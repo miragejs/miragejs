@@ -1,8 +1,14 @@
 import ENV from '../config/environment';
 import Pretender from 'pretender';
-import userConfig from '../pretender/index';
+import userConfig from '../pretender/config';
+import userData from '../pretender/data/index';
 
 var defaults = function() {
+
+  this.originalData = userData;
+
+  this.data = userData;
+
   this.prepareBody = function(body) {
     return body ? JSON.stringify(body) : '{"error": "not found"}';
   };
@@ -12,7 +18,7 @@ var defaults = function() {
   };
 
   this.stub = function(verb, path, handler) {
-    this[verb].call(this, 'blah', function(request) {
+    this[verb].call(this, path, function(request) {
       console.log('Hitting ' + path);
 
       if (typeof handler === 'function') {
@@ -34,10 +40,13 @@ export default {
   name: 'ember-pretenderify',
   initialize: function(container, application) {
     if (ENV['ember-pretenderify'].usePretender) {
-      new Pretender(function() {
+      var server = new Pretender(function() {
         defaults.call(this);
         userConfig.call(this);
       });
+
+      application.register('pretender:main', server, { instantiate: false });
+      application.inject('test', 'pretender', 'pretender:main');
     }
   }
 };
