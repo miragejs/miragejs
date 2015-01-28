@@ -154,10 +154,10 @@ Sets content type to 'application/json', and lets you specify which data to retu
 this.stub(verb, path, handler(request)[, responseCode]);
 ```
 
-**verb**: string. 'get', 'put', 'post', or 'delete'
-**path**: string. The URL you're defining, e.g. '/api/contacts'.
-**handler**: function. Return the data you want to be in the response body as plain JS - it will be stringified. Accepts one parameter, *request*, which is the Pretender request object.
-**responseCode**: number. optional. The response code of the request.
+- **verb**: string. 'get', 'put', 'post', or 'delete'
+- **path**: string. The URL you're defining, e.g. '/api/contacts'.
+- **handler**: function. Return the data you want to be in the response body as plain JS - it will be stringified. Accepts one parameter, *request*, which is the Pretender request object.
+- **responseCode**: number. optional. The response code of the request.
 
 There are some shorthands. Take a look at some examples:
 
