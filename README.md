@@ -23,7 +23,7 @@ ember install:addon ember-pretenderify
 
 In your `tests/helpers/start-app.js`,
 
-```
+```js
 import pretenderifyTesting from '../../ember-pretenderify/testing';
 
 export default function startApp(attrs) {
@@ -39,7 +39,7 @@ export default function startApp(attrs) {
 
 Create the file `app/pretender/config.js` and export a function. `this` inside the function refers to the Pretender server, so this is your chance to add routes, modify the default configuration, etc. Here's an example:
 
-```
+```js
 // app/pretender/config.js
 export default function() {
 
@@ -60,7 +60,7 @@ You can use Pretender's API and structure your routes and data however you pleas
 
 To play along, create the file `app/pretender/data/index.js` and create your data in files under this new `/data` folder. Export all your data from `/data/index.js`, like this:
 
-```
+```js
 // app/pretender/data/contacts.js
 export default [
   {
@@ -81,7 +81,7 @@ Now, this data will be attached to your Pretender server's **store**. The store 
 
 **stub** is a helper method that lets you easily interact with your Pretender server's store while defining routes. Here's how a route defined in our `app/pretender.js` file could look:
 
-```
+```js
 this.stub('get', '/contacts', 'contacts');
 ```
 
@@ -89,7 +89,7 @@ This is the simplest example of a GET route. Here, we're telling Pretender that 
 
 We can also respond with multiple objects from the store, let's say if our app expects additional data to be sideloaded at this URL:
 
-```
+```js
 this.stub('get', '/contacts', ['contacts', 'addresses']);
 ```
 
@@ -97,7 +97,7 @@ We now need to tell Pretender exactly how to return these objects, i.e. how to s
 
 Right now, the response aligns with ActiveModel-style responses, e.g. models will be side-loaded at the root:
 
-```
+```js
 {
   contacts: [{id: 1, name: Zelda, address_ids: [1, 2]}, ...],
   addresses: [{id: 1, street: '123 Hyrule Way', contact_id: 1}, ...]
@@ -116,7 +116,7 @@ So, the only setup work you have to do within each test is to define the initial
 
 A hypothetical test will look like this:
 
-```
+```js
 test("I can view the models", function() {
   serverData.products = [
     {
@@ -150,7 +150,7 @@ These options can be overridden in your `/pretender/config.js` file.
 
 Sets content type to 'application/json', and lets you specify which data to return from the store.
 
-```
+```js
 this.stub(verb, path, handler(request)[, responseCode]);
 ```
 
