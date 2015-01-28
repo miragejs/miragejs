@@ -4,6 +4,8 @@ Share a single Pretender server across your Ember app's testing and development 
 
 > **WARNING**: this is a spike. you probably shouldn't use it
 
+---
+
 Are you
 
 - Tired of writing one set of mocks for your tests, and another for development?
