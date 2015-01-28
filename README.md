@@ -2,7 +2,7 @@
 
 Share a single Pretender server across your Ember app's testing and development environments.
 
----- WARNING: this is a spike. you probably shouldn't use it
+> **WARNING**: this is a spike. you probably shouldn't use it
 
 - Tired of writing one set of mocks for your tests, and another for development?
 - Love Pretender but hate wiring up every app manually?
