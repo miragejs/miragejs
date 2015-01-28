@@ -13,11 +13,18 @@ module('Acceptance: App', {
 });
 
 test("I can view the models", function() {
+  serverData.contacts = [
+    {
+      id: 1,
+      name: 'Link'
+    }
+  ];
+
   visit('/');
 
   andThen(function() {
-    equal(currentRouteName(), 'index');
-    equal( find('p').text(), 'Legos' );
+    equal(currentRouteName(), 'contacts');
+    equal( find('p').text(), 'Link' );
   });
 });
 

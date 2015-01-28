@@ -3,6 +3,8 @@ import Application from '../../app';
 import Router from '../../router';
 import config from '../../config/environment';
 
+import pretenderifyTesting from '../../ember-pretenderify/testing';
+
 export default function startApp(attrs) {
   var application;
 
@@ -14,6 +16,8 @@ export default function startApp(attrs) {
     application.setupForTesting();
     application.injectTestHelpers();
   });
+
+  pretenderifyTesting.setup(application);
 
   return application;
 }

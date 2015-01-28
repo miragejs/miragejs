@@ -1,5 +1,5 @@
-import products from './products';
+import contacts from './contacts';
 
 export default {
-  products: products
+  contacts: contacts
 }
