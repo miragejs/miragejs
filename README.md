@@ -155,17 +155,30 @@ These options can be overridden in your `/pretender/config.js` file.
 
 You interact with the store using the *stub* method in your Pretender routes. You retrieve data from the store, then return what you want for that route. 
 
-- *store.find(key)* returns the `key` models attached to the store object. For example if you had exported the following object from `/app/pretender/data/index.js`
+**store.find(key)**
 
-    ```js
-    export default {
-      contacts: [{id: 1, name: 'Sam'}, {id: 2, name: 'Ryan'}]
-    }
-    ```
+Returns the `key` models attached to the store object. Note `key` is always singular.
 
-    then `store.find('contacts')` would return the `contacts` array.
+For example if you had exported the following object from `/app/pretender/data/index.js`
 
-- *store.find(key, id)* returns a single model from the store based on the key `key` and id `id`. For example, given the above contacts in the store, `store.find('contatcs', 2)` would return `{id: 2, name: 'Ryan'}`.
+```js
+export default {
+  contacts: [{id: 1, name: 'Sam'}, {id: 2, name: 'Ryan'}]
+}
+```
+
+then `store.find('contact')` would return the `contacts` array.
+
+**store.find(key, id)**
+
+Returns a single model from the store based on the key `key` and id `id`. Note `key` is always singular.
+
+For example, given the above contacts in the store, `store.find('contact', 2)` would return `{id: 2, name: 'Ryan'}`.
+
+**store.push(key, data)**
+
+Creates or updates a model of type `key` in the store. `data` is a POJO. If `data` has an `id`, updates the model in the, otherwise, creates a new model.
+
 
 ### stub
 
@@ -182,7 +195,9 @@ this.stub(verb, path, handler(request)[, responseCode]);
 
 There are some shorthands. Here are some examples:
 
-**Returning objects from the store**
+**Returning objects from the store (GET)**
+
+Note: the shorthand versions of the functions below only work if the verb is `get`.
 
 ```js
 /*
@@ -190,7 +205,7 @@ There are some shorthands. Here are some examples:
 */
 this.stub('get', '/contacts', function(store) {
   return {
-    contacts: store.find('contacts');
+    contacts: store.find('contact');
   }:
 });
 // shorthand
@@ -200,8 +215,8 @@ this.stub('get', '/contacts', 'contacts');
   Return a collection with related models
 */
 this.stub('get', '/contacts', function(store) {
-  var contacts = store.find('contacts');
-  var addresses = store.find('addresses');
+  var contacts = store.find('contact');
+  var addresses = store.find('address');
 
   var contactIds = contacts
     .map(function(contact) {return contact.id});
@@ -220,8 +235,8 @@ this.stub('get', '/contacts', function(store) {
   Return multiple collections.
 */
 this.stub('get', '/', function(store, request) {
-  var photos = store.find('photos');
-  var articles = store.find('articles');
+  var photos = store.find('photo');
+  var articles = store.find('article');
 
   return {
     photos: photos,
@@ -236,7 +251,7 @@ this.stub('get', '/', ['photos', 'articles']);
 */
 this.stub('get', '/contacts/:id', function(store, request) {
   var contactId = +request.params.id;
-  var contact = store.find('contacts', contactId);
+  var contact = store.find('contact', contactId);
 
   return {
     contact: contact
@@ -250,8 +265,8 @@ this.stub('get', '/contacts/:id', 'contact');
 */
 this.stub('get', '/contacts/:id', function(store, request) {
   var contactId = +request.params.id;
-  var contact = store.find('contacts', contactId);
-  var addresses = store.find('addresses')
+  var contact = store.find('contact', contactId);
+  var addresses = store.find('address')
     .filterBy('contact_id', contactId);
 
   return {
@@ -263,19 +278,40 @@ this.stub('get', '/contacts/:id', function(store, request) {
 // Make sure you put the singular model first.
 this.stub('get', '/contacts/:id', ['contact', 'addresses']);
 
-**Modifying the store**
-TODO
+**Updating the store (POST, PUT)**
+
+Note: the shorthand versions of the functions below only work if the verb is `post` or `put`.
+
+/*
+  Return a single object with related models
+*/
+this.stub('post', 'contact', '/contacts', function(store, request) {
+  var newContact = JSON.parse(request.requestBody);
+
+  store.push('contact', newContact);
+  return newContact;
+});
+// shorthand. Creates a new resource using data from `request.requestBody`. 
+// The type is found by singularizing the last portion of the url.
+this.stub('post', '/contacts');
+// Optionally specify the type of resource to be created.
+this.stub('post', '/contacts', 'user');
 ```
 
 
 # TODO
 
+**setup**
 - [ ] setup testing stuff automatically or with a blueprint
 - [ ] reset store after each test
-- [ ] `stub` GET with where
-- [ ] `stub` GET with attrs
-- [ ] `stub` POST api
-- [ ] `stub` PUT api
-- [ ] `stub` DELETE api
+
+**stub**
+- [ ] shorthand for multiple data relationships, e.g. lesson has many questions, questions has many answers
+- [ ] with where/query
+- [ ] with attrs (partial models)
+- [ ] modifying data in the store
+
+**other**
+- [ ] factories
 - [ ] write tests for my testing library that helps you test
 - [ ] docs: explain that if api changes, only routes need to change, not (future hypothetical) factories or tests

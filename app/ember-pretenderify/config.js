@@ -15,6 +15,7 @@ var defaults = function() {
 
   this.store = {
     find: function(key, id) {
+      key = key.pluralize();
       var data;
       var query;
 
@@ -48,6 +49,22 @@ var defaults = function() {
 
 
       return data;
+    },
+
+    push: function(key, data) {
+      var pluralKey = key.pluralize();
+      if (data.id) {
+        // update
+      } else {
+        var currentModels = _this.data[pluralKey];
+        var currentModelIds = currentModels.map(function(model) { return model.id; });
+        var newId = Math.max.apply(null, currentModelIds) + 1;
+
+        data[key].id = newId;
+        _this.data[pluralKey].push(data[key]);
+      }
+
+      return data;
     }
   };
 
@@ -59,58 +76,90 @@ var defaults = function() {
     console.error("Your Ember app tried to " + verb + " '" + path + "', but there was no Pretender route defined to handle this request.");
   };
 
-  this.stub = function(verb, path, handler, code) {
-    var store = this.store;
+  this.handleGet = function(handler, store, request, code) {
+    var code = code || 200;
+    var data = {};
+    var storeKeys;
 
-    this[verb].call(this, path, function(request) {
-      var code = code || 200;
-      var data = {};
-      var storeKeys;
+    if (typeof handler === 'function') {
+      data = handler(store, request);
 
-      if (typeof handler === 'function') {
-        data = handler(store, request);
+    // Convenince methods
+    } else {
 
-      // Convenince methods
+      if (typeof handler === 'string') {
+        storeKeys = [handler];
+
       } else {
-
-        if (typeof handler === 'string') {
-          storeKeys = [handler];
-
-        } else {
-          storeKeys = handler;
-        }
-
-        var owner;
-        var ownerKey;
-        storeKeys.forEach(function(key) {
-
-          // There's an owner. Find only related.
-          if (ownerKey) {
-            var ownerIdKey = ownerKey.singularize() + '_id';
-            var query = {};
-            query[ownerIdKey] = owner.id;
-            data[key] = store.find(key, query);
-
-          } else {
-
-            // TODO: This is a crass way of seeing if we're looking for a single model, doens't work for e.g. sheep
-            if (key.singularize() === key) {
-              ownerKey = key;
-              var model = store.find(key, request.params.id);
-              data[key] = model;
-              owner = model;
-
-            } else {
-              data[key] = store.find(key);
-            }
-          }
-        });
+        storeKeys = handler;
       }
 
+      var owner;
+      var ownerKey;
+      storeKeys.forEach(function(key) {
 
+        // There's an owner. Find only related.
+        if (ownerKey) {
+          var ownerIdKey = ownerKey.singularize() + '_id';
+          var query = {};
+          query[ownerIdKey] = owner.id;
+          data[key] = store.find(key, query);
+
+        } else {
+
+          // TODO: This is a crass way of seeing if we're looking for a single model, doens't work for e.g. sheep
+          if (key.singularize() === key) {
+            ownerKey = key;
+            var model = store.find(key, request.params.id);
+            data[key] = model;
+            owner = model;
+
+          } else {
+            data[key] = store.find(key);
+          }
+        }
+      });
+    }
+
+    console.log(data);
+    return [code, {"Content-Type": "application/json"}, data];
+  };
+
+  this.handlePost = function(handler, store, request, code) {
+    var code = code || 201;
+    var data = {};
+
+    if (typeof handler === 'function') {
+      data = handler(store, request);
+
+    } else if (typeof handler === 'undefined') {
+      var type = request.urldebugger;
+      var url = request.url;
+      var type = url.substr(url.lastIndexOf('/') + 1).singularize();
+      var postData = JSON.parse(request.requestBody);
+
+      data = store.push(type, postData);
+
+    } else if (typeof handler === 'string') {
+      var type = handler;
+      var postData = JSON.parse(request.requestBody);
+
+      data = store.push(type, postData);
+    }
+
+    console.log(data);
+    return [code, {"Content-Type": "application/json"}, data];
+  };
+
+  this.stub = function(verb, path, handler, code) {
+    var store = this.store;
+    var _this = this;
+
+    this[verb].call(this, path, function(request) {
       console.log('Successful request: ' + verb + ' ' + path);
-      console.log(data);
-      return [code, {"Content-Type": "application/json"}, data];
+      var stubHandler = 'handle' + verb.capitalize();
+
+      return _this[stubHandler].call(this, handler, store, request, code);
     })
   }.bind(this);
 };
