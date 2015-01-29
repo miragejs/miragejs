@@ -267,9 +267,11 @@ this.stub('get', '/', function(store, request) {
 });
 // shorthand. Note this is everything you have in your store.
 this.stub('get', '/', ['photos', 'articles']);
+```
 
 **Returning a single object from the store (GET)**
 
+```js
 /*
   Return a single object
 */
@@ -301,11 +303,13 @@ this.stub('get', '/contacts/:id', function(store, request) {
 // shorthand. It returns only related models, since since contact is singular. 
 // Make sure you put the singular model first.
 this.stub('get', '/contacts/:id', ['contact', 'addresses']);
+```
 
 **Updating the store (POST, PUT)**
 
 Note: the shorthand versions of the functions below only work if the verb is `post` or `put`.
 
+```js
 /*
   Return a single object with related models
 */
@@ -324,6 +328,7 @@ this.stub('post', '/contacts', 'user');
 
 **Deleting resources from the store (DELETE)**
 
+```js
 /*
   Remove a single object
 */
@@ -353,6 +358,7 @@ this.stub('delete', '/contacts/:id', function(store, request) {
 });
 // shorthand. Make sure the parent resource is first.
 this.stub('delete', '/contacts/:id', ['contact', 'addresses']);
+```
 
 # TODO
 
