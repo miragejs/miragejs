@@ -151,6 +151,28 @@ These options can be overridden in your `/pretender/config.js` file.
 
 ## API
 
+### config
+
+These options are available within your `/pretender/config.js` file.
+
+**namespace**
+
+Set the base namespace used for all routes defined with `stub`. For example,
+
+```js
+// app/pretender/config.js
+
+export default function() {
+
+  this.namespace = '/api';
+
+  // this route will handle the URL '/api/contacts'
+  this.stub('get', '/contacts', function(store, request) {
+    // ... 
+  });
+};
+```
+
 ### store
 
 You interact with the store using the *stub* method in your Pretender routes. You retrieve data from the store, then return what you want for that route. 
@@ -195,7 +217,7 @@ this.stub(verb, path, handler(request)[, responseCode]);
 
 There are some shorthands. Here are some examples:
 
-**Returning objects from the store (GET)**
+**Returning collections from the store (GET)**
 
 Note: the shorthand versions of the functions below only work if the verb is `get`.
 
@@ -245,6 +267,8 @@ this.stub('get', '/', function(store, request) {
 });
 // shorthand. Note this is everything you have in your store.
 this.stub('get', '/', ['photos', 'articles']);
+
+**Returning a single object from the store (GET)**
 
 /*
   Return a single object
@@ -298,6 +322,37 @@ this.stub('post', '/contacts');
 this.stub('post', '/contacts', 'user');
 ```
 
+**Deleting resources from the store (DELETE)**
+
+/*
+  Remove a single object
+*/
+this.stub('delete', '/contacts/:id', function(store, request) {
+  var contactId = +request.params.id;
+
+  store.remove('contact', contactId);
+
+  return {};
+});
+// shorthand
+// The type is found by singularizing the last portion of the url.
+this.stub('delete', '/contacts/:id')
+// Optionally specify the type of resource to be destroyed.
+this.stub('delete', '/contacts/:id', 'user')
+
+/*
+  Remove a single object + related models
+*/
+this.stub('delete', '/contacts/:id', function(store, request) {
+  var contactId = +request.params.id;
+
+  store.remove('contact', contactId);
+  store.remove('address', {contact_id: contactId});
+
+  return {};
+});
+// shorthand. Make sure the parent resource is first.
+this.stub('delete', '/contacts/:id', ['contact', 'addresses']);
 
 # TODO
 

@@ -52,19 +52,39 @@ var defaults = function() {
     },
 
     push: function(key, data) {
-      var pluralKey = key.pluralize();
+      var dataKey = key.pluralize();
       if (data.id) {
         // update
       } else {
-        var currentModels = _this.data[pluralKey];
-        var currentModelIds = currentModels.map(function(model) { return model.id; });
-        var newId = Math.max.apply(null, currentModelIds) + 1;
+        var currentModels = _this.data[dataKey];
+        var newId = 1;
+        if (currentModels.length) {
+          var currentModelIds = currentModels.map(function(model) { return model.id; });
+          newId = Math.max.apply(null, currentModelIds) + 1;
+        }
 
         data[key].id = newId;
-        _this.data[pluralKey].push(data[key]);
+        _this.data[dataKey].push(data[key]);
       }
 
       return data;
+    },
+
+    remove: function(key, id) {
+      var dataKey = key.pluralize();
+
+      if (typeof id === 'object') {
+        var query = id;
+        Object.keys(query).forEach(function(queryKey) {
+          _this.data[dataKey] = _this.data[dataKey].rejectBy(queryKey, query[queryKey]);
+        });
+
+      } else {
+        _this.data[dataKey] = _this.data[dataKey].rejectBy('id', id);
+
+      }
+
+      return {};
     }
   };
 
@@ -133,7 +153,6 @@ var defaults = function() {
       data = handler(store, request);
 
     } else if (typeof handler === 'undefined') {
-      var type = request.urldebugger;
       var url = request.url;
       var type = url.substr(url.lastIndexOf('/') + 1).singularize();
       var postData = JSON.parse(request.requestBody);
@@ -151,11 +170,60 @@ var defaults = function() {
     return [code, {"Content-Type": "application/json"}, data];
   };
 
+  this.handleDelete = function(handler, store, request, code) {
+    var code = code || 200;
+    var data = {};
+
+    if (typeof handler === 'function') {
+      data = handler(store, request);
+
+    } else if (typeof handler === 'undefined') {
+      var url = request.url;
+      var id = +url.substr(url.lastIndexOf('/') + 1).singularize();
+
+      // Strip the id
+      url = url.substr(0, url.lastIndexOf('/'))
+      var type = url.substr(url.lastIndexOf('/') + 1).singularize();
+      var postData = JSON.parse(request.requestBody);
+
+      data = store.remove(type, id);
+
+    } else if (Ember.isArray(handler)) {
+      var url = request.url;
+      var id = +url.substr(url.lastIndexOf('/') + 1).singularize();
+      var types = handler;
+      var parentType = types.shift();
+
+      store.remove(parentType, id);
+
+      var parentIdKey = parentType + '_id';
+      types.forEach(function(type) {
+        var query = {}
+        query[parentIdKey] = id;
+        store.remove(type, query);
+      });
+      data = {};
+
+    } else if (typeof handler === 'string') {
+      var url = request.url;
+      var id = +url.substr(url.lastIndexOf('/') + 1).singularize();
+      var type = handler;
+
+
+      data = store.remove(type, id);
+    }
+
+    console.log(data);
+    return [code, {"Content-Type": "application/json"}, data];
+  };
+
   this.stub = function(verb, path, handler, code) {
     var store = this.store;
     var _this = this;
+    var namespace = this.namespace || '';
+    path = path[0] === '/' ? path.slice(1) : path;
 
-    this[verb].call(this, path, function(request) {
+    this[verb].call(this, namespace + '/' + path, function(request) {
       console.log('Successful request: ' + verb + ' ' + path);
       var stubHandler = 'handle' + verb.capitalize();
 
