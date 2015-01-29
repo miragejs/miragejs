@@ -147,6 +147,7 @@ These options can be overridden in your `/pretender/config.js` file.
 ## API
 
 **store**
+
 You interact with the store using the *stub* method in your Pretender routes. You retrieve data from the store, then return what you want for that route. 
 
 - *store.find(key)* returns the `key` models attached to the store object. For example if you had exported the following object from `/app/pretender/data/index.js`
