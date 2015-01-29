@@ -16,20 +16,34 @@ var defaults = function() {
   this.store = {
     find: function(key, id) {
       var data;
+      var query;
 
-      if (id) {
-        if (_this.data) {
-          var key = key.pluralize();
-          if (_this.data[key]) {
-            data = _this.data[key].findBy('id', +id);
+      if (typeof id === 'object') {
+        query = id;
+
+        data = _this.data[key];
+        Object.keys(query).forEach(function(queryKey) {
+          data = data.filterBy(queryKey, query[queryKey]);
+        });
+
+      } else {
+
+        if (id) {
+          if (_this.data) {
+            var key = key.pluralize();
+
+            if (_this.data[key]) {
+              data = _this.data[key].findBy('id', +id);
+
+            } else {
+              data = null;
+            }
           } else {
             data = null;
           }
         } else {
-          data = null;
+          data = _this.data ? (_this.data[key] ? _this.data[key] : []) : [];
         }
-      } else {
-        data = _this.data ? (_this.data[key] ? _this.data[key] : []) : [];
       }
 
 
@@ -53,25 +67,46 @@ var defaults = function() {
       var data = {};
       var storeKeys;
 
-      if (typeof handler === 'string') {
-        storeKeys = [handler];
+      if (typeof handler === 'function') {
+        data = handler(store, request);
 
-      } else if (typeof handler === 'function') {
-        storeKeys = handler(request);
-
+      // Convenince methods
       } else {
-        storeKeys = handler;
-      }
 
-      storeKeys.forEach(function(key) {
-        // TODO: This is a crass way of seeing if we're looking for a single model
-        if (key.singularize() === key) {
-          data[key] = store.find(key, request.params.id);
+        if (typeof handler === 'string') {
+          storeKeys = [handler];
 
         } else {
-          data[key] = store.find(key);
+          storeKeys = handler;
         }
-      });
+
+        var owner;
+        var ownerKey;
+        storeKeys.forEach(function(key) {
+
+          // There's an owner. Find only related.
+          if (ownerKey) {
+            var ownerIdKey = ownerKey.singularize() + '_id';
+            var query = {};
+            query[ownerIdKey] = owner.id;
+            data[key] = store.find(key, query);
+
+          } else {
+
+            // TODO: This is a crass way of seeing if we're looking for a single model, doens't work for e.g. sheep
+            if (key.singularize() === key) {
+              ownerKey = key;
+              var model = store.find(key, request.params.id);
+              data[key] = model;
+              owner = model;
+
+            } else {
+              data[key] = store.find(key);
+            }
+          }
+        });
+      }
+
 
       console.log('Successful request: ' + verb + ' ' + path);
       console.log(data);
