@@ -161,7 +161,6 @@ Set the base namespace used for all routes defined with `stub`. For example,
 
 ```js
 // app/pretender/config.js
-
 export default function() {
 
   this.namespace = '/api';
@@ -175,7 +174,9 @@ export default function() {
 
 ### store
 
-You interact with the store using the *stub* method in your Pretender routes. You retrieve data from the store, then return what you want for that route. 
+You interact with the store using the *stub* method in your Pretender routes. You retrieve or modify data from the store, then return what you want for that route. 
+
+Here are the methods available to you from within your routes using *stub*.
 
 **store.find(key)**
 
@@ -199,19 +200,19 @@ For example, given the above contacts in the store, `store.find('contact', 2)` w
 
 **store.push(key, data)**
 
-Creates or updates a model of type `key` in the store. `data` is a POJO. If `data` has an `id`, updates the model in the, otherwise, creates a new model.
+Creates or updates a model of type `key` in the store. `data` is a POJO. If `data` has an `id`, updates the model in the, otherwise creates a new model.
 
 
 ### stub
 
-Sets content type to 'application/json', and lets you specify which data to return from the store.
+Sets content type to `application/json` and lets you specify which data to return from the store.
 
 ```js
 this.stub(verb, path, handler(request)[, responseCode]);
 ```
 
 - **verb**: string. 'get', 'put', 'post', or 'delete'
-- **path**: string. The URL you're defining, e.g. '/api/contacts'.
+- **path**: string. The URL you're defining, e.g. '/api/contacts' (or '/contacts' if `namespace` is defined).
 - **handler**: function. Return the data you want to be in the response body as plain JS - it will be stringified. Accepts two parameters, *store*, your Pretender server's store, and *request*, which is the Pretender request object.
 - **responseCode**: number. optional. The response code of the request.
 
@@ -219,7 +220,9 @@ There are some shorthands. Here are some examples:
 
 **Returning collections from the store (GET)**
 
-Note: the shorthand versions of the functions below only work if the verb is `get`.
+Response code defaults to 200.
+
+The shorthand versions of the functions below only work if the verb is `get`.
 
 ```js
 /*
@@ -240,6 +243,7 @@ this.stub('get', '/contacts', function(store) {
   var contacts = store.find('contact');
   var addresses = store.find('address');
 
+  // But we only want the related addresses, so...
   var contactIds = contacts
     .map(function(contact) {return contact.id});
   var relatedAddresses = addresses
@@ -265,11 +269,13 @@ this.stub('get', '/', function(store, request) {
     articles: articles
   }:
 });
-// shorthand. Note this is everything you have in your store.
+// shorthand. Note this is everything you have in your store for these models.
 this.stub('get', '/', ['photos', 'articles']);
 ```
 
 **Returning a single object from the store (GET)**
+
+Response code defaults to 200.
 
 ```js
 /*
@@ -307,11 +313,13 @@ this.stub('get', '/contacts/:id', ['contact', 'addresses']);
 
 **Updating the store (POST, PUT)**
 
-Note: the shorthand versions of the functions below only work if the verb is `post` or `put`.
+Response code defaults to 201 for `post`, 200 for `put`.
+
+The shorthand versions of the functions below only work if the verb is `post` or `put`.
 
 ```js
 /*
-  Return a single object with related models
+  Create a new object
 */
 this.stub('post', 'contact', '/contacts', function(store, request) {
   var newContact = JSON.parse(request.requestBody);
@@ -319,14 +327,17 @@ this.stub('post', 'contact', '/contacts', function(store, request) {
   store.push('contact', newContact);
   return newContact;
 });
-// shorthand. Creates a new resource using data from `request.requestBody`. 
-// The type is found by singularizing the last portion of the url.
+// shorthand. The type is found by singularizing the last portion of the url.
 this.stub('post', '/contacts');
-// Optionally specify the type of resource to be created.
+// Optionally specify the type of resource to be created as the third param.
 this.stub('post', '/contacts', 'user');
 ```
 
 **Deleting resources from the store (DELETE)**
+
+Response code defaults to 200 for `delete`.
+
+The shorthand versions of the functions below only work if the verb is `delete`.
 
 ```js
 /*
@@ -339,10 +350,9 @@ this.stub('delete', '/contacts/:id', function(store, request) {
 
   return {};
 });
-// shorthand
-// The type is found by singularizing the last portion of the url.
+// shorthand. The type is found by singularizing the last portion of the url.
 this.stub('delete', '/contacts/:id')
-// Optionally specify the type of resource to be destroyed.
+// Optionally specify the type of resource to be deleted.
 this.stub('delete', '/contacts/:id', 'user')
 
 /*
