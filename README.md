@@ -6,18 +6,23 @@ Share a single Pretender server across your Ember app's testing and development 
 
 ---
 
-Are you
+Are you tired of
 
-- Tired of writing one set of mocks for your tests, and another for development?
-- Love Pretender but hate wiring up every app manually?
+- Writing one set of mocks for your tests, and another for development?
+- Wiring up tests for each of your apps manually, from scratch?
+- Changing lots of files/tests when your API changes?
 
 Ember Pretenderify may be for you! It lets you share your [Pretender](https://github.com/trek/pretender) server in both development and in testing. It only uses Pretender if you're not in production and if you're not proxying to an explicit API server via `ember serve --proxy`.
 
+## Requirements
+
+You'll need the `ember-cli-pretender` addon installed:
+
+    ember install:addon ember-cli-pretender
+
 ## Installation
 
-```
-ember install:addon ember-pretenderify
-```
+    ember install:addon ember-pretenderify
 
 *Testing*
 
