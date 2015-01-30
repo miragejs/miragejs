@@ -317,17 +317,17 @@ this.stub('get', '/contacts/:id', function(store, request) {
 this.stub('get', '/contacts/:id', ['contact', 'addresses']);
 ```
 
-**Updating the store (POST, PUT)**
+**Creating a resource (POST)**
 
-Response code defaults to 201 for `post`, 200 for `put`.
+Response code defaults to 201 for `post`.
 
-The shorthand versions of the functions below only work if the verb is `post` or `put`.
+The shorthand versions of the functions below only work if the verb is `post`.
 
 ```js
 /*
   Create a new object
 */
-this.stub('post', 'contact', '/contacts', function(store, request) {
+this.stub('post', '/contacts', function(store, request) {
   var newContact = JSON.parse(request.requestBody);
 
   store.push('contact', newContact);
@@ -337,6 +337,30 @@ this.stub('post', 'contact', '/contacts', function(store, request) {
 this.stub('post', '/contacts');
 // Optionally specify the type of resource to be created as the third param.
 this.stub('post', '/contacts', 'user');
+```
+
+**Updating a resource (PUT)**
+
+Response code defaults to 200 for `put`.
+
+The shorthand versions of the functions below only work if the verb is `put`.
+
+```js
+/*
+  Update an object in the store.
+*/
+this.stub('put', '/contacts/:id', function(store, request) {
+  var id = request.params.id;
+  var attrs = JSON.parse(request.requestBody);
+  attrs.id = +id;
+
+  store.push('contact', attrs);
+  return {contact: attrs};
+});
+// shorthand. The type is found by singularizing the last portion of the url.
+this.stub('put', '/contacts/:id');
+// Optionally specify the type of resource to be updated as the third param.
+this.stub('post', '/contacts/:id', 'user');
 ```
 
 **Deleting resources from the store (DELETE)**
