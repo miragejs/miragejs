@@ -3,7 +3,7 @@ import startApp from '../helpers/start-app';
 
 var App;
 
-module('Acceptance: App', {
+module('Acceptance: Contacts', {
   setup: function() {
     App = startApp();
   },
@@ -12,19 +12,18 @@ module('Acceptance: App', {
   }
 });
 
-test("I can view the models", function() {
+test("I can view the contacts", function() {
   serverData.contacts = [
-    {
-      id: 1,
-      name: 'Link'
-    }
+    {id: 1, name: 'Link'},
+    {id: 2, name: 'Zelda'}
   ];
 
   visit('/');
 
   andThen(function() {
     equal(currentRouteName(), 'contacts');
-    equal( find('p').text(), 'Link' );
+    equal( find('p').length, 2 );
+    equal( find('p:first').text(), 'Link' );
   });
 });
 

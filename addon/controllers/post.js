@@ -13,7 +13,8 @@ export default BaseController.extend({
   */
   stringHandler: function(type, store, request, code) {
     var postData = JSON.parse(request.requestBody);
-    var data = store.push(type, postData);
+    var attrs = postData[type];
+    var data = store.push(type, attrs);
 
     return data;
   },
@@ -29,7 +30,8 @@ export default BaseController.extend({
     var url = request.url;
     var type = url.substr(url.lastIndexOf('/') + 1).singularize();
     var postData = JSON.parse(request.requestBody);
-    var data = store.push(type, postData);
+    var attrs = postData[type];
+    var data = store.push(type, attrs);
 
     return data;
   }

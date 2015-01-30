@@ -40,6 +40,8 @@ export default function startApp(attrs) {
 }
 ```
 
+You'll also want to add `serverData` to the `predef` section in your `tests/.jshintrc` file.
+
 ## Getting started
 
 Create the file `app/pretender/config.js` and export a function. `this` inside the function refers to the Pretender server, so this is your chance to add routes, modify the default configuration, etc. Here's an example:

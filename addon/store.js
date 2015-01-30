@@ -24,7 +24,7 @@ export default {
 
       if (id) {
         if (this.data) {
-          var key = key.pluralize();
+          key = key.pluralize();
 
           if (this.data[key]) {
             data = this.data[key].findBy('id', +id);
@@ -44,20 +44,32 @@ export default {
     return data;
   },
 
-  push: function(key, data) {
+  push: function(key, attrs) {
+    var data = {};
     var dataKey = key.pluralize();
-    if (data.id) {
-      // update
+
+    // Updating
+    if (attrs.id) {
+      var currentModel = this.find(key, +attrs.id);
+      Object.keys(attrs).forEach(function(attr) {
+        currentModel[attr] = attrs[attr];
+      });
+
+      data[key] = currentModel;
+
+    // Creating
     } else {
+
       var currentModels = this.data[dataKey];
+
       var newId = 1;
       if (currentModels.length) {
         var currentModelIds = currentModels.map(function(model) { return model.id; });
         newId = Math.max.apply(null, currentModelIds) + 1;
       }
 
-      data[key].id = newId;
-      this.data[dataKey].push(data[key]);
+      attrs.id = newId;
+      this.data[dataKey].push(attrs);
     }
 
     return data;
@@ -74,7 +86,7 @@ export default {
       });
 
     } else {
-      this.data[dataKey] = this.data[dataKey].rejectBy('id', id);
+      this.data[dataKey] = this.data[dataKey].rejectBy('id', +id);
 
     }
 

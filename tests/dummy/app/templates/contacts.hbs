@@ -1,4 +1,3 @@
 {{#each contact in model}}
-  <p>{{contact.name}}</p>
+  <p>{{link-to contact.name 'contact' contact}}</p>
 {{/each}}
-

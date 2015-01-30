@@ -2,51 +2,59 @@ import BaseController from './base';
 
 export default BaseController.extend({
 
-  handle: function(handler, store, request, code) {
-    var code = code || 200;
-    var data = {};
+  /*
+    Remove the model from the store based on singular version
+    of the last portion of the url.
 
-    if (typeof handler === 'function') {
-      data = handler(store, request);
+    This would remove contact with id :id:
+      Ex: this.stub('delete', '/contacts/:id');
+  */
+  undefinedHandler: function(undef, store, request, code) {
+    var id = request.params.id;
+    var url = request.url;
+    var urlNoId = id ? url.substr(0, url.lastIndexOf('/')) : url;
+    var type = urlNoId.substr(urlNoId.lastIndexOf('/') + 1).singularize();
 
-    } else if (typeof handler === 'undefined') {
-      var url = request.url;
-      var id = +url.substr(url.lastIndexOf('/') + 1).singularize();
+    var data = store.remove(type, +id);
 
-      // Strip the id
-      url = url.substr(0, url.lastIndexOf('/'))
-      var type = url.substr(url.lastIndexOf('/') + 1).singularize();
-      var postData = JSON.parse(request.requestBody);
+    return data;
+  },
 
-      data = store.remove(type, id);
+  /*
+    Remove the model from the store of type *type*.
 
-    } else if (Ember.isArray(handler)) {
-      var url = request.url;
-      var id = +url.substr(url.lastIndexOf('/') + 1).singularize();
-      var types = handler;
-      var parentType = types.shift();
+    This would remove the user with id :id:
+      Ex: this.stub('delete', '/contacts/:id', 'user');
+  */
+  stringHandler: function(type, store, request, code) {
+    var id = request.params.id;
+    var data = store.remove(type, id);
 
-      store.remove(parentType, id);
+    return data;
+  },
 
-      var parentIdKey = parentType + '_id';
-      types.forEach(function(type) {
-        var query = {}
-        query[parentIdKey] = id;
-        store.remove(type, query);
-      });
-      data = {};
+  /*
+    Remove the model and child related models from the store.
 
-    } else if (typeof handler === 'string') {
-      var url = request.url;
-      var id = +url.substr(url.lastIndexOf('/') + 1).singularize();
-      var type = handler;
+    This would remove the contact with id `:id`, and well
+    as this contact's addresses and phone numbers.
+      Ex: this.stub('delete', '/contacts/:id', ['contact', 'addresses', 'numbers');
+  */
+  arrayHandler: function(types, store, request, code) {
+    var id = request.params.id;
+    var parentType = types.shift();
 
+    store.remove(parentType, id);
 
-      data = store.remove(type, id);
-    }
+    var query = {};
+    var parentIdKey = parentType + '_id';
+    query[parentIdKey] = id;
 
-    console.log(data);
-    return [code, {"Content-Type": "application/json"}, data];
+    types.forEach(function(type) {
+      store.remove(type, query);
+    });
+
+    return {};
   }
 
 });

@@ -1,1 +1,13 @@
+{{link-to 'Back to all contacts' 'contacts'}}
+
 <p>The contact is {{model.name}}</p>
+
+<div>
+  {{#link-to 'edit' model}}
+    <button>Edit this contact</button>
+  {{/link-to}}
+</div>
+
+<div>
+  <button {{action 'deleteContact' model}}>Delete this contact</button>
+</div>

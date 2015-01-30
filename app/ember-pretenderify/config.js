@@ -46,4 +46,4 @@ export default {
   setupData: setupData,
   defaults: defaults,
   userConfig: userConfig
-}
+};

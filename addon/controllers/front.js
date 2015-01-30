@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import GetController from 'ember-pretenderify/controllers/get';
 import PostController from 'ember-pretenderify/controllers/post';
 import PutController from 'ember-pretenderify/controllers/put';
@@ -30,4 +31,4 @@ export default {
     return [code, {"Content-Type": "application/json"}, data];
   }
 
-}
+};

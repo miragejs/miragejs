@@ -31,6 +31,8 @@ export default function() {
   //   };
   // });
   this.stub('get', '/contacts/:id');
+  this.stub('put', '/contacts/:id', 'contact');
+  this.stub('delete', '/contacts/:id');
   // this.stub('get', '/contacts/:id', ['contact', 'addresses']);
 
   // this.stub('get', '/contacts/:id', function() {
@@ -66,4 +68,4 @@ export default function() {
   //   return response;
   // });
 
-};
+}
