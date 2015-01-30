@@ -8,6 +8,7 @@ export default function() {
   // });
   // this.stub('get', '/contacts', 'contacts');
   this.stub('get', '/contacts');
+  this.stub('post', '/contacts');
   // this.stub('get', '/contacts/:id', 'contact');
 
   // this.stub('get', '/contacts', function(store, request) {

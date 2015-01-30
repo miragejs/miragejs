@@ -1,3 +1,13 @@
 {{#each contact in model}}
   <p>{{link-to contact.name 'contact' contact}}</p>
 {{/each}}
+
+<hr>
+
+<div>
+  <div>{{input value=newName placeholder='Name'}}</div>
+
+  <div>
+    <button {{action 'createContact'}}>Create a new contact</button>
+  </div>
+</div>

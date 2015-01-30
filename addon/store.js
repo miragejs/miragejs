@@ -70,6 +70,7 @@ export default {
 
       attrs.id = newId;
       this.data[dataKey].push(attrs);
+      data[key] = attrs;
     }
 
     return data;
