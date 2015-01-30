@@ -208,7 +208,7 @@ Creates or updates a model of type `key` in the store. `data` is a POJO. If `dat
 Sets content type to `application/json` and lets you specify which data to return from the store.
 
 ```js
-this.stub(verb, path, handler(request)[, responseCode]);
+this.stub(verb, path, handler[, responseCode]);
 ```
 
 - **verb**: string. 'get', 'put', 'post', or 'delete'
@@ -233,8 +233,10 @@ this.stub('get', '/contacts', function(store) {
     contacts: store.find('contact');
   }:
 });
-// shorthand
-this.stub('get', '/contacts', 'contacts');
+// shorthand. Finds type by singularizing last portion of url.
+this.stub('get', '/contacts');
+// optionally specify which collection
+this.stub('get', '/contacts', 'users');
 
 /*
   Return a collection with related models
@@ -289,8 +291,10 @@ this.stub('get', '/contacts/:id', function(store, request) {
     contact: contact
   };
 });
-// shorthand. It returns the contact by id, since contact is singular
-this.stub('get', '/contacts/:id', 'contact');
+// shorthand
+this.stub('get', '/contacts/:id');
+// Optionally specify type
+this.stub('get', '/contacts/:id', 'user');
 
 /*
   Return a single object with related models

@@ -7,15 +7,16 @@ export default function() {
   //   return ['contacts'];
   // });
   // this.stub('get', '/contacts', 'contacts');
-  this.stub('get', '/contacts/:id', 'contact');
+  this.stub('get', '/contacts');
+  // this.stub('get', '/contacts/:id', 'contact');
 
-  this.stub('get', '/contacts', function(store, request) {
-    var contacts = store.find('contacts');
+  // this.stub('get', '/contacts', function(store, request) {
+  //   var contacts = store.find('contacts');
 
-    return {
-      contacts: contacts
-    };
-  });
+  //   return {
+  //     contacts: contacts
+  //   };
+  // });
 
   // this.stub('get', '/contacts/:id', function(store, request) {//   var contact = store.find('contacts', request.params.id);
   //   var contactId = +request.params.id;
@@ -29,7 +30,8 @@ export default function() {
   //     addresses: addresses
   //   };
   // });
-  this.stub('get', '/contacts/:id', ['contact', 'addresses']);
+  this.stub('get', '/contacts/:id');
+  // this.stub('get', '/contacts/:id', ['contact', 'addresses']);
 
   // this.stub('get', '/contacts/:id', function() {
   //   return ['contacts'];
