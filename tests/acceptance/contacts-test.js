@@ -27,4 +27,21 @@ test("I can view the contacts", function() {
   });
 });
 
+test("I can create a new contact", function() {
+  serverData.contacts = [
+    {id: 1, name: 'Link'},
+    {id: 2, name: 'Zelda'}
+  ];
+
+  visit('/');
+  fillIn('input', 'Ganon');
+  click('button:contains(Create)');
+
+  andThen(function() {
+    equal(currentRouteName(), 'contacts');
+    equal( find('p').length, 3 );
+    equal( find('p:last').text(), 'Ganon' );
+  });
+});
+
 

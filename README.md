@@ -404,15 +404,13 @@ this.stub('delete', '/contacts/:id', ['contact', 'addresses']);
 
 **setup**
 - [ ] setup testing stuff automatically or with a blueprint
-- [ ] reset store after each test
 
 **stub**
 - [ ] shorthand for multiple data relationships, e.g. lesson has many questions, questions has many answers
 - [ ] with where/query
 - [ ] with attrs (partial models)
-- [ ] modifying data in the store
 
-**other**
-- [ ] factories
-- [ ] write tests for my testing library that helps you test
-- [ ] docs: explain that if api changes, only routes need to change, not (future hypothetical) factories or tests
+**Roadmap**
+- [ ] Factories for adding data to store in tests.
+- [ ] Write more tests for my testing library that helps you test.
+- [ ] Docs: explain that if api changes, only routes need to change, not (future hypothetical) factories or tests
