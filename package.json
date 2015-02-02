@@ -1,7 +1,7 @@
 {
   "name": "ember-pretenderify",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "0.0.1",
+  "description": "Opinionated Pretender setup for Ember CLI apps",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -43,5 +43,7 @@
     "configPath": "tests/dummy/config",
     "after": "ember-cli-pretender"
   },
-  "dependencies": {}
+  "dependencies": {
+    "ember-cli-pretender": "^0.3.1"
+  }
 }
