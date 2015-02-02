@@ -100,18 +100,7 @@ We can also respond with multiple objects from the store, let's say if our app e
 this.stub('get', '/contacts', ['contacts', 'addresses']);
 ```
 
-We now need to tell Pretender exactly how to return these objects, i.e. how to serialize them. Remember, they are currently arrays of POJOs. Should we add all related models to the root of our JSON response? Should we nest them? Of course, the answers to these questions depend on the data format your Ember app is expecting (or, in the case of Ember Data, which adapter you're using).
-
-Right now, the response aligns with ActiveModel-style responses, e.g. models will be side-loaded at the root:
-
-```js
-{
-  contacts: [{id: 1, name: Zelda, address_ids: [1, 2]}, ...],
-  addresses: [{id: 1, street: '123 Hyrule Way', contact_id: 1}, ...]
-}
-```
-
-> TODO: think more about this. adapter pattern. Currently, only ActiveModel-type responses are supported, i.e. models are sideloaded. Don't need full adapter though, bc the data loaded into the store is already very close to the format expected by the user's app - after all, the user is deciding that format. It's just about, when a route requests "model A" and "model B", how do I return them? Probably just have a method whose param is the array, and they get to manipulate it however they want. But then there might be route-specific differences, etc. Need to think more about this.
+This will return all the data you added to the `contacts` and `address` keys of your store.
 
 You can find the full API for **stub** below.
 
@@ -142,8 +131,6 @@ test("I can view the models", function() {
 ```
 
 In the future, we plan on making factories with a simpler API to help you add data to your Pretender server's store. But fundamentally, the point here is that the routes and config you've defined for your Pretender server will be shared across your development and testing environments.
-
-> Question: what about overriding a route in a test to return a 404, and see how ember app deals w/it?
 
 ## Default config
 
@@ -418,6 +405,9 @@ this.stub('delete', '/contacts/:id', ['contact', 'addresses']);
 
 **setup**
 - [ ] setup testing stuff automatically or with a blueprint
+
+**tests**
+- [ ] override route in test to return 404
 
 **stub**
 - [ ] shorthand for multiple data relationships, e.g. lesson has many questions, questions has many answers
