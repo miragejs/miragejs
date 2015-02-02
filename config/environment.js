@@ -7,11 +7,10 @@ function usingProxy() {
 }
 
 module.exports = function(environment, appConfig) {
-  var setupPretender = (environment === 'development' && !usingProxy());
+  appConfig['ember-pretenderify'] = appConfig['ember-pretenderify'] || {};
+  var setupPretender = ((environment === 'development' && !usingProxy()));
 
-  appConfig['ember-pretenderify'] = {
-    setupPretender: setupPretender
-  };
+  appConfig['ember-pretenderify']['setupPretender'] = setupPretender;
 
   return { };
 };

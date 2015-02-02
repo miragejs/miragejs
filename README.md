@@ -411,6 +411,7 @@ this.stub('delete', '/contacts/:id', ['contact', 'addresses']);
 - [ ] with attrs (partial models)
 
 **Roadmap**
+- [ ] Adapter, only works with AMS-style right now.
 - [ ] Factories for adding data to store in tests.
 - [ ] Write more tests for my testing library that helps you test.
 - [ ] Docs: explain that if api changes, only routes need to change, not (future hypothetical) factories or tests

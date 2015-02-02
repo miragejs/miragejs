@@ -14,7 +14,7 @@ export default BaseController.extend({
   stringHandler: function(key, store, request, code) {
     var data = {};
 
-    // TODO: This is a crass way of seeing if we're looking for a single model, doens't work for e.g. sheep
+    // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
     if (key.singularize() === key) {
       var id = request.params.id;
       if (!id) { console.error("Pretenderify: You're trying to find a model by id, but no :id param was found in this route's URL."); return;}
@@ -55,7 +55,7 @@ export default BaseController.extend({
 
       } else {
 
-        // TODO: This is a crass way of seeing if we're looking for a single model, doens't work for e.g. sheep
+        // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
         if (key.singularize() === key) {
           ownerKey = key;
           var model = store.find(key, request.params.id);
