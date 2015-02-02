@@ -151,6 +151,20 @@ These options can be overridden in your `/pretender/config.js` file.
 
 - Content returned is JSON stringified, so you don't have to do this yourself.
 
+*force*
+
+By default, your Pretender server will run in test mode, and in development mode as long as the `--proxy` option wasn't passed. You can force your server to run in other environments (e.g. production) with an ENV var:
+
+```js
+// config/environment.js
+...
+ENV['ember-pretenderify'] = {
+  force: true
+}
+```
+
+This is useful to share a working prototype before a server is ready, for instance.
+
 ## API
 
 ### config
