@@ -3,6 +3,7 @@ import userConfig from '../pretender/config';
 import userData from '../pretender/data/index';
 import store from 'ember-pretenderify/store';
 import frontController from 'ember-pretenderify/controllers/front';
+import ENV from '../config/environment';
 
 var setupData = function() {
   this.originalData = userData;
@@ -14,6 +15,7 @@ var defaults = function() {
   var _this = this;
 
   this.data = this.data || {};
+  this.timing = 400;
 
   this.store = store;
   this.store.loadData(this.data || {});
@@ -31,6 +33,7 @@ var defaults = function() {
   this.stub = function(verb, path, handler, code) {
     var store = this.store;
     var _this = this;
+    var timing = ENV.environment === 'test' ? 0 : this.timing;
     var namespace = this.namespace || '';
     path = path[0] === '/' ? path.slice(1) : path;
 
@@ -38,7 +41,8 @@ var defaults = function() {
       console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
 
       return _this.frontController.handle(verb, handler, store, request, code);
-    })
+    }, timing);
+
   }.bind(this);
 };
 

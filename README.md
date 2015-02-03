@@ -175,6 +175,19 @@ export default function() {
 };
 ```
 
+**timing**
+
+Set the timing parameter of the response. Default is a 400ms delay. Only applies to non-testing environments. See [Pretender's docs](https://github.com/trek/pretender#timing-parameter) for all possible values.
+
+```js
+// app/pretender/config.js
+export default function() {
+
+  this.timing = 400; // default
+
+};
+```
+
 ### store
 
 You interact with the store using the *stub* method in your Pretender routes. You retrieve or modify data from the store, then return what you want for that route. 

@@ -4,14 +4,18 @@
 module.exports = {
   name: 'ember-pretenderify',
   included: function(app) {
-    this._super.included(app);
+    this.app = app;
 
-    // Shim Pretender in production
-    if (app.env === 'production') {
-      app.import('vendor/production-pretender/shim.js', {
-        type: 'vendor',
-        exports: { 'pretender': ['default'] }
-      });
-    }
-  }
+    app.import(app.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js');
+    app.import(app.bowerDirectory + '/route-recognizer/dist/route-recognizer.js');
+    app.import(app.bowerDirectory + '/pretender/pretender.js');
+    app.import('vendor/ember-cli-pretender/shim.js', {
+      type: 'vendor',
+      exports: { 'pretender': ['default'] }
+    });
+  },
+
+  blueprintsPath: function() {
+    return path.join(__dirname, 'blueprints');
+  },
 };

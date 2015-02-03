@@ -2,6 +2,6 @@ define('pretender', [], function() {
   "use strict";
 
   return {
-    'default': {}
+    'default': Pretender
   };
 });
