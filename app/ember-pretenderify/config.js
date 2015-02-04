@@ -23,11 +23,32 @@ var defaults = function() {
     console.error("Your Ember app tried to " + verb + " '" + path + "', but there was no Pretender route defined to handle this request.");
   };
 
+  this.getDefaultCode = function(verb) {
+    var code = 200;
+    switch (verb) {
+      case 'put':
+        code = 204;
+        break;
+      case 'post':
+        code = 201;
+        break;
+      case 'delete':
+        code = 204;
+        break;
+      default:
+        code = 200;
+        break;
+    }
+
+    return code;
+  };
+
   this.stub = function(verb, path, handler, code) {
     var store = this.store;
     var _this = this;
     var timing = ENV.environment === 'test' ? 0 : this.timing;
     var namespace = this.namespace || '';
+    var code = code ? code : this.getDefaultCode(verb);
     path = path[0] === '/' ? path.slice(1) : path;
 
     this[verb].call(this, namespace + '/' + path, function(request) {
