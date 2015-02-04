@@ -43,7 +43,7 @@ Pretenderify splits up your Pretender server into two pieces:
  - **routes**, which define the URLs your server responds to, and
  - the **store**, your server's "database"
 
-Let's add some data to the store. Create a the file `/app/pretender/data/contacts.js`, and export some data:
+Let's add some data to the store. The generator should have created the file `/app/pretender/data/contacts.js`, which exports some data:
 
 ```js
 // app/pretender/data/contacts.js
@@ -59,11 +59,11 @@ export default [
 ];
 ```
 
-That's it! Now whenever your Pretender server starts up, this data will be added to its store under the `contacts` key (since that's the name of the file).
+Given this file, whenever your Pretender server starts up, this data will be added to its store under the `contacts` key (since that's the name of the file). Add additional data by adding more files under the `/data` folder.
 
-To return this data from an endpoint, let's create our first route. We'll use the **stub** helper method to easily interact with our server's store (which now has these contacts in it).
+Now, to return this data from an endpoint, let's create our first route. We'll use the **stub** helper method to easily interact with our server's store (which now has these contacts in it).
 
-Create the file `app/pretender/config.js` and export a function:
+The generator should have created the file `app/pretender/config.js`, which exports a function. Add a route for `/api/contacts`:
 
 ```js
 // app/pretender/config.js
