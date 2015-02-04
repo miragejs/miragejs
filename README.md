@@ -217,7 +217,7 @@ For example, given the above contacts in the store, `store.find('contact', 2)` w
 
 Creates or updates a model of type `key` in the store. `data` is a POJO. If `data` has an `id`, updates the model in the, otherwise creates a new model.
 
-##store.remove(key, id)**
+**store.remove(key, id)**
 
 Removes a model of type `key` with id `id` from the store.
 
