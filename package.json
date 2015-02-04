@@ -40,5 +40,6 @@
   ],
   "ember-addon": {
     "configPath": "tests/dummy/config"
-  }
+  },
+  "dependencies": {}
 }
