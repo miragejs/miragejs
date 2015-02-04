@@ -14,9 +14,9 @@ Ember Pretenderify may be for you! It lets you share your [Pretender](https://gi
 
 ## Installation
 
-    ember install:addon ember-pretenderify
+Uninstall `ember-cli-pretender` if you're already using it. Then run
 
-> Note: uninstall ember-cli-pretender if you're already using it.
+    ember install:addon ember-pretenderify
 
 *Testing*
 
@@ -61,7 +61,7 @@ export default [
 
 That's it! Now whenever your Pretender server starts up, this data will be added to its store under the `contacts` key (since that's the name of the file).
 
-To return this data from an endpoint, let's create our first route. We'll use the **stub** helper method to easily interact with our server's store.
+To return this data from an endpoint, let's create our first route. We'll use the **stub** helper method to easily interact with our server's store (which now has these contacts in it).
 
 Create the file `app/pretender/config.js` and export a function:
 
@@ -74,7 +74,7 @@ export default function() {
 };
 ```
 
-This is the simplest example of a GET route. Here, we're telling Pretender that when there's a GET request for `/contacts`, respond with all the `contacts` in our store. So the first argument of stub is the *verb*, the second is the *path*, and the third is the *objects in the store* we want to respond with.
+This is the simplest example of a GET route. Here, we're telling Pretender that whenever our Ember app makes a GET request to `/api/contacts`, respond with all the `contacts` in our store. So the first argument of stub is the *verb*, the second is the *path*, and the third is the *objects in the store* we want to respond with.
 
 As long as all your Pretender routes mutate and read from the store, your user interactions during development will persist. This lets users interact with your app as if it were wired up to a real server.
 
@@ -84,11 +84,17 @@ We can also respond with multiple objects from the store, let's say if our app e
 this.stub('get', '/api/contacts', ['contacts', 'addresses']);
 ```
 
-This will return all the data you added to the `contacts` and `address` keys of your store.
+This will return all the data you added to the `contacts` and `addresses` keys of your store.
 
-There are many shorthands to make writing your routes easier. For example, `this.stub('get', '/api/contacts')` works the same as the first route above, since the key of the last URL segment matches the store object we want. You can also pass a function as the third argument to do custom work. You can find the full API for [**stub**](#stub) below.
+There are many shorthands to make writing your routes easier. For example,
 
-*Acceptance testing*
+```js
+this.stub('get', '/api/contacts')
+```
+
+works the same as the first route above, since the key of the last URL segment matches the store object we want. You can also pass a function as the third argument and do custom work. You can find the full API for [**stub**](#stub) below.
+
+**Acceptance testing**
 
 During testing, the store always starts off empty; however, all the routes you've defined will still be available (since these are what your app expects, and mostly shouldn't change within your tests). The store is emptied because tests should be atomic, and not rely on state defined elsewhere.
 
@@ -117,6 +123,8 @@ test("I can view the models", function() {
 ```
 
 In the future, we plan on making factories with a simpler API to help you add data to your Pretender server's store. But fundamentally, the point here is that the routes and config you've defined for your Pretender server will be shared across your development and testing environments.
+
+Another benefit of separating your server's routes from its data is that your tests become less brittle. Say you change your API for some route from using links (async model relationships) to having everything sideloaded. The only thing you need to change here is the related route definition, in your `/pretender/config.js` file. You won't need to update your tests, since they just specify what's in the store at the time of the test (which wouldn't change in this case).
 
 -----
 
@@ -422,4 +430,3 @@ this.stub('delete', '/contacts/:id', ['contact', 'addresses']);
 - [ ] Adapter, only works with AMS-style right now.
 - [ ] Factories for adding data to store in tests.
 - [ ] Write more tests for my testing library that helps you test.
-- [ ] Docs: explain that if api changes, only routes need to change, not (future hypothetical) factories or tests

@@ -1,4 +1,5 @@
 /* global Ember, requirejs, require */
+/*jslint node: true */
 
 "use strict";
 
