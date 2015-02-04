@@ -2,6 +2,7 @@
 /* global require, module */
 
 var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
+var pickFiles = require('broccoli-static-compiler');
 
 var app = new EmberAddon();
 
@@ -17,5 +18,10 @@ var app = new EmberAddon();
 // modules that you would like to import into your application
 // please specify an object with the list of modules as keys
 // along with the exports of each module as its value.
+es5Shim = pickFiles('node_modules/es5-shim', {
+  srcDir: '/',
+  files: ['es5-shim.js'],
+  destDir: '/assets'
+});
 
-module.exports = app.toTree();
+module.exports = app.toTree([es5Shim]);

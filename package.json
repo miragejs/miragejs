@@ -28,6 +28,7 @@
   "devDependencies": {
     "broccoli-asset-rev": "^2.0.0",
     "broccoli-ember-hbs-template-compiler": "^1.6.1",
+    "broccoli-static-compiler": "^0.2.1",
     "ember-cli": "0.1.9",
     "ember-cli-6to5": "0.2.1",
     "ember-cli-content-security-policy": "0.3.0",
@@ -38,7 +39,8 @@
     "ember-data": "1.0.0-beta.12",
     "ember-export-application-global": "^1.0.0",
     "express": "^4.8.5",
-    "glob": "^4.0.5"
+    "glob": "^4.0.5",
+    "es5-shim": "^4.0.6"
   },
   "keywords": [
     "ember-addon",
