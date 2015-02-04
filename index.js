@@ -4,7 +4,7 @@ var path = require('path');
 module.exports = {
   name: 'ember-pretenderify',
 
-  included: function(app) {
+  included: function included(app) {
     this.app = app;
 
     app.import(app.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js');

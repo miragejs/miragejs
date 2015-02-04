@@ -1,3 +1,5 @@
+/* globals Pretender */
+
 define('pretender', [], function() {
   "use strict";
 
