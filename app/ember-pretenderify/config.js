@@ -1,15 +1,8 @@
 import Pretender from 'pretender';
 import userConfig from '../pretender/config';
-import userData from '../pretender/data/index';
 import store from 'ember-pretenderify/store';
 import frontController from 'ember-pretenderify/controllers/front';
 import ENV from '../config/environment';
-
-var setupData = function() {
-  this.originalData = userData;
-
-  this.store.loadData(userData);
-}
 
 var defaults = function() {
   var _this = this;
@@ -47,7 +40,6 @@ var defaults = function() {
 };
 
 export default {
-  setupData: setupData,
   defaults: defaults,
   userConfig: userConfig
 };

@@ -3,8 +3,14 @@
 */
 export default {
 
-  loadData: function(data) {
-    this.data = data;
+  loadData: function(data, key) {
+    this.data = this.data || {};
+
+    if (key) {
+      this.data[key] = data;
+    } else {
+      this.data = data;
+    }
   },
 
   find: function(key, id) {

@@ -2,9 +2,7 @@
 
 Share a single Pretender server across your Ember app's testing and development environments.
 
-> **WARNING**: this is a spike. you probably shouldn't use it
-
----
+----
 
 Are you tired of
 
@@ -17,6 +15,8 @@ Ember Pretenderify may be for you! It lets you share your [Pretender](https://gi
 ## Installation
 
     ember install:addon ember-pretenderify
+
+> Note: uninstall ember-cli-pretender if you're already using it.
 
 *Testing*
 
@@ -59,7 +59,7 @@ That's it! Now if you run `ember s` (and don't pass a `--proxy` option), or run 
 
 You can use Pretender's API and structure your routes and data however you please, but the goal of this project is to converge on a single organizational strategy.
 
-To play along, create the file `app/pretender/data/index.js` and create your data in files under this new `/data` folder. Export all your data from `/data/index.js`, like this:
+To play along, create data files under `/app/pretender/data`, like this:
 
 ```js
 // app/pretender/data/contacts.js
@@ -67,18 +67,17 @@ export default [
   {
     id: 1,
     name: 'Zelda'
-  }
+  },
+  {
+    id: 2,
+    name: 'Link'
+  },
 ];
-
-// app/pretender/data/index.js
-import contacts from './contacts';
-
-export default {
-  contacts: contacts
-}
 ```
 
 Now, this data will be attached to your Pretender server's **store**. The store is similar in concept to Ember Data's store - it's a cache of data. As long as all your Pretender routes mutate and read from the store, your user interactions during development will persist. This lets you interact with your app as if it were wired up to a real server.
+
+In this example, this array of data will be attached to the store under the key `contacts`, since that's the name of the file.
 
 **stub** is a helper method that lets you easily interact with your Pretender server's store while defining routes. Here's how a route defined in our `app/pretender.js` file could look:
 

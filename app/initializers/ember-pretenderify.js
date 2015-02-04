@@ -1,5 +1,6 @@
 import ENV from '../config/environment';
 import pretenderConfig from '../ember-pretenderify/config';
+import loadData from 'ember-pretenderify/load-data';
 
 export default {
   name: 'ember-pretenderify',
@@ -9,7 +10,7 @@ export default {
     if (config.setupPretender || config.force) {
       var server = new Pretender(function() {
         pretenderConfig.defaults.call(this);
-        pretenderConfig.setupData.call(this);
+        loadData(ENV.modulePrefix, this.store);
         pretenderConfig.userConfig.call(this);
       });
     }
