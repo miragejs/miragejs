@@ -1,5 +1,7 @@
 # Ember Pretenderify
 
+[![Build Status](https://travis-ci.org/samselikoff/ember-pretenderify.svg?branch=master)](https://travis-ci.org/samselikoff/ember-pretenderify)
+
 Share a single Pretender server across your Ember app's testing and development environments.
 
 ----
