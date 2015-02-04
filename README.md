@@ -38,28 +38,12 @@ You'll also want to add `serverData` to the `predef` section in your `tests/.jsh
 
 ## Getting started
 
-Create the file `app/pretender/config.js` and export a function. `this` inside the function refers to the Pretender server, so this is your chance to add routes, modify the default configuration, etc. Here's an example:
+Pretenderify splits up your Pretender server into two pieces:
 
-```js
-// app/pretender/config.js
-export default function() {
+ - **routes**, which define the URLs your server responds to, and
+ - the **store**, your server's "database"
 
-  this.get('api/contacts', function(request) {
-    var contacts = [{id: 1, name: 'Zelda'}];
-
-    return [200, {}, contacts];
-  });
-
-};
-```
-
-That's it! Now if you run `ember s` (and don't pass a `--proxy` option), or run tests, your app will get this response whenever it makes a GET request to `/api/contacts`.
-
-## Adding some structure
-
-You can use Pretender's API and structure your routes and data however you please, but the goal of this project is to converge on a single organizational strategy.
-
-To play along, create data files under `/app/pretender/data`, like this:
+Let's add some data to the store. Create a the file `/app/pretender/data/contacts.js`, and export some data:
 
 ```js
 // app/pretender/data/contacts.js
@@ -75,38 +59,47 @@ export default [
 ];
 ```
 
-Now, this data will be attached to your Pretender server's **store**. The store is similar in concept to Ember Data's store - it's a cache of data. As long as all your Pretender routes mutate and read from the store, your user interactions during development will persist. This lets you interact with your app as if it were wired up to a real server.
+That's it! Now whenever your Pretender server starts up, this data will be added to its store under the `contacts` key (since that's the name of the file).
 
-In this example, this array of data will be attached to the store under the key `contacts`, since that's the name of the file.
+To return this data from an endpoint, let's create our first route. We'll use the **stub** helper method to easily interact with our server's store.
 
-**stub** is a helper method that lets you easily interact with your Pretender server's store while defining routes. Here's how a route defined in our `app/pretender.js` file could look:
+Create the file `app/pretender/config.js` and export a function:
 
 ```js
-this.stub('get', '/contacts', 'contacts');
+// app/pretender/config.js
+export default function() {
+
+  this.stub('get', '/api/contacts', 'contacts');
+
+};
 ```
 
-This is the simplest example of a GET route. Here, we're telling Pretender that when there's a GET request for `/contacts`, respond with all the `contacts` in our store. So the first param is the *verb*, the second the *path*, and the third the *objects in the store* we want to respond with.
+This is the simplest example of a GET route. Here, we're telling Pretender that when there's a GET request for `/contacts`, respond with all the `contacts` in our store. So the first argument of stub is the *verb*, the second is the *path*, and the third is the *objects in the store* we want to respond with.
+
+As long as all your Pretender routes mutate and read from the store, your user interactions during development will persist. This lets users interact with your app as if it were wired up to a real server.
 
 We can also respond with multiple objects from the store, let's say if our app expects additional data to be sideloaded at this URL:
 
 ```js
-this.stub('get', '/contacts', ['contacts', 'addresses']);
+this.stub('get', '/api/contacts', ['contacts', 'addresses']);
 ```
 
 This will return all the data you added to the `contacts` and `address` keys of your store.
 
-You can find the full API for **stub** below.
+There are many shorthands to make writing your routes easier. For example, `this.stub('get', '/api/contacts')` works the same as the first route above, since the key of the last URL segment matches the store object we want. You can also pass a function as the third argument to do custom work. You can find the full API for [**stub**](#stub) below.
 
-*Testing*
+*Acceptance testing*
 
-During testing, the store always starts off empty; however, all the routes you've defined will be available (since these are what your app expects, and shouldn't change within your tests). The reason we clear out the store is that tests should be atomic, and not rely on state defined elsewhere.
+During testing, the store always starts off empty; however, all the routes you've defined will still be available (since these are what your app expects, and mostly shouldn't change within your tests). The store is emptied because tests should be atomic, and not rely on state defined elsewhere.
 
-So, the only setup work you have to do within each test is to define the initial state of the store, i.e. the state of your "server". Then, write your test and assert based on that state. There's a global helper called `serverData` to help you do that.
+So for each test, you first define the initial state of the store (i.e. the "server" state your test expects). Then, write your test and assert based on that state.
 
-A hypothetical test will look like this:
+There's a global helper called `serverData` to help you with this. Here's an example acceptance test:
 
 ```js
+// tests/acceptance/index-test.js
 test("I can view the models", function() {
+  // set up our "server's data"
   serverData.products = [
     {
       id: 1,
@@ -125,31 +118,17 @@ test("I can view the models", function() {
 
 In the future, we plan on making factories with a simpler API to help you add data to your Pretender server's store. But fundamentally, the point here is that the routes and config you've defined for your Pretender server will be shared across your development and testing environments.
 
-## Default config
+-----
 
-These options can be overridden in your `/pretender/config.js` file.
+That should be enough to get started! Check out the [dummy config](tests/dummy/app/pretender/config.js) in this repo for a simple example, or keep on reading for the full API.
 
-- Content returned is JSON stringified, so you don't have to do this yourself.
+## Configuration
 
-*force*
+There's some default configuration for your Pretender server which can all be customized. `this` in your `/pretender/config.js` file refers to the actual [`Pretender`](https://github.com/trek/pretender) instance, so any config options that work there will work here as well.
 
-By default, your Pretender server will run in test mode, and in development mode as long as the `--proxy` option wasn't passed. You can force your server to run in other environments (e.g. production) with an ENV var:
+**prepareBody**
 
-```js
-// config/environment.js
-...
-ENV['ember-pretenderify'] = {
-  force: true
-}
-```
-
-This is useful to share a working prototype before a server is ready, for instance.
-
-## API
-
-### config
-
-These options are available within your `/pretender/config.js` file.
+By default, content returned is JSON stringified, so you can just return JS objects. Refer to [Pretender's docs](https://github.com/trek/pretender#mutating-the-body) if you want to change this.
 
 **namespace**
 
@@ -162,15 +141,13 @@ export default function() {
   this.namespace = '/api';
 
   // this route will handle the URL '/api/contacts'
-  this.stub('get', '/contacts', function(store, request) {
-    // ... 
-  });
+  this.stub('get', '/contacts', 'contacts');
 };
 ```
 
 **timing**
 
-Set the timing parameter of the response. Default is a 400ms delay. Only applies to non-testing environments. See [Pretender's docs](https://github.com/trek/pretender#timing-parameter) for all possible values.
+Set the timing parameter of the response. Default is a 400ms delay. This parameter only applies to non-testing environments so it doesn't slow down your tests. See [Pretender's docs](https://github.com/trek/pretender#timing-parameter) for all possible values.
 
 ```js
 // app/pretender/config.js
@@ -180,6 +157,24 @@ export default function() {
 
 };
 ```
+
+**Environment options**
+
+*force*
+
+By default, your Pretender server will run in test mode, and in development mode as long as the `--proxy` option isn't passed. You can force your server to run in other environments (e.g. production) with an ENV var:
+
+```js
+// config/environment.js
+...
+ENV['ember-pretenderify'] = {
+  force: true
+}
+```
+
+This is useful to be able to share a working prototype (built with `--environment production`) before a server is ready, for instance.
+
+## API
 
 ### store
 
@@ -214,7 +209,9 @@ Creates or updates a model of type `key` in the store. `data` is a POJO. If `dat
 
 ### stub
 
-Sets content type to `application/json` and lets you specify which data to return from the store.
+The stub method is the primary way you define routes and interact with your store. There are many shorthands available to make your server definition more succinct, but you can always fallback to a function and manipulate the store however you need to.
+
+Here's the full definition:
 
 ```js
 this.stub(verb, path, handler[, responseCode]);
@@ -222,10 +219,11 @@ this.stub(verb, path, handler[, responseCode]);
 
 - **verb**: string. 'get', 'put', 'post', or 'delete'
 - **path**: string. The URL you're defining, e.g. '/api/contacts' (or '/contacts' if `namespace` is defined).
-- **handler**: function. Return the data you want to be in the response body as plain JS - it will be stringified. Accepts two parameters, *store*, your Pretender server's store, and *request*, which is the Pretender request object.
+- **handler**: function. Return the data you want as the response body as plain JS - it will be stringified. Accepts two parameters, *store*, your Pretender server's store, and *request*, which is the Pretender request object. 
+    There are many shorthands available for this param.
 - **responseCode**: number. optional. The response code of the request.
 
-There are some shorthands. Here are some examples:
+Here are some examples:
 
 **Returning collections from the store (GET)**
 
