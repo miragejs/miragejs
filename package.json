@@ -39,7 +39,6 @@
     "server"
   ],
   "ember-addon": {
-    "configPath": "tests/dummy/config",
-    "after": "ember-cli-pretender"
+    "configPath": "tests/dummy/config"
   }
 }
