@@ -13,6 +13,8 @@
     "ember-qunit": "0.1.8",
     "ember-qunit-notifications": "0.0.5",
     "qunit": "~1.17.1",
+  },
+  "devDependencies": {
     "pretender": "0.6.0"
   }
 }
