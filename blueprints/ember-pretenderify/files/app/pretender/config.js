@@ -16,14 +16,14 @@ export default function() {
     GET shorthands
 
     // Collections
-    this.stub('get', '/contacts')
-    this.stub('get', '/contacts', 'users')
-    this.stub('get', '/contacts', ['contacts', 'addresses'])
+    this.stub('get', '/contacts');
+    this.stub('get', '/contacts', 'users');
+    this.stub('get', '/contacts', ['contacts', 'addresses']);
 
     // Single objects
-    this.stub('get', '/contacts/:id')
-    this.stub('get', '/contacts/:id', 'user')
-    this.stub('get', '/contacts/:id', ['contact', 'addresses'])
+    this.stub('get', '/contacts/:id');
+    this.stub('get', '/contacts/:id', 'user');
+    this.stub('get', '/contacts/:id', ['contact', 'addresses']);
   */
 
   /*
@@ -43,8 +43,8 @@ export default function() {
   /*
     DELETE shorthands
 
-    this.stub('delete', '/contacts/:id')
-    this.stub('delete', '/contacts/:id', 'user') // specify the type of resource to be deleted
+    this.stub('delete', '/contacts/:id');
+    this.stub('delete', '/contacts/:id', 'user'); // specify the type of resource to be deleted
 
     // Single object + related resources. Make sure parent resource is first.
     this.stub('delete', '/contacts/:id', ['contact', 'addresses']);
