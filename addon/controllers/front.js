@@ -27,8 +27,12 @@ export default {
 
     var data = this[controller][handlerMethod](handler, store, request, code);
 
-    console.log(data);
-    return [code, {"Content-Type": "application/json"}, data];
+    if (data) {
+      console.log(data);
+      return [code, {"Content-Type": "application/json"}, data];
+    } else {
+      return [code, {}, undefined];
+    }
   }
 
 };

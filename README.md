@@ -21,23 +21,7 @@ Uninstall `ember-cli-pretender` if you're already using it. Then run
 
     ember install:addon ember-pretenderify
 
-*Testing*
-
-In your `tests/helpers/start-app.js`,
-
-```js
-import pretenderifyTesting from '../../ember-pretenderify/testing';
-
-export default function startApp(attrs) {
-  ...
-
-  pretenderifyTesting.setup(application);
-
-  return application;
-}
-```
-
-You'll also want to add `serverData` to the `predef` section in your `tests/.jshintrc` file.
+Finally, add `serverData` to the `predef` section in your `tests/.jshintrc` file.
 
 ## Getting started
 
@@ -62,7 +46,7 @@ export default [
 ];
 ```
 
-Given this file, whenever your Pretender server starts up, this data will be added to its store under the `contacts` key (since that's the name of the file). Add additional data by adding more files under the `/data` folder.
+Given this file, whenever your Pretender server starts up, this data will be added to its store under the `contacts` key (since that's the name of the file). Add additional data by adding more files under the `/data` folder. All data files should be plural, and export arrays of POJOs.
 
 Now, to return this data from an endpoint, let's create our first route. We'll use the **stub** helper method to easily interact with our server's store (which now has these contacts in it).
 

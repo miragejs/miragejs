@@ -17,7 +17,7 @@ export default BaseController.extend({
 
     var data = store.remove(type, +id);
 
-    return data;
+    return undefined;
   },
 
   /*
@@ -30,7 +30,7 @@ export default BaseController.extend({
     var id = request.params.id;
     var data = store.remove(type, id);
 
-    return data;
+    return undefined;
   },
 
   /*
@@ -40,9 +40,10 @@ export default BaseController.extend({
     as this contact's addresses and phone numbers.
       Ex: this.stub('delete', '/contacts/:id', ['contact', 'addresses', 'numbers');
   */
-  arrayHandler: function(types, store, request, code) {
+  arrayHandler: function(array, store, request, code) {
     var id = request.params.id;
-    var parentType = types.shift();
+    var parentType = array[0];
+    var types = array.slice(1);
 
     store.remove(parentType, id);
 
@@ -54,7 +55,7 @@ export default BaseController.extend({
       store.remove(type, query);
     });
 
-    return {};
+    return undefined;
   }
 
 });
