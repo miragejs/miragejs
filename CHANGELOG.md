@@ -1,15 +1,21 @@
 # Ember Pretenderify Changelog
 
 ## 0.0.13
+Update notes:
+
+ - Run `bower install`. This brings along `ember-inflector` as a separate package.
 
 Changes:
 
 - [breaking change] If you happen to be using `store.find(type)` to return a collection (e.g. without an `id`), start using `store.findAll(type)`
-- various updates/refactorings to store
+- Various updates/refactorings to store
+- Don't log server responses during testing
+- Use standalone ember-inflector package, no more dependency on ember data
 
 ## 0.0.12
-To update,
+Update notes:
   - Before, the following was part of the install:
+
     *Testing*
 
     In your `tests/helpers/start-app.js`,
