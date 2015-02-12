@@ -1,3 +1,4 @@
+import { singularize } from '../inflector';
 import BaseController from './base';
 
 /*
@@ -28,7 +29,7 @@ export default BaseController.extend({
   */
   undefinedHandler: function(undef, store, request, code) {
     var url = request.url;
-    var type = url.substr(url.lastIndexOf('/') + 1).singularize();
+    var type = singularize(url.substr(url.lastIndexOf('/') + 1));
     var postData = JSON.parse(request.requestBody);
     var attrs = postData[type];
     var data = store.push(type, attrs);

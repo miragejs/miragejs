@@ -1,3 +1,4 @@
+import { pluralize } from './inflector';
 /*
   An identity map.
 */
@@ -18,7 +19,7 @@ export default {
   },
 
   find: function(key, id) {
-    key = key.pluralize();
+    key = pluralize(key);
     var data;
     var query;
 
@@ -105,7 +106,7 @@ export default {
 
   remove: function(key, id) {
     var _this = this;
-    var dataKey = key.pluralize();
+    var dataKey = pluralize(key);
 
     this._data[dataKey] = this._data[dataKey].rejectBy('id', +id);
     return {};

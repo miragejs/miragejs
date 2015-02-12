@@ -1,3 +1,4 @@
+import { singularize } from '../inflector';
 import BaseController from './base';
 
 export default BaseController.extend({
@@ -12,7 +13,7 @@ export default BaseController.extend({
     var id = request.params.id;
     var url = request.url;
     var urlNoId = url.substr(0, url.lastIndexOf('/'));
-    var type = urlNoId.substr(urlNoId.lastIndexOf('/') + 1).singularize();
+    var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
     var modelData = JSON.parse(request.requestBody);
     var attrs = modelData[type];
     attrs.id = +id;
