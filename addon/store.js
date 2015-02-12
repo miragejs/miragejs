@@ -18,35 +18,20 @@ export default {
     this._data = {};
   },
 
-  find: function(key, id) {
-    key = pluralize(key);
-    var data;
-    var query;
-
+  find: function(type, id) {
     // If parses, coerce to integer
     id = parseInt(id, 10) || id;
-
-    if (this._data && this._data[key]) {
-      data = this._data[key].findBy('id', id);
-    }
+    var data = this._findDataForType(type).findBy('id', id);
 
     return data;
   },
 
-  findAll: function(key) {
-    key = key.pluralize();
-    var data;
-
-    if (this._data) {
-      data = this._data[key];
-    }
-
-    return data;
+  findAll: function(type) {
+    return this._findDataForType(type);
   },
 
-  findQuery: function(key, query) {
-    key = key.pluralize();
-    var data = this._data[key];
+  findQuery: function(type, query) {
+    var data = this._findDataForType(type);
 
     if (data) {
       Object.keys(query).forEach(function(queryKey) {
@@ -74,15 +59,37 @@ export default {
     return data;
   },
 
+  remove: function(type, id) {
+    var _this = this;
+    var key = this._keyForType(type);
+
+    this._data[key] = this._data[key].rejectBy('id', +id);
+    return {};
+  },
+
+  removeQuery: function(type, query) {
+    var _this = this;
+    var key = this._keyForType(type);
+
+    Object.keys(query).forEach(function(queryKey) {
+      _this._data[key] = _this._data[key].rejectBy(queryKey, query[queryKey]);
+    });
+
+    return {};
+  },
+
+  /*
+    Private methods
+  */
   _createRecord: function(type, attrs) {
-    var dataKey = type.pluralize();
+    var key = this._keyForType(type);
     var newId = 1;
 
-    if (!this._data[dataKey]) {
-      this._data[dataKey] = [];
+    if (!this._data[key]) {
+      this._data[key] = [];
     }
 
-    var currentModels = this._data[dataKey];
+    var currentModels = this._data[key];
 
     if (currentModels.length) {
       var currentModelIds = currentModels.map(function(model) { return model.id; });
@@ -90,7 +97,7 @@ export default {
     }
 
     attrs.id = newId;
-    this._data[dataKey].push(attrs);
+    this._data[key].push(attrs);
 
     return attrs;
   },
@@ -104,22 +111,13 @@ export default {
     return currentModel;
   },
 
-  remove: function(key, id) {
-    var _this = this;
-    var dataKey = pluralize(key);
-
-    this._data[dataKey] = this._data[dataKey].rejectBy('id', +id);
-    return {};
+  _keyForType: function(type) {
+    return pluralize(type);
   },
 
-  removeQuery: function(type, query) {
-    var _this = this;
-    var dataKey = type.pluralize();
+  _findDataForType: function(type) {
+    var key = this._keyForType(type);
 
-    Object.keys(query).forEach(function(queryKey) {
-      _this._data[dataKey] = _this._data[dataKey].rejectBy(queryKey, query[queryKey]);
-    });
-
-    return {};
+    return this._data ? this._data[key] : undefined;
   }
 };

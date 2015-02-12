@@ -1,5 +1,11 @@
 # Ember Pretenderify Changelog
 
+## 0.0.14
+Update notes: None.
+
+Changes:
+ - clean up [string].pluralize calls
+
 ## 0.0.13
 Update notes:
 
