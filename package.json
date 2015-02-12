@@ -1,6 +1,6 @@
 {
   "name": "ember-pretenderify",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Opinionated Pretender setup for Ember CLI apps",
   "main": "index.js",
   "license": "MIT",
