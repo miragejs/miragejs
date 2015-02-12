@@ -193,15 +193,25 @@ then `store.findAll('contact')` would return the `contacts` array.
 
 **store.find(key, id)**
 
-Returns a single model from the store based on the key `key` and id `id`. Note `key` is always singular.
+Returns a single model from the store based on the key `key` and id `id`. Note `key` is always singular, and `id` can be an int or a string, but integer ids as strings (e.g. the string `"1"`) will be treated as integers.
 
 For example, given the above contacts in the store, `store.find('contact', 2)` would return `{id: 2, name: 'Ryan'}`.
+
+**store.findQuery(type, query)**
+
+Returns an array of models of type `type` that match the key-value pairs in the `query` object. `query` is a POJO.
+
+For example, given the above contacts in the store, `store.findQuery('contact', {name: 'Ryan'})` would return `[{id: 2, name: 'Ryan'}]`.
 
 **store.push(key, data)**
 
 Creates or updates a model of type `key` in the store. `data` is a POJO. If `data` has an `id`, updates the model in the, otherwise creates a new model.
 
 **store.remove(key, id)**
+
+Removes a model of type `key` with id `id` from the store.
+
+**store.removeQuery(key, query)**
 
 Removes a model of type `key` with id `id` from the store.
 

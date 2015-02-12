@@ -1,5 +1,11 @@
 # Ember Pretenderify Changelog
 
+## 0.0.13
+
+Changes:
+
+- refactored store
+
 ## 0.0.12
 To update,
   - Before, the following was part of the install:
@@ -21,7 +27,7 @@ To update,
 
     You no longer need this code, so just delete it all from the `start-app` file. The server will automatically instantiate via the initializer during tests.
 
-Updates:
+Changes:
 
 - fixed bug with stub#delete (so it works more than once. hah.)
 - instantiate server in initializer
