@@ -51,9 +51,15 @@ var defaults = function() {
     path = path[0] === '/' ? path.slice(1) : path;
 
     _this[verb].call(_this, namespace + '/' + path, function(request) {
-      console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
 
-      return _this.frontController.handle(verb, handler, store, request, code);
+      var response = _this.frontController.handle(verb, handler, store, request, code);
+
+      if (ENV.environment !== 'test') {
+        console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
+        console.log(response[2]);
+      }
+
+      return response;
     }, timing);
 
   };
