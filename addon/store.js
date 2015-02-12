@@ -22,9 +22,11 @@ export default {
       query = id;
 
       data = this.data[key];
-      Object.keys(query).forEach(function(queryKey) {
-        data = data.filterBy(queryKey, query[queryKey]);
-      });
+      if (data) {
+        Object.keys(query).forEach(function(queryKey) {
+          data = data.filterBy(queryKey, query[queryKey]);
+        });
+      }
 
     } else {
 
