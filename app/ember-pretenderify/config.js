@@ -44,20 +44,19 @@ var defaults = function() {
   };
 
   this.stub = function(verb, path, handler, code) {
-    var store = this.store;
-    var _this = this;
-    var timing = ENV.environment === 'test' ? 0 : this.timing;
-    var namespace = this.namespace || '';
-    var code = code ? code : this.getDefaultCode(verb);
+    var store = _this.store;
+    var timing = ENV.environment === 'test' ? 0 : _this.timing;
+    var namespace = _this.namespace || '';
+    var code = code ? code : _this.getDefaultCode(verb);
     path = path[0] === '/' ? path.slice(1) : path;
 
-    this[verb].call(this, namespace + '/' + path, function(request) {
+    _this[verb].call(_this, namespace + '/' + path, function(request) {
       console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
 
       return _this.frontController.handle(verb, handler, store, request, code);
     }, timing);
 
-  }.bind(this);
+  };
 };
 
 export default {
