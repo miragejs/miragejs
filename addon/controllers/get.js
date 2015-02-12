@@ -22,7 +22,7 @@ export default BaseController.extend({
       data[key] = model;
 
     } else {
-      data[key] = store.find(key);
+      data[key] = store.findAll(key);
     }
 
     return data;
@@ -63,7 +63,7 @@ export default BaseController.extend({
           owner = model;
 
         } else {
-          data[key] = store.find(key);
+          data[key] = store.findAll(key);
         }
       }
     });
@@ -88,7 +88,7 @@ export default BaseController.extend({
     var type = urlNoId.substr(urlNoId.lastIndexOf('/') + 1).singularize();
     var data = {};
 
-    data[type] = id ? store.find(type, id) : store.find(type);
+    data[type] = id ? store.find(type, id) : store.findAll(type);
 
     return data;
   }

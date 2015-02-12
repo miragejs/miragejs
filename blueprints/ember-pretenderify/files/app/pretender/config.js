@@ -53,8 +53,9 @@ export default function() {
   /*
     Function fallback. Manipulate data in the store via
 
-      - store.find(key)
-      - store.find(key, id)-
+      - store.find(key, id)
+      - store.findAll(key)
+      - store.findQuery(key, query)
       - store.push(key, data)
       - store.delete(key, id)
 
@@ -62,7 +63,7 @@ export default function() {
     this.stub('get', '/contacts/:id', function(store, request) {
       var contactId = +request.params.id;
       var contact = store.find('contact', contactId);
-      var addresses = store.find('address')
+      var addresses = store.findAll('address')
         .filterBy('contact_id', contactId);
 
       return {

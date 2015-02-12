@@ -177,19 +177,19 @@ You interact with the store using the *stub* method in your Pretender routes. Yo
 
 Here are the methods available to you from within your routes using *stub*.
 
-**store.find(key)**
+**store.findAll(key)**
 
 Returns the `key` models attached to the store object. Note `key` is always singular.
 
-For example if you had exported the following object from `/app/pretender/data/index.js`
+For example if you had the following data file named `/app/pretender/data/contacts.js`
 
 ```js
-export default {
-  contacts: [{id: 1, name: 'Sam'}, {id: 2, name: 'Ryan'}]
-}
+export default [
+  {id: 1, name: 'Sam'}, {id: 2, name: 'Ryan'}
+];
 ```
 
-then `store.find('contact')` would return the `contacts` array.
+then `store.findAll('contact')` would return the `contacts` array.
 
 **store.find(key, id)**
 
