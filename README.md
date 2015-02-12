@@ -415,18 +415,14 @@ this.stub('delete', '/contacts/:id', ['contact', 'addresses']);
 
 # TODO
 
-**setup**
-- [ ] setup testing stuff automatically or with a blueprint
-
 **tests**
 - [ ] override route in test to return 404
 
 **stub**
-- [ ] shorthand for multiple data relationships, e.g. lesson has many questions, questions has many answers
+- [ ] shorthand for multiple data relationships? e.g. lesson has many questions, questions has many answers
 - [ ] with where/query
 - [ ] with attrs (partial models)
 
 **Roadmap**
 - [ ] Adapter, only works with AMS-style right now.
 - [ ] Factories for adding data to store in tests.
-- [ ] Write more tests for my testing library that helps you test.
