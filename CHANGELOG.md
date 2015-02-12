@@ -4,7 +4,8 @@
 
 Changes:
 
-- refactored store
+- [breaking change] If you happen to be using `store.find(type)` to return a collection (e.g. without an `id`), start using `store.findAll(type)`
+- various updates/refactorings to store
 
 ## 0.0.12
 To update,

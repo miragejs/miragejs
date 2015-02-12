@@ -245,7 +245,7 @@ The shorthand versions of the functions below only work if the verb is `get`.
 */
 this.stub('get', '/contacts', function(store) {
   return {
-    contacts: store.find('contact');
+    contacts: store.findAll('contact');
   }:
 });
 // shorthand. Finds type by singularizing last portion of url.
@@ -257,8 +257,8 @@ this.stub('get', '/contacts', 'users');
   Return a collection with related models
 */
 this.stub('get', '/contacts', function(store) {
-  var contacts = store.find('contact');
-  var addresses = store.find('address');
+  var contacts = store.findAll('contact');
+  var addresses = store.findAll('address');
 
   // But we only want the related addresses, so...
   var contactIds = contacts
@@ -278,8 +278,8 @@ this.stub('get', '/contacts', function(store) {
   Return multiple collections.
 */
 this.stub('get', '/', function(store, request) {
-  var photos = store.find('photo');
-  var articles = store.find('article');
+  var photos = store.findAll('photo');
+  var articles = store.findAll('article');
 
   return {
     photos: photos,
@@ -317,7 +317,7 @@ this.stub('get', '/contacts/:id', 'user');
 this.stub('get', '/contacts/:id', function(store, request) {
   var contactId = +request.params.id;
   var contact = store.find('contact', contactId);
-  var addresses = store.find('address')
+  var addresses = store.findAll('address')
     .filterBy('contact_id', contactId);
 
   return {
