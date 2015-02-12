@@ -69,7 +69,7 @@ export default {
       model = this._createRecord(type, attrs);
     }
 
-    data[type] = model
+    data[type] = model;
     return data;
   },
 
@@ -78,7 +78,7 @@ export default {
     var newId = 1;
 
     if (!this._data[dataKey]) {
-      this._data[dataKey] = []
+      this._data[dataKey] = [];
     }
 
     var currentModels = this._data[dataKey];
