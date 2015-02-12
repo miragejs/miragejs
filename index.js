@@ -14,6 +14,7 @@ module.exports = {
       type: 'vendor',
       exports: { 'pretender': ['default'] }
     });
+    app.import(app.bowerDirectory + '/ember-inflector/ember-inflector.js');
   },
 
   blueprintsPath: function() {

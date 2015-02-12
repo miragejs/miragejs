@@ -1,3 +1,4 @@
+import { singularize } from '../inflector';
 import BaseController from './base';
 
 /*
@@ -15,7 +16,7 @@ export default BaseController.extend({
     var data = {};
 
     // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
-    if (key.singularize() === key) {
+    if (singularize(key) === key) {
       var id = request.params.id;
       if (!id) { console.error("Pretenderify: You're trying to find a model by id, but no :id param was found in this route's URL."); return;}
       var model = store.find(key, request.params.id);
@@ -48,7 +49,7 @@ export default BaseController.extend({
 
       // There's an owner. Find only related.
       if (ownerKey) {
-        var ownerIdKey = ownerKey.singularize() + '_id';
+        var ownerIdKey = singularize(ownerKey) + '_id';
         var query = {};
         query[ownerIdKey] = owner.id;
         data[key] = store.find(key, query);
@@ -56,7 +57,7 @@ export default BaseController.extend({
       } else {
 
         // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
-        if (key.singularize() === key) {
+        if (singularize(key) === key) {
           ownerKey = key;
           var model = store.find(key, request.params.id);
           data[key] = model;
@@ -85,7 +86,7 @@ export default BaseController.extend({
     var id = request.params.id;
     var url = request.url;
     var urlNoId = id ? url.substr(0, url.lastIndexOf('/')) : url;
-    var type = urlNoId.substr(urlNoId.lastIndexOf('/') + 1).singularize();
+    var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
     var data = {};
 
     data[type] = id ? store.find(type, id) : store.findAll(type);

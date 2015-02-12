@@ -1,3 +1,4 @@
+import { singularize } from '../inflector';
 import BaseController from './base';
 
 export default BaseController.extend({
@@ -13,7 +14,7 @@ export default BaseController.extend({
     var id = request.params.id;
     var url = request.url;
     var urlNoId = id ? url.substr(0, url.lastIndexOf('/')) : url;
-    var type = urlNoId.substr(urlNoId.lastIndexOf('/') + 1).singularize();
+    var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
 
     var data = store.remove(type, +id);
 
