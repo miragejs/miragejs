@@ -1,6 +1,6 @@
 export default function() {
   // contacts
-  this.stub('get', '/contacts');
+  this.stub('get', '/contacts', 'contacts');
   this.stub('post', '/contacts');
 
   // contact

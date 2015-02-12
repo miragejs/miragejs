@@ -10,9 +10,12 @@ export default BaseController.extend({
     Retrieve *key* from the store. If it's singular,
     retrieve a single model by id.
 
-    Ex: this.stub('get', '/contacts', 'contacts');
+    Examples:
+      this.stub('get', '/contacts', 'contacts');
+      this.stub('get', '/contacts/:id', 'contact');
   */
-  stringHandler: function(key, store, request, code) {
+  stringHandler: function(string, store, request) {
+    var key = string;
     var data = {};
 
     // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
@@ -40,7 +43,7 @@ export default BaseController.extend({
     subsequent models by related.
       Ex: this.stub('get', '/contacts/:id', ['contact', 'addresses']);
   */
-  arrayHandler: function(keys, store, request, code) {
+  arrayHandler: function(keys, store, request) {
     var data = {};
     var owner;
     var ownerKey;
@@ -82,7 +85,7 @@ export default BaseController.extend({
     If an id is present, return a single model by id.
       Ex: this.stub('get', '/contacts/:id');
   */
-  undefinedHandler: function(undef, store, request, code) {
+  undefinedHandler: function(undef, store, request) {
     var id = request.params.id;
     var url = request.url;
     var urlNoId = id ? url.substr(0, url.lastIndexOf('/')) : url;

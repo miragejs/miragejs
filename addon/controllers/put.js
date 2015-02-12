@@ -9,7 +9,7 @@ export default BaseController.extend({
 
       this.stub('put', '/contacts/:id');
   */
-  undefinedHandler: function(undef, store, request, code) {
+  undefinedHandler: function(undef, store, request) {
     var id = request.params.id;
     var url = request.url;
     var urlNoId = url.substr(0, url.lastIndexOf('/'));
@@ -28,7 +28,7 @@ export default BaseController.extend({
 
       this.stub('put', '/contacts/:id', 'user');
   */
-  stringHandler: function(type, store, request, code) {
+  stringHandler: function(type, store, request) {
     var id = request.params.id;
     var modelData = JSON.parse(request.requestBody);
     var attrs = modelData[type];
