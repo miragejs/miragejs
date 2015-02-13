@@ -285,7 +285,7 @@ this.stub('post', '/contacts', 'user');
 
 ```js
 /*
-  Update an object in the store.
+  Update an object
 */
 // The type is found by singularizing the last portion of the url
 this.stub('put', '/contacts/:id');
@@ -374,7 +374,7 @@ this.stub('get', '/', function(store, request) {
   Return a single object
 */
 this.stub('get', '/contacts/:id', function(store, request) {
-  var contactId = +request.params.id;
+  var contactId = request.params.id;
   var contact = store.find('contact', contactId);
 
   return {
@@ -386,7 +386,7 @@ this.stub('get', '/contacts/:id', function(store, request) {
   Return a single object with related models
 */
 this.stub('get', '/contacts/:id', function(store, request) {
-  var contactId = +request.params.id;
+  var contactId = request.params.id;
   var contact = store.find('contact', contactId);
   var addresses = store.findAll('address')
     .filterBy('contact_id', contactId);
@@ -427,7 +427,7 @@ this.stub('put', '/contacts/:id', function(store, request) {
   Remove a single object
 */
 this.stub('delete', '/contacts/:id', function(store, request) {
-  var contactId = +request.params.id;
+  var contactId = request.params.id;
 
   store.remove('contact', contactId);
 
@@ -438,7 +438,7 @@ this.stub('delete', '/contacts/:id', function(store, request) {
   Remove a single object + related models
 */
 this.stub('delete', '/contacts/:id', function(store, request) {
-  var contactId = +request.params.id;
+  var contactId = request.params.id;
 
   store.remove('contact', contactId);
   store.removeQuery('address', {contact_id: contactId});
