@@ -177,9 +177,9 @@ You interact with the store using the *stub* method in your Pretender routes. Yo
 
 Here are the methods available to you from within your routes using *stub*.
 
-**store.findAll(key)**
+**store.findAll(type)**
 
-Returns the `key` models attached to the store object. Note `key` is always singular.
+Returns the `type` models attached to the store object. Note typekey` is always singular.
 
 For example if you had the following data file named `/app/pretender/data/contacts.js`
 
@@ -191,9 +191,9 @@ export default [
 
 then `store.findAll('contact')` would return the `contacts` array.
 
-**store.find(key, id)**
+**store.find(type, id)**
 
-Returns a single model from the store based on the key `key` and id `id`. Note `key` is always singular, and `id` can be an int or a string, but integer ids as strings (e.g. the string `"1"`) will be treated as integers.
+Returns a single model from the store based on the type `type` and id `id`. Note `type` is always singular, and `id` can be an int or a string, but integer ids as strings (e.g. the string `"1"`) will be treated as integers.
 
 For example, given the above contacts in the store, `store.find('contact', 2)` would return `{id: 2, name: 'Ryan'}`.
 
@@ -203,21 +203,23 @@ Returns an array of models of type `type` that match the key-value pairs in the 
 
 For example, given the above contacts in the store, `store.findQuery('contact', {name: 'Ryan'})` would return `[{id: 2, name: 'Ryan'}]`.
 
-**store.push(key, data)**
+**store.push(type, data)**
 
-Creates or updates a model of type `key` in the store. `data` is a POJO. If `data` has an `id`, updates the model in the, otherwise creates a new model.
+Creates or updates a model of type `type` in the store. `data` is a POJO. If `data` has an `id`, updates the model in the, otherwise creates a new model.
 
-**store.remove(key, id)**
+**store.remove(type, id)**
 
-Removes a model of type `key` with id `id` from the store.
+Removes a model of type `type` with id `id` from the store.
 
-**store.removeQuery(key, query)**
+**store.removeQuery(type, query)**
 
-Removes a model of type `key` with id `id` from the store.
+Removes the models of type `type` that match the key-value pairs in the `query` object from the store. `query` is a POJO.
 
 ### stub
 
-The stub method is the primary way you define routes and interact with your store. There are many shorthands available to make your server definition more succinct, but you can always fallback to a function and manipulate the store however you need to.
+The stub method is the primary way you define routes and interact with your store. There are many shorthands available to make your server definition more succinct, and ideally most of your config will use them.
+
+You can always fall back to a function and manipulate the data in the store however you need to via the [store's api](#store).
 
 Here's the full definition:
 
@@ -225,33 +227,116 @@ Here's the full definition:
 this.stub(verb, path, handler[, responseCode]);
 ```
 
-- **verb**: string. 'get', 'put', 'post', or 'delete'
-- **path**: string. The URL you're defining, e.g. '/api/contacts' (or '/contacts' if `namespace` is defined).
+- **verb**: string. `get`, `put`, `post`, or `delete`
+- **path**: string. The URL you're defining, e.g. `/api/contacts` (or `/contacts` if `namespace` is defined).
 - **handler**: function. Return the data you want as the response body as plain JS - it will be stringified. Accepts two parameters, *store*, your Pretender server's store, and *request*, which is the Pretender request object. 
     There are many shorthands available for this param.
 - **responseCode**: number. optional. The response code of the request.
 
-Here are some examples:
+Here are the shorthands:
 
-**Returning collections from the store (GET)**
+**GET shorthands**
 
-Response code defaults to 200.
+```js
+/*
+  Return a single collection
+*/
+// Finds type by singularizing last portion of url
+this.stub('get', '/contacts');
 
-The shorthand versions of the functions below only work if the verb is `get`.
+// Optionally specify the collection as the third param
+this.stub('get', '/contacts', 'users');
+
+/*
+  Return multiple collections
+*/
+// Note this is everything you have in your store for these models
+this.stub('get', '/', ['photos', 'articles']);
+
+/*
+  Return a single model
+*/
+// Finds type by singularizing last portion of url before id
+this.stub('get', '/contacts/:id');
+// Optionally specify type as third param
+this.stub('get', '/contacts/:id', 'user');
+
+/*
+  Return a single object with related models
+*/
+// Make sure you put the owning (singular) model first. Finds `contact`
+// by `id`, then finds all `addresses` where `contact_id` matches.
+this.stub('get', '/contacts/:id', ['contact', 'addresses']);
+```
+
+**POST shorthands**
+
+```js
+/*
+  Create a new object
+*/
+// The type is found by singularizing the last portion of the url
+this.stub('post', '/contacts');
+// Optionally specify the type of resource to be created as the third param
+this.stub('post', '/contacts', 'user');
+```
+
+**PUT shorthands**
+
+```js
+/*
+  Update an object in the store.
+*/
+// The type is found by singularizing the last portion of the url
+this.stub('put', '/contacts/:id');
+// Optionally specify the type of resource to be updated as the third param
+this.stub('put', '/contacts/:id', 'user');
+```
+
+**DELETE shorthands**
+
+```js
+/*
+  Remove a single object
+*/
+// The type is found by singularizing the last portion of the url.
+this.stub('delete', '/contacts/:id')
+// Optionally specify the type of resource to be deleted as the third param
+this.stub('delete', '/contacts/:id', 'user')
+
+/*
+  Remove a single object + related models
+*/
+// Make sure you put the owning (singular) model first. Deletes `contact`
+// that matches `id`, then deletes all `addresses` where `contact_id`
+// matches `id`.
+this.stub('delete', '/contacts/:id', ['contact', 'addresses']);
+```
+
+**Function API**
+
+If you pass a function handler in as the third param of `stub`, you can manually interact with your store and return specific data in your response.
+
+```js
+this.stub('get', '/contacts', function(store, request) {
+  // do work, return data
+});
+```
+
+The handler takes two parameters, *store*, your Pretender server's store, and *request*, which is the Pretender request object (which is the XMLHttpRequest instance that initiated the request, plus some additional data like `params`).
+
+Consult the [store's API](#store) for how to interact with the store, or look at some examples below:
 
 ```js
 /*
   Return a collection
 */
 this.stub('get', '/contacts', function(store) {
+  var contacts = store.findAll('contact');
   return {
-    contacts: store.findAll('contact');
+    contacts: contacts
   }:
 });
-// shorthand. Finds type by singularizing last portion of url.
-this.stub('get', '/contacts');
-// optionally specify which collection
-this.stub('get', '/contacts', 'users');
 
 /*
   Return a collection with related models
@@ -271,8 +356,6 @@ this.stub('get', '/contacts', function(store) {
     addresses: relatedAddresses
   }:
 });
-// shorthand
-// none yet
 
 /*
   Return multiple collections.
@@ -286,15 +369,7 @@ this.stub('get', '/', function(store, request) {
     articles: articles
   }:
 });
-// shorthand. Note this is everything you have in your store for these models.
-this.stub('get', '/', ['photos', 'articles']);
-```
 
-**Returning a single object from the store (GET)**
-
-Response code defaults to 200.
-
-```js
 /*
   Return a single object
 */
@@ -306,10 +381,6 @@ this.stub('get', '/contacts/:id', function(store, request) {
     contact: contact
   };
 });
-// shorthand
-this.stub('get', '/contacts/:id');
-// Optionally specify type
-this.stub('get', '/contacts/:id', 'user');
 
 /*
   Return a single object with related models
@@ -325,40 +396,19 @@ this.stub('get', '/contacts/:id', function(store, request) {
     addresses: addresses
   };
 });
-// shorthand. It returns only related models, since since contact is singular. 
-// Make sure you put the singular model first.
-this.stub('get', '/contacts/:id', ['contact', 'addresses']);
-```
 
-**Creating a resource (POST)**
-
-Response code defaults to 201 for `post`.
-
-The shorthand versions of the functions below only work if the verb is `post`.
-
-```js
 /*
   Create a new object
 */
 this.stub('post', '/contacts', function(store, request) {
-  var newContact = JSON.parse(request.requestBody);
+  var attrs = JSON.parse(request.requestBody);
+  var newContact = store.push('contact', attrs); // gets an id
 
-  store.push('contact', newContact);
-  return newContact;
+  return {
+    contact: newContact
+  };
 });
-// shorthand. The type is found by singularizing the last portion of the url.
-this.stub('post', '/contacts');
-// Optionally specify the type of resource to be created as the third param.
-this.stub('post', '/contacts', 'user');
-```
 
-**Updating a resource (PUT)**
-
-Response code defaults to 200 for `put`.
-
-The shorthand versions of the functions below only work if the verb is `put`.
-
-```js
 /*
   Update an object in the store.
 */
@@ -368,21 +418,11 @@ this.stub('put', '/contacts/:id', function(store, request) {
   attrs.id = +id;
 
   store.push('contact', attrs);
-  return {contact: attrs};
+  return {
+    contact: attrs
+  };
 });
-// shorthand. The type is found by singularizing the last portion of the url.
-this.stub('put', '/contacts/:id');
-// Optionally specify the type of resource to be updated as the third param.
-this.stub('post', '/contacts/:id', 'user');
-```
 
-**Deleting resources from the store (DELETE)**
-
-Response code defaults to 200 for `delete`.
-
-The shorthand versions of the functions below only work if the verb is `delete`.
-
-```js
 /*
   Remove a single object
 */
@@ -393,10 +433,6 @@ this.stub('delete', '/contacts/:id', function(store, request) {
 
   return {};
 });
-// shorthand. The type is found by singularizing the last portion of the url.
-this.stub('delete', '/contacts/:id')
-// Optionally specify the type of resource to be deleted.
-this.stub('delete', '/contacts/:id', 'user')
 
 /*
   Remove a single object + related models
@@ -405,12 +441,10 @@ this.stub('delete', '/contacts/:id', function(store, request) {
   var contactId = +request.params.id;
 
   store.remove('contact', contactId);
-  store.remove('address', {contact_id: contactId});
+  store.removeQuery('address', {contact_id: contactId});
 
   return {};
 });
-// shorthand. Make sure the parent resource is first.
-this.stub('delete', '/contacts/:id', ['contact', 'addresses']);
 ```
 
 # TODO

@@ -10,7 +10,7 @@ export default function() {
 
 
   /*
-    Routes
+    Route shorthand cheatsheet
   */
   /*
     GET shorthands
