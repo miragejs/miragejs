@@ -1,5 +1,11 @@
 # Ember Pretenderify Changelog
 
+## 0.0.16
+Update notes: None.
+
+Changes:
+  - *actually* fix bower package version of inflector
+
 ## 0.0.15
 Update notes: None.
 
