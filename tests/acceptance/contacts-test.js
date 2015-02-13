@@ -43,5 +43,3 @@ test("I can create a new contact", function() {
     equal( find('p:last').text(), 'Ganon' );
   });
 });
-
-

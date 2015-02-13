@@ -1,4 +1,4 @@
-import { singularize } from '../inflector';
+import { singularize, pluralize } from '../inflector';
 import BaseController from './base';
 
 /*
@@ -19,9 +19,9 @@ export default BaseController.extend({
     var data = {};
 
     // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
-    if (singularize(key) === key) {
+    if (request && request.params && request.params.id) {
       var id = request.params.id;
-      if (!id) { console.error("Pretenderify: You're trying to find a model by id, but no :id param was found in this route's URL."); return;}
+      if (!id) { console.error("Pretenderify: You're trying to find a " + string + " with id " + id + ", but no " + pluralize(key) + " were loaded in the store."); return;}
       var model = store.find(key, request.params.id);
       data[key] = model;
 
