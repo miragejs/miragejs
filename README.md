@@ -15,6 +15,8 @@ Are you tired of
 
 Ember Pretenderify may be for you! It lets you share your [Pretender](https://github.com/trek/pretender) server in both development and in testing. It only uses Pretender if you're not in production and if you're not proxying to an explicit API server via `ember serve --proxy`.
 
+> Note: this is still experimental. Some shorthands currently only work with AMS-style responses, and some assets will be make it into production, albeit ignored. Eventually these will be fixed.
+
 ## Installation
 
 Uninstall `ember-cli-pretender` if you're already using it. Then run
