@@ -101,25 +101,6 @@ export default BaseController.extend({
     }
 
     return data;
-  },
-
-  // Private methods
-  _getIdForRequest: function(request) {
-    var id;
-    if (request && request.params && request.params.id) {
-      id = request.params.id;
-    }
-
-    return id;
-  },
-
-  _getUrlForRequest: function(request) {
-    var url;
-    if (request && request.url) {
-      url = request.url;
-    }
-
-    return url;
   }
 
 });
