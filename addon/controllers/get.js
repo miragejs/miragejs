@@ -17,12 +17,11 @@ export default BaseController.extend({
   stringHandler: function(string, store, request) {
     var key = string;
     var data = {};
+    var id = this._getIdForRequest(request);
 
     // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
-    if (request && request.params && request.params.id) {
-      var id = request.params.id;
-      if (!id) { console.error("Pretenderify: You're trying to find a " + string + " with id " + id + ", but no " + pluralize(key) + " were loaded in the store."); return;}
-      var model = store.find(key, request.params.id);
+    if (id) {
+      var model = store.find(key, id);
       data[key] = model;
 
     } else {
@@ -44,6 +43,7 @@ export default BaseController.extend({
       Ex: this.stub('get', '/contacts/:id', ['contact', 'addresses']);
   */
   arrayHandler: function(keys, store, request) {
+    var _this = this;
     var data = {};
     var owner;
     var ownerKey;
@@ -55,14 +55,15 @@ export default BaseController.extend({
         var ownerIdKey = singularize(ownerKey) + '_id';
         var query = {};
         query[ownerIdKey] = owner.id;
-        data[key] = store.find(key, query);
+        data[key] = store.findQuery(key, query);
 
       } else {
 
         // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
         if (singularize(key) === key) {
           ownerKey = key;
-          var model = store.find(key, request.params.id);
+          var id = _this._getIdForRequest(request);
+          var model = store.find(key, id);
           data[key] = model;
           owner = model;
 
@@ -86,15 +87,39 @@ export default BaseController.extend({
       Ex: this.stub('get', '/contacts/:id');
   */
   undefinedHandler: function(undef, store, request) {
-    var id = request.params.id;
-    var url = request.url;
+    var id = this._getIdForRequest(request);
+    var url = this._getUrlForRequest(request);
     var urlNoId = id ? url.substr(0, url.lastIndexOf('/')) : url;
     var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
+    var key = pluralize(type);
     var data = {};
 
-    data[type] = id ? store.find(type, id) : store.findAll(type);
+    if (id) {
+      data[type] = store.find(type, id);
+    } else {
+      data[key] = store.findAll(type);
+    }
 
     return data;
+  },
+
+  // Private methods
+  _getIdForRequest: function(request) {
+    var id;
+    if (request && request.params && request.params.id) {
+      id = request.params.id;
+    }
+
+    return id;
+  },
+
+  _getUrlForRequest: function(request) {
+    var url;
+    if (request && request.url) {
+      url = request.url;
+    }
+
+    return url;
   }
 
 });
