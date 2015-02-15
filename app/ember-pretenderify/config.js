@@ -1,4 +1,3 @@
-import Pretender from 'pretender';
 import userConfig from '../pretender/config';
 import store from 'ember-pretenderify/store';
 import frontController from 'ember-pretenderify/controllers/front';
