@@ -1,6 +1,9 @@
 import { singularize } from '../inflector';
 import BaseController from './base';
 
+/*
+  Shorthands for PUT requests.
+*/
 export default BaseController.extend({
 
   /*
