@@ -75,23 +75,44 @@ this.get('/api/contacts', ['contacts', 'addresses']);
 
 This will return all the data you added to the `contacts` and `addresses` keys of your store.
 
+Handling POST, PUT and DELETE requests is just as simple. For example, this route lets you create new `users` by POSTing to `/api/users`:
+
+```js
+this.post('/api/users', 'user');
+```
+
+You can also pass a function in as the second argument in case you want to manipulate the store yourself:
+
+```js
+this.post('/api/users', function(store, request) {
+  var attrs = JSON.parse(request.requestBody);
+  var newContact = store.push('contact', attrs);
+
+  return {
+    contact: newContact
+  };
+});
+```
+
+Find the complete documentation for `get`, `post`, `put` and `del` [**below**](#verb-methods).
+
 **Shorthands**
 
-There are many shorthands to make writing your routes easier. For example,
+There are many shorthands available to make writing your routes easier. For example, the route
+
+```js
+this.get('/api/contacts', 'contacts');
+```
+
+can be simplified to
 
 ```js
 this.get('/api/contacts')
 ```
 
-works the same as the first route above, since the key of the last URL segment matches the store object we want. You can also pass a function in as the second argument and do custom work.
+since the key of the last URL segment matches the store object we want.
 
-Defining routes to handle POST, PUT and DELETE requests is just as simple. For example, this route lets you create new `users` by POSTing to `/api/users`:
-
-```js
-this.post('/api/users')
-```
-
-You can find the complete documentation for `get`, `post`, `put` and `del` [**below**](#verb-methods).
+See [the docs below](#verb-shorthands) for all available shorthands.
 
 **Acceptance testing**
 
@@ -241,11 +262,14 @@ this.verb(path, handler[, responseCode]);
 where *verb* is `get`, `put`, `post`, or `delete`, and
 
 - **path**: string. The URL you're defining, e.g. `/api/contacts` (or `/contacts` if `namespace` is defined).
-- **handler**: function or shorthand. As a function, takes two parameters, *store*, your Pretender server's store, and *request*, which is the Pretender request object. Return the data you want as plain JS - it will be stringified and sent as the response body to your request.
-    As a shorthand, either a string, an array or undefined. Consult the docs below for the various shorthand definitions.
+- **handler**: function or shorthand.
+
+    As a function, takes two parameters, *store*, your Pretender server's store, and *request*, which is the Pretender request object. Return the data you want as plain JS - it will be stringified and sent as the response body to your request.
+
+    As a shorthand, either a string, an array or undefined. Consult [the shorthand docs](#verb-shorthands) for the various shorthand definitions.
 - **responseCode**: number. optional. The response code of the request.
 
-Here are the shorthands:
+### Verb shorthands
 
 **GET shorthands**
 
