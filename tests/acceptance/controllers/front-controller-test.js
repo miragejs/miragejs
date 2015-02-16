@@ -120,7 +120,7 @@ test("string shorthand works", function() {
   var body = '{"contact":{"id":1,"name":"Linkz0r"}}';
   var result = controller.handle('put', 'contact', store, {params: {id: 1}, requestBody: body});
 
-  var Link = store.find('contact', 1);
+  Link = store.find('contact', 1);
   equal(Link.name, 'Linkz0r');
 });
 
@@ -131,7 +131,7 @@ test("undefined shorthand works", function() {
   var body = '{"contact":{"id":1,"name":"Linkz0r"}}';
   var result = controller.handle('put', undefined, store, {params: {id: 1}, url: '/contacts/1', requestBody: body});
 
-  var Link = store.find('contact', 1);
+  Link = store.find('contact', 1);
   equal(Link.name, 'Linkz0r');
 });
 
