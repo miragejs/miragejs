@@ -11,7 +11,8 @@ Update notes:
   - `this` in your config file no longer refers to the Pretender instance; use `this.pretender` instead.
 
 Changes:
- - bug fixes + refactoring
+  - [FEATURE] you can use `this.get`, `this.post`, `this.put` and `this.del` instead of `this.stub(verb)` now
+  - bug fixes + refactoring
 
 ## 0.0.16
 Update notes: None.

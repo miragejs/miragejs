@@ -41,6 +41,19 @@ export default function(options) {
     }, timing);
   };
 
+  this.get = function(path, handler, code) {
+    this.stub('get', path, handler, code);
+  };
+  this.post = function(path, handler, code) {
+    this.stub('post', path, handler, code);
+  };
+  this.put = function(path, handler, code) {
+    this.stub('put', path, handler, code);
+  };
+  this['delete'] = this.del = function(path, handler, code) {
+    this.stub('delete', path, handler, code);
+  };
+
   this.store = store;
 
   this.interceptor = new Pretender(function() {

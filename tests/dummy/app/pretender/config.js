@@ -1,10 +1,10 @@
 export default function() {
   // contacts
-  this.stub('get', '/contacts', 'contacts');
-  this.stub('post', '/contacts');
+  this.get('/contacts');
+  this.post('/contacts');
 
   // contact
-  this.stub('get', '/contacts/:id');
-  this.stub('put', '/contacts/:id');
-  this.stub('delete', '/contacts/:id');
+  this.get('/contacts/:id');
+  this.put('/contacts/:id');
+  this.del('/contacts/:id');
 }

@@ -15,38 +15,38 @@ export default function() {
     GET shorthands
 
     // Collections
-    this.stub('get', '/contacts');
-    this.stub('get', '/contacts', 'users');
-    this.stub('get', '/contacts', ['contacts', 'addresses']);
+    this.get('/contacts');
+    this.get('/contacts', 'users');
+    this.get('/contacts', ['contacts', 'addresses']);
 
     // Single objects
-    this.stub('get', '/contacts/:id');
-    this.stub('get', '/contacts/:id', 'user');
-    this.stub('get', '/contacts/:id', ['contact', 'addresses']);
+    this.get('/contacts/:id');
+    this.get('/contacts/:id', 'user');
+    this.get('/contacts/:id', ['contact', 'addresses']);
   */
 
   /*
     POST shorthands
 
-    this.stub('post', '/contacts');
-    this.stub('post', '/contacts', 'user'); // specify the type of resource to be created
+    this.post('/contacts');
+    this.post('/contacts', 'user'); // specify the type of resource to be created
   */
 
   /*
     PUT shorthands
 
-    this.stub('put', '/contacts/:id');
-    this.stub('put', '/contacts/:id', 'user'); // specify the type of resource to be updated
+    this.put('/contacts/:id');
+    this.put('/contacts/:id', 'user'); // specify the type of resource to be updated
   */
 
   /*
     DELETE shorthands
 
-    this.stub('delete', '/contacts/:id');
-    this.stub('delete', '/contacts/:id', 'user'); // specify the type of resource to be deleted
+    this.del('/contacts/:id');
+    this.del('/contacts/:id', 'user'); // specify the type of resource to be deleted
 
     // Single object + related resources. Make sure parent resource is first.
-    this.stub('delete', '/contacts/:id', ['contact', 'addresses']);
+    this.del('/contacts/:id', ['contact', 'addresses']);
   */
 
   /*
@@ -56,10 +56,11 @@ export default function() {
       - store.findAll(key)
       - store.findQuery(key, query)
       - store.push(key, data)
-      - store.delete(key, id)
+      - store.remove(key, id)
+      - store.removeQuery(key, query)
 
     // Example: return a single object with related models
-    this.stub('get', '/contacts/:id', function(store, request) {
+    this.get('/contacts/:id', function(store, request) {
       var contactId = +request.params.id;
       var contact = store.find('contact', contactId);
       var addresses = store.findAll('address')
