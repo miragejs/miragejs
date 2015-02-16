@@ -45,7 +45,7 @@
     "currentURL",
     "currentPath",
     "currentRouteName",
-    "serverData"
+    "store"
   ],
   "node": false,
   "browser": false,

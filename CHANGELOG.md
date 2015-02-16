@@ -1,5 +1,13 @@
 # Ember Pretenderify Changelog
 
+## 0.0.17
+Update notes:
+ - the testing API has changed. Before, you added data directly to `serverData`, e.g.
+
+        serverData.contacts = [{id: 1, name: 'Link'}];
+
+    Now, use [something else]
+
 ## 0.0.16
 Update notes: None.
 

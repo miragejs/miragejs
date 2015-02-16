@@ -154,6 +154,18 @@ test('updates a record if id attr is present', function() {
   deepEqual(link, {id: 1, name: 'The Link'});
 });
 
+test("doesn't affect data outside the store", function() {
+  var contacts = [
+    {id: 1, name: 'Link'}
+  ];
+  store.loadData({contacts: contacts});
+  store.push('contact', {
+    name: 'Zelda'
+  });
+
+  equal(contacts.length, 1);
+});
+
 
 module('pretenderify:store#remove', {teardown: function() {store.emptyData();} });
 

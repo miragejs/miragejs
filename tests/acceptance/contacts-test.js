@@ -6,6 +6,13 @@ var App;
 module('Acceptance: Contacts', {
   setup: function() {
     App = startApp();
+
+    store.loadData({
+      contacts: [
+        {id: 1, name: 'Link'},
+        {id: 2, name: 'Zelda'}
+      ]
+    });
   },
   teardown: function() {
     Ember.run(App, 'destroy');
@@ -13,11 +20,6 @@ module('Acceptance: Contacts', {
 });
 
 test("I can view the contacts", function() {
-  serverData.contacts = [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'}
-  ];
-
   visit('/');
 
   andThen(function() {
@@ -28,11 +30,6 @@ test("I can view the contacts", function() {
 });
 
 test("I can create a new contact", function() {
-  serverData.contacts = [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'}
-  ];
-
   visit('/');
   fillIn('input', 'Ganon');
   click('button:contains(Create)');

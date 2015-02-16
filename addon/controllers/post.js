@@ -12,7 +12,8 @@ export default BaseController.extend({
     For example, this will push a 'user':
       this.stub('post', '/contacts', 'contact');
   */
-  stringHandler: function(type, store, request) {
+  stringHandler: function(string, store, request) {
+    var type = string;
     var postData = JSON.parse(request.requestBody);
     var attrs = postData[type];
     var data = store.push(type, attrs);
@@ -28,7 +29,7 @@ export default BaseController.extend({
       this.stub('post', '/contacts');
   */
   undefinedHandler: function(undef, store, request) {
-    var url = request.url;
+    var url = this._getUrlForRequest(request);
     var type = singularize(url.substr(url.lastIndexOf('/') + 1));
     var postData = JSON.parse(request.requestBody);
     var attrs = postData[type];

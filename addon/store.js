@@ -7,10 +7,12 @@ export default {
   _data: {},
 
   loadData: function(data, key) {
+    var copy = JSON.parse(JSON.stringify(data));
+
     if (key) {
-      this._data[key] = data;
+      this._data[key] = copy;
     } else {
-      this._data = data;
+      this._data = copy;
     }
   },
 

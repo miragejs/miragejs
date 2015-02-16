@@ -6,6 +6,12 @@ var App;
 module('Acceptance: Contact', {
   setup: function() {
     App = startApp();
+    store.loadData({
+      contacts: [
+        {id: 1, name: 'Link'},
+        {id: 2, name: 'Zelda'}
+      ]
+    });
   },
   teardown: function() {
     Ember.run(App, 'destroy');
@@ -13,11 +19,6 @@ module('Acceptance: Contact', {
 });
 
 test("I can view a contact", function() {
-  serverData.contacts = [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'}
-  ];
-
   visit('/2');
 
   andThen(function() {
@@ -27,11 +28,6 @@ test("I can view a contact", function() {
 });
 
 test("I can delete a contact", function() {
-  serverData.contacts = [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'}
-  ];
-
   visit('/2');
   click('button:contains(Delete)');
 

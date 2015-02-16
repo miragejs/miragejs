@@ -42,8 +42,9 @@ export default BaseController.extend({
     subsequent models by related.
       Ex: this.stub('get', '/contacts/:id', ['contact', 'addresses']);
   */
-  arrayHandler: function(keys, store, request) {
+  arrayHandler: function(array, store, request) {
     var _this = this;
+    var keys = array;
     var data = {};
     var owner;
     var ownerKey;

@@ -10,7 +10,7 @@ var defaults = function() {
   this.timing = 400;
 
   this.store = store;
-  this.store.loadData(this.data || {});
+  this.store.loadData(this.data);
 
   this.frontController = frontController;
 

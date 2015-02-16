@@ -24,6 +24,7 @@ export default {
       });
 
       window.serverData = server.data;
+      window.store = server.store;
     }
   }
 };
