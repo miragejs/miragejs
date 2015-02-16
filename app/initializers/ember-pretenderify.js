@@ -8,10 +8,9 @@ export default {
   initialize: function(container, application) {
     var config = ENV['ember-pretenderify'];
     var env = ENV.environment;
-    var shouldUsePretender = config.force || !config.usingProxy;
-    var usingInDev = env === 'development' && shouldUsePretender;
+    var usingInDev = env === 'development' && !config.usingProxy;
     var usingInTest = env === 'test';
-    var shouldUseServer = usingInDev || usingInTest;
+    var shouldUseServer = usingInDev || usingInTest || config.force;
 
     if (shouldUseServer) {
       var server = new Server({
@@ -20,7 +19,7 @@ export default {
 
       server.loadConfig(userConfig);
 
-      if (usingInDev) {
+      if (usingInDev || config.force) {
         var userData = readData(ENV.modulePrefix);
         server.loadData(userData);
       }
