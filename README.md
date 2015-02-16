@@ -23,7 +23,7 @@ Uninstall `ember-cli-pretender` if you're already using it. Then run
 
     ember install:addon ember-pretenderify
 
-Finally, add `serverData` to the `predef` section in your `tests/.jshintrc` file.
+Finally, add `store` to the `predef` section in your `tests/.jshintrc` file.
 
 ## Getting started
 
@@ -120,18 +120,18 @@ During testing, the store always starts off empty; however, all the routes you'v
 
 So for each test, you first define the initial state of the store (i.e. the "server" state your test expects). Then, write your test and assert based on that state.
 
-There's a global helper called `serverData` to help you with this. Here's an example acceptance test:
+There's a global helper called `store` to help you with this. Here's an example acceptance test:
 
 ```js
 // tests/acceptance/index-test.js
 test("I can view the models", function() {
   // set up our "server's data"
-  serverData.products = [
-    {
+  store.loadData({
+    products = [{
       id: 1,
       name: 'iPhone'
-    }
-  ];
+    }]
+  });
 
   visit('/');
 
