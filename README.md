@@ -75,6 +75,8 @@ this.get('/api/contacts', ['contacts', 'addresses']);
 
 This will return all the data you added to the `contacts` and `addresses` keys of your store.
 
+**Shorthands**
+
 There are many shorthands to make writing your routes easier. For example,
 
 ```js
