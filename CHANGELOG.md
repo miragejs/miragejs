@@ -8,6 +8,9 @@ Update notes:
 
     Now, use [something else]
 
+Changes:
+ - bug fixes + refactoring
+
 ## 0.0.16
 Update notes: None.
 

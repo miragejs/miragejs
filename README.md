@@ -449,16 +449,20 @@ this.stub('delete', '/contacts/:id', function(store, request) {
 });
 ```
 
+# Known issues
+
+- assets end up in production
+- Pretender doesn't handle other-origin requests (e.g. api.twitter.com)
+
 # TODO
 
-**tests**
 - [ ] override route in test to return 404
 
 **stub**
 - [ ] shorthand for multiple data relationships? e.g. lesson has many questions, questions has many answers
-- [ ] with where/query
-- [ ] with attrs (partial models)
+- [ ] with partial attrs
 
 **Roadmap**
 - [ ] Adapter, only works with AMS-style right now.
 - [ ] Factories for adding data to store in tests.
+- [ ] Option to disable in test so tests hit real backend

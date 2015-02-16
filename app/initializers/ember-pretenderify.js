@@ -1,30 +1,22 @@
 import ENV from '../config/environment';
-import pretenderConfig from '../ember-pretenderify/config';
-import loadData from 'ember-pretenderify/load-data';
+import userConfig from '../pretender/config';
+import Server from 'ember-pretenderify/server';
 
 export default {
   name: 'ember-pretenderify',
   initialize: function(container, application) {
     var config = ENV['ember-pretenderify'];
-    var shouldUsePretedner = config.force || !config.usingProxy;
+    var env = ENV.environment;
+    var shouldUsePretender = config.force || !config.usingProxy;
+    var usingInDev = env === 'development' && shouldUsePretender;
+    var usingInTest = env === 'test';
 
-    if (ENV.environment === 'development' && shouldUsePretedner) {
-
-      new Pretender(function() {
-        pretenderConfig.defaults.call(this);
-        loadData(ENV.modulePrefix, this.store);
-        pretenderConfig.userConfig.call(this);
+    if (usingInDev || usingInTest) {
+      new Server({
+        environment: env,
+        modulePrefix: ENV.modulePrefix,
+        userConfig: userConfig
       });
-
-    } else if (ENV.environment === 'test') {
-
-      var server = new Pretender(function() {
-        pretenderConfig.defaults.call(this);
-        pretenderConfig.userConfig.call(this);
-      });
-
-      window.serverData = server.data;
-      window.store = server.store;
     }
   }
 };

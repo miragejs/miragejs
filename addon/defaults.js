@@ -1,9 +1,7 @@
-import userConfig from '../pretender/config';
 import store from 'ember-pretenderify/store';
 import frontController from 'ember-pretenderify/controllers/front';
-import ENV from '../config/environment';
 
-var defaults = function() {
+export default function(environment) {
   var _this = this;
 
   this.data = this.data || {};
@@ -44,16 +42,16 @@ var defaults = function() {
 
   this.stub = function(verb, path, handler, code) {
     var store = _this.store;
-    var timing = ENV.environment === 'test' ? 0 : _this.timing;
+    var timing = environment === 'test' ? 0 : _this.timing;
     var namespace = _this.namespace || '';
-    var code = code ? code : _this.getDefaultCode(verb);
+    code = code ? code : _this.getDefaultCode(verb);
     path = path[0] === '/' ? path.slice(1) : path;
 
     _this[verb].call(_this, namespace + '/' + path, function(request) {
 
       var response = _this.frontController.handle(verb, handler, store, request, code);
 
-      if (ENV.environment !== 'test') {
+      if (environment !== 'test') {
         console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
         console.log(response[2]);
       }
@@ -62,9 +60,4 @@ var defaults = function() {
     }, timing);
 
   };
-};
-
-export default {
-  defaults: defaults,
-  userConfig: userConfig
-};
+}
