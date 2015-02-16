@@ -2,11 +2,15 @@
 
 ## 0.0.17
 Update notes:
- - the testing API has changed. Before, you added data directly to `serverData`, e.g.
+  - the testing API has changed. Before, you added data directly to `serverData`, e.g.
 
         serverData.contacts = [{id: 1, name: 'Link'}];
 
-    Now, use [something else]
+    Now, use the store directly:
+
+        store.loadData({
+          contacts: [{id: 1, name: 'Link'}]
+        });
 
   - `this` in your config file no longer refers to the Pretender instance; use `this.pretender` instead.
 
