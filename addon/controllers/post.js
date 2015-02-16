@@ -1,4 +1,4 @@
-import { singularize } from '../inflector';
+import { singularize } from '../utils/inflector';
 import BaseController from './base';
 
 /*

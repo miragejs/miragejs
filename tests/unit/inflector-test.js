@@ -1,4 +1,4 @@
-import { singularize, pluralize } from 'ember-pretenderify/inflector';
+import { singularize, pluralize } from 'ember-pretenderify/utils/inflector';
 
 QUnit.module('pretenderify:inflector');
 

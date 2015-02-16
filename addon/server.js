@@ -1,31 +1,26 @@
 import Pretender from 'pretender';
-import loadData from './load-data';
 import store from './store';
 import frontController from './controllers/front';
 
+/*
+  The Pretenderify server, which has a store and an XHR interceptor.
+*/
 export default function(options) {
   // Init vars
   var environment = options.environment;
-  var userConfig = options.userConfig;
-  var modulePrefix = options.modulePrefix;
 
   // Default properties
   this.timing = 400;
   this.namespace = '';
 
   // Methods
-  this.store = store;
+  this.loadConfig = function(config) {
+    config.call(this);
+  };
 
-  this.interceptor = new Pretender(function() {
-    // Default Pretender config
-    this.prepareBody = function(body) {
-      return body ? JSON.stringify(body) : '{"error": "not found"}';
-    };
-
-    this.unhandledRequest = function(verb, path) {
-      console.error("Your Ember app tried to " + verb + " '" + path + "', but there was no Pretender route defined to handle this request.");
-    };
-  });
+  this.loadData = function(data) {
+    this.store.loadData(data);
+  };
 
   this.stub = function(verb, path, handler, code) {
     var _this = this;
@@ -46,14 +41,22 @@ export default function(options) {
     }, timing);
   };
 
-  // Init
-  // Add user config, which adds routes + overrides defaults
-  userConfig.call(this);
+  this.store = store;
 
-  if (environment !== 'test') {
-    loadData(modulePrefix, this.store);
-  }
+  this.interceptor = new Pretender(function() {
+    // Default Pretender config
+    this.prepareBody = function(body) {
+      return body ? JSON.stringify(body) : '{"error": "not found"}';
+    };
 
+    this.unhandledRequest = function(verb, path) {
+      console.error("Your Ember app tried to " + verb + " '" + path + "', but there was no Pretender route defined to handle this request.");
+    };
+  });
+
+  this.pretender = this.interceptor; // alias
+
+  // TODO: Better test api
   if (environment === 'test') {
     window.store = this.store;
   }

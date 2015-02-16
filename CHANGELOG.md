@@ -8,6 +8,8 @@ Update notes:
 
     Now, use [something else]
 
+  - `this` in your config file no longer refers to the Pretender instance; use `this.pretender` instead.
+
 Changes:
  - bug fixes + refactoring
 

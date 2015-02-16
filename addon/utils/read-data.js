@@ -5,11 +5,12 @@
 
 /*
   This function looks through all files that have been loaded by Ember CLI and
-  finds the ones under /pretender/data. It then loads the data exported by
-  those files into pretenderify's store.
+  finds the ones under /pretender/data, and exports a hash containing the names
+  of the files as keys and the data as values.
 */
-export default function(prefix, store) {
+export default function(prefix) {
   var pretenderDatafileRegExp = new RegExp('^' + prefix + '/pretender/data');
+  var dataFromFiles = {};
 
   Ember.keys(requirejs._eak_seen).filter(function(key) {
     return pretenderDatafileRegExp.test(key);
@@ -20,6 +21,8 @@ export default function(prefix, store) {
     var data = module['default'];
     var key = moduleName.match(/[^\/]+\/?$/)[0];
 
-    store.loadData(data, key);
+    dataFromFiles[key] = data;
   });
+
+  return dataFromFiles;
 }

@@ -1,4 +1,4 @@
-import { pluralize } from './inflector';
+import { pluralize } from './utils/inflector';
 /*
   An identity map.
 */
