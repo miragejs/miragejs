@@ -14,7 +14,7 @@ export default BaseController.extend({
   */
   stringHandler: function(string, store, request) {
     var type = string;
-    var postData = JSON.parse(request.requestBody);
+    var postData = this._getJsonBodyForRequest(request);
     var attrs = postData[type];
     var data = store.push(type, attrs);
 
@@ -31,7 +31,7 @@ export default BaseController.extend({
   undefinedHandler: function(undef, store, request) {
     var url = this._getUrlForRequest(request);
     var type = singularize(url.substr(url.lastIndexOf('/') + 1));
-    var postData = JSON.parse(request.requestBody);
+    var postData = this._getJsonBodyForRequest(request);
     var attrs = postData[type];
     var data = store.push(type, attrs);
 

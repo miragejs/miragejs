@@ -9,8 +9,11 @@ export default Ember.Object.extend({
   // Private methods
   _getIdForRequest: function(request) {
     var id;
+
     if (request && request.params && request.params.id) {
       id = request.params.id;
+      // If parses, coerce to integer
+      id = parseInt(id, 10) || id;
     }
 
     return id;
@@ -18,10 +21,21 @@ export default Ember.Object.extend({
 
   _getUrlForRequest: function(request) {
     var url;
+
     if (request && request.url) {
       url = request.url;
     }
 
     return url;
+  },
+
+  _getJsonBodyForRequest: function(request) {
+    var body;
+
+    if (request && request.requestBody) {
+      body = JSON.parse(request.requestBody);
+    }
+
+    return body;
   }
 });

@@ -10,7 +10,7 @@ export default BaseController.extend({
       Ex: this.stub('delete', '/contacts/:id', 'user');
   */
   stringHandler: function(type, store, request) {
-    var id = request.params.id;
+    var id = this._getIdForRequest(request);
     var data = store.remove(type, id);
 
     return undefined;
@@ -24,7 +24,7 @@ export default BaseController.extend({
       Ex: this.stub('delete', '/contacts/:id', ['contact', 'addresses', 'numbers');
   */
   arrayHandler: function(array, store, request) {
-    var id = request.params.id;
+    var id = this._getIdForRequest(request);
     var parentType = array[0];
     var types = array.slice(1);
 
@@ -49,8 +49,8 @@ export default BaseController.extend({
       Ex: this.stub('delete', '/contacts/:id');
   */
   undefinedHandler: function(undef, store, request) {
-    var id = request.params.id;
-    var url = request.url;
+    var id = this._getIdForRequest(request);
+    var url = this._getUrlForRequest(request);
     var urlNoId = id ? url.substr(0, url.lastIndexOf('/')) : url;
     var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
 

@@ -9,11 +9,9 @@ export default BaseController.extend({
       this.stub('put', '/contacts/:id', 'user');
   */
   stringHandler: function(type, store, request) {
-    var id = request.params.id;
-    // If parses, coerce to integer
-    id = parseInt(id, 10) || id;
-    var modelData = JSON.parse(request.requestBody);
-    var attrs = modelData[type];
+    var id = this._getIdForRequest(request);
+    var putData = this._getJsonBodyForRequest(request);
+    var attrs = putData[type];
     attrs.id = id;
 
     var data = store.push(type, attrs);
@@ -28,14 +26,12 @@ export default BaseController.extend({
       this.stub('put', '/contacts/:id');
   */
   undefinedHandler: function(undef, store, request) {
-    var id = request.params.id;
-    // If parses, coerce to integer
-    id = parseInt(id, 10) || id;
-    var url = request.url;
+    var id = this._getIdForRequest(request);
+    var url = this._getUrlForRequest(request);
     var urlNoId = url.substr(0, url.lastIndexOf('/'));
     var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
-    var modelData = JSON.parse(request.requestBody);
-    var attrs = modelData[type];
+    var putData = this._getJsonBodyForRequest(request);
+    var attrs = putData[type];
     attrs.id = id;
 
     var data = store.push(type, attrs);
