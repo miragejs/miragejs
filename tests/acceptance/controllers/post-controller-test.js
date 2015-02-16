@@ -8,10 +8,10 @@ var App;
 module('pretenderify:frontController POST', {
   setup: function() {
     App = startApp();
+    store.emptyData();
   },
   teardown: function() {
     Ember.run(App, 'destroy');
-    store.emptyData();
   }
 });
 

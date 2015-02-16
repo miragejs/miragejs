@@ -14,6 +14,7 @@ export default {
   handle: function(verb, handler, store, request, code) {
     var controller = verb + 'Controller';
     var handlerType;
+    code = code ? code : this.getDefaultCode(verb);
 
     if (typeof handler === 'function') { handlerType = 'function'; }
     else if (Ember.isArray(handler)) { handlerType = 'array'; }
@@ -32,6 +33,26 @@ export default {
     } else {
       return [code, {}, undefined];
     }
+  },
+
+  getDefaultCode: function(verb) {
+    var code = 200;
+    switch (verb) {
+      case 'put':
+        code = 204;
+        break;
+      case 'post':
+        code = 201;
+        break;
+      case 'delete':
+        code = 204;
+        break;
+      default:
+        code = 200;
+        break;
+    }
+
+    return code;
   }
 
 };
