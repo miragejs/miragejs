@@ -4,19 +4,17 @@ import BaseController from './base';
 export default BaseController.extend({
 
   /*
-    Update an object from the store based on singular version
-    of the last portion of the url.
+    Update an object from the store, specifying the type.
 
-      this.stub('put', '/contacts/:id');
+      this.stub('put', '/contacts/:id', 'user');
   */
-  undefinedHandler: function(undef, store, request) {
+  stringHandler: function(type, store, request) {
     var id = request.params.id;
-    var url = request.url;
-    var urlNoId = url.substr(0, url.lastIndexOf('/'));
-    var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
+    // If parses, coerce to integer
+    id = parseInt(id, 10) || id;
     var modelData = JSON.parse(request.requestBody);
     var attrs = modelData[type];
-    attrs.id = +id;
+    attrs.id = id;
 
     var data = store.push(type, attrs);
 
@@ -24,15 +22,21 @@ export default BaseController.extend({
   },
 
   /*
-    Update an object from the store, specifying the type.
+    Update an object from the store based on singular version
+    of the last portion of the url.
 
-      this.stub('put', '/contacts/:id', 'user');
+      this.stub('put', '/contacts/:id');
   */
-  stringHandler: function(type, store, request) {
+  undefinedHandler: function(undef, store, request) {
     var id = request.params.id;
+    // If parses, coerce to integer
+    id = parseInt(id, 10) || id;
+    var url = request.url;
+    var urlNoId = url.substr(0, url.lastIndexOf('/'));
+    var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
     var modelData = JSON.parse(request.requestBody);
     var attrs = modelData[type];
-    attrs.id = +id;
+    attrs.id = id;
 
     var data = store.push(type, attrs);
 

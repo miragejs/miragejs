@@ -7,7 +7,7 @@ var App;
 var contacts = [{id: 1, name: 'Link', address_ids: [1]}, {id: 2, name: 'Zelda', address_ids: [2]}];
 var addresses = [{id: 1, name: '123 Hyrule Way', contact_id: 1}, {id: 2, name: '456 Hyrule Way', contact_id: 2}];
 
-module('Acceptance: FrontController - GET', {
+module('pretenderify:frontController GET', {
   setup: function() {
     App = startApp();
     store.loadData({
@@ -67,22 +67,21 @@ test("undefined shorthand with id works", function() {
   deepEqual(result[2], {contact: contacts[0]});
 });
 
-module('Acceptance: FrontController - POST', {
+module('pretenderify:frontController POST', {
   setup: function() {
     App = startApp();
-    store.emptyData();
     store.loadData({
       contacts: contacts,
       addresses: addresses
     });
   },
   teardown: function() {
-    store.emptyData();
     Ember.run(App, 'destroy');
+    store.emptyData();
   }
 });
 
-test("post string shorthand works", function() {
+test("string shorthand works", function() {
   var body = '{"contact":{"name":"Ganon"}}';
   var result = controller.handle('post', 'contact', store, {requestBody: body});
 
@@ -91,11 +90,93 @@ test("post string shorthand works", function() {
   deepEqual(result[2], {contact: {id: 3, name: 'Ganon'}});
 });
 
-test("post undefined shorthand works", function() {
+test("undefined shorthand works", function() {
   var body = '{"contact":{"name":"Ganon"}}';
   var result = controller.handle('post', undefined, store, {requestBody: body, url: '/contacts'});
 
   var contactsInStore = store.findAll('contact');
   equal(contactsInStore.length, 3);
   deepEqual(result[2], {contact: {id: 3, name: 'Ganon'}});
+});
+
+module('pretenderify:frontController PUT', {
+  setup: function() {
+    App = startApp();
+    store.loadData({
+      contacts: contacts,
+      addresses: addresses
+    });
+  },
+  teardown: function() {
+    Ember.run(App, 'destroy');
+    store.emptyData();
+  }
+});
+
+test("string shorthand works", function() {
+  var Link = store.find('contact', 1);
+  equal(Link.name, 'Link');
+
+  var body = '{"contact":{"id":1,"name":"Linkz0r"}}';
+  var result = controller.handle('put', 'contact', store, {params: {id: 1}, requestBody: body});
+
+  var Link = store.find('contact', 1);
+  equal(Link.name, 'Linkz0r');
+});
+
+test("undefined shorthand works", function() {
+  var Link = store.find('contact', 1);
+  equal(Link.name, 'Link');
+
+  var body = '{"contact":{"id":1,"name":"Linkz0r"}}';
+  var result = controller.handle('put', undefined, store, {params: {id: 1}, url: '/contacts/1', requestBody: body});
+
+  var Link = store.find('contact', 1);
+  equal(Link.name, 'Linkz0r');
+});
+
+
+module('pretenderify:frontController DELETE', {
+  setup: function() {
+    App = startApp();
+    store.loadData({
+      contacts: contacts,
+      addresses: addresses
+    });
+  },
+  teardown: function() {
+    Ember.run(App, 'destroy');
+    store.emptyData();
+  }
+});
+
+test("string shorthand works", function() {
+  var result = controller.handle('delete', 'contact', store, {params: {id: 1}});
+
+  var contactsInStore = store.findAll('contact');
+  var Zelda = contacts[1];
+  equal(contactsInStore.length, 1);
+  deepEqual(contactsInStore[0], Zelda);
+});
+
+test("array shorthand works", function() {
+  var result = controller.handle('delete', ['contact', 'addresses'], store, {params: {id: 1}});
+
+  var contactsInStore = store.findAll('contact');
+  var addressesInStore = store.findAll('addresses');
+  var Zelda = contacts[1];
+  var ZeldasAddress = addresses[1];
+  equal(contactsInStore.length, 1);
+  equal(addressesInStore.length, 1);
+  deepEqual(contactsInStore[0], Zelda);
+  deepEqual(addressesInStore[0], ZeldasAddress);
+});
+
+test("undefined shorthand works", function() {
+  var result = controller.handle('delete', undefined, store, {params: {id: 1}, url: '/contacts/1'});
+
+  var contactsInStore = store.findAll('contact');
+  var Zelda = contacts[1];
+  equal(contactsInStore.length, 1);
+  deepEqual(contactsInStore[0], Zelda);
 });

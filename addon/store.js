@@ -63,9 +63,11 @@ export default {
 
   remove: function(type, id) {
     var _this = this;
+    // If parses, coerce to integer
+    id = parseInt(id, 10) || id;
     var key = this._keyForType(type);
 
-    this._data[key] = this._data[key].rejectBy('id', +id);
+    this._data[key] = this._data[key].rejectBy('id', id);
     return {};
   },
 
