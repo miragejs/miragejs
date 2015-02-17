@@ -16,9 +16,12 @@ export default BaseController.extend({
     var type = string;
     var postData = this._getJsonBodyForRequest(request);
     var attrs = postData[type];
-    var data = store.push(type, attrs);
+    var model = store.push(type, attrs);
 
-    return data;
+    var response = {};
+    response[type] = model;
+
+    return response;
   },
 
   /*
@@ -33,9 +36,11 @@ export default BaseController.extend({
     var type = singularize(url.substr(url.lastIndexOf('/') + 1));
     var postData = this._getJsonBodyForRequest(request);
     var attrs = postData[type];
-    var data = store.push(type, attrs);
+    var model = store.push(type, attrs);
 
-    return data;
+    var response = {};
+    response[type] = model;
+    return response;
   }
 
 });

@@ -57,8 +57,7 @@ export default {
       model = this._createRecord(type, attrs);
     }
 
-    data[type] = model;
-    return data;
+    return model;
   },
 
   remove: function(type, id) {

@@ -109,13 +109,14 @@ test('returns an empty array if no records match the query', function() {
 module('pretenderify:store#push', {teardown: function() {store.emptyData();} });
 
 test('creates a record if no id attr is present', function() {
-  store.push('contact', {
+  var newContact = store.push('contact', {
     name: 'Link'
   });
 
   var contacts = store.findAll('contact');
 
   deepEqual(contacts, [{id: 1, name: 'Link'}]);
+  deepEqual(newContact, {id: 1, name: 'Link'});
 });
 
 test('creates a record if no id attr is present, and sets new id based on max of existing', function() {
