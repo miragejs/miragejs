@@ -1,4 +1,5 @@
 import { pluralize } from './utils/inflector';
+
 /*
   An identity map.
 */

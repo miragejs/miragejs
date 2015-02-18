@@ -19,7 +19,7 @@ module('Acceptance: Contacts', {
   }
 });
 
-test("I can view the contacts", function() {
+test(`I can view the contacts`, function() {
   visit('/');
 
   andThen(function() {

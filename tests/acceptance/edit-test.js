@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import EP from 'ember-pretenderify';
 import startApp from '../helpers/start-app';
 
 var App;
@@ -13,11 +14,8 @@ module('Acceptance: Edit', {
 });
 
 test("I can edit a contact", function() {
-  store.loadData({
-    contacts: [
-      {id: 1, name: 'Zelda'}
-    ]
-  });
+  var contact = EP.create('contact');
+  var addresses = EP.createList('address', {contact: contact});
 
   visit('/1');
   click('button:contains(Edit)');
