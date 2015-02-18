@@ -1,3 +1,5 @@
+import Ember from 'ember';
+
 export default {
 
   define: function(type, attrs) {
@@ -8,7 +10,7 @@ export default {
     return function(sequence) {
       var newModel = {};
 
-      Object.keys(attrs).forEach(function(key) {
+      Ember.keys(attrs).forEach(function(key) {
         var type = typeof attrs[key];
 
         if (type === 'string' || type === 'number') {
