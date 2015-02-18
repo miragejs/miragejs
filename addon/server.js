@@ -99,7 +99,7 @@ export default function(options) {
 
     for (var i = 0; i < amount; i++) {
       list.push(this.create(type));
-    };
+    }
 
     return list;
   };

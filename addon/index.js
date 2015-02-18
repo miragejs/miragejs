@@ -14,7 +14,7 @@ export default {
         });
 
         return newModel;
-      }
+      };
     }
   }
 

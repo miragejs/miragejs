@@ -2,4 +2,4 @@ export default {
   define: function() {
 
   }
-}
+};
