@@ -4,11 +4,28 @@ export default {
       attrs = type;
     }
 
-    return function(n) {
+    return function(sequence) {
       var newModel = {};
 
-      Object.keys(attrs).forEach(function(key) {
+      // Sort attrs
+      var basicAttrKeys = Object.keys(attrs)
+        .filter(function(key) {
+          var type = typeof attrs[key];
+          return type === 'string' || type === 'number';
+        });
+      var functionAttrKeys = Object.keys(attrs)
+        .filter(function(key) {
+          return typeof attrs[key] === 'function';
+        });
+
+      // First, get plain attrs
+      basicAttrKeys.forEach(function(key) {
         newModel[key] = attrs[key];
+      });
+
+      // Then, execute functions
+      functionAttrKeys.forEach(function(key) {
+        newModel[key] = attrs[key].call(newModel, sequence);
       });
 
       return newModel;
