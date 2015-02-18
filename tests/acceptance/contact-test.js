@@ -2,38 +2,35 @@ import Ember from 'ember';
 import startApp from '../helpers/start-app';
 
 var App;
+var contact;
 
 module('Acceptance: Contact', {
   setup: function() {
     App = startApp();
-    store.loadData({
-      contacts: [
-        {id: 1, name: 'Link'},
-        {id: 2, name: 'Zelda'}
-      ]
-    });
+    contact = server.create('contact');
   },
   teardown: function() {
     Ember.run(App, 'destroy');
+    server.store.emptyData();
   }
 });
 
 test("I can view a contact", function() {
-  visit('/2');
+  visit('/1');
 
   andThen(function() {
     equal(currentRouteName(), 'contact');
-    equal( find('p:first').text(), 'The contact is Zelda' );
+    equal( find('p:first').text(), 'The contact is ' + contact.name );
   });
 });
 
 test("I can delete a contact", function() {
-  visit('/2');
+  visit('/1');
   click('button:contains(Delete)');
 
   andThen(function() {
     equal(currentRouteName(), 'contacts');
-    equal( find('p').length, 1 );
+    equal( find('p').length, 0 );
   });
 });
 
