@@ -45,7 +45,11 @@
     "currentURL",
     "currentPath",
     "currentRouteName",
-    "store"
+    "store",
+    "require",
+    "describe",
+    "afterEach",
+    "it"
   ],
   "node": false,
   "browser": false,
