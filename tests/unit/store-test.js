@@ -1,13 +1,22 @@
-import store from 'ember-pretenderify/store';
+import Store from 'ember-pretenderify/store';
 
+var store;
 module('pretenderify:store');
 
-test('it exists', function() {
+test('it can be instantiated', function() {
+  store = new Store();
   ok(store);
 });
 
 
-module('pretenderify:store#loadData', {teardown: function() {store.emptyData();} });
+module('pretenderify:store#loadData', {
+  setup: function() {
+    store = new Store();
+  },
+  teardown: function() {
+    store.emptyData();
+  }
+});
 
 test('can load an object as its database', function() {
   var data = {contacts: [{id: 1, name: 'Link'}]};
@@ -24,7 +33,14 @@ test('can add data to a single key of its database', function() {
 });
 
 
-module('pretenderify:store#find', {teardown: function() {store.emptyData();} });
+module('pretenderify:store#find', {
+  setup: function() {
+    store = new Store();
+  },
+  teardown: function() {
+    store.emptyData();
+  }
+});
 
 test('returns a record that matches a numerical id', function() {
   store.loadData({
@@ -51,7 +67,14 @@ test('returns a record that matches a string id', function() {
 });
 
 
-module('pretenderify:store#findAll', {teardown: function() {store.emptyData();} });
+module('pretenderify:store#findAll', {
+  setup: function() {
+    store = new Store();
+  },
+  teardown: function() {
+    store.emptyData();
+  }
+});
 
 test('returns all records by type', function() {
   var contacts = [
@@ -74,7 +97,14 @@ test("returns an empty array if no models exist", function() {
 });
 
 
-module('pretenderify:store#findQuery', {teardown: function() {store.emptyData();} });
+module('pretenderify:store#findQuery', {
+  setup: function() {
+    store = new Store();
+  },
+  teardown: function() {
+    store.emptyData();
+  }
+});
 
 test('returns an array of records that match the query', function() {
   var ganon = {id: 3, name: 'Ganon', evil: true};
@@ -106,7 +136,14 @@ test('returns an empty array if no records match the query', function() {
 });
 
 
-module('pretenderify:store#push', {teardown: function() {store.emptyData();} });
+module('pretenderify:store#push', {
+  setup: function() {
+    store = new Store();
+  },
+  teardown: function() {
+    store.emptyData();
+  }
+});
 
 test('creates a record if no id attr is present', function() {
   var newContact = store.push('contact', {
@@ -168,7 +205,14 @@ test("doesn't affect data outside the store", function() {
 });
 
 
-module('pretenderify:store#remove', {teardown: function() {store.emptyData();} });
+module('pretenderify:store#remove', {
+  setup: function() {
+    store = new Store();
+  },
+  teardown: function() {
+    store.emptyData();
+  }
+});
 
 test('removes a record by type and id', function() {
   store.loadData({
@@ -183,7 +227,14 @@ test('removes a record by type and id', function() {
 });
 
 
-module('pretenderify:store#removeQuery', {teardown: function() {store.emptyData();} });
+module('pretenderify:store#removeQuery', {
+  setup: function() {
+    store = new Store();
+  },
+  teardown: function() {
+    store.emptyData();
+  }
+});
 
 test('removes records that match the query', function() {
   var link = {id: 1, name: 'Link', evil: false};

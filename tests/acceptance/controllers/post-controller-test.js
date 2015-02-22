@@ -1,13 +1,15 @@
 import Ember from 'ember';
 import startApp from '../../helpers/start-app';
 import controller from 'ember-pretenderify/controllers/front';
-import store from 'ember-pretenderify/store';
+import Store from 'ember-pretenderify/store';
 
 var App;
+var store;
 
 module('pretenderify:frontController POST', {
   setup: function() {
     App = startApp();
+    store = new Store();
     store.emptyData();
   },
   teardown: function() {

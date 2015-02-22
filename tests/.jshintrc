@@ -45,7 +45,6 @@
     "currentURL",
     "currentPath",
     "currentRouteName",
-    "store",
     "require",
     "describe",
     "afterEach",

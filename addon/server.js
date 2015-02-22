@@ -1,12 +1,17 @@
 import Pretender from 'pretender';
-import store from './store';
+import Store from './store';
 import frontController from './controllers/front';
 
 /*
   The Pretenderify server, which has a store and an XHR interceptor.
+
+  Requires an environment.
 */
 export default function(options) {
   // Init vars
+  if (!options || !options.environment) {
+    throw "You must pass an environment in when creating a Pretenderify server instance";
+  }
   var environment = options.environment;
 
   /*
@@ -73,7 +78,7 @@ export default function(options) {
     this.store.loadData(data);
   };
 
-  this.store = store;
+  this.store = new Store();
   this.emptyStore = function() {
     this.store.emptyData();
   };
@@ -88,6 +93,9 @@ export default function(options) {
   this.create = function(type) {
     var currentRecords = this.store.findAll(type);
     var sequence = currentRecords ? currentRecords.length: 0;
+    if (!this._factoryMap || !this._factoryMap[type]) {
+      throw "You're trying to create a " + type + ", but no factory for this type was found";
+    }
     var factory = this._factoryMap[type];
 
     var attrs = factory(sequence);
