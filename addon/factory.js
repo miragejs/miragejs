@@ -10,15 +10,17 @@ export default {
     return function(sequence) {
       var newModel = {};
 
-      Ember.keys(attrs).forEach(function(key) {
-        var type = typeof attrs[key];
+      if (attrs) {
+        Ember.keys(attrs).forEach(function(key) {
+          var type = typeof attrs[key];
 
-        if (type === 'string' || type === 'number') {
-          newModel[key] = attrs[key];
-        } else if (type === 'function') {
-          newModel[key] = attrs[key].call(attrs, sequence);
-        }
-      });
+          if (type === 'string' || type === 'number') {
+            newModel[key] = attrs[key];
+          } else if (type === 'function') {
+            newModel[key] = attrs[key].call(attrs, sequence);
+          }
+        });
+      }
 
       return newModel;
     };

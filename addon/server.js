@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import Pretender from 'pretender';
 import Store from './store';
 import frontController from './controllers/front';
@@ -90,7 +91,7 @@ export default function(options) {
     this._factoryMap = factoryMap;
   };
 
-  this.create = function(type) {
+  this.create = function(type, overrides) {
     var currentRecords = this.store.findAll(type);
     var sequence = currentRecords ? currentRecords.length: 0;
     if (!this._factoryMap || !this._factoryMap[type]) {
@@ -99,6 +100,11 @@ export default function(options) {
     var factory = this._factoryMap[type];
 
     var attrs = factory(sequence);
+    if (overrides) {
+      Ember.keys(overrides).forEach(function(key) {
+        attrs[key] = overrides[key];
+      });
+    }
     return this.store.push(type, attrs);
   };
 

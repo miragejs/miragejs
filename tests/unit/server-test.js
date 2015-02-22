@@ -1,3 +1,4 @@
+/* global server: true */
 import Server from 'ember-pretenderify/server';
 import Factory from 'ember-pretenderify/factory';
 
@@ -27,18 +28,20 @@ test('its store is isolated across instances', function() {
 });
 
 
-module('pretenderify:server#create');
+var server;
+module('pretenderify:server#create', {
+  setup: function() {
+    server = new Server({environment: 'test'});
+  }
+});
 
 test('create fails when no factories are regisered', function() {
-  var server = new Server({environment: 'test'});
-
   throws(function() {
     var contact = server.create('contact');
   });
 });
 
 test('create fails when an expected factory isn\'t registered', function() {
-  var server = new Server({environment: 'test'});
   server.loadFactories({
     address: Factory.define()
   });
@@ -48,14 +51,36 @@ test('create fails when an expected factory isn\'t registered', function() {
   });
 });
 
-test('create works', function() {
-  var server = new Server({environment: 'test'});
+test('create adds the data to the store', function() {
+  server.loadFactories({
+    contact: Factory.define({name: 'Sam'})
+  });
+
+  server.create('contact');
+  var contactsInStore = server.store.findAll('contact');
+
+  equal(contactsInStore.length, 1);
+  deepEqual(contactsInStore[0], {id: 1, name: 'Sam'});
+});
+
+test('create returns the new data in the store', function() {
   server.loadFactories({
     contact: Factory.define({name: 'Sam'})
   });
 
   var contact = server.create('contact');
 
-  equal(contact.name, 'Sam');
-  //equal(contact.id, server.store.findAll('contact'));
+  deepEqual(contact, {id: 1, name: 'Sam'});
+});
+
+test('create allows for attr overrides', function() {
+  server.loadFactories({
+    contact: Factory.define({name: 'Sam'})
+  });
+
+  var sam = server.create('contact');
+  var link = server.create('contact', {name: 'Link'});
+
+  deepEqual(sam, {id: 1, name: 'Sam'});
+  deepEqual(link, {id: 2, name: 'Link'});
 });

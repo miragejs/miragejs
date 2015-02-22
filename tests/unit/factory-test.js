@@ -6,6 +6,14 @@ test('it exists', function() {
   ok(Factory);
 });
 
+test('it returns an empty object if the factory is a noop', function() {
+  var factory = Factory.define();
+
+  var data = factory();
+
+  deepEqual(data, {});
+});
+
 test('it works with strings and numbers', function() {
   var factory = Factory.define({
     name: 'Sam',
