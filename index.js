@@ -34,5 +34,20 @@ module.exports = {
   shouldIncludeFiles: function() {
     var config = this.app.project.config()['ember-pretenderify'];
     return config.force || this.app.env !== 'production';
+  },
+
+  postprocessTree: function(type, tree) {
+    if(type === 'js' && !this.shouldIncludeFiles()) {
+      return this.excludePretenderDir(tree);
+    }
+    return tree;
+  },
+
+  excludePretenderDir: function(tree) {
+    var modulePrefix = this.app.project.config()['modulePrefix'];
+    return new this.Funnel(tree, {
+      exclude: [new RegExp('^' + modulePrefix + '/pretender/')],
+      description: 'Funnel: exclude pretender'
+    });
   }
 };
