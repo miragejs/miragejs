@@ -40,10 +40,11 @@ Changes:
 Update notes:
 
  - Run `bower install`. This brings along `ember-inflector` as a separate package.
+ - This update contained one or more breaking changes (see below).
 
 Changes:
 
-- [breaking change] If you happen to be using `store.find(type)` to return a collection (e.g. without an `id`), start using `store.findAll(type)`
+- [breaking change] If you happen to be using `store.find(type)` to return a collection (e.g. without an `id`), use `store.findAll(type)` instead
 - Various updates/refactorings to store
 - Don't log server responses during testing
 - Use standalone ember-inflector package, no more dependency on ember data
