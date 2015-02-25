@@ -6,8 +6,8 @@ export default EP.Factory.define({
 
   age: 20,
 
-  email: function(seq) {
-    return `person${seq}@test.com`;
+  email: function(i) {
+    return `person${i}@test.com`;
   },
 
   admin: function() {
