@@ -114,7 +114,7 @@ this.get('/api/contacts')
 
 since the key of the last URL segment matches the store object we want.
 
-See [the docs below](/wiki/HTTP-Verb-methods) for all available shorthands.
+See [the docs below](../../wiki/HTTP-Verb-methods) for all available shorthands.
 
 **Acceptance testing**
 
@@ -150,15 +150,16 @@ Another benefit of separating your server's routes from its data is that your te
 
 -----
 
-That should be enough to get started! Check out the [dummy config](tests/dummy/app/pretender/config.js) in this repo for a simple example, or [browse the wiki](/wiki) for the full API.
+That should be enough to get started! Check out the [dummy config](tests/dummy/app/pretender/config.js) in this repo for a simple example, or [browse the wiki](../../wiki) for the full API.
 
+## [Documentation](../../wiki)
 
-# FAQ
+## FAQ
 
-## Known issues
+### Known issues
 
 - Pretender doesn't handle other-origin requests (e.g. api.twitter.com)
 
-## Support
+### Support
 
 Having trouble? Open an issue!
