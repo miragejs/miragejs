@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default {
 
-  define: function(attrs) {
+  extend: function(attrs) {
 
     return function(sequence) {
       var newModel = {};

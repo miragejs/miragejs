@@ -1,6 +1,6 @@
 import EP from 'ember-pretenderify';
 
-export default EP.Factory.define({
+export default EP.Factory.extend({
 
   name: 'Pete',
 

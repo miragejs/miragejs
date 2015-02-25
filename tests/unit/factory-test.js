@@ -7,7 +7,7 @@ test('it exists', function() {
 });
 
 test('it returns an empty object if the factory is a noop', function() {
-  var factory = Factory.define();
+  var factory = Factory.extend();
 
   var data = factory();
 
@@ -15,7 +15,7 @@ test('it returns an empty object if the factory is a noop', function() {
 });
 
 test('it works with strings and numbers', function() {
-  var factory = Factory.define({
+  var factory = Factory.extend({
     name: 'Sam',
     age: 28,
   });
@@ -26,14 +26,14 @@ test('it works with strings and numbers', function() {
 });
 
 test('it has access to its own plain attrs', function() {
-  var factory1 = Factory.define({
+  var factory1 = Factory.extend({
     name: 'Sam',
     age: 28,
     admin: function(n) {
       return this.age > 30;
     }
   });
-  var factory2 = Factory.define({
+  var factory2 = Factory.extend({
     name: 'Gandalf',
     age: 500,
     admin: function() {
@@ -49,7 +49,7 @@ test('it has access to its own plain attrs', function() {
 });
 
 test('it has access to its sequence', function() {
-  var factory = Factory.define({
+  var factory = Factory.extend({
     name: 'Sam',
     age: 28,
     email: function(n) {
@@ -63,3 +63,12 @@ test('it has access to its sequence', function() {
   deepEqual(data1, {name: 'Sam', age: 28, email: 'person1@test.com'});
   deepEqual(data2, {name: 'Sam', age: 28, email: 'person2@test.com'});
 });
+
+//test('it supports basic inheritance', function() {
+  //var factory = Factory.extend({
+    //name: 'Sam',
+    //age: 28,
+  //});
+
+  //var data = factory();
+//});

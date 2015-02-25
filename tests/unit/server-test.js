@@ -43,7 +43,7 @@ test('create fails when no factories are regisered', function() {
 
 test('create fails when an expected factory isn\'t registered', function() {
   server.loadFactories({
-    address: Factory.define()
+    address: Factory.extend()
   });
 
   throws(function() {
@@ -53,7 +53,7 @@ test('create fails when an expected factory isn\'t registered', function() {
 
 test('create adds the data to the store', function() {
   server.loadFactories({
-    contact: Factory.define({name: 'Sam'})
+    contact: Factory.extend({name: 'Sam'})
   });
 
   server.create('contact');
@@ -65,7 +65,7 @@ test('create adds the data to the store', function() {
 
 test('create returns the new data in the store', function() {
   server.loadFactories({
-    contact: Factory.define({name: 'Sam'})
+    contact: Factory.extend({name: 'Sam'})
   });
 
   var contact = server.create('contact');
@@ -75,7 +75,7 @@ test('create returns the new data in the store', function() {
 
 test('create allows for attr overrides', function() {
   server.loadFactories({
-    contact: Factory.define({name: 'Sam'})
+    contact: Factory.extend({name: 'Sam'})
   });
 
   var sam = server.create('contact');
