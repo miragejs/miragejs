@@ -1,12 +1,13 @@
 import { pluralize } from './utils/inflector';
+
 /*
   An identity map.
 */
-export default {
+export default function() {
 
-  _data: {},
+  this._data = {};
 
-  loadData: function(data, key) {
+  this.loadData = function(data, key) {
     var copy = JSON.parse(JSON.stringify(data));
 
     if (key) {
@@ -14,25 +15,25 @@ export default {
     } else {
       this._data = copy;
     }
-  },
+  };
 
-  emptyData: function() {
+  this.emptyData = function() {
     this._data = {};
-  },
+  };
 
-  find: function(type, id) {
+  this.find = function(type, id) {
     // If parses, coerce to integer
     id = parseInt(id, 10) || id;
     var data = this._findDataForType(type).findBy('id', id);
 
     return data;
-  },
+  };
 
-  findAll: function(type) {
+  this.findAll = function(type) {
     return this._findDataForType(type);
-  },
+  };
 
-  findQuery: function(type, query) {
+  this.findQuery = function(type, query) {
     var data = this._findDataForType(type);
 
     if (data) {
@@ -42,9 +43,9 @@ export default {
     }
 
     return data;
-  },
+  };
 
-  push: function(type, attrs) {
+  this.push = function(type, attrs) {
     var data = {};
     var model;
 
@@ -58,9 +59,9 @@ export default {
     }
 
     return model;
-  },
+  };
 
-  remove: function(type, id) {
+  this.remove = function(type, id) {
     var _this = this;
     // If parses, coerce to integer
     id = parseInt(id, 10) || id;
@@ -68,9 +69,9 @@ export default {
 
     this._data[key] = this._data[key].rejectBy('id', id);
     return {};
-  },
+  };
 
-  removeQuery: function(type, query) {
+  this.removeQuery = function(type, query) {
     var _this = this;
     var key = this._keyForType(type);
 
@@ -79,12 +80,12 @@ export default {
     });
 
     return {};
-  },
+  };
 
   /*
     Private methods
   */
-  _createRecord: function(type, attrs) {
+  this._createRecord = function(type, attrs) {
     var key = this._keyForType(type);
     var newId = 1;
 
@@ -103,24 +104,24 @@ export default {
     this._data[key].push(attrs);
 
     return attrs;
-  },
+  };
 
-  _updateRecord: function(type, attrs) {
+  this._updateRecord = function(type, attrs) {
     var currentModel = this.find(type, attrs.id);
     Object.keys(attrs).forEach(function(attr) {
       currentModel[attr] = attrs[attr];
     });
 
     return currentModel;
-  },
+  };
 
-  _keyForType: function(type) {
+  this._keyForType = function(type) {
     return pluralize(type);
-  },
+  };
 
-  _findDataForType: function(type) {
+  this._findDataForType = function(type) {
     var key = this._keyForType(type);
 
     return this._data ? this._data[key] : undefined;
-  }
-};
+  };
+}

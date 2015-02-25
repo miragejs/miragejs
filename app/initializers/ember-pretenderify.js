@@ -2,6 +2,7 @@ import ENV from '../config/environment';
 import userConfig from '../pretender/config';
 import Server from 'ember-pretenderify/server';
 import readData from 'ember-pretenderify/utils/read-data';
+import readFactories from 'ember-pretenderify/utils/read-factories';
 
 export default {
   name: 'ember-pretenderify',
@@ -22,6 +23,11 @@ export default {
       if (usingInDev || config.force) {
         var userData = readData(ENV.modulePrefix);
         server.loadData(userData);
+
+      } else if (usingInTest) {
+
+        var factoryMap = readFactories(ENV.modulePrefix);
+        server.loadFactories(factoryMap);
       }
     }
   }

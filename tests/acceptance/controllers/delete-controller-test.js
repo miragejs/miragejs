@@ -1,15 +1,17 @@
 import Ember from 'ember';
 import startApp from '../../helpers/start-app';
 import controller from 'ember-pretenderify/controllers/front';
-import store from 'ember-pretenderify/store';
+import Store from 'ember-pretenderify/store';
 
 var App;
 var contacts = [{id: 1, name: 'Link', address_ids: [1]}, {id: 2, name: 'Zelda', address_ids: [2]}];
 var addresses = [{id: 1, name: '123 Hyrule Way', contact_id: 1}, {id: 2, name: '456 Hyrule Way', contact_id: 2}];
+var store;
 
 module('pretenderify:frontController DELETE', {
   setup: function() {
     App = startApp();
+    store = new Store();
     store.loadData({
       contacts: contacts,
       addresses: addresses

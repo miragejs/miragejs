@@ -13,11 +13,7 @@ module('Acceptance: Edit', {
 });
 
 test("I can edit a contact", function() {
-  store.loadData({
-    contacts: [
-      {id: 1, name: 'Zelda'}
-    ]
-  });
+  server.create('contact');
 
   visit('/1');
   click('button:contains(Edit)');

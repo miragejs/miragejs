@@ -1,25 +1,30 @@
+import Ember from 'ember';
 import Pretender from 'pretender';
-import store from './store';
+import Store from './store';
 import frontController from './controllers/front';
 
 /*
   The Pretenderify server, which has a store and an XHR interceptor.
+
+  Requires an environment.
 */
 export default function(options) {
   // Init vars
+  if (!options || !options.environment) {
+    throw "You must pass an environment in when creating a Pretenderify server instance";
+  }
   var environment = options.environment;
+
+  /*
+    Routing methods + props
+  */
 
   // Default properties
   this.timing = 400;
   this.namespace = '';
 
-  // Methods
   this.loadConfig = function(config) {
     config.call(this);
-  };
-
-  this.loadData = function(data) {
-    this.store.loadData(data);
   };
 
   this.stub = function(verb, path, handler, code) {
@@ -54,8 +59,6 @@ export default function(options) {
     this.stub('delete', path, handler, code);
   };
 
-  this.store = store;
-
   this.interceptor = new Pretender(function() {
     // Default Pretender config
     this.prepareBody = function(body) {
@@ -69,9 +72,55 @@ export default function(options) {
 
   this.pretender = this.interceptor; // alias
 
-  // TODO: Better test api
+  /*
+    Store methods and props
+  */
+  this.loadData = function(data) {
+    this.store.loadData(data);
+  };
+
+  this.store = new Store();
+  this.emptyStore = function() {
+    this.store.emptyData();
+  };
+
+  /*
+    Factory methods and props
+  */
+  this.loadFactories = function(factoryMap) {
+    this._factoryMap = factoryMap;
+  };
+
+  this.create = function(type, overrides) {
+    var currentRecords = this.store.findAll(type);
+    var sequence = currentRecords ? currentRecords.length: 0;
+    if (!this._factoryMap || !this._factoryMap[type]) {
+      throw "You're trying to create a " + type + ", but no factory for this type was found";
+    }
+    var factory = this._factoryMap[type];
+
+    var attrs = factory(sequence);
+    if (overrides) {
+      Ember.keys(overrides).forEach(function(key) {
+        attrs[key] = overrides[key];
+      });
+    }
+    return this.store.push(type, attrs);
+  };
+
+  this.createList = function(type, amount) {
+    var list = [];
+
+    for (var i = 0; i < amount; i++) {
+      list.push(this.create(type));
+    }
+
+    return list;
+  };
+
+  // TODO: Better way to inject server
   if (environment === 'test') {
-    window.store = this.store;
+    window.server = this;
   }
 
   return this;
