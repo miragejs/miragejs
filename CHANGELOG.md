@@ -1,5 +1,12 @@
 # Ember Pretenderify Changelog
 
+## 0.0.18
+Update notes:
+  - the testing API has changed. Before, you used `store.loadData`, now you use factories. See the Getting Started guide below for an example, or the factories wiki page for the full API.
+
+Changes:
+  - Basic factory support
+
 ## 0.0.17
 Update notes:
   - the testing API has changed. Before, you added data directly to `serverData`, e.g.
