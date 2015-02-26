@@ -96,7 +96,7 @@ this.post('/api/users', function(store, request) {
 });
 ```
 
-Find the complete documentation for `get`, `post`, `put` and `del` [**below**](#verb-methods).
+Find the complete documentation for `get`, `post`, `put` and `del` [**in the wiki**](../../wiki/HTTP-Verb-methods).
 
 **Shorthands**
 
