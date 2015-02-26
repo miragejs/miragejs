@@ -52,7 +52,7 @@ export default [
 
 Given this file, whenever your Pretender server starts up, this data will be added to its store under the `contacts` key (since that's the name of the file). Add additional data by adding more files under the `/data` folder. All data files should be plural, and export arrays of POJOs.
 
-**Defining your routes**
+### Defining your routes
 
 Now, to return this data from an endpoint, let's define our first route. We'll use the **get** helper method to easily interact with our server's store (which now has these contacts in it).
 
@@ -105,7 +105,7 @@ this.post('/api/users', function(store, request) {
 Find the complete documentation for the store as well as the rest of the
 available shorthands for `get`, `post`, `put` and `del` [in the wiki](../../wiki).
 
-**Acceptance testing**
+### Acceptance testing
 
 During testing, the store always starts off empty; however, all the routes you've defined will still be available (since these are what your app expects, and mostly shouldn't change within your tests). The store is emptied because tests should be atomic, and should not rely on state defined elsewhere. This means the data you've added under `/pretender/data` will not be available in your tests.
 
