@@ -109,7 +109,7 @@ available shorthands for `get`, `post`, `put` and `del` [in the wiki](../../wiki
 
 During testing, the store always starts off empty; however, all the routes you've defined will still be available (since these are what your app expects, and mostly shouldn't change within your tests). The store is emptied because tests should be atomic, and should not rely on state defined elsewhere. This means the data you've added under `/pretender/data` will not be available in your tests.
 
-Instead, to get data into your tests, you'll define factories. That way, each test can create the data it needs (set up the "state" of the server), and then assert against that data.
+Instead, to get data into your tests, you'll define factories. That way, each test can create the data it needs (i.e. it can set up the "server state" it expects), and then assert against that data.
 
 Let's define a `contact` factory. Add a file under `/test/factories/contact.js` - the name of the file is the name of the factory:
 
