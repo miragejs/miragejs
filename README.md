@@ -144,13 +144,15 @@ export default EP.Factory.extend({
 
 The attributes of your factory can either be plain numbers or strings, or functions. A function gets the sequence of the factory *i* as its only parameter. Within the function you can also reference the plain attributes (numbers and strings) of the generated object via `this.attr`.
 
-Let's use this factory in our acceptance test. We want to assert against our index route, assuming there are three contacts being fetched when our Ember app boots up and renders. The `server` variable is injected into your tests which has two helper methods: `create` and `createList`. Let's use `createList` to setup our server's state for this test:
+Let's use this factory in an acceptance test. We want to assert against our index route, assuming there are three contacts in our server when our Ember app boots up and renders.
+
+In your tests you'll have access to the `server` variable, which has two helper methods attached to it: `create` and `createList`. Let's use `createList` to set up our server's state for this test:
 
 ```js
 // tests/acceptance/index-test.js
 
 test("I can view the contacts", function() {
-  // set up our "server's data"
+  // set up our server's state
   var contacts = server.createList('contact', 3);
 
   visit('/');
@@ -163,7 +165,7 @@ test("I can view the contacts", function() {
 });
 ```
 
-Of course, you can put calls to `create` and `createList` within your test module's `setup` block if you want to share them across `test`s. View the [dummy acceptance tests](tests/acceptance) for more examples, or browse the [full Factory API docs](../../wiki/Factories) in the wiki.
+You can also put calls to `create` and `createList` within your test module's `setup` block if you want to share them across `test`s. View the [dummy acceptance tests](tests/acceptance) for more examples, or browse the [full Factory API docs](../../wiki/Factories) in the wiki.
 
 -----
 
