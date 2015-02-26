@@ -52,7 +52,9 @@ export default [
 
 Given this file, whenever your Pretender server starts up, this data will be added to its store under the `contacts` key (since that's the name of the file). Add additional data by adding more files under the `/data` folder. All data files should be plural, and export arrays of POJOs.
 
-Now, to return this data from an endpoint, let's create our first route. We'll use the **get** helper method to easily interact with our server's store (which now has these contacts in it).
+**Defining your routes**
+
+Now, to return this data from an endpoint, let's define our first route. We'll use the **get** helper method to easily interact with our server's store (which now has these contacts in it).
 
 The generator should have created the file `app/pretender/config.js`, which exports a function. Add a route for `/api/contacts`:
 
@@ -83,7 +85,9 @@ Handling POST, PUT and DELETE requests is just as simple. For example, this rout
 this.post('/api/users', 'user');
 ```
 
-You can also pass a function in as the second argument in case you want to manipulate the store yourself:
+Passing just a string or array as the second argument to get, post, put or del is an example of a **shorthand**. There are [several available](../../wiki/HTTP-Verb-methods)
+to make writing your routes as concise as possible, but sometimes you'll need to do some custom work. In that case,
+you can pass a function in as the second argument, and interact directly with the store:
 
 ```js
 this.post('/api/users', function(store, request) {
@@ -96,23 +100,8 @@ this.post('/api/users', function(store, request) {
 });
 ```
 
-**Shorthands**
-
-There are many shorthands available to make writing your routes easier. For example, the route
-
-```js
-this.get('/api/contacts', 'contacts');
-```
-
-can be simplified to
-
-```js
-this.get('/api/contacts')
-```
-
-since the key of the last URL segment matches the store object we want.
-
-Find the complete documentation for `get`, `post`, `put` and `del`, including all available shorthands, [in the wiki](../../wiki/HTTP-Verb-methods).
+Find the complete documentation for the store as well as the rest of the
+available shorthands for `get`, `post`, `put` and `del` [in the wiki](../../wiki).
 
 **Acceptance testing**
 
