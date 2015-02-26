@@ -108,11 +108,11 @@ export default function(options) {
     return this.store.push(type, attrs);
   };
 
-  this.createList = function(type, amount) {
+  this.createList = function(type, amount, overrides) {
     var list = [];
 
     for (var i = 0; i < amount; i++) {
-      list.push(this.create(type));
+      list.push(this.create(type, overrides));
     }
 
     return list;
