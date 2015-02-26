@@ -96,8 +96,6 @@ this.post('/api/users', function(store, request) {
 });
 ```
 
-Find the complete documentation for `get`, `post`, `put` and `del` [**in the wiki**](../../wiki/HTTP-Verb-methods).
-
 **Shorthands**
 
 There are many shorthands available to make writing your routes easier. For example, the route
@@ -114,7 +112,7 @@ this.get('/api/contacts')
 
 since the key of the last URL segment matches the store object we want.
 
-See [the docs below](../../wiki/HTTP-Verb-methods) for all available shorthands.
+Find the complete documentation for `get`, `post`, `put` and `del`, including all available shorthands, [in the wiki](../../wiki/HTTP-Verb-methods).
 
 **Acceptance testing**
 
