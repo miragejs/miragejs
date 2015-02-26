@@ -118,39 +118,56 @@ See [the docs below](../../wiki/HTTP-Verb-methods) for all available shorthands.
 
 **Acceptance testing**
 
-During testing, the store always starts off empty; however, all the routes you've defined will still be available (since these are what your app expects, and mostly shouldn't change within your tests). The store is emptied because tests should be atomic, and should not rely on state defined elsewhere.
+During testing, the store always starts off empty; however, all the routes you've defined will still be available (since these are what your app expects, and mostly shouldn't change within your tests). The store is emptied because tests should be atomic, and should not rely on state defined elsewhere. This means the data you've added under `/pretender/data` will not be available in your tests.
 
-So for each test, you first define the initial state of the store (i.e. the "server" state your test expects). Then, write your test and assert based on that state.
+Instead, to get data into your tests, you'll define factories. That way, each test can create the data it needs (set up the "state" of the server), and then assert against that data.
 
-There's a global helper called `store` to help you with this. Here's an example acceptance test:
+Let's define a `contact` factory. Add a file under `/test/factories/contact.js` - the name of the file is the name of the factory:
+
+```js
+// tests/factories/contact.js
+import EP from 'ember-pretenderify';
+
+export default EP.Factory.extend({
+  name: 'Pete',
+  age: 20,
+
+  email: function(i) {
+    return `person${i}@test.com`;
+  },
+
+  admin: function() {
+    return this.age > 30;
+  }
+});
+```
+
+The attributes of your factory can either be plain numbers or strings, or functions. A function gets the sequence of the factory *i* as its only parameter. Within the function you can also reference the plain attributes (numbers and strings) of the generated object via `this.attr`.
+
+Let's use this factory in our acceptance test. We want to assert against our index route, assuming there are three contacts being fetched when our Ember app boots up and renders. The `server` variable is injected into your tests which has two helper methods: `create` and `createList`. Let's use `createList` to setup our server's state for this test:
 
 ```js
 // tests/acceptance/index-test.js
-test("I can view the models", function() {
+
+test("I can view the contacts", function() {
   // set up our "server's data"
-  store.loadData({
-    products = [{
-      id: 1,
-      name: 'iPhone'
-    }]
-  });
+  var contacts = server.createList('contact', 3);
 
   visit('/');
 
   andThen(function() {
     equal(currentRouteName(), 'index');
-    equal( find('p').text(), 'iPhone' );
+    equal( find('li').length, 3 );
+    equal( find('li:first').text(), contacts[0].name );
   });
 });
 ```
 
-In the future, we plan on making factories with a simpler API to help you add data to your Pretender server's store. But fundamentally, the point here is that the routes and config you've defined for your Pretender server will be shared across your development and testing environments.
-
-Another benefit of separating your server's routes from its data is that your tests become less brittle. Say you change your API for some route from using links (async model relationships) to having everything sideloaded. The only thing you need to change here is the related route definition, in your `/pretender/config.js` file. You won't need to update your tests, since they just specify what's in the store at the time of the test (which wouldn't change in this case).
+Of course, you can put calls to `create` and `createList` within your test module's `setup` block if you want to share them across `test`s. View the [dummy acceptance tests](tests/acceptance) for more examples, or browse the [full Factory API docs](../../wiki/Factories) in the wiki.
 
 -----
 
-That should be enough to get started! Check out the [dummy config](tests/dummy/app/pretender/config.js) in this repo for a simple example, or [browse the wiki](../../wiki) for the full API.
+That should be enough to get started! The dummy app in this example has a fully working [config](tests/dummy/app/pretender/config.js), [factory](tests/factories/contact.js), and some [acceptance tests](tests/acceptance) you can look at. Be sure to [check out the wiki](../../wiki) for the full API.
 
 ## Full documentation
 

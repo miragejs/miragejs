@@ -11,7 +11,6 @@ module('Acceptance: Contacts', {
   },
   teardown: function() {
     Ember.run(App, 'destroy');
-    server.emptyStore();
   }
 });
 

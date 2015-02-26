@@ -19,7 +19,6 @@ module('pretenderify:frontController DELETE', {
   },
   teardown: function() {
     Ember.run(App, 'destroy');
-    store.emptyData();
   }
 });
 

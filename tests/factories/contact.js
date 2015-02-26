@@ -1,9 +1,7 @@
 import EP from 'ember-pretenderify';
 
 export default EP.Factory.extend({
-
   name: 'Pete',
-
   age: 20,
 
   email: function(i) {
@@ -13,5 +11,4 @@ export default EP.Factory.extend({
   admin: function() {
     return this.age > 30;
   }
-
 });
