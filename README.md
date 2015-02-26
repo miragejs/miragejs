@@ -87,8 +87,9 @@ this.post('/api/users', 'user');
 
 Passing just a string or array as the second argument to get, post, put or del
 (as shown above) is an example of a **shorthand**. There are [several available](../../wiki/HTTP-Verb-methods)
-to make writing your routes as concise as possible, but sometimes you'll need to do some custom work. In that case,
-you can pass a function in as the second argument, and interact directly with the store:
+to make writing your routes as concise as possible, but sometimes you'll need
+to do some custom work. In that case, you can pass a function in as the second
+argument, and interact directly with the store and Pretender request object:
 
 ```js
 this.post('/api/users', function(store, request) {
