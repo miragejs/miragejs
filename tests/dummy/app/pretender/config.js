@@ -6,6 +6,6 @@ export default function() {
   this.put('/contacts/:id');
   this.del('/contacts/:id');
 
-  // Admins
-  this.get('/admins');
+  // Friends
+  this.get('/friends');
 }

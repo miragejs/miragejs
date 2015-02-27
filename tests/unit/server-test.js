@@ -85,6 +85,28 @@ test('create allows for attr overrides', function() {
   deepEqual(link, {id: 2, name: 'Link'});
 });
 
+test('create allows for attr overrides with extended factories', function() {
+  var ContactFactory = Factory.extend({
+    name: 'Link',
+    age: 500
+  });
+  var FriendFactory = ContactFactory.extend({
+    is_young: function() {
+      return this.age < 18;
+    }
+  });
+  server.loadFactories({
+    contact: ContactFactory,
+    friend: FriendFactory
+  });
+
+  var link = server.create('friend');
+  var youngLink = server.create('friend', {age: 10});
+
+  deepEqual(link, {id: 1, name: 'Link', age: 500, is_young: false});
+  deepEqual(youngLink, {id: 2, name: 'Link', age: 10, is_young: true});
+});
+
 module('pretenderify:server#createList', {
   setup: function() {
     server = new Server({environment: 'test'});

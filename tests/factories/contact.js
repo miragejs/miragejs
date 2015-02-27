@@ -6,5 +6,9 @@ export default EP.Factory.extend({
 
   email: function(i) {
     return `person${i}@test.com`;
+  },
+
+  admin: function() {
+    return this.age > 30;
   }
 });

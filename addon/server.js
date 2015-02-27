@@ -97,14 +97,16 @@ export default function(options) {
     if (!this._factoryMap || !this._factoryMap[type]) {
       throw "You're trying to create a " + type + ", but no factory for this type was found";
     }
-    var factory = new this._factoryMap[type]();
+    var OriginalFactory = this._factoryMap[type];
+    var Factory = OriginalFactory.extend(overrides);
+    var factory = new Factory();
 
     var attrs = factory.build(sequence);
-    if (overrides) {
-      Ember.keys(overrides).forEach(function(key) {
-        attrs[key] = overrides[key];
-      });
-    }
+    // if (overrides) {
+    //   Ember.keys(overrides).forEach(function(key) {
+    //     attrs[key] = overrides[key];
+    //   });
+    // }
     return this.store.push(type, attrs);
   };
 

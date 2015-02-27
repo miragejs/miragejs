@@ -21,8 +21,8 @@ var Factory = function() {
 };
 
 Factory.extend = function(attrs) {
-  // Merge the new attributes with existing ones
-  var newAttrs = jQuery.extend(true, attrs, this.attrs);
+  // Merge the new attributes with existing ones. If conflict, new ones win.
+  var newAttrs = jQuery.extend(true, {}, this.attrs, attrs);
 
   var Subclass = function() {
     this.attrs = newAttrs;

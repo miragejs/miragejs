@@ -9,7 +9,8 @@ Router.map(function() {
   this.route('contacts', {path: '/'});
   this.route('contact', {path: '/:contact_id'});
   this.route('edit', {path: '/:contact_id/edit'});
-  this.route('admins');
+
+  this.route('friends');
 });
 
 export default Router;
