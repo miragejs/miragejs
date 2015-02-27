@@ -86,8 +86,8 @@ test('returns all records by type', function() {
   deepEqual(store.findAll('contact'), contacts);
 });
 
-test("returns undefined if the key doesn't exist", function() {
-  deepEqual(store.findAll('contact'), undefined);
+test("returns an empty array if the key doesn't exist", function() {
+  deepEqual(store.findAll('contact'), []);
 });
 
 test("returns an empty array if no models exist", function() {

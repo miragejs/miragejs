@@ -30,7 +30,7 @@ export default function() {
   };
 
   this.findAll = function(type) {
-    return this._findDataForType(type);
+    return this._findDataForType(type) || [];
   };
 
   this.findQuery = function(type, query) {

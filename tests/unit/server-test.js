@@ -24,7 +24,7 @@ test('its store is isolated across instances', function() {
   });
   var server2 = new Server({environment: 'test'});
 
-  equal(server2.store.findAll('contact'), undefined);
+  deepEqual(server2.store.findAll('contact'), []);
 });
 
 
