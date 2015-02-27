@@ -28,7 +28,7 @@ test("I can delete a contact", function() {
   click('button:contains(Delete)');
 
   andThen(function() {
-    equal(currentRouteName(), 'contacts');
+    equal(currentRouteName(), 'index');
     equal( find('p').length, 0 );
   });
 });

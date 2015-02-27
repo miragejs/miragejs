@@ -1,6 +1,15 @@
 # Ember Pretenderify Changelog
 
 ## 0.0.19
+Update notes: none.
+
+Changes:
+
+ - #26 [ENHANCEMENT] Added support for factory inheritance
+ - #36 [BUGFIX] Fix bug where createList didn't respect attr overrides @ashton
+ - #37 [INTERNAL] Add tests for createList @cibernox
+
+## 0.0.19
 Hotfix for #34, no changes require to update.
 
 ## 0.0.18

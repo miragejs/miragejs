@@ -1,4 +1,5 @@
 import Ember from 'ember';
+/* global jQuery */
 
 var Factory = function() {
   this.build = function(sequence) {
