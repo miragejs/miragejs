@@ -1,10 +1,11 @@
 export default function() {
-  // contacts
+  // Contacts
   this.get('/contacts');
-  this.post('/contacts');
-
-  // contact
   this.get('/contacts/:id');
+  this.post('/contacts');
   this.put('/contacts/:id');
   this.del('/contacts/:id');
+
+  // Admins
+  this.get('/admins');
 }
