@@ -4,7 +4,7 @@ import startApp from '../helpers/start-app';
 var App;
 var contacts;
 
-module('Acceptance: Index', {
+module('Acceptance: Contacts', {
   setup: function() {
     App = startApp();
     contacts = server.createList('contact', 2);
@@ -18,7 +18,7 @@ test("I can view the contacts", function() {
   visit('/');
 
   andThen(function() {
-    equal(currentRouteName(), 'index');
+    equal(currentRouteName(), 'contacts');
     equal( find('p').length, 2 );
     equal( find('p:first').text(), contacts[0].name );
   });
@@ -30,7 +30,7 @@ test("I can create a new contact", function() {
   click('button:contains(Create)');
 
   andThen(function() {
-    equal(currentRouteName(), 'index');
+    equal(currentRouteName(), 'contacts');
     equal( find('p').length, 3 );
     equal( find('p:last').text(), 'Ganon' );
   });

@@ -4,12 +4,12 @@ export default Ember.Route.extend({
 
   actions: {
     createContact: function() {
-      var name = this.controllerFor('index').get('newName');
+      var name = this.controllerFor('contacts').get('newName');
       var newContact = this.store.createRecord('contact', {
         name: name
       });
 
-      this.controllerFor('index').set('newName', '');
+      this.controllerFor('contacts').set('newName', '');
 
       return newContact.save();
     },
@@ -22,7 +22,7 @@ export default Ember.Route.extend({
 
     deleteContact: function(contact) {
       return contact.destroyRecord().then(() => {
-        this.transitionTo('index');
+        this.transitionTo('contacts');
       });
     }
   }
