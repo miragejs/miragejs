@@ -119,7 +119,7 @@ test('createList returns the created elements', function() {
   deepEqual(contacts[2], {id: 4, name: 'Sam'});
 });
 
-test('createList respects secuences', function() {
+test('createList respects sequences', function() {
   server.loadFactories({
     contact: Factory.extend({
       name: function(i) {
@@ -135,14 +135,16 @@ test('createList respects secuences', function() {
   deepEqual(contacts[2], {id: 3, name: 'name2'});
 });
 
-test('createList allows for attr overrides', function() {
+test('createList respects attr overrides', function() {
   server.loadFactories({
-    contact: Factory.extend({name: 'Same'})
+    contact: Factory.extend({name: 'Sam'})
   });
 
-  var contacts = server.createList('contact', 3, {name: 'Link'});
+  var sams = server.createList('contact', 2);
+  var links = server.createList('contact', 2, {name: 'Link'});
 
-  deepEqual(contacts[0], {id: 1, name: 'Link'});
-  deepEqual(contacts[1], {id: 2, name: 'Link'});
-  deepEqual(contacts[2], {id: 3, name: 'Link'});
+  deepEqual(sams[0], {id: 1, name: 'Sam'});
+  deepEqual(sams[1], {id: 2, name: 'Sam'});
+  deepEqual(links[0], {id: 3, name: 'Link'});
+  deepEqual(links[1], {id: 4, name: 'Link'});
 });
