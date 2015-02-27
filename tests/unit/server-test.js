@@ -84,3 +84,55 @@ test('create allows for attr overrides', function() {
   deepEqual(sam, {id: 1, name: 'Sam'});
   deepEqual(link, {id: 2, name: 'Link'});
 });
+
+module('pretenderify:server#createList', {
+  setup: function() {
+    server = new Server({environment: 'test'});
+  }
+});
+
+test('createList adds the given number of elements to the store', function() {
+  server.loadFactories({
+    contact: Factory.extend({name: 'Sam'})
+  });
+
+  server.createList('contact', 3);
+  var contactsInStore = server.store.findAll('contact');
+
+  equal(contactsInStore.length, 3);
+  deepEqual(contactsInStore[0], {id: 1, name: 'Sam'});
+  deepEqual(contactsInStore[1], {id: 2, name: 'Sam'});
+  deepEqual(contactsInStore[2], {id: 3, name: 'Sam'});
+});
+
+
+test('createList returns the created elements', function() {
+  server.loadFactories({
+    contact: Factory.extend({name: 'Sam'})
+  });
+
+  server.create('contact');
+  var contacts = server.createList('contact', 3);
+
+  equal(contacts.length, 3);
+  deepEqual(contacts[0], {id: 2, name: 'Sam'});
+  deepEqual(contacts[1], {id: 3, name: 'Sam'});
+  deepEqual(contacts[2], {id: 4, name: 'Sam'});
+});
+
+
+test('createList respects secuences', function() {
+  server.loadFactories({
+    contact: Factory.extend({
+      name: function(i) {
+        return 'name' + i;
+      }
+    })
+  });
+
+  var contacts = server.createList('contact', 3);
+
+  deepEqual(contacts[0], {id: 1, name: 'name0'});
+  deepEqual(contacts[1], {id: 2, name: 'name1'});
+  deepEqual(contacts[2], {id: 3, name: 'name2'});
+});
