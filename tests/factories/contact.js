@@ -1,6 +1,6 @@
-import EP from 'ember-pretenderify';
+import Mirage from 'ember-cli-mirage';
 
-export default EP.Factory.extend({
+export default Mirage.Factory.extend({
   name: 'Pete',
   age: 20,
 

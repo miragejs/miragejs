@@ -1,6 +1,6 @@
-import Factory from 'ember-pretenderify/factory';
+import Factory from 'ember-cli-mirage/factory';
 
-module('pretenderify:factory');
+module('mirage:factory');
 
 test('it exists', function() {
   ok(Factory);

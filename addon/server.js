@@ -4,14 +4,14 @@ import Store from './store';
 import frontController from './controllers/front';
 
 /*
-  The Pretenderify server, which has a store and an XHR interceptor.
+  The Mirage server, which has a store and an XHR interceptor.
 
   Requires an environment.
 */
 export default function(options) {
   // Init vars
   if (!options || !options.environment) {
-    throw "You must pass an environment in when creating a Pretenderify server instance";
+    throw "You must pass an environment in when creating a Mirage server instance";
   }
   var environment = options.environment;
 

@@ -1,8 +1,8 @@
 /* global server: true */
-import Server from 'ember-pretenderify/server';
-import Factory from 'ember-pretenderify/factory';
+import Server from 'ember-cli-mirage/server';
+import Factory from 'ember-cli-mirage/factory';
 
-module('pretenderify:server');
+module('mirage:server');
 
 test('it can be instantiated', function() {
   var server = new Server({environment: 'test'});
@@ -15,7 +15,7 @@ test('it cannot be instantiated without an environment', function() {
   });
 });
 
-module('pretenderify:server#store');
+module('mirage:server#store');
 
 test('its store is isolated across instances', function() {
   var server1 = new Server({environment: 'test'});
@@ -29,7 +29,7 @@ test('its store is isolated across instances', function() {
 
 
 var server;
-module('pretenderify:server#create', {
+module('mirage:server#create', {
   setup: function() {
     server = new Server({environment: 'test'});
   }
@@ -107,7 +107,7 @@ test('create allows for attr overrides with extended factories', function() {
   deepEqual(youngLink, {id: 2, name: 'Link', age: 10, is_young: true});
 });
 
-module('pretenderify:server#createList', {
+module('mirage:server#createList', {
   setup: function() {
     server = new Server({environment: 'test'});
   }

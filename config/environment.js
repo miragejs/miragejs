@@ -7,9 +7,9 @@ function usingProxy() {
 }
 
 module.exports = function(environment, appConfig) {
-  appConfig['ember-pretenderify'] = appConfig['ember-pretenderify'] || {};
+  appConfig['ember-cli-mirage'] = appConfig['ember-cli-mirage'] || {};
 
-  appConfig['ember-pretenderify']['usingProxy'] = usingProxy();
+  appConfig['ember-cli-mirage']['usingProxy'] = usingProxy();
 
   return {};
 };

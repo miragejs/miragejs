@@ -2,7 +2,7 @@
 var path = require('path');
 
 module.exports = {
-  name: 'ember-pretenderify',
+  name: 'ember-cli-mirage',
 
   included: function included(app) {
     this.app = app;
@@ -11,7 +11,7 @@ module.exports = {
       app.import(app.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js');
       app.import(app.bowerDirectory + '/route-recognizer/dist/route-recognizer.js');
       app.import(app.bowerDirectory + '/pretender/pretender.js');
-      app.import('vendor/ember-pretenderify/shim.js', {
+      app.import('vendor/ember-cli-mirage/shim.js', {
         type: 'vendor',
         exports: { 'pretender': ['default'] }
       });
@@ -32,7 +32,7 @@ module.exports = {
   },
 
   shouldIncludeFiles: function() {
-    var config = this.app.project.config()['ember-pretenderify'];
+    var config = this.app.project.config()['ember-cli-mirage'];
     return config.force || this.app.env !== 'production';
   },
 

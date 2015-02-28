@@ -1,7 +1,17 @@
-# Ember Pretenderify Changelog
+# Ember CLI Mirage Changelog
 
 ## 0.0.20
-Update notes: none.
+Update notes:
+
+This project has been renamed from ember-pretenderify to ember-cli-mirage. Please update your `package.json` dependency accordingly, and
+ - rename the `/app/pretender` dir to `/app/mirage`
+ - if you have factories, change
+     
+        import EP from 'ember-pretenderify';
+
+    to
+
+        import Mirage from 'ember-cli-mirage';
 
 Changes:
 

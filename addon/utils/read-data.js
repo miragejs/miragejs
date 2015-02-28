@@ -5,15 +5,15 @@
 
 /*
   This function looks through all files that have been loaded by Ember CLI and
-  finds the ones under /pretender/data, and exports a hash containing the names
+  finds the ones under /mirage/data, and exports a hash containing the names
   of the files as keys and the data as values.
 */
 export default function(prefix) {
-  var pretenderDatafileRegExp = new RegExp('^' + prefix + '/pretender/data');
+  var mirageDatafileRegExp = new RegExp('^' + prefix + '/mirage/data');
   var dataFromFiles = {};
 
   Ember.keys(requirejs._eak_seen).filter(function(key) {
-    return pretenderDatafileRegExp.test(key);
+    return mirageDatafileRegExp.test(key);
   }).forEach(function(moduleName) {
     var module = require(moduleName, null, null, true);
     if (!module) { throw new Error(moduleName + ' must export some data.'); }

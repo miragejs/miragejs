@@ -3,15 +3,15 @@ var expect = require('chai').expect;
 var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 var path = require('path');
 
-function getPretenderifyAddon(options) {
+function getMirageAddon(options) {
   var dummyApp = new EmberAddon(options);
-  return findPretenderify(dummyApp);
+  return findMirage(dummyApp);
 }
 
-function findPretenderify(app) {
+function findMirage(app) {
   var addons = app.project.addons;
   for(var i = 0; i < addons.length; i++) {
-    if(addons[i].name === 'ember-pretenderify') {
+    if(addons[i].name === 'ember-cli-mirage') {
       return addons[i];
     }
   }
@@ -26,7 +26,7 @@ describe('Addon', function() {
 
     it('returns an empty tree in production environment', function() {
       process.env.EMBER_ENV = 'production';
-      var addonTree = getPretenderifyAddon().treeFor('addon');
+      var addonTree = getMirageAddon().treeFor('addon');
 
       expect(addonTree.inputTrees.length).to.be.equal(0);
     });
@@ -35,7 +35,7 @@ describe('Addon', function() {
 
       it('returns a tree in ' + environment + ' environment', function() {
         process.env.EMBER_ENV = environment;
-        var addonTree = getPretenderifyAddon().treeFor('addon');
+        var addonTree = getMirageAddon().treeFor('addon');
 
         expect(addonTree.inputTrees.length).to.be.equal(1);
       });
@@ -44,7 +44,7 @@ describe('Addon', function() {
 
     it('returns a tree regardless the environment when force option is true', function() {
       process.env.EMBER_ENV = 'production';
-      var addon = getPretenderifyAddon({ configPath: 'tests/fixtures/config/environment-with-force-true' });
+      var addon = getMirageAddon({ configPath: 'tests/fixtures/config/environment-with-force-true' });
       var addonTree = addon.treeFor('addon');
 
       expect(addonTree.inputTrees.length).to.be.equal(1);
@@ -59,7 +59,7 @@ describe('Addon', function() {
       process.env.EMBER_ENV = 'production';
       var excludePretenderDirCalled = false;
       var dummyApp = new EmberAddon();
-      var addon = findPretenderify(dummyApp);
+      var addon = findMirage(dummyApp);
       addon.excludePretenderDir = function(tree) {
         excludePretenderDirCalled = true;
         return tree;
@@ -76,7 +76,7 @@ describe('Addon', function() {
         process.env.EMBER_ENV = environment;
         var excludePretenderDirCalled = false;
         var dummyApp = new EmberAddon();
-        var addon = findPretenderify(dummyApp);
+        var addon = findMirage(dummyApp);
         addon.excludePretenderDir = function(tree) {
           excludePretenderDirCalled = true;
           return tree;
@@ -93,7 +93,7 @@ describe('Addon', function() {
       process.env.EMBER_ENV = 'production';
       var excludePretenderDirCalled = false;
       var dummyApp = new EmberAddon({ configPath: 'tests/fixtures/config/environment-with-force-true' });
-      var addon = findPretenderify(dummyApp);
+      var addon = findMirage(dummyApp);
       addon.excludePretenderDir = function(tree) {
         excludePretenderDirCalled = true;
         return tree;

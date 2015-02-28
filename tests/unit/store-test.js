@@ -1,7 +1,7 @@
-import Store from 'ember-pretenderify/store';
+import Store from 'ember-cli-mirage/store';
 
 var store;
-module('pretenderify:store');
+module('mirage:store');
 
 test('it can be instantiated', function() {
   store = new Store();
@@ -9,7 +9,7 @@ test('it can be instantiated', function() {
 });
 
 
-module('pretenderify:store#loadData', {
+module('mirage:store#loadData', {
   setup: function() {
     store = new Store();
   },
@@ -33,7 +33,7 @@ test('can add data to a single key of its database', function() {
 });
 
 
-module('pretenderify:store#find', {
+module('mirage:store#find', {
   setup: function() {
     store = new Store();
   },
@@ -67,7 +67,7 @@ test('returns a record that matches a string id', function() {
 });
 
 
-module('pretenderify:store#findAll', {
+module('mirage:store#findAll', {
   setup: function() {
     store = new Store();
   },
@@ -97,7 +97,7 @@ test("returns an empty array if no models exist", function() {
 });
 
 
-module('pretenderify:store#findQuery', {
+module('mirage:store#findQuery', {
   setup: function() {
     store = new Store();
   },
@@ -136,7 +136,7 @@ test('returns an empty array if no records match the query', function() {
 });
 
 
-module('pretenderify:store#push', {
+module('mirage:store#push', {
   setup: function() {
     store = new Store();
   },
@@ -205,7 +205,7 @@ test("doesn't affect data outside the store", function() {
 });
 
 
-module('pretenderify:store#remove', {
+module('mirage:store#remove', {
   setup: function() {
     store = new Store();
   },
@@ -227,7 +227,7 @@ test('removes a record by type and id', function() {
 });
 
 
-module('pretenderify:store#removeQuery', {
+module('mirage:store#removeQuery', {
   setup: function() {
     store = new Store();
   },

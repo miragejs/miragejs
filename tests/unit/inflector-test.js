@@ -1,6 +1,6 @@
-import { singularize, pluralize } from 'ember-pretenderify/utils/inflector';
+import { singularize, pluralize } from 'ember-cli-mirage/utils/inflector';
 
-QUnit.module('pretenderify:inflector');
+QUnit.module('mirage:inflector');
 
 QUnit.test('can singularize', function(assert) {
   assert.equal(singularize('tests'), 'test');

@@ -1,12 +1,12 @@
 import Ember from 'ember';
 import startApp from '../../helpers/start-app';
-import controller from 'ember-pretenderify/controllers/front';
-import Store from 'ember-pretenderify/store';
+import controller from 'ember-cli-mirage/controllers/front';
+import Store from 'ember-cli-mirage/store';
 
 var App;
 var store;
 
-module('pretenderify:frontController POST', {
+module('mirage:frontController POST', {
   setup: function() {
     App = startApp();
     store = new Store();

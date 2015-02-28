@@ -1,7 +1,7 @@
 {
-  "name": "ember-pretenderify",
+  "name": "ember-cli-mirage",
   "version": "0.0.19",
-  "description": "Opinionated Pretender setup for Ember CLI apps",
+  "description": "A client-side server to develop, test and prototype your Ember app",
   "main": "index.js",
   "license": "MIT",
   "directories": {
@@ -15,12 +15,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/samselikoff/ember-pretenderify.git"
+    "url": "https://github.com/samselikoff/ember-cli-mirage.git"
   },
   "bugs": {
-    "url": "https://github.com/samselikoff/ember-pretenderify/issues"
+    "url": "https://github.com/samselikoff/ember-cli-mirage/issues"
   },
-  "homepage": "https://github.com/rwjblue/ember-cli-pretender",
+  "homepage": "https://github.com/samselikoff/ember-cli-mirage",
   "engines": {
     "node": ">= 0.10.0"
   },
@@ -48,6 +48,7 @@
     "ember-addon",
     "pretender",
     "testing",
+    "prototype",
     "server"
   ],
   "ember-addon": {

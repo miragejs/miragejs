@@ -1,14 +1,14 @@
 import Ember from 'ember';
 import startApp from '../../helpers/start-app';
-import controller from 'ember-pretenderify/controllers/front';
-import Store from 'ember-pretenderify/store';
+import controller from 'ember-cli-mirage/controllers/front';
+import Store from 'ember-cli-mirage/store';
 
 var App;
 var contacts = [{id: 1, name: 'Link', address_ids: [1]}, {id: 2, name: 'Zelda', address_ids: [2]}];
 var addresses = [{id: 1, name: '123 Hyrule Way', contact_id: 1}, {id: 2, name: '456 Hyrule Way', contact_id: 2}];
 var store;
 
-module('pretenderify:frontController DELETE', {
+module('mirage:frontController DELETE', {
   setup: function() {
     App = startApp();
     store = new Store();

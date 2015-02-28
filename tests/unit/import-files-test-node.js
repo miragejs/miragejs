@@ -17,7 +17,7 @@ describe('import files', function() {
         addon.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js',
         addon.bowerDirectory + '/route-recognizer/dist/route-recognizer.js',
         addon.bowerDirectory + '/pretender/pretender.js',
-        'vendor/ember-pretenderify/shim.js',
+        'vendor/ember-cli-mirage/shim.js',
         addon.bowerDirectory + '/ember-inflector/ember-inflector.js'
       ]);
     });
@@ -32,7 +32,7 @@ describe('import files', function() {
       addon.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js',
       addon.bowerDirectory + '/route-recognizer/dist/route-recognizer.js',
       addon.bowerDirectory + '/pretender/pretender.js',
-      'vendor/ember-pretenderify/shim.js',
+      'vendor/ember-cli-mirage/shim.js',
       addon.bowerDirectory + '/ember-inflector/ember-inflector.js'
     ]);
   });
@@ -45,7 +45,7 @@ describe('import files', function() {
       addon.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js',
       addon.bowerDirectory + '/route-recognizer/dist/route-recognizer.js',
       addon.bowerDirectory + '/pretender/pretender.js',
-      'vendor/ember-pretenderify/shim.js',
+      'vendor/ember-cli-mirage/shim.js',
       addon.bowerDirectory + '/ember-inflector/ember-inflector.js'
     ]);
   });
