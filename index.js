@@ -1,8 +1,6 @@
 'use strict';
 var path = require('path');
 
-console.log('[deprecation] ember-pretenderify has been renamed to ember-cli-mirage - please update your package.json entry');
-
 module.exports = {
   name: 'ember-cli-mirage',
 

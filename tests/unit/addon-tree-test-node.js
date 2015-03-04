@@ -54,7 +54,7 @@ describe('Addon', function() {
 
   describe('#postprocessTree', function() {
 
-    it('excludes app/pretender tree in production environment', function() {
+    it('excludes app/mirage tree in production environment', function() {
       this.timeout(10000);
       process.env.EMBER_ENV = 'production';
       var excludePretenderDirCalled = false;
@@ -71,7 +71,7 @@ describe('Addon', function() {
 
     ['development', 'test'].forEach(function(environment) {
 
-      it('includes app/pretender tree in ' + environment + ' environment', function() {
+      it('includes app/mirage tree in ' + environment + ' environment', function() {
         this.timeout(10000);
         process.env.EMBER_ENV = environment;
         var excludePretenderDirCalled = false;
@@ -88,7 +88,7 @@ describe('Addon', function() {
 
     });
 
-    it('includes app/pretender tree regardless the environment when force option is true', function() {
+    it('includes app/mirage tree regardless the environment when force option is true', function() {
       this.timeout(10000);
       process.env.EMBER_ENV = 'production';
       var excludePretenderDirCalled = false;

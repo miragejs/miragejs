@@ -1,5 +1,5 @@
 import ENV from '../config/environment';
-import userConfig from '../pretender/config';
+import userConfig from '../mirage/config';
 import Server from 'ember-cli-mirage/server';
 import readData from 'ember-cli-mirage/utils/read-data';
 import readFactories from 'ember-cli-mirage/utils/read-factories';
