@@ -1,12 +1,12 @@
 # Ember CLI Mirage Changelog
 
-## 0.0.20
+## 0.0.21
 Update notes:
 
 This project has been renamed from ember-pretenderify to ember-cli-mirage. Please update your `package.json` dependency accordingly, and
  - rename the `/app/pretender` dir to `/app/mirage`
  - if you have factories, change
-     
+
         import EP from 'ember-pretenderify';
 
     to
@@ -19,6 +19,10 @@ Changes:
  - #36 [BUGFIX] Fix bug where createList didn't respect attr overrides @ashton
  - #37 [INTERNAL] Add tests for createList @cibernox
  - #35 [INTERNAL] Return [] from store#findAll
+
+## 0.0.20
+
+- Deprecation notice for new name.
 
 ## 0.0.19
 Hotfix for #34, no changes require to update.
