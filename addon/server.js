@@ -25,14 +25,13 @@ export default function(options) {
 
   this.loadConfig = function(config) {
     config.call(this);
+    this.timing = environment === 'test' ? 0 : (this.timing || 0);
   };
 
   this.stub = function(verb, path, handler, code) {
     var _this = this;
     var interceptor = this.interceptor;
-    var timing = environment === 'test' ? 0 : this.timing;
     path = path[0] === '/' ? path.slice(1) : path;
-
     interceptor[verb].call(interceptor, this.namespace + '/' + path, function(request) {
 
       var response = frontController.handle(verb, handler, _this.store, request, code);
@@ -43,7 +42,7 @@ export default function(options) {
       }
 
       return response;
-    }, timing);
+    }, function() { return _this.timing; });
   };
 
   this.get = function(path, handler, code) {

@@ -15,6 +15,24 @@ test('it cannot be instantiated without an environment', function() {
   });
 });
 
+module('mirage:server#loadConfig');
+
+test('forces timing to 0 in test environment', function() {
+  var server = new Server({environment: 'test'});
+  server.loadConfig(function() {
+    this.timing = 50;
+  });
+  equal(server.timing, 0);
+});
+
+test("doesn't modify user's timing config in other environments", function() {
+  var server = new Server({environment: 'blah'});
+  server.loadConfig(function() {
+    this.timing = 50;
+  });
+  equal(server.timing, 50);
+});
+
 module('mirage:server#store');
 
 test('its store is isolated across instances', function() {
