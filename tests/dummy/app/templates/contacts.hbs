@@ -1,6 +1,10 @@
-{{#each contact in model}}
-  <p>{{link-to contact.name 'contact' contact}}</p>
-{{/each}}
+{{#unless hasError}}
+  {{#each contact in model}}
+    <p>{{link-to contact.name 'contact' contact}}</p>
+  {{/each}}
+{{else}}
+  <p class='error'>There was an error</p>
+{{/unless}}
 
 <hr>
 

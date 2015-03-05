@@ -35,3 +35,13 @@ test("I can create a new contact", function() {
     equal( find('p:last').text(), 'Ganon' );
   });
 });
+
+test("An error message shows", function() {
+  server.get('/contacts', null, 404);
+
+  visit('/');
+
+  andThen(function() {
+    ok( find('.error').text().match('error') );
+  });
+});
