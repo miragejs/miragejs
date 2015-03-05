@@ -152,7 +152,7 @@ test("I can view the contacts", function() {
 });
 ```
 
-You can also put calls to `create` and `createList` within your test module's `setup` block if you want to share them across `test`s. View the [dummy acceptance tests](tests/acceptance) for more examples, or browse the [full Factory API docs](../../wiki/Factories) in the wiki.
+You can also put calls to `create` and `createList` within your test module's `setup` block if you want to share them across `test`s. View the [acceptance test wiki page](../../wiki/Acceptance-testing) for more examples and the full API.
 
 -----
 
