@@ -13,13 +13,10 @@ export default {
 
   handle: function(verb, handler, store, request, code) {
     var controller = verb + 'Controller';
-    var handlerType;
     code = code ? code : this.getDefaultCode(verb);
 
-    if (typeof handler === 'function') { handlerType = 'function'; }
-    else if (Ember.isArray(handler)) { handlerType = 'array'; }
-    else if (typeof handler === 'string') { handlerType = 'string'; }
-    else if (typeof handler === 'undefined') { handlerType = 'undefined'; }
+    var type = typeof handler;
+    var handlerType = Ember.isArray(handler) ? 'array' : type;
 
     var handlerMethod = handlerType + 'Handler';
 

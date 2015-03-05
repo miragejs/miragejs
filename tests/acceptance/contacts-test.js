@@ -36,12 +36,14 @@ test("I can create a new contact", function() {
   });
 });
 
-test("An error message shows", function() {
-  server.get('/contacts', null, 404);
+test("If the server errors on /contacts, the first error message should show", function() {
+  server.get('/contacts', {
+    errors: ['improper auth']
+  }, 404);
 
   visit('/');
 
   andThen(function() {
-    ok( find('.error').text().match('error') );
+    equal( find('.error span').text(), 'improper auth' );
   });
 });

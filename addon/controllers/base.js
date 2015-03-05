@@ -6,6 +6,10 @@ export default Ember.Object.extend({
     return handler(store, request);
   },
 
+  objectHandler: function(object, store, request) {
+    return object;
+  },
+
   // Private methods
   _getIdForRequest: function(request) {
     var id;
