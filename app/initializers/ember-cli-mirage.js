@@ -1,7 +1,7 @@
 import ENV from '../config/environment';
 import userConfig from '../mirage/config';
 import Server from 'ember-cli-mirage/server';
-import readData from 'ember-cli-mirage/utils/read-data';
+import readFixtures from 'ember-cli-mirage/utils/read-fixtures';
 import readFactories from 'ember-cli-mirage/utils/read-factories';
 
 export default {
@@ -21,7 +21,7 @@ export default {
       server.loadConfig(userConfig);
 
       if (usingInDev || config.force) {
-        var userData = readData(ENV.modulePrefix);
+        var userData = readFixtures(ENV.modulePrefix);
         server.loadData(userData);
 
       } else if (usingInTest) {
