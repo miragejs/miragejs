@@ -7,28 +7,28 @@ import BaseController from './base';
 export default BaseController.extend({
 
   /*
-    Update an object from the store, specifying the type.
+    Update an object from the db, specifying the type.
 
       this.stub('put', '/contacts/:id', 'user');
   */
-  stringHandler: function(type, store, request) {
+  stringHandler: function(type, db, request) {
     var id = this._getIdForRequest(request);
     var putData = this._getJsonBodyForRequest(request);
     var attrs = putData[type];
     attrs.id = id;
 
-    var data = store.push(type, attrs);
+    var data = db.push(type, attrs);
 
     return data;
   },
 
   /*
-    Update an object from the store based on singular version
+    Update an object from the db based on singular version
     of the last portion of the url.
 
       this.stub('put', '/contacts/:id');
   */
-  undefinedHandler: function(undef, store, request) {
+  undefinedHandler: function(undef, db, request) {
     var id = this._getIdForRequest(request);
     var url = this._getUrlForRequest(request);
     var urlNoId = url.substr(0, url.lastIndexOf('/'));
@@ -37,7 +37,7 @@ export default BaseController.extend({
     var attrs = putData[type];
     attrs.id = id;
 
-    var data = store.push(type, attrs);
+    var data = db.push(type, attrs);
 
     return data;
   }

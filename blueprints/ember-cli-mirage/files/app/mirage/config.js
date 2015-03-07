@@ -50,20 +50,20 @@ export default function() {
   */
 
   /*
-    Function fallback. Manipulate data in the store via
+    Function fallback. Manipulate data in the db via
 
-      - store.find(key, id)
-      - store.findAll(key)
-      - store.findQuery(key, query)
-      - store.push(key, data)
-      - store.remove(key, id)
-      - store.removeQuery(key, query)
+      - db.find(key, id)
+      - db.findAll(key)
+      - db.findQuery(key, query)
+      - db.push(key, data)
+      - db.remove(key, id)
+      - db.removeQuery(key, query)
 
     // Example: return a single object with related models
-    this.get('/contacts/:id', function(store, request) {
+    this.get('/contacts/:id', function(db, request) {
       var contactId = +request.params.id;
-      var contact = store.find('contact', contactId);
-      var addresses = store.findAll('address')
+      var contact = db.find('contact', contactId);
+      var addresses = db.findAll('address')
         .filterBy('contact_id', contactId);
 
       return {

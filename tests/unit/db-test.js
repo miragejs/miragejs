@@ -1,78 +1,78 @@
-import Store from 'ember-cli-mirage/store';
+import Db from 'ember-cli-mirage/db';
 
-var store;
-module('mirage:store');
+var db;
+module('mirage:db');
 
 test('it can be instantiated', function() {
-  store = new Store();
-  ok(store);
+  db = new Db();
+  ok(db);
 });
 
 
-module('mirage:store#loadData', {
+module('mirage:db#loadData', {
   setup: function() {
-    store = new Store();
+    db = new Db();
   },
   teardown: function() {
-    store.emptyData();
+    db.emptyData();
   }
 });
 
 test('can load an object as its database', function() {
   var data = {contacts: [{id: 1, name: 'Link'}]};
-  store.loadData(data);
+  db.loadData(data);
 
-  deepEqual(store._data, data);
+  deepEqual(db._data, data);
 });
 
 test('can add data to a single key of its database', function() {
   var contacts = [{id: 1, name: 'Link'}];
-  store.loadData(contacts, 'contacts');
+  db.loadData(contacts, 'contacts');
 
-  deepEqual(store._data, {contacts: contacts});
+  deepEqual(db._data, {contacts: contacts});
 });
 
 
-module('mirage:store#find', {
+module('mirage:db#find', {
   setup: function() {
-    store = new Store();
+    db = new Db();
   },
   teardown: function() {
-    store.emptyData();
+    db.emptyData();
   }
 });
 
 test('returns a record that matches a numerical id', function() {
-  store.loadData({
+  db.loadData({
     contacts: [
       {id: 1, name: 'Link'},
       {id: 2, name: 'Zelda'}
     ]
   });
 
-  var contact = store.find('contact', 1);
+  var contact = db.find('contact', 1);
   deepEqual(contact, {id: 1, name: 'Link'});
 });
 
 test('returns a record that matches a string id', function() {
-  store.loadData({
+  db.loadData({
     contacts: [
       {id: 'abc', name: 'Link'},
       {id: 'def', name: 'Zelda'}
     ]
   });
 
-  var contact = store.find('contact', 'abc');
+  var contact = db.find('contact', 'abc');
   deepEqual(contact, {id: 'abc', name: 'Link'});
 });
 
 
-module('mirage:store#findAll', {
+module('mirage:db#findAll', {
   setup: function() {
-    store = new Store();
+    db = new Db();
   },
   teardown: function() {
-    store.emptyData();
+    db.emptyData();
   }
 });
 
@@ -81,34 +81,34 @@ test('returns all records by type', function() {
     {id: 1, name: 'Link'},
     {id: 2, name: 'Zelda'}
   ];
-  store.loadData({contacts: contacts});
+  db.loadData({contacts: contacts});
 
-  deepEqual(store.findAll('contact'), contacts);
+  deepEqual(db.findAll('contact'), contacts);
 });
 
 test("returns an empty array if the key doesn't exist", function() {
-  deepEqual(store.findAll('contact'), []);
+  deepEqual(db.findAll('contact'), []);
 });
 
 test("returns an empty array if no models exist", function() {
-  store.loadData({contacts: []});
+  db.loadData({contacts: []});
 
-  deepEqual(store.findAll('contact'), []);
+  deepEqual(db.findAll('contact'), []);
 });
 
 
-module('mirage:store#findQuery', {
+module('mirage:db#findQuery', {
   setup: function() {
-    store = new Store();
+    db = new Db();
   },
   teardown: function() {
-    store.emptyData();
+    db.emptyData();
   }
 });
 
 test('returns an array of records that match the query', function() {
   var ganon = {id: 3, name: 'Ganon', evil: true};
-  store.loadData({
+  db.loadData({
     contacts: [
       {id: 1, name: 'Link', evil: false},
       {id: 2, name: 'Zelda', evil: false},
@@ -116,13 +116,13 @@ test('returns an array of records that match the query', function() {
     ]
   });
 
-  var result = store.findQuery('contact', {evil: true});
+  var result = db.findQuery('contact', {evil: true});
 
   deepEqual(result, [ganon]);
 });
 
 test('returns an empty array if no records match the query', function() {
-  store.loadData({
+  db.loadData({
     contacts: [
       {id: 1, name: 'Link', evil: false},
       {id: 2, name: 'Zelda', evil: false},
@@ -130,44 +130,44 @@ test('returns an empty array if no records match the query', function() {
     ]
   });
 
-  var result = store.findQuery('contact', {name: 'Link', evil: true});
+  var result = db.findQuery('contact', {name: 'Link', evil: true});
 
   deepEqual(result, []);
 });
 
 
-module('mirage:store#push', {
+module('mirage:db#push', {
   setup: function() {
-    store = new Store();
+    db = new Db();
   },
   teardown: function() {
-    store.emptyData();
+    db.emptyData();
   }
 });
 
 test('creates a record if no id attr is present', function() {
-  var newContact = store.push('contact', {
+  var newContact = db.push('contact', {
     name: 'Link'
   });
 
-  var contacts = store.findAll('contact');
+  var contacts = db.findAll('contact');
 
   deepEqual(contacts, [{id: 1, name: 'Link'}]);
   deepEqual(newContact, {id: 1, name: 'Link'});
 });
 
 test('creates a record if no id attr is present, and sets new id based on max of existing', function() {
-  store.loadData({
+  db.loadData({
     contacts: [
       {id: 1, name: 'Link'}
     ]
   });
 
-  store.push('contact', {
+  db.push('contact', {
     name: 'Zelda'
   });
 
-  var contacts = store.findAll('contact');
+  var contacts = db.findAll('contact');
 
   deepEqual(contacts, [
     {id: 1, name: 'Link'},
@@ -176,28 +176,28 @@ test('creates a record if no id attr is present, and sets new id based on max of
 });
 
 test('updates a record if id attr is present', function() {
-  store.loadData({
+  db.loadData({
     contacts: [
       {id: 1, name: 'Link'}
     ]
   });
 
-  store.push('contact', {
+  db.push('contact', {
     id: 1,
     name: 'The Link'
   });
 
-  var link = store.find('contact', 1);
+  var link = db.find('contact', 1);
 
   deepEqual(link, {id: 1, name: 'The Link'});
 });
 
-test("doesn't affect data outside the store", function() {
+test("doesn't affect data outside the db", function() {
   var contacts = [
     {id: 1, name: 'Link'}
   ];
-  store.loadData({contacts: contacts});
-  store.push('contact', {
+  db.loadData({contacts: contacts});
+  db.push('contact', {
     name: 'Zelda'
   });
 
@@ -205,41 +205,41 @@ test("doesn't affect data outside the store", function() {
 });
 
 
-module('mirage:store#remove', {
+module('mirage:db#remove', {
   setup: function() {
-    store = new Store();
+    db = new Db();
   },
   teardown: function() {
-    store.emptyData();
+    db.emptyData();
   }
 });
 
 test('removes a record by type and id', function() {
-  store.loadData({
+  db.loadData({
     contacts: [
       {id: 1, name: 'Link'}
     ]
   });
 
-  store.remove('contact', 1);
+  db.remove('contact', 1);
 
-  deepEqual(store.findAll('contact'), []);
+  deepEqual(db.findAll('contact'), []);
 });
 
 
-module('mirage:store#removeQuery', {
+module('mirage:db#removeQuery', {
   setup: function() {
-    store = new Store();
+    db = new Db();
   },
   teardown: function() {
-    store.emptyData();
+    db.emptyData();
   }
 });
 
 test('removes records that match the query', function() {
   var link = {id: 1, name: 'Link', evil: false};
   var zelda = {id: 1, name: 'Zelda', evil: false};
-  store.loadData({
+  db.loadData({
     contacts: [
       link,
       zelda,
@@ -247,7 +247,7 @@ test('removes records that match the query', function() {
     ]
   });
 
-  store.removeQuery('contact', {evil: true});
+  db.removeQuery('contact', {evil: true});
 
-  deepEqual(store.findAll('contact'), [link, zelda]);
+  deepEqual(db.findAll('contact'), [link, zelda]);
 });

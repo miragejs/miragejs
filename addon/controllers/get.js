@@ -7,34 +7,34 @@ import BaseController from './base';
 export default BaseController.extend({
 
   /*
-    Retrieve *key* from the store. If it's singular,
+    Retrieve *key* from the db. If it's singular,
     retrieve a single model by id.
 
     Examples:
       this.stub('get', '/contacts', 'contacts');
       this.stub('get', '/contacts/:id', 'contact');
   */
-  stringHandler: function(string, store, request) {
+  stringHandler: function(string, db, request) {
     var key = string;
     var data = {};
     var id = this._getIdForRequest(request);
 
     // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
     if (id) {
-      var model = store.find(key, id);
+      var model = db.find(key, id);
       data[key] = model;
 
     } else {
-      data[key] = store.findAll(key);
+      data[key] = db.findAll(key);
     }
 
     return data;
   },
 
   /*
-    Retrieve *keys* from the store.
+    Retrieve *keys* from the db.
 
-    If all keys plural, retrieve all objects from store.
+    If all keys plural, retrieve all objects from db.
       Ex: this.stub('get', '/contacts', ['contacts', 'pictures']);
 
 
@@ -42,7 +42,7 @@ export default BaseController.extend({
     subsequent models by related.
       Ex: this.stub('get', '/contacts/:id', ['contact', 'addresses']);
   */
-  arrayHandler: function(array, store, request) {
+  arrayHandler: function(array, db, request) {
     var _this = this;
     var keys = array;
     var data = {};
@@ -56,7 +56,7 @@ export default BaseController.extend({
         var ownerIdKey = singularize(ownerKey) + '_id';
         var query = {};
         query[ownerIdKey] = owner.id;
-        data[key] = store.findQuery(key, query);
+        data[key] = db.findQuery(key, query);
 
       } else {
 
@@ -64,12 +64,12 @@ export default BaseController.extend({
         if (singularize(key) === key) {
           ownerKey = key;
           var id = _this._getIdForRequest(request);
-          var model = store.find(key, id);
+          var model = db.find(key, id);
           data[key] = model;
           owner = model;
 
         } else {
-          data[key] = store.findAll(key);
+          data[key] = db.findAll(key);
         }
       }
     });
@@ -78,7 +78,7 @@ export default BaseController.extend({
   },
 
   /*
-    Retrieve objects from the store based on singular version
+    Retrieve objects from the db based on singular version
     of the last portion of the url.
 
     This would return all contacts:
@@ -87,7 +87,7 @@ export default BaseController.extend({
     If an id is present, return a single model by id.
       Ex: this.stub('get', '/contacts/:id');
   */
-  undefinedHandler: function(undef, store, request) {
+  undefinedHandler: function(undef, db, request) {
     var id = this._getIdForRequest(request);
     var url = this._getUrlForRequest(request);
     var urlNoId = id ? url.substr(0, url.lastIndexOf('/')) : url;
@@ -96,9 +96,9 @@ export default BaseController.extend({
     var data = {};
 
     if (id) {
-      data[type] = store.find(type, id);
+      data[type] = db.find(type, id);
     } else {
-      data[key] = store.findAll(type);
+      data[key] = db.findAll(type);
     }
 
     return data;

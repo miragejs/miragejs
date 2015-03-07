@@ -1,10 +1,10 @@
 import Ember from 'ember';
 import Pretender from 'pretender';
-import Store from './store';
+import Db from './db';
 import frontController from './controllers/front';
 
 /*
-  The Mirage server, which has a store and an XHR interceptor.
+  The Mirage server, which has a db and an XHR interceptor.
 
   Requires an environment.
 */
@@ -34,7 +34,7 @@ export default function(options) {
     path = path[0] === '/' ? path.slice(1) : path;
     interceptor[verb].call(interceptor, this.namespace + '/' + path, function(request) {
 
-      var response = frontController.handle(verb, handler, _this.store, request, code);
+      var response = frontController.handle(verb, handler, _this.db, request, code);
 
       if (environment !== 'test') {
         console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
@@ -72,15 +72,15 @@ export default function(options) {
   this.pretender = this.interceptor; // alias
 
   /*
-    Store methods and props
+    Db methods and props
   */
   this.loadData = function(data) {
-    this.store.loadData(data);
+    this.db.loadData(data);
   };
 
-  this.store = new Store();
-  this.emptyStore = function() {
-    this.store.emptyData();
+  this.db = new Db();
+  this.emptyDb = function() {
+    this.db.emptyData();
   };
 
   /*
@@ -91,7 +91,7 @@ export default function(options) {
   };
 
   this.create = function(type, overrides) {
-    var currentRecords = this.store.findAll(type);
+    var currentRecords = this.db.findAll(type);
     var sequence = currentRecords ? currentRecords.length: 0;
     if (!this._factoryMap || !this._factoryMap[type]) {
       throw "You're trying to create a " + type + ", but no factory for this type was found";
@@ -106,7 +106,7 @@ export default function(options) {
     //     attrs[key] = overrides[key];
     //   });
     // }
-    return this.store.push(type, attrs);
+    return this.db.push(type, attrs);
   };
 
   this.createList = function(type, amount, overrides) {

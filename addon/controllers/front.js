@@ -11,7 +11,7 @@ export default {
   putController: PutController.create(),
   deleteController: DeleteController.create(),
 
-  handle: function(verb, handler, store, request, code) {
+  handle: function(verb, handler, db, request, code) {
     var controller = verb + 'Controller';
     code = code ? code : this.getDefaultCode(verb);
 
@@ -23,7 +23,7 @@ export default {
     var handlerExists = this[controller][handlerMethod];
     if (!handlerExists) { console.error('Mirage: You passed a ' + handlerType + ' as a handler to the ' + controller + ' but no ' + handlerMethod + ' was implemented.'); return;}
 
-    var data = this[controller][handlerMethod](handler, store, request, code);
+    var data = this[controller][handlerMethod](handler, db, request, code);
 
     if (data) {
       return [code, {"Content-Type": "application/json"}, data];

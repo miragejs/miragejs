@@ -2,11 +2,11 @@ import Ember from 'ember';
 
 export default Ember.Object.extend({
 
-  functionHandler: function(handler, store, request) {
-    return handler(store, request);
+  functionHandler: function(handler, db, request) {
+    return handler(db, request);
   },
 
-  objectHandler: function(object, store, request) {
+  objectHandler: function(object, db, request) {
     return object;
   },
 

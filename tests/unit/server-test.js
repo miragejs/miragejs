@@ -33,16 +33,16 @@ test("doesn't modify user's timing config in other environments", function() {
   equal(server.timing, 50);
 });
 
-module('mirage:server#store');
+module('mirage:server#db');
 
-test('its store is isolated across instances', function() {
+test('its db is isolated across instances', function() {
   var server1 = new Server({environment: 'test'});
-  server1.store.loadData({
+  server1.db.loadData({
     contacts: [{id: 1, name: 'Sam'}]
   });
   var server2 = new Server({environment: 'test'});
 
-  deepEqual(server2.store.findAll('contact'), []);
+  deepEqual(server2.db.findAll('contact'), []);
 });
 
 
@@ -69,19 +69,19 @@ test('create fails when an expected factory isn\'t registered', function() {
   });
 });
 
-test('create adds the data to the store', function() {
+test('create adds the data to the db', function() {
   server.loadFactories({
     contact: Factory.extend({name: 'Sam'})
   });
 
   server.create('contact');
-  var contactsInStore = server.store.findAll('contact');
+  var contactsInDb = server.db.findAll('contact');
 
-  equal(contactsInStore.length, 1);
-  deepEqual(contactsInStore[0], {id: 1, name: 'Sam'});
+  equal(contactsInDb.length, 1);
+  deepEqual(contactsInDb[0], {id: 1, name: 'Sam'});
 });
 
-test('create returns the new data in the store', function() {
+test('create returns the new data in the db', function() {
   server.loadFactories({
     contact: Factory.extend({name: 'Sam'})
   });
@@ -131,18 +131,18 @@ module('mirage:server#createList', {
   }
 });
 
-test('createList adds the given number of elements to the store', function() {
+test('createList adds the given number of elements to the db', function() {
   server.loadFactories({
     contact: Factory.extend({name: 'Sam'})
   });
 
   server.createList('contact', 3);
-  var contactsInStore = server.store.findAll('contact');
+  var contactsInDb = server.db.findAll('contact');
 
-  equal(contactsInStore.length, 3);
-  deepEqual(contactsInStore[0], {id: 1, name: 'Sam'});
-  deepEqual(contactsInStore[1], {id: 2, name: 'Sam'});
-  deepEqual(contactsInStore[2], {id: 3, name: 'Sam'});
+  equal(contactsInDb.length, 3);
+  deepEqual(contactsInDb[0], {id: 1, name: 'Sam'});
+  deepEqual(contactsInDb[1], {id: 2, name: 'Sam'});
+  deepEqual(contactsInDb[2], {id: 3, name: 'Sam'});
 });
 
 test('createList returns the created elements', function() {
