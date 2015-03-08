@@ -30,7 +30,7 @@ This project is new and the API is subject to change. When updating your project
 A Mirage server is split into two pieces:
 
  - **routes**, which define the URLs your server responds to, and
- - **db**, your server's "database"
+ - a **database**, your server's clientside cache
 
 Let's add some data to the database. The generator should have created the file `/app/mirage/fixtures/contacts.js`, which exports some data:
 
