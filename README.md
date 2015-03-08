@@ -150,7 +150,9 @@ test("I can view the contacts", function() {
 });
 ```
 
-You can also put calls to `create` and `createList` within your test module's `setup` block if you want to share them across `test`s. View the [acceptance test wiki page](../../wiki/Acceptance-testing) for more examples and the full API.
+You can also put calls to `create` and `createList` within your test module's `setup` block if you want to share them across `test`s. You can even test how your UI reacts when your server [responds slowly](https://github.com/samselikoff/ember-cli-mirage/wiki/Acceptance-testing#timing) or [responds with an error](https://github.com/samselikoff/ember-cli-mirage/wiki/Acceptance-testing#verb).
+
+View the [acceptance test wiki page](../../wiki/Acceptance-testing) for more examples and the full API.
 
 -----
 

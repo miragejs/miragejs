@@ -1,5 +1,23 @@
 # Ember CLI Mirage Changelog
 
+## 0.0.22
+Update notes:
+  - Rename your `/app/mirage/data` directory to `/app/mirage/fixtures`.
+  - Move your `/tests/factories` directory to `/app/mirage/factories`.
+  - `store`, the data cache your routes interact with, has been renamed to `db` and its API has changed. 
+
+    Your shorthand routes should not be affected, but you'll need to update any routes where you passed in a function and interacted with the store.See [the wiki entry](../../wiki/Database) for more details, and the new API. 
+
+Changes:
+
+ - [BREAKING CHANGE] Rename `/data` directory to `/fixtures`.
+ - [BREAKING CHANGE] Move `/tests/factories` directory to `app/mirage/factories`
+ - #41 [BREAKING CHANGE] Renamed `store` to `db`, and changed API. See [the wiki entry](../../wiki/Database).
+ - #42 [ENHANCEMENT] Add ability to change timing within tests, e.g. to test the UI on long delays.
+ - #6 [ENHANCEMENT] Add ability to force an error response from a route. 
+ - [ENHANCEMENT] Return POJO from route
+ - [BUGFIX] ignore assets if Mirage isn't being used
+
 ## 0.0.21
 Update notes:
 
