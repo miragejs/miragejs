@@ -30,12 +30,12 @@ This project is new and the API is subject to change. When updating your project
 A Mirage server is split into two pieces:
 
  - **routes**, which define the URLs your server responds to, and
- - the **store**, your server's "database"
+ - **db**, your server's "database"
 
-Let's add some data to the store. The generator should have created the file `/app/mirage/data/contacts.js`, which exports some data:
+Let's add some data to the database. The generator should have created the file `/app/mirage/fixtures/contacts.js`, which exports some data:
 
 ```js
-// app/mirage/data/contacts.js
+// app/mirage/fixtures/contacts.js
 export default [
   {
     id: 1,
@@ -48,11 +48,11 @@ export default [
 ];
 ```
 
-Given this file, whenever your Mirage server starts up, this data will be added to its store under the `contacts` key (since that's the name of the file). Add additional data by adding more files under the `/data` folder. All data files should be plural, and export arrays of POJOs.
+Given this file, whenever your Mirage server starts up, this data will be added to its database under the `contacts` key (since that's the name of the file). Add additional data by adding more files under the `/fixtures` folder. All fixture files should be plural, and export arrays of POJOs.
 
 ### Defining your routes
 
-Now, to return this data from an endpoint, let's define our first route. We'll use the **get** helper method to easily interact with our server's store (which now has these contacts in it).
+Now, to return this data from an endpoint, let's define our first route. We'll use the **get** helper method to easily interact with our server's db (which now has these contacts in it).
 
 The generator should have created the file `app/mirage/config.js`, which exports a function. Add a route for `/api/contacts`:
 
@@ -65,17 +65,17 @@ export default function() {
 };
 ```
 
-This is the simplest example of a GET route. Here, we're telling Mirage that whenever our Ember app makes a GET request to `/api/contacts`, respond with all the `contacts` in our store. So the first argument of `get` is the *path* of the route we're defining a handler for, and the second is the *objects in the store* we want to respond with.
+This is the simplest example of a GET route. Here, we're telling Mirage that whenever our Ember app makes a GET request to `/api/contacts`, respond with all the `contacts` in our db. So the first argument of `get` is the *path* of the route we're defining a handler for, and the second is the *objects in the db* we want to respond with.
 
-As long as all your Mirage routes mutate and read from the store, your user interactions during development will persist. This lets users interact with your app as if it were wired up to a real server.
+As long as all your Mirage routes read from and write to the db, your user interactions during development will persist. This lets users interact with your app as if it were wired up to a real server.
 
-We can also respond with multiple objects from the store, let's say if our app expects additional data to be sideloaded at this URL:
+We can also respond with multiple objects from the db, let's say if our app expects additional data to be sideloaded at this URL:
 
 ```js
 this.get('/api/contacts', ['contacts', 'addresses']);
 ```
 
-This will return all the data you added to the `contacts` and `addresses` keys of your store.
+This will return all the data you added to the `contacts` and `addresses` keys of your db.
 
 Handling POST, PUT and DELETE requests is just as simple. For example, this route lets you create new `users` by POSTing to `/api/users`:
 
@@ -87,12 +87,12 @@ Passing just a string or array as the second argument to get, post, put or del
 (as shown above) is an example of a **shorthand**. There are [several available](../../wiki/HTTP-Verb-methods)
 to make writing your routes as concise as possible, but sometimes you'll need
 to do some custom work. In that case, you can pass a function in as the second
-argument, and interact directly with the store and Pretender request object:
+argument, and interact directly with the db and Pretender request object:
 
 ```js
-this.post('/api/users', function(store, request) {
+this.post('/api/users', function(db, request) {
   var attrs = JSON.parse(request.requestBody);
-  var newContact = store.push('contact', attrs);
+  var newContact = db.contacts.insert(attrs);
 
   return {
     contact: newContact
@@ -100,30 +100,28 @@ this.post('/api/users', function(store, request) {
 });
 ```
 
-Find the complete documentation for the store as well as the rest of the
+Find the complete documentation for the db as well as the rest of the
 available shorthands for `get`, `post`, `put` and `del` [in the wiki](../../wiki).
 
 ### Acceptance testing
 
-During testing, the store always starts off empty; however, all the routes you've defined will still be available (since these are what your app expects, and mostly shouldn't change within your tests). The store is emptied because tests should be atomic, and should not rely on state defined elsewhere. This means the data you've added under `/mirage/data` will not be available in your tests.
+During testing, the db always starts off empty; however, all the routes you've defined will still be available (since these are what your app expects, and mostly shouldn't change within your tests). The db is emptied because tests should be atomic, and should not rely on state defined elsewhere. This means the data you've added under `/mirage/fixtures` will not be available in your tests.
 
 Instead, to get data into your tests, you'll define factories. That way, each test can create the data it needs (i.e. it can set up the "server state" it expects), and then assert against that data.
 
-Let's define a `contact` factory. Add a file under `/test/factories/contact.js` - the name of the file is the name of the factory:
+Let's define a `contact` factory. The generator should have created the file `/test/factories/contact.js` - the name of the file is how you reference the factory:
 
 ```js
 // tests/factories/contact.js
-import EP from 'ember-cli-mirage';
+import Mirage from 'ember-cli-mirage';
 
-export default EP.Factory.extend({
+export default Mirage.Factory.extend({
   name: 'Pete',
   age: 20,
 
-  email: function(i) {
-    return `person${i}@test.com`;
-  },
+  email: (i) => `person${i}@test.com`,
 
-  admin: function() {
+  admin: function(i) {
     return this.age > 30;
   }
 });
