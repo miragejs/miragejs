@@ -1,4 +1,5 @@
 import { pluralize } from './utils/inflector';
+import Ember from 'ember';
 
 /*
   An identity map.
@@ -17,7 +18,7 @@ export default function() {
           var args = [collection];
           for (var i = 0; i < arguments.length; i++) {
             args.push(arguments[i]);
-          };
+          }
           return _this['_' + method].apply(_this, args);
         };
       });
@@ -86,7 +87,7 @@ export default function() {
 
   this._update = function(collection, target, attrs) {
     if (typeof attrs === 'undefined') {
-      var attrs = target;
+      attrs = target;
       this[collection].forEach(function(record) {
         Object.keys(attrs).forEach(function(attr) {
           record[attr] = attrs[attr];
