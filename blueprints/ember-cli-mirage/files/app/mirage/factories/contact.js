@@ -1,8 +1,8 @@
 /*
-  This is an example. This factory can be used inside
-  of acceptance tests.
+  This is an example factory definition. Factories are
+  used inside acceptance tests.
 
-  Create more files in this directory to define more factories.
+  Create more files in this directory to define additional factories.
 */
 import Mirage from 'ember-cli-mirage';
 
