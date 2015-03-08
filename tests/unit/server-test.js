@@ -37,12 +37,12 @@ module('mirage:server#db');
 
 test('its db is isolated across instances', function() {
   var server1 = new Server({environment: 'test'});
-  server1.db.loadData({
-    contacts: [{id: 1, name: 'Sam'}]
-  });
+  server1.db.createCollection('contacts');
+  server1.db.contacts.insert({name: 'Sam'});
+
   var server2 = new Server({environment: 'test'});
 
-  deepEqual(server2.db.findAll('contact'), []);
+  equal(server2.contacts, undefined);
 });
 
 
@@ -75,7 +75,7 @@ test('create adds the data to the db', function() {
   });
 
   server.create('contact');
-  var contactsInDb = server.db.findAll('contact');
+  var contactsInDb = server.db.contacts;
 
   equal(contactsInDb.length, 1);
   deepEqual(contactsInDb[0], {id: 1, name: 'Sam'});
@@ -137,7 +137,7 @@ test('createList adds the given number of elements to the db', function() {
   });
 
   server.createList('contact', 3);
-  var contactsInDb = server.db.findAll('contact');
+  var contactsInDb = server.db.contacts;
 
   equal(contactsInDb.length, 3);
   deepEqual(contactsInDb[0], {id: 1, name: 'Sam'});

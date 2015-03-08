@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import { singularize, pluralize } from './utils/inflector';
 import Pretender from 'pretender';
 import Db from './db';
 import frontController from './controllers/front';
@@ -74,24 +75,31 @@ export default function(options) {
   /*
     Db methods and props
   */
-  this.loadData = function(data) {
-    this.db.loadData(data);
-  };
-
   this.db = new Db();
-  this.emptyDb = function() {
-    this.db.emptyData();
-  };
+  //this.loadData = function(data) {
+    //this.db.loadData(data);
+  //};
+  //this.emptyDb = function() {
+    //this.db.emptyData();
+  //};
 
   /*
     Factory methods and props
   */
   this.loadFactories = function(factoryMap) {
+    var _this = this;
+    // Store a reference to the factories
     this._factoryMap = factoryMap;
+
+    // Create a collection for each factory
+    Ember.keys(factoryMap).forEach(function(type) {
+      _this.db.createCollection(pluralize(type));
+    });
   };
 
   this.create = function(type, overrides) {
-    var currentRecords = this.db.findAll(type);
+    var collection = pluralize(type);
+    var currentRecords = this.db[collection];
     var sequence = currentRecords ? currentRecords.length: 0;
     if (!this._factoryMap || !this._factoryMap[type]) {
       throw "You're trying to create a " + type + ", but no factory for this type was found";
@@ -106,7 +114,7 @@ export default function(options) {
     //     attrs[key] = overrides[key];
     //   });
     // }
-    return this.db.push(type, attrs);
+    return this.db[collection].insert(attrs);
   };
 
   this.createList = function(type, amount, overrides) {

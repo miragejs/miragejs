@@ -28,18 +28,30 @@ export default function() {
   this._insert = function(collection, data) {
     var _this = this;
     var copy = JSON.parse(JSON.stringify(data));
+    var returnData;
 
     if (!Ember.isArray(copy)) {
-      copy = [copy];
-    }
-
-    copy.forEach(function(attrs) {
+      var attrs = copy;
       if (!attrs.id) {
         attrs.id = _this[collection].length + 1;
       }
 
       _this[collection].push(attrs);
-    });
+      returnData = attrs;
+
+    } else {
+      returnData = [];
+      copy.forEach(function(attrs) {
+        if (!attrs.id) {
+          attrs.id = _this[collection].length + 1;
+        }
+
+        _this[collection].push(attrs);
+        returnData.push(attrs);
+      });
+    }
+
+    return returnData;
   };
 
   this._find = function(collection, id) {
@@ -110,7 +122,6 @@ export default function() {
         _this[collection].splice(index, 1);
       });
     }
-
   };
 
 

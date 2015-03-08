@@ -35,10 +35,11 @@ module('mirage:db#insert', {
   }
 });
 
-test('it can insert an object', function() {
-  db.contacts.insert({name: 'Link'});
+test('it inserts an object and returns it', function() {
+  var link = db.contacts.insert({name: 'Link'});
 
   deepEqual(db.contacts, [{id: 1, name: 'Link'}]);
+  deepEqual(link, {id: 1, name: 'Link'});
 });
 
 test('it can insert objects sequentially', function() {
@@ -54,10 +55,12 @@ test('it does not add an id if present', function() {
   deepEqual(db.contacts, [{id: 5, name: 'Link'}]);
 });
 
-test('it can insert an array', function() {
-  db.contacts.insert([{name: 'Link'}, {name: 'Ganon'}]);
+test('it can insert an array and return it', function() {
+  db.contacts.insert({name: 'Link'});
+  var contacts = db.contacts.insert([{name: 'Zelda'}, {name: 'Ganon'}]);
 
-  deepEqual(db.contacts, [{id: 1, name: 'Link'}, {id: 2, name: 'Ganon'}]);
+  deepEqual(db.contacts, [{id: 1, name: 'Link'}, {id: 2, name: 'Zelda'}, {id: 3, name: 'Ganon'}]);
+  deepEqual(contacts, [{id: 2, name: 'Zelda'}, {id: 3, name: 'Ganon'}]);
 });
 
 test('it does not add ids to array data if present', function() {
