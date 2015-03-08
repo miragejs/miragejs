@@ -12,10 +12,9 @@ module('mirage:frontController PUT', {
   setup: function() {
     App = startApp();
     db = new Db();
-    db.loadData({
-      contacts: contacts,
-      addresses: addresses
-    });
+    db.createCollections('contacts', 'addresses');
+    db.contacts.insert(contacts);
+    db.addresses.insert(addresses);
   },
   teardown: function() {
     Ember.run(App, 'destroy');
@@ -23,23 +22,23 @@ module('mirage:frontController PUT', {
 });
 
 test("string shorthand works", function() {
-  var Link = db.find('contact', 1);
+  var Link = db.contacts.find(1);
   equal(Link.name, 'Link');
 
   var body = '{"contact":{"id":1,"name":"Linkz0r"}}';
   var result = controller.handle('put', 'contact', db, {params: {id: 1}, requestBody: body});
 
-  Link = db.find('contact', 1);
+  Link = db.contacts.find(1);
   equal(Link.name, 'Linkz0r');
 });
 
 test("undefined shorthand works", function() {
-  var Link = db.find('contact', 1);
+  var Link = db.contacts.find(1);
   equal(Link.name, 'Link');
 
   var body = '{"contact":{"id":1,"name":"Linkz0r"}}';
   var result = controller.handle('put', undefined, db, {params: {id: 1}, url: '/contacts/1', requestBody: body});
 
-  Link = db.find('contact', 1);
+  Link = db.contacts.find(1);
   equal(Link.name, 'Linkz0r');
 });

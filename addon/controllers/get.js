@@ -16,16 +16,17 @@ export default BaseController.extend({
   */
   stringHandler: function(string, db, request) {
     var key = string;
+    var collection = pluralize(string);
     var data = {};
     var id = this._getIdForRequest(request);
 
     // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
     if (id) {
-      var model = db.find(key, id);
+      var model = db[collection].find(id);
       data[key] = model;
 
     } else {
-      data[key] = db.findAll(key);
+      data[key] = db[collection];
     }
 
     return data;
@@ -50,13 +51,14 @@ export default BaseController.extend({
     var ownerKey;
 
     keys.forEach(function(key) {
+      var collection = pluralize(key);
 
       // There's an owner. Find only related.
       if (ownerKey) {
         var ownerIdKey = singularize(ownerKey) + '_id';
         var query = {};
         query[ownerIdKey] = owner.id;
-        data[key] = db.findQuery(key, query);
+        data[key] = db[collection].where(query);
 
       } else {
 
@@ -64,12 +66,12 @@ export default BaseController.extend({
         if (singularize(key) === key) {
           ownerKey = key;
           var id = _this._getIdForRequest(request);
-          var model = db.find(key, id);
+          var model = db[collection].find(id);
           data[key] = model;
           owner = model;
 
         } else {
-          data[key] = db.findAll(key);
+          data[key] = db[collection];
         }
       }
     });
@@ -92,13 +94,13 @@ export default BaseController.extend({
     var url = this._getUrlForRequest(request);
     var urlNoId = id ? url.substr(0, url.lastIndexOf('/')) : url;
     var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
-    var key = pluralize(type);
+    var collection = pluralize(type);
     var data = {};
 
     if (id) {
-      data[type] = db.find(type, id);
+      data[type] = db[collection].find(id);
     } else {
-      data[key] = db.findAll(type);
+      data[collection] = db[collection];
     }
 
     return data;

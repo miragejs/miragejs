@@ -25,6 +25,15 @@ export default function() {
     return this;
   };
 
+  this.createCollections = function() {
+    var _this = this;
+    var args = Array.prototype.slice.call(arguments);
+
+    args.forEach(function(collection) {
+      _this.createCollection(collection);
+    });
+  };
+
   this._insert = function(collection, data) {
     var _this = this;
     var copy = JSON.parse(JSON.stringify(data));

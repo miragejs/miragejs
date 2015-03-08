@@ -1,4 +1,4 @@
-import { singularize } from '../utils/inflector';
+import { pluralize, singularize } from '../utils/inflector';
 import BaseController from './base';
 
 /*
@@ -14,7 +14,8 @@ export default BaseController.extend({
   */
   stringHandler: function(type, db, request) {
     var id = this._getIdForRequest(request);
-    var data = db.remove(type, id);
+    var collection = pluralize(type);
+    var data = db[collection].remove(id);
 
     return undefined;
   },
@@ -29,16 +30,18 @@ export default BaseController.extend({
   arrayHandler: function(array, db, request) {
     var id = this._getIdForRequest(request);
     var parentType = array[0];
+    var parentCollection = pluralize(parentType);
     var types = array.slice(1);
 
-    db.remove(parentType, id);
+    db[parentCollection].remove(id);
 
     var query = {};
     var parentIdKey = parentType + '_id';
     query[parentIdKey] = id;
 
     types.forEach(function(type) {
-      db.removeQuery(type, query);
+      var collection = pluralize(type);
+      db[collection].remove(query);
     });
 
     return undefined;
@@ -56,8 +59,9 @@ export default BaseController.extend({
     var url = this._getUrlForRequest(request);
     var urlNoId = id ? url.substr(0, url.lastIndexOf('/')) : url;
     var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
+    var collection = pluralize(type);
 
-    var data = db.remove(type, id);
+    var data = db[collection].remove(id);
 
     return undefined;
   },

@@ -12,10 +12,9 @@ module('mirage:frontController GET', {
   setup: function() {
     App = startApp();
     db = new Db();
-    db.loadData({
-      contacts: contacts,
-      addresses: addresses
-    });
+    db.createCollections('contacts', 'addresses');
+    db.contacts.insert(contacts);
+    db.addresses.insert(addresses);
   },
   teardown: function() {
     Ember.run(App, 'destroy');

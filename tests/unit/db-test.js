@@ -24,6 +24,13 @@ test('it can create an empty collection', function() {
   deepEqual(db.contacts, []);
 });
 
+test('it can create many collections', function() {
+  db.createCollections('contacts', 'addresses');
+
+  deepEqual(db.contacts, []);
+  deepEqual(db.addresses, []);
+});
+
 
 module('mirage:db#insert', {
   setup: function() {

@@ -1,4 +1,4 @@
-import { singularize } from '../utils/inflector';
+import { pluralize, singularize } from '../utils/inflector';
 import BaseController from './base';
 
 /*
@@ -15,9 +15,10 @@ export default BaseController.extend({
     var id = this._getIdForRequest(request);
     var putData = this._getJsonBodyForRequest(request);
     var attrs = putData[type];
+    var collection = pluralize(type);
     attrs.id = id;
 
-    var data = db.push(type, attrs);
+    var data = db[collection].update(id, attrs);
 
     return data;
   },
@@ -33,11 +34,11 @@ export default BaseController.extend({
     var url = this._getUrlForRequest(request);
     var urlNoId = url.substr(0, url.lastIndexOf('/'));
     var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
+    var collection = pluralize(type);
     var putData = this._getJsonBodyForRequest(request);
     var attrs = putData[type];
-    attrs.id = id;
 
-    var data = db.push(type, attrs);
+    var data = db[collection].update(id, attrs);
 
     return data;
   }

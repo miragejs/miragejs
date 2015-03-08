@@ -12,10 +12,9 @@ module('mirage:frontController DELETE', {
   setup: function() {
     App = startApp();
     db = new Db();
-    db.loadData({
-      contacts: contacts,
-      addresses: addresses
-    });
+    db.createCollections('contacts', 'addresses');
+    db.contacts.insert(contacts);
+    db.addresses.insert(addresses);
   },
   teardown: function() {
     Ember.run(App, 'destroy');
@@ -25,7 +24,7 @@ module('mirage:frontController DELETE', {
 test("string shorthand works", function() {
   var result = controller.handle('delete', 'contact', db, {params: {id: 1}});
 
-  var contactsInDb = db.findAll('contact');
+  var contactsInDb = db.contacts;
   var Zelda = contacts[1];
   equal(contactsInDb.length, 1);
   deepEqual(contactsInDb[0], Zelda);
@@ -34,8 +33,8 @@ test("string shorthand works", function() {
 test("array shorthand works", function() {
   var result = controller.handle('delete', ['contact', 'addresses'], db, {params: {id: 1}});
 
-  var contactsInDb = db.findAll('contact');
-  var addressesInDb = db.findAll('addresses');
+  var contactsInDb = db.contacts;
+  var addressesInDb = db.addresses;
   var Zelda = contacts[1];
   var ZeldasAddress = addresses[1];
   equal(contactsInDb.length, 1);
@@ -47,7 +46,7 @@ test("array shorthand works", function() {
 test("undefined shorthand works", function() {
   var result = controller.handle('delete', undefined, db, {params: {id: 1}, url: '/contacts/1'});
 
-  var contactsInDb = db.findAll('contact');
+  var contactsInDb = db.contacts;
   var Zelda = contacts[1];
   equal(contactsInDb.length, 1);
   deepEqual(contactsInDb[0], Zelda);
