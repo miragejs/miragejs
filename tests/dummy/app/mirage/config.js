@@ -8,5 +8,4 @@ export default function() {
 
   // Friends
   this.get('/friends');
-
 }

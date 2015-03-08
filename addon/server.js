@@ -66,7 +66,7 @@ export default function(options) {
     };
 
     this.unhandledRequest = function(verb, path) {
-      console.error("Your Ember app tried to " + verb + " '" + path + "', but there was no Pretender route defined to handle this request.");
+      console.error("Mirage: Your Ember app tried to " + verb + " '" + path + "', but there was no route defined to handle this request.");
     };
   });
 

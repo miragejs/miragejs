@@ -17,6 +17,11 @@ export default BaseController.extend({
     var collection = pluralize(string);
     var postData = this._getJsonBodyForRequest(request);
     var attrs = postData[type];
+
+    if (!db[collection]) {
+      console.error("Mirage: The route handler for " + request.url + " is trying to insert data into the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
+    }
+
     var model = db[collection].insert(attrs);
 
     var response = {};
@@ -38,6 +43,11 @@ export default BaseController.extend({
     var collection = pluralize(type);
     var postData = this._getJsonBodyForRequest(request);
     var attrs = postData[type];
+
+    if (!db[collection]) {
+      console.error("Mirage: The route handler for " + request.url + " is trying to insert data into the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
+    }
+
     var model = db[collection].insert(attrs);
 
     var response = {};

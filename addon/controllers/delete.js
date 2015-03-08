@@ -15,6 +15,11 @@ export default BaseController.extend({
   stringHandler: function(type, db, request) {
     var id = this._getIdForRequest(request);
     var collection = pluralize(type);
+
+    if (!db[collection]) {
+      console.error("Mirage: The route handler for " + request.url + " is trying to remove data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
+    }
+
     var data = db[collection].remove(id);
 
     return undefined;
@@ -33,6 +38,10 @@ export default BaseController.extend({
     var parentCollection = pluralize(parentType);
     var types = array.slice(1);
 
+    if (!db[parentCollection]) {
+      console.error("Mirage: The route handler for " + request.url + " is trying to remove data from the " + parentCollection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
+    }
+
     db[parentCollection].remove(id);
 
     var query = {};
@@ -41,6 +50,11 @@ export default BaseController.extend({
 
     types.forEach(function(type) {
       var collection = pluralize(type);
+
+      if (!db[parentCollection]) {
+        console.error("Mirage: The route handler for " + request.url + " is trying to remove data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
+      }
+
       db[collection].remove(query);
     });
 

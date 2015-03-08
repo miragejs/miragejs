@@ -20,6 +20,10 @@ export default BaseController.extend({
     var data = {};
     var id = this._getIdForRequest(request);
 
+    if (!db[collection]) {
+      console.error("Mirage: The route handler for " + request.url + " is requesting data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
+    }
+
     // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
     if (id) {
       var model = db[collection].find(id);
@@ -52,6 +56,10 @@ export default BaseController.extend({
 
     keys.forEach(function(key) {
       var collection = pluralize(key);
+
+      if (!db[collection]) {
+        console.error("Mirage: The route handler for " + request.url + " is requesting data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
+      }
 
       // There's an owner. Find only related.
       if (ownerKey) {
@@ -96,6 +104,10 @@ export default BaseController.extend({
     var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
     var collection = pluralize(type);
     var data = {};
+
+    if (!db[collection]) {
+      console.error("Mirage: The route handler for " + request.url + " is requesting data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
+    }
 
     if (id) {
       data[type] = db[collection].find(id);
