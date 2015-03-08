@@ -35,6 +35,15 @@ export default function() {
     });
   };
 
+  this.loadData = function(data) {
+    var _this = this;
+
+    Ember.keys(data).forEach(function(collection) {
+      _this.createCollection(collection);
+      _this._insert(collection, data[collection]);
+    });
+  };
+
   this._insert = function(collection, data) {
     var _this = this;
     var copy = JSON.parse(JSON.stringify(data));

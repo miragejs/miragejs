@@ -32,6 +32,27 @@ test('it can create many collections', function() {
 });
 
 
+module('mirage:db#loadData', {
+  setup: function() {
+    db = new Db();
+  },
+  teardown: function() {
+    db.emptyData();
+  }
+});
+
+test('it can load an object of data', function() {
+  var data = {
+    contacts: [{id: 1, name: 'Link'}],
+    addresses: [{id: 1, name: '123 Hyrule Way'}]
+  };
+  db.loadData(data);
+
+  deepEqual(db.contacts, data.contacts);
+  deepEqual(db.addresses, data.addresses);
+});
+
+
 module('mirage:db#insert', {
   setup: function() {
     db = new Db();

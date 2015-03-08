@@ -22,7 +22,7 @@ export default {
 
       if (usingInDev || config.force) {
         var userData = readFixtures(ENV.modulePrefix);
-        server.loadData(userData);
+        server.db.loadData(userData);
 
       } else if (usingInTest) {
 
