@@ -5,123 +5,123 @@ import { pluralize } from './utils/inflector';
 */
 export default function() {
 
-  this._data = {};
+  this.createCollection = function(collection) {
+    var _this = this;
 
-  this.loadData = function(data, key) {
+    this[collection] = [];
+
+    // Attach the methods to the collection
+    ['insert', 'find', 'where', 'update', 'remove']
+      .forEach(function(method) {
+        _this[collection][method] = function() {
+          var args = [collection];
+          for (var i = 0; i < arguments.length; i++) {
+            args.push(arguments[i]);
+          };
+          return _this['_' + method].apply(_this, args);
+        };
+      });
+
+    return this;
+  };
+
+  this._insert = function(collection, data) {
+    var _this = this;
     var copy = JSON.parse(JSON.stringify(data));
 
-    if (key) {
-      this._data[key] = copy;
-    } else {
-      this._data = copy;
+    if (!Ember.isArray(copy)) {
+      copy = [copy];
+    }
+
+    copy.forEach(function(attrs) {
+      if (!attrs.id) {
+        attrs.id = _this[collection].length + 1;
+      }
+
+      _this[collection].push(attrs);
+    });
+  };
+
+  this._find = function(collection, id) {
+    // If parses, coerce to integer
+    id = parseInt(id, 10) || id;
+
+    return this[collection].filter(function(obj) {
+      return obj.id === id;
+    })[0];
+  };
+
+  this._where = function(collection, query) {
+    var records = this[collection];
+
+    Object.keys(query).forEach(function(queryKey) {
+      records = records.filter(function(record) {
+        return record[queryKey] === query[queryKey];
+      });
+    });
+
+    return records;
+  };
+
+  this._update = function(collection, target, attrs) {
+    if (typeof attrs === 'undefined') {
+      var attrs = target;
+      this[collection].forEach(function(record) {
+        Object.keys(attrs).forEach(function(attr) {
+          record[attr] = attrs[attr];
+        });
+      });
+
+    } else if (typeof target === 'number') {
+      var id = target;
+      var record = this._find(collection, id);
+
+      Object.keys(attrs).forEach(function(attr) {
+        record[attr] = attrs[attr];
+      });
+
+    } else if (typeof target === 'object') {
+      var query = target;
+      var records = this._where(collection, query);
+
+      records.forEach(function(record) {
+        Object.keys(attrs).forEach(function(attr) {
+          record[attr] = attrs[attr];
+        });
+      });
     }
   };
 
-  this.emptyData = function() {
-    this._data = {};
-  };
+  this._remove = function(collection, target) {
+    var _this = this;
 
-  this.find = function(type, id) {
-    // If parses, coerce to integer
-    id = parseInt(id, 10) || id;
-    var data = this._findDataForType(type).findBy('id', id);
+    if (typeof target === 'undefined') {
+      this[collection] = [];
 
-    return data;
-  };
+    } else if (typeof target === 'number') {
+      var record = this._find(collection, target);
+      var index = this[collection].indexOf(record);
+      this[collection].splice(index, 1);
 
-  this.findAll = function(type) {
-    return this._findDataForType(type) || [];
-  };
-
-  this.findQuery = function(type, query) {
-    var data = this._findDataForType(type);
-
-    if (data) {
-      Object.keys(query).forEach(function(queryKey) {
-        data = data.filterBy(queryKey, query[queryKey]);
+    } else if (typeof target === 'object') {
+      var records = this._where(collection, target);
+      records.forEach(function(record) {
+        var index = _this[collection].indexOf(record);
+        _this[collection].splice(index, 1);
       });
     }
 
-    return data;
   };
 
-  this.push = function(type, attrs) {
-    var data = {};
-    var model;
 
-    // Updating
-    if (attrs.id) {
-      model = this._updateRecord(type, attrs);
-
-    // Creating
-    } else {
-      model = this._createRecord(type, attrs);
-    }
-
-    return model;
-  };
-
-  this.remove = function(type, id) {
+  this.emptyData = function() {
     var _this = this;
-    // If parses, coerce to integer
-    id = parseInt(id, 10) || id;
-    var key = this._keyForType(type);
+    Object.keys(this).forEach(function(key) {
+      if (key === 'loadData' || key === 'emptyData') {
+        return;
+      }
 
-    this._data[key] = this._data[key].rejectBy('id', id);
-    return {};
-  };
-
-  this.removeQuery = function(type, query) {
-    var _this = this;
-    var key = this._keyForType(type);
-
-    Object.keys(query).forEach(function(queryKey) {
-      _this._data[key] = _this._data[key].rejectBy(queryKey, query[queryKey]);
+      _this[key] = {};
     });
-
-    return {};
-  };
-
-  /*
-    Private methods
-  */
-  this._createRecord = function(type, attrs) {
-    var key = this._keyForType(type);
-    var newId = 1;
-
-    if (!this._data[key]) {
-      this._data[key] = [];
-    }
-
-    var currentModels = this._data[key];
-
-    if (currentModels.length) {
-      var currentModelIds = currentModels.map(function(model) { return model.id; });
-      newId = Math.max.apply(null, currentModelIds) + 1;
-    }
-
-    attrs.id = newId;
-    this._data[key].push(attrs);
-
-    return attrs;
-  };
-
-  this._updateRecord = function(type, attrs) {
-    var currentModel = this.find(type, attrs.id);
-    Object.keys(attrs).forEach(function(attr) {
-      currentModel[attr] = attrs[attr];
-    });
-
-    return currentModel;
-  };
-
-  this._keyForType = function(type) {
-    return pluralize(type);
-  };
-
-  this._findDataForType = function(type) {
-    var key = this._keyForType(type);
-
-    return this._data ? this._data[key] : undefined;
   };
 }

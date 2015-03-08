@@ -9,7 +9,7 @@ test('it can be instantiated', function() {
 });
 
 
-module('mirage:db#loadData', {
+module('mirage:db#createCollection', {
   setup: function() {
     db = new Db();
   },
@@ -18,24 +18,63 @@ module('mirage:db#loadData', {
   }
 });
 
-test('can load an object as its database', function() {
-  var data = {contacts: [{id: 1, name: 'Link'}]};
-  db.loadData(data);
+test('it can create an empty collection', function() {
+  db.createCollection('contacts');
 
-  deepEqual(db._data, data);
+  deepEqual(db.contacts, []);
 });
 
-test('can add data to a single key of its database', function() {
-  var contacts = [{id: 1, name: 'Link'}];
-  db.loadData(contacts, 'contacts');
 
-  deepEqual(db._data, {contacts: contacts});
+module('mirage:db#insert', {
+  setup: function() {
+    db = new Db();
+    db.createCollection('contacts');
+  },
+  teardown: function() {
+    db.emptyData();
+  }
+});
+
+test('it can insert an object', function() {
+  db.contacts.insert({name: 'Link'});
+
+  deepEqual(db.contacts, [{id: 1, name: 'Link'}]);
+});
+
+test('it can insert objects sequentially', function() {
+  db.contacts.insert({name: 'Link'});
+  db.contacts.insert({name: 'Ganon'});
+
+  deepEqual(db.contacts, [{id: 1, name: 'Link'}, {id: 2, name: 'Ganon'}]);
+});
+
+test('it does not add an id if present', function() {
+  db.contacts.insert({id: 5, name: 'Link'});
+
+  deepEqual(db.contacts, [{id: 5, name: 'Link'}]);
+});
+
+test('it can insert an array', function() {
+  db.contacts.insert([{name: 'Link'}, {name: 'Ganon'}]);
+
+  deepEqual(db.contacts, [{id: 1, name: 'Link'}, {id: 2, name: 'Ganon'}]);
+});
+
+test('it does not add ids to array data if present', function() {
+  db.contacts.insert([{id: 2, name: 'Link'}, {id: 1, name: 'Ganon'}]);
+
+  deepEqual(db.contacts, [{id: 2, name: 'Link'}, {id: 1, name: 'Ganon'}]);
 });
 
 
 module('mirage:db#find', {
   setup: function() {
     db = new Db();
+    db.createCollection('contacts');
+    db.contacts.insert([
+      {id: 2, name: 'Link'},
+      {id: 'abc', name: 'Ganon'}
+    ]);
   },
   teardown: function() {
     db.emptyData();
@@ -43,63 +82,33 @@ module('mirage:db#find', {
 });
 
 test('returns a record that matches a numerical id', function() {
-  db.loadData({
-    contacts: [
-      {id: 1, name: 'Link'},
-      {id: 2, name: 'Zelda'}
-    ]
-  });
+  var contact = db.contacts.find(2);
 
-  var contact = db.find('contact', 1);
-  deepEqual(contact, {id: 1, name: 'Link'});
+  deepEqual(contact, {id: 2, name: 'Link'});
+});
+
+test('coerces interger-like ids to integers', function() {
+  var contact = db.contacts.find('2');
+
+  deepEqual(contact, {id: 2, name: 'Link'});
 });
 
 test('returns a record that matches a string id', function() {
-  db.loadData({
-    contacts: [
-      {id: 'abc', name: 'Link'},
-      {id: 'def', name: 'Zelda'}
-    ]
-  });
+  var contact = db.contacts.find('abc');
 
-  var contact = db.find('contact', 'abc');
-  deepEqual(contact, {id: 'abc', name: 'Link'});
+  deepEqual(contact, {id: 'abc', name: 'Ganon'});
 });
 
 
-module('mirage:db#findAll', {
+module('mirage:db#where', {
   setup: function() {
     db = new Db();
-  },
-  teardown: function() {
-    db.emptyData();
-  }
-});
-
-test('returns all records by type', function() {
-  var contacts = [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'}
-  ];
-  db.loadData({contacts: contacts});
-
-  deepEqual(db.findAll('contact'), contacts);
-});
-
-test("returns an empty array if the key doesn't exist", function() {
-  deepEqual(db.findAll('contact'), []);
-});
-
-test("returns an empty array if no models exist", function() {
-  db.loadData({contacts: []});
-
-  deepEqual(db.findAll('contact'), []);
-});
-
-
-module('mirage:db#findQuery', {
-  setup: function() {
-    db = new Db();
+    db.createCollection('contacts');
+    db.contacts.insert([
+      {name: 'Link', evil: false},
+      {name: 'Zelda', evil: false},
+      {name: 'Ganon', evil: true}
+    ]);
   },
   teardown: function() {
     db.emptyData();
@@ -107,147 +116,97 @@ module('mirage:db#findQuery', {
 });
 
 test('returns an array of records that match the query', function() {
-  var ganon = {id: 3, name: 'Ganon', evil: true};
-  db.loadData({
-    contacts: [
-      {id: 1, name: 'Link', evil: false},
-      {id: 2, name: 'Zelda', evil: false},
-      ganon
-    ]
-  });
+  var result = db.contacts.where({evil: true});
 
-  var result = db.findQuery('contact', {evil: true});
-
-  deepEqual(result, [ganon]);
+  deepEqual(result, [
+    {id: 3, name: 'Ganon', evil: true}
+  ]);
 });
 
 test('returns an empty array if no records match the query', function() {
-  db.loadData({
-    contacts: [
-      {id: 1, name: 'Link', evil: false},
-      {id: 2, name: 'Zelda', evil: false},
-      {id: 3, name: 'Ganon', evil: true}
-    ]
-  });
-
-  var result = db.findQuery('contact', {name: 'Link', evil: true});
+  var result = db.contacts.where({name: 'Link', evil: true});
 
   deepEqual(result, []);
 });
 
 
-module('mirage:db#push', {
+module('mirage:db#update', {
   setup: function() {
     db = new Db();
+    db.createCollection('contacts');
+    db.contacts.insert([
+      {id: 1, name: 'Link', evil: false},
+      {id: 2, name: 'Zelda', evil: false},
+      {id: 3, name: 'Ganon', evil: true}
+    ]);
   },
   teardown: function() {
     db.emptyData();
   }
 });
 
-test('creates a record if no id attr is present', function() {
-  var newContact = db.push('contact', {
-    name: 'Link'
-  });
+test('it can update the whole collection', function() {
+  db.contacts.update({name: 'Sam', evil: false});
 
-  var contacts = db.findAll('contact');
-
-  deepEqual(contacts, [{id: 1, name: 'Link'}]);
-  deepEqual(newContact, {id: 1, name: 'Link'});
-});
-
-test('creates a record if no id attr is present, and sets new id based on max of existing', function() {
-  db.loadData({
-    contacts: [
-      {id: 1, name: 'Link'}
-    ]
-  });
-
-  db.push('contact', {
-    name: 'Zelda'
-  });
-
-  var contacts = db.findAll('contact');
-
-  deepEqual(contacts, [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'}
+  deepEqual(db.contacts, [
+    {id: 1, name: 'Sam', evil: false},
+    {id: 2, name: 'Sam', evil: false},
+    {id: 3, name: 'Sam', evil: false}
   ]);
 });
 
-test('updates a record if id attr is present', function() {
-  db.loadData({
-    contacts: [
-      {id: 1, name: 'Link'}
-    ]
-  });
+test('it can update a record by id', function() {
+  db.contacts.update(3, {name: 'Ganondorf', evil: false});
+  var ganon = db.contacts.find(3);
 
-  db.push('contact', {
-    id: 1,
-    name: 'The Link'
-  });
-
-  var link = db.find('contact', 1);
-
-  deepEqual(link, {id: 1, name: 'The Link'});
+  deepEqual(ganon, {id: 3, name: 'Ganondorf', evil: false});
 });
 
-test("doesn't affect data outside the db", function() {
-  var contacts = [
-    {id: 1, name: 'Link'}
-  ];
-  db.loadData({contacts: contacts});
-  db.push('contact', {
-    name: 'Zelda'
-  });
+test('it can update records by query', function() {
+  db.contacts.update({evil: false}, {name: 'Sam'});
 
-  equal(contacts.length, 1);
+  deepEqual(db.contacts, [
+    {id: 1, name: 'Sam', evil: false},
+    {id: 2, name: 'Sam', evil: false},
+    {id: 3, name: 'Ganon', evil: true}
+  ]);
 });
 
 
 module('mirage:db#remove', {
   setup: function() {
     db = new Db();
+    db.createCollection('contacts');
+    db.contacts.insert([
+      {id: 1, name: 'Link', evil: false},
+      {id: 2, name: 'Zelda', evil: false},
+      {id: 3, name: 'Ganon', evil: true}
+    ]);
   },
   teardown: function() {
     db.emptyData();
   }
 });
 
-test('removes a record by type and id', function() {
-  db.loadData({
-    contacts: [
-      {id: 1, name: 'Link'}
-    ]
-  });
+test('it can remove an entire collection', function() {
+  db.contacts.remove();
 
-  db.remove('contact', 1);
-
-  deepEqual(db.findAll('contact'), []);
+  deepEqual(db.contacts, []);
 });
 
+test('it can remove a single record', function() {
+  db.contacts.remove(1);
 
-module('mirage:db#removeQuery', {
-  setup: function() {
-    db = new Db();
-  },
-  teardown: function() {
-    db.emptyData();
-  }
+  deepEqual(db.contacts, [
+    {id: 2, name: 'Zelda', evil: false},
+    {id: 3, name: 'Ganon', evil: true},
+  ]);
 });
 
-test('removes records that match the query', function() {
-  var link = {id: 1, name: 'Link', evil: false};
-  var zelda = {id: 1, name: 'Zelda', evil: false};
-  db.loadData({
-    contacts: [
-      link,
-      zelda,
-      {id: 3, name: 'Ganon', evil: true},
-    ]
-  });
+test('it can remove multiple records by query', function() {
+  db.contacts.remove({evil: false});
 
-  db.removeQuery('contact', {evil: true});
-
-  deepEqual(db.findAll('contact'), [link, zelda]);
+  deepEqual(db.contacts, [
+    {id: 3, name: 'Ganon', evil: true},
+  ]);
 });
