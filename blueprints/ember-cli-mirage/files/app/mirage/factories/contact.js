@@ -12,7 +12,7 @@ export default Mirage.Factory.extend({
 
   email: (i) => `person${i}@test.com`,
 
-  admin: function(i) {
+  admin: function() {
     return this.age > 30;
   }
 });
