@@ -11,7 +11,7 @@ export default {
     var env = ENV.environment;
     var usingInDev = env === 'development' && !config.usingProxy;
     var usingInTest = env === 'test';
-    var shouldUseServer = usingInDev || usingInTest || config.force;
+    var shouldUseServer = config.force || usingInDev || usingInTest;
 
     if (shouldUseServer) {
       var server = new Server({
@@ -21,11 +21,10 @@ export default {
       server.loadConfig(userConfig);
 
       if (usingInDev || config.force) {
-        var userData = readFixtures(ENV.modulePrefix);
-        server.db.loadData(userData);
+        var fixtures = readFixtures(ENV.modulePrefix);
+        server.db.loadData(fixtures);
 
       } else if (usingInTest) {
-
         var factoryMap = readFactories(ENV.modulePrefix);
         server.loadFactories(factoryMap);
       }

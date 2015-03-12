@@ -33,7 +33,8 @@ module.exports = {
 
   shouldIncludeFiles: function() {
     var config = this.app.project.config()['ember-cli-mirage'];
-    return config.force || (!config.usingProxy && this.app.env !== 'production');
+
+    return config.force || (this.app.env !== 'production')
   },
 
   postprocessTree: function(type, tree) {
@@ -50,4 +51,5 @@ module.exports = {
       description: 'Funnel: exclude mirage'
     });
   }
+
 };

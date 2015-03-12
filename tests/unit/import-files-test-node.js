@@ -50,16 +50,4 @@ describe('import files', function() {
     ]);
   });
 
-  it('doesn\'t include third party libraries when --proxy is passed', function() {
-    process.env.EMBER_ENV = 'development';
-    var addon = new EmberAddon({ configPath: 'tests/fixtures/config/environment-with-proxy-true' });
-
-    expect(addon.legacyFilesToAppend).not.to.include.members([
-      addon.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js',
-      addon.bowerDirectory + '/route-recognizer/dist/route-recognizer.js',
-      addon.bowerDirectory + '/pretender/pretender.js',
-      'vendor/ember-cli-mirage/shim.js',
-      addon.bowerDirectory + '/ember-inflector/ember-inflector.js'
-    ]);
-  });
 });
