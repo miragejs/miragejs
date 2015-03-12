@@ -9,10 +9,10 @@ var Factory = function() {
     Ember.keys(attrs).forEach(function(key) {
       var type = typeof attrs[key];
 
-      if (type === 'string' || type === 'number') {
-        object[key] = attrs[key];
-      } else if (type === 'function') {
+      if (type === 'function') {
         object[key] = attrs[key].call(attrs, sequence);
+      } else {
+        object[key] = attrs[key];
       }
     });
 
