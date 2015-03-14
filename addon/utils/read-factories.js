@@ -28,5 +28,7 @@ export default function(prefix) {
     factoryMap[key] = data;
   });
 
-  return factoryMap;
+  return (Ember.keys(factoryMap).length !== 0)
+    ? factoryMap
+    : null;
 }

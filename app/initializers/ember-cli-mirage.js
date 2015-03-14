@@ -14,19 +14,19 @@ export default {
     var shouldUseServer = config.force || usingInDev || usingInTest;
 
     if (shouldUseServer) {
+      var factoryMap = readFactories(ENV.modulePrefix);
+      var fixtures = readFixtures(ENV.modulePrefix);
       var server = new Server({
         environment: env
       });
 
       server.loadConfig(userConfig);
 
-      if (usingInDev || config.force) {
-        var fixtures = readFixtures(ENV.modulePrefix);
-        server.db.loadData(fixtures);
-
-      } else if (usingInTest) {
-        var factoryMap = readFactories(ENV.modulePrefix);
+      if (env === 'test' && factoryMap) {
         server.loadFactories(factoryMap);
+
+      } else {
+        server.db.loadData(fixtures);
       }
     }
   }
