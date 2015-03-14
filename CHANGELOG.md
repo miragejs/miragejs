@@ -1,5 +1,14 @@
 # Ember CLI Mirage Changelog
 
+## 0.0.23
+Update notes: None.
+
+Change:
+
+ - #53 allow arbitrary factory attrs
+ - #50 do not use Mirage if /server/proxies dir exists
+ - load fixtures in test environment if no factories exist
+
 ## 0.0.22
 Update notes:
   - Rename your `/app/mirage/data` directory to `/app/mirage/fixtures`.
