@@ -52,18 +52,17 @@ export default function() {
   /*
     Function fallback. Manipulate data in the db via
 
-      - db.find(key, id)
-      - db.findAll(key)
-      - db.findQuery(key, query)
-      - db.push(key, data)
-      - db.remove(key, id)
-      - db.removeQuery(key, query)
+      - db.{collection} // returns all the data defined in /app/mirage/fixtures/{collection}.js
+      - db.{collection}.find(id)
+      - db.{collection}.where(query)
+      - db.{collection}.update(target, attrs)
+      - db.{collection}.remove(target)
 
     // Example: return a single object with related models
     this.get('/contacts/:id', function(db, request) {
       var contactId = +request.params.id;
-      var contact = db.find('contact', contactId);
-      var addresses = db.findAll('address')
+      var contact = db.contacts.find(contactId);
+      var addresses = db.addresses
         .filterBy('contact_id', contactId);
 
       return {
