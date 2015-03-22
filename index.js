@@ -6,7 +6,7 @@ module.exports = {
 
   included: function included(app) {
     this.app = app;
-
+    this.addonConfig = this.app.project.config(app.env)['ember-cli-mirage'];
     if (this.shouldIncludeFiles()) {
       app.import(app.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js');
       app.import(app.bowerDirectory + '/route-recognizer/dist/route-recognizer.js');
@@ -32,9 +32,7 @@ module.exports = {
   },
 
   shouldIncludeFiles: function() {
-    var config = this.app.project.config()['ember-cli-mirage'];
-
-    return config.force || (this.app.env !== 'production')
+    return this.addonConfig.force || (!this.addonConfig.usingProxy ? this.addonConfig.isEnabledEnvironment : true);
   },
 
   postprocessTree: function(type, tree) {
@@ -45,7 +43,7 @@ module.exports = {
   },
 
   excludePretenderDir: function(tree) {
-    var modulePrefix = this.app.project.config()['modulePrefix'];
+    var modulePrefix = this.app.project.config(this.app.env)['modulePrefix'];
     return new this.Funnel(tree, {
       exclude: [new RegExp('^' + modulePrefix + '/mirage/')],
       description: 'Funnel: exclude mirage'

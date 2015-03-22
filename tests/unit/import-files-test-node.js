@@ -40,7 +40,6 @@ describe('import files', function() {
   it('includes third party libraries regardless the environment when force option is true', function() {
     process.env.EMBER_ENV = 'production';
     var addon = new EmberAddon({ configPath: 'tests/fixtures/config/environment-with-force-true' });
-
     expect(addon.legacyFilesToAppend).to.include.members([
       addon.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js',
       addon.bowerDirectory + '/route-recognizer/dist/route-recognizer.js',

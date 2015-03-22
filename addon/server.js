@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { singularize, pluralize } from './utils/inflector';
+import { pluralize } from './utils/inflector';
 import Pretender from 'pretender';
 import Db from './db';
 import frontController from './controllers/front';
