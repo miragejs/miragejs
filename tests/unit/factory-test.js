@@ -1,85 +1,43 @@
-import Factory from 'ember-cli-mirage/factory';
+import Mirage from 'ember-cli-mirage';
 
 import {module, test} from 'qunit';
 
 module('mirage:factory');
 
 test('it exists', function(assert) {
-  assert.ok(Factory);
+  assert.ok(Mirage.Factory);
 });
 
 test('the base class builds empty objects', function(assert) {
-  var f = new Factory();
+  var f = new Mirage.Factory();
   var data = f.build();
 
   assert.deepEqual(data, {});
 });
 
 test('a noop extension builds empty objects', function(assert) {
-  var EmptyFactory = Factory.extend();
+  var EmptyFactory = Mirage.Factory.extend();
   var f = new EmptyFactory();
   var data = f.build();
 
   assert.deepEqual(data, {});
-  assert.ok(Factory.extend);
 });
 
-test('it works with strings and numbers', function(assert) {
-  var AFactory = Factory.extend({
+test('it works with strings, numbers and booleans', function(assert) {
+  var AFactory = Mirage.Factory.extend({
     name: 'Sam',
     age: 28,
+    alive: true
   });
 
   var f = new AFactory();
   var data = f.build();
 
-  assert.deepEqual(data, {name: 'Sam', age: 28});
-});
-
-test('it has access to its own plain attrs', function(assert) {
-  var SamFactory = Factory.extend({
-    name: 'Sam',
-    age: 28,
-    admin: function(n) {
-      return this.age > 30;
-    }
-  });
-  var GandalfFactory = Factory.extend({
-    name: 'Gandalf',
-    age: 500,
-    admin: function() {
-      return this.age > 30;
-    },
-  });
-
-  var s = new SamFactory();
-  var sam = s.build();
-  var g = new GandalfFactory();
-  var gandalf = g.build();
-
-  assert.deepEqual(sam, {name: 'Sam', age: 28, admin: false});
-  assert.deepEqual(gandalf, {name: 'Gandalf', age: 500, admin: true});
-});
-
-test('it has access to its sequence', function(assert) {
-  var SamFactory = Factory.extend({
-    name: 'Sam',
-    age: 28,
-    email: function(n) {
-      return `person${n}@test.com`;
-    }
-  });
-
-  var s = new SamFactory();
-  var data1 = s.build(1);
-  var data2 = s.build(2);
-
-  assert.deepEqual(data1, {name: 'Sam', age: 28, email: 'person1@test.com'});
-  assert.deepEqual(data2, {name: 'Sam', age: 28, email: 'person2@test.com'});
+  assert.deepEqual(data, {name: 'Sam', age: 28, alive: true});
 });
 
 test('it supports inheritance', function(assert) {
-  var PersonFactory = Factory.extend({
+  var PersonFactory = Mirage.Factory.extend({
     species: 'human'
   });
   var ManFactory = PersonFactory.extend({
@@ -90,15 +48,25 @@ test('it supports inheritance', function(assert) {
   });
 
   var p = new PersonFactory();
-  var person = p.build();
-
   var m = new ManFactory();
-  var man = m.build();
-
   var s = new SamFactory();
-  var sam = s.build();
 
-  assert.deepEqual(person, {species: 'human'});
-  assert.deepEqual(man, {species: 'human', gender: 'male'});
-  assert.deepEqual(sam, {species: 'human', gender: 'male', name: 'Sam'});
+  assert.deepEqual(p.build(), {species: 'human'});
+  assert.deepEqual(m.build(), {species: 'human', gender: 'male'});
+  assert.deepEqual(s.build(), {species: 'human', gender: 'male', name: 'Sam'});
+});
+
+test('it can use sequences', function(assert) {
+  var PostFactory = Mirage.Factory.extend({
+    likes: function(i) {
+      return 5*i;
+    }
+  });
+
+  var p = new PostFactory();
+  var post1 = p.build(1);
+  var post2 = p.build(2);
+
+  assert.deepEqual(post1, {likes: 5});
+  assert.deepEqual(post2, {likes: 10});
 });

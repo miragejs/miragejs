@@ -1,5 +1,12 @@
 # Ember CLI Mirage Changelog
 
+## next
+
+Changes:
+  - [BREAKING CHANGE] #63 db.collection.update(target, attrs) is now
+    db.collection.update(attrs, target)
+  - [BREAKING CHANGE] To return all the records in a db collection, use db.collection.all() (previously just db.collection).
+
 ## 0.1.5
 
 Update notes: none

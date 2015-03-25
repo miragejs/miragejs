@@ -76,7 +76,7 @@ test('create adds the data to the db', function(assert) {
   });
 
   server.create('contact');
-  var contactsInDb = server.db.contacts;
+  var contactsInDb = server.db.contacts.all();
 
   assert.equal(contactsInDb.length, 1);
   assert.deepEqual(contactsInDb[0], {id: 1, name: 'Sam'});
@@ -152,7 +152,7 @@ test('createList adds the given number of elements to the db', function(assert) 
   });
 
   server.createList('contact', 3);
-  var contactsInDb = server.db.contacts;
+  var contactsInDb = server.db.contacts.all();
 
   assert.equal(contactsInDb.length, 3);
   assert.deepEqual(contactsInDb[0], {id: 1, name: 'Sam'});

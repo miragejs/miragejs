@@ -1,5 +1,5 @@
 import del from 'ember-cli-mirage/shorthands/delete';
-import Db from 'ember-cli-mirage/db';
+import Db from 'ember-cli-mirage/orm/db';
 
 import {module, test} from 'qunit';
 
@@ -18,7 +18,7 @@ module('mirage:shorthands#delete', {
 test("string shorthand works", function(assert) {
   del.string('contact', db, {params: {id: 1}});
 
-  var contactsInDb = db.contacts;
+  var contactsInDb = db.contacts.all();
   var Zelda = contacts[1];
   assert.equal(contactsInDb.length, 1);
   assert.deepEqual(contactsInDb[0], Zelda);
@@ -27,8 +27,8 @@ test("string shorthand works", function(assert) {
 test("array shorthand works", function(assert) {
   del.array(['contact', 'addresses'], db, {params: {id: 1}});
 
-  var contactsInDb = db.contacts;
-  var addressesInDb = db.addresses;
+  var contactsInDb = db.contacts.all();
+  var addressesInDb = db.addresses.all();
   var Zelda = contacts[1];
   var ZeldasAddress = addresses[1];
   assert.equal(contactsInDb.length, 1);
@@ -40,7 +40,7 @@ test("array shorthand works", function(assert) {
 test("undefined shorthand works", function(assert) {
   del.undefined(undefined, db, {params: {id: 1}, url: '/contacts/1'});
 
-  var contactsInDb = db.contacts;
+  var contactsInDb = db.contacts.all();
   var Zelda = contacts[1];
   assert.equal(contactsInDb.length, 1);
   assert.deepEqual(contactsInDb[0], Zelda);

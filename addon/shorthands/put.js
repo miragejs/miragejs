@@ -22,7 +22,7 @@ export default {
       console.error("Mirage: The route handler for " + request.url + " is trying to modify data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
     }
 
-    var data = db[collection].update(id, attrs);
+    var data = db[collection].update(attrs, id);
 
     var response = {};
     response[type] = data;
@@ -48,7 +48,7 @@ export default {
       console.error("Mirage: The route handler for " + request.url + " is trying to modify data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
     }
 
-    var data = db[collection].update(id, attrs);
+    var data = db[collection].update(attrs, id);
 
     var response = {};
     response[type] = data;

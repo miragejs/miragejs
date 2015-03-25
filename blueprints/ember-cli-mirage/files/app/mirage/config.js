@@ -54,7 +54,7 @@ export default function() {
   /*
     Function fallback. Manipulate data in the db via
 
-      - db.{collection} // returns all the data defined in /app/mirage/fixtures/{collection}.js
+      - db.{collection}.all()
       - db.{collection}.find(id)
       - db.{collection}.where(query)
       - db.{collection}.update(target, attrs)
@@ -63,13 +63,10 @@ export default function() {
     // Example: return a single object with related models
     this.get('/contacts/:id', function(db, request) {
       var contactId = +request.params.id;
-      var contact = db.contacts.find(contactId);
-      var addresses = db.addresses
-        .filterBy('contact_id', contactId);
 
       return {
-        contact: contact,
-        addresses: addresses
+        contact: db.contacts.find(contactId),
+        addresses: db.addresses.where({contact_id: contactId});
       };
     });
 

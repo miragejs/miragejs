@@ -26,6 +26,7 @@
   "author": "Sam Selikoff",
   "devDependencies": {
     "broccoli-asset-rev": "^2.0.2",
+    "broccoli-static-compiler": "^0.2.1",
     "chai": "2.0.0",
     "ember-cli": "0.2.7",
     "ember-cli-app-version": "0.3.3",
@@ -41,6 +42,7 @@
     "ember-disable-proxy-controllers": "^1.0.0",
     "ember-export-application-global": "^1.0.2",
     "ember-try": "0.0.6",
+    "es5-shim": "^4.1.5",
     "mocha": "^2.1.0"
   },
   "keywords": [

@@ -1,5 +1,5 @@
 import get from 'ember-cli-mirage/shorthands/get';
-import Db from 'ember-cli-mirage/db';
+import Db from 'ember-cli-mirage/orm/db';
 
 import {module, test} from 'qunit';
 
