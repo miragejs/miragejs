@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import { singularize } from '../utils/inflector';
 
 export default Ember.Object.extend({
 
@@ -31,6 +32,14 @@ export default Ember.Object.extend({
     }
 
     return url;
+  },
+
+  _getTypeFromUrl: function(url, hasId) {
+    var urlNoId = hasId ? url.substr(0, url.lastIndexOf('/')) : url;
+    var urlNoIdNoQuery = urlNoId.split("?")[0];
+    var type = singularize(urlNoIdNoQuery.substr(urlNoIdNoQuery.lastIndexOf('/') + 1));
+
+    return type;
   },
 
   _getJsonBodyForRequest: function(request) {

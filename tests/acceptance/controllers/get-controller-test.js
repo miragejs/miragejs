@@ -56,7 +56,13 @@ test("array shorthand with id works", function() {
 
 // e.g. this.stub('get', '/contacts');
 test("undefined shorthand works", function() {
-  var result = controller.handle('get', undefined, db, {url: '/contacts'});
+  var result = controller.handle('get', undefined, db, {url: '/api/v1/contacts'});
+
+  deepEqual(result[2], {contacts: contacts});
+});
+
+test("undefined shorthand works when query params are present", function() {
+  var result = controller.handle('get', undefined, db, {url: '/contacts?foo=true'});
 
   deepEqual(result[2], {contacts: contacts});
 });
@@ -64,6 +70,13 @@ test("undefined shorthand works", function() {
 // e.g. this.stub('get', '/contacts/:id');
 test("undefined shorthand with id works", function() {
   var result = controller.handle('get', undefined, db, {url: '/contacts/1', params: {id: 1}});
+
+  deepEqual(result[2], {contact: contacts[0]});
+});
+
+// e.g. this.stub('get', '/contacts/:id');
+test("undefined shorthand with id works when query params are present", function() {
+  var result = controller.handle('get', undefined, db, {url: '/contacts/1?foo=true', params: {id: 1}});
 
   deepEqual(result[2], {contact: contacts[0]});
 });

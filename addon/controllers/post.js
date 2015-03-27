@@ -39,7 +39,7 @@ export default BaseController.extend({
   */
   undefinedHandler: function(undef, db, request) {
     var url = this._getUrlForRequest(request);
-    var type = singularize(url.substr(url.lastIndexOf('/') + 1));
+    var type = this._getTypeFromUrl(url);
     var collection = pluralize(type);
     var postData = this._getJsonBodyForRequest(request);
     var attrs = postData[type];

@@ -42,3 +42,14 @@ test("undefined shorthand works", function() {
   Link = db.contacts.find(1);
   equal(Link.name, 'Linkz0r');
 });
+
+test("undefined shorthand works when query params present", function() {
+  var Link = db.contacts.find(1);
+  equal(Link.name, 'Link');
+
+  var body = '{"contact":{"id":1,"name":"Linkz0r"}}';
+  var result = controller.handle('put', undefined, db, {params: {id: 1}, url: '/contacts/1?some=foo', requestBody: body});
+
+  Link = db.contacts.find(1);
+  equal(Link.name, 'Linkz0r');
+});

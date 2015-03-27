@@ -34,3 +34,12 @@ test("undefined shorthand works", function() {
   equal(contactsInDb.length, 1);
   deepEqual(result[2], {contact: {id: 1, name: 'Ganon'}});
 });
+
+test("undefined shorthand works when query params present", function() {
+  var body = '{"contact":{"name":"Ganon"}}';
+  var result = controller.handle('post', undefined, db, {requestBody: body, url: '/contacts?foo=bar'});
+
+  var contactsInDb = db.contacts;
+  equal(contactsInDb.length, 1);
+  deepEqual(result[2], {contact: {id: 1, name: 'Ganon'}});
+});
