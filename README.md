@@ -108,6 +108,8 @@ available shorthands for `get`, `post`, `put` and `del` [in the wiki](../../wiki
 
 During testing, the db always starts off empty; however, all the routes you've defined will still be available (since these are what your app expects, and mostly shouldn't change within your tests). The db is emptied because tests should be atomic, and should not rely on state defined elsewhere. This means the data you've added under `/mirage/fixtures` will not be available in your tests.
 
+> Note: For now, since factory relationships haven't landed yet, if you prefer to just use fixtures in your tests, delete the `/mirage/factories` directory. The fixtures under `/mirage/fixtures` will then load during testing, and you can use those as a starting point, and modify your db data via `server.db` in your tests. Once factories are fleshed out, this will most likely be discouraged.
+
 Instead, to get data into your tests, you'll define factories. That way, each test can create the data it needs (i.e. it can set up the "server state" it expects), and then assert against that data.
 
 Let's define a `contact` factory. The generator should have created the file `/test/factories/contact.js` - the name of the file is how you reference the factory:
