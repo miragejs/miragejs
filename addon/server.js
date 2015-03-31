@@ -11,6 +11,7 @@ import frontController from './controllers/front';
 */
 export default function(options) {
   // Init vars
+  var server = this;
   if (!options || !options.environment) {
     throw "You must pass an environment in when creating a Mirage server instance";
   }
@@ -33,11 +34,12 @@ export default function(options) {
     var _this = this;
     var interceptor = this.interceptor;
     path = path[0] === '/' ? path.slice(1) : path;
+
     interceptor[verb].call(interceptor, this.namespace + '/' + path, function(request) {
-
       var response = frontController.handle(verb, handler, _this.db, request, code);
+      var shouldLog = server.logging !== 'undefined' ? server.logging : (environment !== 'test');
 
-      if (environment !== 'test') {
+      if (shouldLog) {
         console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
         console.log(response[2]);
       }
