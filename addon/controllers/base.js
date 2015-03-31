@@ -4,7 +4,14 @@ import { singularize } from '../utils/inflector';
 export default Ember.Object.extend({
 
   functionHandler: function(handler, db, request) {
-    return handler(db, request);
+    var data;
+    try {
+      data = handler(db, request);
+    } catch(error) {
+      console.error(`Mirage: Your custom function handler for the url ${request.url} threw an error:`, error.message, error.stack);
+    }
+
+    return data;
   },
 
   objectHandler: function(object, db, request) {
