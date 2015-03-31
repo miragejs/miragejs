@@ -32,7 +32,7 @@ module.exports = {
   },
 
   shouldIncludeFiles: function() {
-    var config = this.app.project.config()['ember-cli-mirage'];
+    var config = this.app.project.config(this.app.env)['ember-cli-mirage'];
 
     return !config.disable && (config.force || (this.app.env !== 'production')) 
   },
@@ -45,7 +45,7 @@ module.exports = {
   },
 
   excludePretenderDir: function(tree) {
-    var modulePrefix = this.app.project.config()['modulePrefix'];
+    var modulePrefix = this.app.project.config(this.app.env)['modulePrefix'];
     return new this.Funnel(tree, {
       exclude: [new RegExp('^' + modulePrefix + '/mirage/')],
       description: 'Funnel: exclude mirage'
