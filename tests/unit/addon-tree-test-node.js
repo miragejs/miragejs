@@ -50,6 +50,30 @@ describe('Addon', function() {
       expect(addonTree.inputTrees.length).to.be.equal(1);
     });
 
+    ['development', 'test', 'production'].forEach(function(environment) {
+
+      it('returns an empty tree when disable option is true in ' + environment + ' environment', function() {
+        process.env.EMBER_ENV = environment;
+        var addon = getMirageAddon({ configPath: 'tests/fixtures/config/environment-with-disable-true' });
+        var addonTree = addon.treeFor('addon');
+
+        expect(addonTree.inputTrees.length).to.be.equal(0);
+      });
+
+    });
+
+    ['development', 'test', 'production'].forEach(function(environment) {
+      
+      it('returns an empty tree when disable option is true in ' + environment + ' environment regardless force option is true', function() {
+        process.env.EMBER_ENV = environment;
+        var addon = getMirageAddon({ configPath: 'tests/fixtures/config/environment-with-disable-true-and-force-true' });
+        var addonTree = addon.treeFor('addon');
+
+        expect(addonTree.inputTrees.length).to.be.equal(0);
+      });
+      
+    });
+
   });
 
   describe('#postprocessTree', function() {

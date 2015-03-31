@@ -34,7 +34,7 @@ module.exports = {
   shouldIncludeFiles: function() {
     var config = this.app.project.config()['ember-cli-mirage'];
 
-    return config.force || (this.app.env !== 'production')
+    return !config.disable && (config.force || (this.app.env !== 'production')) 
   },
 
   postprocessTree: function(type, tree) {
