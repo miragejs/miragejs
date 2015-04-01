@@ -7,6 +7,7 @@ module.exports = {
   included: function included(app) {
     this.app = app;
     this.addonConfig = this.app.project.config(app.env)['ember-cli-mirage'];
+
     if (this.shouldIncludeFiles()) {
       app.import(app.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js');
       app.import(app.bowerDirectory + '/route-recognizer/dist/route-recognizer.js');
@@ -31,15 +32,18 @@ module.exports = {
     return this.mergeTrees([]);
   },
 
-  shouldIncludeFiles: function() {
-    return this.addonConfig.force || (!this.addonConfig.usingProxy ? this.addonConfig.isEnabledEnvironment : true);
-  },
-
   postprocessTree: function(type, tree) {
     if(type === 'js' && !this.shouldIncludeFiles()) {
       return this.excludePretenderDir(tree);
     }
     return tree;
+  },
+
+  shouldIncludeFiles: function() {
+    var userDeclaredEnabled = typeof this.addonConfig.enabled !== 'undefined';
+    var defaultEnabled = (this.app.env !== 'production');
+
+    return userDeclaredEnabled ? this.addonConfig.enabled : defaultEnabled;
   },
 
   excludePretenderDir: function(tree) {

@@ -1,11 +1,6 @@
 'use strict';
 var fs = require('fs');
 
-function isEnabledEnvironment(environment, appConfig) {
-  var environments = appConfig['ember-cli-mirage'] && appConfig['ember-cli-mirage'].enabledEnvironments || ['test','development'];
-  return environments.indexOf(environment) > -1;
-}
-
 function usingProxy() {
   var usingProxyArg = !!process.argv.filter(function (arg) {
     return arg.indexOf('--proxy') === 0;
@@ -23,9 +18,7 @@ function usingProxy() {
 
 module.exports = function(environment, appConfig) {
   appConfig['ember-cli-mirage'] = appConfig['ember-cli-mirage'] || {};
-
   appConfig['ember-cli-mirage']['usingProxy'] = usingProxy();
 
-  appConfig['ember-cli-mirage']['isEnabledEnvironment'] = isEnabledEnvironment(environment, appConfig);
   return {};
 };
