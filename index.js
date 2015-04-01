@@ -8,7 +8,7 @@ module.exports = {
     this.app = app;
     this.addonConfig = this.app.project.config(app.env)['ember-cli-mirage'];
 
-    if (this.shouldIncludeFiles()) {
+    if (this._shouldIncludeFiles()) {
       app.import(app.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js');
       app.import(app.bowerDirectory + '/route-recognizer/dist/route-recognizer.js');
       app.import(app.bowerDirectory + '/pretender/pretender.js');
@@ -25,7 +25,7 @@ module.exports = {
   },
 
   treeFor: function(name) {
-    if (this.shouldIncludeFiles()) {
+    if (this._shouldIncludeFiles()) {
       return this._super.treeFor.apply(this, arguments);
     }
     this._requireBuildPackages();
@@ -33,20 +33,20 @@ module.exports = {
   },
 
   postprocessTree: function(type, tree) {
-    if(type === 'js' && !this.shouldIncludeFiles()) {
-      return this.excludePretenderDir(tree);
+    if(type === 'js' && !this._shouldIncludeFiles()) {
+      return this._excludePretenderDir(tree);
     }
     return tree;
   },
 
-  shouldIncludeFiles: function() {
+  _shouldIncludeFiles: function() {
     var userDeclaredEnabled = typeof this.addonConfig.enabled !== 'undefined';
     var defaultEnabled = (this.app.env !== 'production');
 
     return userDeclaredEnabled ? this.addonConfig.enabled : defaultEnabled;
   },
 
-  excludePretenderDir: function(tree) {
+  _excludePretenderDir: function(tree) {
     var modulePrefix = this.app.project.config(this.app.env)['modulePrefix'];
     return new this.Funnel(tree, {
       exclude: [new RegExp('^' + modulePrefix + '/mirage/')],
