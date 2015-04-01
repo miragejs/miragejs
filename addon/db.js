@@ -1,4 +1,3 @@
-import { pluralize } from './utils/inflector';
 import Ember from 'ember';
 
 /*

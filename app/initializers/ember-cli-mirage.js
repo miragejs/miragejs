@@ -7,13 +7,9 @@ import readFactories from 'ember-cli-mirage/utils/read-factories';
 export default {
   name: 'ember-cli-mirage',
   initialize: function(container, application) {
-    var config = ENV['ember-cli-mirage'];
     var env = ENV.environment;
-    var usingInDev = env === 'development' && !config.usingProxy;
-    var usingInTest = env === 'test';
-    var shouldUseServer = config.force || usingInDev || usingInTest;
 
-    if (shouldUseServer) {
+    if (_shouldUseMirage(env, ENV['ember-cli-mirage'])) {
       var factoryMap = readFactories(ENV.modulePrefix);
       var fixtures = readFixtures(ENV.modulePrefix);
       var server = new Server({
@@ -31,3 +27,21 @@ export default {
     }
   }
 };
+
+function _shouldUseMirage(env, addonConfig) {
+  var userDeclaredEnabled = typeof addonConfig.enabled !== 'undefined';
+  var defaultEnabled = _defaultEnabled(env, addonConfig);
+
+  return userDeclaredEnabled ? addonConfig.enabled : defaultEnabled;
+};
+
+/*
+  Returns a boolean specifying the default behavior for whether
+  to initialize Mirage.
+*/
+function _defaultEnabled(env, addonConfig) {
+  var usingInDev = env === 'development' && !addonConfig.usingProxy;
+  var usingInTest = env === 'test';
+
+  return usingInDev || usingInTest;
+}

@@ -13,22 +13,6 @@
     <link rel="stylesheet" href="assets/vendor.css">
     <link rel="stylesheet" href="assets/dummy.css">
     <link rel="stylesheet" href="assets/test-support.css">
-    <style>
-      #ember-testing-container {
-        position: absolute;
-        background: white;
-        bottom: 0;
-        right: 0;
-        width: 640px;
-        height: 384px;
-        overflow: auto;
-        z-index: 9999;
-        border: 1px solid #ccc;
-      }
-      #ember-testing {
-        zoom: 50%;
-      }
-    </style>
 
     {{content-for 'head-footer'}}
     {{content-for 'test-head-footer'}}
@@ -37,7 +21,6 @@
 
     {{content-for 'body'}}
     {{content-for 'test-body'}}
-    <script src="assets/es5-shim.js"></script>
     <script src="assets/vendor.js"></script>
     <script src="assets/test-support.js"></script>
     <script src="assets/dummy.js"></script>

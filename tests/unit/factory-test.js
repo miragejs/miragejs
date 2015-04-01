@@ -1,28 +1,30 @@
 import Factory from 'ember-cli-mirage/factory';
 
+import {module, test} from 'qunit';
+
 module('mirage:factory');
 
-test('it exists', function() {
-  ok(Factory);
+test('it exists', function(assert) {
+  assert.ok(Factory);
 });
 
-test('the base class builds empty objects', function() {
+test('the base class builds empty objects', function(assert) {
   var f = new Factory();
   var data = f.build();
 
-  deepEqual(data, {});
+  assert.deepEqual(data, {});
 });
 
-test('a noop extension builds empty objects', function() {
+test('a noop extension builds empty objects', function(assert) {
   var EmptyFactory = Factory.extend();
   var f = new EmptyFactory();
   var data = f.build();
 
-  deepEqual(data, {});
-  ok(Factory.extend);
+  assert.deepEqual(data, {});
+  assert.ok(Factory.extend);
 });
 
-test('it works with strings and numbers', function() {
+test('it works with strings and numbers', function(assert) {
   var AFactory = Factory.extend({
     name: 'Sam',
     age: 28,
@@ -31,10 +33,10 @@ test('it works with strings and numbers', function() {
   var f = new AFactory();
   var data = f.build();
 
-  deepEqual(data, {name: 'Sam', age: 28});
+  assert.deepEqual(data, {name: 'Sam', age: 28});
 });
 
-test('it has access to its own plain attrs', function() {
+test('it has access to its own plain attrs', function(assert) {
   var SamFactory = Factory.extend({
     name: 'Sam',
     age: 28,
@@ -55,11 +57,11 @@ test('it has access to its own plain attrs', function() {
   var g = new GandalfFactory();
   var gandalf = g.build();
 
-  deepEqual(sam, {name: 'Sam', age: 28, admin: false});
-  deepEqual(gandalf, {name: 'Gandalf', age: 500, admin: true});
+  assert.deepEqual(sam, {name: 'Sam', age: 28, admin: false});
+  assert.deepEqual(gandalf, {name: 'Gandalf', age: 500, admin: true});
 });
 
-test('it has access to its sequence', function() {
+test('it has access to its sequence', function(assert) {
   var SamFactory = Factory.extend({
     name: 'Sam',
     age: 28,
@@ -72,11 +74,11 @@ test('it has access to its sequence', function() {
   var data1 = s.build(1);
   var data2 = s.build(2);
 
-  deepEqual(data1, {name: 'Sam', age: 28, email: 'person1@test.com'});
-  deepEqual(data2, {name: 'Sam', age: 28, email: 'person2@test.com'});
+  assert.deepEqual(data1, {name: 'Sam', age: 28, email: 'person1@test.com'});
+  assert.deepEqual(data2, {name: 'Sam', age: 28, email: 'person2@test.com'});
 });
 
-test('it supports inheritance', function() {
+test('it supports inheritance', function(assert) {
   var PersonFactory = Factory.extend({
     species: 'human'
   });
@@ -96,7 +98,7 @@ test('it supports inheritance', function() {
   var s = new SamFactory();
   var sam = s.build();
 
-  deepEqual(person, {species: 'human'});
-  deepEqual(man, {species: 'human', gender: 'male'});
-  deepEqual(sam, {species: 'human', gender: 'male', name: 'Sam'});
+  assert.deepEqual(person, {species: 'human'});
+  assert.deepEqual(man, {species: 'human', gender: 'male'});
+  assert.deepEqual(sam, {species: 'human', gender: 'male', name: 'Sam'});
 });

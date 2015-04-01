@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import {module, test} from 'qunit';
 import startApp from '../../helpers/start-app';
 import controller from 'ember-cli-mirage/controllers/front';
 import Db from 'ember-cli-mirage/db';
@@ -9,45 +10,45 @@ var addresses = [{id: 1, name: '123 Hyrule Way', contact_id: 1}, {id: 2, name: '
 var db;
 
 module('mirage:frontController DELETE', {
-  setup: function() {
+  beforeEach: function() {
     App = startApp();
     db = new Db();
     db.createCollections('contacts', 'addresses');
     db.contacts.insert(contacts);
     db.addresses.insert(addresses);
   },
-  teardown: function() {
+  afterEach: function() {
     Ember.run(App, 'destroy');
   }
 });
 
-test("string shorthand works", function() {
+test("string shorthand works", function(assert) {
   var result = controller.handle('delete', 'contact', db, {params: {id: 1}});
 
   var contactsInDb = db.contacts;
   var Zelda = contacts[1];
-  equal(contactsInDb.length, 1);
-  deepEqual(contactsInDb[0], Zelda);
+  assert.equal(contactsInDb.length, 1);
+  assert.deepEqual(contactsInDb[0], Zelda);
 });
 
-test("array shorthand works", function() {
+test("array shorthand works", function(assert) {
   var result = controller.handle('delete', ['contact', 'addresses'], db, {params: {id: 1}});
 
   var contactsInDb = db.contacts;
   var addressesInDb = db.addresses;
   var Zelda = contacts[1];
   var ZeldasAddress = addresses[1];
-  equal(contactsInDb.length, 1);
-  equal(addressesInDb.length, 1);
-  deepEqual(contactsInDb[0], Zelda);
-  deepEqual(addressesInDb[0], ZeldasAddress);
+  assert.equal(contactsInDb.length, 1);
+  assert.equal(addressesInDb.length, 1);
+  assert.deepEqual(contactsInDb[0], Zelda);
+  assert.deepEqual(addressesInDb[0], ZeldasAddress);
 });
 
-test("undefined shorthand works", function() {
+test("undefined shorthand works", function(assert) {
   var result = controller.handle('delete', undefined, db, {params: {id: 1}, url: '/contacts/1'});
 
   var contactsInDb = db.contacts;
   var Zelda = contacts[1];
-  equal(contactsInDb.length, 1);
-  deepEqual(contactsInDb[0], Zelda);
+  assert.equal(contactsInDb.length, 1);
+  assert.deepEqual(contactsInDb[0], Zelda);
 });
