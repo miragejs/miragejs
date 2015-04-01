@@ -37,7 +37,7 @@ export default function(options) {
 
     interceptor[verb].call(interceptor, this.namespace + '/' + path, function(request) {
       var response = frontController.handle(verb, handler, _this.db, request, code);
-      var shouldLog = server.logging !== 'undefined' ? server.logging : (environment !== 'test');
+      var shouldLog = typeof server.logging !== 'undefined' ? server.logging : (environment !== 'test');
 
       if (shouldLog) {
         console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
