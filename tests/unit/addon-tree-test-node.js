@@ -1,4 +1,5 @@
  /*jshint -W079 */
+/* jshint node: true */
 var expect = require('chai').expect;
 var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 var path = require('path');
@@ -63,7 +64,7 @@ describe('Addon', function() {
     });
 
     ['development', 'test', 'production'].forEach(function(environment) {
-      
+
       it('returns an empty tree when disable option is true in ' + environment + ' environment regardless force option is true', function() {
         process.env.EMBER_ENV = environment;
         var addon = getMirageAddon({ configPath: 'tests/fixtures/config/environment-with-disable-true-and-force-true' });
@@ -71,7 +72,7 @@ describe('Addon', function() {
 
         expect(addonTree.inputTrees.length).to.be.equal(0);
       });
-      
+
     });
 
   });

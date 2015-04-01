@@ -1,4 +1,5 @@
  /*jshint -W079 */
+/* jshint node: true */
 var expect = require('chai').expect;
 var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 
