@@ -71,7 +71,7 @@ describe('Addon', function() {
       var excludePretenderDirCalled = false;
       var dummyApp = new EmberAddon();
       var addon = findMirage(dummyApp);
-      addon.excludePretenderDir = function(tree) {
+      addon._excludePretenderDir = function(tree) {
         excludePretenderDirCalled = true;
         return tree;
       };
@@ -87,7 +87,7 @@ describe('Addon', function() {
         var excludePretenderDirCalled = false;
         var dummyApp = new EmberAddon();
         var addon = findMirage(dummyApp);
-        addon.excludePretenderDir = function(tree) {
+        addon._excludePretenderDir = function(tree) {
           excludePretenderDirCalled = true;
           return tree;
         };
@@ -103,7 +103,7 @@ describe('Addon', function() {
       var excludePretenderDirCalled = false;
       var dummyApp = new EmberAddon({ configPath: 'tests/fixtures/config/environment-production-enabled' });
       var addon = findMirage(dummyApp);
-      addon.excludePretenderDir = function(tree) {
+      addon._excludePretenderDir = function(tree) {
         excludePretenderDirCalled = true;
         return tree;
       };
@@ -119,7 +119,7 @@ describe('Addon', function() {
         var excludePretenderDirCalled = false;
         var dummyApp = new EmberAddon({ configPath: 'tests/fixtures/config/environment-' + environment + '-disabled' });
         var addon = findMirage(dummyApp);
-        addon.excludePretenderDir = function(tree) {
+        addon._excludePretenderDir = function(tree) {
           excludePretenderDirCalled = true;
           return tree;
         };
