@@ -20,8 +20,8 @@ export default BaseController.extend({
       console.error("Mirage: The route handler for " + request.url + " is trying to remove data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
     }
 
-    var data = db[collection].remove(id);
-
+    db[collection].remove(id);
+    
     return undefined;
   },
 
@@ -75,8 +75,8 @@ export default BaseController.extend({
     var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
     var collection = pluralize(type);
 
-    var data = db[collection].remove(id);
-
+    db[collection].remove(id);
+    
     return undefined;
   },
 });

@@ -9,10 +9,7 @@ export default {
   initialize: function(container, application) {
     var config = ENV['ember-cli-mirage'];
     var env = ENV.environment;
-    var usingInDev = env === 'development' && !config.usingProxy;
-    var usingInTest = env === 'test';
-    var shouldUseServer = config.force || usingInDev || usingInTest;
-
+    var shouldUseServer = config.force || (!config.usingProxy ? config.isEnabledEnvironment : true);
     if (shouldUseServer) {
       var factoryMap = readFactories(ENV.modulePrefix);
       var fixtures = readFixtures(ENV.modulePrefix);

@@ -14,7 +14,7 @@ export default Ember.Object.extend({
     return data;
   },
 
-  objectHandler: function(object, db, request) {
+  objectHandler: function(object /*, db, request*/) {
     return object;
   },
 
