@@ -1,33 +1,34 @@
 import Ember from 'ember';
+import {module, test} from 'qunit';
 import startApp from '../helpers/start-app';
 
 var App;
 var friends;
 
 module('Acceptance: Contacts', {
-  setup: function() {
+  beforeEach: function() {
     App = startApp();
   },
-  teardown: function() {
+  afterEach: function() {
     Ember.run(App, 'destroy');
   }
 });
 
-test("I can view the friends", function() {
+test("I can view the friends", function(assert) {
   var friend = server.create('friend');
   var youngFriend = server.create('friend', {name: 'Tommy', age: 10});
 
   visit('/friends');
 
   andThen(function() {
-    equal(currentRouteName(), 'friends');
-    equal( find('p').length, 2 );
-    equal(friend.is_young, false);
-    equal(youngFriend.is_young, true);
+    assert.equal(currentRouteName(), 'friends');
+    assert.equal( find('p').length, 2 );
+    assert.equal(friend.is_young, false);
+    assert.equal(youngFriend.is_young, true);
 
-    ok( find('p:first').text().match(friend.name) );
-    ok( find('p:first').text().match(friend.age) );
-    ok( find('p:last').text().match('Tommy') );
-    ok( find('p:last').text().match(10) );
+    assert.ok( find('p:first').text().match(friend.name) );
+    assert.ok( find('p:first').text().match(friend.age) );
+    assert.ok( find('p:last').text().match('Tommy') );
+    assert.ok( find('p:last').text().match(10) );
   });
 });

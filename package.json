@@ -2,7 +2,6 @@
   "name": "ember-cli-mirage",
   "version": "0.0.23",
   "description": "A client-side server to develop, test and prototype your Ember app",
-  "main": "index.js",
   "license": "MIT",
   "directories": {
     "doc": "doc",
@@ -27,8 +26,6 @@
   "author": "Sam Selikoff",
   "devDependencies": {
     "broccoli-asset-rev": "^2.0.0",
-    "broccoli-static-compiler": "^0.2.1",
-    "chai": "^2.0.0",
     "ember-cli": "0.2.0",
     "ember-cli-app-version": "0.3.2",
     "ember-cli-babel": "^4.0.0",
@@ -41,10 +38,7 @@
     "ember-cli-uglify": "1.0.1",
     "ember-data": "1.0.0-beta.15",
     "ember-export-application-global": "^1.0.2",
-    "es5-shim": "^4.0.6",
-    "express": "^4.8.5",
-    "glob": "~4.0.5",
-    "rimraf": "2.2.8",
+    "chai": "^2.0.0",
     "mocha": "^2.1.0"
   },
   "keywords": [
@@ -56,6 +50,5 @@
   ],
   "ember-addon": {
     "configPath": "tests/dummy/config"
-  },
-  "dependencies": {}
+  }
 }

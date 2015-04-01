@@ -1,5 +1,7 @@
 import { singularize, pluralize } from 'ember-cli-mirage/utils/inflector';
 
+import {module, test} from 'qunit';
+
 QUnit.module('mirage:inflector');
 
 QUnit.test('can singularize', function(assert) {

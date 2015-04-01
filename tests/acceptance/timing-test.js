@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import {module, test} from 'qunit';
 import startApp from '../helpers/start-app';
 
 var App;
@@ -6,12 +7,12 @@ var contact;
 var appStore;
 
 module('Acceptance: Timing', {
-  setup: function() {
+  beforeEach: function() {
     App = startApp();
     appStore = App.__container__.lookup('store:main');
     contact = server.create('contact');
   },
-  teardown: function() {
+  afterEach: function() {
     Ember.run(App, 'destroy');
   }
 });
