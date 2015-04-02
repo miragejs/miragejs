@@ -112,10 +112,10 @@ During testing, the db always starts off empty; however, all the routes you've d
 
 Instead, to get data into your tests, you'll define factories. That way, each test can create the data it needs (i.e. it can set up the "server state" it expects), and then assert against that data.
 
-Let's define a `contact` factory. The generator should have created the file `/test/factories/contact.js` - the name of the file is how you reference the factory:
+Let's define a `contact` factory. The generator should have created the file `/app/mirage/factories/contact.js` - the name of the file is how you reference the factory:
 
 ```js
-// tests/factories/contact.js
+// app/mirage/factories/contact.js
 import Mirage from 'ember-cli-mirage';
 
 export default Mirage.Factory.extend({
