@@ -1,5 +1,18 @@
 # Ember CLI Mirage Changelog
 
+## 0.0.24
+
+Changes:
+  - [BREAKING CHANGE] There's no more `force` or `disabled` option, simply specify
+
+        ENV['ember-cli-mirage'].enabled = true/false
+
+    in whichever environment you need to override the default behavior.
+
+  - [ENHANCEMENT] #51 Adds generators: `ember g factory contact` and `ember g fixture contacts`
+  - [ENHANCEMENT] Allow response logging in tests via `server.logging = true`
+  - [BUGFIX] #66 ignore query params in shorthands
+
 ## 0.0.23
 Update notes: None.
 
