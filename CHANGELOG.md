@@ -5,7 +5,7 @@
 Changes:
   - [BREAKING CHANGE] There's no more `force` or `disabled` option, simply specify
 
-        ENV['ember-cli-mirage'].enabled = true/false
+        ENV['ember-cli-mirage'].enabled = [true|false]
 
     in whichever environment you need to override the default behavior.
 
