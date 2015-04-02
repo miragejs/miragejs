@@ -2,8 +2,10 @@
 
 ## 0.0.24
 
+Update notes: The config options `force` or `disable` aren't support anymore, please use `enabled` as explained here: https://github.com/samselikoff/ember-cli-mirage/wiki/Configuration#enabled
+
 Changes:
-  - [BREAKING CHANGE] There's no more `force` or `disabled` option, simply specify
+  - [BREAKING CHANGE] There's no more `force` or `disable` option, simply specify
 
         ENV['ember-cli-mirage'].enabled = [true|false]
 
