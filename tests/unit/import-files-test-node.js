@@ -48,19 +48,4 @@ describe('import files', function() {
     ]);
   });
 
-  ['development', 'test'].forEach(function(environment) {
-    it('doesn\'t include third party libraries in ' + environment + ' environment when enabled is set to false', function() {
-      process.env.EMBER_ENV = environment;
-      var addon = new EmberAddon({ configPath: 'tests/fixtures/config/environment-' + environment + '-disabled' });
-
-      expect(addon.legacyFilesToAppend).to.not.include.members([
-        addon.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js',
-        addon.bowerDirectory + '/route-recognizer/dist/route-recognizer.js',
-        addon.bowerDirectory + '/pretender/pretender.js',
-        'vendor/ember-cli-mirage/shim.js',
-        addon.bowerDirectory + '/ember-inflector/ember-inflector.js'
-      ]);
-    });
-  });
-
 });

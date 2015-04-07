@@ -50,16 +50,6 @@ describe('Addon', function() {
       expect(addonTree.inputTrees.length).to.be.equal(1);
     });
 
-    ['development', 'test'].forEach(function(environment) {
-      it('returns an empty tree in ' + environment + ' environment when enabled is set to false', function() {
-        process.env.EMBER_ENV = environment;
-        var addon = getMirageAddon({ configPath: 'tests/fixtures/config/environment-' + environment + '-disabled' });
-        var addonTree = addon.treeFor('addon');
-
-        expect(addonTree.inputTrees.length).to.be.equal(0);
-      });
-    });
-
   });
 
 
@@ -110,23 +100,6 @@ describe('Addon', function() {
       dummyApp.toTree();
 
       expect(excludePretenderDirCalled).to.be.equal(false);
-    });
-
-    ['development', 'test'].forEach(function(environment) {
-      it('excludes app/mirage tree in ' + environment + ' environment when enabled is set to false', function() {
-        this.timeout(10000);
-        process.env.EMBER_ENV = environment;
-        var excludePretenderDirCalled = false;
-        var dummyApp = new EmberAddon({ configPath: 'tests/fixtures/config/environment-' + environment + '-disabled' });
-        var addon = findMirage(dummyApp);
-        addon._excludePretenderDir = function(tree) {
-          excludePretenderDirCalled = true;
-          return tree;
-        };
-        dummyApp.toTree();
-
-        expect(excludePretenderDirCalled).to.be.equal(true);
-      });
     });
 
   });

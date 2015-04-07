@@ -40,10 +40,9 @@ module.exports = {
   },
 
   _shouldIncludeFiles: function() {
-    var userDeclaredEnabled = typeof this.addonConfig.enabled !== 'undefined';
-    var defaultEnabled = (this.app.env !== 'production');
+    var enabledInProd = this.app.env === 'production' && this.addonConfig.enabled;
 
-    return userDeclaredEnabled ? this.addonConfig.enabled : defaultEnabled;
+    return enabledInProd || (this.app.env !== 'production');
   },
 
   _excludePretenderDir: function(tree) {
