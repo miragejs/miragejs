@@ -18,7 +18,7 @@ Ember CLI Mirage may be for you! It lets you create a client-side server using [
 
 ## Installation
 
-    ember install ember-cli-mirage
+    ember install ember-cli-mirage  # install:addon for < 0.2.3
 
 and add `server` to the `predef` section in your `tests/.jshintrc` file.
 
