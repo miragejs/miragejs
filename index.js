@@ -47,7 +47,7 @@ module.exports = {
 
   _excludePretenderDir: function(tree) {
     var modulePrefix = this.app.project.config(this.app.env)['modulePrefix'];
-    return new this.Funnel(tree, {
+    return new Funnel(tree, {
       exclude: [new RegExp('^' + modulePrefix + '/mirage/')],
       description: 'Funnel: exclude mirage'
     });
