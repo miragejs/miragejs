@@ -29,7 +29,7 @@ module.exports = {
       return this._super.treeFor.apply(this, arguments);
     }
     this._requireBuildPackages();
-    return this.mergeTrees([]);
+    return mergeTrees([]);
   },
 
   postprocessTree: function(type, tree) {
