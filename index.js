@@ -1,5 +1,7 @@
 'use strict';
 var path = require('path');
+var mergeTrees = require('broccoli-merge-trees');
+var Funnel = require('broccoli-funnel');
 
 module.exports = {
   name: 'ember-cli-mirage',
