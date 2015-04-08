@@ -1,5 +1,7 @@
 'use strict';
 var path = require('path');
+var mergeTrees = require('broccoli-merge-trees');
+var Funnel = require('broccoli-funnel');
 
 module.exports = {
   name: 'ember-cli-mirage',
@@ -29,7 +31,7 @@ module.exports = {
       return this._super.treeFor.apply(this, arguments);
     }
     this._requireBuildPackages();
-    return this.mergeTrees([]);
+    return mergeTrees([]);
   },
 
   postprocessTree: function(type, tree) {
@@ -47,7 +49,7 @@ module.exports = {
 
   _excludePretenderDir: function(tree) {
     var modulePrefix = this.app.project.config(this.app.env)['modulePrefix'];
-    return new this.Funnel(tree, {
+    return new Funnel(tree, {
       exclude: [new RegExp('^' + modulePrefix + '/mirage/')],
       description: 'Funnel: exclude mirage'
     });

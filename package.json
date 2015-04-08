@@ -26,6 +26,8 @@
   "author": "Sam Selikoff",
   "devDependencies": {
     "broccoli-asset-rev": "^2.0.0",
+    "broccoli-funnel": "^0.2.3",
+    "broccoli-merge-trees": "^0.2.1",
     "chai": "2.0.0",
     "ember-cli": "0.2.0",
     "ember-cli-app-version": "0.3.2",
