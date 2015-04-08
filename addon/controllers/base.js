@@ -25,8 +25,8 @@ export default Ember.Object.extend({
 
     if (request && request.params && request.params.id) {
       id = request.params.id;
-      // If parses, coerce to integer
-      id = parseInt(id, 10) || id;
+      // If the id is not a number, return the string. Otherwise, parse it as an integer
+      id = isNaN(id) ? id : parseInt(id, 10);
     }
 
     return id;
