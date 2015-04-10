@@ -4,6 +4,12 @@ import PostController from 'ember-cli-mirage/controllers/post';
 import PutController from 'ember-cli-mirage/controllers/put';
 import DeleteController from 'ember-cli-mirage/controllers/delete';
 
+var defaultCodes = {
+  put: 204,
+  post: 201,
+  delete: 204
+};
+
 export default {
 
   getController: GetController.create(),
@@ -13,7 +19,7 @@ export default {
 
   handle: function(verb, handler, db, request, code) {
     var controller = verb + 'Controller';
-    code = code ? code : this.getDefaultCode(verb);
+    code = code ? code : (defaultCodes[verb] || 200);
 
     var type = typeof handler;
     var handlerType = Ember.isArray(handler) ? 'array' : type;
@@ -30,26 +36,5 @@ export default {
     } else {
       return [code, {}, undefined];
     }
-  },
-
-  getDefaultCode: function(verb) {
-    var code = 200;
-    switch (verb) {
-      case 'put':
-        code = 204;
-        break;
-      case 'post':
-        code = 201;
-        break;
-      case 'delete':
-        code = 204;
-        break;
-      default:
-        code = 200;
-        break;
-    }
-
-    return code;
   }
-
 };
