@@ -2,7 +2,7 @@ import Ember from 'ember';
 import { pluralize } from './utils/inflector';
 import Pretender from 'pretender';
 import Db from './db';
-import frontController from './controllers/front';
+import controller from './controller';
 
 /*
   The Mirage server, which has a db and an XHR interceptor.
@@ -36,7 +36,7 @@ export default function(options) {
     path = path[0] === '/' ? path.slice(1) : path;
 
     this.interceptor[verb].call(this.interceptor, this.namespace + '/' + path, function(request) {
-      var response = frontController.handle(verb, handler, _this.db, request, code);
+      var response = controller.handle(verb, handler, _this.db, request, code);
       var shouldLog = typeof server.logging !== 'undefined' ? server.logging : (environment !== 'test');
 
       if (shouldLog) {

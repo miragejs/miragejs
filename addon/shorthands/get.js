@@ -1,10 +1,7 @@
 import { singularize, pluralize } from '../utils/inflector';
-import BaseController from './base';
+import utils from './utils';
 
-/*
-  Shorthands for GET requests.
-*/
-export default BaseController.extend({
+export default {
 
   /*
     Retrieve *key* from the db. If it's singular,
@@ -14,11 +11,11 @@ export default BaseController.extend({
       this.stub('get', '/contacts', 'contacts');
       this.stub('get', '/contacts/:id', 'contact');
   */
-  stringHandler: function(string, db, request) {
+  string: function(string, db, request) {
     var key = string;
     var collection = pluralize(string);
     var data = {};
-    var id = this._getIdForRequest(request);
+    var id = utils.getIdForRequest(request);
 
     if (!db[collection]) {
       console.error("Mirage: The route handler for " + request.url + " is requesting data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
@@ -46,8 +43,7 @@ export default BaseController.extend({
     subsequent models by related.
       Ex: this.stub('get', '/contacts/:id', ['contact', 'addresses']);
   */
-  arrayHandler: function(array, db, request) {
-    var _this = this;
+  array: function(array, db, request) {
     var keys = array;
     var data = {};
     var owner;
@@ -72,7 +68,7 @@ export default BaseController.extend({
         // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
         if (singularize(key) === key) {
           ownerKey = key;
-          var id = _this._getIdForRequest(request);
+          var id = utils.getIdForRequest(request);
           var model = db[collection].find(id);
           data[key] = model;
           owner = model;
@@ -96,10 +92,10 @@ export default BaseController.extend({
     If an id is present, return a single model by id.
       Ex: this.stub('get', '/contacts/:id');
   */
-  undefinedHandler: function(undef, db, request) {
-    var id = this._getIdForRequest(request);
-    var url = this._getUrlForRequest(request);
-    var type = this._getTypeFromUrl(url, id);
+  undefined: function(undef, db, request) {
+    var id = utils.getIdForRequest(request);
+    var url = utils.getUrlForRequest(request);
+    var type = utils.getTypeFromUrl(url, id);
     var collection = pluralize(type);
     var data = {};
 
@@ -116,4 +112,4 @@ export default BaseController.extend({
     return data;
   }
 
-});
+};

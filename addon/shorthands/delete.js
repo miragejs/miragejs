@@ -1,10 +1,10 @@
 import { pluralize, singularize } from '../utils/inflector';
-import BaseController from './base';
+import utils from './utils';
 
 /*
   Shorthands for DELETE requests.
 */
-export default BaseController.extend({
+export default {
 
   /*
     Remove the model from the db of type *type*.
@@ -12,8 +12,8 @@ export default BaseController.extend({
     This would remove the user with id :id:
       Ex: this.stub('delete', '/contacts/:id', 'user');
   */
-  stringHandler: function(type, db, request) {
-    var id = this._getIdForRequest(request);
+  string: function(type, db, request) {
+    var id = utils.getIdForRequest(request);
     var collection = pluralize(type);
 
     if (!db[collection]) {
@@ -21,7 +21,7 @@ export default BaseController.extend({
     }
 
     db[collection].remove(id);
-    
+
     return undefined;
   },
 
@@ -32,8 +32,8 @@ export default BaseController.extend({
     as this contact's addresses and phone numbers.
       Ex: this.stub('delete', '/contacts/:id', ['contact', 'addresses', 'numbers');
   */
-  arrayHandler: function(array, db, request) {
-    var id = this._getIdForRequest(request);
+  array: function(array, db, request) {
+    var id = utils.getIdForRequest(request);
     var parentType = array[0];
     var parentCollection = pluralize(parentType);
     var types = array.slice(1);
@@ -68,15 +68,15 @@ export default BaseController.extend({
     This would remove contact with id :id:
       Ex: this.stub('delete', '/contacts/:id');
   */
-  undefinedHandler: function(undef, db, request) {
-    var id = this._getIdForRequest(request);
-    var url = this._getUrlForRequest(request);
+  undefined: function(undef, db, request) {
+    var id = utils.getIdForRequest(request);
+    var url = utils.getUrlForRequest(request);
     var urlNoId = id ? url.substr(0, url.lastIndexOf('/')) : url;
     var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
     var collection = pluralize(type);
 
     db[collection].remove(id);
-    
+
     return undefined;
   },
-});
+};

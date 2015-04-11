@@ -1,10 +1,10 @@
 import { pluralize } from '../utils/inflector';
-import BaseController from './base';
+import utils from './utils';
 
 /*
   Shorthands for POST requests.
 */
-export default BaseController.extend({
+export default {
 
   /*
     Push a new model of type *type* to the db.
@@ -12,10 +12,10 @@ export default BaseController.extend({
     For example, this will push a 'user':
       this.stub('post', '/contacts', 'contact');
   */
-  stringHandler: function(string, db, request) {
+  string: function(string, db, request) {
     var type = string;
     var collection = pluralize(string);
-    var postData = this._getJsonBodyForRequest(request);
+    var postData = utils.getJsonBodyForRequest(request);
     var attrs = postData[type];
 
     if (!db[collection]) {
@@ -37,11 +37,11 @@ export default BaseController.extend({
     For example, this will push a 'contact'.
       this.stub('post', '/contacts');
   */
-  undefinedHandler: function(undef, db, request) {
-    var url = this._getUrlForRequest(request);
-    var type = this._getTypeFromUrl(url);
+  undefined: function(undef, db, request) {
+    var url = utils.getUrlForRequest(request);
+    var type = utils.getTypeFromUrl(url);
     var collection = pluralize(type);
-    var postData = this._getJsonBodyForRequest(request);
+    var postData = utils.getJsonBodyForRequest(request);
     var attrs = postData[type];
 
     if (!db[collection]) {
@@ -55,4 +55,4 @@ export default BaseController.extend({
     return response;
   }
 
-});
+};

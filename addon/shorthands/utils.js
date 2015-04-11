@@ -1,26 +1,8 @@
-import Ember from 'ember';
 import { singularize } from '../utils/inflector';
 
-export default Ember.Object.extend({
+export default {
 
-  functionHandler: function(handler, db, request) {
-    var data;
-
-    try {
-      data = handler(db, request);
-    } catch(error) {
-      console.error('Mirage: Your custom function handler for the url ' + request.url + ' threw an error:', error.message, error.stack);
-    }
-
-    return data;
-  },
-
-  objectHandler: function(object /*, db, request*/) {
-    return object;
-  },
-
-  // Private methods
-  _getIdForRequest: function(request) {
+  getIdForRequest: function(request) {
     var id;
 
     if (request && request.params && request.params.id) {
@@ -32,7 +14,7 @@ export default Ember.Object.extend({
     return id;
   },
 
-  _getUrlForRequest: function(request) {
+  getUrlForRequest: function(request) {
     var url;
 
     if (request && request.url) {
@@ -42,7 +24,7 @@ export default Ember.Object.extend({
     return url;
   },
 
-  _getTypeFromUrl: function(url, hasId) {
+  getTypeFromUrl: function(url, hasId) {
     var urlNoId = hasId ? url.substr(0, url.lastIndexOf('/')) : url;
     var urlNoIdNoQuery = urlNoId.split("?")[0];
     var type = singularize(urlNoIdNoQuery.substr(urlNoIdNoQuery.lastIndexOf('/') + 1));
@@ -50,7 +32,7 @@ export default Ember.Object.extend({
     return type;
   },
 
-  _getJsonBodyForRequest: function(request) {
+  getJsonBodyForRequest: function(request) {
     var body;
 
     if (request && request.requestBody) {
@@ -59,4 +41,5 @@ export default Ember.Object.extend({
 
     return body;
   }
-});
+
+};

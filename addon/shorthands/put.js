@@ -1,19 +1,19 @@
 import { pluralize } from '../utils/inflector';
-import BaseController from './base';
+import utils from './utils';
 
 /*
   Shorthands for PUT requests.
 */
-export default BaseController.extend({
+export default {
 
   /*
     Update an object from the db, specifying the type.
 
       this.stub('put', '/contacts/:id', 'user');
   */
-  stringHandler: function(type, db, request) {
-    var id = this._getIdForRequest(request);
-    var putData = this._getJsonBodyForRequest(request);
+  string: function(type, db, request) {
+    var id = utils.getIdForRequest(request);
+    var putData = utils.getJsonBodyForRequest(request);
     var attrs = putData[type];
     var collection = pluralize(type);
     attrs.id = id;
@@ -33,12 +33,12 @@ export default BaseController.extend({
 
       this.stub('put', '/contacts/:id');
   */
-  undefinedHandler: function(undef, db, request) {
-    var id = this._getIdForRequest(request);
-    var url = this._getUrlForRequest(request);
-    var type = this._getTypeFromUrl(url, id);
+  undefined: function(undef, db, request) {
+    var id = utils.getIdForRequest(request);
+    var url = utils.getUrlForRequest(request);
+    var type = utils.getTypeFromUrl(url, id);
     var collection = pluralize(type);
-    var putData = this._getJsonBodyForRequest(request);
+    var putData = utils.getJsonBodyForRequest(request);
     var attrs = putData[type];
 
     if (!db[collection]) {
@@ -50,4 +50,4 @@ export default BaseController.extend({
     return data;
   }
 
-});
+};
