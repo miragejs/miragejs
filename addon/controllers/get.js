@@ -24,7 +24,6 @@ export default BaseController.extend({
       console.error("Mirage: The route handler for " + request.url + " is requesting data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
     }
 
-    // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
     if (id) {
       var model = db[collection].find(id);
       data[key] = model;

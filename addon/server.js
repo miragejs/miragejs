@@ -12,6 +12,7 @@ import frontController from './controllers/front';
 export default function(options) {
   // Init vars
   var server = this;
+
   if (!options || !options.environment) {
     throw "You must pass an environment in when creating a Mirage server instance";
   }
@@ -32,10 +33,9 @@ export default function(options) {
 
   this.stub = function(verb, path, handler, code) {
     var _this = this;
-    var interceptor = this.interceptor;
     path = path[0] === '/' ? path.slice(1) : path;
 
-    interceptor[verb].call(interceptor, this.namespace + '/' + path, function(request) {
+    this.interceptor[verb].call(this.interceptor, this.namespace + '/' + path, function(request) {
       var response = frontController.handle(verb, handler, _this.db, request, code);
       var shouldLog = typeof server.logging !== 'undefined' ? server.logging : (environment !== 'test');
 
@@ -48,21 +48,23 @@ export default function(options) {
     }, function() { return _this.timing; });
   };
 
-  this.get = function(path, handler, code) {
-    this.stub('get', path, handler, code);
-  };
-  this.post = function(path, handler, code) {
-    this.stub('post', path, handler, code);
-  };
-  this.put = function(path, handler, code) {
-    this.stub('put', path, handler, code);
-  };
-  this['delete'] = this.del = function(path, handler, code) {
-    this.stub('delete', path, handler, code);
-  };
+  [['get'], ['post'], ['put'], ['delete', 'del']].forEach(function(names) {
+    var verb = names[0];
+    var alias = names[1];
 
+    server[verb] = function(path, handler, code) {
+      this.stub(verb, path, handler, code);
+    };
+
+    if (alias) { server[alias] = server[verb]; }
+  });
+
+  /*
+    Pretender instance with default config.
+
+    TODO: Inject?
+  */
   this.interceptor = new Pretender(function() {
-    // Default Pretender config
     this.prepareBody = function(body) {
       return body ? JSON.stringify(body) : '{"error": "not found"}';
     };
@@ -75,15 +77,11 @@ export default function(options) {
   this.pretender = this.interceptor; // alias
 
   /*
-    Db methods and props
+    Db instance
+
+    TODO: Inject?
   */
   this.db = new Db();
-  //this.loadData = function(data) {
-    //this.db.loadData(data);
-  //};
-  //this.emptyDb = function() {
-    //this.db.emptyData();
-  //};
 
   /*
     Factory methods and props
@@ -111,11 +109,6 @@ export default function(options) {
     var factory = new Factory();
 
     var attrs = factory.build(sequence);
-    // if (overrides) {
-    //   Ember.keys(overrides).forEach(function(key) {
-    //     attrs[key] = overrides[key];
-    //   });
-    // }
     return this.db[collection].insert(attrs);
   };
 
