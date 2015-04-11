@@ -10,7 +10,7 @@
   "scripts": {
     "start": "ember server",
     "build": "ember build",
-    "test": "ember test && mocha tests/**/*-test-node.js"
+    "test": "ember try:testall && mocha tests/**/*-test-node.js"
   },
   "repository": {
     "type": "git",
@@ -41,6 +41,7 @@
     "ember-cli-uglify": "1.0.1",
     "ember-data": "1.0.0-beta.15",
     "ember-export-application-global": "^1.0.2",
+    "ember-try": "0.0.4",
     "mocha": "^2.1.0"
   },
   "keywords": [
