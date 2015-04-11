@@ -1,9 +1,10 @@
 import utils from 'ember-cli-mirage/shorthands/utils';
+import Db from 'ember-cli-mirage/db';
 
 import {module, test} from 'qunit';
 
 var request;
-module('mirage:shorthands', {
+module('mirage:shorthands#utils', {
   beforeEach: function() {
     request = { params: {id: ''} };
   }
