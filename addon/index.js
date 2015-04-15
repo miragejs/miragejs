@@ -1,5 +1,7 @@
 import Factory from './factory';
+import Response from './response';
 
 export default {
-  Factory: Factory
+  Factory: Factory,
+  Response: Response,
 };

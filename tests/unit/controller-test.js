@@ -1,6 +1,7 @@
 import Factory from 'ember-cli-mirage/factory';
 import controller from 'ember-cli-mirage/controller';
 import Db from 'ember-cli-mirage/db';
+import Response from 'ember-cli-mirage/response';
 
 import {module, test} from 'qunit';
 
@@ -17,11 +18,19 @@ module('mirage:controller', {
 });
 
 test("function handler works", function(assert) {
-  var result = controller.handle('get', function(db, request) {
+  var response = controller.handle('get', function(db, request) {
     return db.contacts;
   }, db, {params: {id: 1}});
 
-  assert.deepEqual(result[2], contacts);
+  assert.deepEqual(response[2], contacts);
+});
+
+test("function handler works with custom response", function(assert) {
+  var response = controller.handle('get', function(db, request) {
+    return new Response(201, {some: 'header'}, {some: 'data'});
+  }, db);
+
+  assert.deepEqual(response, [201, {some: 'header'}, {some: 'data'}]);
 });
 
 test('its default response is 204 if the verb is put', function(assert) {

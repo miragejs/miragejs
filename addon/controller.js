@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import shorthandHandlers from 'ember-cli-mirage/shorthands/index';
+import Response from './response';
 
 var defaultCodes = {
   put: 204,
@@ -13,12 +14,19 @@ export default {
     code = code ? code : (defaultCodes[verb] || 200);
 
     var handlerMethod = this._lookupHandlerMethod(verb, handler);
-    var data = handlerMethod(handler, db, request, code);
+    var response = handlerMethod(handler, db, request, code);
 
-    if (data) {
-      return [code, {"Content-Type": "application/json"}, data];
+    if (response instanceof Response) {
+      return response.toArray();
+
     } else {
-      return [code, {}, undefined];
+
+      if (response) {
+        return [code, {"Content-Type": "application/json"}, response];
+      } else {
+        return [code, {}, undefined];
+      }
+
     }
   },
 
