@@ -1,6 +1,6 @@
 # Ember CLI Mirage Changelog
 
-## 0.0.25
+## 0.0.26
 
 Update notes: none.
 
@@ -15,6 +15,10 @@ for details.
   - [IMPROVEMENT] import mergeTrees and funnel @willrax @cibernox
   - [IMPROVEMENT] better status code lookup @cibernox
   - [IMPROVEMENT] use ember-try @willrax
+
+## 0.0.25
+
+  - npm is hard :(
 
 ## 0.0.24
 
