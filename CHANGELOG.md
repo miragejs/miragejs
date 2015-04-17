@@ -1,5 +1,21 @@
 # Ember CLI Mirage Changelog
 
+## 0.0.25
+
+Update notes: none.
+
+Changes:
+  - [ENHANCEMENT] #70 Allow function route handler to customize status
+    code, HTTP headers and data. See [the
+wiki](https://github.com/samselikoff/ember-cli-mirage/wiki/HTTP%20Verb%20function%20handler#dynamic-status-codes-and-http-headers)
+for details.
+  - [BUGFIX] #81 Include assets in dev build, in case users visit /tests
+    from `ember s`.
+  - [BUGFIX] smarter id coercion in controller @mikehollis
+  - [IMPROVEMENT] import mergeTrees and funnel @willrax @cibernox
+  - [IMPROVEMENT] better status code lookup @cibernox
+  - [IMPROVEMENT] use ember-try @willrax
+
 ## 0.0.24
 
 Update notes: The config options `force` or `disable` aren't support anymore, please use `enabled` as explained here: https://github.com/samselikoff/ember-cli-mirage/wiki/Configuration#enabled
