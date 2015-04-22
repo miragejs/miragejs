@@ -2,7 +2,12 @@ import Ember from 'ember';
 import shorthandHandlers from 'ember-cli-mirage/shorthands/index';
 import Response from './response';
 
-var defaultCodes = {
+const isArray = Ember.isArray;
+const isBlank = Ember.isBlank;
+const typeOf  = Ember.typeOf;
+const keys    = Ember.keys;
+
+const defaultCodes = {
   put: 204,
   post: 201,
   delete: 204
@@ -10,16 +15,24 @@ var defaultCodes = {
 
 export default {
 
-  handle: function(verb, handler, db, request, code) {
-    code = code ? code : (defaultCodes[verb] || 200);
-
+  handle: function(verb, handler, db, request, customizedCode) {
+    var code, isEmptyObject;
     var handlerMethod = this._lookupHandlerMethod(verb, handler);
-    var response = handlerMethod(handler, db, request, code);
+    var response = handlerMethod(handler, db, request);
 
     if (response instanceof Response) {
       return response.toArray();
 
     } else {
+      if (customizedCode) {
+        code = customizedCode;
+      } else {
+        code = defaultCodes[verb] || 200;
+        isEmptyObject = typeOf(response) === 'object' && keys(response).length === 0;
+        if (code === 204 && response && !isEmptyObject && (isArray(response) || !isBlank(response))) {
+          code = 200;
+        }
+      }
 
       if (response) {
         return [code, {"Content-Type": "application/json"}, response];
@@ -32,7 +45,7 @@ export default {
 
   _lookupHandlerMethod: function(verb, handler) {
     var type = typeof handler;
-    type = Ember.isArray(handler) ? 'array' : type;
+    type = isArray(handler) ? 'array' : type;
 
     var handlerMethod;
 
