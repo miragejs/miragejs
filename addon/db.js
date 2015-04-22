@@ -1,5 +1,7 @@
 import Ember from 'ember';
 
+var allDigitsRegex = /^\d+$/;
+
 /*
   An identity map.
 */
@@ -74,7 +76,9 @@ export default function() {
 
   this._find = function(collection, id) {
     // If parses, coerce to integer
-    id = parseInt(id, 10) || id;
+    if (typeof id === "string" && allDigitsRegex.test(id)) {
+      id = parseInt(id, 10);
+    }
 
     return this[collection].filter(function(obj) {
       return obj.id === id;
