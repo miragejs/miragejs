@@ -2,12 +2,12 @@ import Ember from 'ember';
 import shorthandHandlers from 'ember-cli-mirage/shorthands/index';
 import Response from './response';
 
-const isArray = Ember.isArray;
-const isBlank = Ember.isBlank;
-const typeOf  = Ember.typeOf;
-const keys    = Ember.keys;
+var isArray = Ember.isArray;
+var isBlank = Ember.isBlank;
+var typeOf  = Ember.typeOf;
+var keys    = Ember.keys;
 
-const defaultCodes = {
+var defaultCodes = {
   put: 204,
   post: 201,
   delete: 204
