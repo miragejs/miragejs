@@ -106,7 +106,7 @@ export default function() {
         });
       });
 
-    } else if (typeof target === 'number') {
+    } else if (typeof target === 'number' || typeof target === 'string') {
       var id = target;
       var record = this._find(collection, id);
 
