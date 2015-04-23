@@ -132,11 +132,10 @@ export default function() {
     if (typeof target === 'undefined') {
       this[collection] = [];
 
-    } else if (typeof target === 'number') {
+    } else if (typeof target === 'number' || typeof target === 'string') {
       var record = this._find(collection, target);
       var index = this[collection].indexOf(record);
       this[collection].splice(index, 1);
-
     } else if (typeof target === 'object') {
       var records = this._where(collection, target);
       records.forEach(function(record) {

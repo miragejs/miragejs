@@ -255,6 +255,17 @@ test('it can remove a single record', function(assert) {
   ]);
 });
 
+test('it can remove a single record then the id is a string', function(assert) {
+  db.contacts.insert({id: '123-abc', name: 'Epona', evil: true});
+  db.contacts.remove('123-abc');
+
+  assert.deepEqual(db.contacts, [
+    {id: 1, name: 'Link', evil: false},
+    {id: 2, name: 'Zelda', evil: false},
+    {id: 3, name: 'Ganon', evil: true},
+  ]);
+});
+
 test('it can remove multiple records by query', function(assert) {
   db.contacts.remove({evil: false});
 
