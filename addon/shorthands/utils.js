@@ -1,5 +1,7 @@
 import { singularize } from '../utils/inflector';
 
+var allDigitsRegex = /^\d+$/;
+
 export default {
 
   getIdForRequest: function(request) {
@@ -7,8 +9,10 @@ export default {
 
     if (request && request.params && request.params.id) {
       id = request.params.id;
-      // If the id is not a number, return the string. Otherwise, parse it as an integer
-      id = isNaN(id) ? id : parseInt(id, 10);
+      // If parses, coerce to integer
+      if (typeof id === "string" && allDigitsRegex.test(id)) {
+        id = parseInt(request.params.id, 10);
+      }
     }
 
     return id;
