@@ -1,5 +1,13 @@
 # Ember CLI Mirage Changelog
 
+## 0.0.27
+
+Update notes: none
+
+Changes:
+  - [IMPROVEMENT] remove `tmp` dir from git @ahmadsoe
+  - [BUGFIX] ensure string ids that start with ints can be used @cibernox
+
 ## 0.0.26
 
 Update notes: none.
