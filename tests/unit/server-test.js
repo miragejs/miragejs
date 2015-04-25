@@ -126,6 +126,20 @@ test('create allows for attr overrides with extended factories', function(assert
   assert.deepEqual(youngLink, {id: 2, name: 'Link', age: 10, is_young: true});
 });
 
+test('create allows for attr overrides with arrays', function(assert) {
+  server.loadFactories({
+    contact: Factory.extend({name: ['Sam', 'Carl']})
+  });
+
+  var sam = server.create('contact');
+  var link = server.create('contact', {name: ['Link']});
+  var noname = server.create('contact', {name: []});
+
+  assert.deepEqual(sam, {id: 1, name: ['Sam', 'Carl']});
+  assert.deepEqual(link, {id: 2, name: ['Link']});
+  assert.deepEqual(noname, {id: 3, name: []});
+});
+
 module('mirage:server#createList', {
   beforeEach: function() {
     server = new Server({environment: 'test'});
