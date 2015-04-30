@@ -70,7 +70,11 @@ export default function(options) {
     };
 
     this.unhandledRequest = function(verb, path) {
-      console.error("Mirage: Your Ember app tried to " + verb + " '" + path + "', but there was no route defined to handle this request. Define a route that matches this path in your mirage/config.js file.");
+      path = decodeURI(path);
+      console.error("Mirage: Your Ember app tried to " + verb + " '" + path +
+                    "', but there was no route defined to handle this " +
+                    "request. Define a route that matches this path in your " +
+                    "mirage/config.js file.");
     };
   });
 
