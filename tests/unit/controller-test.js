@@ -33,6 +33,11 @@ test("function handler works with custom response", function(assert) {
   assert.deepEqual(response, [201, {some: 'header'}, {some: 'data'}]);
 });
 
+test('its default response is 200 if the verb is get', function(assert) {
+  var response = controller.handle('get', {});
+  assert.equal(response[0], 200);
+});
+
 test('its default response is 204 if the verb is put and the response is empty', function(assert) {
   var response = controller.handle('put', {});
   assert.equal(response[0], 204);

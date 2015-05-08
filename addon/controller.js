@@ -8,9 +8,10 @@ var typeOf  = Ember.typeOf;
 var keys    = Ember.keys;
 
 var defaultCodes = {
+  get: 200,
   put: 204,
   post: 201,
-  delete: 204
+  'delete': 204
 };
 
 export default {
@@ -27,7 +28,7 @@ export default {
       if (customizedCode) {
         code = customizedCode;
       } else {
-        code = defaultCodes[verb] || 200;
+        code = defaultCodes[verb];
         isEmptyObject = typeOf(response) === 'object' && keys(response).length === 0;
         if (code === 204 && response && !isEmptyObject && (isArray(response) || !isBlank(response))) {
           code = 200;

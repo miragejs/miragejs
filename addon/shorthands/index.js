@@ -7,5 +7,5 @@ export default {
   get: get,
   post: post,
   put: put,
-  delete: del,
+  'delete': del,
 };
