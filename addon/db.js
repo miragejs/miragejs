@@ -74,15 +74,17 @@ export default function() {
     return returnData;
   };
 
-  this._find = function(collection, id) {
-    // If parses, coerce to integer
-    if (typeof id === "string" && allDigitsRegex.test(id)) {
-      id = parseInt(id, 10);
-    }
+  this._find = function(collection, ids) {
+    var _this = this;
 
-    return this[collection].filter(function(obj) {
-      return obj.id === id;
-    })[0];
+    if (Ember.isArray(ids)) {
+      return ids.map(function(id) {
+        return _this._findRecordForId(collection, id);
+      });
+
+    } else {
+      return this._findRecordForId(collection, ids);
+    }
   };
 
   this._where = function(collection, query) {
@@ -155,5 +157,16 @@ export default function() {
 
       _this[key] = {};
     });
+  };
+
+  this._findRecordForId = function(collection, id) {
+    // If parses, coerce to integer
+    if (typeof id === "string" && allDigitsRegex.test(id)) {
+      id = parseInt(id, 10);
+    }
+
+    return this[collection].filter(function(obj) {
+      return obj.id === id;
+    })[0];
   };
 }
