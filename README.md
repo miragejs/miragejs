@@ -141,16 +141,16 @@ In your tests you'll have access to the `server` variable, which has two helper 
 ```js
 // tests/acceptance/index-test.js
 
-test("I can view the contacts", function() {
+test("I can view the contacts", (assert) => {
   // set up our server's state
   var contacts = server.createList('contact', 3);
 
   visit('/');
 
-  andThen(function() {
-    equal(currentRouteName(), 'index');
-    equal( find('li').length, 3 );
-    equal( find('li:first').text(), contacts[0].name );
+  andThen(() => {
+    assert.equal(currentRouteName(), 'index');
+    assert.equal( find('li').length, 3 );
+    assert.equal( find('li:first').text(), contacts[0].name );
   });
 });
 ```
