@@ -132,7 +132,7 @@ export default function() {
     var _this = this;
 
     if (typeof target === 'undefined') {
-      this[collection] = [];
+      this[collection].length = 0;
 
     } else if (typeof target === 'number' || typeof target === 'string') {
       var record = this._find(collection, target);

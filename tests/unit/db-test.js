@@ -280,3 +280,13 @@ test('it can remove multiple records by query', function(assert) {
     {id: 3, name: 'Ganon', evil: true},
   ]);
 });
+
+test('it can add a record after removing all records', function(assert) {
+  db.contacts.remove();
+  db.contacts.insert({name: 'Foo'});
+
+  assert.equal(db.contacts.length, 1);
+  assert.deepEqual(db.contacts, [
+    {id: 1, name: 'Foo'}
+  ]);
+});
