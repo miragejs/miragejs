@@ -3,7 +3,11 @@ import Db from 'ember-cli-mirage/db';
 
 import {module, test} from 'qunit';
 
-var contacts = [{id: 1, name: 'Link', address_ids: [1]}, {id: 2, name: 'Zelda', address_ids: [2]}];
+var contacts = [
+  {id: 1, name: 'Link', address_ids: [1]},
+  {id: 2, name: 'Zelda', address_ids: [2]},
+  {id: 3, name: 'Epona', address_ids: []}
+];
 var addresses = [{id: 1, name: '123 Hyrule Way', contact_id: 1}, {id: 2, name: '456 Hyrule Way', contact_id: 2}];
 var db;
 module('mirage:shorthands#get', {
@@ -27,6 +31,14 @@ test("string shorthand with id works", function(assert) {
   var result = get.string('contact', db, {params: {id: 1}});
 
   assert.deepEqual(result, {contact: contacts[0]});
+});
+
+// e.g. this.stub('get', '/contacts?ids=1,3', 'contact');
+test("string shorthand works with coalesce options", function(assert) {
+  var reqWithManyIds = { queryParams: { ids: [1, 3] } };
+  var result = get.string('contacts', db, reqWithManyIds, { coalesce: true });
+
+  assert.deepEqual(result, { contacts: [ contacts[0], contacts[2] ]});
 });
 
 // e.g. this.stub('get', '/', ['contacts', 'addresses']);
@@ -70,4 +82,12 @@ test("undefined shorthand with id works when query params are present", function
   var result = get.undefined(undefined, db, {url: '/contacts/1?foo=true', params: {id: 1}});
 
   assert.deepEqual(result, {contact: contacts[0]});
+});
+
+// e.g. this.stub('get', '/contacts/:id');
+test("undefined shorthand with ids in the query params and coalesced enabled works", function(assert) {
+  var request = { url: '/contacts?ids=1,2,3', queryParams: { ids: [1,3] } };
+  var result = get.undefined(undefined, db, request, { coalesce: true });
+
+  assert.deepEqual(result, { contacts: [ contacts[0], contacts[2] ]});
 });
