@@ -16,10 +16,10 @@ var defaultCodes = {
 
 export default {
 
-  handle: function(verb, handler, db, request, customizedCode) {
+  handle: function(verb, handler, db, request, customizedCode, options) {
     var code, isEmptyObject;
     var handlerMethod = this._lookupHandlerMethod(verb, handler);
-    var response = handlerMethod(handler, db, request);
+    var response = handlerMethod(handler, db, request, options);
 
     if (response instanceof Response) {
       return response.toArray();

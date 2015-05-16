@@ -10,7 +10,7 @@ export default function() {
   this.del('/contacts/:id');
 
   // Friends
-  this.get('/friends');
+  this.get('/friends', { coalesce: true });
 
   // Pets
   this.get('/pets', function(db) {

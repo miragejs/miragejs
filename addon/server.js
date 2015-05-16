@@ -5,6 +5,29 @@ import Db from './db';
 import controller from './controller';
 
 /*
+  Given a variable number of arguments, it generates an array of with
+  [path, handler, code, options], `path` and `options` being always defined,
+  and `handler` and `code` being undefined if not suplied.
+*/
+function extractStubArguments(/* path, handler, code, options */) {
+  var ary = Array.prototype.slice.call(arguments);
+  var argsInitialLength = ary.length;
+  var lastArgument = ary[ary.length - 1];
+  var options;
+  var i = 0;
+  if (typeof lastArgument === 'object') {
+    argsInitialLength--;
+  } else {
+    options = { colesce: false };
+    ary.push(options);
+  }
+  for(; i < 5 - ary.length; i++) {
+    ary.insertAt(argsInitialLength, undefined);
+  }
+  return ary;
+}
+
+/*
   The Mirage server, which has a db and an XHR interceptor.
 
   Requires an environment.
@@ -31,12 +54,12 @@ export default function(options) {
     this.timing = environment === 'test' ? 0 : (this.timing || 0);
   };
 
-  this.stub = function(verb, path, handler, code) {
+  this.stub = function(verb, path, handler, code, options) {
     var _this = this;
     path = path[0] === '/' ? path.slice(1) : path;
 
     this.interceptor[verb].call(this.interceptor, this.namespace + '/' + path, function(request) {
-      var response = controller.handle(verb, handler, _this.db, request, code);
+      var response = controller.handle(verb, handler, _this.db, request, code, options);
       var shouldLog = typeof server.logging !== 'undefined' ? server.logging : (environment !== 'test');
 
       if (shouldLog) {
@@ -52,8 +75,10 @@ export default function(options) {
     var verb = names[0];
     var alias = names[1];
 
-    server[verb] = function(path, handler, code) {
-      this.stub(verb, path, handler, code);
+    server[verb] = function(/* path, handler, code, options */) {
+      var args = extractStubArguments.apply(this, arguments);
+      args.unshift(verb);
+      this.stub.apply(this, args);
     };
 
     if (alias) { server[alias] = server[verb]; }

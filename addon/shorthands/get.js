@@ -11,24 +11,24 @@ export default {
       this.stub('get', '/contacts', 'contacts');
       this.stub('get', '/contacts/:id', 'contact');
   */
-  string: function(string, db, request) {
+  string: function(string, db, request, options) {
     var key = string;
     var collection = pluralize(string);
-    var data = {};
     var id = utils.getIdForRequest(request);
+    var data = {};
+    options = options || {};
 
     if (!db[collection]) {
       console.error("Mirage: The route handler for " + request.url + " is requesting data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
     }
 
     if (id) {
-      var model = db[collection].find(id);
-      data[key] = model;
-
+      data[key] = db[collection].find(id);
+    } else if (options.coalesce && request.queryParams && request.queryParams.ids) {
+      data[key] = db[collection].find(request.queryParams.ids);
     } else {
       data[key] = db[collection];
     }
-
     return data;
   },
 
@@ -91,13 +91,18 @@ export default {
 
     If an id is present, return a single model by id.
       Ex: this.stub('get', '/contacts/:id');
+
+    If the options contain a `coalesce: true` option and the queryParams have `ids`, it
+    returns the models with those ids.
+      Ex: this.stub('get', '/contacts/:id');
   */
-  undefined: function(undef, db, request) {
+  undefined: function(undef, db, request, options) {
     var id = utils.getIdForRequest(request);
     var url = utils.getUrlForRequest(request);
     var type = utils.getTypeFromUrl(url, id);
     var collection = pluralize(type);
     var data = {};
+    options = options || {};
 
     if (!db[collection]) {
       console.error("Mirage: The route handler for " + request.url + " is requesting data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
@@ -105,10 +110,11 @@ export default {
 
     if (id) {
       data[type] = db[collection].find(id);
+    } else if (options.coalesce && request.queryParams && request.queryParams.ids) {
+      data[collection] = db[collection].find(request.queryParams.ids);
     } else {
       data[collection] = db[collection];
     }
-
     return data;
   }
 

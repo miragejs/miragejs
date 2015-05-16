@@ -5,7 +5,7 @@ import startApp from '../helpers/start-app';
 var App;
 var friends;
 
-module('Acceptance: Contacts', {
+module('Acceptance: Friends', {
   beforeEach: function() {
     App = startApp();
   },
@@ -30,5 +30,23 @@ test("I can view the friends", function(assert) {
     assert.ok( find('p:first').text().match(friend.age) );
     assert.ok( find('p:last').text().match('Tommy') );
     assert.ok( find('p:last').text().match(10) );
+  });
+});
+
+test("I can view the selected friends", function(assert) {
+  var friend1 = server.create('friend', { name: 'Jane', age: 30 });
+  var friend2 = server.create('friend', { name: 'Tommy', age: 10});
+  var friend3 = server.create('friend', { name: 'Bob', age: 28 });
+
+  visit('/close-friends');
+
+  andThen(function() {
+    assert.equal(currentRouteName(), 'close-friends');
+    assert.equal( find('p').length, 2 );
+
+    assert.ok( find('p:first').text().match('Jane') );
+    assert.ok( find('p:first').text().match(30) );
+    assert.ok( find('p:last').text().match('Bob') );
+    assert.ok( find('p:last').text().match(28) );
   });
 });
