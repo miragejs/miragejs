@@ -1,7 +1,7 @@
 {
   "name": "ember-cli-mirage",
   "version": "0.0.27",
-  "description": "A client-side server to develop, test and prototype your Ember app",
+  "description": "A client-side mock HTTP server to develop, test and demo your Ember app",
   "license": "MIT",
   "directories": {
     "doc": "doc",

@@ -1,5 +1,19 @@
 # Ember CLI Mirage Changelog
 
+## 0.0.28
+
+Update notes: none
+
+Changes:
+  - [ENHANCEMENT] 'coalesce' option to support GET multiple ids @cibernox
+  - [ENHANCEMENT] #117 db.find supports array of ids @samselikoff
+  - [BUGFIX] #115 IE8 safe @samselikoff
+  - [BUGFIX] can remove collection then add records again @seawatts
+  - [IMPROVEMENT] automatically add server to .jshint @bdvholmes
+  - [IMPROVEMENT] use lodash.extend instead of jQuery.extend @seawatts
+  - [IMPROVEMENT] use 200 HTTP code if responseBody exists @cibernox
+  - [IMPROVEMENT] better logging @bdvholmes
+
 ## 0.0.27
 
 Update notes: none
