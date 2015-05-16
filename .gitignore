@@ -17,3 +17,4 @@ npm-debug.log
 testem.log
 .floo
 _site
+jekyll-tmp
