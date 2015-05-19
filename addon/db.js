@@ -108,6 +108,8 @@ export default function() {
         });
       });
 
+      return this[collection];
+
     } else if (typeof target === 'number' || typeof target === 'string') {
       var id = target;
       var record = this._find(collection, id);
@@ -115,6 +117,8 @@ export default function() {
       Object.keys(attrs).forEach(function(attr) {
         record[attr] = attrs[attr];
       });
+
+      return record;
 
     } else if (typeof target === 'object') {
       var query = target;
@@ -125,6 +129,8 @@ export default function() {
           record[attr] = attrs[attr];
         });
       });
+
+      return records;
     }
   };
 

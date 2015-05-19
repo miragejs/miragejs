@@ -231,6 +231,28 @@ test('it can update records by query', function(assert) {
   ]);
 });
 
+test('updating a single record returns that record', function(assert) {
+  var ganon = db.contacts.update(3, {name: 'Ganondorf'});
+  assert.deepEqual(ganon, {id: 3, name: 'Ganondorf', evil: true});
+});
+
+test('updating a collection returns the updated records', function(assert) {
+  var characters = db.contacts.update({evil: true});
+  assert.deepEqual(characters, [
+    {id: 1, name: 'Link', evil: true},
+    {id: 2, name: 'Zelda', evil: true},
+    {id: 3, name: 'Ganon', evil: true}
+  ]);
+});
+
+test('updating multiple records returns the updated records', function(assert) {
+  var characters = db.contacts.update({evil: false}, {evil: true});
+  assert.deepEqual(characters, [
+    {id: 1, name: 'Link', evil: true},
+    {id: 2, name: 'Zelda', evil: true}
+  ]);
+});
+
 
 module('mirage:db#remove', {
   beforeEach: function() {
