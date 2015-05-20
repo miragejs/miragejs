@@ -29,3 +29,11 @@ test('it returns a string if it\'s a string', function(assert) {
   request.params.id = "someID";
   assert.equal(utils.getIdForRequest(request), "someID", 'it returns a number');
 });
+
+test('url without id returns correct type', function (assert) {
+  var urlWithSlash = '/api/users/?test=true';
+  var urlWithoutSlash = '/api/users?test=true';
+  
+  assert.equal(utils.getTypeFromUrl(urlWithSlash), 'user', 'it returns a singular type');
+  assert.equal(utils.getTypeFromUrl(urlWithoutSlash), 'user', 'it returns a singular type');
+});
