@@ -30,7 +30,8 @@ export default {
 
   getTypeFromUrl: function(url, hasId) {
     var urlNoId = hasId ? url.substr(0, url.lastIndexOf('/')) : url;
-    var urlNoIdNoQuery = urlNoId.split("?")[0];
+    var urlSplit = urlNoId.split("?");
+    var urlNoIdNoQuery = urlSplit[0].slice(-1) === '/' ? urlSplit[0].slice(0, -1) : urlSplit[0];
     var type = singularize(urlNoIdNoQuery.substr(urlNoIdNoQuery.lastIndexOf('/') + 1));
 
     return type;
