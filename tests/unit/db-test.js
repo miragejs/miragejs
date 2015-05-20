@@ -155,9 +155,9 @@ module('mirage:db#where', {
     db = new Db();
     db.createCollection('contacts');
     db.contacts.insert([
-      {name: 'Link', evil: false},
-      {name: 'Zelda', evil: false},
-      {name: 'Ganon', evil: true}
+      { name: 'Link',  evil: false, age: 17 },
+      { name: 'Zelda', evil: false, age: 17 },
+      { name: 'Ganon', evil: true,  age: 45 }
     ]);
   },
   afterEach: function() {
@@ -169,7 +169,15 @@ test('returns an array of records that match the query', function(assert) {
   var result = db.contacts.where({evil: true});
 
   assert.deepEqual(result, [
-    {id: 3, name: 'Ganon', evil: true}
+    {id: 3, name: 'Ganon', evil: true, age: 45}
+  ]);
+});
+
+test('it coerces query params to strings', function(assert) {
+  var result = db.contacts.where({age: "45"});
+
+  assert.deepEqual(result, [
+    {id: 3, name: 'Ganon', evil: true, age: 45}
   ]);
 });
 
