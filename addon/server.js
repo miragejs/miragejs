@@ -15,7 +15,7 @@ function extractStubArguments(/* path, handler, code, options */) {
   var lastArgument = ary[ary.length - 1];
   var options;
   var i = 0;
-  if (typeof lastArgument === 'object') {
+  if (lastArgument.constructor === Object) {
     argsInitialLength--;
   } else {
     options = { colesce: false };
@@ -155,6 +155,10 @@ export default function(options) {
   if (environment === 'test') {
     window.server = this;
   }
+
+  this.shutdown = function(){
+    this.pretender.shutdown();
+  };
 
   return this;
 }
