@@ -7,9 +7,9 @@ module.exports = {
       }
     },
     {
-      name: 'ember-1.12.0-beta.1',
+      name: 'ember-1.12.0',
       dependencies: {
-        'ember': '1.12.0-beta.1'
+        'ember': '1.12.0'
       }
     },
     {
