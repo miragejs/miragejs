@@ -24,7 +24,10 @@ export default {
 
     var data = db[collection].update(id, attrs);
 
-    return data;
+    var response = {};
+    response[type] = data;
+
+    return response;
   },
 
   /*
@@ -47,7 +50,10 @@ export default {
 
     var data = db[collection].update(id, attrs);
 
-    return data;
+    var response = {};
+    response[type] = data;
+
+    return response;
   }
 
 };
