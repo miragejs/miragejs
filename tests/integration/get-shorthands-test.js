@@ -1,7 +1,7 @@
 import {module, test} from 'qunit';
 import Server from 'ember-cli-mirage/server';
 
-module('Integration: Server', {
+module('integration:get-shorthands', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development'
@@ -14,16 +14,18 @@ module('Integration: Server', {
 });
 
 test("get undefined shorthand", function(assert) {
+  assert.expect(1);
   var done = assert.async();
+  var server = this.server;
 
   var contacts = [
     {id: 1, name: 'Link'},
     {id: 2, name: 'Zelda'},
   ];
-  this.server.db.loadData({
+  server.db.loadData({
     contacts: contacts
   });
-  this.server.get('/contacts');
+  server.get('/contacts');
 
   $.getJSON('/contacts', function(data) {
     assert.deepEqual(data, { contacts: contacts });
@@ -32,7 +34,9 @@ test("get undefined shorthand", function(assert) {
 });
 
 test("get array shorthand", function(assert) {
+  assert.expect(1);
   var done = assert.async();
+  var server = this.server;
 
   var contacts = [
     {id: 1, name: 'Link'},
@@ -42,11 +46,11 @@ test("get array shorthand", function(assert) {
     {id: 1, name: '123'},
     {id: 2, name: 'abc'},
   ];
-  this.server.db.loadData({
+  server.db.loadData({
     contacts: contacts,
     addresses: addresses
   });
-  this.server.get('/contacts', ['contacts', 'addresses']);
+  server.get('/contacts', ['contacts', 'addresses']);
 
   $.getJSON('/contacts', function(data) {
     assert.deepEqual(data, {
