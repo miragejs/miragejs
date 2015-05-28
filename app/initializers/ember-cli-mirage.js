@@ -11,6 +11,8 @@ export default {
 
     if (_shouldUseMirage(env, ENV['ember-cli-mirage'])) {
       var modulesMap = readModules(ENV.modulePrefix);
+      var hasFactories = !Ember.isEmpty(modulesMap['factories']);
+      var hasDefaultScenario = modulesMap['scenarios'].hasOwnProperty('default');
       var server = new Server({
         environment: env
       });
@@ -21,9 +23,11 @@ export default {
         server.loadConfig(testConfig);
       }
 
-      if (env === 'test' && !Ember.isEmpty(modulesMap['factories'])) {
+      if (env === 'test' && hasFactories) {
         server.loadFactories(modulesMap['factories']);
-
+      } else if (hasDefaultScenario && hasFactories) {
+        server.loadFactories(modulesMap['factories']);
+        modulesMap['scenarios']['default'](server);
       } else {
         server.db.loadData(modulesMap['fixtures']);
       }
