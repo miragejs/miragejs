@@ -34,4 +34,9 @@ export default function() {
   });
 
   this.delete('/pets/:id', function(db, req) { }, 200);
+
+}
+
+export function testConfig() {
+  this.get('/friends/:id');
 }

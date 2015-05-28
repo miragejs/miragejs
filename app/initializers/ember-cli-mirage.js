@@ -1,5 +1,5 @@
 import ENV from '../config/environment';
-import userConfig from '../mirage/config';
+import baseConfig, { testConfig } from '../mirage/config';
 import Server from 'ember-cli-mirage/server';
 import readFixtures from 'ember-cli-mirage/utils/read-fixtures';
 import readFactories from 'ember-cli-mirage/utils/read-factories';
@@ -16,7 +16,11 @@ export default {
         environment: env
       });
 
-      server.loadConfig(userConfig);
+      server.loadConfig(baseConfig);
+
+      if (env === 'test') {
+        server.loadConfig(testConfig);
+      }
 
       if (env === 'test' && factoryMap) {
         server.loadFactories(factoryMap);
@@ -33,7 +37,7 @@ function _shouldUseMirage(env, addonConfig) {
   var defaultEnabled = _defaultEnabled(env, addonConfig);
 
   return userDeclaredEnabled ? addonConfig.enabled : defaultEnabled;
-};
+}
 
 /*
   Returns a boolean specifying the default behavior for whether
