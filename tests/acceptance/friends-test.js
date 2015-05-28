@@ -50,3 +50,14 @@ test("I can view the selected friends", function(assert) {
     assert.ok( find('p:last').text().match(28) );
   });
 });
+
+test("I can view a friend that was configured only for test mode", function(assert) {
+  var friend = server.create('friend', { name: 'The Dude' });
+
+  visit('/friends/' + friend.id);
+
+  andThen(function() {
+    assert.equal(currentRouteName(), 'friend');
+    assert.ok( find('h2.friend-name').text().match('The Dude') );
+  });
+});

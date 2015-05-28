@@ -11,6 +11,7 @@ Router.map(function() {
   this.route('edit', {path: '/:contact_id/edit'});
 
   this.route('friends');
+  this.route('friend', { path: '/friends/:friend_id'});
   this.route('close-friends');
 });
 
