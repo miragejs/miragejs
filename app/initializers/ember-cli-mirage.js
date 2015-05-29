@@ -25,7 +25,7 @@ export default {
 
       if (env === 'test' && hasFactories) {
         server.loadFactories(modulesMap['factories']);
-      } else if (hasDefaultScenario && hasFactories) {
+      } else if (env !== 'test' && hasDefaultScenario && hasFactories) {
         server.loadFactories(modulesMap['factories']);
         modulesMap['scenarios']['default'](server);
       } else {
