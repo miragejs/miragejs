@@ -1,8 +1,8 @@
+import Ember from 'ember';
 import ENV from '../config/environment';
 import baseConfig, { testConfig } from '../mirage/config';
 import Server from 'ember-cli-mirage/server';
-import readFixtures from 'ember-cli-mirage/utils/read-fixtures';
-import readFactories from 'ember-cli-mirage/utils/read-factories';
+import readModules from 'ember-cli-mirage/utils/read-modules';
 
 export default {
   name: 'ember-cli-mirage',
@@ -10,8 +10,9 @@ export default {
     var env = ENV.environment;
 
     if (_shouldUseMirage(env, ENV['ember-cli-mirage'])) {
-      var factoryMap = readFactories(ENV.modulePrefix);
-      var fixtures = readFixtures(ENV.modulePrefix);
+      var modulesMap = readModules(ENV.modulePrefix);
+      var hasFactories = !Ember.isEmpty(modulesMap['factories']);
+      var hasDefaultScenario = modulesMap['scenarios'].hasOwnProperty('default');
       var server = new Server({
         environment: env
       });
@@ -22,11 +23,13 @@ export default {
         server.loadConfig(testConfig);
       }
 
-      if (env === 'test' && factoryMap) {
-        server.loadFactories(factoryMap);
-
+      if (env === 'test' && hasFactories) {
+        server.loadFactories(modulesMap['factories']);
+      } else if (env !== 'test' && hasDefaultScenario && hasFactories) {
+        server.loadFactories(modulesMap['factories']);
+        modulesMap['scenarios']['default'](server);
       } else {
-        server.db.loadData(fixtures);
+        server.db.loadData(modulesMap['fixtures']);
       }
     }
   }
