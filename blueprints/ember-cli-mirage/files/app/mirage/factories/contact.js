@@ -11,9 +11,7 @@ export default Mirage.Factory.extend({
   // age: 20,                              // numbers
   // tall: true,                           // booleans
 
-  // email: (i) => `person${i}@test.com`,  // and functions
-
-  // admin: function() {
-  //   return this.age > 30;
+  // email: function(i) {                  // and functions
+  //   return 'person' + i + '@test.com';
   // }
 });
