@@ -7,12 +7,13 @@
 import Mirage from 'ember-cli-mirage';
 
 export default Mirage.Factory.extend({
-  name: 'Pete',
-  age: 20,
+  // name: 'Pete',                         // strings
+  // age: 20,                              // numbers
+  // tall: true,                           // booleans
 
-  email: (i) => `person${i}@test.com`,
+  // email: (i) => `person${i}@test.com`,  // and functions
 
-  admin: function() {
-    return this.age > 30;
-  }
+  // admin: function() {
+  //   return this.age > 30;
+  // }
 });
