@@ -2,7 +2,13 @@
 
 ## 0.1.0
 
-Update notes: none
+Update notes: Add the following to the bottom of your Mirage config file:
+
+```js
+export function testConfig() {
+  // add test only routes here
+}
+```
 
 Changes:
   - [ENHANCEMENT] Ability to use factories to seed development database @g-cassie
