@@ -19,7 +19,7 @@ export default {
 
       server.loadConfig(baseConfig);
 
-      if (env === 'test') {
+      if (env === 'test' && testConfig) {
         server.loadConfig(testConfig);
       }
 
