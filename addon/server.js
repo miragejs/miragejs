@@ -22,7 +22,7 @@ function extractStubArguments(/* path, handler, code, options */) {
     ary.push(options);
   }
   for(; i < 5 - ary.length; i++) {
-    ary.insertAt(argsInitialLength, undefined);
+    ary.splice(argsInitialLength, 0, undefined);
   }
   return ary;
 }
