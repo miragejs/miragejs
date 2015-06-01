@@ -1,5 +1,22 @@
 # Ember CLI Mirage Changelog
 
+## 0.1.0
+
+Update notes: none
+
+Changes:
+  - [ENHANCEMENT] Ability to use factories to seed development database @g-cassie
+  - [ENHANCEMENT] Ability to specify test-only Mirage routes @cball
+  - [BUGFIX] `db.where` now coerces query params to string @cibernox
+  - [BUGFIX] #146 fix es6 template bug with blueprint
+
+## 0.0.29
+
+Update notes: none
+
+Changes:
+  - [BUGFIX] fix url with slash before ? @knownasilya
+
 ## 0.0.28
 
 Update notes: none
