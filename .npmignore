@@ -1,4 +1,7 @@
+.sass-cache/
+_site/
 bower_components/
+jekyll-tmp/
 tests/
 tmp/
 
