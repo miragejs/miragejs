@@ -4,13 +4,12 @@ var Factory = function() {
   this.build = function(sequence) {
     var object = {};
     var attrs = this.attrs || {};
-    var attrsWithFakerInjected = _.extend({}, attrs, { faker: faker });
 
     Ember.keys(attrs).forEach(function(key) {
       var type = typeof attrs[key];
 
       if (type === 'function') {
-        object[key] = attrs[key].call(attrsWithFakerInjected, sequence);
+        object[key] = attrs[key].call(attrs, sequence);
       } else {
         object[key] = attrs[key];
       }
