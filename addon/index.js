@@ -1,9 +1,8 @@
 import Factory from './factory';
 import Response from './response';
-import faker from './fabrications/faker';
-import cycle from './fabrications/cycle';
+import faker from './faker';
 
-export { faker, cycle };
+export { faker };
 
 export default {
   Factory: Factory,
