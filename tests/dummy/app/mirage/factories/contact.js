@@ -1,7 +1,8 @@
 import Mirage from 'ember-cli-mirage';
-import { faker } from 'ember-cli-mirage';
+import { faker, cycle } from 'ember-cli-mirage';
 
 export default Mirage.Factory.extend({
+  title: cycle('Duke', 'Developer', 'Artist'),
   name: faker.name.firstName,
   age: 20,
 
