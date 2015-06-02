@@ -1,7 +1,9 @@
 import Mirage from 'ember-cli-mirage';
 
 export default Mirage.Factory.extend({
-  name: 'Pete',
+  name: function (i) {
+    return this.faker.name.firstName();
+  },
   age: 20,
 
   email: function(i) {
