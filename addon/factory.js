@@ -1,4 +1,5 @@
 import Ember from 'ember';
+
 var Factory = function() {
   this.build = function(sequence) {
     var object = {};
