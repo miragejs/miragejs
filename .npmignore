@@ -4,6 +4,7 @@ bower_components/
 jekyll-tmp/
 tests/
 tmp/
+dist/
 
 .bowerrc
 .editorconfig

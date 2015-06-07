@@ -4,6 +4,8 @@ var expect = require('chai').expect;
 var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 
 describe('import files', function() {
+  this.timeout(15000);
+
   afterEach(function() {
     delete process.env.EMBER_ENV;
   });
