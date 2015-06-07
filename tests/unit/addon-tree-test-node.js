@@ -19,6 +19,8 @@ function findMirage(app) {
 }
 
 describe('Addon', function() {
+  this.timeout(15000);
+
   afterEach(function() {
     delete process.env.EMBER_ENV;
   });
@@ -38,7 +40,7 @@ describe('Addon', function() {
         process.env.EMBER_ENV = environment;
         var addonTree = getMirageAddon().treeFor('addon');
 
-        expect(addonTree.inputTrees.length).to.be.equal(1);
+        expect(addonTree.inputTrees.length).to.not.equal(0);
       });
     });
 
@@ -47,7 +49,7 @@ describe('Addon', function() {
       var addon = getMirageAddon({ configPath: 'tests/fixtures/config/environment-production-enabled' });
       var addonTree = addon.treeFor('addon');
 
-      expect(addonTree.inputTrees.length).to.be.equal(1);
+      expect(addonTree.inputTrees.length).to.not.equal(0);
     });
 
   });
@@ -56,7 +58,6 @@ describe('Addon', function() {
   describe('#postprocessTree', function() {
 
     it('excludes app/mirage tree in production environment', function() {
-      this.timeout(10000);
       process.env.EMBER_ENV = 'production';
       var excludePretenderDirCalled = false;
       var dummyApp = new EmberAddon();
@@ -72,7 +73,6 @@ describe('Addon', function() {
 
     ['development', 'test'].forEach(function(environment) {
       it('includes app/mirage tree in ' + environment + ' environment', function() {
-        this.timeout(10000);
         process.env.EMBER_ENV = environment;
         var excludePretenderDirCalled = false;
         var dummyApp = new EmberAddon();
@@ -88,7 +88,6 @@ describe('Addon', function() {
     });
 
     it('includes app/mirage tree in production environment when enabled is set to true', function() {
-      this.timeout(10000);
       process.env.EMBER_ENV = 'production';
       var excludePretenderDirCalled = false;
       var dummyApp = new EmberAddon({ configPath: 'tests/fixtures/config/environment-production-enabled' });
