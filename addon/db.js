@@ -52,7 +52,7 @@ export default function() {
 
     if (!Ember.isArray(copy)) {
       var attrs = copy;
-      if (!attrs.id) {
+      if (attrs.id === undefined || attrs.id === null) {
         attrs.id = _this[collection].length + 1;
       }
 
@@ -62,7 +62,7 @@ export default function() {
     } else {
       returnData = [];
       copy.forEach(function(attrs) {
-        if (!attrs.id) {
+        if (attrs.id === undefined || attrs.id === null) {
           attrs.id = _this[collection].length + 1;
         }
 

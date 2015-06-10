@@ -99,6 +99,12 @@ test('it does not add ids to array data if present', function(assert) {
   assert.deepEqual(db.contacts, [{id: 2, name: 'Link'}, {id: 1, name: 'Ganon'}]);
 });
 
+test('it can insert a record with an id of 0', function(assert) {
+  db.contacts.insert({id: 0, name: 'Link'});
+
+  assert.deepEqual(db.contacts, [{id: 0, name: 'Link'}]);
+});
+
 
 module('mirage:db#find', {
   beforeEach: function() {
