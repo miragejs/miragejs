@@ -1,5 +1,12 @@
 # Ember CLI Mirage Changelog
 
+## 0.1.4
+
+Update notes: none
+
+Changes: 
+  - [IMPROVEMENT] factory-focused initial blueprints
+
 ## 0.1.3
 
 Update notes: none
