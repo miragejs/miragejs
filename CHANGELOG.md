@@ -1,5 +1,26 @@
 # Ember CLI Mirage Changelog
 
+## 0.1.3
+
+Update notes: none
+
+Changes:
+  - [ENHANCEMENT] #29 add faker + list helpers @mupkoo
+  - [IMPROVEMENT] upgrade ember cli to 0.2.7 @blimmer
+  - [BUGFIX] #167 allow ids of 0 @samselikoff
+
+## 0.1.2
+
+- empty release
+
+## 0.1.1
+
+Update notes: none
+
+Changes:
+  - [IMPROVEMENT] remove unrelated folders from npm @mupkoo
+  - [BUGFIX] allow testConfig to be optional @samselikoff
+
 ## 0.1.0
 
 Update notes: none
