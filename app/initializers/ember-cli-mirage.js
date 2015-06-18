@@ -4,6 +4,12 @@ import baseConfig, { testConfig } from '../mirage/config';
 import Server from 'ember-cli-mirage/server';
 import readModules from 'ember-cli-mirage/utils/read-modules';
 
+function hasModulesOfType(modulesMap, type) {
+  var modulesOfType = modulesMap[type] || {};
+
+  return Ember.keys(modulesOfType).length > 0;
+}
+
 export default {
   name: 'ember-cli-mirage',
   initialize: function(container, application) {
@@ -11,7 +17,7 @@ export default {
 
     if (_shouldUseMirage(env, ENV['ember-cli-mirage'])) {
       var modulesMap = readModules(ENV.modulePrefix);
-      var hasFactories = !Ember.isEmpty(modulesMap['factories']);
+      var hasFactories = hasModulesOfType(modulesMap, 'factories');
       var hasDefaultScenario = modulesMap['scenarios'].hasOwnProperty('default');
       var server = new Server({
         environment: env
