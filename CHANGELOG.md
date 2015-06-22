@@ -1,5 +1,14 @@
 # Ember CLI Mirage Changelog
 
+## 0.1.5
+
+Update notes: none
+
+Changes:
+  - [BUGFIX] fixtures bug @bantic
+  - [BUGFIX] jshint on blueprint files @dukex
+  - [BUGFIX] allow beta to break build @bantic
+
 ## 0.1.4
 
 Update notes: none
