@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import ENV from '../config/environment';
 import baseConfig, { testConfig } from '../mirage/config';
 import Server from 'ember-cli-mirage/server';
@@ -19,8 +18,11 @@ export default {
       var modulesMap = readModules(ENV.modulePrefix);
       var hasFactories = hasModulesOfType(modulesMap, 'factories');
       var hasDefaultScenario = modulesMap['scenarios'].hasOwnProperty('default');
+      var hasModels = hasModulesOfType(modulesMap, 'models');
+
       var server = new Server({
-        environment: env
+        environment: env,
+        modelsMap: hasModels ? modulesMap['models'] : null
       });
 
       server.loadConfig(baseConfig);

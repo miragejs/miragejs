@@ -1,6 +1,7 @@
 import { pluralize } from './utils/inflector';
 import Pretender from 'pretender';
 import Db from './orm/db';
+import Schema from './orm/schema';
 import controller from './controller';
 
 /*
@@ -47,6 +48,11 @@ export default class Server {
     */
     this.db = new Db();
 
+    if (options.modelsMap) {
+      this.schema = new Schema(this.db);
+      this.schema.registerModels(options.modelsMap);
+    }
+
     // TODO: Better way to inject server into test env
     if (this.environment === 'test') {
       window.server = this;
@@ -58,12 +64,13 @@ export default class Server {
     this.timing = this.environment === 'test' ? 0 : (this.timing || 0);
   }
 
+  // TODO: Move all this logic to another object (route?)
   stub(verb, path, handler, code, options) {
     var _this = this;
     path = path[0] === '/' ? path.slice(1) : path;
 
     this.interceptor[verb].call(this.interceptor, this.namespace + '/' + path, function(request) {
-      var response = controller.handle(verb, handler, _this.db, request, code, options);
+      var response = controller.handle(verb, handler, (_this.schema || _this.db), request, code, options);
       var shouldLog = typeof _this.logging !== 'undefined' ? _this.logging : (_this.environment !== 'test');
 
       if (shouldLog) {

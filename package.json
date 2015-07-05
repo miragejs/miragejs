@@ -56,8 +56,8 @@
     "configPath": "tests/dummy/config"
   },
   "dependencies": {
-    "ember-cli-babel": "^5.0.0",
     "broccoli-funnel": "^0.2.3",
-    "broccoli-merge-trees": "^0.2.1"
+    "broccoli-merge-trees": "^0.2.1",
+    "ember-cli-babel": "^5.0.0"
   }
 }
