@@ -14,12 +14,16 @@ var defaultCodes = {
   'delete': 204
 };
 
-export default {
+export default class Controller {
 
-  handle: function(verb, handler, db, request, customizedCode, options) {
+  constructor(serializer) {
+    this.serializer = serializer;
+  }
+
+  handle(verb, handler, dbOrSchema, request, customizedCode, options) {
     var code, isEmptyObject;
     var handlerMethod = this._lookupHandlerMethod(verb, handler);
-    var response = handlerMethod(handler, db, request, options);
+    var response = handlerMethod(handler, dbOrSchema, request, options);
 
     if (response instanceof Response) {
       return response.toArray();
@@ -36,15 +40,17 @@ export default {
       }
 
       if (response) {
-        return [code, {"Content-Type": "application/json"}, response];
+        var serializedResponse = this._serialize(response, request);
+
+        return [code, {"Content-Type": "application/json"}, serializedResponse];
       } else {
         return [code, {}, undefined];
       }
 
     }
-  },
+  }
 
-  _lookupHandlerMethod: function(verb, handler) {
+  _lookupHandlerMethod(verb, handler) {
     var type = typeof handler;
     type = isArray(handler) ? 'array' : type;
 
@@ -57,22 +63,26 @@ export default {
     }
 
     return handlerMethod;
-  },
+  }
 
-  _functionHandler: function(handler, db, request) {
+  _functionHandler(handler, dbOrSchema, request) {
     var data;
 
     try {
-      data = handler(db, request);
+      data = handler(dbOrSchema, request);
     } catch(error) {
       console.error('Mirage: Your custom function handler for the url ' + request.url + ' threw an error:', error.message, error.stack);
     }
 
     return data;
-  },
+  }
 
-  _objectHandler: function(object /*, db, request*/) {
+  _objectHandler(object /*, dbOrSchema, request*/) {
     return object;
   }
 
-};
+  _serialize(response, request) {
+    return this.serializer.serialize(response, request);
+  }
+
+}
