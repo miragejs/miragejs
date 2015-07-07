@@ -31,6 +31,9 @@ test("string shorthand with id works", function(assert) {
   var result = get.string('contact', db, {params: {id: 1}});
 
   assert.deepEqual(result, {contact: contacts[0]});
+
+  var result404 = get.undefined(undefined, db, {url: '/contacts/1', params: {id: 999}});
+  assert.equal(result404.toArray()[0], 404, 'Status is Not Found');
 });
 
 // e.g. this.stub('get', '/contacts?ids=1,3', 'contact');
@@ -75,6 +78,9 @@ test("undefined shorthand with id works", function(assert) {
   var result = get.undefined(undefined, db, {url: '/contacts/1', params: {id: 1}});
 
   assert.deepEqual(result, {contact: contacts[0]});
+
+  var result404 = get.undefined(undefined, db, {url: '/contacts/1', params: {id: 999}});
+  assert.equal(result404.toArray()[0], 404, 'Status is Not Found');
 });
 
 // e.g. this.stub('get', '/contacts/:id');

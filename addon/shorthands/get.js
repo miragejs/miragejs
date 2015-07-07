@@ -1,3 +1,4 @@
+import Response from '../response';
 import { singularize, pluralize } from '../utils/inflector';
 import utils from './utils';
 
@@ -16,6 +17,7 @@ export default {
     var collection = pluralize(string);
     var id = utils.getIdForRequest(request);
     var data = {};
+    var record;
     options = options || {};
 
     if (!db[collection]) {
@@ -23,7 +25,11 @@ export default {
     }
 
     if (id) {
-      data[key] = db[collection].find(id);
+      record = db[collection].find(id);
+      if (!record) {
+        return new Response(404, {}, {});
+      }
+      data[key] = record;
     } else if (options.coalesce && request.queryParams && request.queryParams.ids) {
       data[key] = db[collection].find(request.queryParams.ids);
     } else {
@@ -102,6 +108,7 @@ export default {
     var type = utils.getTypeFromUrl(url, id);
     var collection = pluralize(type);
     var data = {};
+    var record;
     options = options || {};
 
     if (!db[collection]) {
@@ -109,6 +116,10 @@ export default {
     }
 
     if (id) {
+      record = db[collection].find(id);
+      if (!record) {
+        return new Response(404, {}, {});
+      }
       data[type] = db[collection].find(id);
     } else if (options.coalesce && request.queryParams && request.queryParams.ids) {
       data[collection] = db[collection].find(request.queryParams.ids);
