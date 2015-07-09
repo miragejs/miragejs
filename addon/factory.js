@@ -1,11 +1,9 @@
-import Ember from 'ember';
-
 var Factory = function() {
   this.build = function(sequence) {
     var object = {};
     var attrs = this.attrs || {};
 
-    Ember.keys(attrs).forEach(function(key) {
+    _.keys(attrs).forEach(function(key) {
       var type = typeof attrs[key];
 
       if (type === 'function') {

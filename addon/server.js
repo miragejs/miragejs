@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import { pluralize } from './utils/inflector';
 import Pretender from 'pretender';
 import Db from './db';
@@ -86,7 +85,7 @@ export default class Server {
     this._factoryMap = factoryMap;
 
     // Create a collection for each factory
-    Ember.keys(factoryMap).forEach(function(type) {
+    _.keys(factoryMap).forEach(function(type) {
       _this.db.createCollection(pluralize(type));
     });
   }

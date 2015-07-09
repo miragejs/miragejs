@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 var allDigitsRegex = /^\d+$/;
+var keys = _.keys;
 
 /*
   An identity map.
@@ -39,7 +40,7 @@ export default function() {
   this.loadData = function(data) {
     var _this = this;
 
-    Ember.keys(data).forEach(function(collection) {
+    keys(data).forEach(function(collection) {
       _this.createCollection(collection);
       _this._insert(collection, data[collection]);
     });
@@ -90,7 +91,7 @@ export default function() {
   this._where = function(collection, query) {
     var records = this[collection];
 
-    Object.keys(query).forEach(function(queryKey) {
+    keys(query).forEach(function(queryKey) {
       records = records.filter(function(record) {
         return String(record[queryKey]) === String(query[queryKey]);
       });
@@ -103,7 +104,7 @@ export default function() {
     if (typeof attrs === 'undefined') {
       attrs = target;
       this[collection].forEach(function(record) {
-        Object.keys(attrs).forEach(function(attr) {
+        keys(attrs).forEach(function(attr) {
           record[attr] = attrs[attr];
         });
       });
@@ -114,7 +115,7 @@ export default function() {
       var id = target;
       var record = this._find(collection, id);
 
-      Object.keys(attrs).forEach(function(attr) {
+      keys(attrs).forEach(function(attr) {
         record[attr] = attrs[attr];
       });
 
@@ -125,7 +126,7 @@ export default function() {
       var records = this._where(collection, query);
 
       records.forEach(function(record) {
-        Object.keys(attrs).forEach(function(attr) {
+        keys(attrs).forEach(function(attr) {
           record[attr] = attrs[attr];
         });
       });
@@ -156,7 +157,7 @@ export default function() {
 
   this.emptyData = function() {
     var _this = this;
-    Object.keys(this).forEach(function(key) {
+    keys(this).forEach(function(key) {
       if (key === 'loadData' || key === 'emptyData') {
         return;
       }

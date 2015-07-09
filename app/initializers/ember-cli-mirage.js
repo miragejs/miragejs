@@ -7,7 +7,7 @@ import readModules from 'ember-cli-mirage/utils/read-modules';
 function hasModulesOfType(modulesMap, type) {
   var modulesOfType = modulesMap[type] || {};
 
-  return Ember.keys(modulesOfType).length > 0;
+  return _.keys(modulesOfType).length > 0;
 }
 
 export default {

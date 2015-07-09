@@ -5,7 +5,7 @@ import Response from './response';
 var isArray = Ember.isArray;
 var isBlank = Ember.isBlank;
 var typeOf  = Ember.typeOf;
-var keys    = Ember.keys;
+var keys    = _.keys;
 
 var defaultCodes = {
   get: 200,
