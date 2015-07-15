@@ -122,7 +122,7 @@ export default class Server {
   _setupStubAliases() {
     var _this = this;
 
-    [['get'], ['post'], ['put'], ['delete', 'del']].forEach(function(names) {
+    [['get'], ['post'], ['put'], ['delete', 'del'], ['patch']].forEach(function(names) {
       var verb = names[0];
       var alias = names[1];
 

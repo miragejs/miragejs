@@ -7,6 +7,7 @@ module('integration:server-config', {
       environment: 'development'
     });
     this.server.timing = 0;
+    this.server.logging = false;
   },
   afterEach: function() {
     this.server.shutdown();
