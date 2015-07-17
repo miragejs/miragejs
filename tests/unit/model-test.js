@@ -1,4 +1,3 @@
-import Mirage from 'ember-cli-mirage';
 import Model from 'ember-cli-mirage/orm/model';
 import {module, test} from 'qunit';
 

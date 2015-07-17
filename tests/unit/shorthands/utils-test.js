@@ -1,5 +1,4 @@
 import utils from 'ember-cli-mirage/shorthands/utils';
-import Db from 'ember-cli-mirage/orm/db';
 
 import {module, test} from 'qunit';
 
@@ -33,7 +32,7 @@ test('it returns a string if it\'s a string', function(assert) {
 test('url without id returns correct type', function (assert) {
   var urlWithSlash = '/api/users/?test=true';
   var urlWithoutSlash = '/api/users?test=true';
-  
+
   assert.equal(utils.getTypeFromUrl(urlWithSlash), 'user', 'it returns a singular type');
   assert.equal(utils.getTypeFromUrl(urlWithoutSlash), 'user', 'it returns a singular type');
 });

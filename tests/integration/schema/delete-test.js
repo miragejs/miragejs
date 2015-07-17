@@ -33,7 +33,7 @@ test('it can destroy its models', function(assert) {
 });
 
 
-var db, schema, User, Address;
+var db, schema, User;
 module('mirage:integration:schema:delete#model', {
   beforeEach: function() {
     db = new Db();

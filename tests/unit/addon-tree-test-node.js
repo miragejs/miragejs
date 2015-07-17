@@ -2,7 +2,6 @@
 /* jshint node: true */
 var expect = require('chai').expect;
 var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
-var path = require('path');
 
 function getMirageAddon(options) {
   var dummyApp = new EmberAddon(options);
@@ -26,8 +25,6 @@ describe('Addon', function() {
   });
 
   describe('#treeFor', function() {
-    var addonTree;
-
     it('returns an empty tree in production environment by default', function() {
       process.env.EMBER_ENV = 'production';
       var addonTree = getMirageAddon().treeFor('addon');
