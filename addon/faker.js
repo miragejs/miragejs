@@ -16,18 +16,6 @@ var list = {
   }
 };
 
+faker.list = list;
 
-export default {
-  name:     faker.name,
-  address:  faker.address,
-  phone:    faker.phone,
-  internet: faker.internet,
-  company:  faker.company,
-  image:    faker.image,
-  lorem:    faker.lorem,
-  date:     faker.date,
-  random:   faker.random,
-  finance:  faker.finance,
-  hacker:   faker.hacker,
-  list:     list
-};
+export default faker;
