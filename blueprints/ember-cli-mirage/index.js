@@ -1,3 +1,5 @@
+/*jshint node:true*/
+
 'use strict';
 
 module.exports = {
@@ -20,7 +22,7 @@ module.exports = {
       {name: 'pretender', target: '~0.7.0'},
       {name: 'ember-inflector', target: '~1.3.1'},
       {name: 'lodash', target: '~3.7.0'},
-      {name: 'Faker', target: '~2.1.3'}
+      {name: 'Faker', target: '~3.0.0'}
     ]);
   }
 };
