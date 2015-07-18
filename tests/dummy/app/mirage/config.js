@@ -15,7 +15,7 @@ export default function() {
 
   // Pets
   this.get('/pets', function(db) {
-    return { pets: db.pets.all().filter(pet => pet.alive) };
+    return { pets: db.pets.filter(pet => pet.alive) };
   });
 
   this.post('/pets', function(db, req) {

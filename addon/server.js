@@ -1,6 +1,6 @@
 import { pluralize } from './utils/inflector';
 import Pretender from 'pretender';
-import Db from './orm/db';
+import Db from './db';
 import Schema from './orm/schema';
 import controller from './controller';
 
@@ -98,7 +98,7 @@ export default class Server {
 
   create(type, overrides) {
     var collection = pluralize(type);
-    var currentRecords = this.db[collection].all();
+    var currentRecords = this.db[collection];
     var sequence = currentRecords ? currentRecords.length: 0;
     if (!this._factoryMap || !this._factoryMap[type]) {
       throw "You're trying to create a " + type + ", but no factory for this type was found";

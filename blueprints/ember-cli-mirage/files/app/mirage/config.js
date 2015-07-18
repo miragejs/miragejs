@@ -54,7 +54,7 @@ export default function() {
   /*
     Function fallback. Manipulate data in the db via
 
-      - db.{collection}.all()
+      - db.{collection}
       - db.{collection}.find(id)
       - db.{collection}.where(query)
       - db.{collection}.update(target, attrs)

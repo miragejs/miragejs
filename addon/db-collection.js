@@ -1,61 +1,27 @@
 /*
-  The db, an identity map.
-
-  Note the public methods return copies of the data,
-  so the actual db records cannot be inadvertantly
-  modified.
+  A collection of db records i.e. a database table.
 */
-class Db {
+class DbCollection {
 
-  constructor(initialData) {
+  constructor(name, initialData) {
+    this.name = name;
+    this._records = [];
+
     if (initialData) {
-      this.loadData(initialData);
+      this.insert(initialData);
     }
   }
 
-  loadData(data) {
-    for (let collection in data) {
-      this.createCollection(collection);
-      this.insert(collection, data[collection]);
-    }
+  /*
+    Returns a copy of the data, to prevent inadvertant data manipulation.
+  */
+  all() {
+    return JSON.parse(JSON.stringify(this._records));
   }
 
-  createCollection(collection) {
-    this[collection] = { _records: [] };
-
-    // Attach the methods to the collection
-    // TODO: use prototype?
-    ['all', 'insert', 'find', 'where', 'update', 'remove']
-      .forEach((method) => {
-        this[collection][method] = this[method].bind(this, collection);
-      });
-
-    return this;
-  }
-
-  createCollections(...collections) {
-    collections.forEach( c => this.createCollection(c) );
-  }
-
-  emptyData() {
-    Object.keys(this).forEach((key) => {
-      if (key === 'loadData' || key === 'emptyData') {
-        return;
-      }
-
-      this[key] = {};
-    });
-  }
-
-  all(collection) {
-    let records = this[collection]._records;
-
-    return records.map(r => JSON.parse(JSON.stringify(r)) );
-  }
-
-  insert(collection, data) {
+  insert(data) {
     let copy = data ? JSON.parse(JSON.stringify(data)) : {};
-    let records = this[collection]._records;
+    let records = this._records;
     let returnData;
 
     if (!_.isArray(copy)) {
@@ -83,16 +49,16 @@ class Db {
     return returnData;
   }
 
-  find(collection, ids) {
+  find(ids) {
     if (_.isArray(ids)) {
-      let records = this._findRecords(collection, ids)
+      let records = this._findRecords(ids)
         .filter(r => r !== undefined);
 
       // Return a copy
       return records.map(r => JSON.parse(JSON.stringify(r)) );
 
     } else {
-      let record = this._findRecord(collection, ids);
+      let record = this._findRecord(ids);
       if (!record) { return null; }
 
       // Return a copy
@@ -100,18 +66,18 @@ class Db {
     }
   }
 
-  where(collection, query) {
-    let records = this._findRecordsWhere(collection, query);
+  where(query) {
+    let records = this._findRecordsWhere(query);
 
     return records.map( r => JSON.parse(JSON.stringify(r)) );
   }
 
-  update(collection, attrs, target) {
+  update(attrs, target) {
     let records;
 
     if (typeof target === 'undefined') {
       let changedRecords = [];
-      this[collection]._records.forEach(function(record) {
+      this._records.forEach(function(record) {
         let oldRecord = _.assign({}, record);
 
         for (let attr in attrs) {
@@ -127,7 +93,7 @@ class Db {
 
     } else if (typeof target === 'number' || typeof target === 'string') {
       let id = target;
-      let record = this._findRecord(collection, id);
+      let record = this._findRecord(id);
 
       for (let attr in attrs) {
         record[attr] = attrs[attr];
@@ -137,7 +103,7 @@ class Db {
 
     } else if (_.isArray(target)) {
       let ids = target;
-      records = this._findRecords(collection, ids);
+      records = this._findRecords(ids);
 
       records.forEach(record => {
         for (let attr in attrs) {
@@ -149,7 +115,7 @@ class Db {
 
     } else if (typeof target === 'object') {
       let query = target;
-      records = this._findRecordsWhere(collection, query);
+      records = this._findRecordsWhere(query);
 
       records.forEach(record => {
         for (let attr in attrs) {
@@ -161,30 +127,29 @@ class Db {
     }
   }
 
-  remove(collection, target) {
-    let _collection = this[collection];
+  remove(target) {
     let records;
 
     if (typeof target === 'undefined') {
-      _collection._records = [];
+      this._records = [];
 
     } else if (typeof target === 'number' || typeof target === 'string') {
-      let record = this._findRecord(collection, target);
-      let index = _collection._records.indexOf(record);
-      _collection._records.splice(index, 1);
+      let record = this._findRecord(target);
+      let index = this._records.indexOf(record);
+      this._records.splice(index, 1);
 
     } else if (_.isArray(target)) {
-      records = this._findRecords(collection, target);
+      records = this._findRecords(target);
       records.forEach(record =>  {
-        let index = _collection._records.indexOf(record);
-        _collection._records.splice(index, 1);
+        let index = this._records.indexOf(record);
+        this._records.splice(index, 1);
       });
 
     } else if (typeof target === 'object') {
-      records = this._findRecordsWhere(collection, target);
+      records = this._findRecordsWhere(target);
       records.forEach(record =>  {
-        let index = _collection._records.indexOf(record);
-        _collection._records.splice(index, 1);
+        let index = this._records.indexOf(record);
+        this._records.splice(index, 1);
       });
     }
   }
@@ -197,7 +162,7 @@ class Db {
     API query methods return copies.
   */
 
-  _findRecord(collection, id) {
+  _findRecord(id) {
     let allDigitsRegex = /^\d+$/;
 
     // If parses, coerce to integer
@@ -205,19 +170,19 @@ class Db {
       id = parseInt(id, 10);
     }
 
-    let record = this[collection]._records.filter(obj => obj.id === id)[0];
+    let record = this._records.filter(obj => obj.id === id)[0];
 
     return record;
   }
 
-  _findRecords(collection, ids) {
-    let records = ids.map(id => this._findRecord(collection, id));
+  _findRecords(ids) {
+    let records = ids.map(id => this._findRecord(id));
 
     return records;
   }
 
-  _findRecordsWhere(collection, query) {
-    let records = this[collection]._records;
+  _findRecordsWhere(query) {
+    let records = this._records;
 
     for (let queryKey in query) {
       records = records.filter( r => String(r[queryKey]) === String(query[queryKey]) );
@@ -227,4 +192,4 @@ class Db {
   }
 }
 
-export default Db;
+export default DbCollection;

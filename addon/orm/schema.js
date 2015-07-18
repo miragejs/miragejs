@@ -75,9 +75,8 @@ export default function(db) {
 
   this.all = function(type) {
     var collection = this._collectionForType(type);
-    var records = collection._records;
 
-    return this._hydrate(records, type);
+    return this._hydrate(collection, type);
   };
 
   this.find = function(type, ids) {

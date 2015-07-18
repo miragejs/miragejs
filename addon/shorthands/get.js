@@ -32,7 +32,7 @@ function stringGet(string, db, request, options) {
   } else if (options.coalesce && request.queryParams && request.queryParams.ids) {
     data[key] = db[collection].find(request.queryParams.ids);
   } else {
-    data[key] = db[collection].all();
+    data[key] = db[collection];
   }
   return data;
 }
@@ -79,7 +79,7 @@ function arrayGet(array, db, request) {
         owner = model;
 
       } else {
-        data[key] = db[collection].all();
+        data[key] = db[collection];
       }
     }
   });

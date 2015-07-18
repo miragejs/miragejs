@@ -1,5 +1,5 @@
 import controller from 'ember-cli-mirage/controller';
-import Db from 'ember-cli-mirage/orm/db';
+import Db from 'ember-cli-mirage/db';
 import Response from 'ember-cli-mirage/response';
 
 import {module, test} from 'qunit';
@@ -18,7 +18,7 @@ module('mirage:controller', {
 
 test("function handler works", function(assert) {
   var response = controller.handle('get', function(db, request) {
-    return db.contacts.all();
+    return db.contacts;
   }, db, {params: {id: 1}});
 
   assert.deepEqual(response[2], contacts);

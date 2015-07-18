@@ -1,7 +1,7 @@
 import Mirage from 'ember-cli-mirage';
 import Model from 'ember-cli-mirage/orm/model';
 import Schema from 'ember-cli-mirage/orm/schema';
-import Db from 'ember-cli-mirage/orm/db';
+import Db from 'ember-cli-mirage/db';
 import {module, test} from 'qunit';
 
 var schema, child1, child2;
