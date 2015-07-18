@@ -35,7 +35,7 @@ class Db {
       }
     });
 
-    this._collections.push(name);
+    this._collections.push(newCollection);
 
     return this;
   }
@@ -45,9 +45,7 @@ class Db {
   }
 
   emptyData() {
-    this._collections.forEach(name => {
-      this[name].remove();
-    });
+    this._collections.forEach( c => c.remove() );
   }
 }
 

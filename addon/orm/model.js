@@ -46,7 +46,7 @@ Model.prototype.save = function() {
     this._definePlainAttribute('id');
 
   } else {
-    this._schema.db[collection].update(this.attrs, this.attrs.id);
+    this._schema.db[collection].update(this.attrs.id, this.attrs);
   }
 
   // Update associated children

@@ -20,6 +20,18 @@ test('it can load data on instantiation', function(assert) {
   assert.equal(db.addresses.length, 2);
 });
 
+test('it can empty its data', function(assert) {
+  db = new Db({
+    users: [{id: 1, name: 'Link'}],
+    addresses: [{id: 1, name: '123 Hyrule Way'}, {id: 2, name: 'Lorem ipsum'}]
+  });
+
+  db.emptyData();
+
+  assert.equal(db.users.length, 0);
+  assert.equal(db.addresses.length, 0);
+});
+
 module('mirage:db#createCollection', {
   beforeEach: function() {
     db = new Db();
@@ -304,21 +316,21 @@ test('it can update the whole collection', function(assert) {
 });
 
 test('it can update a record by id', function(assert) {
-  db.contacts.update({name: 'Ganondorf', evil: false}, 3);
+  db.contacts.update(3, {name: 'Ganondorf', evil: false});
   var ganon = db.contacts.find(3);
 
   assert.deepEqual(ganon, {id: 3, name: 'Ganondorf', evil: false});
 });
 
 test('it can update a record by id when the id is a string', function(assert) {
-  db.contacts.update({ evil: true }, '123-abc');
+  db.contacts.update('123-abc', { evil: true });
   var epona = db.contacts.find('123-abc');
 
   assert.deepEqual(epona, {id: '123-abc', name: 'Epona', evil: true});
 });
 
 test('it can update multiple records by ids', function(assert) {
-  db.contacts.update({evil: true}, [1, 2]);
+  db.contacts.update([1, 2], {evil: true});
   var link = db.contacts.find(1);
   var zelda = db.contacts.find(2);
 
@@ -328,7 +340,7 @@ test('it can update multiple records by ids', function(assert) {
 
 
 test('it can update records by query', function(assert) {
-  db.contacts.update({name: 'Sam'}, {evil: false});
+  db.contacts.update({evil: false}, {name: 'Sam'});
 
   assert.deepEqual(db.contacts, [
     {id: 1, name: 'Sam', evil: false},
@@ -339,7 +351,7 @@ test('it can update records by query', function(assert) {
 });
 
 test('updating a single record returns that record', function(assert) {
-  var ganon = db.contacts.update({name: 'Ganondorf'}, 3);
+  var ganon = db.contacts.update(3, {name: 'Ganondorf'});
   assert.deepEqual(ganon, {id: 3, name: 'Ganondorf', evil: true});
 });
 
@@ -353,7 +365,7 @@ test('updating a collection returns the updated records', function(assert) {
 });
 
 test('updating multiple records returns the updated records', function(assert) {
-  var characters = db.contacts.update({evil: true}, {evil: false});
+  var characters = db.contacts.update({evil: false}, {evil: true});
   assert.deepEqual(characters, [
     {id: 1, name: 'Link', evil: true},
     {id: 2, name: 'Zelda', evil: true},

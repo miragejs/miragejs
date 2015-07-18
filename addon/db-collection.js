@@ -72,10 +72,11 @@ class DbCollection {
     return records.map( r => JSON.parse(JSON.stringify(r)) );
   }
 
-  update(attrs, target) {
+  update(target, attrs) {
     let records;
 
-    if (typeof target === 'undefined') {
+    if (typeof attrs === 'undefined') {
+      attrs = target;
       let changedRecords = [];
       this._records.forEach(function(record) {
         let oldRecord = _.assign({}, record);
