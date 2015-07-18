@@ -3,11 +3,12 @@ import Ember from 'ember';
 export default Ember.Route.extend({
 
   model() {
-    return this.store.find('contact').then(null, (reason) => {
-      var errorMsg = reason.responseJSON ? reason.responseJSON.errors[0] :
-                                           reason.errors[0];
-      this.set('error', errorMsg);
-    });
+    return this.store.find('contact')
+      .catch((reason) => {
+        var errorMsg = reason.responseJSON ? reason.responseJSON.errors[0] : reason.errors[0];
+
+        this.set('error', errorMsg);
+      });
   },
 
   setupController(controller, model) {

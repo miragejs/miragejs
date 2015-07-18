@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import Application from '../../app';
-import Router from '../../router';
+// import Router from '../../router';
 import config from '../../config/environment';
 
 export default function startApp(attrs) {

@@ -12,7 +12,7 @@ test('it can be instantiated', function(assert) {
 
 test('it cannot be instantiated without an environment', function(assert) {
   assert.throws(function() {
-    var server = new Server();
+    new Server();
   });
 });
 
@@ -56,7 +56,7 @@ module('mirage:server#create', {
 
 test('create fails when no factories are regisered', function(assert) {
   assert.throws(function() {
-    var contact = server.create('contact');
+    server.create('contact');
   });
 });
 
@@ -66,7 +66,7 @@ test('create fails when an expected factory isn\'t registered', function(assert)
   });
 
   assert.throws(function() {
-    var contact = server.create('contact');
+    server.create('contact');
   });
 });
 

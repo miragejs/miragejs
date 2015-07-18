@@ -13,4 +13,5 @@ export default Mirage.Factory.extend({
   admin: function() {
     return this.age > 30;
   }
+
 });

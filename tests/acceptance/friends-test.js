@@ -3,7 +3,6 @@ import {module, test} from 'qunit';
 import startApp from '../helpers/start-app';
 
 var App;
-var friends;
 
 module('Acceptance: Friends', {
   beforeEach: function() {
@@ -34,9 +33,9 @@ test("I can view the friends", function(assert) {
 });
 
 test("I can view the selected friends", function(assert) {
-  var friend1 = server.create('friend', { name: 'Jane', age: 30 });
-  var friend2 = server.create('friend', { name: 'Tommy', age: 10});
-  var friend3 = server.create('friend', { name: 'Bob', age: 28 });
+  server.create('friend', { name: 'Jane', age: 30 });
+  server.create('friend', { name: 'Tommy', age: 10});
+  server.create('friend', { name: 'Bob', age: 28 });
 
   visit('/close-friends');
 

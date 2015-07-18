@@ -1,4 +1,3 @@
-import Factory from 'ember-cli-mirage/factory';
 import controller from 'ember-cli-mirage/controller';
 import Db from 'ember-cli-mirage/db';
 import Response from 'ember-cli-mirage/response';
@@ -67,7 +66,7 @@ test('its default response is 200 if the verb is put and the response is not emp
   var response5 = controller.handle('put', function() {
     return;
   }, 204);
-  assert.equal(response4[0], 204, 'If the response code is forced, that takes precedence');
+  assert.equal(response5[0], 204, 'If the response code is forced, that takes precedence');
 
   var response6 = controller.handle('put', function() {
     return {};
@@ -109,7 +108,7 @@ test('its default response is 200 if the verb is delete and the response is not 
   var response5 = controller.handle('delete', function() {
     return;
   }, 204);
-  assert.equal(response4[0], 204, 'If the response code is forced, that takes precedence');
+  assert.equal(response5[0], 204, 'If the response code is forced, that takes precedence');
 
   var response6 = controller.handle('delete', function() {
     return {};
