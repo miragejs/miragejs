@@ -1,48 +1,37 @@
 import Model from './orm/model';
 import Collection from './orm/collection';
 import { pluralize } from './utils/inflector';
-// import utils from './shorthands/utils';
+import extend from './utils/extend';
 
-// const isArray = _.isArray;
-
-export default class Serializer {
+class Serializer {
 
   serialize(response, request) {
-    let serializedResponse;
+    if (response instanceof Model) {
+      return this.serializeModel(response);
 
-    if (response instanceof Model || response instanceof Collection) {
-      // let id = utils.getIdForRequest(request);
-      // let url = utils.getUrlForRequest(request);
-      // let type = utils.getTypeFromUrl(url, id);
-
-      if (response instanceof Collection) {
-        serializedResponse = this.serializeCollection(response);
-
-      } else if (response instanceof Model) {
-        serializedResponse = this.serializeModel(response);
-      }
-
-    // } else if (isArray(response) {
-    //   var key = pluralize(type);
-    //   serializedResponse[key] = response.map(model => model.attrs);
-
+    } else if (response instanceof Collection) {
+      return this.serializeCollection(response);
 
     } else {
-      serializedResponse = response;
+      return response;
     }
-
-    return serializedResponse;
   }
 
   serializeModel(model) {
-    return { [model.type]: model.attrs };
+    return this.constructor.root ? { [model.type]: model.attrs } : model.attrs;
   }
 
   serializeCollection(collection) {
     let key = pluralize(collection[0].type);
     let allAttrs = collection.map(model => model.attrs);
 
-    return { [key]: allAttrs };
+    return this.constructor.root ? { [key]: allAttrs } : allAttrs;
   }
 
 }
+
+Serializer.extend = extend.bind(Serializer, null);
+
+Serializer.root = true;
+
+export default Serializer;
