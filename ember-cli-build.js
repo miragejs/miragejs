@@ -13,12 +13,14 @@ var pickFiles = require('broccoli-static-compiler');
   behave. You most likely want to be modifying `./index.js` or app's Brocfile
 */
 
-var app = new EmberAddon();
+module.exports = function(defaults) {
+  var app = new EmberAddon();
 
-var es5Shim = pickFiles('node_modules/es5-shim', {
-  srcDir: '/',
-  files: ['es5-shim.js'],
-  destDir: '/assets'
-});
+  var es5Shim = pickFiles('node_modules/es5-shim', {
+    srcDir: '/',
+    files: ['es5-shim.js'],
+    destDir: '/assets'
+  });
 
-module.exports = app.toTree([es5Shim]);
+  return app.toTree([es5Shim]);
+}
