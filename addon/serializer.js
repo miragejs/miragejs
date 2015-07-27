@@ -18,20 +18,18 @@ class Serializer {
   }
 
   serializeModel(model) {
-    return this.constructor.root ? { [model.type]: model.attrs } : model.attrs;
+    return this.root ? { [model.type]: model.attrs } : model.attrs;
   }
 
   serializeCollection(collection) {
     let key = pluralize(collection[0].type);
     let allAttrs = collection.map(model => model.attrs);
 
-    return this.constructor.root ? { [key]: allAttrs } : allAttrs;
+    return this.root ? { [key]: allAttrs } : allAttrs;
   }
 
 }
 
-Serializer.extend = extend.bind(Serializer, null);
-
-Serializer.root = true;
+Serializer.extend = extend.bind(Serializer);
 
 export default Serializer;
