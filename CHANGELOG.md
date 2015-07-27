@@ -1,5 +1,15 @@
 # Ember CLI Mirage Changelog
 
+## 0.1.6
+
+Update notes: none
+
+Changes:
+  - [ENHANCEMENT] add PATCH to mirage @samselikoff
+  - [ENHANCEMENT] update Faker to 3.0, expose all methods @blimmer
+  - [ENHANCEMENT] add basics of orm layer @samselikoff
+  - [IMPROVEMENT] general refactorings @makepanic @cibernox
+
 ## 0.1.5
 
 Update notes: none
