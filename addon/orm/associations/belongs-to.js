@@ -14,17 +14,18 @@ class BelongsTo extends Association {
     return `${this.target}_id`;
   }
 
-  addMethodsToModel(model, key, schema) {
+  addMethodsToModelClass(ModelClass, key, schema) {
+    let modelPrototype = ModelClass.prototype;
     var association = this;
     var foreignKey = this.getForeignKey();
 
     var associationHash = {};
     associationHash[key] = this;
-    model.belongsToAssociations = _.assign(model.belongsToAssociations, associationHash);
-    model.associationKeys.push(key);
-    model.associationIdKeys.push(foreignKey);
+    modelPrototype.belongsToAssociations = _.assign(modelPrototype.belongsToAssociations, associationHash);
+    modelPrototype.associationKeys.push(key);
+    modelPrototype.associationIdKeys.push(foreignKey);
 
-    Object.defineProperty(model, this.getForeignKey(), {
+    Object.defineProperty(modelPrototype, this.getForeignKey(), {
 
       /*
         object.parent_id
@@ -48,7 +49,7 @@ class BelongsTo extends Association {
       }
     });
 
-    Object.defineProperty(model, key, {
+    Object.defineProperty(modelPrototype, key, {
       /*
         object.parent
           - returns the associated parent
@@ -88,7 +89,7 @@ class BelongsTo extends Association {
       object.newParent
         - creates a new unsaved associated parent
     */
-    model['new' + capitalize(key)] = function(attrs) {
+    modelPrototype['new' + capitalize(key)] = function(attrs) {
       var parent = schema[key].new(attrs);
 
       this[key] = parent;
@@ -101,7 +102,7 @@ class BelongsTo extends Association {
         - creates an associated parent, persists directly to db,
           and updates the owner's foreign key
     */
-    model['create' + capitalize(key)] = function(attrs) {
+    modelPrototype['create' + capitalize(key)] = function(attrs) {
       var parent = schema[key].create(attrs);
 
       this[foreignKey] = parent.id;

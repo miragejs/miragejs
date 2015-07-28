@@ -26,25 +26,32 @@ export default function(db) {
     this._registry[type] = this._registry[type] || {class: null, foreignKeys: []}; // we may have created this key before, if another model added fks to it
     this._registry[type].class = ModelClass;
 
-    Object.keys(ModelClass).forEach(function(key) {
-      if (ModelClass[key] instanceof Association) {
-        var association = ModelClass[key];
+    // Set up associations
+    ModelClass.prototype.hasManyAssociations = {};   // a registry of the model's hasMany associations. Key is key from model definition, value is association instance itself
+    ModelClass.prototype.belongsToAssociations = {}; // a registry of the model's belongsTo associations. Key is key from model definition, value is association instance itself
+    ModelClass.prototype.associationKeys = [];       // ex: address.user, user.addresses
+    ModelClass.prototype.associationIdKeys = [];     // ex: address.user_id, user.address_ids. may or may not be a fk.
+
+    Object.keys(ModelClass.prototype).forEach(function(key) {
+      if (ModelClass.prototype[key] instanceof Association) {
+        var association = ModelClass.prototype[key];
         var associatedType = association.type || singularize(key);
         association.owner = type;
         association.target = associatedType;
 
-        // Update the registry with this association's foreign keys
+        // Update the registry with this association's foreign keys. This is
+        // essentially our "db migration", since we must know about the fks.
         var result = association.getForeignKeyArray();
         var fkHolder = result[0];
         var fk = result[1];
         _this._addForeignKeyToRegistry(fkHolder, fk);
+
+        // Augment the Model's class with any methods added by this association
+        association.addMethodsToModelClass(ModelClass, key, _this);
       }
     });
 
-    // Add association methods (until we can figure out how to add them as static class methods upon definition)
-    ModelClass.prototype.addAssociationMethods(this);
-
-    // Create db, if doesn't exist
+    // Create a db collection for this model, if doesn't exist
     var collection = pluralize(type);
     if (!this.db[collection]) {
       this.db.createCollection(collection);

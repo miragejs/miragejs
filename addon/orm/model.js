@@ -1,6 +1,5 @@
 import { pluralize } from '../utils/inflector';
 import extend from '../utils/extend';
-import Association from './associations/association';
 
 /*
   The Model class. Notes:
@@ -111,23 +110,6 @@ class Model {
       });
   }
 
-  // TODO: this is really model constructor logic...I think?
-  addAssociationMethods(schema) {
-    var _this = this;
-
-    this.hasManyAssociations = {};       // a registry of the model's hasMany associations. Key is key from model definition, value is association instance itself
-    this.belongsToAssociations = {};     // a registry of the model's belongsTo associations. Key is key from model definition, value is association instance itself
-    this.associationKeys = [];    // ex: address.user, user.addresses
-    this.associationIdKeys = [];  // ex: address.user_id, user.address_ids. may or may not be a fk.
-
-    Object.keys(this.constructor).forEach(function(attr) {
-      if (_this.constructor[attr] instanceof Association) {
-        var association = _this.constructor[attr];
-        association.addMethodsToModel(_this, attr, schema);
-      }
-    });
-  }
-
 
   // Private
   /*
@@ -219,6 +201,6 @@ class Model {
   }
 }
 
-Model.extend = extend.bind(Model, null);
+Model.extend = extend.bind(Model);
 
 export default Model;
