@@ -201,6 +201,6 @@ class Model {
   }
 }
 
-Model.extend = extend.bind(Model);
+Model.extend = extend;
 
 export default Model;
