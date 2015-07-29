@@ -1,3 +1,4 @@
+import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import Serializer from 'ember-cli-mirage/serializer';
 import schemaHelper from './schema-helper';
 import { camelize } from 'ember-cli-mirage/utils/inflector';
@@ -7,12 +8,13 @@ schemaHelper.setup();
 
 module('mirage:serializer - key formatting', {
   beforeEach() {
-    let MySerializer = Serializer.extend({
-      keyForAttribute(key) {
-        return camelize(key);
-      }
+    this.registry = new SerializerRegistry(schemaHelper.schema, {
+      author: Serializer.extend({
+        keyForAttribute(key) {
+          return camelize(key);
+        }
+      })
     });
-    this.serializer = new MySerializer();
   },
   afterEach() {
     schemaHelper.emptyData();
@@ -20,14 +22,14 @@ module('mirage:serializer - key formatting', {
 });
 
 test(`keyForAttribute formats the attributes of a model`, function(assert) {
-  var user = schemaHelper.getUserModel({
+  var author = schemaHelper.getModel('author', {
     id: 1,
     'first-name': 'Link',
     'last-name': 'Jackson',
     age: 323,
   });
 
-  let result = this.serializer.serialize(user);
+  let result = this.registry.serialize(author);
 
   assert.deepEqual(result, {
     id: 1,
@@ -38,12 +40,12 @@ test(`keyForAttribute formats the attributes of a model`, function(assert) {
 });
 
 test(`keyForAttribute also formats the models in a collections`, function(assert) {
-  var user = schemaHelper.getUserCollection([
+  var author = schemaHelper.getCollection('author', [
     {id: 1, 'first-name': 'Link', 'last-name': 'Jackson'},
     {id: 2, 'first-name': 'Zelda', 'last-name': 'Brown'}
   ]);
 
-  let result = this.serializer.serialize(user);
+  let result = this.registry.serialize(author);
 
   assert.deepEqual(result, [
     {id: 1, firstName: 'Link', lastName: 'Jackson'},

@@ -1,3 +1,4 @@
+import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import Serializer from 'ember-cli-mirage/serializer';
 import schemaHelper from './schema-helper';
 import { module, test } from 'qunit';
@@ -6,10 +7,11 @@ schemaHelper.setup();
 
 module('mirage:serializer - attrs list', {
   beforeEach: function() {
-    const MySerializer = Serializer.extend({
-      attrs: ['id', 'name']
+    this.registry = new SerializerRegistry(schemaHelper.schema, {
+      post: Serializer.extend({
+        attrs: ['id', 'title']
+      })
     });
-    this.serializer = new MySerializer();
   },
   afterEach() {
     schemaHelper.emptyData();
@@ -17,28 +19,28 @@ module('mirage:serializer - attrs list', {
 });
 
 test(`it returns only the whitelisted attrs when serializing a model`, function(assert) {
-  var user = schemaHelper.getUserModel({
+  var user = schemaHelper.getModel('post', {
     id: 1,
-    name: 'Link',
-    age: 323,
+    title: 'Lorem',
+    date: '20150101',
   });
 
-  var result = this.serializer.serialize(user);
+  var result = this.registry.serialize(user);
   assert.deepEqual(result, {
     id: 1,
-    name: 'Link'
+    title: 'Lorem'
   });
 });
 
 test(`it returns only the whitelisted attrs when serializing a collection`, function(assert) {
-  var collection = schemaHelper.getUserCollection([
-    {id: 1, name: 'Link', age: 323},
-    {id: 2, name: 'Zelda', age: 401}
+  var collection = schemaHelper.getCollection('post', [
+    {id: 1, title: 'Lorem', date: '20150101'},
+    {id: 2, title: 'Ipsum', date: '20150102'}
   ]);
 
-  var result = this.serializer.serialize(collection);
+  var result = this.registry.serialize(collection);
   assert.deepEqual(result, [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'}
+    {id: 1, title: 'Lorem'},
+    {id: 2, title: 'Ipsum'}
   ]);
 });

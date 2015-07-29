@@ -7,22 +7,25 @@ export default {
   setup() {
     let db = new Db();
     this.schema = new Schema(db);
-    this.schema.registerModel('user', Model.extend());
+    this.schema.registerModels({
+      author: Model.extend(),
+      post: Model.extend(),
+    });
   },
 
   emptyData() {
     this.schema.db.emptyData();
   },
 
-  getUserModel(attrs) {
-    return this.schema.user.create(attrs);
+  getModel(type, attrs) {
+    return this.schema[type].create(attrs);
   },
 
-  getUserCollection(attrsArray) {
+  getCollection(type, attrsArray) {
     attrsArray.forEach(attrs => {
-      this.schema.user.create(attrs);
+      this.schema[type].create(attrs);
     });
 
-    return this.schema.user.all();
+    return this.schema[type].all();
   }
 };

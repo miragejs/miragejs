@@ -47,6 +47,7 @@ export default class Server {
     this.pretender = this.interceptor; // alias
 
     if (options.modelsMap) {
+      // TODO: really should be injected into Controller, server doesn't need to know about schema
       this.schema = new Schema(this.db);
       this.schema.registerModels(options.modelsMap);
     }

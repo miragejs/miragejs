@@ -1,4 +1,4 @@
-import Serializer from 'ember-cli-mirage/serializer';
+import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import schemaHelper from './schema-helper';
 import { module, test } from 'qunit';
 
@@ -6,63 +6,48 @@ schemaHelper.setup();
 
 module('mirage:serializer - Base', {
   beforeEach() {
-    this.serializer = new Serializer();
+    this.registry = new SerializerRegistry(schemaHelper.schema);
   },
   afterEach() {
     schemaHelper.emptyData();
   }
 });
 
-test('it returns pojos unaffected', function(assert) {
-  var result = this.serializer.serialize({oh: 'hai'});
+test('it returns objects unaffected', function(assert) {
+  var result = this.registry.serialize({oh: 'hai'});
 
   assert.deepEqual(result, {oh: 'hai'});
 });
 
 test('it returns arrays unaffected', function(assert) {
-  var data = [{id: 1, name: 'Link'}, {id: 2, name: 'Zelda'}];
-  var result = this.serializer.serialize(data);
+  var data = [{id: 1, title: 'Lorem'}, {id: 2, title: 'Ipsum'}];
+  var result = this.registry.serialize(data);
 
   assert.deepEqual(result, data);
 });
 
 test(`it serializes a model by returning its attrs`, function(assert) {
-  var user = schemaHelper.getUserModel({
+  var post = schemaHelper.getModel('post', {
     id: 1,
-    name: 'Link',
-    age: 323,
+    title: 'Lorem',
   });
 
-  var result = this.serializer.serialize(user);
+  var result = this.registry.serialize(post);
   assert.deepEqual(result, {
     id: 1,
-    name: 'Link',
-    age: 323
+    title: 'Lorem',
   });
 });
 
 test(`it serializes a collection of models by returning an array of their attrs`, function(assert) {
-  var collection = schemaHelper.getUserCollection([
-    {id: 1, name: 'Link', age: 323},
-    {id: 2, name: 'Zelda', age: 401}
+  var collection = schemaHelper.getCollection('post', [
+    {id: 1, title: 'Lorem'},
+    {id: 2, title: 'Ipsum'}
   ]);
 
-  var result = this.serializer.serialize(collection);
+  var result = this.registry.serialize(collection);
   assert.deepEqual(result, [
-    {id: 1, name: 'Link', age: 323},
-    {id: 2, name: 'Zelda', age: 401}
-  ]);
-});
-
-test(`it serializes a collection of models by returning an array of their attrs`, function(assert) {
-  var collection = schemaHelper.getUserCollection([
-    {id: 1, name: 'Link', age: 323},
-    {id: 2, name: 'Zelda', age: 401}
-  ]);
-
-  var result = this.serializer.serialize(collection);
-  assert.deepEqual(result, [
-    {id: 1, name: 'Link', age: 323},
-    {id: 2, name: 'Zelda', age: 401}
+    {id: 1, title: 'Lorem'},
+    {id: 2, title: 'Ipsum'}
   ]);
 });
