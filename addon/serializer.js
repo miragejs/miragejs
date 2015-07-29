@@ -1,3 +1,4 @@
+/* global _ */
 import Model from './orm/model';
 import Collection from './orm/collection';
 import { pluralize } from './utils/inflector';
@@ -7,23 +8,27 @@ class Serializer {
 
   serialize(response, request) {
     if (response instanceof Model) {
-      return this.serializeModel(response);
+      return this._serializeModel(response);
 
     } else if (response instanceof Collection) {
-      return this.serializeCollection(response);
+      return this._serializeCollection(response);
 
     } else {
       return response;
     }
   }
 
-  serializeModel(model) {
+  keyForAttribute(key) {
+    return key;
+  }
+
+  _serializeModel(model) {
     let attrs = this._attrsForModel(model);
 
     return this.root ? { [model.type]: attrs } : attrs;
   }
 
-  serializeCollection(collection) {
+  _serializeCollection(collection) {
     let key = pluralize(collection[0].type);
     let allAttrs = collection.map(model => this._attrsForModel(model));
 
@@ -39,10 +44,21 @@ class Serializer {
         return memo;
       }, {});
     } else {
-      attrs = model.attrs;
+      attrs = _.assign(attrs, model.attrs);
     }
 
-    return attrs;
+    return this._formatAttributeKeys(attrs);
+  }
+
+  _formatAttributeKeys(attrs) {
+    let formattedAttrs = {};
+
+    for (let key in attrs) {
+      let formattedKey = this.keyForAttribute(key);
+      formattedAttrs[formattedKey] = attrs[key];
+    }
+
+    return formattedAttrs;
   }
 }
 
