@@ -12,9 +12,9 @@ export default Mirage.Factory.extend({
 
   // email: function(i) {                  // and functions
   //   return 'person' + i + '@test.com';
-  // }
+  // },
 
-  // firstName: faker.name.firstName       // using faker
-  // lastName: faker.name.firstName
+  // firstName: faker.name.firstName,       // using faker
+  // lastName: faker.name.firstName,
   // zipCode: faker.address.zipCode
 });
