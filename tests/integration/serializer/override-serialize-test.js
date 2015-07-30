@@ -8,7 +8,7 @@ schemaHelper.setup();
 module('mirage:serializer - overriding serialize', {
   beforeEach: function() {
     this.registry = new SerializerRegistry(schemaHelper.schema, {
-      post: Serializer.extend({
+      author: Serializer.extend({
         serialize(response, request) {
           return 'blah';
         }
@@ -21,11 +21,11 @@ module('mirage:serializer - overriding serialize', {
 });
 
 test(`it can use a completely custom serialize function`, function(assert) {
-  var post = schemaHelper.getModel('post', {
+  var author = schemaHelper.getModel('author', {
     id: 1,
-    title: 'Lorem',
+    title: 'Link',
   });
 
-  var result = this.registry.serialize(post);
+  var result = this.registry.serialize(author);
   assert.equal(result, 'blah');
 });

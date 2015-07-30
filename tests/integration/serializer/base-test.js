@@ -20,34 +20,34 @@ test('it returns objects unaffected', function(assert) {
 });
 
 test('it returns arrays unaffected', function(assert) {
-  var data = [{id: 1, title: 'Lorem'}, {id: 2, title: 'Ipsum'}];
+  var data = [{id: 1, name: 'Link'}, {id: 2, name: 'Zelda'}];
   var result = this.registry.serialize(data);
 
   assert.deepEqual(result, data);
 });
 
 test(`it serializes a model by returning its attrs`, function(assert) {
-  var post = schemaHelper.getModel('post', {
+  var author = schemaHelper.getModel('author', {
     id: 1,
-    title: 'Lorem',
+    name: 'Link',
   });
 
-  var result = this.registry.serialize(post);
+  var result = this.registry.serialize(author);
   assert.deepEqual(result, {
     id: 1,
-    title: 'Lorem',
+    name: 'Link',
   });
 });
 
 test(`it serializes a collection of models by returning an array of their attrs`, function(assert) {
-  var collection = schemaHelper.getCollection('post', [
-    {id: 1, title: 'Lorem'},
-    {id: 2, title: 'Ipsum'}
+  var collection = schemaHelper.getCollection('author', [
+    {id: 1, name: 'Link'},
+    {id: 2, name: 'Zelda'}
   ]);
 
   var result = this.registry.serialize(collection);
   assert.deepEqual(result, [
-    {id: 1, title: 'Lorem'},
-    {id: 2, title: 'Ipsum'}
+    {id: 1, name: 'Link'},
+    {id: 2, name: 'Zelda'}
   ]);
 });

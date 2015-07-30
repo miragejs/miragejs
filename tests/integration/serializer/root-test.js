@@ -8,7 +8,7 @@ schemaHelper.setup();
 module('mirage:serializer - root:true', {
   beforeEach() {
     this.registry = new SerializerRegistry(schemaHelper.schema, {
-      post: Serializer.extend({
+      author: Serializer.extend({
         root: true
       })
     });
@@ -19,31 +19,31 @@ module('mirage:serializer - root:true', {
 });
 
 test(`if root is true, it serializes a model by returning its attrs under a key of the model's type`, function(assert) {
-  var post = schemaHelper.getModel('post', {
+  var author = schemaHelper.getModel('author', {
     id: 1,
-    title: 'Lorem ipsum',
+    name: 'Link',
   });
 
-  var result = this.registry.serialize(post);
+  var result = this.registry.serialize(author);
   assert.deepEqual(result, {
-    post: {
+    author: {
       id: 1,
-      title: 'Lorem ipsum',
+      name: 'Link',
     }
   });
 });
 
 test(`if root is true, it serializes a collection of models by returning an array of their attrs under a pluralized key`, function(assert) {
-  var collection = schemaHelper.getCollection('post', [
-    {id: 1, title: 'Lorem'},
-    {id: 2, title: 'Ipsum'}
+  var collection = schemaHelper.getCollection('author', [
+    {id: 1, name: 'Link'},
+    {id: 2, name: 'Zelda'}
   ]);
 
   var result = this.registry.serialize(collection);
   assert.deepEqual(result, {
-    posts: [
-      {id: 1, title: 'Lorem'},
-      {id: 2, title: 'Ipsum'}
+    authors: [
+      {id: 1, name: 'Link'},
+      {id: 2, name: 'Zelda'}
     ]
   });
 });

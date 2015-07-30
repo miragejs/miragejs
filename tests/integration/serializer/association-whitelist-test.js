@@ -7,9 +7,15 @@ schemaHelper.setup();
 
 module('mirage:serializer - associations list', {
   beforeEach: function() {
+    schemaHelper.schema.post.create({
+      title: 'Lorem'
+    });
+    schemaHelper.schema.post.create({
+      title: 'Ipsum'
+    });
+
     this.registry = new SerializerRegistry(schemaHelper.schema, {
       author: Serializer.extend({
-        attrs: ['id', 'name'],
         relationships: ['posts']
       })
     });

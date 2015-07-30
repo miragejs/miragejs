@@ -1,3 +1,4 @@
+import Mirage from 'ember-cli-mirage';
 import Schema from 'ember-cli-mirage/orm/schema';
 import Model from 'ember-cli-mirage/orm/model';
 import Db from 'ember-cli-mirage/db';
@@ -8,8 +9,16 @@ export default {
     let db = new Db();
     this.schema = new Schema(db);
     this.schema.registerModels({
-      author: Model.extend(),
-      post: Model.extend(),
+      author: Model.extend({
+        posts: Mirage.hasMany()
+      }),
+      post: Model.extend({
+        author: Mirage.belongsTo(),
+        comments: Mirage.hasMany()
+      }),
+      comment: Model.extend({
+        posts: Mirage.belongsTo()
+      }),
     });
   },
 
