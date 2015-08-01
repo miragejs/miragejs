@@ -14,7 +14,7 @@ module('mirage:integration:schema:delete#collection', {
     var User = Model.extend();
     schema.registerModel('user', User);
 
-    collection = new Collection([
+    collection = new Collection('user', [
       schema.user.create({name: 'Link', location: 'Hyrule', evil: false}),
       schema.user.create({name: 'Zelda', location: 'Hyrule', evil: false}),
     ]);

@@ -1,17 +1,12 @@
 /* global _ */
 import Model from './orm/model';
-import Collection from './orm/collection';
-import { pluralize } from './utils/inflector';
 import extend from './utils/extend';
 
 class Serializer {
 
   serialize(response, request) {
     if (response instanceof Model) {
-      return this._serializeModel(response);
-
-    } else if (response instanceof Collection) {
-      return this._serializeCollection(response);
+      return this._attrsForModel(response);
 
     } else {
       return response;
@@ -20,19 +15,6 @@ class Serializer {
 
   keyForAttribute(key) {
     return key;
-  }
-
-  _serializeModel(model) {
-    let attrs = this._attrsForModel(model);
-
-    return this.root ? { [model.type]: attrs } : attrs;
-  }
-
-  _serializeCollection(collection) {
-    let key = pluralize(collection[0].type);
-    let allAttrs = collection.map(model => this._attrsForModel(model));
-
-    return this.root ? { [key]: allAttrs } : allAttrs;
   }
 
   _attrsForModel(model) {
@@ -62,6 +44,7 @@ class Serializer {
   }
 }
 
+Serializer.prototype.relationships = [];
 Serializer.extend = extend;
 
 export default Serializer;

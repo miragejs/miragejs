@@ -35,6 +35,7 @@ test('it returns an empty array when no models exist', function(assert) {
   var users = schema.user.all();
 
   assert.ok(users instanceof Collection, 'it returns a collection');
+  assert.equal(users.type, 'user', 'the collection knows its type');
   assert.equal(users.length, 0);
 });
 

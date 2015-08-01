@@ -150,7 +150,7 @@ export default function(db) {
         return _this._instantiateModel(type, record);
       });
 
-      return new Collection(models);
+      return new Collection(type, models);
 
     } else {
       var record = records;

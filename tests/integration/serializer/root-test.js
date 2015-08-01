@@ -47,3 +47,12 @@ test(`if root is true, it serializes a collection of models by returning an arra
     ]
   });
 });
+
+test(`if root is true, it serializes an empty collection by returning an empty array under a pluralized key`, function(assert) {
+  var emptyAuthorCollection = schemaHelper.schema.author.all();
+  var result = this.registry.serialize(emptyAuthorCollection);
+
+  assert.deepEqual(result, {
+    authors: []
+  });
+});

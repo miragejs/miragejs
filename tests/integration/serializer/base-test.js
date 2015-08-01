@@ -51,3 +51,10 @@ test(`it serializes a collection of models by returning an array of their attrs`
     {id: 2, name: 'Zelda'}
   ]);
 });
+
+test(`it can serialize an empty collection`, function(assert) {
+  var authors = schemaHelper.schema.author.all();
+  var result = this.registry.serialize(authors);
+
+  assert.deepEqual(result, []);
+});

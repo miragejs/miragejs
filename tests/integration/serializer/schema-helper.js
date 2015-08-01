@@ -20,6 +20,8 @@ export default {
         posts: Mirage.belongsTo()
       }),
     });
+
+    return this.schema;
   },
 
   emptyData() {

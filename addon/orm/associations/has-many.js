@@ -105,7 +105,7 @@ class HasMany extends Association {
         models = models ? _.compact(models) : [];
 
         if (this.isNew()) {
-          association._cachedChildren = models instanceof Collection ? models : new Collection(models);
+          association._cachedChildren = models instanceof Collection ? models : new Collection(association.target, models);
 
         } else {
 
@@ -137,7 +137,7 @@ class HasMany extends Association {
 
       var child = schema[association.target].new(attrs);
 
-      association._cachedChildren = association._cachedChildren || new Collection();
+      association._cachedChildren = association._cachedChildren || new Collection(association.target);
       association._cachedChildren.push(child);
 
       return child;
