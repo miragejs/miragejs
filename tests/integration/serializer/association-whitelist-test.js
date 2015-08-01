@@ -151,3 +151,31 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
     ]
   });
 });
+
+test(`it ignores relationships that refer to serialized ancestor resources, two (and more) levels down`, function(assert) {
+  let registry = new SerializerRegistry(this.schema, {
+    author: Serializer.extend({
+      relationships: ['posts']
+    }),
+    post: Serializer.extend({
+      relationships: ['author', 'comments']
+    }),
+    comment: Serializer.extend({
+      relationships: ['post']
+    })
+  });
+
+  let author = this.schema.author.find(1);
+  var result = registry.serialize(author);
+
+  assert.deepEqual(result, {
+    id: 1,
+    name: 'Link',
+    posts: [
+      {id: 1, title: 'Lorem', comments: [
+        {id: 1, text: 'pwned'}
+      ]},
+      {id: 2, title: 'Ipsum', comments: []}
+    ]
+  });
+});

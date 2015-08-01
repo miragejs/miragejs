@@ -17,7 +17,7 @@ export default {
         comments: Mirage.hasMany()
       }),
       comment: Model.extend({
-        posts: Mirage.belongsTo()
+        post: Mirage.belongsTo()
       }),
     });
 
