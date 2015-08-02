@@ -1,9 +1,9 @@
 import Serializer from 'ember-cli-mirage/serializer';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
-import schemaHelper from './schema-helper';
+import schemaHelper from '../schema-helper';
 import { module, test } from 'qunit';
 
-module('mirage:serializer - associations list', {
+module('mirage:serializer:associations base test', {
   beforeEach: function() {
     this.schema = schemaHelper.setup();
 
@@ -32,12 +32,14 @@ test(`it can serialize a model with a has-many relationship`, function(assert) {
   var result = registry.serialize(link);
 
   assert.deepEqual(result, {
-    id: 1,
-    name: 'Link',
-    posts: [
-      {id: 1, title: 'Lorem'},
-      {id: 2, title: 'Ipsum'}
-    ]
+    author: {
+      id: 1,
+      name: 'Link',
+      posts: [
+        {id: 1, title: 'Lorem'},
+        {id: 2, title: 'Ipsum'}
+      ]
+    }
   });
 });
 
@@ -52,10 +54,12 @@ test(`it can serialize a model with a belongs-to relationship`, function(assert)
   var result = registry.serialize(post);
 
   assert.deepEqual(result, {
-    id: 1,
-    author_id: 1,
-    title: 'Lorem',
-    author: {id: 1, name: 'Link'}
+    post: {
+      id: 1,
+      author_id: 1,
+      title: 'Lorem',
+      author: {id: 1, name: 'Link'}
+    }
   });
 });
 
@@ -69,21 +73,23 @@ test(`it can serialize a collection with a has-many relationship`, function(asse
   let authors = this.schema.author.all();
   var result = registry.serialize(authors);
 
-  assert.deepEqual(result, [
-    {
-      id: 1,
-      name: 'Link',
-      posts: [
-        {id: 1, title: 'Lorem'},
-        {id: 2, title: 'Ipsum'}
-      ]
-    },
-    {
-      id: 2,
-      name: 'Zelda',
-      posts: []
-    }
-  ]);
+  assert.deepEqual(result, {
+    authors: [
+      {
+        id: 1,
+        name: 'Link',
+        posts: [
+          {id: 1, title: 'Lorem'},
+          {id: 2, title: 'Ipsum'}
+        ]
+      },
+      {
+        id: 2,
+        name: 'Zelda',
+        posts: []
+      }
+    ]
+  });
 });
 
 test(`it can serialize a collection with a belongs-to relationship`, function(assert) {
@@ -97,10 +103,12 @@ test(`it can serialize a collection with a belongs-to relationship`, function(as
   var result = registry.serialize(post);
 
   assert.deepEqual(result, {
-    id: 1,
-    author_id: 1,
-    title: 'Lorem',
-    author: {id: 1, name: 'Link'}
+    post: {
+      id: 1,
+      author_id: 1,
+      title: 'Lorem',
+      author: {id: 1, name: 'Link'}
+    }
   });
 });
 
@@ -118,14 +126,16 @@ test(`it supports a chain of serializers with relationships`, function(assert) {
   var result = registry.serialize(author);
 
   assert.deepEqual(result, {
-    id: 1,
-    name: 'Link',
-    posts: [
-      {id: 1, title: 'Lorem', comments: [
-        {id: 1, text: 'pwned'}
-      ]},
-      {id: 2, title: 'Ipsum', comments: []}
-    ]
+    author: {
+      id: 1,
+      name: 'Link',
+      posts: [
+        {id: 1, title: 'Lorem', comments: [
+          {id: 1, text: 'pwned'}
+        ]},
+        {id: 2, title: 'Ipsum', comments: []}
+      ]
+    }
   });
 });
 
@@ -143,12 +153,14 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
   var result = registry.serialize(author);
 
   assert.deepEqual(result, {
-    id: 1,
-    name: 'Link',
-    posts: [
-      {id: 1, title: 'Lorem'},
-      {id: 2, title: 'Ipsum'}
-    ]
+    author: {
+      id: 1,
+      name: 'Link',
+      posts: [
+        {id: 1, title: 'Lorem'},
+        {id: 2, title: 'Ipsum'}
+      ]
+    }
   });
 });
 
@@ -169,13 +181,15 @@ test(`it ignores relationships that refer to serialized ancestor resources, two 
   var result = registry.serialize(author);
 
   assert.deepEqual(result, {
-    id: 1,
-    name: 'Link',
-    posts: [
-      {id: 1, title: 'Lorem', comments: [
-        {id: 1, text: 'pwned'}
-      ]},
-      {id: 2, title: 'Ipsum', comments: []}
-    ]
+    author :{
+      id: 1,
+      name: 'Link',
+      posts: [
+        {id: 1, title: 'Lorem', comments: [
+          {id: 1, text: 'pwned'}
+        ]},
+        {id: 2, title: 'Ipsum', comments: []}
+      ]
+    }
   });
 });

@@ -6,7 +6,7 @@ import {module, test} from 'qunit';
 
 schemaHelper.setup();
 
-module('mirage:serializer - key formatting', {
+module('mirage:serializer - attribute key formatting', {
   beforeEach() {
     this.registry = new SerializerRegistry(schemaHelper.schema, {
       author: Serializer.extend({
@@ -32,10 +32,12 @@ test(`keyForAttribute formats the attributes of a model`, function(assert) {
   let result = this.registry.serialize(author);
 
   assert.deepEqual(result, {
-    id: 1,
-    firstName: 'Link',
-    lastName: 'Jackson',
-    age: 323
+    author: {
+      id: 1,
+      firstName: 'Link',
+      lastName: 'Jackson',
+      age: 323
+    }
   });
 });
 
@@ -47,8 +49,10 @@ test(`keyForAttribute also formats the models in a collections`, function(assert
 
   let result = this.registry.serialize(author);
 
-  assert.deepEqual(result, [
-    {id: 1, firstName: 'Link', lastName: 'Jackson'},
-    {id: 2, firstName: 'Zelda', lastName: 'Brown'}
-  ]);
+  assert.deepEqual(result, {
+    authors: [
+      {id: 1, firstName: 'Link', lastName: 'Jackson'},
+      {id: 2, firstName: 'Zelda', lastName: 'Brown'}
+    ]
+  });
 });

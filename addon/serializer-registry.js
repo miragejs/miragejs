@@ -37,7 +37,11 @@ export default class SerializerRegistry {
     let serializer = this._serializerFor(model);
     let attrs = this._attrsForModel(model, isRelatedModel, alreadySerialized);
 
-    return serializer.root ? { [model.type]: attrs } : attrs;
+    if (isRelatedModel) {
+      return attrs;
+    } else {
+      return serializer.root ? { [model.type]: attrs } : attrs;
+    }
   }
 
   _serializeCollection(collection, isRelatedModel = false, alreadySerialized = {}) {
@@ -45,7 +49,11 @@ export default class SerializerRegistry {
     let serializer = this._serializerFor(collection.type);
     let allAttrs = collection.map(model => this._attrsForModel(model, isRelatedModel, alreadySerialized));
 
-    return serializer.root ? { [key]: allAttrs } : allAttrs;
+    if (isRelatedModel) {
+      return allAttrs;
+    } else {
+      return serializer.root ? { [key]: allAttrs } : allAttrs;
+    }
   }
 
   _attrsForModel(model, isRelatedModel = false, alreadySerialized = {}) {

@@ -26,7 +26,7 @@ test('it returns arrays unaffected', function(assert) {
   assert.deepEqual(result, data);
 });
 
-test(`it serializes a model by returning its attrs`, function(assert) {
+test(`it serializes a model by returning its attrs under a root`, function(assert) {
   var author = schemaHelper.getModel('author', {
     id: 1,
     name: 'Link',
@@ -34,27 +34,33 @@ test(`it serializes a model by returning its attrs`, function(assert) {
 
   var result = this.registry.serialize(author);
   assert.deepEqual(result, {
-    id: 1,
-    name: 'Link',
+    author: {
+      id: 1,
+      name: 'Link',
+    }
   });
 });
 
-test(`it serializes a collection of models by returning an array of their attrs`, function(assert) {
+test(`it serializes a collection of models by returning an array of their attrs under a puralized root`, function(assert) {
   var collection = schemaHelper.getCollection('author', [
     {id: 1, name: 'Link'},
     {id: 2, name: 'Zelda'}
   ]);
 
   var result = this.registry.serialize(collection);
-  assert.deepEqual(result, [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'}
-  ]);
+  assert.deepEqual(result, {
+    authors: [
+      {id: 1, name: 'Link'},
+      {id: 2, name: 'Zelda'}
+    ]
+  });
 });
 
 test(`it can serialize an empty collection`, function(assert) {
   var authors = schemaHelper.schema.author.all();
   var result = this.registry.serialize(authors);
 
-  assert.deepEqual(result, []);
+  assert.deepEqual(result, {
+    authors: []
+  });
 });

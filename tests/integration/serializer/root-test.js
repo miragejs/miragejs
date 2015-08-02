@@ -5,11 +5,11 @@ import { module, test } from 'qunit';
 
 schemaHelper.setup();
 
-module('mirage:serializer - root:true', {
+module('mirage:serializer - root:false', {
   beforeEach() {
     this.registry = new SerializerRegistry(schemaHelper.schema, {
       author: Serializer.extend({
-        root: true
+        root: false
       })
     });
   },
@@ -18,7 +18,7 @@ module('mirage:serializer - root:true', {
   }
 });
 
-test(`if root is true, it serializes a model by returning its attrs under a key of the model's type`, function(assert) {
+test(`if root is false, it serializes a model by returning its attrs`, function(assert) {
   var author = schemaHelper.getModel('author', {
     id: 1,
     name: 'Link',
@@ -26,33 +26,27 @@ test(`if root is true, it serializes a model by returning its attrs under a key 
 
   var result = this.registry.serialize(author);
   assert.deepEqual(result, {
-    author: {
-      id: 1,
-      name: 'Link',
-    }
+    id: 1,
+    name: 'Link',
   });
 });
 
-test(`if root is true, it serializes a collection of models by returning an array of their attrs under a pluralized key`, function(assert) {
+test(`if root is false, it serializes a collection of models by returning an array of their attrs`, function(assert) {
   var collection = schemaHelper.getCollection('author', [
     {id: 1, name: 'Link'},
     {id: 2, name: 'Zelda'}
   ]);
 
   var result = this.registry.serialize(collection);
-  assert.deepEqual(result, {
-    authors: [
-      {id: 1, name: 'Link'},
-      {id: 2, name: 'Zelda'}
-    ]
-  });
+  assert.deepEqual(result, [
+    {id: 1, name: 'Link'},
+    {id: 2, name: 'Zelda'}
+  ]);
 });
 
-test(`if root is true, it serializes an empty collection by returning an empty array under a pluralized key`, function(assert) {
+test(`if root is false, it serializes an empty collection by returning an empty array`, function(assert) {
   var emptyAuthorCollection = schemaHelper.schema.author.all();
   var result = this.registry.serialize(emptyAuthorCollection);
 
-  assert.deepEqual(result, {
-    authors: []
-  });
+  assert.deepEqual(result, []);
 });

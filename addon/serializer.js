@@ -44,7 +44,10 @@ class Serializer {
   }
 }
 
+// Defaults
 Serializer.prototype.relationships = [];
+Serializer.prototype.root = true;
+
 Serializer.extend = extend;
 
 export default Serializer;

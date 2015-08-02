@@ -27,5 +27,7 @@ test(`it can use a completely custom serialize function`, function(assert) {
   });
 
   var result = this.registry.serialize(author);
-  assert.equal(result, 'blah');
+  assert.deepEqual(result, {
+    author: 'blah'
+  });
 });

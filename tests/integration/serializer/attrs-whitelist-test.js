@@ -19,7 +19,7 @@ module('mirage:serializer - attrs list', {
 });
 
 test(`it returns only the whitelisted attrs when serializing a model`, function(assert) {
-  var user = schemaHelper.getModel('author', {
+  var user = schemaHelper.schema.author.create({
     id: 1,
     name: 'Link',
     age: 123,
@@ -27,20 +27,25 @@ test(`it returns only the whitelisted attrs when serializing a model`, function(
 
   var result = this.registry.serialize(user);
   assert.deepEqual(result, {
-    id: 1,
-    name: 'Link'
+    author: {
+      id: 1,
+      name: 'Link'
+    }
   });
 });
 
 test(`it returns only the whitelisted attrs when serializing a collection`, function(assert) {
-  var collection = schemaHelper.getCollection('author', [
-    {id: 1, name: 'Link', age: 123},
-    {id: 2, name: 'Zelda', age: 456}
-  ]);
+  let schema = schemaHelper.schema;
+  schema.author.create({id: 1, name: 'Link', age: 123});
+  schema.author.create({id: 2, name: 'Zelda', age: 456});
 
-  var result = this.registry.serialize(collection);
-  assert.deepEqual(result, [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'}
-  ]);
+  let collection = schemaHelper.schema.author.all();
+  let result = this.registry.serialize(collection);
+
+  assert.deepEqual(result, {
+    authors: [
+      {id: 1, name: 'Link'},
+      {id: 2, name: 'Zelda'}
+    ]
+  });
 });
