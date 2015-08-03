@@ -3,7 +3,7 @@ import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import schemaHelper from '../schema-helper';
 import { module, test } from 'qunit';
 
-module('mirage:serializer:associations base test', {
+module('mirage:serializer:associations embedded - model', {
   beforeEach: function() {
     this.schema = schemaHelper.setup();
 
@@ -43,76 +43,7 @@ test(`it can serialize a model with a has-many relationship`, function(assert) {
   });
 });
 
-test(`it can serialize a model with a belongs-to relationship`, function(assert) {
-  let registry = new SerializerRegistry(this.schema, {
-    post: Serializer.extend({
-      relationships: ['author']
-    })
-  });
-
-  let post = this.schema.post.find(1);
-  var result = registry.serialize(post);
-
-  assert.deepEqual(result, {
-    post: {
-      id: 1,
-      author_id: 1,
-      title: 'Lorem',
-      author: {id: 1, name: 'Link'}
-    }
-  });
-});
-
-test(`it can serialize a collection with a has-many relationship`, function(assert) {
-  let registry = new SerializerRegistry(this.schema, {
-    author: Serializer.extend({
-      relationships: ['posts']
-    })
-  });
-
-  let authors = this.schema.author.all();
-  var result = registry.serialize(authors);
-
-  assert.deepEqual(result, {
-    authors: [
-      {
-        id: 1,
-        name: 'Link',
-        posts: [
-          {id: 1, title: 'Lorem'},
-          {id: 2, title: 'Ipsum'}
-        ]
-      },
-      {
-        id: 2,
-        name: 'Zelda',
-        posts: []
-      }
-    ]
-  });
-});
-
-test(`it can serialize a collection with a belongs-to relationship`, function(assert) {
-  let registry = new SerializerRegistry(this.schema, {
-    post: Serializer.extend({
-      relationships: ['author']
-    })
-  });
-
-  let post = this.schema.post.find(1);
-  var result = registry.serialize(post);
-
-  assert.deepEqual(result, {
-    post: {
-      id: 1,
-      author_id: 1,
-      title: 'Lorem',
-      author: {id: 1, name: 'Link'}
-    }
-  });
-});
-
-test(`it supports a chain of serializers with relationships`, function(assert) {
+test(`it can serialize a model with a chain of has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     author: Serializer.extend({
       relationships: ['posts']
@@ -135,6 +66,53 @@ test(`it supports a chain of serializers with relationships`, function(assert) {
         ]},
         {id: 2, title: 'Ipsum', comments: []}
       ]
+    }
+  });
+});
+
+test(`it can serialize a model with a belongs-to relationship`, function(assert) {
+  let registry = new SerializerRegistry(this.schema, {
+    post: Serializer.extend({
+      relationships: ['author']
+    })
+  });
+
+  let post = this.schema.post.find(1);
+  var result = registry.serialize(post);
+
+  assert.deepEqual(result, {
+    post: {
+      id: 1,
+      title: 'Lorem',
+      author: {id: 1, name: 'Link'}
+    }
+  });
+});
+
+test(`it can serialize a model with a chain of belongs-to relationships`, function(assert) {
+  let registry = new SerializerRegistry(this.schema, {
+    comment: Serializer.extend({
+      relationships: ['post']
+    }),
+    post: Serializer.extend({
+      relationships: ['author']
+    })
+  });
+
+  let comment = this.schema.comment.find(1);
+  var result = registry.serialize(comment);
+
+  assert.deepEqual(result, {
+    comment: {
+      id: 1,
+      text: 'pwned',
+      post: {
+        id: 1,
+        title: 'Lorem',
+        author: {
+          id: 1, name: 'Link'
+        }
+      },
     }
   });
 });
@@ -164,7 +142,7 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
   });
 });
 
-test(`it ignores relationships that refer to serialized ancestor resources, two (and more) levels down`, function(assert) {
+test(`it ignores relationships that refer to serialized ancestor resources, multiple levels down`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     author: Serializer.extend({
       relationships: ['posts']

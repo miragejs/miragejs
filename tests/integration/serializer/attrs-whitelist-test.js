@@ -3,23 +3,22 @@ import Serializer from 'ember-cli-mirage/serializer';
 import schemaHelper from './schema-helper';
 import { module, test } from 'qunit';
 
-schemaHelper.setup();
-
 module('mirage:serializer - attrs list', {
   beforeEach: function() {
-    this.registry = new SerializerRegistry(schemaHelper.schema, {
+    this.schema = schemaHelper.setup();
+    this.registry = new SerializerRegistry(this.schema, {
       author: Serializer.extend({
         attrs: ['id', 'name']
       })
     });
   },
   afterEach() {
-    schemaHelper.emptyData();
+    this.schema.db.emptyData();
   }
 });
 
 test(`it returns only the whitelisted attrs when serializing a model`, function(assert) {
-  var user = schemaHelper.schema.author.create({
+  var user = this.schema.author.create({
     id: 1,
     name: 'Link',
     age: 123,
@@ -35,11 +34,11 @@ test(`it returns only the whitelisted attrs when serializing a model`, function(
 });
 
 test(`it returns only the whitelisted attrs when serializing a collection`, function(assert) {
-  let schema = schemaHelper.schema;
+  let schema = this.schema;
   schema.author.create({id: 1, name: 'Link', age: 123});
   schema.author.create({id: 2, name: 'Zelda', age: 456});
 
-  let collection = schemaHelper.schema.author.all();
+  let collection = this.schema.author.all();
   let result = this.registry.serialize(collection);
 
   assert.deepEqual(result, {

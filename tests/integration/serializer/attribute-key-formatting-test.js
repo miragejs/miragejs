@@ -4,11 +4,10 @@ import schemaHelper from './schema-helper';
 import { camelize } from 'ember-cli-mirage/utils/inflector';
 import {module, test} from 'qunit';
 
-schemaHelper.setup();
-
 module('mirage:serializer - attribute key formatting', {
   beforeEach() {
-    this.registry = new SerializerRegistry(schemaHelper.schema, {
+    this.schema = schemaHelper.setup();
+    this.registry = new SerializerRegistry(this.schema, {
       author: Serializer.extend({
         keyForAttribute(key) {
           return camelize(key);
@@ -17,12 +16,12 @@ module('mirage:serializer - attribute key formatting', {
     });
   },
   afterEach() {
-    schemaHelper.emptyData();
+    this.schema.db.emptyData();
   }
 });
 
 test(`keyForAttribute formats the attributes of a model`, function(assert) {
-  var author = schemaHelper.getModel('author', {
+  var author = this.schema.author.create({
     id: 1,
     'first-name': 'Link',
     'last-name': 'Jackson',
@@ -42,12 +41,11 @@ test(`keyForAttribute formats the attributes of a model`, function(assert) {
 });
 
 test(`keyForAttribute also formats the models in a collections`, function(assert) {
-  var author = schemaHelper.getCollection('author', [
-    {id: 1, 'first-name': 'Link', 'last-name': 'Jackson'},
-    {id: 2, 'first-name': 'Zelda', 'last-name': 'Brown'}
-  ]);
+  this.schema.author.create({id: 1, 'first-name': 'Link', 'last-name': 'Jackson'});
+  this.schema.author.create({id: 2, 'first-name': 'Zelda', 'last-name': 'Brown'});
+  let authors = this.schema.author.all();
 
-  let result = this.registry.serialize(author);
+  let result = this.registry.serialize(authors);
 
   assert.deepEqual(result, {
     authors: [

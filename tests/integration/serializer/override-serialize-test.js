@@ -3,11 +3,10 @@ import Serializer from 'ember-cli-mirage/serializer';
 import schemaHelper from './schema-helper';
 import { module, test } from 'qunit';
 
-schemaHelper.setup();
-
 module('mirage:serializer - overriding serialize', {
-  beforeEach: function() {
-    this.registry = new SerializerRegistry(schemaHelper.schema, {
+  beforeEach() {
+    this.schema = schemaHelper.setup();
+    this.registry = new SerializerRegistry(this.schema, {
       author: Serializer.extend({
         serialize(response, request) {
           return 'blah';
@@ -16,17 +15,18 @@ module('mirage:serializer - overriding serialize', {
     });
   },
   afterEach() {
-    schemaHelper.emptyData();
+    this.schema.db.emptyData();
   }
 });
 
 test(`it can use a completely custom serialize function`, function(assert) {
-  var author = schemaHelper.getModel('author', {
+  let author = this.schema.author.create({
     id: 1,
     title: 'Link',
   });
 
-  var result = this.registry.serialize(author);
+  let result = this.registry.serialize(author);
+
   assert.deepEqual(result, {
     author: 'blah'
   });

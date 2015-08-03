@@ -2,14 +2,13 @@ import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import schemaHelper from './schema-helper';
 import { module, test } from 'qunit';
 
-schemaHelper.setup();
-
 module('mirage:serializer - Base', {
   beforeEach() {
-    this.registry = new SerializerRegistry(schemaHelper.schema);
+    this.schema = schemaHelper.setup();
+    this.registry = new SerializerRegistry(this.schema);
   },
   afterEach() {
-    schemaHelper.emptyData();
+    this.schema.db.emptyData();
   }
 });
 
@@ -27,7 +26,7 @@ test('it returns arrays unaffected', function(assert) {
 });
 
 test(`it serializes a model by returning its attrs under a root`, function(assert) {
-  var author = schemaHelper.getModel('author', {
+  var author = this.schema.author.create({
     id: 1,
     name: 'Link',
   });
@@ -42,12 +41,13 @@ test(`it serializes a model by returning its attrs under a root`, function(asser
 });
 
 test(`it serializes a collection of models by returning an array of their attrs under a puralized root`, function(assert) {
-  var collection = schemaHelper.getCollection('author', [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'}
-  ]);
+  this.schema.author.create({id: 1, name: 'Link'});
+  this.schema.author.create({id: 2, name: 'Zelda'});
 
-  var result = this.registry.serialize(collection);
+  let authors = this.schema.author.all();
+
+  let result = this.registry.serialize(authors);
+
   assert.deepEqual(result, {
     authors: [
       {id: 1, name: 'Link'},
@@ -57,7 +57,7 @@ test(`it serializes a collection of models by returning an array of their attrs 
 });
 
 test(`it can serialize an empty collection`, function(assert) {
-  var authors = schemaHelper.schema.author.all();
+  var authors = this.schema.author.all();
   var result = this.registry.serialize(authors);
 
   assert.deepEqual(result, {

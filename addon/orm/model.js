@@ -18,10 +18,6 @@ class Model {
     if (!schema) { throw 'Mirage: A model requires a schema'; }
     if (!type) { throw 'Mirage: A model requires a type'; }
 
-    this.toString = function() {
-      return 'model:' + type;
-    };
-
     this._schema = schema;
     this.type = type;
     this.fks = fks || [];
@@ -197,7 +193,7 @@ class Model {
   }
 
   toString() {
-    return 'model';
+    return `model:${this.type}(${this.id})`;
   }
 }
 

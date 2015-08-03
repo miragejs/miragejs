@@ -22,21 +22,6 @@ export default {
     });
 
     return this.schema;
-  },
-
-  emptyData() {
-    this.schema.db.emptyData();
-  },
-
-  getModel(type, attrs) {
-    return this.schema[type].create(attrs);
-  },
-
-  getCollection(type, attrsArray) {
-    attrsArray.forEach(attrs => {
-      this.schema[type].create(attrs);
-    });
-
-    return this.schema[type].all();
   }
+
 };

@@ -47,6 +47,7 @@ class Serializer {
 // Defaults
 Serializer.prototype.relationships = [];
 Serializer.prototype.root = true;
+Serializer.prototype.embed = true;
 
 Serializer.extend = extend;
 

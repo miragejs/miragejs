@@ -1,7 +1,7 @@
 import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
 import Serializer from 'ember-cli-mirage/serializer';
-import { pluralize } from './utils/inflector';
+import { singularize, pluralize } from './utils/inflector';
 
 export default class SerializerRegistry {
 
@@ -12,86 +12,188 @@ export default class SerializerRegistry {
   }
 
   serialize(response) {
-    if (response instanceof Model) {
-      return this._serializeModel(response);
+    this.alreadySerialized = {};
 
-    } else if (response instanceof Collection) {
-      return this._serializeCollection(response);
+    if (response instanceof Model || response instanceof Collection) {
+      let serializer = this._serializerFor(response);
+
+      if (serializer.embed) {
+        let json;
+
+        if (this._isModel(response)) {
+          json = this._serializeModel(response);
+        } else {
+          json = response.reduce((allAttrs, model) => {
+            allAttrs.push(this._serializeModel(model));
+            this._resetAlreadySerialized();
+
+            return allAttrs;
+          }, []);
+        }
+
+        return this._formatResponse(response, json);
+
+      } else {
+        return this._serializeSideloadedModelOrCollection(response);
+      }
 
     } else {
       return response;
     }
   }
 
-  serializeRelationship(modelOrCollection, alreadySerialized = {}) {
-    if (modelOrCollection instanceof Model) {
-      return this._serializeModel(modelOrCollection, true, alreadySerialized);
+  _serializeSideloadedModelOrCollection(response) {
+    if (this._isModel(response)) {
+      return this._serializeSideloadedModelResponse(response);
+    } else {
 
-    } else if (modelOrCollection instanceof Collection) {
-      return this._serializeCollection(modelOrCollection, true, alreadySerialized);
-
+      return response.reduce((allAttrs, model) => {
+        this._augmentAlreadySerialized(model);
+        return this._serializeSideloadedModelResponse(model, true, allAttrs);
+      }, {});
     }
   }
 
-  _serializeModel(model, isRelatedModel = false, alreadySerialized = {}) {
+  _serializeSideloadedModelResponse(model, topLevelIsArray = false, allAttrs = {}) {
+    // Add this model's attrs
+    this._augmentAlreadySerialized(model);
+    let modelAttrs = this._attrsForModel(model, false, true);
+    let key = model.type;
+    if (topLevelIsArray) {
+      key = pluralize(key);
+      allAttrs[key] = allAttrs[key] || [];
+      allAttrs[key].push(modelAttrs);
+    } else {
+      allAttrs[key] = modelAttrs;
+    }
+
+    // Traverse this model's relationships
     let serializer = this._serializerFor(model);
-    let attrs = this._attrsForModel(model, isRelatedModel, alreadySerialized);
+    serializer.relationships
+      .map(key => model[key])
+      .forEach(relationship => {
+        if (relationship instanceof Collection) {
+          relationship.forEach(relatedModel => {
+            if (this._hasBeenSerialized(relatedModel)) {
+              return;
+            }
+            this._serializeSideloadedModelResponse(relatedModel, true, allAttrs);
+          });
+        } else {
+          if (this._hasBeenSerialized(relationship)) {
+            return;
+          }
 
-    if (isRelatedModel) {
-      return attrs;
+          this._serializeSideloadedModelResponse(relationship, true, allAttrs);
+        }
+      });
+
+    return allAttrs;
+  }
+
+  _formatResponse(modelOrCollection, attrs) {
+    let serializer = this._serializerFor(modelOrCollection);
+    let key = modelOrCollection.type;
+
+    if (this._isCollection(modelOrCollection)) {
+      key = pluralize(key);
+    }
+
+    return serializer.root ? { [key]: attrs } : attrs;
+  }
+
+  _serializeModelOrCollection(modelOrCollection, removeForeignKeys, serializeRelationships) {
+    if (this._isModel(modelOrCollection)) {
+      return this._serializeModel(modelOrCollection, removeForeignKeys, serializeRelationships);
+
     } else {
-      return serializer.root ? { [model.type]: attrs } : attrs;
+      return modelOrCollection.map(model => this._serializeModel(model, removeForeignKeys, serializeRelationships));
     }
   }
 
-  _serializeCollection(collection, isRelatedModel = false, alreadySerialized = {}) {
-    let key = pluralize(collection.type);
-    let serializer = this._serializerFor(collection.type);
-    let allAttrs = collection.map(model => this._attrsForModel(model, isRelatedModel, alreadySerialized));
-
-    if (isRelatedModel) {
-      return allAttrs;
-    } else {
-      return serializer.root ? { [key]: allAttrs } : allAttrs;
+  _serializeModel(model, removeForeignKeys = true, serializeRelationships = true) {
+    if (this._hasBeenSerialized(model)) {
+      return;
     }
+
+    let attrs = this._attrsForModel(model, removeForeignKeys);
+
+    this._augmentAlreadySerialized(model);
+    let relatedAttrs = serializeRelationships ? this._attrsForRelationships(model) : {};
+
+    return _.assign(attrs, relatedAttrs);
   }
 
-  _attrsForModel(model, isRelatedModel = false, alreadySerialized = {}) {
+  _attrsForModel(model, removeForeignKeys, embedRelatedIds) {
     let serializer = this._serializerFor(model);
     let attrs = serializer.serialize(model);
 
-    // Keep track that we've serialized this model
-    let modelKey = `${model.type}_ids`;
-    alreadySerialized[modelKey] = alreadySerialized[modelKey] || [];
-    alreadySerialized[modelKey].push(model.id);
-
-    // If we're getting attrs for a related model, strip out the fks
-    if (isRelatedModel) {
+    if (removeForeignKeys) {
       model.fks.forEach(key => {
         delete attrs[key];
       });
     }
 
-    serializer.relationships.forEach(key => {
-      let relationship = model[key];
-      let relationshipKey = `${relationship.type}_ids`;
-      alreadySerialized[relationshipKey] = alreadySerialized[relationshipKey] || [];
-
-      // Only serialize models that haven't already been serialized
-      if (alreadySerialized[`${relationship.type}_ids`].indexOf(relationship.id) === -1) {
-        let relationshipAttrs = this.serializeRelationship(relationship, alreadySerialized);
-        attrs[key] = relationshipAttrs;
-      }
-    });
+    if (embedRelatedIds) {
+      serializer.relationships
+        .map(key => model[key])
+        .filter(relatedCollection => relatedCollection instanceof Collection)
+        .forEach(relatedCollection => {
+          attrs[`${singularize(relatedCollection.type)}_ids`] = relatedCollection.map(obj => obj.id);
+        });
+    }
 
     return attrs;
   }
 
-  _serializerFor(modelOrType) {
-    let type = modelOrType instanceof Model ? modelOrType.type : modelOrType;
+  _attrsForRelationships(model) {
+    let serializer = this._serializerFor(model);
+
+    return serializer.relationships.reduce((attrs, key) => {
+      let relatedAttrs = this._serializeModelOrCollection(model[key]);
+
+      if (relatedAttrs) {
+        attrs[key] = relatedAttrs;
+      }
+
+      return attrs;
+    }, {});
+  }
+
+  _hasBeenSerialized(model) {
+    let relationshipKey = `${model.type}_ids`;
+
+    return (this.alreadySerialized[relationshipKey] && this.alreadySerialized[relationshipKey].indexOf(model.id) > -1);
+  }
+
+  _augmentAlreadySerialized(model) {
+    let modelKey = `${model.type}_ids`;
+
+    this.alreadySerialized[modelKey] = this.alreadySerialized[modelKey] || [];
+    this.alreadySerialized[modelKey].push(model.id);
+  }
+
+  _resetAlreadySerialized() {
+    this.alreadySerialized = {};
+  }
+
+  _serializerFor(modelOrCollection) {
+    let type = modelOrCollection.type;
     let ModelSerializer = this._serializerMap[type];
 
+    if (ModelSerializer && (!ModelSerializer.prototype.embed) && (!ModelSerializer.prototype.root)) {
+      throw 'Mirage: You cannot have a serializer that sideloads (embed: false) and disables the root (root: false).';
+    }
+
     return ModelSerializer ? new ModelSerializer() : this.baseSerializer;
+  }
+
+  _isModel(object) {
+    return object instanceof Model;
+  }
+
+  _isCollection(object) {
+    return object instanceof Collection;
   }
 
 }
