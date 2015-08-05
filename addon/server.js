@@ -123,6 +123,9 @@ export default class Server {
 
   shutdown() {
     this.pretender.shutdown();
+    if (this.environment === 'test') {
+      window.server = undefined;
+    }
   }
 
   _setupStubAliases() {
