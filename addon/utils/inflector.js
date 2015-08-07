@@ -1,5 +1,4 @@
 import Ember from 'ember';
+export { singularize, pluralize } from 'ember-inflector';
 
-export var singularize = Ember.String.singularize;
-export var pluralize = Ember.String.pluralize;
 export var capitalize = Ember.String.capitalize;
