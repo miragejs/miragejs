@@ -18,6 +18,7 @@ export default class Server {
     this.environment = options.environment;
     this.timing = 400;
     this.namespace = '';
+    this.urlPrefix = '';
 
     this._setupStubAliases();
 
@@ -69,7 +70,7 @@ export default class Server {
     var _this = this;
     path = path[0] === '/' ? path.slice(1) : path;
 
-    this.interceptor[verb].call(this.interceptor, this.namespace + '/' + path, function(request) {
+    this.interceptor[verb].call(this.interceptor, this._getFullPath(path), function(request) {
       var response = controller.handle(verb, handler, (_this.schema || _this.db), request, code, options);
       var shouldLog = typeof _this.logging !== 'undefined' ? _this.logging : (_this.environment !== 'test');
 
@@ -166,6 +167,38 @@ export default class Server {
       ary.splice(argsInitialLength, 0, undefined);
     }
     return ary;
+  }
+
+  /*
+    Builds a full path for Pretender to monitor based on the `path` and
+    configured options (`urlPrefix` and `namespace`).
+  */
+  _getFullPath(path) {
+    var fullPath = '',
+        urlPrefix = this.urlPrefix ? this.urlPrefix.trim() : '',
+        namespace = this.namespace ? this.namespace.trim() : '';
+
+    // check to see if path is a FQDN. if so, ignore any urlPrefix/namespace that was set
+    if (/^https?:\/\//.test(path)) {
+      fullPath += path;
+    } else {
+
+      // otherwise, if there is a urlPrefix, use that as the beginning of the path
+      if (!!urlPrefix.length) {
+        fullPath += urlPrefix[urlPrefix.length - 1] === '/' ? urlPrefix : urlPrefix + '/';
+      }
+
+      // if a namespace has been configured, add it before the path
+      if (!!namespace.length) {
+        fullPath += namespace ? namespace + '/' : namespace;
+      }
+
+      // finally add the configured path
+      fullPath += path;
+    }
+
+    console.log(fullPath);
+    return fullPath;
   }
 
 }
