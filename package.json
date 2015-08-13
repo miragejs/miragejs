@@ -28,6 +28,7 @@
     "broccoli-asset-rev": "^2.0.2",
     "broccoli-static-compiler": "^0.2.1",
     "chai": "2.0.0",
+    "ember-inflector": "~1.9.0",
     "ember-cli": "1.13.1",
     "ember-cli-app-version": "0.3.3",
     "ember-cli-content-security-policy": "0.4.0",
