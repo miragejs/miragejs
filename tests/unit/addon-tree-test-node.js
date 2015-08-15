@@ -1,10 +1,16 @@
  /*jshint -W079 */
 /* jshint node: true */
+/* jshint expr: true */
 var expect = require('chai').expect;
 var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 
 function getMirageAddon(options) {
-  var dummyApp = new EmberAddon(options);
+  var dummyApp;
+  if (options) {
+    dummyApp = new EmberAddon(options);
+  } else {
+    dummyApp = new EmberAddon();
+  }
   return findMirage(dummyApp);
 }
 
@@ -29,7 +35,11 @@ describe('Addon', function() {
       process.env.EMBER_ENV = 'production';
       var addonTree = getMirageAddon().treeFor('addon');
 
-      expect(addonTree.inputTrees.length).to.be.equal(0);
+      if (addonTree._inputNodes) {
+        expect(addonTree._inputNodes.length).to.equal(0);
+      } else {
+        expect(addonTree._inputNodes).to.be.undefined;
+      }
     });
 
     ['development', 'test'].forEach(function(environment) {
@@ -37,7 +47,7 @@ describe('Addon', function() {
         process.env.EMBER_ENV = environment;
         var addonTree = getMirageAddon().treeFor('addon');
 
-        expect(addonTree.inputTrees.length).to.not.equal(0);
+        expect(addonTree._inputNodes.length).to.not.equal(0);
       });
     });
 
@@ -46,7 +56,7 @@ describe('Addon', function() {
       var addon = getMirageAddon({ configPath: 'tests/fixtures/config/environment-production-enabled' });
       var addonTree = addon.treeFor('addon');
 
-      expect(addonTree.inputTrees.length).to.not.equal(0);
+      expect(addonTree._inputNodes.length).to.not.equal(0);
     });
 
   });
