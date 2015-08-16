@@ -5,10 +5,10 @@ module.exports = {
       dependencies: { }
     },
     {
-      name: 'ember-1.13.2',
+      name: 'ember-1.13.8',
       dependencies: {
-        'ember': '1.13.2',
-        'ember-data': '1.13.2'
+        'ember': '1.13.8',
+        'ember-data': '1.13.9'
       }
     },
     {
