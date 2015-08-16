@@ -7,7 +7,7 @@ var App, appStore, rex, toby, sam, andy;
 module('Acceptance: Custom handlers', {
   beforeEach: function() {
     App = startApp();
-    appStore = App.__container__.lookup('store:main');
+    appStore = App.__container__.lookup('service:store');
     rex  = server.create('pet', { name: 'Rex',  alive: true  });
     toby = server.create('pet', { name: 'Toby', alive: false });
     sam  = server.create('pet', { name: 'Sam',  alive: false });
@@ -20,7 +20,7 @@ module('Acceptance: Custom handlers', {
 
 test("You can customize the response by passing a handler function that returns the desired body", function(assert) {
   var done = assert.async();
-  appStore.find('pet').then(function(pets) {
+  appStore.findAll('pet').then(function(pets) {
     assert.deepEqual(pets.mapBy('name'), ['Rex', 'Andy']);
   }).finally(done);
 });

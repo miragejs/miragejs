@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Route.extend({
 
   model() {
-    return this.store.find('contact')
+    return this.store.findAll('contact')
       .catch((reason) => {
         var errorMsg = reason.responseJSON ? reason.responseJSON.errors[0] : reason.errors[0];
 

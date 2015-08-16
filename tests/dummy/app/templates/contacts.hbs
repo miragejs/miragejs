@@ -1,7 +1,7 @@
 {{#if error}}
   <p class='error'>There was an error: <span>{{error}}</span></p>
 {{else}}
-  {{#each contact in model}}
+  {{#each model as |contact|}}
     <p>{{link-to contact.name 'contact' contact}}</p>
   {{/each}}
 {{/if}}
