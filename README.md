@@ -35,12 +35,6 @@ This project is new and the API is subject to change. When updating your project
 
 Check out the [Docs](http://www.ember-cli-mirage.com/docs/latest/)!
 
-## FAQ
-
-### Known issues
-
-- Pretender doesn't handle other-origin requests (e.g. api.twitter.com)
-
-### Support
+## Support
 
 Having trouble? Open an issue!

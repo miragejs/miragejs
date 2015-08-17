@@ -1,5 +1,14 @@
 # Ember CLI Mirage Changelog
 
+## 0.1.7
+
+Update notes: none
+
+  - [ENHANCEMENT] Add support for fully qualified domain name @jamesdixon
+  - [IMPROVEMENT] upgrade Ember CLI, Pretender 0.9 @cibernox @blimmer
+  - [IMPROVEMENT] use ember-inflector from NPM @alexlafroscia @eptis
+  - [IMPROVEMENT] note requirement of .bind @brettchalupa
+
 ## 0.1.6
 
 Update notes: none
