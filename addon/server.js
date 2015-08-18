@@ -37,7 +37,7 @@ export default class Server {
         console.error("Mirage: Your Ember app tried to " + verb + " '" + path +
                       "', but there was no route defined to handle this " +
                       "request. Define a route that matches this path in your " +
-                      "mirage/config.js file.");
+                      "mirage/config.js file. Did you forget to add your namespace?");
       };
     });
     this.pretender = this.interceptor; // alias
