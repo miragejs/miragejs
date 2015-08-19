@@ -9,6 +9,18 @@ module.exports = {
     // to us
   },
 
+  fileMapTokens: function() {
+    return {
+      __root__: function(options) {
+        if (options.inAddon) {
+          return 'tests/dummy/app';
+        }
+
+        return 'app';
+      }
+    };
+  },
+
   afterInstall: function() {
     this.insertIntoFile('.jshintrc', '    "server",', {
       after: '"predef": [\n'
