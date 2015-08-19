@@ -2,6 +2,8 @@
 
 'use strict';
 
+var path = require('path');
+
 module.exports = {
   normalizeEntityName: function() {
     // this prevents an error when the entityName is
@@ -13,7 +15,7 @@ module.exports = {
     return {
       __root__: function(options) {
         if (options.inAddon) {
-          return 'tests/dummy/app';
+          return path.join('tests', 'dummy', 'app');
         }
 
         return 'app';
