@@ -4,6 +4,7 @@ import Db from './db';
 import Schema from './orm/schema';
 import Controller from './controller';
 import Serializer from './serializer';
+import SerializerRegistry from './serializer-registry';
 
 /*
   The Mirage server, which has a db and an XHR interceptor.
@@ -50,6 +51,10 @@ export default class Server {
       // TODO: really should be injected into Controller, server doesn't need to know about schema
       this.schema = new Schema(this.db);
       this.schema.registerModels(options.modelsMap);
+
+      if (options.serializersMap) {
+        this.controller.setSerializerRegistry(new SerializerRegistry(this.schema, options.serializersMap));
+      }
     }
 
     // TODO: Better way to inject server into test env
@@ -68,7 +73,7 @@ export default class Server {
     var _this = this;
     path = path[0] === '/' ? path.slice(1) : path;
 
-    this.interceptor[verb].call(this.interceptor, this.namespace + '/' + path, function(request) {
+    this.interceptor[verb].call(this.interceptor, this._getFullPath(path), function(request) {
       var response = _this.controller.handle(verb, handler, (_this.schema || _this.db), request, code, options);
       var shouldLog = typeof _this.logging !== 'undefined' ? _this.logging : (_this.environment !== 'test');
 

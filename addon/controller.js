@@ -17,7 +17,11 @@ var defaultCodes = {
 export default class Controller {
 
   constructor(serializer) {
-    this.serializer = serializer;
+    this.serializerOrRegistry = serializer;
+  }
+
+  setSerializerRegistry(registry) {
+    this.serializerOrRegistry = registry;
   }
 
   handle(verb, handler, dbOrSchema, request, customizedCode, options) {
@@ -82,7 +86,7 @@ export default class Controller {
   }
 
   _serialize(response, request) {
-    return this.serializer.serialize(response, request);
+    return this.serializerOrRegistry.serialize(response, request);
   }
 
 }

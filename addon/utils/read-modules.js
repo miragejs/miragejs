@@ -10,7 +10,7 @@
 */
 export default function(prefix) {
   var mirageModuleRegExp = new RegExp(
-    '^' + prefix + '/mirage/(factories|fixtures|scenarios|models)'
+    '^' + prefix + '/mirage/(factories|fixtures|scenarios|models|serializers)'
   );
   var modulesMap = {fixtures: {}, factories: {}, scenarios: {}, models: {}};
 
