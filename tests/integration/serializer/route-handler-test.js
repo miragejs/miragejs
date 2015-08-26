@@ -21,6 +21,9 @@ module('integration:serializer - route handler', {
         }),
       },
       serializersMap: {
+        application: Serializer.extend({
+          root: false
+        }),
         author: Serializer.extend({
           attrs: ['id', 'first'],
           relationships: ['posts']
@@ -63,6 +66,33 @@ test('the appropriate serializer is used', function(assert) {
           {id: 1, title: 'Lorem ipsum'}
         ]
       }
+    });
+    done();
+  });
+});
+
+test('a response falls back to the application serializer, if it exists', function(assert) {
+  assert.expect(1);
+  var done = assert.async();
+  this.server.schema.post.create({
+    title: 'Lorem',
+    date: '20001010'
+  });
+
+  this.server.get('/posts/:id', function(schema, request) {
+    let id = request.params.id;
+
+    return schema.post.find(id);
+  });
+
+  $.ajax({
+    method: 'GET',
+    url: '/posts/1'
+  }).done(function(res) {
+    assert.deepEqual(res, {
+      id: 1,
+      title: 'Lorem',
+      date: '20001010'
     });
     done();
   });
