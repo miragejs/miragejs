@@ -20,22 +20,28 @@ class Db {
   }
 
   createCollection(name, initialData) {
-    var newCollection = new DbCollection(name, initialData);
+    if (!this[name]) {
+      var newCollection = new DbCollection(name, initialData);
 
-    Object.defineProperty(this, name, {
-      get() {
-        var recordsCopy = newCollection.all();
+      Object.defineProperty(this, name, {
+        get() {
+          var recordsCopy = newCollection.all();
 
-        ['insert', 'find', 'where', 'update', 'remove']
-          .forEach(function(method) {
-            recordsCopy[method] = newCollection[method].bind(newCollection);
-          });
+          ['insert', 'find', 'where', 'update', 'remove']
+            .forEach(function(method) {
+              recordsCopy[method] = newCollection[method].bind(newCollection);
+            });
 
-        return recordsCopy;
-      }
-    });
+          return recordsCopy;
+        }
+      });
 
-    this._collections.push(newCollection);
+      this._collections.push(newCollection);
+
+    } else {
+
+      this[name].insert(initialData);
+    }
 
     return this;
   }

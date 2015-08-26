@@ -28,6 +28,78 @@ module('integration:get-shorthands', {
   }
 });
 
+test('undefined shorthand can return a collection', function(assert) {
+  assert.expect(1);
+  var done = assert.async();
+
+  this.server.get('/authors');
+
+  $.ajax({method: 'GET', url: '/authors'}).then(data => {
+    assert.deepEqual(data, { authors: this.authors });
+    done();
+  });
+});
+
+test('undefined shorthand ignores query params', function(assert) {
+  assert.expect(1);
+  var done = assert.async();
+
+  this.server.get('/authors');
+
+  $.ajax({method: 'GET', url: '/authors?foo'}).then(data => {
+    assert.deepEqual(data, { authors: this.authors });
+    done();
+  });
+});
+
+test('undefined shorthand can return a singular resource', function(assert) {
+  assert.expect(1);
+  var done = assert.async();
+
+  this.server.get('/authors/:id');
+
+  $.ajax({method: 'GET', url: '/authors/1'}).then(data => {
+    assert.deepEqual(data, { author: this.authors[0] });
+    done();
+  });
+});
+
+test('undefined shorthand returns a 404 if a singular resource does not exist', function(assert) {
+  assert.expect(1);
+  var done = assert.async();
+
+  this.server.get('/authors/:id');
+
+  $.ajax({method: 'GET', url: '/authors/9'}).fail(res => {
+    assert.equal(res.status, 404);
+    done();
+  });
+});
+
+test('undefined shorthand ignores query params on a singular resource', function(assert) {
+  assert.expect(1);
+  var done = assert.async();
+
+  this.server.get('/authors/:id');
+
+  $.ajax({method: 'GET', url: '/authors/1?foo=bar'}).then(data => {
+    assert.deepEqual(data, { author: this.authors[0] });
+    done();
+  });
+});
+
+test('undefined shorthand can coalesce ids', function(assert) {
+  assert.expect(1);
+  var done = assert.async();
+
+  this.server.get('/authors', undefined, {coalesce: true});
+
+  $.ajax({method: 'GET', url: '/authors?ids[]=1&ids[]=3'}).then(data => {
+    assert.deepEqual(data, { authors: this.authors.filter(author => [1,3].indexOf(author.id) > -1) });
+    done();
+  });
+});
+
 test('string shorthand returns the named collection', function(assert) {
   assert.expect(1);
   var done = assert.async();
@@ -105,76 +177,3 @@ test('array shorthand for a singular resource returns all related resources of e
     done();
   });
 });
-
-test('undefined shorthand can return a collection', function(assert) {
-  assert.expect(1);
-  var done = assert.async();
-
-  this.server.get('/authors');
-
-  $.ajax({method: 'GET', url: '/authors'}).then(data => {
-    assert.deepEqual(data, { authors: this.authors });
-    done();
-  });
-});
-
-test('undefined shorthand ignores query params', function(assert) {
-  assert.expect(1);
-  var done = assert.async();
-
-  this.server.get('/authors');
-
-  $.ajax({method: 'GET', url: '/authors?foo'}).then(data => {
-    assert.deepEqual(data, { authors: this.authors });
-    done();
-  });
-});
-
-test('undefined shorthand can return a singular resource', function(assert) {
-  assert.expect(1);
-  var done = assert.async();
-
-  this.server.get('/authors/:id');
-
-  $.ajax({method: 'GET', url: '/authors/1'}).then(data => {
-    assert.deepEqual(data, { author: this.authors[0] });
-    done();
-  });
-});
-
-test('undefined shorthand returns a 404 if a singular resource does not exist', function(assert) {
-  assert.expect(1);
-  var done = assert.async();
-
-  this.server.get('/authors/:id');
-
-  $.ajax({method: 'GET', url: '/authors/9'}).fail(res => {
-    assert.equal(res.status, 404);
-    done();
-  });
-});
-
-test('undefined shorthand ignores query params on a singular resource', function(assert) {
-  assert.expect(1);
-  var done = assert.async();
-
-  this.server.get('/authors/:id');
-
-  $.ajax({method: 'GET', url: '/authors/1?foo=bar'}).then(data => {
-    assert.deepEqual(data, { author: this.authors[0] });
-    done();
-  });
-});
-
-test('undefined shorthand can coalesce ids', function(assert) {
-  assert.expect(1);
-  var done = assert.async();
-
-  this.server.get('/authors', undefined, {coalesce: true});
-
-  $.ajax({method: 'GET', url: '/authors?ids[]=1&ids[]=3'}).then(data => {
-    assert.deepEqual(data, { authors: this.authors.filter(author => [1,3].indexOf(author.id) > -1) });
-    done();
-  });
-});
-
