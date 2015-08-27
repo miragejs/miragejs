@@ -39,7 +39,8 @@ Changes:
 
 ## 0.1.4
 
-Update notes: none
+Update notes:
+  - If you run the generator to update deps, the blueprint will put a file under `/scenarios/default.js`. The presence of this file will mean your fixtures will be ignored during development. If you'd still like to use your fixtures, delete the `/scenarios` directory.
 
 Changes: 
   - [IMPROVEMENT] factory-focused initial blueprints
