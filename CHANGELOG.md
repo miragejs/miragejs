@@ -9,7 +9,8 @@ Changes:
 
 ## 0.1.7
 
-Update notes: none
+Update notes:
+  - We use `ember-inflector` from NPM now, so after upgrading you should remove `ember-inflector` from your bower.json.
 
 Changes:
   - [ENHANCEMENT] Add support for fully qualified domain name @jamesdixon
