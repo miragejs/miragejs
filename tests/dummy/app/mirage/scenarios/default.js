@@ -1,3 +1,3 @@
-export default function(server){
+export default function(server) {
   server.create('contact', {name: 'Made by Scenario'});
 }

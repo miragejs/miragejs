@@ -19,10 +19,12 @@ export default {
       var hasFactories = hasModulesOfType(modulesMap, 'factories');
       var hasDefaultScenario = modulesMap['scenarios'].hasOwnProperty('default');
       var hasModels = hasModulesOfType(modulesMap, 'models');
+      var hasSerializers = hasModulesOfType(modulesMap, 'serializers');
 
       var server = new Server({
         environment: env,
-        modelsMap: hasModels ? modulesMap['models'] : null
+        modelsMap: hasModels ? modulesMap['models'] : null,
+        serializersMap: hasSerializers ? modulesMap['serializers'] : null
       });
 
       server.loadConfig(baseConfig);

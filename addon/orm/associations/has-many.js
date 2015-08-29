@@ -15,8 +15,9 @@ class HasMany extends Association {
     return `${this.owner}_id`;
   }
 
-  addMethodsToModel(model, key, schema) {
-    this._model = model;
+  addMethodsToModelClass(ModelClass, key, schema) {
+    let modelPrototype = ModelClass.prototype;
+    this._model = modelPrototype;
     this._key = key;
 
     var association = this;
@@ -24,11 +25,11 @@ class HasMany extends Association {
     var relationshipIdsKey = association.target + '_ids';
 
     var associationHash = {[key]: this};
-    model.hasManyAssociations = _.assign(model.hasManyAssociations, associationHash);
-    model.associationKeys.push(key);
-    model.associationIdKeys.push(relationshipIdsKey);
+    modelPrototype.hasManyAssociations = _.assign(modelPrototype.hasManyAssociations, associationHash);
+    modelPrototype.associationKeys.push(key);
+    modelPrototype.associationIdKeys.push(relationshipIdsKey);
 
-    Object.defineProperty(model, relationshipIdsKey, {
+    Object.defineProperty(modelPrototype, relationshipIdsKey, {
 
       /*
         object.children_ids
@@ -73,7 +74,7 @@ class HasMany extends Association {
       }
     });
 
-    Object.defineProperty(model, key, {
+    Object.defineProperty(modelPrototype, key, {
 
       /*
         object.children
@@ -104,7 +105,7 @@ class HasMany extends Association {
         models = models ? _.compact(models) : [];
 
         if (this.isNew()) {
-          association._cachedChildren = models instanceof Collection ? models : new Collection(models);
+          association._cachedChildren = models instanceof Collection ? models : new Collection(association.target, models);
 
         } else {
 
@@ -129,14 +130,14 @@ class HasMany extends Association {
       object.newChild
         - creates a new unsaved associated child
     */
-    model['new' + capitalize(association.target)] = function(attrs) {
+    modelPrototype['new' + capitalize(association.target)] = function(attrs) {
       if (!this.isNew()) {
         attrs = _.assign(attrs, {[foreignKey]: this.id});
       }
 
       var child = schema[association.target].new(attrs);
 
-      association._cachedChildren = association._cachedChildren || new Collection();
+      association._cachedChildren = association._cachedChildren || new Collection(association.target);
       association._cachedChildren.push(child);
 
       return child;
@@ -148,7 +149,7 @@ class HasMany extends Association {
           updates the target's foreign key
         - parent must be saved
     */
-    model['create' + capitalize(association.target)] = function(attrs) {
+    modelPrototype['create' + capitalize(association.target)] = function(attrs) {
       if (this.isNew()) {
         throw 'You cannot call create unless the parent is saved';
       }
