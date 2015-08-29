@@ -64,43 +64,70 @@ function stringGet(string, dbOrSchema, request, options = {}) {
   subsequent models by related.
     Ex: this.stub('get', '/contacts/:id', ['contact', 'addresses']);
 */
-function arrayGet(array, db, request) {
+function arrayGet(array, dbOrSchema, request) {
   var keys = array;
-  var data = {};
   var owner;
   var ownerKey;
 
-  keys.forEach(function(key) {
-    var collection = pluralize(key);
+  if (dbOrSchema instanceof Db) {
+    let data = {};
+    let db = dbOrSchema;
 
-    if (!db[collection]) {
-      console.error("Mirage: The route handler for " + request.url + " is requesting data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
-    }
+    keys.forEach(function(key) {
+      var collection = pluralize(key);
 
-    // There's an owner. Find only related.
-    if (ownerKey) {
-      var ownerIdKey = singularize(ownerKey) + '_id';
-      var query = {};
-      query[ownerIdKey] = owner.id;
-      data[key] = db[collection].where(query);
+      if (!db[collection]) {
+        console.error("Mirage: The route handler for " + request.url + " is requesting data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
+      }
 
-    } else {
-
-      // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
-      if (singularize(key) === key) {
-        ownerKey = key;
-        var id = utils.getIdForRequest(request);
-        var model = db[collection].find(id);
-        data[key] = model;
-        owner = model;
+      // There's an owner. Find only related.
+      if (ownerKey) {
+        var ownerIdKey = singularize(ownerKey) + '_id';
+        var query = {};
+        query[ownerIdKey] = owner.id;
+        data[key] = db[collection].where(query);
 
       } else {
-        data[key] = db[collection];
-      }
-    }
-  });
 
-  return data;
+        // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
+        if (singularize(key) === key) {
+          ownerKey = key;
+          var id = utils.getIdForRequest(request);
+          var model = db[collection].find(id);
+          data[key] = model;
+          owner = model;
+
+        } else {
+          data[key] = db[collection];
+        }
+      }
+    });
+
+    return data;
+
+  } else {
+    let schema = dbOrSchema;
+    let id = utils.getIdForRequest(request);
+
+    /*
+    If the first key is singular and we have an id param in
+    the request, we're dealing with the version of the shorthand
+    that has a parent model and several has-many relationships.
+    We throw an error, because the serializer is the appropriate
+    place for this now.
+    */
+    if (id && singularize(keys[0]) === keys[0]) {
+      throw `Mirage: It looks like you're using the "Single record with
+      related records" version of the array shorthand, in addition to opting
+      in to the model layer. This shorthand was made when there was no
+      serializer layer. Now that you're using models, please ensure your
+      relationships are defined, and create a serializer for the parent
+      model, adding the relationships there.`;
+
+    } else {
+      return keys.map(type => schema[singularize(type)].all());
+    }
+  }
 }
 
 /*

@@ -1,43 +1,49 @@
 import { pluralize, singularize } from '../utils/inflector';
 import utils from './utils';
+import Db from '../db';
 
 /*
-  Shorthands for DELETE requests.
+  Remove the model from the db of type *type*.
+
+  This would remove the user with id :id:
+    Ex: this.stub('delete', '/contacts/:id', 'user');
 */
-export default {
+function stringDel(type, dbOrSchema, request) {
+  var id = utils.getIdForRequest(request);
+  var collection = pluralize(type);
 
-  /*
-    Remove the model from the db of type *type*.
-
-    This would remove the user with id :id:
-      Ex: this.stub('delete', '/contacts/:id', 'user');
-  */
-  string: function(type, db, request) {
-    var id = utils.getIdForRequest(request);
-    var collection = pluralize(type);
-
+  if (dbOrSchema instanceof Db) {
+    let db = dbOrSchema;
     if (!db[collection]) {
       console.error("Mirage: The route handler for " + request.url + " is trying to remove data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
     }
 
     db[collection].remove(id);
 
-    return undefined;
-  },
+  } else {
+    let schema = dbOrSchema;
 
-  /*
-    Remove the model and child related models from the db.
+    return schema[type].find(id).destroy();
+  }
 
-    This would remove the contact with id `:id`, and well
-    as this contact's addresses and phone numbers.
-      Ex: this.stub('delete', '/contacts/:id', ['contact', 'addresses', 'numbers');
-  */
-  array: function(array, db, request) {
-    var id = utils.getIdForRequest(request);
-    var parentType = array[0];
-    var parentCollection = pluralize(parentType);
-    var types = array.slice(1);
+  return undefined;
+}
 
+/*
+  Remove the model and child related models from the db.
+
+  This would remove the contact with id `:id`, and well
+  as this contact's addresses and phone numbers.
+    Ex: this.stub('delete', '/contacts/:id', ['contact', 'addresses', 'numbers');
+*/
+function arrayDel(array, dbOrSchema, request) {
+  var id = utils.getIdForRequest(request);
+  var parentType = array[0];
+  var parentCollection = pluralize(parentType);
+  var types = array.slice(1);
+
+  if (dbOrSchema instanceof Db) {
+    let db = dbOrSchema;
     if (!db[parentCollection]) {
       console.error("Mirage: The route handler for " + request.url + " is trying to remove data from the " + parentCollection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
     }
@@ -58,25 +64,41 @@ export default {
       db[collection].remove(query);
     });
 
-    return undefined;
-  },
+  } else {
+    let schema = dbOrSchema;
 
-  /*
-    Remove the model from the db based on singular version
-    of the last portion of the url.
+    let parent = schema[parentType].find(id);
 
-    This would remove contact with id :id:
-      Ex: this.stub('delete', '/contacts/:id');
-  */
-  undefined: function(undef, db, request) {
-    var id = utils.getIdForRequest(request);
-    var url = utils.getUrlForRequest(request);
-    var urlNoId = id ? url.substr(0, url.lastIndexOf('/')) : url;
-    var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
-    var collection = pluralize(type);
+    // Delete related children
+    types.forEach(type => {
+      parent[type].destroy();
+    });
 
-    db[collection].remove(id);
+    // Delete the parent
+    parent.destroy();
+  }
 
-    return undefined;
-  },
+  return undefined;
+}
+
+/*
+  Remove the model from the db based on singular version
+  of the last portion of the url.
+
+  This would remove contact with id :id:
+    Ex: this.stub('delete', '/contacts/:id');
+*/
+function undefinedDel(undef, dbOrSchema, request) {
+  var id = utils.getIdForRequest(request);
+  var url = utils.getUrlForRequest(request);
+  var urlNoId = id ? url.substr(0, url.lastIndexOf('/')) : url;
+  var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
+
+  return stringDel(type, dbOrSchema, request);
+}
+
+export default {
+  undefined: undefinedDel,
+  string: stringDel,
+  array: arrayDel
 };

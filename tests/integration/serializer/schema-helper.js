@@ -19,6 +19,7 @@ export default {
       comment: Model.extend({
         post: Mirage.belongsTo()
       }),
+      photo: Model
     });
 
     return this.schema;

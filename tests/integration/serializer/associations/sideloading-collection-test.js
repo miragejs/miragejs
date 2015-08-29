@@ -13,7 +13,6 @@ module('mirage:serializer:associations sideloading - collection', {
 
     post.createComment({text: 'pwned'});
 
-
     let zelda = this.schema.author.create({name: 'Zelda'});
     zelda.createPost({title: `Zeldas post`});
   },
