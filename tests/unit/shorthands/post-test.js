@@ -11,18 +11,18 @@ module('mirage:shorthands#post', {
   }
 });
 
-test("string shorthand works", function(assert) {
+test("undefined shorthand works", function(assert) {
   var body = '{"contact":{"name":"Ganon"}}';
-  var result = post.string('contact', db, {requestBody: body});
+  var result = post.undefined(undefined, db, {requestBody: body, url: '/contacts'});
 
   var contactsInDb = db.contacts;
   assert.equal(contactsInDb.length, 1);
   assert.deepEqual(result, {contact: {id: 1, name: 'Ganon'}});
 });
 
-test("undefined shorthand works", function(assert) {
+test("string shorthand works", function(assert) {
   var body = '{"contact":{"name":"Ganon"}}';
-  var result = post.undefined(undefined, db, {requestBody: body, url: '/contacts'});
+  var result = post.string('contact', db, {requestBody: body, url: '/people'});
 
   var contactsInDb = db.contacts;
   assert.equal(contactsInDb.length, 1);

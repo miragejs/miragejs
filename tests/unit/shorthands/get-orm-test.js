@@ -1,7 +1,8 @@
 import {module, test} from 'qunit';
+import Model from 'ember-cli-mirage/orm/model';
+import Collection from 'ember-cli-mirage/orm/collection';
 import Server from 'ember-cli-mirage/server';
 import Mirage from 'ember-cli-mirage';
-import Model from 'ember-cli-mirage/orm/model';
 import get from 'ember-cli-mirage/shorthands/get';
 
 module('mirage:shorthands#get-with-orm', {
@@ -19,6 +20,7 @@ module('mirage:shorthands#get-with-orm', {
         comment: Model.extend({
           post: Mirage.belongsTo()
         }),
+        photo: Model
       }
     });
     this.server.timing = 0;
@@ -33,9 +35,14 @@ module('mirage:shorthands#get-with-orm', {
       {id: 1, title: 'Lorem', author_id: 1},
       {id: 2, title: 'Ipsum', author_id: 1}
     ];
+    this.photos = [
+      {id: 1, title: 'Amazing', location: 'Hyrule'},
+      {id: 2, title: 'Photo', location: 'Goron City'}
+    ];
     this.server.db.loadData({
       authors: this.authors,
-      posts: this.posts
+      posts: this.posts,
+      photos: this.photos,
     });
 
     this.schema = this.server.schema;
@@ -125,33 +132,20 @@ test('string shorthand with coalesce returns the correct models', function(asser
   assert.deepEqual(authors.map(author => author.name), ['Link', 'Epona']);
 });
 
-// working...what should I return from array shorthands?
-// test('array shorthand returns all models of each type', function(assert) {
-  // assert.expect(1);
-  // var done = assert.async();
+test('array shorthand returns the correct models', function(assert) {
+  let models = get.array(['authors', 'photos'], this.schema, {url: '/home'});
 
-  // this.server.get('/authors', ['authors', 'posts']);
+  assert.ok(models[0] instanceof Collection);
+  assert.equal(models[0].type, 'author');
+  assert.equal(models[0].length, this.authors.length);
 
-  // $.ajax({method: 'GET', url: '/authors'}).then(data => {
-  //   assert.deepEqual(data, {
-  //     authors: this.authors,
-  //     posts: this.posts
-  //   });
-  //   done();
-  // });
-// });
+  assert.ok(models[1] instanceof Collection);
+  assert.equal(models[1].type, 'photo');
+  assert.equal(models[1].length, this.photos.length);
+});
 
-// test('array shorthand for a singular resource returns all related resources of each type', function(assert) {
-//   assert.expect(1);
-//   var done = assert.async();
-
-//   this.server.get('/authors/:id', ['author', 'posts']);
-
-//   $.ajax({method: 'GET', url: '/authors/1'}).then(data => {
-//     assert.deepEqual(data, {
-//       author: this.authors[0],
-//       posts: this.posts.filter(post => +post.author_id === 1)
-//     });
-//     done();
-//   });
-// });
+test('array shorthand for a singular resource errors', function(assert) {
+  assert.throws(function() {
+    get.array(['author', 'posts'], this.schema, {url: '/authors/1', params: {id: 1}});
+  }, /create a serializer/);
+});

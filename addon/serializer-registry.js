@@ -3,6 +3,8 @@ import Collection from 'ember-cli-mirage/orm/collection';
 import Serializer from 'ember-cli-mirage/serializer';
 import { singularize, pluralize } from './utils/inflector';
 
+const { isArray, assign } = _;
+
 export default class SerializerRegistry {
 
   constructor(schema, serializerMap = {}) {
@@ -36,6 +38,26 @@ export default class SerializerRegistry {
       } else {
         return this._serializeSideloadedModelOrCollection(response);
       }
+
+    /*
+      Special case for an array of assorted collections (e.g. different types).
+
+      The array shorthand can return this, e.g.
+        this.get('/home', ['authors', 'photos'])
+    */
+    } else if (isArray(response) && response.filter(item => (item instanceof Collection)).length) {
+      return response.reduce((json, collection) => {
+        let serializer = this._serializerFor(collection);
+
+        if (serializer.embed) {
+          json[pluralize(collection.type)] = this._serializeModelOrCollection(collection);
+        } else {
+          json = assign(json, this._serializeSideloadedModelOrCollection(collection));
+        }
+
+        return json;
+      }, {});
+
 
     } else {
       return response;
