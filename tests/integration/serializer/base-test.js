@@ -2,7 +2,7 @@ import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import schemaHelper from './schema-helper';
 import { module, test } from 'qunit';
 
-module('mirage:serializer - Base', {
+module('Integration | Serializer | Base', {
   beforeEach() {
     this.schema = schemaHelper.setup();
     this.registry = new SerializerRegistry(this.schema);

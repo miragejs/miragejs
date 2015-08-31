@@ -5,7 +5,7 @@ import Collection from 'ember-cli-mirage/orm/collection';
 import {module, test} from 'qunit';
 
 
-module('mirage:integration:schema:read#all');
+module('Integration | Schema | read#all');
 
 test('it can return all models', function(assert) {
   var db = new Db();
@@ -42,7 +42,7 @@ test('it returns an empty array when no models exist', function(assert) {
 
 var schema;
 var User = Model.extend();
-module('mirage:integration:schema:read#find', {
+module('Integration | Schema | read#find', {
   beforeEach: function() {
     var db = new Db();
     db.createCollection('users');
@@ -84,7 +84,7 @@ test('it errors if incorrect number of models are found for an array of ids', fu
 
 var schema;
 var User = Model.extend();
-module('mirage:integration:schema:read#where', {
+module('Integration | Schema | read#where', {
   beforeEach: function() {
     var db = new Db();
     db.createCollection('users');
@@ -117,7 +117,7 @@ test('it returns an empty collection if no models match a query', function(asser
 
 
 var db, schema, User;
-module('mirage:integration:schema:read#model', {
+module('Integration | Schema | Reading a models attrs', {
   beforeEach: function() {
     db = new Db();
     db.createCollection('users');

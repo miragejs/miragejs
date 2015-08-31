@@ -3,7 +3,7 @@ import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import schemaHelper from '../schema-helper';
 import { module, test } from 'qunit';
 
-module('mirage:serializer:associations default embed', {
+module('Integration | Serializer | Associations | Default Embed', {
   beforeEach: function() {
     this.schema = schemaHelper.setup();
 

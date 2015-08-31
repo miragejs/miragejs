@@ -3,7 +3,7 @@ import Serializer from 'ember-cli-mirage/serializer';
 import schemaHelper from '../schema-helper';
 import {module, test} from 'qunit';
 
-module('mirage:serializer:associations sideloading - assorted collections', {
+module('Integration | Serializer | Associations | Sideloading Assorted Collections', {
   beforeEach() {
     this.schema = schemaHelper.setup();
     this.registry = new SerializerRegistry(this.schema, {

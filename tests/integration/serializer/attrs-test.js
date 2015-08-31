@@ -3,7 +3,7 @@ import Serializer from 'ember-cli-mirage/serializer';
 import schemaHelper from './schema-helper';
 import { module, test } from 'qunit';
 
-module('mirage:serializer - attrs list', {
+module('Integration | Serializer | Attrs List', {
   beforeEach: function() {
     this.schema = schemaHelper.setup();
     this.registry = new SerializerRegistry(this.schema, {

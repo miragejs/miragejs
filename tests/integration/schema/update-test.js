@@ -4,9 +4,8 @@ import Db from 'ember-cli-mirage/db';
 import Collection from 'ember-cli-mirage/orm/collection';
 import {module, test} from 'qunit';
 
-
 var db, collection;
-module('mirage:integration:schema:update#collection', {
+module('Integration | Schema | Updating a Collection', {
   beforeEach: function() {
     db = new Db();
     db.createCollection('users');
@@ -56,7 +55,7 @@ test('it can update its models with a hash of attrs', function(assert) {
 
 
 var db, schema, User;
-module('mirage:integration:schema:update#model', {
+module('Integration | Schema | Updating a Model', {
   beforeEach: function() {
     db = new Db();
     db.createCollection('users');

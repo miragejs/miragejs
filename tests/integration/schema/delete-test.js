@@ -5,7 +5,7 @@ import Collection from 'ember-cli-mirage/orm/collection';
 import {module, test} from 'qunit';
 
 var db, collection;
-module('mirage:integration:schema:delete#collection', {
+module('Integration | Schema | Deleting a Collection', {
   beforeEach: function() {
     db = new Db();
     db.createCollection('users');
@@ -34,7 +34,7 @@ test('it can destroy its models', function(assert) {
 
 
 var db, schema, User;
-module('mirage:integration:schema:delete#model', {
+module('Integration | Schema | Deleting a Model', {
   beforeEach: function() {
     db = new Db();
     db.createCollection('users');

@@ -4,7 +4,7 @@ import schemaHelper from './schema-helper';
 import { camelize } from 'ember-cli-mirage/utils/inflector';
 import {module, test} from 'qunit';
 
-module('mirage:serializer - attribute key formatting', {
+module('Integration | Serializer | Attribute Key Formatting', {
   beforeEach() {
     this.schema = schemaHelper.setup();
     this.registry = new SerializerRegistry(this.schema, {

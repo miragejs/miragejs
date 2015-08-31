@@ -6,7 +6,7 @@ import Db from 'ember-cli-mirage/db';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import { module, test } from 'qunit';
 
-module('Mirage | Serializer | Active Model Serializer', {
+module('Integration | Serializer | Active Model Serializer', {
   beforeEach: function() {
     let db = new Db();
     this.schema = new Schema(db);
