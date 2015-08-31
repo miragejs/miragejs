@@ -8,6 +8,7 @@ module('mirage:serializer - root:false', {
     this.schema = schemaHelper.setup();
     this.registry = new SerializerRegistry(this.schema, {
       author: Serializer.extend({
+        embed: true,
         root: false
       })
     });

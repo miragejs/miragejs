@@ -38,6 +38,22 @@ test(`it throws an error if embed is false and root is false`, function(assert) 
   }, /disables the root/);
 });
 
+test(`it can sideload an empty collection`, function(assert) {
+  this.schema.db.emptyData();
+  let registry = new SerializerRegistry(this.schema, {
+    author: Serializer.extend({
+      embed: false,
+      relationships: ['posts'],
+    })
+  });
+
+  var result = registry.serialize(this.schema.author.all());
+
+  assert.deepEqual(result, {
+    authors: []
+  });
+});
+
 test(`it can sideload a collection with a has-many relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     author: Serializer.extend({

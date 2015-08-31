@@ -22,9 +22,11 @@ module('integration:serializer - route handler', {
       },
       serializersMap: {
         application: Serializer.extend({
+          embed: true,
           root: false
         }),
         author: Serializer.extend({
+          embed: true,
           attrs: ['id', 'first'],
           relationships: ['posts']
         })

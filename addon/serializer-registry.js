@@ -64,15 +64,19 @@ export default class SerializerRegistry {
     }
   }
 
-  _serializeSideloadedModelOrCollection(response) {
-    if (this._isModel(response)) {
-      return this._serializeSideloadedModelResponse(response);
-    } else {
+  _serializeSideloadedModelOrCollection(modelOrCollection) {
+    if (this._isModel(modelOrCollection)) {
+      return this._serializeSideloadedModelResponse(modelOrCollection);
+    } else if (modelOrCollection.length) {
 
-      return response.reduce((allAttrs, model) => {
+      return modelOrCollection.reduce((allAttrs, model) => {
         this._augmentAlreadySerialized(model);
         return this._serializeSideloadedModelResponse(model, true, allAttrs);
       }, {});
+
+    // We have an empty collection
+    } else {
+      return {[pluralize(modelOrCollection.type)]: []};
     }
   }
 

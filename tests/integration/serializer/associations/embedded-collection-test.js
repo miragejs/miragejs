@@ -21,9 +21,10 @@ module('mirage:serializer:associations embedded - collection', {
   }
 });
 
-test(`it can serialize a collection with a has-many relationship`, function(assert) {
+test(`it can embed a collection with a has-many relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     author: Serializer.extend({
+      embed: true,
       relationships: ['posts']
     })
   });
@@ -50,9 +51,10 @@ test(`it can serialize a collection with a has-many relationship`, function(asse
   });
 });
 
-test(`it can serialize a collection with a chain of has-many relationships`, function(assert) {
+test(`it can embed a collection with a chain of has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     author: Serializer.extend({
+      embed: true,
       relationships: ['posts']
     }),
     post: Serializer.extend({
@@ -92,9 +94,10 @@ test(`it can serialize a collection with a chain of has-many relationships`, fun
   });
 });
 
-test(`it can serialize a collection with a belongs-to relationship`, function(assert) {
+test(`it can embed a collection with a belongs-to relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     post: Serializer.extend({
+      embed: true,
       relationships: ['author']
     })
   });
@@ -118,9 +121,10 @@ test(`it can serialize a collection with a belongs-to relationship`, function(as
   });
 });
 
-test(`it can serialize a collection with a chain of belongs-to relationships`, function(assert) {
+test(`it can embed a collection with a chain of belongs-to relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     comment: Serializer.extend({
+      embed: true,
       relationships: ['post']
     }),
     post: Serializer.extend({

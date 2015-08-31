@@ -21,9 +21,10 @@ module('mirage:serializer:associations embedded - model', {
   }
 });
 
-test(`it can serialize a model with a has-many relationship`, function(assert) {
+test(`it can embed has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     author: Serializer.extend({
+      embed: true,
       relationships: ['posts']
     })
   });
@@ -43,9 +44,10 @@ test(`it can serialize a model with a has-many relationship`, function(assert) {
   });
 });
 
-test(`it can serialize a model with a chain of has-many relationships`, function(assert) {
+test(`it can embed a chain of has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     author: Serializer.extend({
+      embed: true,
       relationships: ['posts']
     }),
     post: Serializer.extend({
@@ -70,9 +72,10 @@ test(`it can serialize a model with a chain of has-many relationships`, function
   });
 });
 
-test(`it can serialize a model with a belongs-to relationship`, function(assert) {
+test(`it can embed a belongs-to relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     post: Serializer.extend({
+      embed: true,
       relationships: ['author']
     })
   });
@@ -89,9 +92,10 @@ test(`it can serialize a model with a belongs-to relationship`, function(assert)
   });
 });
 
-test(`it can serialize a model with a chain of belongs-to relationships`, function(assert) {
+test(`it can serialize a chain of belongs-to relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     comment: Serializer.extend({
+      embed: true,
       relationships: ['post']
     }),
     post: Serializer.extend({
@@ -120,6 +124,7 @@ test(`it can serialize a model with a chain of belongs-to relationships`, functi
 test(`it ignores relationships that refer to serialized ancestor resources`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     author: Serializer.extend({
+      embed: true,
       relationships: ['posts']
     }),
     post: Serializer.extend({
@@ -145,6 +150,7 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
 test(`it ignores relationships that refer to serialized ancestor resources, multiple levels down`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     author: Serializer.extend({
+      embed: true,
       relationships: ['posts']
     }),
     post: Serializer.extend({
