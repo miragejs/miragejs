@@ -25,5 +25,7 @@ export {
 
 export default {
   Factory,
-  Response
+  Response,
+  hasMany,
+  belongsTo
 };
