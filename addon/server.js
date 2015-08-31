@@ -51,10 +51,7 @@ export default class Server {
       // TODO: really should be injected into Controller, server doesn't need to know about schema
       this.schema = new Schema(this.db);
       this.schema.registerModels(options.modelsMap);
-
-      if (options.serializersMap) {
-        this.controller.setSerializerRegistry(new SerializerRegistry(this.schema, options.serializersMap));
-      }
+      this.controller.setSerializerRegistry(new SerializerRegistry(this.schema, options.serializersMap));
     }
 
     // TODO: Better way to inject server into test env

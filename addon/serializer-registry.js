@@ -201,7 +201,7 @@ export default class SerializerRegistry {
 
   _serializerFor(modelOrCollection) {
     let type = modelOrCollection.type;
-    let ModelSerializer = this._serializerMap[type] || this._serializerMap['application'];
+    let ModelSerializer = this._serializerMap && (this._serializerMap[type] || this._serializerMap['application']);
 
     if (ModelSerializer && (!ModelSerializer.prototype.embed) && (!ModelSerializer.prototype.root)) {
       throw 'Mirage: You cannot have a serializer that sideloads (embed: false) and disables the root (root: false).';

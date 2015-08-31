@@ -38,8 +38,7 @@ class Db {
 
       this._collections.push(newCollection);
 
-    } else {
-
+    } else if (initialData) {
       this[name].insert(initialData);
     }
 
