@@ -104,3 +104,73 @@ test('it can reuse dynamic properties', function(assert) {
   assert.deepEqual(baz1, {foo: 5, bar: 10});
   assert.deepEqual(baz2, {foo: 10, bar: 20});
 });
+
+test('it can reference properties out of order', function(assert) {
+  var BazFactory = Mirage.Factory.extend({
+    bar: function() {
+      return this.foo + 2;
+    },
+
+    baz: 6,
+
+    foo: function(i) {
+      return this.baz * i;
+    }
+  });
+
+  var b = new BazFactory();
+  var baz1 = b.build(1);
+  var baz2 = b.build(2);
+
+  assert.deepEqual(baz1, {baz: 6, foo: 6, bar: 8});
+  assert.deepEqual(baz2, {baz: 6, foo: 12, bar: 14});
+});
+
+test('it can reference properties on complex object', function(assert) {
+  var AbcFactory = Mirage.Factory.extend({
+    a: function(i) {
+      return this.b + i;
+    },
+    b: function() {
+      return this.c + 1;
+    },
+    c: function() {
+      return this.f + 1;
+    },
+    d: function(i) {
+      return this.e + i;
+    },
+    e: function() {
+      return this.c + 1;
+    },
+    f: 1,
+    g: 2,
+    h: 3,
+  });
+
+  var b = new AbcFactory();
+  var abc1 = b.build(1);
+  var abc2 = b.build(2);
+
+  assert.deepEqual(abc1, {a: 4, b: 3, c: 2, d: 4, e: 3, f: 1, g: 2, h: 3});
+  assert.deepEqual(abc2, {a: 5, b: 3, c: 2, d: 5, e: 3, f: 1, g: 2, h: 3});
+});
+
+test('throws meaningfull exception on circular reference', function(assert) {
+  var BazFactory = Mirage.Factory.extend({
+    bar: function() {
+      return this.foo;
+    },
+
+    foo: function(i) {
+      return this.bar;
+    }
+  });
+
+  var b = new BazFactory();
+  assert.throws(function() {
+    b.build(1);
+  }, function(e) {
+    return e.toString() === 'Error: Cyclic dependency in properties ["bar","foo"]';
+  });
+});
