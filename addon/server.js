@@ -76,6 +76,16 @@ export default class Server {
 
       if (shouldLog) {
         console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
+        if (request.requestBody) {
+          var contentType = request.requestHeaders['Content-Type'];
+          console.log('Request body:');
+          if (contentType && contentType.indexOf('application/json') === 0) {
+            console.log(JSON.parse(request.requestBody));
+          } else {
+            console.log(request.requestBody);
+          }
+        }
+        console.log('Response:');
         console.log(response[2]);
       }
 
