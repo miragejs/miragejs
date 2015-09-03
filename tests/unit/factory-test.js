@@ -70,3 +70,37 @@ test('it can use sequences', function(assert) {
   assert.deepEqual(post1, {likes: 5});
   assert.deepEqual(post2, {likes: 10});
 });
+
+test('it can reuse static properties', function(assert) {
+  var BazFactory = Mirage.Factory.extend({
+    foo: 5,
+    bar: function(i) {
+      return this.foo * i;
+    }
+  });
+
+  var b = new BazFactory();
+  var baz1 = b.build(1);
+  var baz2 = b.build(2);
+
+  assert.deepEqual(baz1, {foo: 5, bar: 5});
+  assert.deepEqual(baz2, {foo: 5, bar: 10});
+});
+
+test('it can reuse dynamic properties', function(assert) {
+  var BazFactory = Mirage.Factory.extend({
+    foo: function(i) {
+      return 5*i;
+    },
+    bar: function() {
+      return this.foo * 2;
+    }
+  });
+
+  var b = new BazFactory();
+  var baz1 = b.build(1);
+  var baz2 = b.build(2);
+
+  assert.deepEqual(baz1, {foo: 5, bar: 10});
+  assert.deepEqual(baz2, {foo: 10, bar: 20});
+});
