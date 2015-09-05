@@ -126,6 +126,50 @@ test('it can reference properties out of order', function(assert) {
   assert.deepEqual(baz2, {baz: 6, foo: 12, bar: 14});
 });
 
+test('it can reference multiple properties in any order', function(assert) {
+  var FooFactory = Mirage.Factory.extend({
+    foo: function() {
+      return this.bar + this.baz;
+    },
+
+    bar: 6,
+
+    baz: 10
+  });
+
+  var BarFactory = Mirage.Factory.extend({
+    bar: 6,
+
+    foo: function() {
+      return this.bar + this.baz;
+    },
+
+    baz: 10
+  });
+
+  var BazFactory = Mirage.Factory.extend({
+    bar: 6,
+
+    baz: 10,
+
+    foo: function() {
+      return this.bar + this.baz;
+    }
+  });
+
+  var Foo = new FooFactory();
+  var Bar = new BarFactory();
+  var Baz = new BazFactory();
+
+  var foo = Foo.build(1);
+  var bar = Bar.build(1);
+  var baz = Baz.build(1);
+
+  assert.deepEqual(foo, {foo: 16, bar: 6, baz: 10});
+  assert.deepEqual(bar, {foo: 16, bar: 6, baz: 10});
+  assert.deepEqual(baz, {foo: 16, bar: 6, baz: 10});
+});
+
 test('it can reference properties on complex object', function(assert) {
   var AbcFactory = Mirage.Factory.extend({
     a: function(i) {
