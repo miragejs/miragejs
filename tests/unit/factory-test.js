@@ -171,6 +171,6 @@ test('throws meaningfull exception on circular reference', function(assert) {
   assert.throws(function() {
     b.build(1);
   }, function(e) {
-    return e.toString() === 'Error: Cyclic dependency in properties ["bar","foo"]';
+    return e.toString() === 'Error: Cyclic dependency in properties ["foo","bar"]';
   });
 });

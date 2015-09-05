@@ -5,13 +5,13 @@ module('mirage:reference-sort');
 
 test('it sorts property references', function(assert) {
   var sorted = referenceSort([
+    ['propA'],
     ['propB', 'propC'],
     ['propC', 'propA'],
-    ['propA'],
     ['propD']
   ]);
 
-  assert.deepEqual(sorted, ['propB', 'propC', 'propA', 'propD']);
+  assert.deepEqual(sorted, ['propD', 'propA', 'propC', 'propB']);
 });
 
 test('it throws on circular dependency', function(assert) {
@@ -34,5 +34,5 @@ test('it works with no references', function(assert) {
     ['propD']
   ]);
 
-  assert.deepEqual(sorted, ['propA', 'propB', 'propC', 'propD']);
+  assert.deepEqual(sorted, ['propD', 'propC', 'propB', 'propA']);
 });
