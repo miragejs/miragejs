@@ -29,12 +29,12 @@ module('Integration | Serializer | Active Model Serializer', {
   }
 });
 
-test(`it works`, function(assert) {
+test('it works', function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: ActiveModelSerializer,
     author: ActiveModelSerializer.extend({
       attrs: ['id', 'name'],
-      // relationships: ['posts']
+      relationships: ['blogPosts']
     })
   });
 
@@ -42,10 +42,22 @@ test(`it works`, function(assert) {
   let result = registry.serialize(link);
 
   assert.deepEqual(result, {
-    author: {id: 1, name: 'Link', blog_post_ids: [1, 2]},
-    'blog_posts': [
-      {id: 1, title: 'Lorem'},
-      {id: 2, title: 'Ipsum'}
+    author: {
+      id: 1,
+      name: 'Link',
+      blog_post_ids: [1, 2]
+    },
+    blog_posts: [
+      {
+        id: 1,
+        title: 'Lorem',
+        author_id: 1
+      },
+      {
+        id: 2,
+        title: 'Ipsum',
+        author_id: 1
+      }
     ]
   });
 });

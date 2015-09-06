@@ -1,10 +1,18 @@
 import Serializer from '../serializer';
-import { decamelize } from '../utils/inflector';
+import { decamelize, pluralize } from '../utils/inflector';
 
 export default Serializer.extend({
 
-  keyForAttribute(key) {
-    return decamelize(key);
+  keyForAttribute(attr) {
+    return decamelize(attr);
+  },
+
+  keyForRelatedCollection(type) {
+    return pluralize(decamelize(type));
+  },
+
+  keyForRelationshipIds(type) {
+    return `${decamelize(type)}_ids`;
   }
 
 });
