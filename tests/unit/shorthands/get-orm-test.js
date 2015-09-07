@@ -32,8 +32,8 @@ module('mirage:shorthands#get-with-orm', {
       {id: 3, name: 'Epona'}
     ];
     this.posts = [
-      {id: 1, title: 'Lorem', author_id: 1},
-      {id: 2, title: 'Ipsum', author_id: 1}
+      {id: 1, title: 'Lorem', authorId: 1},
+      {id: 2, title: 'Ipsum', authorId: 1}
     ];
     this.photos = [
       {id: 1, title: 'Amazing', location: 'Hyrule'},

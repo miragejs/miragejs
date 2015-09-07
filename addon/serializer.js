@@ -23,7 +23,7 @@ class Serializer {
   }
 
   keyForRelationshipIds(type) {
-    return `${singularize(type)}_ids`;
+    return `${singularize(type)}Ids`;
   }
 
   _attrsForModel(model) {

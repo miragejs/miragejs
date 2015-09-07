@@ -27,7 +27,7 @@ module('mirage:integration:schema:belongsTo#createAssociation', {
 
     assert.ok(ganon.id, 'the parent was persisted');
     assert.deepEqual(address.user, ganon);
-    assert.equal(address.user_id, ganon.id);
+    assert.equal(address.userId, ganon.id);
   });
 
 });

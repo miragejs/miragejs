@@ -183,13 +183,13 @@ export default class SerializerRegistry {
   }
 
   _hasBeenSerialized(model) {
-    let relationshipKey = `${model.type}_ids`;
+    let relationshipKey = `${model.type}Ids`;
 
     return (this.alreadySerialized[relationshipKey] && this.alreadySerialized[relationshipKey].indexOf(model.id) > -1);
   }
 
   _augmentAlreadySerialized(model) {
-    let modelKey = `${model.type}_ids`;
+    let modelKey = `${model.type}Ids`;
 
     this.alreadySerialized[modelKey] = this.alreadySerialized[modelKey] || [];
     this.alreadySerialized[modelKey].push(model.id);

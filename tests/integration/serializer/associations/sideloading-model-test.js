@@ -52,11 +52,11 @@ test(`it can sideload a model with a has-many relationship`, function(assert) {
     author: {
       id: 1,
       name: 'Link',
-      post_ids: [1, 2]
+      postIds: [1, 2]
     },
     posts: [
-      {id: 1, title: 'Lorem', author_id: 1},
-      {id: 2, title: 'Ipsum', author_id: 1}
+      {id: 1, title: 'Lorem', authorId: 1},
+      {id: 2, title: 'Ipsum', authorId: 1}
     ]
   });
 });
@@ -79,14 +79,14 @@ test(`it can sideload a model with a chain of has-many relationships`, function(
     author: {
       id: 1,
       name: 'Link',
-      post_ids: [1, 2]
+      postIds: [1, 2]
     },
     posts: [
-      {id: 1, title: 'Lorem', author_id: 1, comment_ids: [1]},
-      {id: 2, title: 'Ipsum', author_id: 1, comment_ids: []}
+      {id: 1, title: 'Lorem', authorId: 1, commentIds: [1]},
+      {id: 2, title: 'Ipsum', authorId: 1, commentIds: []}
     ],
     comments: [
-      {id: 1, text: 'pwned', post_id: 1}
+      {id: 1, text: 'pwned', postId: 1}
     ]
   });
 });
@@ -109,11 +109,11 @@ test(`it avoids circularity when serializing a model`, function(assert) {
     author: {
       id: 1,
       name: 'Link',
-      post_ids: [1, 2]
+      postIds: [1, 2]
     },
     posts: [
-      {id: 1, title: 'Lorem', author_id: 1},
-      {id: 2, title: 'Ipsum', author_id: 1}
+      {id: 1, title: 'Lorem', authorId: 1},
+      {id: 2, title: 'Ipsum', authorId: 1}
     ]
   });
 });
@@ -131,7 +131,7 @@ test(`it can sideload a model with a belongs-to relationship`, function(assert) 
 
   assert.deepEqual(result, {
     post: {
-      id: 1, title: 'Lorem', author_id: 1
+      id: 1, title: 'Lorem', authorId: 1
     },
     authors: [
       {id: 1, name: 'Link'}
@@ -155,10 +155,10 @@ test(`it can sideload a model with a chain of belongs-to relationships`, functio
 
   assert.deepEqual(result, {
     comment: {
-      id: 1, text: 'pwned', post_id: 1
+      id: 1, text: 'pwned', postId: 1
     },
     posts: [
-      {id: 1, title: 'Lorem', author_id: 1}
+      {id: 1, title: 'Lorem', authorId: 1}
     ],
     authors: [
       {id: 1, name: 'Link'}

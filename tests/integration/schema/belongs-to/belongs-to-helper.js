@@ -52,7 +52,7 @@ class BelongsToHelper {
 
   savedChildSavedParent() {
     this.db.users.insert({id: 1, name: 'some user'});
-    this.db.addresses.insert({id: 1, name: 'foo', user_id: 1});
+    this.db.addresses.insert({id: 1, name: 'foo', userId: 1});
 
     var address = this.schema.address.find(1);
     var user = this.schema.user.find(1);

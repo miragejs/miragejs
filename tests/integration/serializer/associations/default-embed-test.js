@@ -35,11 +35,11 @@ test(`it defaults to sideloaded (embed is false)`, function(assert) {
     author: {
       id: 1,
       name: 'Link',
-      post_ids: [1, 2]
+      postIds: [1, 2]
     },
     posts: [
-      {id: 1, title: 'Lorem', author_id: 1},
-      {id: 2, title: 'Ipsum', author_id: 1}
+      {id: 1, title: 'Lorem', authorId: 1},
+      {id: 2, title: 'Ipsum', authorId: 1}
     ]
   });
 });

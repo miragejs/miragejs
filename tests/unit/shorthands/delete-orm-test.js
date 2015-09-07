@@ -22,8 +22,8 @@ module('mirage:shorthands#del-with-orm', {
       {id: 1, name: 'Ganon'},
     ];
     let posts = [
-      {id: 1, title: 'Lorem', author_id: '1'},
-      {id: 2, title: 'Another', author_id: '2'},
+      {id: 1, title: 'Lorem', authorId: '1'},
+      {id: 2, title: 'Another', authorId: '2'},
     ];
     this.server.db.loadData({authors, posts});
 

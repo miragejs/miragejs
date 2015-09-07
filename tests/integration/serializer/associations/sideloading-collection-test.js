@@ -67,13 +67,13 @@ test(`it can sideload a collection with a has-many relationship`, function(asser
 
   assert.deepEqual(result, {
     authors: [
-      {id: 1, name: 'Link', post_ids: [1, 2]},
-      {id: 2, name: 'Zelda', post_ids: [3]},
+      {id: 1, name: 'Link', postIds: [1, 2]},
+      {id: 2, name: 'Zelda', postIds: [3]},
     ],
     posts: [
-      {id: 1, title: 'Lorem', author_id: 1},
-      {id: 2, title: 'Ipsum', author_id: 1},
-      {id: 3, title: 'Zeldas post', author_id: 2}
+      {id: 1, title: 'Lorem', authorId: 1},
+      {id: 2, title: 'Ipsum', authorId: 1},
+      {id: 3, title: 'Zeldas post', authorId: 2}
     ]
   });
 });
@@ -94,16 +94,16 @@ test(`it can sideload a collection with a chain of has-many relationships`, func
 
   assert.deepEqual(result, {
     authors: [
-      {id: 1, name: 'Link', post_ids: [1, 2]},
-      {id: 2, name: 'Zelda', post_ids: [3]}
+      {id: 1, name: 'Link', postIds: [1, 2]},
+      {id: 2, name: 'Zelda', postIds: [3]}
     ],
     posts: [
-      {id: 1, title: 'Lorem', author_id: 1, comment_ids: [1]},
-      {id: 2, title: 'Ipsum', author_id: 1, comment_ids: []},
-      {id: 3, title: 'Zeldas post', author_id: 2, comment_ids: []}
+      {id: 1, title: 'Lorem', authorId: 1, commentIds: [1]},
+      {id: 2, title: 'Ipsum', authorId: 1, commentIds: []},
+      {id: 3, title: 'Zeldas post', authorId: 2, commentIds: []}
     ],
     comments: [
-      {id: 1, text: 'pwned', post_id: 1}
+      {id: 1, text: 'pwned', postId: 1}
     ]
   });
 });
@@ -124,13 +124,13 @@ test(`it avoids circularity when serializing a collection`, function(assert) {
 
   assert.deepEqual(result, {
     authors: [
-      {id: 1, name: 'Link', post_ids: [1, 2] },
-      {id: 2, name: 'Zelda', post_ids: [3] },
+      {id: 1, name: 'Link', postIds: [1, 2] },
+      {id: 2, name: 'Zelda', postIds: [3] },
     ],
     posts: [
-      {id: 1, title: 'Lorem', author_id: 1},
-      {id: 2, title: 'Ipsum', author_id: 1},
-      {id: 3, title: 'Zeldas post', author_id: 2},
+      {id: 1, title: 'Lorem', authorId: 1},
+      {id: 2, title: 'Ipsum', authorId: 1},
+      {id: 3, title: 'Zeldas post', authorId: 2},
     ]
   });
 });
@@ -148,9 +148,9 @@ test(`it can sideload a collection with a belongs-to relationship`, function(ass
 
   assert.deepEqual(result, {
     posts: [
-      {id: 1, title: 'Lorem', author_id: 1 },
-      {id: 2, title: 'Ipsum', author_id: 1 },
-      {id: 3, title: 'Zeldas post', author_id: 2 },
+      {id: 1, title: 'Lorem', authorId: 1 },
+      {id: 2, title: 'Ipsum', authorId: 1 },
+      {id: 3, title: 'Zeldas post', authorId: 2 },
     ],
     authors: [
       {id: 1, name: 'Link'},
@@ -175,10 +175,10 @@ test(`it can sideload a collection with a chain of belongs-to relationships`, fu
 
   assert.deepEqual(result, {
     comments: [
-      {id: 1, text: 'pwned', post_id: 1}
+      {id: 1, text: 'pwned', postId: 1}
     ],
     posts: [
-      {id: 1, title: 'Lorem', author_id: 1}
+      {id: 1, title: 'Lorem', authorId: 1}
     ],
     authors: [
       {id: 1, name: 'Link'}

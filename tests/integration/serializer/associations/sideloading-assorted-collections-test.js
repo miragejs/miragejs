@@ -21,8 +21,8 @@ module('Integration | Serializer | Associations | Sideloading Assorted Collectio
       {id: 3, name: 'Epona'}
     ];
     this.posts = [
-      {id: 1, title: 'Lorem', author_id: 1},
-      {id: 2, title: 'Ipsum', author_id: 1}
+      {id: 1, title: 'Lorem', authorId: 1},
+      {id: 2, title: 'Ipsum', authorId: 1}
     ];
     this.photos = [
       {id: 1, title: 'Amazing', location: 'Hyrule'},
@@ -47,7 +47,7 @@ test(`it can sideload an array of assorted collections that have relationships`,
 
   assert.deepEqual(result, {
     authors: this.authors.map(attrs => {
-      attrs.post_ids = this.posts.filter(post => post.author_id === attrs.id).map(post => post.id);
+      attrs.postIds = this.posts.filter(post => post.authorId === attrs.id).map(post => post.id);
       return attrs;
     }),
     posts: this.posts,

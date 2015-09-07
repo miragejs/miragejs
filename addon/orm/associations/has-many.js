@@ -8,11 +8,11 @@ class HasMany extends Association {
     The hasMany association adds a fk to the target of the association
   */
   getForeignKeyArray() {
-    return [this.target, `${this.owner}_id`];
+    return [this.target, `${this.owner}Id`];
   }
 
   getForeignKey() {
-    return `${this.owner}_id`;
+    return `${this.owner}Id`;
   }
 
   addMethodsToModelClass(ModelClass, key, schema) {
@@ -22,7 +22,7 @@ class HasMany extends Association {
 
     var association = this;
     var foreignKey = this.getForeignKey();
-    var relationshipIdsKey = association.target + '_ids';
+    var relationshipIdsKey = association.target + 'Ids';
 
     var associationHash = {[key]: this};
     modelPrototype.hasManyAssociations = _.assign(modelPrototype.hasManyAssociations, associationHash);
@@ -32,7 +32,7 @@ class HasMany extends Association {
     Object.defineProperty(modelPrototype, relationshipIdsKey, {
 
       /*
-        object.children_ids
+        object.childrenIds
           - returns an array of the associated children's ids
       */
       get: function() {
@@ -49,7 +49,7 @@ class HasMany extends Association {
       },
 
       /*
-        object.children_ids = ([childrenIds...])
+        object.childrenIds = ([childrenIds...])
           - sets the associated parent (via id)
       */
       set: function(ids) {
