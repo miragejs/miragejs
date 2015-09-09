@@ -1,4 +1,5 @@
-/* global _ */
+import _assign from 'lodash/object/assign';
+import _has from 'lodash/object/has';
 
 export default function(protoProps, staticProps) {
   var parent = this;
@@ -7,7 +8,7 @@ export default function(protoProps, staticProps) {
   // The constructor function for the new subclass is either defined by you
   // (the "constructor" property in your `extend` definition), or defaulted
   // by us to simply call the parent's constructor.
-  if (protoProps && _.has(protoProps, 'constructor')) {
+  if (protoProps && _has(protoProps, 'constructor')) {
     child = protoProps.constructor;
   } else {
     child = function(){ return parent.apply(this, arguments); };
@@ -15,7 +16,7 @@ export default function(protoProps, staticProps) {
 
   // Add static properties to the constructor function, if supplied.
 
-  _.assign(child, parent, staticProps);
+  _assign(child, parent, staticProps);
 
   // Set the prototype chain to inherit from `parent`, without calling
   // `parent`'s constructor function.
@@ -25,7 +26,7 @@ export default function(protoProps, staticProps) {
 
   // Add prototype properties (instance properties) to the subclass,
   // if supplied.
-  if (protoProps) {_.assign(child.prototype, protoProps);}
+  if (protoProps) { _assign(child.prototype, protoProps); }
 
   // Set a convenience property in case the parent's prototype is needed
   // later.

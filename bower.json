@@ -13,7 +13,6 @@
     "ember-qunit-notifications": "0.0.7",
     "qunit": "~1.18.0",
     "pretender": "~0.9.0",
-    "lodash": "~3.7.0",
     "Faker": "~3.0.0"
   }
 }

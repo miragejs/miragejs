@@ -7,7 +7,9 @@ import PostShorthandHandler from './route-handlers/shorthands/post';
 import PutShorthandHandler from './route-handlers/shorthands/put';
 import DeleteShorthandHandler from './route-handlers/shorthands/delete';
 
-const { isArray, keys } = _;
+import _keys from 'lodash/object/keys';
+import _isArray from 'lodash/lang/isArray';
+
 const { isBlank, typeOf } = Ember;
 
 export default class RouteHandler {
@@ -92,7 +94,7 @@ export default class RouteHandler {
   }
 
   _rawHandlerType() {
-    return isArray(this.rawHandler) ? 'array' : typeof this.rawHandler;
+    return _isArray(this.rawHandler) ? 'array' : typeof this.rawHandler;
   }
 
   _toMirageResponse(response) {
@@ -110,8 +112,8 @@ export default class RouteHandler {
 
   _getCodeForResponse(response) {
     let code;
-    let responseIsEmptyObject = typeOf(response) === 'object' && keys(response).length === 0;
-    let responseHasContent = response && !responseIsEmptyObject && (isArray(response) || !isBlank(response));
+    let responseIsEmptyObject = typeOf(response) === 'object' && _keys(response).length === 0;
+    let responseHasContent = response && !responseIsEmptyObject && (_isArray(response) || !isBlank(response));
 
     if (this.customizedCode) {
       code = this.customizedCode;
