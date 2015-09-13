@@ -13,6 +13,10 @@ export default Serializer.extend({
 
   keyForRelationshipIds(type) {
     return `${decamelize(type)}_ids`;
+  },
+
+  normalize() {
+
   }
 
 });

@@ -2,6 +2,7 @@ import {module, test} from 'qunit';
 import Server from 'ember-cli-mirage/server';
 import Model from 'ember-cli-mirage/orm/model';
 import post from 'ember-cli-mirage/shorthands/post';
+import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
 
 module('mirage:shorthands#post-with-orm', {
   beforeEach: function() {
@@ -10,6 +11,9 @@ module('mirage:shorthands#post-with-orm', {
       modelsMap: {
         author: Model.extend({})
       },
+      serializersMap: {
+        application: ActiveModelSerializer
+      }
     });
     this.server.timing = 0;
     this.server.logging = false;

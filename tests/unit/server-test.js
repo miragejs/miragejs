@@ -10,12 +10,6 @@ test('it can be instantiated', function(assert) {
   assert.ok(server);
 });
 
-test('it cannot be instantiated without an environment', function(assert) {
-  assert.throws(function() {
-    new Server();
-  });
-});
-
 module('mirage:server#loadConfig');
 
 test('forces timing to 0 in test environment', function(assert) {

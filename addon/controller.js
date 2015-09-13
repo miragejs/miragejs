@@ -25,9 +25,10 @@ export default class Controller {
   }
 
   handle(verb, handler, dbOrSchema, request, customizedCode, options) {
+    // debugger;
     var code, isEmptyObject;
     var handlerMethod = this._lookupHandlerMethod(verb, handler);
-    var response = handlerMethod(handler, dbOrSchema, request, options);
+    var response = handlerMethod.call(this, handler, dbOrSchema, request, options);
 
     if (response instanceof Response) {
       return response.toArray();
