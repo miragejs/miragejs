@@ -8,7 +8,7 @@ module('mirage:shorthands#del-with-orm', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development',
-      modelsMap: {
+      models: {
         author: Model.extend({
           posts: Mirage.hasMany(),
         }),

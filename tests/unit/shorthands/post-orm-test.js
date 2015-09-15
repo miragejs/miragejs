@@ -8,10 +8,10 @@ module('mirage:shorthands#post-with-orm', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development',
-      modelsMap: {
+      models: {
         author: Model.extend({})
       },
-      serializersMap: {
+      serializers: {
         application: ActiveModelSerializer
       }
     });

@@ -8,7 +8,7 @@ module('Integration | Serializer | Route Handler', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development',
-      modelsMap: {
+      models: {
         author: Model.extend({
           posts: Mirage.hasMany()
         }),
@@ -20,7 +20,7 @@ module('Integration | Serializer | Route Handler', {
           post: Mirage.belongsTo()
         }),
       },
-      serializersMap: {
+      serializers: {
         application: Serializer.extend({
           embed: true,
           root: false

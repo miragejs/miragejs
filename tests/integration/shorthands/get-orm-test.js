@@ -9,7 +9,7 @@ module('Integration | Shorthands | GET with ORM', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development',
-      modelsMap: {
+      models: {
         author: Model.extend({
           posts: Mirage.hasMany()
         }),

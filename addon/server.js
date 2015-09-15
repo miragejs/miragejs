@@ -40,16 +40,38 @@ export default class Server {
       };
     });
 
-    if (options.modelsMap) {
+    if (this._hasModulesOfType(options, 'models')) {
       // TODO: really should be injected into Controller, server doesn't need to know about schema
       this.schema = new Schema(this.db);
-      this.schema.registerModels(options.modelsMap);
-      this.controller.setSerializerRegistry(new SerializerRegistry(this.schema, options.serializersMap));
+      this.schema.registerModels(options.models);
+      this.controller.setSerializerRegistry(new SerializerRegistry(this.schema, options.serializers));
     }
 
     // TODO: Better way to inject server into test env
     if (this.environment === 'test') {
       window.server = this;
+    }
+
+    let hasFactories = this._hasModulesOfType(options, 'factories');
+    let hasDefaultScenario = options.scenarios && options.scenarios.hasOwnProperty('default');
+
+    if (options.baseConfig) {
+      this.loadConfig(options.baseConfig);
+    }
+
+    if (this.environment === 'test' && options.testConfig) {
+      this.loadConfig(options.testConfig);
+    }
+
+    if (this.environment === 'test' && hasFactories) {
+      this.loadFactories(options.factories);
+
+    } else if (this.environment !== 'test' && hasDefaultScenario && hasFactories) {
+      this.loadFactories(options.factories);
+      options.scenarios.default(this);
+
+    } else {
+      this.db.loadData(options.fixtures);
     }
   }
 
@@ -106,14 +128,19 @@ export default class Server {
 
   _defineRouteHandlerHelpers() {
     [['get'], ['post'], ['put'], ['delete', 'del'], ['patch']]
-    .forEach(([verb, alias]) => {
-      this[verb] = (...options) => {
-        new RouteHandler(this, verb, options);
-      };
+      .forEach(([verb, alias]) => {
+        this[verb] = (...options) => {
+          new RouteHandler(this, verb, options);
+        };
 
-      if (alias) { this[alias] = this[verb]; }
-    });
+        if (alias) { this[alias] = this[verb]; }
+      });
   }
 
+  _hasModulesOfType(modules, type) {
+    let modulesOfType = modules[type] || {};
+
+    return _.keys(modulesOfType).length > 0;
+  }
 
 }

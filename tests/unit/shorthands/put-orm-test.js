@@ -7,7 +7,7 @@ module('mirage:shorthands#put-with-orm', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development',
-      modelsMap: {
+      models: {
         author: Model.extend(),
       }
     });
