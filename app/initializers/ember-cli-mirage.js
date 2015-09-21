@@ -11,7 +11,11 @@ function hasModulesOfType(modulesMap, type) {
 
 export default {
   name: 'ember-cli-mirage',
-  initialize: function(container, application) {
+  initialize: function(application) {
+    if (arguments.length > 1) { // Ember < 2.1
+      var container = arguments[0],
+          application = arguments[1];
+    }
     var env = ENV.environment;
 
     if (_shouldUseMirage(env, ENV['ember-cli-mirage'])) {
