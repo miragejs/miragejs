@@ -1,5 +1,13 @@
 # Ember CLI Mirage Changelog
 
+## next
+
+Update notes:
+  - Originally, you defined routes via `this.stub('get', '/path'...)` in your `mirage/config.js` file. `stub` has been removed, so if you happen to be using it, just replace them with the `this.get`, `this.post`, etc. helper methods.
+
+Changes:
+  - [BREAKING CHANGE] remove #stub from Server (see update note)
+
 ## 0.1.8
 
 Update notes: none

@@ -4,7 +4,7 @@ import Model from 'ember-cli-mirage/orm/model';
 import Serializer from 'ember-cli-mirage/serializer';
 import {module, test} from 'qunit';
 
-module('Integration | Serializer | Route Handler', {
+module('Integration | Serializer | Full Request', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development',

@@ -2,11 +2,10 @@ import { pluralize } from './utils/inflector';
 import Pretender from 'pretender';
 import Db from './db';
 import Schema from './orm/schema';
-import Controller from './controller';
 import Serializer from './serializer';
 import SerializerRegistry from './serializer-registry';
+import RouteDefinitionReader from './route-definition-reader';
 import RouteHandler from './route-handler';
-
 
 export default class Server {
 
@@ -23,9 +22,9 @@ export default class Server {
 
       TODO: Inject / belongs in a container
     */
-    this.controller = new Controller(new Serializer());
     this.db = new Db();
 
+    this.routeDefinitionReader = new RouteDefinitionReader();
     this.pretender = this.interceptor = new Pretender(function() {
       this.prepareBody = function(body) {
         return body ? JSON.stringify(body) : '{"error": "not found"}';
@@ -44,7 +43,7 @@ export default class Server {
       // TODO: really should be injected into Controller, server doesn't need to know about schema
       this.schema = new Schema(this.db);
       this.schema.registerModels(options.models);
-      this.controller.setSerializerRegistry(new SerializerRegistry(this.schema, options.serializers));
+      this.serializerRegistry = new SerializerRegistry(this.schema, options.serializers);
     }
 
     // TODO: Better way to inject server into test env
@@ -127,20 +126,72 @@ export default class Server {
   }
 
   _defineRouteHandlerHelpers() {
-    [['get'], ['post'], ['put'], ['delete', 'del'], ['patch']]
-      .forEach(([verb, alias]) => {
-        this[verb] = (...options) => {
-          new RouteHandler(this, verb, options);
-        };
+    [['get'], ['post'], ['put'], ['delete', 'del'], ['patch']].forEach(([verb, alias]) => {
+      this[verb] = (path, ...args) => {
+        let fullPath = this._getFullPath(path);
+        let {handler, customizedCode} = this.routeDefinitionReader.read(verb, args);
+        this._createAndRegisterRouteHandler(verb, fullPath, handler, customizedCode);
+      };
 
-        if (alias) { this[alias] = this[verb]; }
-      });
+      if (alias) { this[alias] = this[verb]; }
+    });
+  }
+
+  _createAndRegisterRouteHandler(verb, fullPath, standardF, customizedCode) {
+    let serializerOrRegistry = (this.serializerRegistry || new Serializer());
+    let routeHandler = new RouteHandler(verb, serializerOrRegistry, standardF, customizedCode);
+
+    this.pretender[verb](fullPath, request => {
+      let dbOrSchema = (this.schema || this.db);
+      let response = routeHandler.handle(dbOrSchema, request);
+
+      let shouldLog = typeof this.logging !== 'undefined' ? this.logging : (this.environment !== 'test');
+
+      if (shouldLog) {
+        console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
+        console.log(response[2]);
+      }
+
+      return response;
+    }, () => { return this.timing; });
   }
 
   _hasModulesOfType(modules, type) {
     let modulesOfType = modules[type] || {};
 
     return _.keys(modulesOfType).length > 0;
+  }
+
+  /*
+    Builds a full path for Pretender to monitor based on the `path` and
+    configured options (`urlPrefix` and `namespace`).
+  */
+  _getFullPath(path) {
+    path = path[0] === '/' ? path.slice(1) : path;
+    let fullPath = '';
+    let urlPrefix = this.urlPrefix ? this.urlPrefix.trim() : '';
+    let namespace = this.namespace ? this.namespace.trim() : '';
+
+    // check to see if path is a FQDN. if so, ignore any urlPrefix/namespace that was set
+    if (/^https?:\/\//.test(path)) {
+      fullPath += path;
+    } else {
+
+      // otherwise, if there is a urlPrefix, use that as the beginning of the path
+      if (!!urlPrefix.length) {
+        fullPath += urlPrefix[urlPrefix.length - 1] === '/' ? urlPrefix : urlPrefix + '/';
+      }
+
+      // if a namespace has been configured, add it before the path
+      if (!!namespace.length) {
+        fullPath += namespace ? namespace + '/' : namespace;
+      }
+
+      // finally add the configured path
+      fullPath += path;
+    }
+
+    return fullPath;
   }
 
 }
