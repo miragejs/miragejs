@@ -17,7 +17,6 @@ function stringPost(string, dbOrSchema, request) {
   let collection = pluralize(string);
   let postData = utils.getJsonBodyForRequest(request);
   let attrs = postData[type];
-  // debugger;
 
   if (dbOrSchema instanceof Db) {
     let db = dbOrSchema;

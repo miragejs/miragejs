@@ -4,6 +4,10 @@ const { isArray } = _;
 
 export default class RouteDefinitionReader {
 
+  constructor(serializerOrRegistry) {
+    this.serializerOrRegistry = serializerOrRegistry;
+  }
+
   read(verb, args) {
     let [rawHandler, customizedCode, options] = this._extractStubArguments(args);
     let handler = this._lookupHandlerMethod(verb, rawHandler, options);

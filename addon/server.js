@@ -24,7 +24,6 @@ export default class Server {
     */
     this.db = new Db();
 
-    this.routeDefinitionReader = new RouteDefinitionReader();
     this.pretender = this.interceptor = new Pretender(function() {
       this.prepareBody = function(body) {
         return body ? JSON.stringify(body) : '{"error": "not found"}';
@@ -43,8 +42,11 @@ export default class Server {
       // TODO: really should be injected into Controller, server doesn't need to know about schema
       this.schema = new Schema(this.db);
       this.schema.registerModels(options.models);
-      this.serializerRegistry = new SerializerRegistry(this.schema, options.serializers);
+      this.serializerOrRegistry = new SerializerRegistry(this.schema, options.serializers);
+    } else {
+      this.serializerOrRegistry = new Serializer();
     }
+    this.routeDefinitionReader = new RouteDefinitionReader(this.serializerOrRegistry);
 
     // TODO: Better way to inject server into test env
     if (this.environment === 'test') {
@@ -128,18 +130,17 @@ export default class Server {
   _defineRouteHandlerHelpers() {
     [['get'], ['post'], ['put'], ['delete', 'del'], ['patch']].forEach(([verb, alias]) => {
       this[verb] = (path, ...args) => {
-        let fullPath = this._getFullPath(path);
         let {handler, customizedCode} = this.routeDefinitionReader.read(verb, args);
-        this._createAndRegisterRouteHandler(verb, fullPath, handler, customizedCode);
+        this._createAndRegisterRouteHandler(verb, path, handler, customizedCode);
       };
 
       if (alias) { this[alias] = this[verb]; }
     });
   }
 
-  _createAndRegisterRouteHandler(verb, fullPath, standardF, customizedCode) {
-    let serializerOrRegistry = (this.serializerRegistry || new Serializer());
-    let routeHandler = new RouteHandler(verb, serializerOrRegistry, standardF, customizedCode);
+  _createAndRegisterRouteHandler(verb, path, standardF, customizedCode) {
+    let fullPath = this._getFullPath(path);
+    let routeHandler = new RouteHandler(verb, this.serializerOrRegistry, standardF, customizedCode);
 
     this.pretender[verb](fullPath, request => {
       let dbOrSchema = (this.schema || this.db);
