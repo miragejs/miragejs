@@ -4,7 +4,7 @@ import Db from './db';
 import Schema from './orm/schema';
 import Serializer from './serializer';
 import SerializerRegistry from './serializer-registry';
-import RouteDefinitionReader from './route-definition-reader';
+import RouteDefinition from './route-definition';
 import RouteHandler from './route-handler';
 
 export default class Server {
@@ -46,7 +46,6 @@ export default class Server {
     } else {
       this.serializerOrRegistry = new Serializer();
     }
-    this.routeDefinitionReader = new RouteDefinitionReader(this.serializerOrRegistry);
 
     // TODO: Better way to inject server into test env
     if (this.environment === 'test') {
@@ -130,30 +129,30 @@ export default class Server {
   _defineRouteHandlerHelpers() {
     [['get'], ['post'], ['put'], ['delete', 'del'], ['patch']].forEach(([verb, alias]) => {
       this[verb] = (path, ...args) => {
-        let {handler, customizedCode} = this.routeDefinitionReader.read(verb, args);
-        this._createAndRegisterRouteHandler(verb, path, handler, customizedCode);
+        let definition = new RouteDefinition(verb, args);
+        this._createAndRegisterRouteHandler(verb, path, definition.handler());
       };
 
       if (alias) { this[alias] = this[verb]; }
     });
   }
 
-  _createAndRegisterRouteHandler(verb, path, standardF, customizedCode) {
+  _createAndRegisterRouteHandler(verb, path, standardF) {
+    let routeHandler = new RouteHandler(this.serializerOrRegistry, standardF);
     let fullPath = this._getFullPath(path);
-    let routeHandler = new RouteHandler(verb, this.serializerOrRegistry, standardF, customizedCode);
 
     this.pretender[verb](fullPath, request => {
       let dbOrSchema = (this.schema || this.db);
-      let response = routeHandler.handle(dbOrSchema, request);
+      let rackResponse = routeHandler.handle(dbOrSchema, request);
 
       let shouldLog = typeof this.logging !== 'undefined' ? this.logging : (this.environment !== 'test');
 
       if (shouldLog) {
         console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
-        console.log(response[2]);
+        console.log(rackResponse[2]);
       }
 
-      return response;
+      return rackResponse;
     }, () => { return this.timing; });
   }
 

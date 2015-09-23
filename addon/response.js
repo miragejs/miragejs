@@ -1,7 +1,18 @@
-export default function(code, headers, data) {
-  this.toArray = function() {
-    return [code, headers, data];
-  };
+export default class Response {
 
-  return this;
+  constructor(code, headers, data) {
+    this.code = code;
+    this.headers = headers;
+    this.data = data;
+  }
+
+  toRackResponse() {
+    let headers = this.headers;
+    if (!headers.hasOwnProperty('Content-Type')) {
+      headers['Content-Type'] = 'application/json';
+    }
+
+    return [this.code, this.headers, this.data];
+  }
+
 }

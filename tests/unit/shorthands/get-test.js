@@ -62,7 +62,7 @@ test('undefined shorthand returns an 404 if a singular resource does not exist',
   var result = get.undefined(undefined, this.db, {url: '/addresses/99', params: {id: '99'}});
 
   assert.ok(result instanceof Response);
-  assert.equal(result.toArray()[0], 404);
+  assert.equal(result.toRackResponse()[0], 404);
 });
 
 test('string shorthand returns the named collection', function(assert) {
@@ -87,7 +87,7 @@ test('string shorthand with an id returns 404 if the record is not found', funct
   var result = get.string('contact', this.db, {url: '/people/9', params: {id: 9}});
 
   assert.ok(result instanceof Response);
-  assert.equal(result.toArray()[0], 404);
+  assert.equal(result.toRackResponse()[0], 404);
 });
 
 test('array shorthand returns all collections of each type', function(assert) {
