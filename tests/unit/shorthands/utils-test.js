@@ -3,7 +3,7 @@ import utils from 'ember-cli-mirage/shorthands/utils';
 import {module, test} from 'qunit';
 
 var request;
-module('mirage:shorthands#utils', {
+module('Unit | Shorthands | utils', {
   beforeEach: function() {
     request = { params: {id: ''} };
   }

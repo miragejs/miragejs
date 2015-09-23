@@ -4,7 +4,7 @@ import Db from 'ember-cli-mirage/db';
 
 import {module, test} from 'qunit';
 
-module('mirage:shorthands#get', {
+module('Unit | Shorthands | get', {
   beforeEach: function() {
     this.contacts = [
       {id: 1, name: 'Link', address_ids: [1]},

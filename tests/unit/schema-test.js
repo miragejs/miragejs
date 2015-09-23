@@ -1,7 +1,7 @@
 import Schema from 'ember-cli-mirage/orm/schema';
 import {module, test} from 'qunit';
 
-module('mirage:schema');
+module('Unit | Schema');
 
 test('it can be instantiated', function(assert) {
   var dbMock = {};

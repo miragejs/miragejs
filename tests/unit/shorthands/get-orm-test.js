@@ -5,7 +5,7 @@ import Server from 'ember-cli-mirage/server';
 import Mirage from 'ember-cli-mirage';
 import get from 'ember-cli-mirage/shorthands/get';
 
-module('mirage:shorthands#get-with-orm', {
+module('Unit | Shorthands | get with orm', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development',

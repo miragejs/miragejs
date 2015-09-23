@@ -1,7 +1,7 @@
 import HasManyHelper from './has-many-helper';
 import {module, test} from 'qunit';
 
-module('mirage:integration:schema:hasMany#setAssociation', {
+module('Integration | Schema | hasMany #setAssociation', {
   beforeEach: function() {
     this.helper = new HasManyHelper();
   }

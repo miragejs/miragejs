@@ -3,7 +3,7 @@ import Db from 'ember-cli-mirage/db';
 import {module, test} from 'qunit';
 
 var db;
-module('mirage:db');
+module('Unit | Db');
 
 test('it can be instantiated', function(assert) {
   db = new Db();
@@ -32,7 +32,7 @@ test('it can empty its data', function(assert) {
   assert.equal(db.addresses.length, 0);
 });
 
-module('mirage:db#createCollection', {
+module('Unit | Db #createCollection', {
   beforeEach: function() {
     db = new Db();
   },
@@ -55,7 +55,7 @@ test('it can create many collections', function(assert) {
 });
 
 
-module('mirage:db#loadData', {
+module('Unit | Db #loadData', {
   beforeEach: function() {
     db = new Db();
   },
@@ -75,7 +75,7 @@ test('it can load an object of data', function(assert) {
   assert.deepEqual(db.addresses, data.addresses);
 });
 
-module('mirage:db#all', {
+module('Unit | Db #all', {
   beforeEach: function() {
     this.data = {
       contacts: [{id: 1, name: 'Link'}],
@@ -103,7 +103,7 @@ test('the collection is a copy', function(assert) {
   assert.deepEqual(db.contacts, this.data.contacts);
 });
 
-module('mirage:db#insert', {
+module('Unit | Db #insert', {
   beforeEach: function() {
     db = new Db();
     db.createCollection('contacts');
@@ -164,7 +164,7 @@ test('it can insert a record with an id of 0', function(assert) {
 });
 
 
-module('mirage:db#find', {
+module('Unit | Db #find', {
   beforeEach: function() {
     db = new Db();
     db.createCollection('contacts');
@@ -236,7 +236,7 @@ test('returns an empty array when it doesnt find multiple ids', function(assert)
 });
 
 
-module('mirage:db#where', {
+module('Unit | Db #where', {
   beforeEach: function() {
     db = new Db();
     db.createCollection('contacts');
@@ -288,7 +288,7 @@ test('returns an empty array if no records match the query', function(assert) {
 });
 
 
-module('mirage:db#update', {
+module('Unit | Db #update', {
   beforeEach: function() {
     db = new Db();
     db.createCollection('contacts');
@@ -374,7 +374,7 @@ test('updating multiple records returns the updated records', function(assert) {
 });
 
 
-module('mirage:db#remove', {
+module('Unit | Db #remove', {
   beforeEach: function() {
     db = new Db();
     db.createCollection('contacts');

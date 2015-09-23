@@ -4,7 +4,7 @@ import Model from 'ember-cli-mirage/orm/model';
 import Mirage from 'ember-cli-mirage';
 import del from 'ember-cli-mirage/shorthands/delete';
 
-module('mirage:shorthands#del-with-orm', {
+module('Unit | Shorthands | del with orm', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development',

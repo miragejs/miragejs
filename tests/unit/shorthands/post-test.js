@@ -4,7 +4,7 @@ import Db from 'ember-cli-mirage/db';
 import {module, test} from 'qunit';
 
 var db;
-module('mirage:shorthands#post', {
+module('Unit | Shorthands | post', {
   beforeEach: function() {
     db = new Db();
     db.createCollection('contacts');

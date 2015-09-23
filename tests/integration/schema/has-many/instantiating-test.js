@@ -5,7 +5,7 @@ import Db from 'ember-cli-mirage/db';
 import {module, test} from 'qunit';
 
 var schema, child1, child2;
-module('mirage:integration:schema:hasMany instantiating with params', {
+module('Integration | Schema | hasMany instantiating with params', {
   beforeEach: function() {
     var db = new Db({
       users: [],

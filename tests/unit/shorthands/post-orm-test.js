@@ -4,7 +4,7 @@ import Model from 'ember-cli-mirage/orm/model';
 import post from 'ember-cli-mirage/shorthands/post';
 import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
 
-module('mirage:shorthands#post-with-orm', {
+module('Unit | Shorthands | post with orm', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development',

@@ -1,7 +1,7 @@
 import Model from 'ember-cli-mirage/orm/model';
 import {module, test} from 'qunit';
 
-module('mirage:model');
+module('Unit | Model');
 
 test('it can be instantiated', function(assert) {
   var model = new Model({}, 'user');

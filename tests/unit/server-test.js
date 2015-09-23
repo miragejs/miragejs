@@ -3,14 +3,14 @@ import Server from 'ember-cli-mirage/server';
 import {module, test} from 'qunit';
 import Factory from 'ember-cli-mirage/factory';
 
-module('mirage:server');
+module('Unit | Server');
 
 test('it can be instantiated', function(assert) {
   var server = new Server({environment: 'test'});
   assert.ok(server);
 });
 
-module('mirage:server#loadConfig');
+module('Unit | Server #loadConfig');
 
 test('forces timing to 0 in test environment', function(assert) {
   var server = new Server({environment: 'test'});
@@ -28,7 +28,7 @@ test("doesn't modify user's timing config in other environments", function(asser
   assert.equal(server.timing, 50);
 });
 
-module('mirage:server#db');
+module('Unit | Server #db');
 
 test('its db is isolated across instances', function(assert) {
   var server1 = new Server({environment: 'test'});
@@ -42,7 +42,7 @@ test('its db is isolated across instances', function(assert) {
 
 
 var server;
-module('mirage:server#create', {
+module('Unit | Server #create', {
   beforeEach: function() {
     server = new Server({environment: 'test'});
   }
@@ -134,7 +134,7 @@ test('create allows for attr overrides with arrays', function(assert) {
   assert.deepEqual(noname, {id: 3, name: []});
 });
 
-module('mirage:server#createList', {
+module('Unit | Server #createList', {
   beforeEach: function() {
     server = new Server({environment: 'test'});
   }

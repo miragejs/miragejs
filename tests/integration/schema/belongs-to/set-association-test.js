@@ -1,7 +1,7 @@
 import BelongsToHelper from './belongs-to-helper';
 import {module, test} from 'qunit';
 
-module('mirage:integration:schema:belongsTo#setAssociation', {
+module('Integration | Schema | belongsTo #setAssociation', {
   beforeEach: function() {
     this.helper = new BelongsToHelper();
   }

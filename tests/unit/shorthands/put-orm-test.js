@@ -3,7 +3,7 @@ import Server from 'ember-cli-mirage/server';
 import Model from 'ember-cli-mirage/orm/model';
 import put from 'ember-cli-mirage/shorthands/put';
 
-module('mirage:shorthands#put-with-orm', {
+module('Unit | Shorthands | put with orm', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development',
