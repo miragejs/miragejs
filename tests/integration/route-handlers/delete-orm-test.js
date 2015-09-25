@@ -2,9 +2,10 @@ import {module, test} from 'qunit';
 import Server from 'ember-cli-mirage/server';
 import Model from 'ember-cli-mirage/orm/model';
 import Mirage from 'ember-cli-mirage';
-import del from 'ember-cli-mirage/shorthands/delete';
+import DeleteShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthands/delete';
 
-module('Unit | Shorthands | del with orm', {
+module('Integration | Route Handlers | DELETE with ORM', {
+
   beforeEach: function() {
     this.server = new Server({
       environment: 'development',
@@ -29,34 +30,48 @@ module('Unit | Shorthands | del with orm', {
 
     this.schema = this.server.schema;
   },
+
   afterEach: function() {
     this.server.shutdown();
   }
+
 });
 
 test('undefined shorthand deletes the record and returns null', function(assert) {
-  let response = del.undefined(undefined, this.schema, {url: '/authors/1', params: {id: '1'}});
+  let request = {url: '/authors/1', params: {id: '1'}};
+  let handler = new DeleteShorthandRouteHandler(this.schema);
+
+  let response = handler.handle(request);
 
   assert.equal(this.schema.db.authors.length, 0);
   assert.equal(response, null);
 });
 
 test('query params are ignored', function(assert) {
-  let response = del.undefined(undefined, this.schema, {url: '/authors/1?foo=bar', params: {id: '1'}, queryParams: {foo: 'bar'}});
+  let request = {url: '/authors/1?foo=bar', params: {id: '1'}, queryParams: {foo: 'bar'}};
+  let handler = new DeleteShorthandRouteHandler(this.schema);
+
+  let response = handler.handle(request);
 
   assert.equal(this.schema.db.authors.length, 0);
   assert.equal(response, null);
 });
 
 test('string shorthand deletes the record of the specified type', function(assert) {
-  let response = del.string('author', this.schema, {url: '/people/1?foo=bar', params: {id: '1'}, queryParams: {foo: 'bar'}});
+  let request = {url: '/people/1?foo=bar', params: {id: '1'}, queryParams: {foo: 'bar'}};
+  let handler = new DeleteShorthandRouteHandler(this.schema, 'author');
+
+  let response = handler.handle(request);
 
   assert.equal(this.schema.db.authors.length, 0);
   assert.equal(response, null);
 });
 
 test('array shorthand deletes the record and all related records', function(assert) {
-  let response = del.array(['author', 'posts'], this.schema, {url: '/authors/1', params: {id: '1'}});
+  let request = {url: '/authors/1', params: {id: '1'}};
+  let handler = new DeleteShorthandRouteHandler(this.schema, ['author', 'posts']);
+
+  let response = handler.handle(request);
 
   assert.equal(this.schema.db.authors.length, 0);
   assert.equal(this.schema.db.posts.length, 1);

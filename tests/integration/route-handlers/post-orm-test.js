@@ -1,10 +1,10 @@
 import {module, test} from 'qunit';
+import PostShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthands/post';
 import Server from 'ember-cli-mirage/server';
 import Model from 'ember-cli-mirage/orm/model';
-import post from 'ember-cli-mirage/shorthands/post';
 import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
 
-module('Unit | Shorthands | post with orm', {
+module('Integration | Route Handlers | POST with ORM', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development',
@@ -25,8 +25,11 @@ module('Unit | Shorthands | post with orm', {
 });
 
 test('undefined shorthand creates a record and returns the new model', function(assert) {
-  let body = '{"author":{"first_name":"Ganon","last_name":"Dorf"}}';
-  let model = post.undefined(undefined, this.schema, {requestBody: body, url: '/authors'});
+  let body = {author: {first_name: "Ganon", last_name: "Dorf"}};
+  let request = {requestBody: JSON.stringify(body), url: '/authors'};
+  let handler = new PostShorthandRouteHandler(this.schema);
+
+  let model = handler.handle(request);
 
   assert.equal(this.schema.db.authors.length, 1);
   assert.ok(model instanceof Model);
@@ -35,8 +38,11 @@ test('undefined shorthand creates a record and returns the new model', function(
 });
 
 test('string shorthand creates a record of the specified type and returns the new model', function(assert) {
-  let body = '{"author":{"first_name":"Ganon","last_name":"Dorf"}}';
-  let model = post.string('author', this.schema, {requestBody: body, url: '/people'});
+  let body = {author: {first_name: "Ganon", last_name: "Dorf"}};
+  let request = {requestBody: JSON.stringify(body), url: '/people'};
+  let handler = new PostShorthandRouteHandler(this.schema, 'author');
+
+  let model = handler.handle(request);
 
   assert.equal(this.schema.db.authors.length, 1);
   assert.ok(model instanceof Model);
@@ -45,8 +51,11 @@ test('string shorthand creates a record of the specified type and returns the ne
 });
 
 test('query params are ignored', function(assert) {
-  let body = '{"author":{"first_name":"Ganon","last_name":"Dorf"}}';
-  let model = post.undefined(undefined, this.schema, {requestBody: body, url: '/authors?foo=bar', queryParams: {foo: 'bar'}});
+  let body = {author: {first_name: "Ganon", last_name: "Dorf"}};
+  let request = {requestBody: JSON.stringify(body), url: '/authors?foo=bar', queryParams: {foo: 'bar'}};
+  let handler = new PostShorthandRouteHandler(this.schema);
+
+  let model = handler.handle(request);
 
   assert.equal(this.schema.db.authors.length, 1);
   assert.ok(model instanceof Model);

@@ -3,9 +3,9 @@ import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
 import Server from 'ember-cli-mirage/server';
 import Mirage from 'ember-cli-mirage';
-import get from 'ember-cli-mirage/shorthands/get';
+import GetShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthands/get';
 
-module('Unit | Shorthands | get with orm', {
+module('Integration | Route Handlers | GET with ORM', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development',
@@ -52,13 +52,11 @@ module('Unit | Shorthands | get with orm', {
   }
 });
 
-/*
-  These tests ensure the shorthands, when used with the orm model definitions,
-  return the appropriate models/collections.
-*/
-
 test('undefined shorthand returns the collection of models', function(assert) {
-  let authors = get.undefined(undefined, this.schema, {url: '/authors'});
+  let request = {url: '/authors'};
+  let handler = new GetShorthandRouteHandler(this.schema);
+
+  let authors = handler.handle(request);
 
   assert.equal(authors.length, 3);
   assert.ok(authors[0] instanceof Model);
@@ -66,7 +64,10 @@ test('undefined shorthand returns the collection of models', function(assert) {
 });
 
 test('undefined shorthand ignores query params', function(assert) {
-  let authors = get.undefined(undefined, this.schema, {url: '/authors?foo=bar'});
+  let request = {url: '/authors?foo=bar'};
+  let handler = new GetShorthandRouteHandler(this.schema);
+
+  let authors = handler.handle(request);
 
   assert.equal(authors.length, 3);
   assert.ok(authors[0] instanceof Model);
@@ -74,7 +75,10 @@ test('undefined shorthand ignores query params', function(assert) {
 });
 
 test('undefined shorthand can return a single model', function(assert) {
-  let author = get.undefined(undefined, this.schema, {url: '/authors/2', params: {id: 2}});
+  let request = {url: '/authors/2', params: {id: 2}};
+  let handler = new GetShorthandRouteHandler(this.schema);
+
+  let author = handler.handle(request);
 
   assert.ok(author instanceof Model);
   assert.equal(author.type, 'author');
@@ -82,13 +86,19 @@ test('undefined shorthand can return a single model', function(assert) {
 });
 
 test('undefined shorthand returns null if a singular resource does not exist', function(assert) {
-  let author = get.undefined(undefined, this.schema, {url: '/authors/99', params: {id: 99}});
+  let request = {url: '/authors/99', params: {id: 99}};
+  let handler = new GetShorthandRouteHandler(this.schema);
+
+  let author = handler.handle(request);
 
   assert.ok(author === null);
 });
 
 test('undefined shorthand ignores query params for a singular resource', function(assert) {
-  let author = get.undefined(undefined, this.schema, {url: '/authors/2?foo=bar', params: {id: 2}});
+  let request = {url: '/authors/2?foo=bar', params: {id: 2}};
+  let handler = new GetShorthandRouteHandler(this.schema);
+
+  let author = handler.handle(request);
 
   assert.ok(author instanceof Model);
   assert.equal(author.type, 'author');
@@ -96,15 +106,21 @@ test('undefined shorthand ignores query params for a singular resource', functio
 });
 
 test('undefined shorthand with coalesce true returns the appropriate models', function(assert) {
-  let authors = get.undefined(undefined, this.schema, {url: '/authors?ids[]=1&ids[]=3', queryParams: {ids: [1, 3]}}, {coalesce: true});
+  let request = {url: '/authors?ids[]=1&ids[]=3', queryParams: {ids: [1, 3]}};
+  let options = {coalesce: true};
+  let handler = new GetShorthandRouteHandler(this.schema, undefined, options);
+
+  let authors = handler.handle(request);
 
   assert.equal(authors.length, 2);
   assert.deepEqual(authors.map(author => author.name), ['Link', 'Epona']);
 });
 
 test('string shorthand returns the correct collection of models', function(assert) {
-  this.server.get('/people', 'authors');
-  let authors = get.string('authors', this.schema, {url: '/people'});
+  let request = {url: '/people'};
+  let handler = new GetShorthandRouteHandler(this.schema, 'author');
+
+  let authors = handler.handle(request);
 
   assert.equal(authors.length, 3);
   assert.ok(authors[0] instanceof Model);
@@ -112,7 +128,10 @@ test('string shorthand returns the correct collection of models', function(asser
 });
 
 test('string shorthand with an id returns the correct model', function(assert) {
-  let author = get.string('author', this.schema, {url: '/people/2', params: {id: 2}});
+  let request = {url: '/people/2', params: {id: 2}};
+  let handler = new GetShorthandRouteHandler(this.schema, 'author');
+
+  let author = handler.handle(request);
 
   assert.ok(author instanceof Model);
   assert.equal(author.type, 'author');
@@ -120,20 +139,30 @@ test('string shorthand with an id returns the correct model', function(assert) {
 });
 
 test('string shorthand with an id returns null if the model is not found', function(assert) {
-  let author = get.string('author', this.schema, {url: '/people/99', params: {id: 99}});
+  let request = {url: '/people/99', params: {id: 99}};
+  let handler = new GetShorthandRouteHandler(this.schema, 'author');
+
+  let author = handler.handle(request);
 
   assert.ok(author === null);
 });
 
 test('string shorthand with coalesce returns the correct models', function(assert) {
-  let authors = get.string('author', this.schema, {url: '/people?ids[]=1&ids[]=3', queryParams: {ids: [1, 3]}}, {coalesce: true});
+  let request = {url: '/people?ids[]=1&ids[]=3', queryParams: {ids: [1, 3]}};
+  let options = {coalesce: true};
+  let handler = new GetShorthandRouteHandler(this.schema, 'author', options);
+
+  let authors = handler.handle(request);
 
   assert.equal(authors.length, 2);
   assert.deepEqual(authors.map(author => author.name), ['Link', 'Epona']);
 });
 
 test('array shorthand returns the correct models', function(assert) {
-  let models = get.array(['authors', 'photos'], this.schema, {url: '/home'});
+  let request = {url: '/home'};
+  let handler = new GetShorthandRouteHandler(this.schema, ['authors', 'photos']);
+
+  let models = handler.handle(request);
 
   assert.ok(models[0] instanceof Collection);
   assert.equal(models[0].type, 'author');
@@ -145,7 +174,10 @@ test('array shorthand returns the correct models', function(assert) {
 });
 
 test('array shorthand for a singular resource errors', function(assert) {
+  let request = {url: '/authors/1', params: {id: 1}};
+  let handler = new GetShorthandRouteHandler(this.schema, ['author', 'posts']);
+
   assert.throws(function() {
-    get.array(['author', 'posts'], this.schema, {url: '/authors/1', params: {id: 1}});
+    handler.handle(request);
   }, /create a serializer/);
 });

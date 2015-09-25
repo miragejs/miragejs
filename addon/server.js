@@ -4,7 +4,6 @@ import Db from './db';
 import Schema from './orm/schema';
 import Serializer from './serializer';
 import SerializerRegistry from './serializer-registry';
-import RouteDefinition from './route-definition';
 import RouteHandler from './route-handler';
 
 export default class Server {
@@ -129,21 +128,20 @@ export default class Server {
   _defineRouteHandlerHelpers() {
     [['get'], ['post'], ['put'], ['delete', 'del'], ['patch']].forEach(([verb, alias]) => {
       this[verb] = (path, ...args) => {
-        let definition = new RouteDefinition(verb, args);
-        this._createAndRegisterRouteHandler(verb, path, definition.handler());
+        this._registerRouteHandler(verb, path, args);
       };
 
       if (alias) { this[alias] = this[verb]; }
     });
   }
 
-  _createAndRegisterRouteHandler(verb, path, standardF) {
-    let routeHandler = new RouteHandler(this.serializerOrRegistry, standardF);
+  _registerRouteHandler(verb, path, args) {
+    let dbOrSchema = (this.schema || this.db);
+    let routeHandler = new RouteHandler(dbOrSchema, verb, args, this.serializerOrRegistry);
     let fullPath = this._getFullPath(path);
 
     this.pretender[verb](fullPath, request => {
-      let dbOrSchema = (this.schema || this.db);
-      let rackResponse = routeHandler.handle(dbOrSchema, request);
+      let rackResponse = routeHandler.handle(request);
 
       let shouldLog = typeof this.logging !== 'undefined' ? this.logging : (this.environment !== 'test');
 
