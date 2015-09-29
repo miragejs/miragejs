@@ -23,3 +23,12 @@ test('#random - returns random element from a list', function (assert) {
 
   assert.notEqual(['first', 'second', 'third'].indexOf(callback()), -1, 'returns random value');
 });
+
+test('#range - creates a random number in a range', function (assert) {
+  var min = 0;
+  var max = 10;
+
+  var callback = faker.random.number.range (min, max);
+  assert.equal(callback () >= min, true, 'result is higher or equal than low value');
+  assert.equal(callback () <= max, true, 'result is lower or equal than high value');
+});
