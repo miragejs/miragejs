@@ -6,7 +6,7 @@ import Db from 'ember-cli-mirage/db';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import { module, test } from 'qunit';
 
-module('Integration | Serializer | Active Model Serializer', {
+module('Integration | Serializer | ActiveModelSerializer', {
   beforeEach: function() {
     let db = new Db();
     this.schema = new Schema(db);
@@ -29,7 +29,7 @@ module('Integration | Serializer | Active Model Serializer', {
   }
 });
 
-test('it works', function(assert) {
+test('it sideloads associations and snake-cases attributes', function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: ActiveModelSerializer,
     author: ActiveModelSerializer.extend({

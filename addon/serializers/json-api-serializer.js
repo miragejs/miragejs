@@ -15,8 +15,8 @@ export default Serializer.extend({
     return `${decamelize(type)}_ids`;
   },
 
-  normalize() {
-
+  normalize(json) {
+    return json;
   }
 
 });

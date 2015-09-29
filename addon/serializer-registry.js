@@ -1,6 +1,6 @@
 import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
-import Serializer from 'ember-cli-mirage/serializer';
+import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
 import { pluralize } from './utils/inflector';
 
 const { isArray, assign } = _;
@@ -9,7 +9,7 @@ export default class SerializerRegistry {
 
   constructor(schema, serializerMap = {}) {
     this.schema = schema;
-    this.baseSerializer = new Serializer();
+    this.baseSerializer = new ActiveModelSerializer();
     this._serializerMap = serializerMap;
   }
 

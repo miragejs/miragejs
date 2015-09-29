@@ -1,9 +1,9 @@
 import Serializer from 'ember-cli-mirage/serializer';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
-import schemaHelper from '../schema-helper';
+import schemaHelper from '../../schema-helper';
 import { module, test } from 'qunit';
 
-module('Integration | Serializer | Associations | Sideloading Models', {
+module('Integration | Serializers | Base | Associations | Sideloading Models', {
   beforeEach: function() {
     this.schema = schemaHelper.setup();
 
@@ -14,6 +14,10 @@ module('Integration | Serializer | Associations | Sideloading Models', {
     author.createPost({title: 'Ipsum'});
 
     this.schema.author.create({name: 'Zelda'});
+
+    this.BaseSerializer = Serializer.extend({
+      embed: false
+    });
   },
 
   afterEach() {
@@ -23,8 +27,7 @@ module('Integration | Serializer | Associations | Sideloading Models', {
 
 test(`it throws an error if embed is false and root is false`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    author: Serializer.extend({
-      embed: false,
+    author: this.BaseSerializer.extend({
       root: false,
       relationships: ['posts'],
     })
@@ -39,8 +42,8 @@ test(`it throws an error if embed is false and root is false`, function(assert) 
 
 test(`it can sideload a model with a has-many relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    author: Serializer.extend({
-      embed: false,
+    application: this.BaseSerializer,
+    author: this.BaseSerializer.extend({
       relationships: ['posts'],
     })
   });
@@ -63,12 +66,12 @@ test(`it can sideload a model with a has-many relationship`, function(assert) {
 
 test(`it can sideload a model with a chain of has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    author: Serializer.extend({
-      embed: false,
-      relationships: ['posts'],
+    application: this.BaseSerializer,
+    author: this.BaseSerializer.extend({
+      relationships: ['posts']
     }),
-    post: Serializer.extend({
-      relationships: ['comments'],
+    post: this.BaseSerializer.extend({
+      relationships: ['comments']
     })
   });
 
@@ -93,12 +96,12 @@ test(`it can sideload a model with a chain of has-many relationships`, function(
 
 test(`it avoids circularity when serializing a model`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    author: Serializer.extend({
-      embed: false,
-      relationships: ['posts'],
+    application: this.BaseSerializer,
+    author: this.BaseSerializer.extend({
+      relationships: ['posts']
     }),
-    post: Serializer.extend({
-      relationships: ['author'],
+    post: this.BaseSerializer.extend({
+      relationships: ['author']
     })
   });
 
@@ -120,9 +123,9 @@ test(`it avoids circularity when serializing a model`, function(assert) {
 
 test(`it can sideload a model with a belongs-to relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    post: Serializer.extend({
-      embed: false,
-      relationships: ['author'],
+    application: this.BaseSerializer,
+    post: this.BaseSerializer.extend({
+      relationships: ['author']
     })
   });
 
@@ -141,12 +144,12 @@ test(`it can sideload a model with a belongs-to relationship`, function(assert) 
 
 test(`it can sideload a model with a chain of belongs-to relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    comment: Serializer.extend({
-      embed: false,
-      relationships: ['post'],
+    application: this.BaseSerializer,
+    comment: this.BaseSerializer.extend({
+      relationships: ['post']
     }),
-    post: Serializer.extend({
-      relationships: ['author'],
+    post: this.BaseSerializer.extend({
+      relationships: ['author']
     })
   });
 

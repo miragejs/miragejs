@@ -1,10 +1,10 @@
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import Serializer from 'ember-cli-mirage/serializer';
-import schemaHelper from './schema-helper';
+import schemaHelper from '../schema-helper';
 import { camelize } from 'ember-cli-mirage/utils/inflector';
 import {module, test} from 'qunit';
 
-module('Integration | Serializer | Attribute Key Formatting', {
+module('Integration | Serializers | Base | Attribute Key Formatting', {
   beforeEach() {
     this.schema = schemaHelper.setup();
     this.registry = new SerializerRegistry(this.schema, {

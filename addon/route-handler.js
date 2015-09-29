@@ -35,22 +35,22 @@ export default class RouteHandler {
     let handler;
 
     if (type === 'function') {
-      handler = new FunctionHandler(this.dbOrSchema, this.rawHandler);
+      handler = new FunctionHandler(this.dbOrSchema, this.serializerOrRegistry, this.rawHandler);
 
     } else if (type === 'object') {
-      handler = new ObjectHandler(this.dbOrSchema, this.rawHandler);
+      handler = new ObjectHandler(this.dbOrSchema, this.serializerOrRegistry, this.rawHandler);
 
     } else if (this.verb === 'get') {
-      handler = new GetShorthandHandler(this.dbOrSchema, this.rawHandler, this.options);
+      handler = new GetShorthandHandler(this.dbOrSchema, this.serializerOrRegistry, this.rawHandler, this.options);
 
     } else if (this.verb === 'post') {
-      handler = new PostShorthandHandler(this.dbOrSchema, this.rawHandler, this.options);
+      handler = new PostShorthandHandler(this.dbOrSchema, this.serializerOrRegistry, this.rawHandler, this.options);
 
     } else if (this.verb === 'put') {
-      handler = new PutShorthandHandler(this.dbOrSchema, this.rawHandler, this.options);
+      handler = new PutShorthandHandler(this.dbOrSchema, this.serializerOrRegistry, this.rawHandler, this.options);
 
     } else if (this.verb === 'delete') {
-      handler = new DeleteShorthandHandler(this.dbOrSchema, this.rawHandler, this.options);
+      handler = new DeleteShorthandHandler(this.dbOrSchema, this.serializerOrRegistry, this.rawHandler, this.options);
     }
 
     let response;

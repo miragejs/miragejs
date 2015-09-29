@@ -1,7 +1,8 @@
 export default class ObjectRouteHandler {
 
-  constructor(dbOrSchema, object) {
+  constructor(dbOrSchema, serializerOrRegistry, object) {
     this.dbOrSchema = dbOrSchema;
+    this.serializerOrRegistry = serializerOrRegistry;
     this.object = object;
   }
 

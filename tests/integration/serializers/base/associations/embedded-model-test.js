@@ -1,9 +1,9 @@
 import Serializer from 'ember-cli-mirage/serializer';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
-import schemaHelper from '../schema-helper';
+import schemaHelper from '../../schema-helper';
 import { module, test } from 'qunit';
 
-module('Integration | Serializer | Associations | Embedded Models', {
+module('Integration | Serializers | Base | Associations | Embedded Models', {
   beforeEach: function() {
     this.schema = schemaHelper.setup();
 
@@ -14,6 +14,10 @@ module('Integration | Serializer | Associations | Embedded Models', {
     author.createPost({title: 'Ipsum'});
 
     this.schema.author.create({name: 'Zelda'});
+
+    this.BaseSerializer = Serializer.extend({
+      embed: true
+    });
   },
 
   afterEach() {
@@ -23,8 +27,8 @@ module('Integration | Serializer | Associations | Embedded Models', {
 
 test(`it can embed has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    author: Serializer.extend({
-      embed: true,
+    application: this.BaseSerializer,
+    author: this.BaseSerializer.extend({
       relationships: ['posts']
     })
   });
@@ -46,11 +50,11 @@ test(`it can embed has-many relationships`, function(assert) {
 
 test(`it can embed a chain of has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    author: Serializer.extend({
-      embed: true,
+    application: this.BaseSerializer,
+    author: this.BaseSerializer.extend({
       relationships: ['posts']
     }),
-    post: Serializer.extend({
+    post: this.BaseSerializer.extend({
       relationships: ['comments']
     })
   });
@@ -74,7 +78,8 @@ test(`it can embed a chain of has-many relationships`, function(assert) {
 
 test(`it can embed a belongs-to relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    post: Serializer.extend({
+    application: this.BaseSerializer,
+    post: this.BaseSerializer.extend({
       embed: true,
       relationships: ['author']
     })
@@ -94,11 +99,11 @@ test(`it can embed a belongs-to relationship`, function(assert) {
 
 test(`it can serialize a chain of belongs-to relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    comment: Serializer.extend({
-      embed: true,
+    application: this.BaseSerializer,
+    comment: this.BaseSerializer.extend({
       relationships: ['post']
     }),
-    post: Serializer.extend({
+    post: this.BaseSerializer.extend({
       relationships: ['author']
     })
   });
@@ -123,11 +128,11 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
 
 test(`it ignores relationships that refer to serialized ancestor resources`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    author: Serializer.extend({
-      embed: true,
+    application: this.BaseSerializer,
+    author: this.BaseSerializer.extend({
       relationships: ['posts']
     }),
-    post: Serializer.extend({
+    post: this.BaseSerializer.extend({
       relationships: ['author']
     })
   });
@@ -149,14 +154,15 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
 
 test(`it ignores relationships that refer to serialized ancestor resources, multiple levels down`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    author: Serializer.extend({
+    application: this.BaseSerializer,
+    author: this.BaseSerializer.extend({
       embed: true,
       relationships: ['posts']
     }),
-    post: Serializer.extend({
+    post: this.BaseSerializer.extend({
       relationships: ['author', 'comments']
     }),
-    comment: Serializer.extend({
+    comment: this.BaseSerializer.extend({
       relationships: ['post']
     })
   });

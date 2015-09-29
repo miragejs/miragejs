@@ -1,12 +1,13 @@
-import { singularize, capitalize } from 'ember-cli-mirage/utils/inflector';
+import { singularize, capitalize, camelize } from 'ember-cli-mirage/utils/inflector';
 
 const { isArray } = _;
 const allDigitsRegex = /^\d+$/;
 
 export default class BaseShorthandRouteHandler {
 
-  constructor(dbOrSchema, shorthand, options) {
+  constructor(dbOrSchema, serializerOrRegistry, shorthand, options) {
     this.dbOrSchema = dbOrSchema;
+    this.serializerOrRegistry = serializerOrRegistry;
     this.shorthand = shorthand;
     this.options = options;
   }
@@ -59,6 +60,20 @@ export default class BaseShorthandRouteHandler {
     }
 
     return body;
+  }
+
+  _getAttrsForRequest(request) {
+    let id = this._getIdForRequest(request);
+    let json = this._getJsonBodyForRequest(request);
+    let jsonApiDoc = this.serializerOrRegistry.normalize(json);
+    let attrs = {};
+    Object.keys(jsonApiDoc.data.attributes).forEach(key => {
+      attrs[camelize(key)] = jsonApiDoc.data.attributes[key];
+    });
+
+    attrs.id = id;
+
+    return attrs;
   }
 
 }

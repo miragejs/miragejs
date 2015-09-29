@@ -1,9 +1,9 @@
 import Serializer from 'ember-cli-mirage/serializer';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
-import schemaHelper from '../schema-helper';
+import schemaHelper from '../../schema-helper';
 import { module, test } from 'qunit';
 
-module('Integration | Serializer | Associations | Sideloading Collections', {
+module('Integration | Serializers | Base | Associations | Sideloading Collections', {
   beforeEach: function() {
     this.schema = schemaHelper.setup();
 
@@ -15,6 +15,10 @@ module('Integration | Serializer | Associations | Sideloading Collections', {
 
     let zelda = this.schema.author.create({name: 'Zelda'});
     zelda.createPost({title: `Zeldas post`});
+
+    this.BaseSerializer = Serializer.extend({
+      embed: false
+    });
   },
 
   afterEach() {
@@ -24,8 +28,7 @@ module('Integration | Serializer | Associations | Sideloading Collections', {
 
 test(`it throws an error if embed is false and root is false`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    author: Serializer.extend({
-      embed: false,
+    author: this.BaseSerializer.extend({
       root: false,
       relationships: ['posts'],
     })
@@ -41,8 +44,8 @@ test(`it throws an error if embed is false and root is false`, function(assert) 
 test(`it can sideload an empty collection`, function(assert) {
   this.schema.db.emptyData();
   let registry = new SerializerRegistry(this.schema, {
-    author: Serializer.extend({
-      embed: false,
+    application: this.BaseSerializer,
+    author: this.BaseSerializer.extend({
       relationships: ['posts'],
     })
   });
@@ -56,7 +59,8 @@ test(`it can sideload an empty collection`, function(assert) {
 
 test(`it can sideload a collection with a has-many relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    author: Serializer.extend({
+    application: this.BaseSerializer,
+    author: this.BaseSerializer.extend({
       embed: false,
       relationships: ['posts'],
     })
@@ -80,11 +84,12 @@ test(`it can sideload a collection with a has-many relationship`, function(asser
 
 test(`it can sideload a collection with a chain of has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    author: Serializer.extend({
+    application: this.BaseSerializer,
+    author: this.BaseSerializer.extend({
       embed: false,
       relationships: ['posts'],
     }),
-    post: Serializer.extend({
+    post: this.BaseSerializer.extend({
       relationships: ['comments'],
     })
   });
@@ -110,11 +115,12 @@ test(`it can sideload a collection with a chain of has-many relationships`, func
 
 test(`it avoids circularity when serializing a collection`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    author: Serializer.extend({
+    application: this.BaseSerializer,
+    author: this.BaseSerializer.extend({
       embed: false,
       relationships: ['posts'],
     }),
-    post: Serializer.extend({
+    post: this.BaseSerializer.extend({
       relationships: ['author'],
     })
   });
@@ -137,7 +143,8 @@ test(`it avoids circularity when serializing a collection`, function(assert) {
 
 test(`it can sideload a collection with a belongs-to relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    post: Serializer.extend({
+    application: this.BaseSerializer,
+    post: this.BaseSerializer.extend({
       embed: false,
       relationships: ['author'],
     })
@@ -161,11 +168,12 @@ test(`it can sideload a collection with a belongs-to relationship`, function(ass
 
 test(`it can sideload a collection with a chain of belongs-to relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    comment: Serializer.extend({
+    application: this.BaseSerializer,
+    comment: this.BaseSerializer.extend({
       embed: false,
       relationships: ['post'],
     }),
-    post: Serializer.extend({
+    post: this.BaseSerializer.extend({
       relationships: ['author'],
     })
   });

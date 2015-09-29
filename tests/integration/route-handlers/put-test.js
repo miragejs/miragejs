@@ -1,6 +1,7 @@
 import {module, test} from 'qunit';
-import PutShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthands/put';
 import Db from 'ember-cli-mirage/db';
+import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
+import PutShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthands/put';
 
 module('Integration | Route Handlers | PUT', {
 
@@ -20,6 +21,7 @@ module('Integration | Route Handlers | PUT', {
       addresses: this.addresses,
       photos: this.photos
     });
+    this.serializer = new ActiveModelSerializer();
   }
 
 });
@@ -28,7 +30,7 @@ test("string shorthand works", function(assert) {
   let link = this.db.contacts.find(1);
   assert.equal(link.name, 'Link');
 
-  let handler = new PutShorthandRouteHandler(this.db, 'contact');
+  let handler = new PutShorthandRouteHandler(this.db, this.serializer, 'contact');
   let body = {contact: {id: 1, name: "Linkz0r"}};
   let request = {params: {id: 1}, requestBody: JSON.stringify(body)};
 
@@ -42,7 +44,7 @@ test("undefined shorthand works", function(assert) {
   let link = this.db.contacts.find(1);
   assert.equal(link.name, 'Link');
 
-  let handler = new PutShorthandRouteHandler(this.db, 'contact');
+  let handler = new PutShorthandRouteHandler(this.db, this.serializer, 'contact');
   let body = {contact: {id: 1, name: "Linkz0r"}};
   let request = {params: {id: 1}, url: '/contacts/1', requestBody: JSON.stringify(body)};
 
@@ -56,7 +58,7 @@ test("undefined shorthand works when query params present", function(assert) {
   let link = this.db.contacts.find(1);
   assert.equal(link.name, 'Link');
 
-  let handler = new PutShorthandRouteHandler(this.db);
+  let handler = new PutShorthandRouteHandler(this.db, this.serializer);
   let body = {contact: {id: 1, name: "Linkz0r"}};
   let request = {params: {id: 1}, url: '/contacts/1?some=foo', requestBody: JSON.stringify(body)};
 

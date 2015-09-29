@@ -11,10 +11,8 @@ export default class PutShorthandRouteHandler extends BaseShorthandRouteHandler 
   */
   handleStringShorthand(type, dbOrSchema, request) {
     var id = this._getIdForRequest(request);
-    var putData = this._getJsonBodyForRequest(request);
-    var attrs = putData[type];
+    let attrs = this._getAttrsForRequest(request);
     var collection = pluralize(type);
-    attrs.id = id;
 
     if (dbOrSchema instanceof Db) {
       let db = dbOrSchema;

@@ -1,17 +1,20 @@
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import Serializer from 'ember-cli-mirage/serializer';
-import schemaHelper from '../schema-helper';
+import schemaHelper from '../../schema-helper';
 import {module, test} from 'qunit';
 
-module('Integration | Serializer | Associations | Sideloading Assorted Collections', {
+module('Integration | Serializers | Base | Associations | Sideloading Assorted Collections', {
   beforeEach() {
     this.schema = schemaHelper.setup();
+    let BaseSerializer = Serializer.extend({
+      embed: false
+    });
     this.registry = new SerializerRegistry(this.schema, {
-      author: Serializer.extend({
-        embed: false,
+      application: BaseSerializer,
+      author: BaseSerializer.extend({
         relationships: ['posts']
       }),
-      photo: Serializer.extend({
+      photo: BaseSerializer.extend({
         attrs: ['id', 'title']
       })
     });

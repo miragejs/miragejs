@@ -26,6 +26,10 @@ class Serializer {
     return `${singularize(type)}Ids`;
   }
 
+  normalize(json) {
+    return json;
+  }
+
   _attrsForModel(model) {
     let attrs = {};
 

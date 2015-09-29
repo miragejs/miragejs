@@ -3,6 +3,7 @@ import Server from 'ember-cli-mirage/server';
 import Model from 'ember-cli-mirage/orm/model';
 import Mirage from 'ember-cli-mirage';
 import DeleteShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthands/delete';
+import JSONAPISerializer from 'ember-cli-mirage/serializers/json-api-serializer';
 
 module('Integration | Route Handlers | DELETE with ORM', {
 
@@ -29,6 +30,7 @@ module('Integration | Route Handlers | DELETE with ORM', {
     this.server.db.loadData({authors, posts});
 
     this.schema = this.server.schema;
+    this.serializer = new JSONAPISerializer();
   },
 
   afterEach: function() {
@@ -39,7 +41,7 @@ module('Integration | Route Handlers | DELETE with ORM', {
 
 test('undefined shorthand deletes the record and returns null', function(assert) {
   let request = {url: '/authors/1', params: {id: '1'}};
-  let handler = new DeleteShorthandRouteHandler(this.schema);
+  let handler = new DeleteShorthandRouteHandler(this.schema, this.serializer);
 
   let response = handler.handle(request);
 
@@ -49,7 +51,7 @@ test('undefined shorthand deletes the record and returns null', function(assert)
 
 test('query params are ignored', function(assert) {
   let request = {url: '/authors/1?foo=bar', params: {id: '1'}, queryParams: {foo: 'bar'}};
-  let handler = new DeleteShorthandRouteHandler(this.schema);
+  let handler = new DeleteShorthandRouteHandler(this.schema, this.serializer);
 
   let response = handler.handle(request);
 
@@ -59,7 +61,7 @@ test('query params are ignored', function(assert) {
 
 test('string shorthand deletes the record of the specified type', function(assert) {
   let request = {url: '/people/1?foo=bar', params: {id: '1'}, queryParams: {foo: 'bar'}};
-  let handler = new DeleteShorthandRouteHandler(this.schema, 'author');
+  let handler = new DeleteShorthandRouteHandler(this.schema, this.serializer, 'author');
 
   let response = handler.handle(request);
 
@@ -69,7 +71,7 @@ test('string shorthand deletes the record of the specified type', function(asser
 
 test('array shorthand deletes the record and all related records', function(assert) {
   let request = {url: '/authors/1', params: {id: '1'}};
-  let handler = new DeleteShorthandRouteHandler(this.schema, ['author', 'posts']);
+  let handler = new DeleteShorthandRouteHandler(this.schema, this.serializer, ['author', 'posts']);
 
   let response = handler.handle(request);
 

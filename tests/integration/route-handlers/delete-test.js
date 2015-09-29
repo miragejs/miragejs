@@ -1,6 +1,7 @@
 import {module, test} from 'qunit';
 import DeleteShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthands/delete';
 import Db from 'ember-cli-mirage/db';
+import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
 
 module('Integration | Route Handlers | DELETE', {
 
@@ -18,12 +19,13 @@ module('Integration | Route Handlers | DELETE', {
       contacts: this.contacts,
       addresses: this.addresses
     });
+    this.serializer = new ActiveModelSerializer();
   }
 
 });
 
 test("string shorthand works", function(assert) {
-  let handler = new DeleteShorthandRouteHandler(this.db, 'contact');
+  let handler = new DeleteShorthandRouteHandler(this.db, this.serializer, 'contact');
   let request = {params: {id: 1}};
 
   handler.handle(request);
@@ -35,7 +37,7 @@ test("string shorthand works", function(assert) {
 });
 
 test("array shorthand works", function(assert) {
-  let handler = new DeleteShorthandRouteHandler(this.db, ['contact', 'addresses']);
+  let handler = new DeleteShorthandRouteHandler(this.db, this.serializer, ['contact', 'addresses']);
   let request = {params: {id: 1}};
 
   handler.handle(request);
@@ -52,7 +54,7 @@ test("array shorthand works", function(assert) {
 });
 
 test("undefined shorthand works", function(assert) {
-  let handler = new DeleteShorthandRouteHandler(this.db);
+  let handler = new DeleteShorthandRouteHandler(this.db, this.serializer);
   let request = {params: {id: 1}, url: '/contacts/1'};
 
   handler.handle(request);

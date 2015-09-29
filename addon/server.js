@@ -2,7 +2,7 @@ import { pluralize } from './utils/inflector';
 import Pretender from 'pretender';
 import Db from './db';
 import Schema from './orm/schema';
-import Serializer from './serializer';
+import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
 import SerializerRegistry from './serializer-registry';
 import RouteHandler from './route-handler';
 
@@ -43,7 +43,7 @@ export default class Server {
       this.schema.registerModels(options.models);
       this.serializerOrRegistry = new SerializerRegistry(this.schema, options.serializers);
     } else {
-      this.serializerOrRegistry = new Serializer();
+      this.serializerOrRegistry = new ActiveModelSerializer();
     }
 
     // TODO: Better way to inject server into test env
