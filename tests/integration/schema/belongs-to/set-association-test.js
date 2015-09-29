@@ -1,7 +1,7 @@
 import BelongsToHelper from './belongs-to-helper';
 import {module, test} from 'qunit';
 
-module('mirage:integration:schema:belongsTo#setAssociation', {
+module('Integration | Schema | belongsTo #setAssociation', {
   beforeEach: function() {
     this.helper = new BelongsToHelper();
   }
@@ -22,7 +22,7 @@ module('mirage:integration:schema:belongsTo#setAssociation', {
 
     address.user = savedUser;
 
-    assert.equal(address.user_id, savedUser.id);
+    assert.equal(address.userId, savedUser.id);
     assert.deepEqual(address.user, savedUser);
   });
 
@@ -32,7 +32,7 @@ module('mirage:integration:schema:belongsTo#setAssociation', {
 
     address.user = newUser;
 
-    assert.equal(address.user_id, null);
+    assert.equal(address.userId, null);
     assert.deepEqual(address.user, newUser);
   });
 
@@ -41,7 +41,7 @@ module('mirage:integration:schema:belongsTo#setAssociation', {
 
     address.user = null;
 
-    assert.equal(address.user_id, null);
+    assert.equal(address.userId, null);
     assert.deepEqual(address.user, null);
   });
 

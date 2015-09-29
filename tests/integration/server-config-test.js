@@ -1,7 +1,7 @@
 import {module, test} from 'qunit';
 import Server from 'ember-cli-mirage/server';
 
-module('integration:server-config', {
+module('Integration | Server Config', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development'

@@ -2,7 +2,7 @@ import faker from 'ember-cli-mirage/faker';
 
 import {module, test} from 'qunit';
 
-module('mirage:faker');
+module('Unit | Faker');
 
 test('#cycle - returns a function', function (assert) {
   var callback = faker.list.cycle('first', 'second');

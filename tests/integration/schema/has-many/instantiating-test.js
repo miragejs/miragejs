@@ -5,7 +5,7 @@ import Db from 'ember-cli-mirage/db';
 import {module, test} from 'qunit';
 
 var schema, child1, child2;
-module('mirage:integration:schema:hasMany instantiating with params', {
+module('Integration | Schema | hasMany instantiating with params', {
   beforeEach: function() {
     var db = new Db({
       users: [],
@@ -33,27 +33,27 @@ module('mirage:integration:schema:hasMany instantiating with params', {
 
 test('children have fks added to their attrs', function(assert) {
   var newChild = schema.address.new();
-  assert.deepEqual(newChild.attrs, {user_id: null});
-  assert.deepEqual(child1.attrs, {id: 1, name: '123 Hyrule Way', user_id: null});
+  assert.deepEqual(newChild.attrs, {userId: null});
+  assert.deepEqual(child1.attrs, {id: 1, name: '123 Hyrule Way', userId: null});
 });
 
 test('the parent accepts an array of saved children ids', function(assert) {
-  var user = schema.user.new({address_ids: [1, 2]});
+  var user = schema.user.new({addressIds: [1, 2]});
 
   assert.equal(user.addresses.length, 2);
   assert.deepEqual(user.addresses[0], child1);
   assert.deepEqual(user.addresses[1], child2);
-  assert.deepEqual(user.address_ids, [1, 2]);
+  assert.deepEqual(user.addressIds, [1, 2]);
 });
 
 test('the parent errors if one of the child ids doesnt exist', function(assert) {
   assert.throws(function() {
-    schema.user.new({address_ids: [1, 9]});
+    schema.user.new({addressIds: [1, 9]});
   }, /Couldn't find/);
 });
 
-test('the parent accepts an empty child_ids array', function(assert) {
-  var user = schema.user.new({address_ids: []});
+test('the parent accepts an empty childIds array', function(assert) {
+  var user = schema.user.new({addressIds: []});
 
   assert.equal(user.addresses.length, 0);
 });
@@ -61,7 +61,7 @@ test('the parent accepts an empty child_ids array', function(assert) {
 test('the parent accepts an array of saved child models', function(assert) {
   var user = schema.user.new({addresses: [child1, child2]});
 
-  assert.deepEqual(user.address_ids, [1, 2]);
+  assert.deepEqual(user.addressIds, [1, 2]);
   assert.equal(user.addresses.length, 2);
   assert.deepEqual(user.addresses[0], child1);
 });
@@ -71,7 +71,7 @@ test('the parent accepts an array of new child models', function(assert) {
   var newAddress2 = schema.address.new();
   var user = schema.user.new({addresses: [newAddress1, newAddress2]});
 
-  assert.deepEqual(user.address_ids, [undefined, undefined]);
+  assert.deepEqual(user.addressIds, [undefined, undefined]);
   assert.equal(user.addresses.length, 2);
   assert.deepEqual(user.addresses[0], newAddress1);
 });
@@ -80,7 +80,7 @@ test('the parent accepts a mixed array of new and saved child models', function(
   var newAddress1 = schema.address.new();
   var user = schema.user.new({addresses: [child1, newAddress1]});
 
-  assert.deepEqual(user.address_ids, [1, undefined]);
+  assert.deepEqual(user.addressIds, [1, undefined]);
   assert.equal(user.addresses.length, 2);
   assert.deepEqual(user.addresses[0], child1);
   assert.deepEqual(user.addresses[1], newAddress1);
@@ -89,20 +89,20 @@ test('the parent accepts a mixed array of new and saved child models', function(
 test('the parent accepts null child models', function(assert) {
   var user = schema.user.new({addresses: [null]});
 
-  assert.deepEqual(user.address_ids, []);
+  assert.deepEqual(user.addressIds, []);
   assert.equal(user.addresses.length, 0);
 });
 
 test('the parent accepts no reference to a child id or model as empty obj', function(assert) {
   var user = schema.user.new({});
 
-  assert.deepEqual(user.address_ids, []);
+  assert.deepEqual(user.addressIds, []);
   assert.equal(user.addresses.length, 0);
 });
 
 test('the parent accepts no reference to a child id or model', function(assert) {
   var user = schema.user.new();
 
-  assert.deepEqual(user.address_ids, []);
+  assert.deepEqual(user.addressIds, []);
   assert.equal(user.addresses.length, 0);
 });

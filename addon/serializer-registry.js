@@ -1,7 +1,7 @@
 import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
-import Serializer from 'ember-cli-mirage/serializer';
-import { singularize, pluralize } from './utils/inflector';
+import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
+import { pluralize } from './utils/inflector';
 
 const { isArray, assign } = _;
 
@@ -9,14 +9,14 @@ export default class SerializerRegistry {
 
   constructor(schema, serializerMap = {}) {
     this.schema = schema;
-    this.baseSerializer = new Serializer();
+    this.baseSerializer = new ActiveModelSerializer();
     this._serializerMap = serializerMap;
   }
 
   serialize(response) {
     this.alreadySerialized = {};
 
-    if (response instanceof Model || response instanceof Collection) {
+    if (this._isModelOrCollection(response)) {
       let serializer = this._serializerFor(response);
 
       if (serializer.embed) {
@@ -45,7 +45,7 @@ export default class SerializerRegistry {
       The array shorthand can return this, e.g.
         this.get('/home', ['authors', 'photos'])
     */
-    } else if (isArray(response) && response.filter(item => (item instanceof Collection)).length) {
+    } else if (isArray(response) && response.filter(item => (this._isCollection(item))).length) {
       return response.reduce((json, collection) => {
         let serializer = this._serializerFor(collection);
 
@@ -80,13 +80,15 @@ export default class SerializerRegistry {
     }
   }
 
-  _serializeSideloadedModelResponse(model, topLevelIsArray = false, allAttrs = {}) {
+  _serializeSideloadedModelResponse(model, topLevelIsArray = false, allAttrs = {}, root = null) {
+    let serializer = this._serializerFor(model);
+
     // Add this model's attrs
     this._augmentAlreadySerialized(model);
     let modelAttrs = this._attrsForModel(model, false, true);
     let key = model.type;
     if (topLevelIsArray) {
-      key = pluralize(key);
+      key = root ? root : pluralize(key);
       allAttrs[key] = allAttrs[key] || [];
       allAttrs[key].push(modelAttrs);
     } else {
@@ -94,24 +96,18 @@ export default class SerializerRegistry {
     }
 
     // Traverse this model's relationships
-    let serializer = this._serializerFor(model);
     serializer.relationships
       .map(key => model[key])
       .forEach(relationship => {
-        if (relationship instanceof Collection) {
-          relationship.forEach(relatedModel => {
-            if (this._hasBeenSerialized(relatedModel)) {
-              return;
-            }
-            this._serializeSideloadedModelResponse(relatedModel, true, allAttrs);
-          });
-        } else {
-          if (this._hasBeenSerialized(relationship)) {
+        let relatedModels = this._isModel(relationship) ? [relationship] : relationship;
+
+        relatedModels.forEach(relatedModel => {
+          if (this._hasBeenSerialized(relatedModel)) {
             return;
           }
 
-          this._serializeSideloadedModelResponse(relationship, true, allAttrs);
-        }
+          this._serializeSideloadedModelResponse(relatedModel, true, allAttrs, serializer.keyForRelatedCollection(relatedModel.type));
+        });
       });
 
     return allAttrs;
@@ -163,9 +159,9 @@ export default class SerializerRegistry {
     if (embedRelatedIds) {
       serializer.relationships
         .map(key => model[key])
-        .filter(relatedCollection => relatedCollection instanceof Collection)
+        .filter(relatedCollection => this._isCollection(relatedCollection))
         .forEach(relatedCollection => {
-          attrs[`${singularize(relatedCollection.type)}_ids`] = relatedCollection.map(obj => obj.id);
+          attrs[serializer.keyForRelationshipIds(relatedCollection.type)] = relatedCollection.map(obj => obj.id);
         });
     }
 
@@ -187,13 +183,13 @@ export default class SerializerRegistry {
   }
 
   _hasBeenSerialized(model) {
-    let relationshipKey = `${model.type}_ids`;
+    let relationshipKey = `${model.type}Ids`;
 
     return (this.alreadySerialized[relationshipKey] && this.alreadySerialized[relationshipKey].indexOf(model.id) > -1);
   }
 
   _augmentAlreadySerialized(model) {
-    let modelKey = `${model.type}_ids`;
+    let modelKey = `${model.type}Ids`;
 
     this.alreadySerialized[modelKey] = this.alreadySerialized[modelKey] || [];
     this.alreadySerialized[modelKey].push(model.id);
@@ -220,6 +216,10 @@ export default class SerializerRegistry {
 
   _isCollection(object) {
     return object instanceof Collection;
+  }
+
+  _isModelOrCollection(object) {
+    return this._isModel(object) || this._isCollection(object);
   }
 
 }

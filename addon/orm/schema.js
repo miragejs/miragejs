@@ -1,4 +1,4 @@
-import { singularize, pluralize } from '../utils/inflector';
+import { singularize, pluralize, camelize } from '../utils/inflector';
 import Collection from './collection';
 import Association from './associations/association';
 
@@ -21,6 +21,7 @@ export default function(db) {
 
   this.registerModel = function(type, ModelClass) {
     var _this = this;
+    type = camelize(type);
 
     // Store model & fks in registry
     this._registry[type] = this._registry[type] || {class: null, foreignKeys: []}; // we may have created this key before, if another model added fks to it

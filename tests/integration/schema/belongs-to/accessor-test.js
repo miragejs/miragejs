@@ -1,7 +1,7 @@
 import BelongsToHelper from './belongs-to-helper';
 import {module, test} from 'qunit';
 
-module('mirage:integration:schema:belongsTo#accessor', {
+module('Integration | Schema | belongsTo #accessor', {
   beforeEach: function() {
     this.helper = new BelongsToHelper();
   }
@@ -24,7 +24,7 @@ module('mirage:integration:schema:belongsTo#accessor', {
     var [address, user] = this.helper[state]();
 
     assert.deepEqual(address.user, user ? user : null, 'the model reference is correct');
-    assert.equal(address.user_id, user ? user.id : null, 'the model_id reference is correct');
+    assert.equal(address.userId, user ? user.id : null, 'the modelId reference is correct');
   });
 
 });

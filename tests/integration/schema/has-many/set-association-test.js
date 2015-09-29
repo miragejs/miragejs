@@ -1,7 +1,7 @@
 import HasManyHelper from './has-many-helper';
 import {module, test} from 'qunit';
 
-module('mirage:integration:schema:hasMany#setAssociation', {
+module('Integration | Schema | hasMany #setAssociation', {
   beforeEach: function() {
     this.helper = new HasManyHelper();
   }
@@ -29,7 +29,7 @@ module('mirage:integration:schema:hasMany#setAssociation', {
     addresses.forEach(function(address) {
       if (address.isSaved()) {
         address.reload();
-        assert.equal(address.user_id, null, 'old saved children have their fks cleared');
+        assert.equal(address.userId, null, 'old saved children have their fks cleared');
       }
     });
   });
@@ -50,7 +50,7 @@ module('mirage:integration:schema:hasMany#setAssociation', {
     user.addresses = [savedAddress];
     savedAddress.reload();
 
-    assert.equal(savedAddress.user_id, user.id, `the child's fk was set`);
+    assert.equal(savedAddress.userId, user.id, `the child's fk was set`);
   });
 
 });
@@ -80,7 +80,7 @@ module('mirage:integration:schema:hasMany#setAssociation', {
     addresses.forEach(function(address) {
       if (address.isSaved()) {
         address.reload();
-        assert.equal(address.user_id, null, 'old saved children have their fks cleared');
+        assert.equal(address.userId, null, 'old saved children have their fks cleared');
       }
     });
   });
@@ -102,7 +102,7 @@ module('mirage:integration:schema:hasMany#setAssociation', {
     address.reload();
 
     assert.ok(address.isSaved(), 'the new child was saved');
-    assert.equal(address.user_id, user.id, `the child's fk was set`);
+    assert.equal(address.userId, user.id, `the child's fk was set`);
   });
 
 });
@@ -135,7 +135,7 @@ module('mirage:integration:schema:hasMany#setAssociation', {
     addresses.forEach(function(address) {
       if (address.isSaved()) {
         address.reload();
-        assert.equal(address.user_id, null, 'old saved children have their fks cleared');
+        assert.equal(address.userId, null, 'old saved children have their fks cleared');
       }
     });
   });
@@ -159,8 +159,8 @@ module('mirage:integration:schema:hasMany#setAssociation', {
     newAddress.reload();
 
     assert.ok(newAddress.isSaved(), 'the new child was saved');
-    assert.equal(savedAddress.user_id, user.id, `the saved child's fk was set`);
-    assert.equal(newAddress.user_id, user.id, `the new child's fk was set`);
+    assert.equal(savedAddress.userId, user.id, `the saved child's fk was set`);
+    assert.equal(newAddress.userId, user.id, `the new child's fk was set`);
   });
 
 });
@@ -185,7 +185,7 @@ module('mirage:integration:schema:hasMany#setAssociation', {
     addresses.forEach(function(address) {
       if (address.isSaved()) {
         address.reload();
-        assert.equal(address.user_id, null, 'old saved children have their fks cleared');
+        assert.equal(address.userId, null, 'old saved children have their fks cleared');
       }
     });
   });

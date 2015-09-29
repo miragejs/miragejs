@@ -2,7 +2,7 @@ import { singularize, pluralize } from 'ember-cli-mirage/utils/inflector';
 
 import {module, test} from 'qunit';
 
-module('mirage:inflector');
+module('Unit | Inflector');
 
 test('can singularize', function(assert) {
   assert.equal(singularize('tests'), 'test');

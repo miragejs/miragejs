@@ -1,7 +1,7 @@
 import HasManyHelper from './has-many-helper';
 import {module, test} from 'qunit';
 
-module('mirage:integration:schema:hasMany#newAssociation', {
+module('Integration | Schema | hasMany #newAssociation', {
   beforeEach: function() {
     this.helper = new HasManyHelper();
   }
@@ -28,13 +28,13 @@ module('mirage:integration:schema:hasMany#newAssociation', {
     assert.deepEqual(user.addresses[startingCount], springfield, `the child is appended to the parent's collection`);
 
     if (!user.isNew()) {
-      assert.equal(springfield.user_id, user.id, `the new address's fk reference the saved parent`);
+      assert.equal(springfield.userId, user.id, `the new address's fk reference the saved parent`);
     }
 
     user.save();
 
     assert.ok(springfield.id, 'saving the parent persists the child');
-    assert.equal(springfield.user_id, user.id, 'the childs fk was updated');
+    assert.equal(springfield.userId, user.id, 'the childs fk was updated');
   });
 
 });

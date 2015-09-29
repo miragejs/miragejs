@@ -1,7 +1,7 @@
 import {module, test} from 'qunit';
 import Server from 'ember-cli-mirage/server';
 
-module('integration:http-verbs', {
+module('Integration | HTTP Verbs', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development'
@@ -26,7 +26,7 @@ test('mirage responds to get', function(assert) {
     method: 'GET',
     url: '/contacts'
   }).done(function(res) {
-    assert.ok(res);
+    assert.equal(res, true);
     done();
   });
 });
@@ -43,7 +43,7 @@ test('mirage responds to post', function(assert) {
     method: 'POST',
     url: '/contacts'
   }).done(function(res) {
-    assert.ok(res);
+    assert.equal(res, true);
     done();
   });
 });
@@ -60,7 +60,7 @@ test('mirage responds to put', function(assert) {
     method: 'PUT',
     url: '/contacts'
   }).done(function(res) {
-    assert.ok(res);
+    assert.equal(res, true);
     done();
   });
 });
@@ -77,7 +77,7 @@ test('mirage responds to delete', function(assert) {
     method: 'DELETE',
     url: '/contacts'
   }).done(function(res) {
-    assert.ok(res);
+    assert.equal(res, true);
     done();
   });
 });
@@ -94,7 +94,23 @@ test('mirage responds to patch', function(assert) {
     method: 'PATCH',
     url: '/contacts'
   }).done(function(res) {
-    assert.ok(res);
+    assert.equal(res, true);
     done();
   });
 });
+
+test('response code can be customized', function(assert) {
+  assert.expect(1);
+  var done = assert.async();
+
+  this.server.get('/contacts', {}, 404);
+
+  $.ajax({
+    method: 'GET',
+    url: '/contacts'
+  }).complete(function(res) {
+    assert.ok(res.status, 404);
+    done();
+  });
+});
+

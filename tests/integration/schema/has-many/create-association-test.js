@@ -1,7 +1,7 @@
 import HasManyHelper from './has-many-helper';
 import {module, test} from 'qunit';
 
-module('mirage:integration:schema:hasMany#createAssociation', {
+module('Integration | Schema | hasMany #createAssociation', {
   beforeEach: function() {
     this.helper = new HasManyHelper();
   }
@@ -21,10 +21,10 @@ module('mirage:integration:schema:hasMany#createAssociation', {
     var springfield = user.createAddress({name: '1 Springfield ave'});
 
     assert.ok(springfield.id, 'the child was persisted');
-    assert.equal(springfield.user_id, 1, 'the fk is set');
+    assert.equal(springfield.userId, 1, 'the fk is set');
     assert.equal(user.addresses.length, startingCount + 1, 'the collection length is correct');
     assert.deepEqual(user.addresses.filter(a => a.id === springfield.id)[0], springfield, 'the address was added to user.addresses');
-    assert.ok(user.address_ids.indexOf(springfield.id) > -1, 'the id was added to the fks array');
+    assert.ok(user.addressIds.indexOf(springfield.id) > -1, 'the id was added to the fks array');
   });
 
 });

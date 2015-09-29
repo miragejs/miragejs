@@ -2,7 +2,7 @@ import Mirage from 'ember-cli-mirage';
 
 import {module, test} from 'qunit';
 
-module('mirage:factory');
+module('Unit | Factory');
 
 test('it exists', function(assert) {
   assert.ok(Mirage.Factory);

@@ -1,7 +1,7 @@
 import BelongsToHelper from './belongs-to-helper';
 import {module, test} from 'qunit';
 
-module('mirage:integration:schema:belongsTo#newAssociation', {
+module('Integration | Schema | belongsTo #newAssociation', {
   beforeEach: function() {
     this.helper = new BelongsToHelper();
   }
@@ -27,12 +27,12 @@ module('mirage:integration:schema:belongsTo#newAssociation', {
 
     assert.ok(!ganon.id, 'the parent was not persisted');
     assert.deepEqual(address.user, ganon);
-    assert.equal(address.user_id, null);
+    assert.equal(address.userId, null);
 
     address.save();
 
     assert.ok(ganon.id, 'saving the child persists the parent');
-    assert.equal(address.user_id, ganon.id, 'the childs fk was updated');
+    assert.equal(address.userId, ganon.id, 'the childs fk was updated');
   });
 
 });

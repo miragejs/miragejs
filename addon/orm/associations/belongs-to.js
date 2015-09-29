@@ -7,11 +7,11 @@ class BelongsTo extends Association {
     The belongsTo association adds a fk to the owner of the association
   */
   getForeignKeyArray() {
-    return [this.owner, `${this.target}_id`];
+    return [this.owner, `${this.target}Id`];
   }
 
   getForeignKey() {
-    return `${this.target}_id`;
+    return `${this.target}Id`;
   }
 
   addMethodsToModelClass(ModelClass, key, schema) {
@@ -28,7 +28,7 @@ class BelongsTo extends Association {
     Object.defineProperty(modelPrototype, this.getForeignKey(), {
 
       /*
-        object.parent_id
+        object.parentId
           - returns the associated parent's id
       */
       get: function() {
@@ -36,7 +36,7 @@ class BelongsTo extends Association {
       },
 
       /*
-        object.parent_id = (parentId)
+        object.parentId = (parentId)
           - sets the associated parent (via id)
       */
       set: function(id) {

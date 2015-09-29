@@ -1,7 +1,7 @@
 import HasManyHelper from './has-many-helper';
 import {module, test} from 'qunit';
 
-module('mirage:integration:schema:hasMany#accessor', {
+module('Integration | Schema | hasMany #accessor', {
   beforeEach: function() {
     this.helper = new HasManyHelper();
   }
@@ -26,13 +26,13 @@ module('mirage:integration:schema:hasMany#accessor', {
     var [user, addresses] = this.helper[state]();
 
     assert.equal(user.addresses.length, addresses.length, 'parent has correct number of children');
-    assert.equal(user.address_ids.length, addresses.length, 'parent has correct number of child ids');
+    assert.equal(user.addressIds.length, addresses.length, 'parent has correct number of child ids');
 
     addresses.forEach(function(address, i) {
       assert.deepEqual(user.addresses[i], addresses[i], 'each child is in parent.children array');
 
       if (!address.isNew()) {
-        assert.ok(user.address_ids.indexOf(address.id) > -1, 'each saved child id is in parent.children_ids array');
+        assert.ok(user.addressIds.indexOf(address.id) > -1, 'each saved child id is in parent.childrenIds array');
       }
     });
   });

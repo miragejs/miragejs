@@ -1,6 +1,7 @@
 /* global _ */
 import Model from './orm/model';
 import extend from './utils/extend';
+import { singularize, pluralize } from './utils/inflector';
 
 class Serializer {
 
@@ -13,8 +14,20 @@ class Serializer {
     }
   }
 
-  keyForAttribute(key) {
-    return key;
+  keyForAttribute(attr) {
+    return attr;
+  }
+
+  keyForRelatedCollection(type) {
+    return pluralize(type);
+  }
+
+  keyForRelationshipIds(type) {
+    return `${singularize(type)}Ids`;
+  }
+
+  normalize(json) {
+    return json;
   }
 
   _attrsForModel(model) {

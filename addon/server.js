@@ -2,37 +2,28 @@ import { pluralize } from './utils/inflector';
 import Pretender from 'pretender';
 import Db from './db';
 import Schema from './orm/schema';
-import Controller from './controller';
-import Serializer from './serializer';
+import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
 import SerializerRegistry from './serializer-registry';
+import RouteHandler from './route-handler';
 
-/*
-  The Mirage server, which has a db and an XHR interceptor.
-  Requires an environment.
-*/
 export default class Server {
 
-  constructor(options) {
-    if (!options || !options.environment) {
-      throw "You must pass an environment in when creating a Mirage server instance";
-    }
-
-    this.environment = options.environment;
+  constructor(options = {}) {
+    this.environment = options.environment || 'development';
     this.timing = 400;
     this.namespace = '';
     this.urlPrefix = '';
 
-    this._setupStubAliases();
+    this._defineRouteHandlerHelpers();
 
     /*
       Bootstrap dependencies
 
       TODO: Inject / belongs in a container
     */
-    this.controller = new Controller(new Serializer());
     this.db = new Db();
 
-    this.interceptor = new Pretender(function() {
+    this.pretender = this.interceptor = new Pretender(function() {
       this.prepareBody = function(body) {
         return body ? JSON.stringify(body) : '{"error": "not found"}';
       };
@@ -45,52 +36,47 @@ export default class Server {
                       "mirage/config.js file. Did you forget to add your namespace?");
       };
     });
-    this.pretender = this.interceptor; // alias
 
-    if (options.modelsMap) {
+    if (this._hasModulesOfType(options, 'models')) {
       // TODO: really should be injected into Controller, server doesn't need to know about schema
       this.schema = new Schema(this.db);
-      this.schema.registerModels(options.modelsMap);
-      this.controller.setSerializerRegistry(new SerializerRegistry(this.schema, options.serializersMap));
+      this.schema.registerModels(options.models);
+      this.serializerOrRegistry = new SerializerRegistry(this.schema, options.serializers);
+    } else {
+      this.serializerOrRegistry = new ActiveModelSerializer();
     }
 
     // TODO: Better way to inject server into test env
     if (this.environment === 'test') {
       window.server = this;
     }
+
+    let hasFactories = this._hasModulesOfType(options, 'factories');
+    let hasDefaultScenario = options.scenarios && options.scenarios.hasOwnProperty('default');
+
+    if (options.baseConfig) {
+      this.loadConfig(options.baseConfig);
+    }
+
+    if (this.environment === 'test' && options.testConfig) {
+      this.loadConfig(options.testConfig);
+    }
+
+    if (this.environment === 'test' && hasFactories) {
+      this.loadFactories(options.factories);
+
+    } else if (this.environment !== 'test' && hasDefaultScenario && hasFactories) {
+      this.loadFactories(options.factories);
+      options.scenarios.default(this);
+
+    } else {
+      this.db.loadData(options.fixtures);
+    }
   }
 
   loadConfig(config) {
     config.call(this);
     this.timing = this.environment === 'test' ? 0 : (this.timing || 0);
-  }
-
-  // TODO: Move all this logic to another object (route?)
-  stub(verb, path, handler, code, options) {
-    var _this = this;
-    path = path[0] === '/' ? path.slice(1) : path;
-
-    this.interceptor[verb].call(this.interceptor, this._getFullPath(path), function(request) {
-      var response = _this.controller.handle(verb, handler, (_this.schema || _this.db), request, code, options);
-      var shouldLog = typeof _this.logging !== 'undefined' ? _this.logging : (_this.environment !== 'test');
-
-      if (shouldLog) {
-        console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
-        if (request.requestBody) {
-          var contentType = request.requestHeaders['Content-Type'];
-          console.log('Request body:');
-          if (contentType && contentType.indexOf('application/json') === 0) {
-            console.log(JSON.parse(request.requestBody));
-          } else {
-            console.log(request.requestBody);
-          }
-        }
-        console.log('Response:');
-        console.log(response[2]);
-      }
-
-      return response;
-    }, function() { return _this.timing; });
   }
 
   /*
@@ -139,44 +125,39 @@ export default class Server {
     }
   }
 
-  _setupStubAliases() {
-    var _this = this;
-
-    [['get'], ['post'], ['put'], ['delete', 'del'], ['patch']].forEach(function(names) {
-      var verb = names[0];
-      var alias = names[1];
-
-      _this[verb] = function(/* path, handler, code, options */) {
-        var args = _this._extractStubArguments.apply(this, arguments);
-        args.unshift(verb);
-        this.stub.apply(this, args);
+  _defineRouteHandlerHelpers() {
+    [['get'], ['post'], ['put'], ['delete', 'del'], ['patch']].forEach(([verb, alias]) => {
+      this[verb] = (path, ...args) => {
+        this._registerRouteHandler(verb, path, args);
       };
 
-      if (alias) { _this[alias] = _this[verb]; }
+      if (alias) { this[alias] = this[verb]; }
     });
   }
 
-  /*
-    Given a variable number of arguments, it generates an array of with
-    [path, handler, code, options], `path` and `options` being always defined,
-    and `handler` and `code` being undefined if not suplied.
-  */
-  _extractStubArguments(/* path, handler, code, options */) {
-    var ary = Array.prototype.slice.call(arguments);
-    var argsInitialLength = ary.length;
-    var lastArgument = ary[ary.length - 1];
-    var options;
-    var i = 0;
-    if (lastArgument.constructor === Object) {
-      argsInitialLength--;
-    } else {
-      options = { colesce: false };
-      ary.push(options);
-    }
-    for(; i < 5 - ary.length; i++) {
-      ary.splice(argsInitialLength, 0, undefined);
-    }
-    return ary;
+  _registerRouteHandler(verb, path, args) {
+    let dbOrSchema = (this.schema || this.db);
+    let routeHandler = new RouteHandler(dbOrSchema, verb, args, this.serializerOrRegistry);
+    let fullPath = this._getFullPath(path);
+
+    this.pretender[verb](fullPath, request => {
+      let rackResponse = routeHandler.handle(request);
+
+      let shouldLog = typeof this.logging !== 'undefined' ? this.logging : (this.environment !== 'test');
+
+      if (shouldLog) {
+        console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
+        console.log(rackResponse[2]);
+      }
+
+      return rackResponse;
+    }, () => { return this.timing; });
+  }
+
+  _hasModulesOfType(modules, type) {
+    let modulesOfType = modules[type] || {};
+
+    return _.keys(modulesOfType).length > 0;
   }
 
   /*
@@ -184,9 +165,10 @@ export default class Server {
     configured options (`urlPrefix` and `namespace`).
   */
   _getFullPath(path) {
-    var fullPath = '',
-        urlPrefix = this.urlPrefix ? this.urlPrefix.trim() : '',
-        namespace = this.namespace ? this.namespace.trim() : '';
+    path = path[0] === '/' ? path.slice(1) : path;
+    let fullPath = '';
+    let urlPrefix = this.urlPrefix ? this.urlPrefix.trim() : '';
+    let namespace = this.namespace ? this.namespace.trim() : '';
 
     // check to see if path is a FQDN. if so, ignore any urlPrefix/namespace that was set
     if (/^https?:\/\//.test(path)) {

@@ -4,7 +4,7 @@ import Db from 'ember-cli-mirage/db';
 import {module, test} from 'qunit';
 
 var schema;
-module('mirage:integration:schema:create#unregistered', {
+module('Integration | Schema | Creating an Unregistered Model', {
   beforeEach: function() {
     schema = new Schema(new Db());
   }
@@ -24,7 +24,7 @@ test('it cannot create models that havent been registered', function(assert) {
 
 
 var db, schema, User;
-module('mirage:integration:schema:create', {
+module('Integration | Schema | Creating a Model', {
   beforeEach: function() {
     db = new Db();
     schema = new Schema(db);
