@@ -9,6 +9,7 @@ module('Acceptance: Edit', {
     App = startApp();
   },
   afterEach: function() {
+    server.shutdown();
     Ember.run(App, 'destroy');
   }
 });
