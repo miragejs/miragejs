@@ -13,6 +13,7 @@ module('Acceptance: Timing', {
     contact = server.create('contact');
   },
   afterEach: function() {
+    server.shutdown();
     Ember.run(App, 'destroy');
   }
 });

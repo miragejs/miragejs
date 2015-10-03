@@ -1,7 +1,7 @@
 {
   "name": "ember-cli-mirage",
   "dependencies": {
-    "jquery": "^1.11.3",
+    "jquery": "2.1.4",
     "ember": "1.13.8",
     "ember-data": "1.13.9",
     "ember-resolver": "~0.1.18",

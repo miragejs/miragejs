@@ -11,6 +11,7 @@ module('Acceptance: Contacts', {
     contacts = server.createList('contact', 2);
   },
   afterEach: function() {
+    server.shutdown();
     Ember.run(App, 'destroy');
   }
 });

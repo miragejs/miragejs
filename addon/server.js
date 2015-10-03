@@ -6,6 +6,8 @@ import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-ser
 import SerializerRegistry from './serializer-registry';
 import RouteHandler from './route-handler';
 
+const { isArray } = _;
+
 export default class Server {
 
   constructor(options = {}) {
@@ -77,6 +79,24 @@ export default class Server {
   loadConfig(config) {
     config.call(this);
     this.timing = this.environment === 'test' ? 0 : (this.timing || 0);
+  }
+
+  passthrough(...paths) {
+    let verbs = ['get', 'post', 'put', 'delete', 'patch'];
+    let lastArg = paths[paths.length-1];
+
+    if (paths.length === 0) {
+      paths = ['/*catchall'];
+    } else if (isArray(lastArg)) {
+      verbs = paths.pop();
+    }
+
+    verbs.forEach(verb => {
+      paths.map(path => this._getFullPath(path))
+        .forEach(path => {
+          this.pretender[verb](path, this.pretender.passthrough);
+        });
+    });
   }
 
   /*
