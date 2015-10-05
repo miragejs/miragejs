@@ -27,7 +27,7 @@ class Db {
         get() {
           var recordsCopy = newCollection.all();
 
-          ['insert', 'find', 'where', 'update', 'remove']
+          ['insert', 'find', 'where', 'update', 'remove', 'firstOrCreate']
             .forEach(function(method) {
               recordsCopy[method] = newCollection[method].bind(newCollection);
             });

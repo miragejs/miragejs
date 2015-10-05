@@ -76,6 +76,20 @@ class DbCollection {
     return records.map( r => stringify(r) );
   }
 
+  firstOrCreate(query, attributesForNew={}) {
+    let queryResult = this.where(query);
+    let record = queryResult[0];
+
+    if (record) {
+      return record;
+    } else {
+      let mergedAttributes = _.assign(attributesForNew, query);
+      let createdRecord = this.insert(mergedAttributes);
+
+      return createdRecord;
+    }
+  }
+
   update(target, attrs) {
     let records;
 
