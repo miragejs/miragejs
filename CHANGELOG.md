@@ -1,12 +1,24 @@
 # Ember CLI Mirage Changelog
 
-## next
+## 0.1.9
 
 Update notes:
-  - Originally, you defined routes via `this.stub('get', '/path'...)` in your `mirage/config.js` file. `stub` has been removed, so if you happen to be using it, just replace them with the `this.get`, `this.post`, etc. helper methods.
+  - When this library first came out, you defined routes using `this.stub('get', '/path'...)` in your `mirage/config.js` file. `stub` has been removed, so if you happen to be using it, just replace those calls with the `this.get`, `this.post`, etc. helper methods.
+  - If you happen to be using the orm (it's private + not ready yet), know that there were some changes to how the data is stored. Contact me if you want to upgrade.
 
 Changes:
-  - [BREAKING CHANGE] remove #stub from Server (see update note)
+  - [BREAKING CHANGE] remove #stub from Server (see update note) @samselikoff
+  - [FEATURE] add `.passthrough` API @samselikoff
+  - [FEATURE] add `.loadFixtures` API @samselikoff
+  - [FEATURE] add .random.number.range to faker @iamjulianacosta
+  - [IMPROVEMENT] better missing route message @blimmer
+  - [IMPROVEMENT] upgrade Ember CLI 1.13.8 @blimmer
+  - [IMPROVEMENT] improve logging @gaborsar
+  - [IMPROVEMENT] cleanup @jherdman
+  - [BUGFIX] fixup blueprints @samsinite
+  - [BUGFIX] fix ie8 bug @jerel
+  - [BUGFIX] avoid dep warning in Ember 2.x @mixonic
+
 
 ## 0.1.8
 
