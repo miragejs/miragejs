@@ -12,6 +12,7 @@ export default class Server {
 
   constructor(options = {}) {
     this.environment = options.environment || 'development';
+    this.options = options;
     this.timing = 400;
     this.namespace = '';
     this.urlPrefix = '';
@@ -72,7 +73,7 @@ export default class Server {
       options.scenarios.default(this);
 
     } else {
-      this.db.loadData(options.fixtures);
+      this.loadFixtures();
     }
   }
 
@@ -97,6 +98,15 @@ export default class Server {
           this.pretender[verb](path, this.pretender.passthrough);
         });
     });
+  }
+
+  loadFixtures(...args) {
+    let fixtures = this.options.fixtures;
+    if (args.length) {
+      fixtures = _.pick(fixtures, ...args);
+    }
+
+    this.db.loadData(fixtures);
   }
 
   /*
