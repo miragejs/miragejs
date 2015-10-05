@@ -442,3 +442,40 @@ test('it can add a record after removing all records', function(assert) {
     {id: 1, name: 'Foo'}
   ]);
 });
+
+module('Unit | Db #firstOrCreate', {
+  beforeEach() {
+    db = new Db();
+    db.createCollection('contacts');
+    db.contacts.insert([
+      {id: 1, name: 'Link', evil: false},
+      {id: 2, name: 'Zelda', evil: false},
+      {id: 3, name: 'Ganon', evil: true},
+    ]);
+  },
+
+  afterEach() {
+    db.emptyData();
+  }
+});
+
+test('it can find the first record available from the query', function(assert) {
+  let record = db.contacts.firstOrCreate({ name: 'Link' });
+
+  assert.deepEqual(record, { id: 1, name: 'Link', evil: false });
+});
+
+test('it creates a new record from query + attrs if none found', function(assert) {
+  let record = db.contacts.firstOrCreate({ name: 'Mario' }, { evil: false });
+
+  assert.equal(record.name, 'Mario');
+  assert.equal(record.evil, false);
+  assert.ok(record.id);
+});
+
+test('does not require attrs', function(assert) {
+  let record = db.contacts.firstOrCreate({ name: 'Luigi' });
+
+  assert.equal(record.name, 'Luigi');
+  assert.ok(record.id);
+});
