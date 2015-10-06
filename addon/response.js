@@ -1,6 +1,6 @@
 export default class Response {
 
-  constructor(code, headers, data) {
+  constructor(code, headers={}, data={}) {
     this.code = code;
     this.headers = headers;
     this.data = data;
