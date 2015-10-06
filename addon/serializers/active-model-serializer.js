@@ -1,5 +1,5 @@
 import Serializer from '../serializer';
-import { decamelize, pluralize } from '../utils/inflector';
+import { decamelize, pluralize, dasherize } from '../utils/inflector';
 
 export default Serializer.extend({
 
@@ -16,7 +16,6 @@ export default Serializer.extend({
   },
 
   normalize(payload) {
-    // let payload = {contact: {id: 1, name: "Linkz0r"}};
     let type = Object.keys(payload)[0];
     let attrs = payload[type];
 
@@ -31,7 +30,7 @@ export default Serializer.extend({
     }
     Object.keys(attrs).forEach(key => {
       if (key !== 'id') {
-        jsonApiPayload.data.attributes[key] = attrs[key];
+        jsonApiPayload.data.attributes[dasherize(key)] = attrs[key];
       }
     });
 

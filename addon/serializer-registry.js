@@ -1,6 +1,7 @@
 import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
 import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
+import JsonApiSerializer from 'ember-cli-mirage/serializers/json-api-serializer';
 import { pluralize } from './utils/inflector';
 
 const { isArray, assign } = _;
@@ -18,6 +19,19 @@ export default class SerializerRegistry {
 
     if (this._isModelOrCollection(response)) {
       let serializer = this._serializerFor(response);
+
+      /*
+        TODO:
+        I'm using JsonApiSerializer as a sandbox to try to identify
+        the inteface a serializer should have. Currently, SerializerRegistry
+        does a lot of work specific to sideloaded/embedded-type responses.
+        If we pass the serializerMap/a container into Serializer instances,
+        Registry should simplify to just instantiating the appropriate serializer,
+        and calling serialize.serialize.
+      */
+      if (serializer instanceof JsonApiSerializer) {
+        return serializer.serialize(response);
+      }
 
       if (serializer.embed) {
         let json;
@@ -203,11 +217,15 @@ export default class SerializerRegistry {
     let type = modelOrCollection.type;
     let ModelSerializer = this._serializerMap && (this._serializerMap[type] || this._serializerMap['application']);
 
-    if (ModelSerializer && (!ModelSerializer.prototype.embed) && (!ModelSerializer.prototype.root)) {
+    /*
+      TODO: This check should exist within the Serializer class, when the logic is moved from the registry to the
+      individual serializers (see TODO above).
+    */
+    if (ModelSerializer && (!ModelSerializer.prototype.embed) && (!ModelSerializer.prototype.root) && (!(new ModelSerializer() instanceof JsonApiSerializer))) {
       throw 'Mirage: You cannot have a serializer that sideloads (embed: false) and disables the root (root: false).';
     }
 
-    return ModelSerializer ? new ModelSerializer() : this.baseSerializer;
+    return ModelSerializer ? new ModelSerializer(this._serializerMap) : this.baseSerializer;
   }
 
   _isModel(object) {
