@@ -67,7 +67,7 @@ export default function() {
 
       return {
         contact: db.contacts.find(contactId),
-        addresses: db.addresses.where({contact_id: contactId});
+        addresses: db.addresses.where({contact_id: contactId})
       };
     });
 
