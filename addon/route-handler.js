@@ -4,7 +4,7 @@ import FunctionHandler from './route-handlers/function';
 import ObjectHandler from './route-handlers/object';
 import GetShorthandHandler from './route-handlers/shorthands/get';
 import PostShorthandHandler from './route-handlers/shorthands/post';
-import PutShorthandHandler from './route-handlers/shorthands/post';
+import PutShorthandHandler from './route-handlers/shorthands/put';
 import DeleteShorthandHandler from './route-handlers/shorthands/delete';
 
 const { isArray, keys } = _;
