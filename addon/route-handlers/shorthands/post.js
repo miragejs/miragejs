@@ -13,9 +13,10 @@ export default class PostShorthandRouteHandler extends BaseShorthandRouteHandler
   handleStringShorthand(string, dbOrSchema, request) {
     let type = string;
     let collection = pluralize(string);
-    let attrs = this._getAttrsForRequest(request);
 
     if (dbOrSchema instanceof Db) {
+      let payload = this._getJsonBodyForRequest(request);
+      let attrs = payload[type];
       let db = dbOrSchema;
       if (!db[collection]) {
         console.error("Mirage: The route handler for " + request.url + " is trying to insert data into the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
@@ -29,6 +30,7 @@ export default class PostShorthandRouteHandler extends BaseShorthandRouteHandler
       return response;
 
     } else {
+      let attrs = this._getAttrsForRequest(request);
       let schema = dbOrSchema;
       let model = schema[type].create(attrs);
 

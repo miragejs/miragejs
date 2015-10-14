@@ -13,34 +13,34 @@ module('Integration | Route Handlers | POST', {
 });
 
 test('undefined shorthand works', function(assert) {
-  let body = {contact: {name: "Ganon"}};
+  let body = {contact: {first_name: "Ganon"}};
   let request = {requestBody: JSON.stringify(body), url: '/contacts'};
   let handler = new PostShorthandRouteHandler(this.db, this.serializer);
 
   let result = handler.handle(request);
 
   assert.equal(this.db.contacts.length, 1);
-  assert.deepEqual(result, {contact: {id: 1, name: 'Ganon'}});
+  assert.deepEqual(result, {contact: {id: 1, first_name: 'Ganon'}});
 });
 
 test('string shorthand works', function(assert) {
-  let body = {contact: {name: "Ganon"}};
+  let body = {contact: {first_name: "Ganon"}};
   let request = {requestBody: JSON.stringify(body), url: '/people'};
   let handler = new PostShorthandRouteHandler(this.db, this.serializer, 'contact');
 
   let result = handler.handle(request);
 
   assert.equal(this.db.contacts.length, 1);
-  assert.deepEqual(result, {contact: {id: 1, name: 'Ganon'}});
+  assert.deepEqual(result, {contact: {id: 1, first_name: 'Ganon'}});
 });
 
 test('undefined shorthand works when query params present', function(assert) {
-  let body = {contact: {name: "Ganon"}};
+  let body = {contact: {first_name: "Ganon"}};
   let request = {requestBody: JSON.stringify(body), url: '/contacts?foo=bar'};
   let handler = new PostShorthandRouteHandler(this.db, this.serializer);
 
   let result = handler.handle(request);
 
   assert.equal(this.db.contacts.length, 1);
-  assert.deepEqual(result, {contact: {id: 1, name: 'Ganon'}});
+  assert.deepEqual(result, {contact: {id: 1, first_name: 'Ganon'}});
 });
