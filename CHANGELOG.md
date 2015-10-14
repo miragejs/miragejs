@@ -40,7 +40,15 @@ Changes:
 
 ## 0.1.6
 
-Update notes: none
+Update notes:
+  - If you happened to be manipulating db objects using object references instead of the db API, e.g.
+  
+    ```
+    let contact = db.contacts.find(1);
+    contact.name = 'Gandalf';
+    ```
+  
+    this will no longer work, as the db query methods now return copies of db data. This was considered a private API. You'll need to use the db api (e.g. `db.update`) to make changes to db data.
 
 Changes:
   - [ENHANCEMENT] add PATCH to mirage @samselikoff
