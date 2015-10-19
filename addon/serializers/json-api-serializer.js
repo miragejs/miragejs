@@ -1,8 +1,8 @@
-/* global _ */
 import extend from '../utils/extend';
 import { dasherize, pluralize } from '../utils/inflector';
 import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
+import _assign from 'lodash/object/assign';
 
 class JsonApiSerializer {
 
@@ -139,7 +139,7 @@ class JsonApiSerializer {
         return memo;
       }, {});
     } else {
-      attrs = _.assign(attrs, model.attrs);
+      attrs = _assign(attrs, model.attrs);
     }
 
     delete attrs.id;
