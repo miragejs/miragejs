@@ -24,6 +24,8 @@ module.exports = {
   },
 
   afterInstall: function() {
+    var _this = this;
+
     this.insertIntoFile('.jshintrc', '    "server",', {
       after: '"predef": [\n'
     });
@@ -32,10 +34,13 @@ module.exports = {
       after: '"predef": [\n'
     });
 
-    return this.addBowerPackagesToProject([
-      {name: 'pretender', target: '~0.10.1'},
-      {name: 'lodash', target: '~3.7.0'},
-      {name: 'Faker', target: '~3.0.0'}
-    ]);
+    return this.addPackagesToProject([
+      { name: 'ember-lodash', target: '0.0.5' }
+    ]).then(function() {
+      return _this.addBowerPackagesToProject([
+        { name: 'pretender', target: '~0.10.1' },
+        { name: 'Faker', target: '~3.0.0' }
+      ]);
+    });
   }
 };

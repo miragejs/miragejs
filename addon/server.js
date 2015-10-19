@@ -6,7 +6,9 @@ import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-ser
 import SerializerRegistry from './serializer-registry';
 import RouteHandler from './route-handler';
 
-const { isArray } = _;
+import _isArray from 'lodash/lang/isArray';
+import _keys from 'lodash/object/keys';
+import _pick from 'lodash/object/pick';
 
 export default class Server {
 
@@ -88,7 +90,7 @@ export default class Server {
 
     if (paths.length === 0) {
       paths = ['/*catchall'];
-    } else if (isArray(lastArg)) {
+    } else if (_isArray(lastArg)) {
       verbs = paths.pop();
     }
 
@@ -103,7 +105,7 @@ export default class Server {
   loadFixtures(...args) {
     let fixtures = this.options.fixtures;
     if (args.length) {
-      fixtures = _.pick(fixtures, ...args);
+      fixtures = _pick(fixtures, ...args);
     }
 
     this.db.loadData(fixtures);
@@ -118,7 +120,7 @@ export default class Server {
     this._factoryMap = factoryMap;
 
     // Create a collection for each factory
-    _.keys(factoryMap).forEach(function(type) {
+    _keys(factoryMap).forEach(function(type) {
       _this.db.createCollection(pluralize(type));
     });
   }
@@ -187,7 +189,7 @@ export default class Server {
   _hasModulesOfType(modules, type) {
     let modulesOfType = modules[type] || {};
 
-    return _.keys(modulesOfType).length > 0;
+    return _keys(modulesOfType).length > 0;
   }
 
   /*

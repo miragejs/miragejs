@@ -1,4 +1,5 @@
 import Association from './association';
+import _assign from 'lodash/object/assign';
 import { capitalize } from 'ember-cli-mirage/utils/inflector';
 
 class BelongsTo extends Association {
@@ -21,7 +22,7 @@ class BelongsTo extends Association {
 
     var associationHash = {};
     associationHash[key] = this;
-    modelPrototype.belongsToAssociations = _.assign(modelPrototype.belongsToAssociations, associationHash);
+    modelPrototype.belongsToAssociations = _assign(modelPrototype.belongsToAssociations, associationHash);
     modelPrototype.associationKeys.push(key);
     modelPrototype.associationIdKeys.push(foreignKey);
 

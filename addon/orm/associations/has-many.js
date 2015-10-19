@@ -1,5 +1,7 @@
 import Association from './association';
 import Collection from '../collection';
+import _assign from 'lodash/object/assign';
+import _compact from 'lodash/array/compact';
 import { capitalize } from 'ember-cli-mirage/utils/inflector';
 
 class HasMany extends Association {
@@ -25,7 +27,7 @@ class HasMany extends Association {
     var relationshipIdsKey = association.target + 'Ids';
 
     var associationHash = {[key]: this};
-    modelPrototype.hasManyAssociations = _.assign(modelPrototype.hasManyAssociations, associationHash);
+    modelPrototype.hasManyAssociations = _assign(modelPrototype.hasManyAssociations, associationHash);
     modelPrototype.associationKeys.push(key);
     modelPrototype.associationIdKeys.push(relationshipIdsKey);
 
@@ -102,7 +104,7 @@ class HasMany extends Association {
             + (why? because rails does)
       */
       set: function(models) {
-        models = models ? _.compact(models) : [];
+        models = models ? _compact(models) : [];
 
         if (this.isNew()) {
           association._cachedChildren = models instanceof Collection ? models : new Collection(association.target, models);
@@ -132,7 +134,7 @@ class HasMany extends Association {
     */
     modelPrototype['new' + capitalize(association.target)] = function(attrs) {
       if (!this.isNew()) {
-        attrs = _.assign(attrs, {[foreignKey]: this.id});
+        attrs = _assign(attrs, { [foreignKey]: this.id });
       }
 
       var child = schema[association.target].new(attrs);
@@ -154,7 +156,7 @@ class HasMany extends Association {
         throw 'You cannot call create unless the parent is saved';
       }
 
-      var augmentedAttrs = _.assign(attrs, {[foreignKey]: this.id});
+      var augmentedAttrs = _assign(attrs, { [foreignKey]: this.id });
       var child = schema[association.target].create(augmentedAttrs);
 
       return child;

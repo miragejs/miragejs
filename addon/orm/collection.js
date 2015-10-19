@@ -1,3 +1,5 @@
+import _isArray from 'lodash/lang/isArray';
+
 /*
   An array of models, returned from one of the schema query
   methods (all, find, where). Knows how to update and destroy its models.
@@ -8,7 +10,7 @@ var Collection = function(type, ...args) {
   }
   this.type = type;
 
-  if (_.isArray(args[0])) {
+  if (_isArray(args[0])) {
     args = args[0];
   }
   this.push.apply(this, args);
