@@ -48,7 +48,7 @@ export default class RouteHandler {
     } else if (this.verb === 'post') {
       handler = new PostShorthandHandler(this.dbOrSchema, this.serializerOrRegistry, this.rawHandler, this.options);
 
-    } else if (this.verb === 'put') {
+    } else if (this.verb === 'put' || this.verb === 'patch') {
       handler = new PutShorthandHandler(this.dbOrSchema, this.serializerOrRegistry, this.rawHandler, this.options);
 
     } else if (this.verb === 'delete') {
