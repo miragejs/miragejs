@@ -1,4 +1,4 @@
-import { pluralize } from './utils/inflector';
+import { pluralize, camelize } from './utils/inflector';
 import Pretender from 'pretender';
 import Db from './db';
 import Schema from './orm/schema';
@@ -115,18 +115,18 @@ export default class Server {
     Factory methods
   */
   loadFactories(factoryMap) {
-    var _this = this;
     // Store a reference to the factories
     this._factoryMap = factoryMap;
 
     // Create a collection for each factory
-    _keys(factoryMap).forEach(function(type) {
-      _this.db.createCollection(pluralize(type));
+    _keys(factoryMap).forEach(type => {
+      let collectionName = this.schema ? pluralize(camelize(type)) : pluralize(type);
+      this.db.createCollection(collectionName);
     });
   }
 
   create(type, overrides) {
-    var collection = pluralize(type);
+    var collection = this.schema ? pluralize(camelize(type)) : pluralize(type);
     var currentRecords = this.db[collection];
     var sequence = currentRecords ? currentRecords.length: 0;
     if (!this._factoryMap || !this._factoryMap[type]) {
