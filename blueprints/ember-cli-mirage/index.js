@@ -15,10 +15,10 @@ module.exports = {
     return {
       __root__: function(options) {
         if (options.inAddon) {
-          return path.join('tests', 'dummy', 'app');
+          return path.join('tests', 'dummy');
         }
 
-        return 'app';
+        return '/';
       }
     };
   },
