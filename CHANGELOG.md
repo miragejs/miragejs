@@ -1,5 +1,7 @@
 # Ember CLI Mirage Changelog
 
+## Next
+
 Changes:
 
   - [BREAKING CHANGE] missing routes will now throw an Error instead of logging
