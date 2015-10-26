@@ -2,13 +2,18 @@
 var path = require('path');
 var mergeTrees = require('broccoli-merge-trees');
 var Funnel = require('broccoli-funnel');
+var unwatchedTree = require('broccoli-unwatched-tree');
 
 module.exports = {
   name: 'ember-cli-mirage',
 
   included: function included(app) {
     this.app = app;
-    this.addonConfig = this.app.project.config(app.env)['ember-cli-mirage'];
+    this.addonConfig = this.app.project.config(app.env)['ember-cli-mirage'] || {};
+    this.addonBuildConfig = this.app.options['ember-cli-mirage'] || {};
+    this.mirageDirectory = this.addonBuildConfig['directory'] || path.join(this.app.project.root, '/mirage');
+
+    this.miragePath = this.addonConfig['miragePath'] || path.join(this.app.project.root, '/mirage');
 
     if (this._shouldIncludeFiles()) {
       app.import(app.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js');
@@ -27,32 +32,25 @@ module.exports = {
   },
 
   treeFor: function(name) {
-    if (this._shouldIncludeFiles()) {
-      return this._super.treeFor.apply(this, arguments);
+    if (!this._shouldIncludeFiles()) {
+      return;
     }
-    this._requireBuildPackages();
-    return mergeTrees([]);
+
+    return this._super.treeFor.apply(this, arguments);
   },
 
-  postprocessTree: function(type, tree) {
-    if(type === 'js' && !this._shouldIncludeFiles()) {
-      return this._excludePretenderDir(tree);
-    }
-    return tree;
+  treeForApp: function(name) {
+    var originalAppTree = unwatchedTree(path.resolve(__dirname, 'app'));
+    var mirageFilesTree = new Funnel(this.mirageDirectory, {
+      destDir: 'mirage'
+    });
+
+    return mergeTrees([originalAppTree, mirageFilesTree]);
   },
 
   _shouldIncludeFiles: function() {
     var enabledInProd = this.app.env === 'production' && this.addonConfig.enabled;
 
     return enabledInProd || (this.app.env !== 'production');
-  },
-
-  _excludePretenderDir: function(tree) {
-    var modulePrefix = this.app.project.config(this.app.env)['modulePrefix'];
-    return new Funnel(tree, {
-      exclude: [new RegExp('^' + modulePrefix + '/mirage/')],
-      description: 'Funnel: exclude mirage'
-    });
   }
-
 };

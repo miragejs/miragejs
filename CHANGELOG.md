@@ -3,9 +3,9 @@
 ## Next
 
 Changes:
-
   - [BREAKING CHANGE] missing routes will now throw an Error instead of logging
     to the Logger's `error` channel.
+  - [BREAKING CHANGE] Move /app/mirage to /mirage
 
 ## 0.1.9
 

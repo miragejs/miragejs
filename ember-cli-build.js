@@ -3,6 +3,7 @@
 
 var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 var pickFiles = require('broccoli-static-compiler');
+var path = require('path');
 
 
 /*
@@ -14,7 +15,11 @@ var pickFiles = require('broccoli-static-compiler');
 */
 
 module.exports = function(defaults) {
-  var app = new EmberAddon();
+  var app = new EmberAddon({
+    'ember-cli-mirage': {
+      directory: path.resolve(__dirname, path.join('tests', 'dummy', 'mirage'))
+    }
+  });
 
   var es5Shim = pickFiles('node_modules/es5-shim', {
     srcDir: '/',
