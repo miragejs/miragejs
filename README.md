@@ -23,9 +23,6 @@ Ember CLI Mirage may be for you! It lets you create a client-side server using [
 ```sh
 ember install ember-cli-mirage  # install:addon for Ember CLI < 0.2.3
 ```
-### Requirements
-
-If you are using a version of PhantomJS before 2.0, ensure you have [ember-cli-es5-shim](https://github.com/pixelhandler/ember-cli-es5-shim) installed in your app because Mirage uses `.bind`.
 
 ## Updating
 

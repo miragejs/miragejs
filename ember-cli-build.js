@@ -2,7 +2,6 @@
 /* global require, module */
 
 var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
-var pickFiles = require('broccoli-static-compiler');
 var path = require('path');
 
 
@@ -21,11 +20,5 @@ module.exports = function(defaults) {
     }
   });
 
-  var es5Shim = pickFiles('node_modules/es5-shim', {
-    srcDir: '/',
-    files: ['es5-shim.js'],
-    destDir: '/assets'
-  });
-
-  return app.toTree([es5Shim]);
+  return app.toTree();
 }

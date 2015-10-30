@@ -61,11 +61,11 @@ export default function(db) {
 
     // Create the entity methods
     this[type] = {
-      new: this.new.bind(this, type),
-      create: this.create.bind(this, type),
-      all: this.all.bind(this, type),
-      find: this.find.bind(this, type),
-      where: this.where.bind(this, type)
+      new: (attrs) => this.new(type, attrs),
+      create: (attrs) => this.create(type, attrs),
+      all: (attrs) => this.all(type, attrs),
+      find: (attrs) => this.find(type, attrs),
+      where: (attrs) => this.where(type, attrs)
     };
 
     return this;
