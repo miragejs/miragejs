@@ -29,7 +29,9 @@ class Db {
 
           ['insert', 'find', 'where', 'update', 'remove', 'firstOrCreate']
             .forEach(function(method) {
-              recordsCopy[method] = newCollection[method].bind(newCollection);
+              recordsCopy[method] = function () {
+                return newCollection[method](...arguments);
+              };
             });
 
           return recordsCopy;
