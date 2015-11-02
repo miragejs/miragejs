@@ -47,7 +47,7 @@ export default class BaseShorthandRouteHandler {
     let urlNoId = hasId ? url.substr(0, url.lastIndexOf('/')) : url;
     let urlSplit = urlNoId.split('?');
     let urlNoIdNoQuery = urlSplit[0].slice(-1) === '/' ? urlSplit[0].slice(0, -1) : urlSplit[0];
-    let type = singularize(urlNoIdNoQuery.substr(urlNoIdNoQuery.lastIndexOf('/') + 1));
+    let type = camelize(singularize(urlNoIdNoQuery.substr(urlNoIdNoQuery.lastIndexOf('/') + 1)));
 
     return type;
   }
