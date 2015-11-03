@@ -24,6 +24,9 @@ export default function(db) {
     var _this = this;
     type = camelize(type);
 
+    // Avoid mutating original class, because we may want to reuse it across many tests
+    ModelClass = ModelClass.extend();
+
     // Store model & fks in registry
     this._registry[type] = this._registry[type] || {class: null, foreignKeys: []}; // we may have created this key before, if another model added fks to it
     this._registry[type].class = ModelClass;
@@ -34,7 +37,7 @@ export default function(db) {
     ModelClass.prototype.associationKeys = [];       // ex: address.user, user.addresses
     ModelClass.prototype.associationIdKeys = [];     // ex: address.user_id, user.address_ids. may or may not be a fk.
 
-    Object.keys(ModelClass.prototype).forEach(function(key) {
+    for (var key in ModelClass.prototype) {
       if (ModelClass.prototype[key] instanceof Association) {
         var association = ModelClass.prototype[key];
         var associatedType = association.type || singularize(key);
@@ -51,7 +54,7 @@ export default function(db) {
         // Augment the Model's class with any methods added by this association
         association.addMethodsToModelClass(ModelClass, key, _this);
       }
-    });
+    }
 
     // Create a db collection for this model, if doesn't exist
     var collection = pluralize(type);
