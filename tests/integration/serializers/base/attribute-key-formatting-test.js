@@ -8,7 +8,7 @@ module('Integration | Serializers | Base | Attribute Key Formatting', {
   beforeEach() {
     this.schema = schemaHelper.setup();
     this.registry = new SerializerRegistry(this.schema, {
-      author: Serializer.extend({
+      wordSmith: Serializer.extend({
         keyForAttribute(key) {
           return camelize(key);
         }
@@ -21,17 +21,17 @@ module('Integration | Serializers | Base | Attribute Key Formatting', {
 });
 
 test(`keyForAttribute formats the attributes of a model`, function(assert) {
-  var author = this.schema.author.create({
+  var wordSmith = this.schema.wordSmith.create({
     id: 1,
     'first-name': 'Link',
     'last-name': 'Jackson',
     age: 323,
   });
 
-  let result = this.registry.serialize(author);
+  let result = this.registry.serialize(wordSmith);
 
   assert.deepEqual(result, {
-    author: {
+    wordSmith: {
       id: 1,
       firstName: 'Link',
       lastName: 'Jackson',
@@ -41,14 +41,14 @@ test(`keyForAttribute formats the attributes of a model`, function(assert) {
 });
 
 test(`keyForAttribute also formats the models in a collections`, function(assert) {
-  this.schema.author.create({id: 1, 'first-name': 'Link', 'last-name': 'Jackson'});
-  this.schema.author.create({id: 2, 'first-name': 'Zelda', 'last-name': 'Brown'});
-  let authors = this.schema.author.all();
+  this.schema.wordSmith.create({id: 1, 'first-name': 'Link', 'last-name': 'Jackson'});
+  this.schema.wordSmith.create({id: 2, 'first-name': 'Zelda', 'last-name': 'Brown'});
+  let wordSmiths = this.schema.wordSmith.all();
 
-  let result = this.registry.serialize(authors);
+  let result = this.registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
-    authors: [
+    wordSmiths: [
       {id: 1, firstName: 'Link', lastName: 'Jackson'},
       {id: 2, firstName: 'Zelda', lastName: 'Brown'}
     ]

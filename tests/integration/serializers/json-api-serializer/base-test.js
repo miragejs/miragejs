@@ -16,16 +16,16 @@ module('Integration | Serializers | JSON API Serializer | Base', {
 });
 
 test(`it includes all attributes for a model`, function(assert) {
-  var user = this.schema.author.create({
+  let user = this.schema.wordSmith.create({
     id: 1,
     firstName: 'Link',
     age: 123,
   });
 
-  var result = this.registry.serialize(user);
+  let result = this.registry.serialize(user);
   assert.deepEqual(result, {
     data: {
-      type: 'authors',
+      type: 'wordSmiths',
       id: 1,
       attributes: {
         'first-name': 'Link',
@@ -37,22 +37,22 @@ test(`it includes all attributes for a model`, function(assert) {
 
 test(`it inclues all attributes for each model in a collection`, function(assert) {
   let schema = this.schema;
-  schema.author.create({id: 1, firstName: 'Link', age: 123});
-  schema.author.create({id: 2, firstName: 'Zelda', age: 456});
+  schema.wordSmith.create({id: 1, firstName: 'Link', age: 123});
+  schema.wordSmith.create({id: 2, firstName: 'Zelda', age: 456});
 
-  let collection = this.schema.author.all();
+  let collection = this.schema.wordSmith.all();
   let result = this.registry.serialize(collection);
 
   assert.deepEqual(result, {
     data: [{
-      type: 'authors',
+      type: 'wordSmiths',
       id: 1,
       attributes: {
         'first-name': 'Link',
         age: 123
       }
     }, {
-      type: 'authors',
+      type: 'wordSmiths',
       id: 2,
       attributes: {
         'first-name': 'Zelda',
@@ -63,8 +63,8 @@ test(`it inclues all attributes for each model in a collection`, function(assert
 });
 
 test(`it can serialize an empty collection`, function(assert) {
-  var authors = this.schema.author.all();
-  var result = this.registry.serialize(authors);
+  let wordSmiths = this.schema.wordSmith.all();
+  let result = this.registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
     data: []

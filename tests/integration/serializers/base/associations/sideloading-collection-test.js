@@ -7,14 +7,14 @@ module('Integration | Serializers | Base | Associations | Sideloading Collection
   beforeEach: function() {
     this.schema = schemaHelper.setup();
 
-    let link = this.schema.author.create({name: 'Link'});
-    let post = link.createPost({title: 'Lorem'});
-    link.createPost({title: 'Ipsum'});
+    let link = this.schema.wordSmith.create({name: 'Link'});
+    let blogPost = link.createBlogPost({title: 'Lorem'});
+    link.createBlogPost({title: 'Ipsum'});
 
-    post.createComment({text: 'pwned'});
+    blogPost.createFineComment({text: 'pwned'});
 
-    let zelda = this.schema.author.create({name: 'Zelda'});
-    zelda.createPost({title: `Zeldas post`});
+    let zelda = this.schema.wordSmith.create({name: 'Zelda'});
+    zelda.createBlogPost({title: `Zeldas blogPost`});
 
     this.BaseSerializer = Serializer.extend({
       embed: false
@@ -28,16 +28,16 @@ module('Integration | Serializers | Base | Associations | Sideloading Collection
 
 test(`it throws an error if embed is false and root is false`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    author: this.BaseSerializer.extend({
+    wordSmith: this.BaseSerializer.extend({
       root: false,
-      relationships: ['posts'],
+      relationships: ['blogPosts'],
     })
   });
 
-  let authors = this.schema.author.all();
+  let wordSmiths = this.schema.wordSmith.all();
 
   assert.throws(function() {
-    registry.serialize(authors);
+    registry.serialize(wordSmiths);
   }, /disables the root/);
 });
 
@@ -45,39 +45,39 @@ test(`it can sideload an empty collection`, function(assert) {
   this.schema.db.emptyData();
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
-    author: this.BaseSerializer.extend({
-      relationships: ['posts'],
+    wordSmith: this.BaseSerializer.extend({
+      relationships: ['blogPosts'],
     })
   });
 
-  var result = registry.serialize(this.schema.author.all());
+  var result = registry.serialize(this.schema.wordSmith.all());
 
   assert.deepEqual(result, {
-    authors: []
+    wordSmiths: []
   });
 });
 
 test(`it can sideload a collection with a has-many relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
-    author: this.BaseSerializer.extend({
+    wordSmith: this.BaseSerializer.extend({
       embed: false,
-      relationships: ['posts'],
+      relationships: ['blogPosts'],
     })
   });
 
-  let authors = this.schema.author.all();
-  var result = registry.serialize(authors);
+  let wordSmiths = this.schema.wordSmith.all();
+  var result = registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
-    authors: [
-      {id: 1, name: 'Link', postIds: [1, 2]},
-      {id: 2, name: 'Zelda', postIds: [3]},
+    wordSmiths: [
+      {id: 1, name: 'Link', blogPostIds: [1, 2]},
+      {id: 2, name: 'Zelda', blogPostIds: [3]},
     ],
-    posts: [
-      {id: 1, title: 'Lorem', authorId: 1},
-      {id: 2, title: 'Ipsum', authorId: 1},
-      {id: 3, title: 'Zeldas post', authorId: 2}
+    blogPosts: [
+      {id: 1, title: 'Lorem', wordSmithId: 1},
+      {id: 2, title: 'Ipsum', wordSmithId: 1},
+      {id: 3, title: 'Zeldas blogPost', wordSmithId: 2}
     ]
   });
 });
@@ -85,30 +85,30 @@ test(`it can sideload a collection with a has-many relationship`, function(asser
 test(`it can sideload a collection with a chain of has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
-    author: this.BaseSerializer.extend({
+    wordSmith: this.BaseSerializer.extend({
       embed: false,
-      relationships: ['posts'],
+      relationships: ['blogPosts'],
     }),
-    post: this.BaseSerializer.extend({
-      relationships: ['comments'],
+    blogPost: this.BaseSerializer.extend({
+      relationships: ['fineComments'],
     })
   });
 
-  let authors = this.schema.author.all();
-  var result = registry.serialize(authors);
+  let wordSmiths = this.schema.wordSmith.all();
+  var result = registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
-    authors: [
-      {id: 1, name: 'Link', postIds: [1, 2]},
-      {id: 2, name: 'Zelda', postIds: [3]}
+    wordSmiths: [
+      {id: 1, name: 'Link', blogPostIds: [1, 2]},
+      {id: 2, name: 'Zelda', blogPostIds: [3]}
     ],
-    posts: [
-      {id: 1, title: 'Lorem', authorId: 1, commentIds: [1]},
-      {id: 2, title: 'Ipsum', authorId: 1, commentIds: []},
-      {id: 3, title: 'Zeldas post', authorId: 2, commentIds: []}
+    blogPosts: [
+      {id: 1, title: 'Lorem', wordSmithId: 1, fineCommentIds: [1]},
+      {id: 2, title: 'Ipsum', wordSmithId: 1, fineCommentIds: []},
+      {id: 3, title: 'Zeldas blogPost', wordSmithId: 2, fineCommentIds: []}
     ],
-    comments: [
-      {id: 1, text: 'pwned', postId: 1}
+    fineComments: [
+      {id: 1, text: 'pwned', blogPostId: 1}
     ]
   });
 });
@@ -116,27 +116,27 @@ test(`it can sideload a collection with a chain of has-many relationships`, func
 test(`it avoids circularity when serializing a collection`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
-    author: this.BaseSerializer.extend({
+    wordSmith: this.BaseSerializer.extend({
       embed: false,
-      relationships: ['posts'],
+      relationships: ['blogPosts'],
     }),
-    post: this.BaseSerializer.extend({
-      relationships: ['author'],
+    blogPost: this.BaseSerializer.extend({
+      relationships: ['wordSmith'],
     })
   });
 
-  let authors = this.schema.author.all();
-  var result = registry.serialize(authors);
+  let wordSmiths = this.schema.wordSmith.all();
+  var result = registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
-    authors: [
-      {id: 1, name: 'Link', postIds: [1, 2] },
-      {id: 2, name: 'Zelda', postIds: [3] },
+    wordSmiths: [
+      {id: 1, name: 'Link', blogPostIds: [1, 2] },
+      {id: 2, name: 'Zelda', blogPostIds: [3] },
     ],
-    posts: [
-      {id: 1, title: 'Lorem', authorId: 1},
-      {id: 2, title: 'Ipsum', authorId: 1},
-      {id: 3, title: 'Zeldas post', authorId: 2},
+    blogPosts: [
+      {id: 1, title: 'Lorem', wordSmithId: 1},
+      {id: 2, title: 'Ipsum', wordSmithId: 1},
+      {id: 3, title: 'Zeldas blogPost', wordSmithId: 2},
     ]
   });
 });
@@ -144,22 +144,22 @@ test(`it avoids circularity when serializing a collection`, function(assert) {
 test(`it can sideload a collection with a belongs-to relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
-    post: this.BaseSerializer.extend({
+    blogPost: this.BaseSerializer.extend({
       embed: false,
-      relationships: ['author'],
+      relationships: ['wordSmith'],
     })
   });
 
-  let posts = this.schema.post.all();
-  var result = registry.serialize(posts);
+  let blogPosts = this.schema.blogPost.all();
+  var result = registry.serialize(blogPosts);
 
   assert.deepEqual(result, {
-    posts: [
-      {id: 1, title: 'Lorem', authorId: 1 },
-      {id: 2, title: 'Ipsum', authorId: 1 },
-      {id: 3, title: 'Zeldas post', authorId: 2 },
+    blogPosts: [
+      {id: 1, title: 'Lorem', wordSmithId: 1 },
+      {id: 2, title: 'Ipsum', wordSmithId: 1 },
+      {id: 3, title: 'Zeldas blogPost', wordSmithId: 2 },
     ],
-    authors: [
+    wordSmiths: [
       {id: 1, name: 'Link'},
       {id: 2, name: 'Zelda'}
     ]
@@ -169,26 +169,26 @@ test(`it can sideload a collection with a belongs-to relationship`, function(ass
 test(`it can sideload a collection with a chain of belongs-to relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
-    comment: this.BaseSerializer.extend({
+    fineComment: this.BaseSerializer.extend({
       embed: false,
-      relationships: ['post'],
+      relationships: ['blogPost'],
     }),
-    post: this.BaseSerializer.extend({
-      relationships: ['author'],
+    blogPost: this.BaseSerializer.extend({
+      relationships: ['wordSmith'],
     })
   });
 
-  let comments = this.schema.comment.all();
-  var result = registry.serialize(comments);
+  let fineComments = this.schema.fineComment.all();
+  var result = registry.serialize(fineComments);
 
   assert.deepEqual(result, {
-    comments: [
-      {id: 1, text: 'pwned', postId: 1}
+    fineComments: [
+      {id: 1, text: 'pwned', blogPostId: 1}
     ],
-    posts: [
-      {id: 1, title: 'Lorem', authorId: 1}
+    blogPosts: [
+      {id: 1, title: 'Lorem', wordSmithId: 1}
     ],
-    authors: [
+    wordSmiths: [
       {id: 1, name: 'Link'}
     ]
   });
