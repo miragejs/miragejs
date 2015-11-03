@@ -61,7 +61,7 @@ class JsonApiSerializer {
 
         if (relationship instanceof Model) {
           this._serializeIncludedModel(relationship);
-        } else {
+        } else if (relationship) {
           relationship.forEach(model => {
             this._serializeIncludedModel(model);
           });
@@ -91,11 +91,11 @@ class JsonApiSerializer {
     };
 
     if (serializer.relationships && serializer.relationships.length) {
-      obj.relationships = {};
       serializer.relationships.forEach(type => {
         let relationship = model[type];
 
         if (this._isCollection(relationship)) {
+          if (!obj.relationships) { obj.relationships = {}; }
           obj.relationships[type] = {
             data: relationship.map(model => {
               return {
@@ -104,7 +104,8 @@ class JsonApiSerializer {
               };
             })
           };
-        } else {
+        } else if (relationship) {
+          if (!obj.relationships) { obj.relationships = {}; }
           obj.relationships[type] = {
             data: {
               type: this.typeKeyForModel(relationship),
