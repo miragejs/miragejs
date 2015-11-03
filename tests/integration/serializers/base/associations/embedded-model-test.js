@@ -7,13 +7,13 @@ module('Integration | Serializers | Base | Associations | Embedded Models', {
   beforeEach: function() {
     this.schema = schemaHelper.setup();
 
-    let author = this.schema.author.create({name: 'Link'});
-    let post = author.createPost({title: 'Lorem'});
-    post.createComment({text: 'pwned'});
+    let wordSmith = this.schema.wordSmith.create({name: 'Link'});
+    let post = wordSmith.createBlogPost({title: 'Lorem'});
+    post.createFineComment({text: 'pwned'});
 
-    author.createPost({title: 'Ipsum'});
+    wordSmith.createBlogPost({title: 'Ipsum'});
 
-    this.schema.author.create({name: 'Zelda'});
+    this.schema.wordSmith.create({name: 'Zelda'});
 
     this.BaseSerializer = Serializer.extend({
       embed: true
@@ -28,19 +28,19 @@ module('Integration | Serializers | Base | Associations | Embedded Models', {
 test(`it can embed has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
-    author: this.BaseSerializer.extend({
-      relationships: ['posts']
+    wordSmith: this.BaseSerializer.extend({
+      relationships: ['blogPosts']
     })
   });
 
-  let link = this.schema.author.find(1);
+  let link = this.schema.wordSmith.find(1);
   var result = registry.serialize(link);
 
   assert.deepEqual(result, {
-    author: {
+    wordSmith: {
       id: 1,
       name: 'Link',
-      posts: [
+      blogPosts: [
         {id: 1, title: 'Lorem'},
         {id: 2, title: 'Ipsum'}
       ]
@@ -51,26 +51,26 @@ test(`it can embed has-many relationships`, function(assert) {
 test(`it can embed a chain of has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
-    author: this.BaseSerializer.extend({
-      relationships: ['posts']
+    wordSmith: this.BaseSerializer.extend({
+      relationships: ['blogPosts']
     }),
-    post: this.BaseSerializer.extend({
-      relationships: ['comments']
+    blogPost: this.BaseSerializer.extend({
+      relationships: ['fineComments']
     })
   });
 
-  let author = this.schema.author.find(1);
-  var result = registry.serialize(author);
+  let wordSmith = this.schema.wordSmith.find(1);
+  var result = registry.serialize(wordSmith);
 
   assert.deepEqual(result, {
-    author: {
+    wordSmith: {
       id: 1,
       name: 'Link',
-      posts: [
-        {id: 1, title: 'Lorem', comments: [
+      blogPosts: [
+        {id: 1, title: 'Lorem', fineComments: [
           {id: 1, text: 'pwned'}
         ]},
-        {id: 2, title: 'Ipsum', comments: []}
+        {id: 2, title: 'Ipsum', fineComments: []}
       ]
     }
   });
@@ -79,20 +79,20 @@ test(`it can embed a chain of has-many relationships`, function(assert) {
 test(`it can embed a belongs-to relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
-    post: this.BaseSerializer.extend({
+    blogPost: this.BaseSerializer.extend({
       embed: true,
-      relationships: ['author']
+      relationships: ['wordSmith']
     })
   });
 
-  let post = this.schema.post.find(1);
-  var result = registry.serialize(post);
+  let blogPost = this.schema.blogPost.find(1);
+  var result = registry.serialize(blogPost);
 
   assert.deepEqual(result, {
-    post: {
+    blogPost: {
       id: 1,
       title: 'Lorem',
-      author: {id: 1, name: 'Link'}
+      wordSmith: {id: 1, name: 'Link'}
     }
   });
 });
@@ -100,25 +100,25 @@ test(`it can embed a belongs-to relationship`, function(assert) {
 test(`it can serialize a chain of belongs-to relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
-    comment: this.BaseSerializer.extend({
-      relationships: ['post']
+    fineComment: this.BaseSerializer.extend({
+      relationships: ['blogPost']
     }),
-    post: this.BaseSerializer.extend({
-      relationships: ['author']
+    blogPost: this.BaseSerializer.extend({
+      relationships: ['wordSmith']
     })
   });
 
-  let comment = this.schema.comment.find(1);
-  var result = registry.serialize(comment);
+  let fineComment = this.schema.fineComment.find(1);
+  var result = registry.serialize(fineComment);
 
   assert.deepEqual(result, {
-    comment: {
+    fineComment: {
       id: 1,
       text: 'pwned',
-      post: {
+      blogPost: {
         id: 1,
         title: 'Lorem',
-        author: {
+        wordSmith: {
           id: 1, name: 'Link'
         }
       },
@@ -129,22 +129,22 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
 test(`it ignores relationships that refer to serialized ancestor resources`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
-    author: this.BaseSerializer.extend({
-      relationships: ['posts']
+    wordSmith: this.BaseSerializer.extend({
+      relationships: ['blogPosts']
     }),
-    post: this.BaseSerializer.extend({
-      relationships: ['author']
+    blogPost: this.BaseSerializer.extend({
+      relationships: ['wordSmith']
     })
   });
 
-  let author = this.schema.author.find(1);
-  var result = registry.serialize(author);
+  let wordSmith = this.schema.wordSmith.find(1);
+  var result = registry.serialize(wordSmith);
 
   assert.deepEqual(result, {
-    author: {
+    wordSmith: {
       id: 1,
       name: 'Link',
-      posts: [
+      blogPosts: [
         {id: 1, title: 'Lorem'},
         {id: 2, title: 'Ipsum'}
       ]
@@ -155,30 +155,30 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
 test(`it ignores relationships that refer to serialized ancestor resources, multiple levels down`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
-    author: this.BaseSerializer.extend({
+    wordSmith: this.BaseSerializer.extend({
       embed: true,
-      relationships: ['posts']
+      relationships: ['blogPosts']
     }),
-    post: this.BaseSerializer.extend({
-      relationships: ['author', 'comments']
+    blogPost: this.BaseSerializer.extend({
+      relationships: ['wordSmith', 'fineComments']
     }),
-    comment: this.BaseSerializer.extend({
-      relationships: ['post']
+    fineComment: this.BaseSerializer.extend({
+      relationships: ['blogPost']
     })
   });
 
-  let author = this.schema.author.find(1);
-  var result = registry.serialize(author);
+  let wordSmith = this.schema.wordSmith.find(1);
+  var result = registry.serialize(wordSmith);
 
   assert.deepEqual(result, {
-    author :{
+    wordSmith :{
       id: 1,
       name: 'Link',
-      posts: [
-        {id: 1, title: 'Lorem', comments: [
+      blogPosts: [
+        {id: 1, title: 'Lorem', fineComments: [
           {id: 1, text: 'pwned'}
         ]},
-        {id: 2, title: 'Ipsum', comments: []}
+        {id: 2, title: 'Ipsum', fineComments: []}
       ]
     }
   });

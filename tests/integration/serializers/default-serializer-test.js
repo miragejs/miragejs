@@ -6,13 +6,13 @@ module('Integration | Serializers | Default serializer for registry', {
   beforeEach: function() {
     this.schema = schemaHelper.setup();
 
-    let author = this.schema.author.create({name: 'Link'});
-    let post = author.createPost({title: 'Lorem'});
-    post.createComment({text: 'pwned'});
+    let wordSmith = this.schema.wordSmith.create({name: 'Link'});
+    let blogPost = wordSmith.createBlogPost({title: 'Lorem'});
+    blogPost.createFineComment({text: 'pwned'});
 
-    author.createPost({title: 'Ipsum'});
+    wordSmith.createBlogPost({title: 'Ipsum'});
 
-    this.schema.author.create({name: 'Zelda'});
+    this.schema.wordSmith.create({name: 'Zelda'});
   },
 
   afterEach() {
@@ -23,12 +23,12 @@ module('Integration | Serializers | Default serializer for registry', {
 test(`registry defaults to ActiveModelSerializer`, function(assert) {
   let registry = new SerializerRegistry(this.schema);
 
-  var result = registry.serialize(this.schema.post.all());
+  var result = registry.serialize(this.schema.blogPost.all());
 
   assert.deepEqual(result, {
-    posts: [
-      {id: 1, title: 'Lorem', author_id: 1},
-      {id: 2, title: 'Ipsum', author_id: 1}
+    blogPosts: [
+      {id: 1, title: 'Lorem', word_smith_id: 1},
+      {id: 2, title: 'Ipsum', word_smith_id: 1}
     ]
   });
 });

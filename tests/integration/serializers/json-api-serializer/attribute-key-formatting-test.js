@@ -21,18 +21,18 @@ module('Integration | Serializers | JSON API Serializer | Attribute Key Formatti
 });
 
 test(`keyForAttribute formats the attributes of a model`, function(assert) {
-  var author = this.schema.author.create({
+  let wordSmith = this.schema.wordSmith.create({
     id: 1,
     firstName: 'Link',
     lastName: 'Jackson',
     age: 323,
   });
 
-  let result = this.registry.serialize(author);
+  let result = this.registry.serialize(wordSmith);
 
   assert.deepEqual(result, {
     data: {
-      type: 'authors',
+      type: 'wordSmiths',
       id: 1,
       attributes: {
         age: 323,
@@ -44,22 +44,22 @@ test(`keyForAttribute formats the attributes of a model`, function(assert) {
 });
 
 test(`keyForAttribute also formats the models in a collections`, function(assert) {
-  this.schema.author.create({id: 1, 'firstName': 'Link', 'lastName': 'Jackson'});
-  this.schema.author.create({id: 2, 'firstName': 'Zelda', 'lastName': 'Brown'});
-  let authors = this.schema.author.all();
+  this.schema.wordSmith.create({id: 1, 'firstName': 'Link', 'lastName': 'Jackson'});
+  this.schema.wordSmith.create({id: 2, 'firstName': 'Zelda', 'lastName': 'Brown'});
+  let wordSmiths = this.schema.wordSmith.all();
 
-  let result = this.registry.serialize(authors);
+  let result = this.registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
     data: [{
-      type: 'authors',
+      type: 'wordSmiths',
       id: 1,
       attributes: {
         'first_name': 'Link',
         'last_name': 'Jackson',
       }
     }, {
-      type: 'authors',
+      type: 'wordSmiths',
       id: 2,
       attributes: {
         'first_name': 'Zelda',

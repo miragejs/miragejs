@@ -7,7 +7,7 @@ module('Integration | Serializers | Base | Attrs List', {
   beforeEach: function() {
     this.schema = schemaHelper.setup();
     this.registry = new SerializerRegistry(this.schema, {
-      author: Serializer.extend({
+      wordSmith: Serializer.extend({
         attrs: ['id', 'name']
       })
     });
@@ -18,15 +18,15 @@ module('Integration | Serializers | Base | Attrs List', {
 });
 
 test(`it returns only the whitelisted attrs when serializing a model`, function(assert) {
-  var user = this.schema.author.create({
+  let wordSmith = this.schema.wordSmith.create({
     id: 1,
     name: 'Link',
     age: 123,
   });
 
-  var result = this.registry.serialize(user);
+  let result = this.registry.serialize(wordSmith);
   assert.deepEqual(result, {
-    author: {
+    wordSmith: {
       id: 1,
       name: 'Link'
     }
@@ -35,14 +35,14 @@ test(`it returns only the whitelisted attrs when serializing a model`, function(
 
 test(`it returns only the whitelisted attrs when serializing a collection`, function(assert) {
   let schema = this.schema;
-  schema.author.create({id: 1, name: 'Link', age: 123});
-  schema.author.create({id: 2, name: 'Zelda', age: 456});
+  schema.wordSmith.create({id: 1, name: 'Link', age: 123});
+  schema.wordSmith.create({id: 2, name: 'Zelda', age: 456});
 
-  let collection = this.schema.author.all();
+  let collection = this.schema.wordSmith.all();
   let result = this.registry.serialize(collection);
 
   assert.deepEqual(result, {
-    authors: [
+    wordSmiths: [
       {id: 1, name: 'Link'},
       {id: 2, name: 'Zelda'}
     ]

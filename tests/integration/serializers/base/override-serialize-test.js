@@ -7,7 +7,7 @@ module('Integration | Serializers | Base | Overriding Serialize', {
   beforeEach() {
     this.schema = schemaHelper.setup();
     this.registry = new SerializerRegistry(this.schema, {
-      author: Serializer.extend({
+      wordSmith: Serializer.extend({
         serialize(response, request) {
           return 'blah';
         }
@@ -20,14 +20,14 @@ module('Integration | Serializers | Base | Overriding Serialize', {
 });
 
 test(`it can use a completely custom serialize function`, function(assert) {
-  let author = this.schema.author.create({
+  let wordSmith = this.schema.wordSmith.create({
     id: 1,
     title: 'Link',
   });
 
-  let result = this.registry.serialize(author);
+  let result = this.registry.serialize(wordSmith);
 
   assert.deepEqual(result, {
-    author: 'blah'
+    wordSmith: 'blah'
   });
 });

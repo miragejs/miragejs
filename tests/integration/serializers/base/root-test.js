@@ -7,7 +7,7 @@ module('Integration | Serializers | Base | Root', {
   beforeEach() {
     this.schema = schemaHelper.setup();
     this.registry = new SerializerRegistry(this.schema, {
-      author: Serializer.extend({
+      wordSmith: Serializer.extend({
         embed: true,
         root: false
       })
@@ -19,12 +19,12 @@ module('Integration | Serializers | Base | Root', {
 });
 
 test(`if root is false, it serializes a model by returning its attrs`, function(assert) {
-  var author = this.schema.author.create({
+  var wordSmith = this.schema.wordSmith.create({
     id: 1,
     name: 'Link',
   });
 
-  var result = this.registry.serialize(author);
+  var result = this.registry.serialize(wordSmith);
   assert.deepEqual(result, {
     id: 1,
     name: 'Link',
@@ -32,11 +32,11 @@ test(`if root is false, it serializes a model by returning its attrs`, function(
 });
 
 test(`if root is false, it serializes a collection of models by returning an array of their attrs`, function(assert) {
-  this.schema.author.create({id: 1, name: 'Link'});
-  this.schema.author.create({id: 2, name: 'Zelda'});
-  let authors = this.schema.author.all();
+  this.schema.wordSmith.create({id: 1, name: 'Link'});
+  this.schema.wordSmith.create({id: 2, name: 'Zelda'});
+  let wordSmiths = this.schema.wordSmith.all();
 
-  var result = this.registry.serialize(authors);
+  var result = this.registry.serialize(wordSmiths);
 
   assert.deepEqual(result, [
     {id: 1, name: 'Link'},
@@ -45,8 +45,8 @@ test(`if root is false, it serializes a collection of models by returning an arr
 });
 
 test(`if root is false, it serializes an empty collection by returning an empty array`, function(assert) {
-  var emptyAuthorCollection = this.schema.author.all();
-  var result = this.registry.serialize(emptyAuthorCollection);
+  var emptywordSmithCollection = this.schema.wordSmith.all();
+  var result = this.registry.serialize(emptywordSmithCollection);
 
   assert.deepEqual(result, []);
 });
