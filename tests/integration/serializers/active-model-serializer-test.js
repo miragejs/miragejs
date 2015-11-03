@@ -11,17 +11,27 @@ module('Integration | Serializer | ActiveModelSerializer', {
     let db = new Db();
     this.schema = new Schema(db);
     this.schema.registerModels({
-      author: Model.extend({
+      wordSmith: Model.extend({
         blogPosts: hasMany()
       }),
-      'blog-post': Model.extend({
-        author: belongsTo()
+      blogPost: Model.extend({
+        wordSmith: belongsTo()
       })
     });
 
-    let link = this.schema.author.create({name: 'Link', age: 123});
+    let link = this.schema.wordSmith.create({name: 'Link', age: 123});
     link.createBlogPost({title: 'Lorem'});
     link.createBlogPost({title: 'Ipsum'});
+
+    this.schema.wordSmith.create({name: 'Zelda', age: 230});
+
+    this.registry = new SerializerRegistry(this.schema, {
+      application: ActiveModelSerializer,
+      wordSmith: ActiveModelSerializer.extend({
+        attrs: ['id', 'name'],
+        relationships: ['blogPosts']
+      })
+    });
   },
 
   afterEach() {
@@ -29,20 +39,12 @@ module('Integration | Serializer | ActiveModelSerializer', {
   }
 });
 
-test('it sideloads associations and snake-cases attributes', function(assert) {
-  let registry = new SerializerRegistry(this.schema, {
-    application: ActiveModelSerializer,
-    author: ActiveModelSerializer.extend({
-      attrs: ['id', 'name'],
-      relationships: ['blogPosts']
-    })
-  });
-
-  let link = this.schema.author.find(1);
-  let result = registry.serialize(link);
+test('it sideloads associations and snake-cases relationships and attributes correctly for a model', function(assert) {
+  let link = this.schema.wordSmith.find(1);
+  let result = this.registry.serialize(link);
 
   assert.deepEqual(result, {
-    author: {
+    word_smith: {
       id: 1,
       name: 'Link',
       blog_post_ids: [1, 2]
@@ -51,13 +53,47 @@ test('it sideloads associations and snake-cases attributes', function(assert) {
       {
         id: 1,
         title: 'Lorem',
-        author_id: 1
+        word_smith_id: 1
       },
       {
         id: 2,
         title: 'Ipsum',
-        author_id: 1
+        word_smith_id: 1
       }
     ]
   });
 });
+
+
+test('it sideloads associations and snake-cases relationships and attributes correctly for a collection', function(assert) {
+  let wordSmiths = this.schema.wordSmith.all();
+  let result = this.registry.serialize(wordSmiths);
+
+  assert.deepEqual(result, {
+    word_smiths: [
+      {
+        id: 1,
+        name: 'Link',
+        blog_post_ids: [1, 2]
+      },
+      {
+        id: 2,
+        name: 'Zelda',
+        blog_post_ids: []
+      }
+    ],
+    blog_posts: [
+      {
+        id: 1,
+        title: 'Lorem',
+        word_smith_id: 1
+      },
+      {
+        id: 2,
+        title: 'Ipsum',
+        word_smith_id: 1
+      }
+    ]
+  });
+});
+

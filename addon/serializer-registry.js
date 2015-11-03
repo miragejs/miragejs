@@ -1,6 +1,6 @@
 import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
-import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
+import Serializer from 'ember-cli-mirage/serializer';
 import JsonApiSerializer from 'ember-cli-mirage/serializers/json-api-serializer';
 import { pluralize } from './utils/inflector';
 
@@ -11,7 +11,7 @@ export default class SerializerRegistry {
 
   constructor(schema, serializerMap = {}) {
     this.schema = schema;
-    this.baseSerializer = new ActiveModelSerializer();
+    this.baseSerializer = new Serializer();
     this._serializerMap = serializerMap;
   }
 
@@ -105,7 +105,7 @@ export default class SerializerRegistry {
     // Add this model's attrs
     this._augmentAlreadySerialized(model);
     let modelAttrs = this._attrsForModel(model, false, true);
-    let key = model.type;
+    let key = serializer.keyForModel(model.type);
     if (topLevelIsArray) {
       key = root ? root : pluralize(key);
       allAttrs[key] = allAttrs[key] || [];
@@ -125,7 +125,7 @@ export default class SerializerRegistry {
             return;
           }
 
-          this._serializeSideloadedModelResponse(relatedModel, true, allAttrs, serializer.keyForRelatedCollection(relatedModel.type));
+          this._serializeSideloadedModelResponse(relatedModel, true, allAttrs, serializer.keyForRelationship(relatedModel.type));
         });
       });
 
