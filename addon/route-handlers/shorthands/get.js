@@ -1,6 +1,6 @@
 import BaseShorthandRouteHandler from './base';
 import Response from 'ember-cli-mirage/response';
-import { singularize, pluralize } from 'ember-cli-mirage/utils/inflector';
+import { singularize, pluralize, camelize } from 'ember-cli-mirage/utils/inflector';
 import Db from 'ember-cli-mirage/db';
 
 export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler {
@@ -42,7 +42,7 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
 
     } else {
       let schema = dbOrSchema;
-      let type = singularize(string);
+      let type = camelize(singularize(string));
 
       if (id) {
         return schema[type].find(id);

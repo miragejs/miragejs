@@ -15,6 +15,10 @@ export default class SerializerRegistry {
     this._serializerMap = serializerMap;
   }
 
+  normalize(payload) {
+    return this._serializerFor(payload[Object.keys(payload)[0]]).normalize(payload);
+  }
+
   serialize(response) {
     this.alreadySerialized = {};
 

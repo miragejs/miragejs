@@ -21,7 +21,8 @@ module('Integration | Route Handlers | GET with ORM', {
         comment: Model.extend({
           post: Mirage.belongsTo()
         }),
-        photo: Model
+        photo: Model,
+        'project-owner': Model
       }
     });
     this.server.timing = 0;
@@ -40,10 +41,14 @@ module('Integration | Route Handlers | GET with ORM', {
       {id: 1, title: 'Amazing', location: 'Hyrule'},
       {id: 2, title: 'Photo', location: 'Goron City'}
     ];
+    this.projectOwners = [
+      {id: 1, name: 'Nintendo'}
+    ];
     this.server.db.loadData({
       authors: this.authors,
       posts: this.posts,
       photos: this.photos,
+      projectOwners: this.projectOwners
     });
 
     this.schema = this.server.schema;
@@ -182,4 +187,13 @@ test('array shorthand for a singular resource errors', function(assert) {
   assert.throws(function() {
     handler.handle(request);
   }, /create a serializer/);
+});
+
+test('shorthand for list of models with a dash in their name', function(assert) {
+  let request = {url: '/project-owners'};
+  let handler = new GetShorthandRouteHandler(this.schema, this.serializer);
+  let models = handler.handle(request);
+  assert.equal(models.length, 1);
+  assert.ok(models[0] instanceof Model);
+  assert.equal(models[0].type, 'projectOwner');
 });
