@@ -238,7 +238,7 @@ export default class SerializerRegistry {
   }
 
   _isCollection(object) {
-    return object instanceof Collection;
+    return object instanceof Collection || (_isArray(object) && this._isModel(object[0]));
   }
 
   _isModelOrCollection(object) {
