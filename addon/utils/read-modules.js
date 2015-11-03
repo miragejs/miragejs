@@ -5,6 +5,7 @@
 
 import Ember from 'ember';
 import _keys from 'lodash/object/keys';
+import { camelize } from 'ember-cli-mirage/utils/inflector';
 
 /*
   This function looks through all files that have been loaded by Ember CLI and
@@ -27,7 +28,7 @@ export default function(prefix) {
     }
     let moduleParts = moduleName.split('/');
     let moduleType = moduleParts[moduleParts.length - 2];
-    let moduleKey = moduleParts[moduleParts.length - 1];
+    let moduleKey = camelize(moduleParts[moduleParts.length - 1]);
     Ember.assert('Subdirectories under ' + moduleType + ' are not supported',
                  moduleParts[moduleParts.length - 3] === 'mirage');
     if (moduleType === 'scenario'){
