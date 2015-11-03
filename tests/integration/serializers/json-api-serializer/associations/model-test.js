@@ -173,6 +173,29 @@ test(`it can embed a belongs-to relationship`, function(assert) {
   });
 });
 
+test(`it gracefully handles null belongs-to relationship`, function(assert) {
+  let registry = new SerializerRegistry(this.schema, {
+    application: JsonApiSerializer,
+    blogPost: JsonApiSerializer.extend({
+      relationships: ['wordSmith']
+    })
+  });
+
+  this.schema.blogPost.create({ id: 3, title: 'Lorem3' });
+  let blogPost = this.schema.blogPost.find(3);
+  let result = registry.serialize(blogPost);
+
+  assert.deepEqual(result, {
+    data: {
+      type: 'blogPosts',
+      id: 3,
+      attributes: {
+        title: 'Lorem3'
+      }
+    }
+  });
+});
+
 test(`it can serialize a chain of belongs-to relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
