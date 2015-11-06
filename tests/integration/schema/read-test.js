@@ -108,6 +108,15 @@ test('it returns models that match a query with where', function(assert) {
   assert.deepEqual(users[0].attrs, {id: 3, name: 'Ganon', good: false});
 });
 
+test('it returns models that match using a query function', function(assert) {
+  let users = schema.user.where(function(rec) { return !rec.good; });
+
+  assert.ok(users instanceof Collection, 'it returns a collection');
+  assert.equal(users.length, 1);
+  assert.ok(users[0] instanceof User);
+  assert.deepEqual(users[0].attrs, {id: 3, name: 'Ganon', good: false});
+});
+
 test('it returns an empty collection if no models match a query', function(assert) {
   var users = schema.user.where({name: 'Link', good: false});
 
