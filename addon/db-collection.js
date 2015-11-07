@@ -207,11 +207,17 @@ class DbCollection {
   _findRecordsWhere(query) {
     let records = this._records;
 
-    for (let queryKey in query) {
-      records = records.filter( r => String(r[queryKey]) === String(query[queryKey]) );
+    function defaultQueryFunction (record) {
+      let keys = Object.keys(query);
+
+      return keys.every(function(key) {
+        return String(record[key]) === String(query[key]);
+      });
     }
 
-    return records;
+    let queryFunction = typeof query === 'object' ? defaultQueryFunction : query;
+
+    return records.filter(queryFunction);
   }
 }
 

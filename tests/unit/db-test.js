@@ -287,6 +287,13 @@ test('returns an empty array if no records match the query', function(assert) {
   assert.deepEqual(result, []);
 });
 
+test('accepts a filter function', function(assert) {
+  let result = db.contacts.where(function(record) { return record.age === 45; });
+
+  assert.deepEqual(result, [
+    {id: 3, name: 'Ganon', evil: true, age: 45}
+  ]);
+});
 
 module('Unit | Db #update', {
   beforeEach: function() {
