@@ -1,10 +1,10 @@
 /*jshint node:true*/
-
 'use strict'
 
 var path = require('path');
 
 module.exports = {
+  name: 'mirage:factory',
   description: 'Generates a mirage factory.',
 
   fileMapTokens: function() {
