@@ -64,7 +64,7 @@ test("returning a non-blank response from a custom handler whose default status 
   });
 
   request.then(function(response, statusText, jqXHR) {
-    assert.equal(jqXHR.status, 200, 'The status code is 200 instead od 204');
+    assert.equal(jqXHR.status, 200, 'The status code is 200 instead of 204');
     assert.deepEqual(response, { id: 1, name: "The Rex", alive: true }, 'The response is correct');
     done();
   });
