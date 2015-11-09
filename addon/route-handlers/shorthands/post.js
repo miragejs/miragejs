@@ -19,7 +19,7 @@ export default class PostShorthandRouteHandler extends BaseShorthandRouteHandler
       let attrs = payload[type];
       let db = dbOrSchema;
       if (!db[collection]) {
-        console.error("Mirage: The route handler for " + request.url + " is trying to insert data into the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
+        throw new Error("Mirage: The route handler for " + request.url + " is trying to insert data into the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
       }
 
       let model = db[collection].insert(attrs);
