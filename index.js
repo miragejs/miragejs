@@ -1,3 +1,4 @@
+/* jshint node: true */
 'use strict';
 var path = require('path');
 var mergeTrees = require('broccoli-merge-trees');
@@ -12,8 +13,6 @@ module.exports = {
     this.addonConfig = this.app.project.config(app.env)['ember-cli-mirage'] || {};
     this.addonBuildConfig = this.app.options['ember-cli-mirage'] || {};
     this.mirageDirectory = this.addonBuildConfig['directory'] || path.join(this.app.project.root, '/mirage');
-
-    this.miragePath = this.addonConfig['miragePath'] || path.join(this.app.project.root, '/mirage');
 
     if (this._shouldIncludeFiles()) {
       app.import(app.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js');
