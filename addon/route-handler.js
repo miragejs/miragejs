@@ -60,7 +60,7 @@ export default class RouteHandler {
     try {
       response = handler.handle(request);
     } catch(error) {
-      console.error('Mirage: Your handler for the url ' + request.url + ' threw an error:', error.message, error.stack);
+      throw new Error('Mirage: Your handler for the url ' + request.url + ' threw an error:', error.message, error.stack);
     }
 
     return this._toMirageResponse(response);
