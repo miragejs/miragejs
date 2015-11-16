@@ -61,7 +61,7 @@
     "broccoli-merge-trees": "^0.2.1",
     "broccoli-unwatched-tree": "^0.1.1",
     "ember-cli-babel": "^5.1.3",
-    "ember-lodash": "0.0.5",
+    "ember-lodash": "0.0.6",
     "ember-inflector": "^1.9.2"
   }
 }
