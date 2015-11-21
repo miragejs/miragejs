@@ -178,7 +178,7 @@ class Model {
     Object.keys(this.belongsToAssociations).forEach(key => {
       var association = this.belongsToAssociations[key];
       var parent = this[key];
-      if (parent.isNew()) {
+      if (parent && parent.isNew()) {
         var fk = association.getForeignKey();
         parent.save();
         this.update(fk, parent.id);
