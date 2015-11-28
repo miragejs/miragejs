@@ -134,6 +134,44 @@ test('create allows for attr overrides with arrays', function(assert) {
   assert.deepEqual(noname, {id: 3, name: []});
 });
 
+test('create allows for nested attr overrides', function(assert) {
+  server.loadFactories({
+    contact: Factory.extend({
+      address: {
+        streetName: 'Main',
+        streetAddress(i) {
+          return 1000 + i;
+        }
+      }
+    })
+  });
+
+  var contact1 = server.create('contact');
+  var contact2 = server.create('contact');
+
+  assert.deepEqual(contact1, {id: 1, address: {streetName: 'Main', streetAddress: 1000}});
+  assert.deepEqual(contact2, {id: 2, address: {streetName: 'Main', streetAddress: 1001}});
+});
+
+test('create allows for arrays of attr overrides', function(assert) {
+  server.loadFactories({
+    contact: Factory.extend({
+      websites: [
+        'http://example.com',
+        function(i) {
+          return `http://placekitten.com/${320 + i}/${240 + i}`;
+        }
+      ]
+    })
+  });
+
+  var contact1 = server.create('contact');
+  var contact2 = server.create('contact');
+
+  assert.deepEqual(contact1, {id: 1, websites: ['http://example.com', 'http://placekitten.com/320/240']});
+  assert.deepEqual(contact2, {id: 2, websites: ['http://example.com', 'http://placekitten.com/321/241']});
+});
+
 module('Unit | Server #createList', {
   beforeEach: function() {
     server = new Server({environment: 'test'});
