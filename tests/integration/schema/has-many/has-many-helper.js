@@ -35,36 +35,36 @@ class HasManyHelper {
   }
 
   savedParentNoChildren() {
-    this.db.users.insert({id: 1, name: 'Link'});
+    let insertedUser = this.db.users.insert({name: 'Link'});
 
-    return [this.schema.user.find(1), []];
+    return [this.schema.user.find(insertedUser.id), []];
   }
 
   savedParentNewChildren() {
-    this.db.users.insert({id: 1, name: 'Link'});
+    let insertedUser = this.db.users.insert({name: 'Link'});
 
-    var user = this.schema.user.find(1);
+    var user = this.schema.user.find(insertedUser.id);
     var newAddress = user.newAddress();
 
     return [user, [newAddress]];
   }
 
   savedParentSavedChildren() {
-    this.db.users.insert({id: 1, name: 'Link'});
-    this.db.addresses.insert({id: 1, name: '123 Hyrule Way', userId: 1});
+    let insertedUser = this.db.users.insert({name: 'Link'});
+    let insertedAddress = this.db.addresses.insert({name: '123 Hyrule Way', userId: insertedUser.id});
 
-    var user = this.schema.user.find(1);
-    var address = this.schema.address.find(1);
+    var user = this.schema.user.find(insertedUser.id);
+    var address = this.schema.address.find(insertedAddress.id);
 
     return [user, [address]];
   }
 
   savedParentMixedChildren() {
-    this.db.users.insert({id: 1, name: 'Link'});
-    this.db.addresses.insert({id: 1, name: '123 Hyrule Way', userId: 1});
+    let insertedUser = this.db.users.insert({name: 'Link'});
+    let insertedAddress = this.db.addresses.insert({name: '123 Hyrule Way', userId: insertedUser.id});
 
-    var user = this.schema.user.find(1);
-    var savedAddress = this.schema.address.find(1);
+    var user = this.schema.user.find(insertedUser.id);
+    var savedAddress = this.schema.address.find(insertedAddress.id);
     var newAddress = user.newAddress();
 
     return [user, [savedAddress, newAddress]];
@@ -84,16 +84,16 @@ class HasManyHelper {
   }
 
   newParentSavedChildren() {
-    this.db.addresses.insert({id: 1, name: '123 Hyrule Way'});
-    var savedAddress = this.schema.address.find(1);
-    var newUser = this.schema.user.new({addresses: [savedAddress]});
+    let insertedAddress = this.db.addresses.insert({name: '123 Hyrule Way'});
+    let savedAddress = this.schema.address.find(insertedAddress.id);
+    let newUser = this.schema.user.new({addresses: [savedAddress]});
 
     return [newUser, [savedAddress]];
   }
 
   newParentMixedChildren() {
-    this.db.addresses.insert({id: 1, name: '123 Hyrule Way'});
-    var savedAddress = this.schema.address.find(1);
+    let insertedAddress = this.db.addresses.insert({name: '123 Hyrule Way'});
+    var savedAddress = this.schema.address.find(insertedAddress.id);
     var newAddress = this.schema.address.new();
 
     var newUser = this.schema.user.new({addresses: [savedAddress, newAddress]});
@@ -104,9 +104,9 @@ class HasManyHelper {
   // Just a saved unassociated child. The id is high so as not to
   // interfere with any other children
   savedChild() {
-    this.db.addresses.insert({id: 100, name: 'foo'});
+    let insertedAddress = this.db.addresses.insert({name: 'foo'});
 
-    return this.schema.address.find(100);
+    return this.schema.address.find(insertedAddress.id);
   }
 
   newChild() {
