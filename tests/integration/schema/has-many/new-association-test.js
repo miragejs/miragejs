@@ -35,6 +35,16 @@ module('Integration | Schema | hasMany #newAssociation', {
 
     assert.ok(springfield.id, 'saving the parent persists the child');
     assert.equal(springfield.userId, user.id, 'the childs fk was updated');
+    assert.equal(springfield.name, '1 Springfield ave', 'the childs attrs were saved');
+  });
+
+  test(`a ${state} can build a new associated parent without passing in attrs (regression)`, function(assert) {
+    var [user, addresses] = this.helper[state]();
+    var startingCount = addresses.length;
+
+    var springfield = user.newAddress();
+
+    assert.deepEqual(user.addresses[startingCount], springfield, `the child is appended to the parent's collection`);
   });
 
 });

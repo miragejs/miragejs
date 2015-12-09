@@ -132,7 +132,7 @@ class HasMany extends Association {
       object.newChild
         - creates a new unsaved associated child
     */
-    modelPrototype['new' + capitalize(association.target)] = function(attrs) {
+    modelPrototype['new' + capitalize(association.target)] = function(attrs = {}) {
       if (!this.isNew()) {
         attrs = _assign(attrs, { [foreignKey]: this.id });
       }
@@ -151,7 +151,7 @@ class HasMany extends Association {
           updates the target's foreign key
         - parent must be saved
     */
-    modelPrototype['create' + capitalize(association.target)] = function(attrs) {
+    modelPrototype['create' + capitalize(association.target)] = function(attrs = {}) {
       if (this.isNew()) {
         throw 'You cannot call create unless the parent is saved';
       }

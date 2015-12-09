@@ -27,6 +27,14 @@ module('Integration | Schema | hasMany #createAssociation', {
     assert.ok(user.addressIds.indexOf(springfield.id) > -1, 'the id was added to the fks array');
   });
 
+  test(`a ${state} can create an associated child without passing attrs (regression)`, function(assert) {
+    var [user] = this.helper[state]();
+
+    var springfield = user.createAddress();
+
+    assert.deepEqual(user.addresses.filter(a => a.id === springfield.id)[0], springfield, 'the address was added to user.addresses');
+  });
+
 });
 
 [
