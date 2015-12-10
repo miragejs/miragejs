@@ -39,7 +39,7 @@ test(`it can include a has many relationship`, function(assert) {
         'first-name': 'Link',
       },
       relationships: {
-        blogPosts: {
+        'blog-posts': {
           data: [
             {type: 'blog-posts', id: 1},
             {type: 'blog-posts', id: 2},
@@ -88,7 +88,7 @@ test(`it can include a chain of has-many relationships`, function(assert) {
         'first-name': 'Link',
       },
       relationships: {
-        blogPosts: {
+        'blog-posts': {
           data: [
             {type: 'blog-posts', id: 1},
             {type: 'blog-posts', id: 2},
@@ -104,7 +104,7 @@ test(`it can include a chain of has-many relationships`, function(assert) {
           title: 'Lorem'
         },
         relationships: {
-          fineComments: {
+          'fine-comments': {
             data: [
               {type: 'fine-comments', id: 1},
             ]
@@ -125,7 +125,7 @@ test(`it can include a chain of has-many relationships`, function(assert) {
           title: 'Ipsum'
         },
         relationships: {
-          fineComments: {
+          'fine-comments': {
             data: []
           }
         }
@@ -153,7 +153,7 @@ test(`it can embed a belongs-to relationship`, function(assert) {
         title: 'Lorem'
       },
       relationships: {
-        wordSmith: {
+        'word-smith': {
           data: {
             id: 1,
             type: "word-smiths"
@@ -218,7 +218,7 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
         text: 'pwned'
       },
       relationships: {
-        blogPost: {
+        'blog-post': {
           data: {
             id: 1,
             type: "blog-posts"
@@ -234,7 +234,7 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
           title: 'Lorem'
         },
         relationships: {
-          wordSmith: {
+          'word-smith': {
             data: {
               type: 'word-smiths',
               id: 1
@@ -274,7 +274,7 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
       },
       id: 1,
       relationships: {
-        blogPosts: {
+        'blog-posts': {
           data: [
             {type: 'blog-posts', id: 1},
             {type: 'blog-posts', id: 2},
@@ -290,7 +290,7 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
         },
         id: 1,
         relationships: {
-          wordSmith: {
+          'word-smith': {
             data: {type: 'word-smiths', id: 1}
           }
         },
@@ -303,7 +303,7 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
           title: "Ipsum"
         },
         relationships: {
-          wordSmith: {
+          'word-smith': {
             data: {type: 'word-smiths', id: 1}
           }
         },
@@ -336,7 +336,7 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
       },
       id: 1,
       relationships: {
-        blogPosts: {
+        'blog-posts': {
           data: [
             {type: 'blog-posts', id: 1},
             {type: 'blog-posts', id: 2},
@@ -353,10 +353,10 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
           title: "Lorem"
         },
         relationships: {
-          wordSmith: {
+          'word-smith': {
             data: {type: 'word-smiths', id: 1}
           },
-          fineComments: {
+          'fine-comments': {
             data: [
               {type: 'fine-comments', id: 1}
             ]
@@ -370,7 +370,7 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
           text: 'pwned'
         },
         relationships: {
-          blogPost: {
+          'blog-post': {
             data: {type: 'blog-posts', id: 1}
           }
         },
@@ -382,10 +382,10 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
           title: "Ipsum"
         },
         relationships: {
-          wordSmith: {
+          'word-smith': {
             data: {type: 'word-smiths', id: 1}
           },
-          fineComments: {
+          'fine-comments': {
             data: []
           }
         },

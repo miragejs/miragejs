@@ -93,12 +93,11 @@ class JsonApiSerializer {
 
     if (serializer.relationships && serializer.relationships.length) {
       serializer.relationships.forEach(type => {
-        const camelizedType = camelize(type);
-        let relationship = model[camelizedType];
+        let relationship = model[camelize(type)];
 
         if (this._isCollection(relationship)) {
           if (!obj.relationships) { obj.relationships = {}; }
-          obj.relationships[camelizedType] = {
+          obj.relationships[type] = {
             data: relationship.map(model => {
               return {
                 type: this.typeKeyForModel(model),
@@ -108,7 +107,7 @@ class JsonApiSerializer {
           };
         } else if (relationship) {
           if (!obj.relationships) { obj.relationships = {}; }
-          obj.relationships[camelizedType] = {
+          obj.relationships[type] = {
             data: {
               type: this.typeKeyForModel(relationship),
               id: relationship.id
