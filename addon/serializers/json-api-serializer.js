@@ -3,6 +3,7 @@ import { dasherize, pluralize } from '../utils/inflector';
 import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
 import _assign from 'lodash/object/assign';
+import _compose from 'lodash/function/compose';
 
 class JsonApiSerializer {
 
@@ -124,7 +125,7 @@ class JsonApiSerializer {
   }
 
   typeKeyForModel(model) {
-    return pluralize(model.type);
+    return _compose(pluralize, dasherize)(model.type);
   }
 
   normalize(json) {
