@@ -35,7 +35,7 @@ test(`it includes all attributes for a model`, function(assert) {
   });
 });
 
-test(`it inclues all attributes for each model in a collection`, function(assert) {
+test(`it includes all attributes for each model in a collection`, function(assert) {
   let schema = this.schema;
   schema.wordSmith.create({id: 1, firstName: 'Link', age: 123});
   schema.wordSmith.create({id: 2, firstName: 'Zelda', age: 456});

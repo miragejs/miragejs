@@ -19,7 +19,7 @@ export default class SerializerRegistry {
     return this._serializerFor(payload[Object.keys(payload)[0]]).normalize(payload);
   }
 
-  serialize(response) {
+  serialize(response, request) {
     this.alreadySerialized = {};
 
     if (this._isModelOrCollection(response)) {
@@ -35,14 +35,14 @@ export default class SerializerRegistry {
         and calling serialize.serialize.
       */
       if (serializer instanceof JsonApiSerializer) {
-        return serializer.serialize(response);
+        return serializer.serialize(response, request);
       }
 
       if (serializer.embed) {
         let json;
 
         if (this._isModel(response)) {
-          json = this._serializeModel(response);
+          json = this._serializeModel(response, request);
         } else {
           json = response.reduce((allAttrs, model) => {
             allAttrs.push(this._serializeModel(model));
@@ -55,7 +55,7 @@ export default class SerializerRegistry {
         return this._formatResponse(response, json);
 
       } else {
-        return this._serializeSideloadedModelOrCollection(response);
+        return this._serializeSideloadedModelOrCollection(response, request);
       }
 
     /*
