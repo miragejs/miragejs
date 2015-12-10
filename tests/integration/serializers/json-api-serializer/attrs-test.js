@@ -27,7 +27,7 @@ test(`it returns only the whitelisted attrs when serializing a model`, function(
   var result = this.registry.serialize(user);
   assert.deepEqual(result, {
     data: {
-      type: 'wordSmiths',
+      type: 'word-smiths',
       id: 1,
       attributes: {
         'first-name': 'Link'
@@ -46,15 +46,15 @@ test(`it returns only the whitelisted attrs when serializing a collection`, func
 
   assert.deepEqual(result, {
     data: [{
-      type: 'wordSmiths',
+      type: 'word-smiths',
       id: 1,
       attributes: {
         'first-name': 'Link'
       }
     }, {
-      type: 'wordSmiths',
+      type: 'word-smiths',
       id: 2,
-      attributes: {
+        attributes: {
         'first-name': 'Zelda'
       }
     }]

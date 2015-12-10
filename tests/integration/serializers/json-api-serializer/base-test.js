@@ -25,7 +25,7 @@ test(`it includes all attributes for a model`, function(assert) {
   let result = this.registry.serialize(user);
   assert.deepEqual(result, {
     data: {
-      type: 'wordSmiths',
+      type: 'word-smiths',
       id: 1,
       attributes: {
         'first-name': 'Link',
@@ -45,14 +45,14 @@ test(`it inclues all attributes for each model in a collection`, function(assert
 
   assert.deepEqual(result, {
     data: [{
-      type: 'wordSmiths',
+      type: 'word-smiths',
       id: 1,
       attributes: {
         'first-name': 'Link',
         age: 123
       }
     }, {
-      type: 'wordSmiths',
+      type: 'word-smiths',
       id: 2,
       attributes: {
         'first-name': 'Zelda',
