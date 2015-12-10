@@ -30,7 +30,7 @@ test(`it throws an error if embed is false and root is false`, function(assert) 
   let registry = new SerializerRegistry(this.schema, {
     wordSmith: this.BaseSerializer.extend({
       root: false,
-      relationships: ['blogPosts'],
+      relationships: ['blog-posts'],
     })
   });
 
@@ -46,7 +46,7 @@ test(`it can sideload an empty collection`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      relationships: ['blogPosts'],
+      relationships: ['blog-posts'],
     })
   });
 
@@ -62,7 +62,7 @@ test(`it can sideload a collection with a has-many relationship`, function(asser
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
       embed: false,
-      relationships: ['blogPosts'],
+      relationships: ['blog-posts'],
     })
   });
 
@@ -87,10 +87,10 @@ test(`it can sideload a collection with a chain of has-many relationships`, func
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
       embed: false,
-      relationships: ['blogPosts'],
+      relationships: ['blog-posts'],
     }),
     blogPost: this.BaseSerializer.extend({
-      relationships: ['fineComments'],
+      relationships: ['fine-comments'],
     })
   });
 
@@ -118,10 +118,10 @@ test(`it avoids circularity when serializing a collection`, function(assert) {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
       embed: false,
-      relationships: ['blogPosts'],
+      relationships: ['blog-posts'],
     }),
     blogPost: this.BaseSerializer.extend({
-      relationships: ['wordSmith'],
+      relationships: ['word-smith'],
     })
   });
 
@@ -146,7 +146,7 @@ test(`it can sideload a collection with a belongs-to relationship`, function(ass
     application: this.BaseSerializer,
     blogPost: this.BaseSerializer.extend({
       embed: false,
-      relationships: ['wordSmith'],
+      relationships: ['word-smith'],
     })
   });
 
@@ -171,10 +171,10 @@ test(`it can sideload a collection with a chain of belongs-to relationships`, fu
     application: this.BaseSerializer,
     fineComment: this.BaseSerializer.extend({
       embed: false,
-      relationships: ['blogPost'],
+      relationships: ['blog-post'],
     }),
     blogPost: this.BaseSerializer.extend({
-      relationships: ['wordSmith'],
+      relationships: ['word-smith'],
     })
   });
 

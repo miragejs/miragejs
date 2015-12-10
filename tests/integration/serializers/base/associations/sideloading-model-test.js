@@ -29,7 +29,7 @@ test(`it throws an error if embed is false and root is false`, function(assert) 
   let registry = new SerializerRegistry(this.schema, {
     wordSmith: this.BaseSerializer.extend({
       root: false,
-      relationships: ['blogPosts'],
+      relationships: ['blog-posts'],
     })
   });
 
@@ -44,7 +44,7 @@ test(`it can sideload a model with a has-many relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      relationships: ['blogPosts'],
+      relationships: ['blog-posts'],
     })
   });
 
@@ -68,10 +68,10 @@ test(`it can sideload a model with a chain of has-many relationships`, function(
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      relationships: ['blogPosts']
+      relationships: ['blog-posts']
     }),
     blogPost: this.BaseSerializer.extend({
-      relationships: ['fineComments']
+      relationships: ['fine-comments']
     })
   });
 
@@ -98,10 +98,10 @@ test(`it avoids circularity when serializing a model`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      relationships: ['blogPosts']
+      relationships: ['blog-posts']
     }),
     blogPost: this.BaseSerializer.extend({
-      relationships: ['wordSmith']
+      relationships: ['word-smith']
     })
   });
 
@@ -125,7 +125,7 @@ test(`it can sideload a model with a belongs-to relationship`, function(assert) 
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     blogPost: this.BaseSerializer.extend({
-      relationships: ['wordSmith']
+      relationships: ['word-smith']
     })
   });
 
@@ -146,10 +146,10 @@ test(`it can sideload a model with a chain of belongs-to relationships`, functio
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     fineComment: this.BaseSerializer.extend({
-      relationships: ['blogPost']
+      relationships: ['blog-post']
     }),
     blogPost: this.BaseSerializer.extend({
-      relationships: ['wordSmith']
+      relationships: ['word-smith']
     })
   });
 

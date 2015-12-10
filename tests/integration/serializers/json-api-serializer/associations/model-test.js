@@ -24,7 +24,7 @@ test(`it can include a has many relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     wordSmith: JsonApiSerializer.extend({
-      relationships: ['blogPosts'],
+      relationships: ['blog-posts'],
     })
   });
 
@@ -70,10 +70,10 @@ test(`it can include a chain of has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     wordSmith: JsonApiSerializer.extend({
-      relationships: ['blogPosts'],
+      relationships: ['blog-posts'],
     }),
     blogPost: JsonApiSerializer.extend({
-      relationships: ['fineComments'],
+      relationships: ['fine-comments'],
     })
   });
 
@@ -138,7 +138,7 @@ test(`it can embed a belongs-to relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     blogPost: JsonApiSerializer.extend({
-      relationships: ['wordSmith'],
+      relationships: ['word-smith'],
     })
   });
 
@@ -177,7 +177,7 @@ test(`it gracefully handles null belongs-to relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     blogPost: JsonApiSerializer.extend({
-      relationships: ['wordSmith']
+      relationships: ['word-smith']
     })
   });
 
@@ -200,10 +200,10 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     blogPost: JsonApiSerializer.extend({
-      relationships: ['wordSmith'],
+      relationships: ['word-smith'],
     }),
     fineComment: JsonApiSerializer.extend({
-      relationships: ['blogPost'],
+      relationships: ['blog-post'],
     })
   });
 
@@ -257,10 +257,10 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     wordSmith: JsonApiSerializer.extend({
-      relationships: ['blogPosts'],
+      relationships: ['blog-posts'],
     }),
     blogPost: JsonApiSerializer.extend({
-      relationships: ['wordSmith'],
+      relationships: ['word-smith'],
     })
   });
 
@@ -316,13 +316,13 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     wordSmith: JsonApiSerializer.extend({
-      relationships: ['blogPosts'],
+      relationships: ['blog-posts'],
     }),
     blogPost: JsonApiSerializer.extend({
-      relationships: ['wordSmith', 'fineComments'],
+      relationships: ['word-smith', 'fine-comments'],
     }),
     fineComment: JsonApiSerializer.extend({
-      relationships: ['blogPost']
+      relationships: ['blog-post']
     })
   });
 

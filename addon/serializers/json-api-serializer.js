@@ -1,5 +1,5 @@
 import extend from '../utils/extend';
-import { dasherize, pluralize } from '../utils/inflector';
+import { dasherize, pluralize, camelize } from '../utils/inflector';
 import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
 import _assign from 'lodash/object/assign';
@@ -58,7 +58,7 @@ class JsonApiSerializer {
 
     if (serializer.relationships && serializer.relationships.length) {
       serializer.relationships.forEach(type => {
-        let relationship = model[type];
+        let relationship = model[camelize(type)];
 
         if (relationship instanceof Model) {
           this._serializeIncludedModel(relationship);
@@ -93,11 +93,12 @@ class JsonApiSerializer {
 
     if (serializer.relationships && serializer.relationships.length) {
       serializer.relationships.forEach(type => {
-        let relationship = model[type];
+        const camelizedType = camelize(type);
+        let relationship = model[camelizedType];
 
         if (this._isCollection(relationship)) {
           if (!obj.relationships) { obj.relationships = {}; }
-          obj.relationships[type] = {
+          obj.relationships[camelizedType] = {
             data: relationship.map(model => {
               return {
                 type: this.typeKeyForModel(model),
@@ -107,7 +108,7 @@ class JsonApiSerializer {
           };
         } else if (relationship) {
           if (!obj.relationships) { obj.relationships = {}; }
-          obj.relationships[type] = {
+          obj.relationships[camelizedType] = {
             data: {
               type: this.typeKeyForModel(relationship),
               id: relationship.id

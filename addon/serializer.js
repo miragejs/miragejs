@@ -1,7 +1,8 @@
 import Model from './orm/model';
 import _assign from 'lodash/object/assign';
+import _compose from 'lodash/function/compose';
 import extend from './utils/extend';
-import { singularize, pluralize } from './utils/inflector';
+import { singularize, pluralize, camelize } from './utils/inflector';
 
 class Serializer {
 
@@ -25,7 +26,7 @@ class Serializer {
     Used to format the key of a primary collection.
   */
   keyForCollection(type) {
-    return pluralize(this.keyForModel(type));
+    return _compose(camelize, pluralize)(this.keyForModel(type));
   }
 
   /*
@@ -54,7 +55,7 @@ class Serializer {
     }
   */
   keyForRelationship(type) {
-    return pluralize(type);
+    return _compose(camelize, pluralize)(type);
   }
 
   /*

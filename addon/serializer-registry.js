@@ -2,7 +2,7 @@ import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
 import Serializer from 'ember-cli-mirage/serializer';
 import JsonApiSerializer from 'ember-cli-mirage/serializers/json-api-serializer';
-import { pluralize } from './utils/inflector';
+import { pluralize, camelize } from './utils/inflector';
 
 import _assign from 'lodash/object/assign';
 import _isArray from 'lodash/lang/isArray';
@@ -116,7 +116,7 @@ export default class SerializerRegistry {
 
     // Traverse this model's relationships
     serializer.relationships
-      .map(key => model[key])
+      .map(key => model[camelize(key)])
       .forEach(relationship => {
         let relatedModels = this._isModel(relationship) ? [relationship] : relationship;
 
@@ -177,7 +177,7 @@ export default class SerializerRegistry {
 
     if (embedRelatedIds) {
       serializer.relationships
-        .map(key => model[key])
+        .map(key => model[camelize(key)])
         .filter(relatedCollection => this._isCollection(relatedCollection))
         .forEach(relatedCollection => {
           attrs[serializer.keyForRelationshipIds(relatedCollection.type)] = relatedCollection.map(obj => obj.id);
@@ -191,10 +191,10 @@ export default class SerializerRegistry {
     let serializer = this._serializerFor(model);
 
     return serializer.relationships.reduce((attrs, key) => {
-      let relatedAttrs = this._serializeModelOrCollection(model[key]);
+      let relatedAttrs = this._serializeModelOrCollection(model[camelize(key)]);
 
       if (relatedAttrs) {
-        attrs[key] = relatedAttrs;
+        attrs[camelize(key)] = relatedAttrs;
       }
 
       return attrs;

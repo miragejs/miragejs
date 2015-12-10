@@ -29,7 +29,7 @@ module('Integration | Serializer | ActiveModelSerializer', {
       application: ActiveModelSerializer,
       wordSmith: ActiveModelSerializer.extend({
         attrs: ['id', 'name'],
-        relationships: ['blogPosts']
+        relationships: ['blog-posts']
       })
     });
   },
