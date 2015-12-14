@@ -30,6 +30,11 @@ test(`it includes all attributes for a model`, function(assert) {
       attributes: {
         'first-name': 'Link',
         age: 123
+      },
+      relationships: {
+        "blog-posts": {
+          data: []
+        }
       }
     }
   });
@@ -50,6 +55,11 @@ test(`it includes all attributes for each model in a collection`, function(asser
       attributes: {
         'first-name': 'Link',
         age: 123
+      },
+      relationships: {
+        "blog-posts": {
+          data: []
+        }
       }
     }, {
       type: 'word-smiths',
@@ -57,6 +67,11 @@ test(`it includes all attributes for each model in a collection`, function(asser
       attributes: {
         'first-name': 'Zelda',
         age: 456
+      },
+      relationships: {
+        "blog-posts": {
+          data: []
+        }
       }
     }]
   });

@@ -52,17 +52,34 @@ test(`model: it can include relationships specified by the include query param`,
       {
         type: 'word-smiths',
         id: 1,
-        attributes: {}
+        attributes: {},
+        relationships: {
+          'blog-posts': {
+            data: [
+              {type: 'blog-posts', id: 1}
+            ]
+          }
+        }
       },
       {
         type: 'fine-comments',
         id: 1,
-        attributes: {}
+        attributes: {},
+        relationships: {
+          'blog-post': {
+            data: {type: 'blog-posts', id: 1}
+          }
+        }
       },
       {
         type: 'fine-comments',
         id: 2,
-        attributes: {}
+        attributes: {},
+        relationships: {
+          'blog-post': {
+            data: {type: 'blog-posts', id: 1}
+          }
+        }
       }
     ]
   });
@@ -72,7 +89,7 @@ test(`model: it can include relationships specified by a combination of the incl
   const registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     blogPost: JsonApiSerializer.extend({
-      relationships: ['word-smith'],
+      include: ['word-smith'],
     })
   });
 
@@ -105,17 +122,34 @@ test(`model: it can include relationships specified by a combination of the incl
       {
         type: 'word-smiths',
         id: 1,
-        attributes: {}
+        attributes: {},
+        relationships: {
+          'blog-posts': {
+            data: [
+              {type: 'blog-posts', id: 1}
+            ]
+          }
+        }
       },
       {
         type: 'fine-comments',
         id: 1,
-        attributes: {}
+        attributes: {},
+        relationships: {
+          'blog-post': {
+            data: {type: 'blog-posts', id: 1}
+          }
+        }
       },
       {
         type: 'fine-comments',
         id: 2,
-        attributes: {}
+        attributes: {},
+        relationships: {
+          'blog-post': {
+            data: {type: 'blog-posts', id: 1}
+          }
+        }
       }
     ]
   });
@@ -126,7 +160,7 @@ test(`model: it can include relationships specified by a combination of the incl
   const registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     blogPost: JsonApiSerializer.extend({
-      relationships: ['fine-comments'],
+      include: ['fine-comments'],
     })
   });
 
@@ -159,17 +193,34 @@ test(`model: it can include relationships specified by a combination of the incl
       {
         type: 'fine-comments',
         id: 1,
-        attributes: {}
+        attributes: {},
+        relationships: {
+          'blog-post': {
+            data: {type: 'blog-posts', id: 1}
+          }
+        }
       },
       {
         type: 'fine-comments',
         id: 2,
-        attributes: {}
+        attributes: {},
+        relationships: {
+          'blog-post': {
+            data: {type: 'blog-posts', id: 1}
+          }
+        }
       },
       {
         type: 'word-smiths',
         id: 1,
-        attributes: {}
+        attributes: {},
+        relationships: {
+          'blog-posts': {
+            data: [
+              {type: 'blog-posts', id: 1}
+            ]
+          }
+        }
       }
     ]
   });
@@ -222,17 +273,34 @@ test(`collection: it can include relationships specified by the include query pa
       {
         type: 'word-smiths',
         id: 1,
-        attributes: {}
+        attributes: {},
+        relationships: {
+          'blog-posts': {
+            data: [
+              {type: 'blog-posts', id: 1}
+            ]
+          }
+        }
       },
       {
         type: 'fine-comments',
         id: 1,
-        attributes: {}
+        attributes: {},
+        relationships: {
+          'blog-post': {
+            data: {type: 'blog-posts', id: 1}
+          }
+        }
       },
       {
         type: 'fine-comments',
         id: 2,
-        attributes: {}
+        attributes: {},
+        relationships: {
+          'blog-post': {
+            data: {type: 'blog-posts', id: 1}
+          }
+        }
       }
     ]
   });

@@ -84,7 +84,6 @@ class JsonApiSerializer {
   }
 
   _resourceObjectFor(model, request) {
-    let serializer = this._serializerFor(model);
     const attrs = this._attrsForModel(model);
 
     const obj = {
@@ -93,14 +92,13 @@ class JsonApiSerializer {
       attributes: attrs
     };
 
-    const relationships = this._combineRelationships(serializer, request);
-
-    relationships.forEach(type => {
-      let relationship = model[camelize(type)];
+    model.associationKeys.forEach(camelizedType => {
+      const relationship = model[camelizedType];
+      const dasherizedType = dasherize(camelizedType);
 
       if (this._isCollection(relationship)) {
         if (!obj.relationships) { obj.relationships = {}; }
-        obj.relationships[type] = {
+        obj.relationships[dasherizedType] = {
           data: relationship.map(model => {
             return {
               type: this.typeKeyForModel(model),
@@ -110,7 +108,7 @@ class JsonApiSerializer {
         };
       } else if (relationship) {
         if (!obj.relationships) { obj.relationships = {}; }
-        obj.relationships[type] = {
+        obj.relationships[dasherizedType] = {
           data: {
             type: this.typeKeyForModel(relationship),
             id: relationship.id
@@ -203,7 +201,7 @@ class JsonApiSerializer {
   }
 
   _combineRelationships(serializer = {}, request = {}) {
-    const serializerRelationships = _get(serializer, 'relationships', []);
+    const serializerRelationships = _get(serializer, 'include', []);
     let requestRelationships = _get(request, 'queryParams.include', []);
 
     if (requestRelationships.length) {

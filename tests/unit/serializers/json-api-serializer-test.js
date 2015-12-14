@@ -11,7 +11,7 @@ module('Unit | Serializers | JsonApiSerializer', {
 test('_combineRelationships should combine relationships from serializer and request', function(assert) {
 
   const otherSerializer = {
-    relationships: ['foo', 'bar']
+    include: ['foo', 'bar']
   };
 
   const request = {
@@ -29,7 +29,7 @@ test('_combineRelationships should combine relationships from serializer and req
 test('_combineRelationships should not choke on missing request', function(assert) {
 
   const otherSerializer = {
-    relationships: ['foo', 'bar']
+    include: ['foo', 'bar']
   };
 
   const result = this.serializer._combineRelationships(otherSerializer);
@@ -41,7 +41,7 @@ test('_combineRelationships should not choke on missing request', function(asser
 test('_combineRelationships should not choke on empty request', function(assert) {
 
   const otherSerializer = {
-    relationships: ['foo', 'bar']
+    include: ['foo', 'bar']
   };
 
   const request = {};
@@ -55,7 +55,7 @@ test('_combineRelationships should not choke on empty request', function(assert)
 test('_combineRelationships should not choke on empty queryParams', function(assert) {
 
   const otherSerializer = {
-    relationships: ['foo', 'bar']
+    include: ['foo', 'bar']
   };
 
   const request = {queryParams: {}};
@@ -69,7 +69,7 @@ test('_combineRelationships should not choke on empty queryParams', function(ass
 test('_combineRelationships should not choke on empty included', function(assert) {
 
   const otherSerializer = {
-    relationships: ['foo', 'bar']
+    include: ['foo', 'bar']
   };
 
   const request = {

@@ -31,6 +31,11 @@ test(`it returns only the whitelisted attrs when serializing a model`, function(
       id: 1,
       attributes: {
         'first-name': 'Link'
+      },
+      relationships: {
+        "blog-posts": {
+          data: []
+        }
       }
     }
   });
@@ -50,12 +55,22 @@ test(`it returns only the whitelisted attrs when serializing a collection`, func
       id: 1,
       attributes: {
         'first-name': 'Link'
+      },
+      relationships: {
+        "blog-posts": {
+          data: []
+        }
       }
     }, {
       type: 'word-smiths',
       id: 2,
         attributes: {
         'first-name': 'Zelda'
+      },
+      relationships: {
+        "blog-posts": {
+          data: []
+        }
       }
     }]
   });
