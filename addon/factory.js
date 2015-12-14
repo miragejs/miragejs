@@ -1,22 +1,32 @@
 import _assign from 'lodash/object/assign';
-import _keys from 'lodash/object/keys';
+import _isArray from 'lodash/lang/isArray';
+import _isFunction from 'lodash/lang/isFunction';
+import _isPlainObject from 'lodash/lang/isPlainObject';
+import _mapValues from 'lodash/object/mapValues';
 
 var Factory = function() {
   this.build = function(sequence) {
-    var object = {};
-    var attrs = this.attrs || {};
+    const topLevelAttrs = this.attrs || {};
+    let buildAttrs;
+    let buildSingleValue;
 
-    _keys(attrs).forEach(function(key) {
-      var type = typeof attrs[key];
+    buildAttrs = function(attrs) {
+      return _mapValues(attrs, buildSingleValue);
+    };
 
-      if (type === 'function') {
-        object[key] = attrs[key].call(attrs, sequence);
+    buildSingleValue = function(value) {
+      if (_isArray(value)) {
+        return value.map(buildSingleValue);
+      } else if (_isPlainObject(value)) {
+        return buildAttrs(value);
+      } else if (_isFunction(value)) {
+        return value.call(topLevelAttrs, sequence);
       } else {
-        object[key] = attrs[key];
+        return value;
       }
-    });
+    };
 
-    return object;
+    return buildAttrs(topLevelAttrs);
   };
 };
 
