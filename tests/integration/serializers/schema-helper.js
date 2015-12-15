@@ -19,7 +19,24 @@ export default {
       fineComment: Model.extend({
         blogPost: Mirage.belongsTo()
       }),
-      greatPhoto: Model
+      greatPhoto: Model,
+
+      foo: Model.extend({
+        bar: Mirage.belongsTo()
+      }),
+      bar: Model.extend({
+        baz: Mirage.belongsTo()
+      }),
+      baz: Model.extend({
+        quuxes: Mirage.hasMany()
+      }),
+      quux: Model.extend({
+        zomgs: Mirage.hasMany()
+      }),
+      zomg: Model.extend({
+        lol: Mirage.belongsTo()
+      }),
+      lol: Model
     });
 
     return this.schema;

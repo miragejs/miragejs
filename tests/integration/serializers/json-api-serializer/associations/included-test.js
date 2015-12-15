@@ -85,7 +85,7 @@ test(`model: it can include relationships specified by the include query param`,
   });
 });
 
-test(`model: it can include relationships specified by a combination of the include query param (hasMany) and serializer.relationships (belongsTo)`, function(assert) {
+test(`model: it can include relationships specified by a combination of the include query param (hasMany) and serializer.relationships (belongsTo, ignored)`, function(assert) {
   const registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     blogPost: JsonApiSerializer.extend({
@@ -120,18 +120,6 @@ test(`model: it can include relationships specified by a combination of the incl
     },
     included: [
       {
-        type: 'word-smiths',
-        id: 1,
-        attributes: {},
-        relationships: {
-          'blog-posts': {
-            data: [
-              {type: 'blog-posts', id: 1}
-            ]
-          }
-        }
-      },
-      {
         type: 'fine-comments',
         id: 1,
         attributes: {},
@@ -156,7 +144,7 @@ test(`model: it can include relationships specified by a combination of the incl
 });
 
 
-test(`model: it can include relationships specified by a combination of the include query param (belongsTo) and serializer.relationships (hasMany)`, function(assert) {
+test(`model: it can include relationships specified by a combination of the include query param (belongsTo) and serializer.relationships (hasMany, ignored)`, function(assert) {
   const registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     blogPost: JsonApiSerializer.extend({
@@ -190,26 +178,6 @@ test(`model: it can include relationships specified by a combination of the incl
       }
     },
     included: [
-      {
-        type: 'fine-comments',
-        id: 1,
-        attributes: {},
-        relationships: {
-          'blog-post': {
-            data: {type: 'blog-posts', id: 1}
-          }
-        }
-      },
-      {
-        type: 'fine-comments',
-        id: 2,
-        attributes: {},
-        relationships: {
-          'blog-post': {
-            data: {type: 'blog-posts', id: 1}
-          }
-        }
-      },
       {
         type: 'word-smiths',
         id: 1,

@@ -4,8 +4,12 @@ import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
 import _assign from 'lodash/object/assign';
 import _get from 'lodash/object/get';
-import _compose from 'lodash/function/compose';
 import _trim from 'lodash/string/trim';
+import _isString from 'lodash/lang/isString';
+import _ from 'lodash';
+
+
+
 
 class JsonApiSerializer {
 
@@ -58,7 +62,7 @@ class JsonApiSerializer {
   _serializeRelationshipsFor(model, request) {
     let serializer = this._serializerFor(model);
 
-    const relationships = this._combineRelationships(serializer, request);
+    const relationships = this._getRelationships(serializer, request);
 
     relationships.forEach(type => {
       let relationship = model[camelize(type)];
@@ -125,7 +129,7 @@ class JsonApiSerializer {
   }
 
   typeKeyForModel(model) {
-    return _compose(pluralize, dasherize)(model.type);
+    return dasherize(pluralize(model.type));
   }
 
   normalize(json) {
@@ -200,17 +204,35 @@ class JsonApiSerializer {
     this.alreadySerialized[modelKey].push(model.id);
   }
 
-  _combineRelationships(serializer = {}, request = {}) {
-    const serializerRelationships = _get(serializer, 'include', []);
-    let requestRelationships = _get(request, 'queryParams.include', []);
+  _getRelationships(serializer = {}, request = {}) {
+    const requestRelationships = _get(request, 'queryParams.include');
 
-    if (requestRelationships.length) {
-      requestRelationships = requestRelationships.split(',').map(_trim);
+    if (_isString(requestRelationships)) {
+      if(requestRelationships.length) {
+        return requestRelationships.split(',').map(_trim);
+      }
+      return [];
     }
 
-    return [...serializerRelationships, ...requestRelationships];
+    return _get(serializer, 'include', []);
   }
 
+  _getRelatedWithPath(parentModel, path) {
+    const relationships = path.split('.');
+    let currentModels = [parentModel];
+
+    relationships.forEach(relationship => {
+      currentModels =
+        _(currentModels)
+          .map(r => r.reload()[relationship])
+          .map(r => r instanceof Array ? [...r] : r) // Turning Collections into Arrays for lodash to recognize
+          .flatten()
+          .filter(r => r)
+          .value();
+    });
+
+    return currentModels;
+  }
 }
 
 // Defaults

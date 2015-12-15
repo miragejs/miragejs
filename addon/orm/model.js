@@ -104,6 +104,8 @@ class Model {
       .forEach(function(attr) {
         _this[attr] = attrs[attr];
       });
+
+    return this;
   }
 
 
