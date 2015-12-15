@@ -118,8 +118,7 @@ export default class RouteHandler {
     if (this.customizedCode) {
       code = this.customizedCode;
     } else {
-      code = this._defaultCodeFor[this.verb];
-
+      code = this._defaultCodeFor(this.verb);
       if (code === 204 && responseHasContent) {
         code = 200;
       }
@@ -129,7 +128,7 @@ export default class RouteHandler {
   }
 
   _defaultCodeFor(verb) {
-    return {get: 200, put: 204, post: 201, 'delete': 204 }[verb];
+    return { get: 200, put: 204, post: 201, 'delete': 204 }[verb];
   }
 
   _serialize(mirageResponse, request) {
