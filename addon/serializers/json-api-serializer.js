@@ -62,15 +62,15 @@ class JsonApiSerializer {
   _serializeRelationshipsFor(model, request) {
     let serializer = this._serializerFor(model);
 
-    const relationships = this._getRelationships(serializer, request);
+    const relationshipNames = this._getRelationshipNames(serializer, request);
 
-    relationships.forEach(type => {
-      let relationship = model[camelize(type)];
+    relationshipNames.forEach(relationshipName => {
+      let related = this._getRelatedWithPath(model, relationshipName);
 
-      if (relationship instanceof Model) {
-        this._serializeIncludedModel(relationship, request);
-      } else if (relationship) {
-        relationship.forEach(model => {
+      if (related instanceof Model) {
+        this._serializeIncludedModel(related, request);
+      } else if (related) {
+        related.forEach(model => {
           this._serializeIncludedModel(model, request);
         });
       }
@@ -204,7 +204,7 @@ class JsonApiSerializer {
     this.alreadySerialized[modelKey].push(model.id);
   }
 
-  _getRelationships(serializer = {}, request = {}) {
+  _getRelationshipNames(serializer = {}, request = {}) {
     const requestRelationships = _get(request, 'queryParams.include');
 
     if (_isString(requestRelationships)) {
@@ -218,20 +218,16 @@ class JsonApiSerializer {
   }
 
   _getRelatedWithPath(parentModel, path) {
-    const relationships = path.split('.');
-    let currentModels = [parentModel];
-
-    relationships.forEach(relationship => {
-      currentModels =
-        _(currentModels)
-          .map(r => r.reload()[relationship])
+    return path
+      .split('.')
+      .reduce((related, relationshipName) => {
+        return _(related)
+          .map(r => r.reload()[camelize(relationshipName)])
           .map(r => r instanceof Array ? [...r] : r) // Turning Collections into Arrays for lodash to recognize
           .flatten()
           .filter(r => r)
           .value();
-    });
-
-    return currentModels;
+      }, [parentModel]);
   }
 }
 

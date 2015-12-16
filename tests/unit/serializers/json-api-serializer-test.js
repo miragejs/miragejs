@@ -11,7 +11,7 @@ module('Unit | Serializers | JsonApiSerializer', {
   }
 });
 
-test('_getRelationships should prefer relationships from request', function(assert) {
+test('_getRelationshipNames should prefer relationships from request', function(assert) {
 
   const otherSerializer = {
     include: ['foo', 'bar']
@@ -23,25 +23,25 @@ test('_getRelationships should prefer relationships from request', function(asse
     }
   };
 
-  const result = this.serializer._getRelationships(otherSerializer, request);
+  const result = this.serializer._getRelationshipNames(otherSerializer, request);
 
   assert.deepEqual(result, ['baz', 'quux']);
 });
 
 
-test('_getRelationships should not choke on missing request', function(assert) {
+test('_getRelationshipNames should not choke on missing request', function(assert) {
 
   const otherSerializer = {
     include: ['foo', 'bar']
   };
 
-  const result = this.serializer._getRelationships(otherSerializer);
+  const result = this.serializer._getRelationshipNames(otherSerializer);
 
   assert.deepEqual(result, ['foo', 'bar']);
 });
 
 
-test('_getRelationships should not choke on empty request', function(assert) {
+test('_getRelationshipNames should not choke on empty request', function(assert) {
 
   const otherSerializer = {
     include: ['foo', 'bar']
@@ -49,13 +49,13 @@ test('_getRelationships should not choke on empty request', function(assert) {
 
   const request = {};
 
-  const result = this.serializer._getRelationships(otherSerializer, request);
+  const result = this.serializer._getRelationshipNames(otherSerializer, request);
 
   assert.deepEqual(result, ['foo', 'bar']);
 });
 
 
-test('_getRelationships should not choke on empty queryParams', function(assert) {
+test('_getRelationshipNames should not choke on empty queryParams', function(assert) {
 
   const otherSerializer = {
     include: ['foo', 'bar']
@@ -63,13 +63,13 @@ test('_getRelationships should not choke on empty queryParams', function(assert)
 
   const request = {queryParams: {}};
 
-  const result = this.serializer._getRelationships(otherSerializer, request);
+  const result = this.serializer._getRelationshipNames(otherSerializer, request);
 
   assert.deepEqual(result, ['foo', 'bar']);
 });
 
 
-test('_getRelationships should not choke on empty included', function(assert) {
+test('_getRelationshipNames should not choke on empty included', function(assert) {
 
   const otherSerializer = {
     include: ['foo', 'bar']
@@ -81,13 +81,13 @@ test('_getRelationships should not choke on empty included', function(assert) {
     }
   };
 
-  const result = this.serializer._getRelationships(otherSerializer, request);
+  const result = this.serializer._getRelationshipNames(otherSerializer, request);
 
   assert.deepEqual(result, []);
 });
 
 
-test('_getRelationships should not choke on missing serializer.relationships', function(assert) {
+test('_getRelationshipNames should not choke on missing serializer.relationships', function(assert) {
 
   const request = {
     queryParams: {
@@ -95,7 +95,7 @@ test('_getRelationships should not choke on missing serializer.relationships', f
     }
   };
 
-  const result = this.serializer._getRelationships(undefined, request);
+  const result = this.serializer._getRelationshipNames(undefined, request);
 
   assert.deepEqual(result, ['baz', 'quux']);
 });

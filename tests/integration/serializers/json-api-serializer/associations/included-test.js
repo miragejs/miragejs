@@ -12,6 +12,29 @@ module('Integration | Serializers | JSON API Serializer | Associations | Include
     post.createFineComment();
     post.createFineComment();
     this.schema.blogPost.create();
+
+    const foo = this.schema.foo.create();
+    const bar = foo.createBar();
+    foo.save();
+    const baz = bar.createBaz();
+    bar.save();
+    const quux1 = baz.createQuux();
+    const quux2 = baz.createQuux();
+    baz.save();
+    const zomg1 = quux1.createZomg();
+    const zomg2 = quux1.createZomg();
+    quux1.save();
+    const zomg3 = quux2.createZomg();
+    const zomg4 = quux2.createZomg();
+    quux2.save();
+    zomg1.createLol();
+    zomg2.createLol();
+    zomg3.createLol();
+    zomg4.createLol();
+    zomg1.save();
+    zomg2.save();
+    zomg3.save();
+    zomg4.save();
   },
   afterEach() {
     this.schema.db.emptyData();
@@ -270,6 +293,56 @@ test(`collection: it can include relationships specified by the include query pa
           }
         }
       }
+    ]
+  });
+});
+
+
+test(`dot-paths in include query params include query param`, function(assert) {
+  const registry = new SerializerRegistry(this.schema, {
+    application: JsonApiSerializer
+  });
+
+  const foo = this.schema.foo.find(1);
+  const request = {
+    queryParams: {
+      include: "bar.baz.quuxes.zomgs.lol"
+    }
+  };
+  const result = registry.serialize(foo, request);
+
+  assert.propEqual(result, {
+    data: {
+      type: 'foos',
+      id: 1,
+      attributes: {},
+      relationships: {
+        'bar': {
+          data: {type: 'bars', id: 1}
+        }
+      }
+    },
+    included: [
+      {
+        type: 'lols',
+        id: 1,
+        attributes: {},
+      },
+      {
+        type: 'lols',
+        id: 2,
+        attributes: {},
+      },
+      {
+        type: 'lols',
+        id: 3,
+        attributes: {},
+      },
+      {
+        type: 'lols',
+        id: 4,
+        attributes: {},
+      },
     ]
   });
 });
