@@ -125,26 +125,36 @@ export default class Server {
     });
   }
 
-  create(type, overrides) {
-    var collection = this.schema ? pluralize(camelize(type)) : pluralize(type);
-    var currentRecords = this.db[collection];
-    var sequence = currentRecords ? currentRecords.length: 0;
+  create(type, overrides, collectionFromCreateList) {
+
+    // Store sequence for factory type as instance variable
+    this.factorySequences = this.factorySequences || {};
+    this.factorySequences[type] = this.factorySequences[type] + 1 || 0;
+
     if (!this._factoryMap || !this._factoryMap[type]) {
       throw "You're trying to create a " + type + ", but no factory for this type was found";
     }
-    var OriginalFactory = this._factoryMap[type];
-    var Factory = OriginalFactory.extend(overrides);
-    var factory = new Factory();
 
-    var attrs = factory.build(sequence);
-    return this.db[collection].insert(attrs);
+    const OriginalFactory = this._factoryMap[type];
+    const Factory = OriginalFactory.extend(overrides);
+    const factory = new Factory();
+
+    const sequence = this.factorySequences[type];
+    const attrs = factory.build(sequence);
+
+    const collectionName = this.schema ? pluralize(camelize(type)) : pluralize(type);
+    const collection = collectionFromCreateList || this.db[collectionName];
+
+    return collection.insert(attrs);
   }
 
   createList(type, amount, overrides) {
-    var list = [];
+    const list = [];
+    const collectionName = this.schema ? pluralize(camelize(type)) : pluralize(type);
+    const collection = this.db[collectionName];
 
-    for (var i = 0; i < amount; i++) {
-      list.push(this.create(type, overrides));
+    for (let i = 0; i < amount; i++) {
+      list.push(this.create(type, overrides, collection));
     }
 
     return list;
