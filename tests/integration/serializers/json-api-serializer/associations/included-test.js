@@ -89,7 +89,7 @@ test(`model: it can include relationships specified by a combination of the incl
   const registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     blogPost: JsonApiSerializer.extend({
-      include: ['word-smith'],
+      include: ['wordSmith'],
     })
   });
 
@@ -148,7 +148,7 @@ test(`model: it can include relationships specified by a combination of the incl
   const registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     blogPost: JsonApiSerializer.extend({
-      include: ['fine-comments'],
+      include: ['fineComments'],
     })
   });
 

@@ -24,7 +24,7 @@ test(`it can serialize a collection with a has-many relationship`, function(asse
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     wordSmith: JsonApiSerializer.extend({
-      include: ['blog-posts'],
+      include: ['blogPosts'],
     })
   });
 
@@ -102,10 +102,10 @@ test(`it can serialize a collection with a chain of has-many relationships`, fun
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     wordSmith: JsonApiSerializer.extend({
-      include: ['blog-posts']
+      include: ['blogPosts']
     }),
     blogPost: JsonApiSerializer.extend({
-      include: ['fine-comments']
+      include: ['fineComments']
     })
   });
 
@@ -195,7 +195,7 @@ test(`it can serialize a collection with a belongs-to relationship`, function(as
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     blogPost: JsonApiSerializer.extend({
-      include: ['word-smith']
+      include: ['wordSmith']
     })
   });
 
@@ -261,10 +261,10 @@ test(`it can serialize a collection with a chain of belongs-to relationships`, f
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     fineComment: JsonApiSerializer.extend({
-      include: ['blog-post']
+      include: ['blogPost']
     }),
     blogPost: JsonApiSerializer.extend({
-      include: ['word-smith']
+      include: ['wordSmith']
     })
   });
 
@@ -336,7 +336,7 @@ test(`it can serialize a collection of models that have both belongs-to and has-
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     blogPost: JsonApiSerializer.extend({
-      include: ['word-smith', 'fine-comments']
+      include: ['wordSmith', 'fineComments']
     })
   });
 
