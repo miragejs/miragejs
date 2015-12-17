@@ -115,7 +115,7 @@ export default class SerializerRegistry {
     }
 
     // Traverse this model's relationships
-    serializer.relationships
+    serializer.include
       .map(key => model[camelize(key)])
       .forEach(relationship => {
         let relatedModels = this._isModel(relationship) ? [relationship] : relationship;
@@ -176,7 +176,7 @@ export default class SerializerRegistry {
     }
 
     if (embedRelatedIds) {
-      serializer.relationships
+      serializer.include
         .map(key => model[camelize(key)])
         .filter(relatedCollection => this._isCollection(relatedCollection))
         .forEach(relatedCollection => {
@@ -190,7 +190,7 @@ export default class SerializerRegistry {
   _attrsForRelationships(model) {
     let serializer = this._serializerFor(model);
 
-    return serializer.relationships.reduce((attrs, key) => {
+    return serializer.include.reduce((attrs, key) => {
       let relatedAttrs = this._serializeModelOrCollection(model[camelize(key)]);
 
       if (relatedAttrs) {

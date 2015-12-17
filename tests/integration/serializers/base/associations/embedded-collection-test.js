@@ -29,7 +29,7 @@ test(`it can embed a collection with a has-many relationship`, function(assert) 
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      relationships: ['blog-posts']
+      include: ['blogPosts']
     })
   });
 
@@ -59,10 +59,10 @@ test(`it can embed a collection with a chain of has-many relationships`, functio
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      relationships: ['blog-posts']
+      include: ['blogPosts']
     }),
     blogPost: this.BaseSerializer.extend({
-      relationships: ['fine-comments']
+      include: ['fineComments']
     })
   });
 
@@ -102,7 +102,7 @@ test(`it can embed a collection with a belongs-to relationship`, function(assert
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     blogPost: this.BaseSerializer.extend({
-      relationships: ['word-smith']
+      include: ['wordSmith']
     })
   });
 
@@ -129,10 +129,10 @@ test(`it can embed a collection with a chain of belongs-to relationships`, funct
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     fineComment: this.BaseSerializer.extend({
-      relationships: ['blog-post']
+      include: ['blogPost']
     }),
     blogPost: this.BaseSerializer.extend({
-      relationships: ['word-smith']
+      include: ['wordSmith']
     })
   });
 

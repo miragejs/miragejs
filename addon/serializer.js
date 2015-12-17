@@ -123,7 +123,7 @@ class Serializer {
 }
 
 // Defaults
-Serializer.prototype.relationships = [];
+Serializer.prototype.include = [];
 Serializer.prototype.root = true;
 Serializer.prototype.embed = false;
 
