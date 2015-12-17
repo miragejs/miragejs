@@ -39,7 +39,7 @@ test("You can customize the response code of a custom handler passing the code a
   });
 });
 
-test("You can can programatically returns a taylored response by returning a Mirage.Response", function(assert) {
+test("You can can programatically returns a tailored response by returning a Mirage.Response", function(assert) {
   var done = assert.async();
   var request = Ember.$.ajax({
     url: '/pets',

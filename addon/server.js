@@ -30,7 +30,11 @@ export default class Server {
 
     this.pretender = this.interceptor = new Pretender(function() {
       this.prepareBody = function(body) {
-        return body ? JSON.stringify(body) : '{"error": "not found"}';
+        if (body) {
+          return typeof body !== 'string' ? JSON.stringify(body) : body;
+        } else {
+          return '{"error": "not found"}';
+        }
       };
 
       this.unhandledRequest = function(verb, path) {

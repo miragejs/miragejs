@@ -19,7 +19,7 @@ module('Integration | Server | Shorthand sanity check', {
 });
 
 test('a get shorthand works', function(assert) {
-  assert.expect(1);
+  assert.expect(2);
   var done = assert.async();
 
   this.server.db.loadData({
@@ -33,7 +33,8 @@ test('a get shorthand works', function(assert) {
   $.ajax({
     method: 'GET',
     url: '/contacts'
-  }).done(function(res) {
+  }).done(function(res, status, xhr) {
+    assert.equal(xhr.status, 200);
     assert.deepEqual(res, {contacts: [{id: 1, name: 'Link'}]});
     done();
   });
@@ -41,7 +42,7 @@ test('a get shorthand works', function(assert) {
 
 test('a post shorthand works', function(assert) {
   let server = this.server;
-  assert.expect(1);
+  assert.expect(2);
   let done = assert.async();
 
   server.post('/contacts');
@@ -54,7 +55,8 @@ test('a post shorthand works', function(assert) {
         name: 'Zelda'
       }
     })
-  }).done(() => {
+  }).done((res, status, xhr) => {
+    assert.equal(xhr.status, 201);
     assert.equal(server.db.contacts.length, 1);
     done();
   });
@@ -62,7 +64,7 @@ test('a post shorthand works', function(assert) {
 
 test('a put shorthand works', function(assert) {
   let server = this.server;
-  assert.expect(1);
+  assert.expect(2);
   let done = assert.async();
 
   this.server.db.loadData({
@@ -81,7 +83,8 @@ test('a put shorthand works', function(assert) {
         name: 'Zelda'
       }
     })
-  }).done(() => {
+  }).done((res, status, xhr) => {
+    assert.equal(xhr.status, 200);
     assert.equal(server.db.contacts[0].name, 'Zelda');
     done();
   });
@@ -89,7 +92,7 @@ test('a put shorthand works', function(assert) {
 
 test('a patch shorthand works', function(assert) {
   let server = this.server;
-  assert.expect(1);
+  assert.expect(2);
   let done = assert.async();
 
   this.server.db.loadData({
@@ -108,7 +111,8 @@ test('a patch shorthand works', function(assert) {
         name: 'Zelda'
       }
     })
-  }).done(() => {
+  }).done((res, status, xhr) => {
+    assert.equal(xhr.status, 200);
     assert.equal(server.db.contacts[0].name, 'Zelda');
     done();
   });
@@ -116,7 +120,7 @@ test('a patch shorthand works', function(assert) {
 
 test('a delete shorthand works', function(assert) {
   let server = this.server;
-  assert.expect(1);
+  assert.expect(2);
   let done = assert.async();
 
   this.server.db.loadData({
@@ -130,7 +134,8 @@ test('a delete shorthand works', function(assert) {
   $.ajax({
     method: 'DELETE',
     url: '/contacts/1',
-  }).done(() => {
+  }).done((res, status, xhr) => {
+    assert.equal(xhr.status, 204);
     assert.equal(server.db.contacts.length, 0);
     done();
   });

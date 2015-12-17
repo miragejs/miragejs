@@ -2,6 +2,11 @@
 
 ## Next
 
+Update notes:
+  - We now use `destroyApp` test helper in Ember-CLI to shutdown the Mirage server
+  after each test to resolve a memory leak reported in #226. It's important to run
+  `ember g ember-cli-mirage` when upgrading to take advantage of this fix.
+
 Changes:
   - [BREAKING CHANGE] missing routes will now throw an Error instead of logging
     to the Logger's `error` channel.
