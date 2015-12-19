@@ -12,7 +12,7 @@ module('Integration | Serializers | Base | Associations | Sideloading Assorted C
     this.registry = new SerializerRegistry(this.schema, {
       application: BaseSerializer,
       wordSmith: BaseSerializer.extend({
-        relationships: ['blogPosts']
+        include: ['blogPosts']
       }),
       greatPhoto: BaseSerializer.extend({
         attrs: ['id', 'title']

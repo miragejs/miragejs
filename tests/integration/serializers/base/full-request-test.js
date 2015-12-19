@@ -28,7 +28,7 @@ module('Integration | Serializers | Base | Full Request', {
         author: Serializer.extend({
           embed: true,
           attrs: ['id', 'first'],
-          relationships: ['posts']
+          include: ['posts']
         })
       }
     });

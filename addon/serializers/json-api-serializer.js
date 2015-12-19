@@ -1,8 +1,15 @@
 import extend from '../utils/extend';
-import { dasherize, pluralize } from '../utils/inflector';
+import { dasherize, pluralize, camelize } from '../utils/inflector';
 import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
 import _assign from 'lodash/object/assign';
+import _get from 'lodash/object/get';
+import _trim from 'lodash/string/trim';
+import _isString from 'lodash/lang/isString';
+import _ from 'lodash';
+
+
+
 
 class JsonApiSerializer {
 
@@ -32,42 +39,42 @@ class JsonApiSerializer {
     this._augmentAlreadySerialized(model);
 
     let response = {
-      data: this._resourceObjectFor(model)
+      data: this._resourceObjectFor(model, request)
     };
 
-    this._serializeRelationshipsFor(model);
+    this._serializeRelationshipsFor(model, request);
 
     return response;
   }
 
   _serializePrimaryCollection(collection, request) {
     let response = {
-      data: collection.map(model => this._resourceObjectFor(model))
+      data: collection.map(model => this._resourceObjectFor(model, request))
     };
 
     collection.forEach(model => {
-      this._serializeRelationshipsFor(model);
+      this._serializeRelationshipsFor(model, request);
     });
 
     return response;
   }
 
-  _serializeRelationshipsFor(model) {
+  _serializeRelationshipsFor(model, request) {
     let serializer = this._serializerFor(model);
 
-    if (serializer.relationships && serializer.relationships.length) {
-      serializer.relationships.forEach(type => {
-        let relationship = model[type];
+    const relationshipNames = this._getRelationshipNames(serializer, request);
 
-        if (relationship instanceof Model) {
-          this._serializeIncludedModel(relationship);
-        } else if (relationship) {
-          relationship.forEach(model => {
-            this._serializeIncludedModel(model);
-          });
-        }
-      });
-    }
+    relationshipNames.forEach(relationshipName => {
+      let related = this._getRelatedWithPath(model, relationshipName);
+
+      if (related instanceof Model) {
+        this._serializeIncludedModel(related, request);
+      } else if (related) {
+        related.forEach(model => {
+          this._serializeIncludedModel(model, request);
+        });
+      }
+    });
   }
 
   _serializeIncludedModel(model, request) {
@@ -76,12 +83,11 @@ class JsonApiSerializer {
     }
     this._augmentAlreadySerialized(model);
 
-    this.included.push(this._resourceObjectFor(model));
-    this._serializeRelationshipsFor(model);
+    this.included.push(this._resourceObjectFor(model, request));
+    this._serializeRelationshipsFor(model, request);
   }
 
-  _resourceObjectFor(model) {
-    let serializer = this._serializerFor(model);
+  _resourceObjectFor(model, request) {
     const attrs = this._attrsForModel(model);
 
     const obj = {
@@ -90,31 +96,30 @@ class JsonApiSerializer {
       attributes: attrs
     };
 
-    if (serializer.relationships && serializer.relationships.length) {
-      serializer.relationships.forEach(type => {
-        let relationship = model[type];
+    model.associationKeys.forEach(camelizedType => {
+      const relationship = model[camelizedType];
+      const dasherizedType = dasherize(camelizedType);
 
-        if (this._isCollection(relationship)) {
-          if (!obj.relationships) { obj.relationships = {}; }
-          obj.relationships[type] = {
-            data: relationship.map(model => {
-              return {
-                type: this.typeKeyForModel(model),
-                id: model.id
-              };
-            })
-          };
-        } else if (relationship) {
-          if (!obj.relationships) { obj.relationships = {}; }
-          obj.relationships[type] = {
-            data: {
-              type: this.typeKeyForModel(relationship),
-              id: relationship.id
-            }
-          };
-        }
-      });
-    }
+      if (this._isCollection(relationship)) {
+        if (!obj.relationships) { obj.relationships = {}; }
+        obj.relationships[dasherizedType] = {
+          data: relationship.map(model => {
+            return {
+              type: this.typeKeyForModel(model),
+              id: model.id
+            };
+          })
+        };
+      } else if (relationship) {
+        if (!obj.relationships) { obj.relationships = {}; }
+        obj.relationships[dasherizedType] = {
+          data: {
+            type: this.typeKeyForModel(relationship),
+            id: relationship.id
+          }
+        };
+      }
+    });
 
     return obj;
   }
@@ -124,7 +129,7 @@ class JsonApiSerializer {
   }
 
   typeKeyForModel(model) {
-    return pluralize(model.type);
+    return dasherize(pluralize(model.type));
   }
 
   normalize(json) {
@@ -199,6 +204,31 @@ class JsonApiSerializer {
     this.alreadySerialized[modelKey].push(model.id);
   }
 
+  _getRelationshipNames(serializer = {}, request = {}) {
+    const requestRelationships = _get(request, 'queryParams.include');
+
+    if (_isString(requestRelationships)) {
+      if(requestRelationships.length) {
+        return requestRelationships.split(',').map(_trim);
+      }
+      return [];
+    }
+
+    return _get(serializer, 'include', []);
+  }
+
+  _getRelatedWithPath(parentModel, path) {
+    return path
+      .split('.')
+      .reduce((related, relationshipName) => {
+        return _(related)
+          .map(r => r.reload()[camelize(relationshipName)])
+          .map(r => r instanceof Array ? [...r] : r) // Turning Collections into Arrays for lodash to recognize
+          .flatten()
+          .filter(r => r)
+          .value();
+      }, [parentModel]);
+  }
 }
 
 // Defaults

@@ -18,3 +18,7 @@ testem.log
 .floo
 _site
 jekyll-tmp
+
+# IDE
+/.idea/
+/*.iml

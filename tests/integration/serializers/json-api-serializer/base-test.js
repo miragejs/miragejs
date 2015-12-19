@@ -25,17 +25,22 @@ test(`it includes all attributes for a model`, function(assert) {
   let result = this.registry.serialize(user);
   assert.deepEqual(result, {
     data: {
-      type: 'wordSmiths',
+      type: 'word-smiths',
       id: 1,
       attributes: {
         'first-name': 'Link',
         age: 123
+      },
+      relationships: {
+        "blog-posts": {
+          data: []
+        }
       }
     }
   });
 });
 
-test(`it inclues all attributes for each model in a collection`, function(assert) {
+test(`it includes all attributes for each model in a collection`, function(assert) {
   let schema = this.schema;
   schema.wordSmith.create({id: 1, firstName: 'Link', age: 123});
   schema.wordSmith.create({id: 2, firstName: 'Zelda', age: 456});
@@ -45,18 +50,28 @@ test(`it inclues all attributes for each model in a collection`, function(assert
 
   assert.deepEqual(result, {
     data: [{
-      type: 'wordSmiths',
+      type: 'word-smiths',
       id: 1,
       attributes: {
         'first-name': 'Link',
         age: 123
+      },
+      relationships: {
+        "blog-posts": {
+          data: []
+        }
       }
     }, {
-      type: 'wordSmiths',
+      type: 'word-smiths',
       id: 2,
       attributes: {
         'first-name': 'Zelda',
         age: 456
+      },
+      relationships: {
+        "blog-posts": {
+          data: []
+        }
       }
     }]
   });

@@ -32,12 +32,17 @@ test(`keyForAttribute formats the attributes of a model`, function(assert) {
 
   assert.deepEqual(result, {
     data: {
-      type: 'wordSmiths',
+      type: 'word-smiths',
       id: 1,
       attributes: {
         age: 323,
         first_name: 'Link',
         last_name: 'Jackson'
+      },
+      relationships: {
+        "blog-posts": {
+          data: []
+        }
       }
     }
   });
@@ -52,18 +57,28 @@ test(`keyForAttribute also formats the models in a collections`, function(assert
 
   assert.deepEqual(result, {
     data: [{
-      type: 'wordSmiths',
+      type: 'word-smiths',
       id: 1,
       attributes: {
         'first_name': 'Link',
         'last_name': 'Jackson',
+      },
+      relationships: {
+        "blog-posts": {
+          data: []
+        }
       }
     }, {
-      type: 'wordSmiths',
+      type: 'word-smiths',
       id: 2,
       attributes: {
         'first_name': 'Zelda',
         'last_name': 'Brown',
+      },
+      relationships: {
+        "blog-posts": {
+          data: []
+        }
       }
     }]
   });

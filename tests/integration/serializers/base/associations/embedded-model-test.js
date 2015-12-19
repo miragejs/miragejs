@@ -29,7 +29,7 @@ test(`it can embed has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      relationships: ['blogPosts']
+      include: ['blogPosts']
     })
   });
 
@@ -52,10 +52,10 @@ test(`it can embed a chain of has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      relationships: ['blogPosts']
+      include: ['blogPosts']
     }),
     blogPost: this.BaseSerializer.extend({
-      relationships: ['fineComments']
+      include: ['fineComments']
     })
   });
 
@@ -81,7 +81,7 @@ test(`it can embed a belongs-to relationship`, function(assert) {
     application: this.BaseSerializer,
     blogPost: this.BaseSerializer.extend({
       embed: true,
-      relationships: ['wordSmith']
+      include: ['wordSmith']
     })
   });
 
@@ -101,10 +101,10 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     fineComment: this.BaseSerializer.extend({
-      relationships: ['blogPost']
+      include: ['blogPost']
     }),
     blogPost: this.BaseSerializer.extend({
-      relationships: ['wordSmith']
+      include: ['wordSmith']
     })
   });
 
@@ -130,10 +130,10 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      relationships: ['blogPosts']
+      include: ['blogPosts']
     }),
     blogPost: this.BaseSerializer.extend({
-      relationships: ['wordSmith']
+      include: ['wordSmith']
     })
   });
 
@@ -157,13 +157,13 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
       embed: true,
-      relationships: ['blogPosts']
+      include: ['blogPosts']
     }),
     blogPost: this.BaseSerializer.extend({
-      relationships: ['wordSmith', 'fineComments']
+      include: ['word-smith', 'fine-comments']
     }),
     fineComment: this.BaseSerializer.extend({
-      relationships: ['blogPost']
+      include: ['blogPost']
     })
   });
 

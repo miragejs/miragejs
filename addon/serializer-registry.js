@@ -2,7 +2,7 @@ import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
 import Serializer from 'ember-cli-mirage/serializer';
 import JsonApiSerializer from 'ember-cli-mirage/serializers/json-api-serializer';
-import { pluralize } from './utils/inflector';
+import { pluralize, camelize } from './utils/inflector';
 
 import _assign from 'lodash/object/assign';
 import _isArray from 'lodash/lang/isArray';
@@ -19,7 +19,7 @@ export default class SerializerRegistry {
     return this._serializerFor(payload[Object.keys(payload)[0]]).normalize(payload);
   }
 
-  serialize(response) {
+  serialize(response, request) {
     this.alreadySerialized = {};
 
     if (this._isModelOrCollection(response)) {
@@ -35,14 +35,14 @@ export default class SerializerRegistry {
         and calling serialize.serialize.
       */
       if (serializer instanceof JsonApiSerializer) {
-        return serializer.serialize(response);
+        return serializer.serialize(response, request);
       }
 
       if (serializer.embed) {
         let json;
 
         if (this._isModel(response)) {
-          json = this._serializeModel(response);
+          json = this._serializeModel(response, request);
         } else {
           json = response.reduce((allAttrs, model) => {
             allAttrs.push(this._serializeModel(model));
@@ -55,7 +55,7 @@ export default class SerializerRegistry {
         return this._formatResponse(response, json);
 
       } else {
-        return this._serializeSideloadedModelOrCollection(response);
+        return this._serializeSideloadedModelOrCollection(response, request);
       }
 
     /*
@@ -115,8 +115,8 @@ export default class SerializerRegistry {
     }
 
     // Traverse this model's relationships
-    serializer.relationships
-      .map(key => model[key])
+    serializer.include
+      .map(key => model[camelize(key)])
       .forEach(relationship => {
         let relatedModels = this._isModel(relationship) ? [relationship] : relationship;
 
@@ -176,8 +176,8 @@ export default class SerializerRegistry {
     }
 
     if (embedRelatedIds) {
-      serializer.relationships
-        .map(key => model[key])
+      serializer.include
+        .map(key => model[camelize(key)])
         .filter(relatedCollection => this._isCollection(relatedCollection))
         .forEach(relatedCollection => {
           attrs[serializer.keyForRelationshipIds(relatedCollection.type)] = relatedCollection.map(obj => obj.id);
@@ -190,11 +190,11 @@ export default class SerializerRegistry {
   _attrsForRelationships(model) {
     let serializer = this._serializerFor(model);
 
-    return serializer.relationships.reduce((attrs, key) => {
-      let relatedAttrs = this._serializeModelOrCollection(model[key]);
+    return serializer.include.reduce((attrs, key) => {
+      let relatedAttrs = this._serializeModelOrCollection(model[camelize(key)]);
 
       if (relatedAttrs) {
-        attrs[key] = relatedAttrs;
+        attrs[camelize(key)] = relatedAttrs;
       }
 
       return attrs;
