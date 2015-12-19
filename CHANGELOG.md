@@ -1,16 +1,60 @@
 # Ember CLI Mirage Changelog
 
-## Next
+In general, it's good to run `ember g ember-cli-mirage` after upgrading.
+
+## master
 
 Update notes:
-  - We now use `destroyApp` test helper in Ember-CLI to shutdown the Mirage server
-  after each test to resolve a memory leak reported in #226. It's important to run
-  `ember g ember-cli-mirage` when upgrading to take advantage of this fix.
+  - `Serializer#relationships` was renamed to `Serializer#include`.
+
+  Before:
+
+  ```
+  export default Serializer.extend({
+    relationships: ['comments']
+  });
+  ```
+
+  After:
+
+  ```
+  export default Serializer.extend({
+    include: ['comments']
+  });
+  ```
+
+  - We now use `destroyApp` test helper in Ember-CLI to shutdown the Mirage server after each test to resolve a memory leak reported in #226. It's important to run `ember g ember-cli-mirage` when upgrading to take advantage of this fix.
 
 Changes:
-  - [BREAKING CHANGE] missing routes will now throw an Error instead of logging
-    to the Logger's `error` channel.
-  - [BREAKING CHANGE] Move /app/mirage to /mirage
+  - [FEATURE] Add `?include` query param support in JSONAPISerializer @lolmaus
+  - [ENHANCEMENT] JSONAPISerializer defaults to dasherized types and relationships (and other JSONAPI enhancements) @lolmaus
+  - [ENHANCEMENT] shutdown Mirage server on destroyAppp @blimmer
+  - [FEATURE] [Allow nested factory objects](https://github.com/samselikoff/ember-cli-mirage/commit/a73a195c1b991d226429ee369e2af688a95c7d95) @john-kurkowski
+  - Other bugfixes/enhancements @jherdman, @ef4, @seanpdoyle, @alecho, @bekzod
+
+## 0.2.0.beta-1
+
+Update notes:
+  - Move `/app/mirage` to `/mirage`
+
+Changes:
+  - [FEATURE] ORM, Serializers
+  - [ENHANCEMENT] @heroiceric
+  - [BREAKING CHANGE] missing routes will now throw an Error instead of logging to the Logger's `error` channel.
+
+## 0.1.11
+
+Update notes: none
+
+Changes:
+  - [BUGFIX]
+
+## 0.1.10
+
+Update notes: none
+
+Changes:
+  - [BUGFIX]
 
 ## 0.1.9
 
