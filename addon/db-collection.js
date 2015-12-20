@@ -2,8 +2,14 @@ import _assign from 'lodash/object/assign';
 import _isArray from 'lodash/lang/isArray';
 import _isEqual from 'lodash/lang/isEqual';
 
-function stringify(data) {
-  return JSON.parse(JSON.stringify(data));
+function duplicate(data) {
+  if (_isArray(data)) {
+    return data.map(function(el) {
+      return _assign({}, el);
+    });
+  } else {
+    return _assign({}, data);
+  }
 }
 
 /*
@@ -24,11 +30,11 @@ class DbCollection {
     Returns a copy of the data, to prevent inadvertant data manipulation.
   */
   all() {
-    return stringify(this._records);
+    return duplicate(this._records);
   }
 
   insert(data) {
-    let copy = data ? stringify(data) : {};
+    let copy = data ? duplicate(data) : {};
     let records = this._records;
     let returnData;
 
@@ -39,7 +45,7 @@ class DbCollection {
       }
 
       records.push(attrs);
-      returnData = stringify(attrs);
+      returnData = duplicate(attrs);
 
     } else {
       returnData = [];
@@ -50,7 +56,7 @@ class DbCollection {
 
         records.push(data);
         returnData.push(data);
-        returnData = returnData.map( r => stringify(r) );
+        returnData = returnData.map(duplicate);
       });
     }
 
@@ -63,21 +69,21 @@ class DbCollection {
         .filter(r => r !== undefined);
 
       // Return a copy
-      return records.map(r => stringify(r) );
+      return records.map(duplicate);
 
     } else {
       let record = this._findRecord(ids);
       if (!record) { return null; }
 
       // Return a copy
-      return stringify(record);
+      return duplicate(record);
     }
   }
 
   where(query) {
     let records = this._findRecordsWhere(query);
 
-    return records.map( r => stringify(r) );
+    return records.map(duplicate);
   }
 
   firstOrCreate(query, attributesForNew={}) {
@@ -101,7 +107,7 @@ class DbCollection {
       attrs = target;
       let changedRecords = [];
       this._records.forEach(function(record) {
-        let oldRecord = _assign({}, record);
+        let oldRecord = duplicate(record);
 
         for (let attr in attrs) {
           record[attr] = attrs[attr];
