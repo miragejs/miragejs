@@ -4,8 +4,7 @@
 var path = require('path');
 
 module.exports = {
-  name: 'mirage:factory',
-  description: 'Generates a mirage factory.',
+  description: 'Generates a Mirage factory.',
 
   fileMapTokens: function() {
     return {

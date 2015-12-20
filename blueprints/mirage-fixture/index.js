@@ -5,7 +5,7 @@
 var path = require('path');
 
 module.exports = {
-  description: 'Generates a mirage fixture.',
+  description: 'Generates a Mirage fixture.',
 
   fileMapTokens: function() {
     return {
