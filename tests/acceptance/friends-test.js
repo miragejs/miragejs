@@ -1,18 +1,7 @@
-import Ember from 'ember';
-import {module, test} from 'qunit';
-import startApp from '../helpers/start-app';
+import {test} from 'qunit';
+import moduleForAcceptance from '../helpers/module-for-acceptance';
 
-var App;
-
-module('Acceptance: Friends', {
-  beforeEach: function() {
-    App = startApp();
-  },
-  afterEach: function() {
-    server.shutdown();
-    Ember.run(App, 'destroy');
-  }
-});
+moduleForAcceptance('Acceptance | Friends');
 
 test("I can view the friends", function(assert) {
   var friend = server.create('friend');

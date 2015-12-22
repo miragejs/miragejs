@@ -1,18 +1,11 @@
-import Ember from 'ember';
-import {module, test} from 'qunit';
-import startApp from '../helpers/start-app';
+import {test} from 'qunit';
+import moduleForAcceptance from '../helpers/module-for-acceptance';
 
-var App;
-var contact;
+let contact;
 
-module('Acceptance: Contact', {
-  beforeEach: function() {
-    App = startApp();
+moduleForAcceptance('Acceptance | Contact', {
+  beforeEach() {
     contact = server.create('contact');
-  },
-  afterEach: function() {
-    server.shutdown();
-    Ember.run(App, 'destroy');
   }
 });
 

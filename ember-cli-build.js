@@ -14,7 +14,7 @@ var path = require('path');
 */
 
 module.exports = function(defaults) {
-  var app = new EmberAddon({
+  var app = new EmberAddon(defaults, {
     'ember-cli-mirage': {
       directory: path.resolve(__dirname, path.join('tests', 'dummy', 'mirage'))
     }

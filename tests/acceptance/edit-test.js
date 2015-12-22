@@ -1,18 +1,7 @@
-import Ember from 'ember';
-import {module, test} from 'qunit';
-import startApp from '../helpers/start-app';
+import {test} from 'qunit';
+import moduleForAcceptance from '../helpers/module-for-acceptance';
 
-var App;
-
-module('Acceptance: Edit', {
-  beforeEach: function() {
-    App = startApp();
-  },
-  afterEach: function() {
-    server.shutdown();
-    Ember.run(App, 'destroy');
-  }
-});
+moduleForAcceptance('Acceptance | Edit');
 
 test("I can edit a contact", function(assert) {
   server.create('contact');
