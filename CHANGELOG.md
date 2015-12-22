@@ -25,12 +25,14 @@ Update notes:
 
   - We now use `destroyApp` test helper in Ember-CLI to shutdown the Mirage server after each test to resolve a memory leak reported in #226. It's important to run `ember g ember-cli-mirage` when upgrading to take advantage of this fix.
   - [BREAKING CHANGE] Inserting records with numerical IDs that have already have been used will throw an per changes from #417
+  - [BREAKING CHANGE] Change `model.type` to `model.modelName`, ensure it's dasherized #454
 
 Changes:
   - [FEATURE] Add `?include` query param support in JSONAPISerializer @lolmaus
   - [ENHANCEMENT] JSONAPISerializer defaults to dasherized types and relationships (and other JSONAPI enhancements) @lolmaus
   - [ENHANCEMENT] shutdown Mirage server on destroyAppp @blimmer
   - [FEATURE] [Allow nested factory objects](https://github.com/samselikoff/ember-cli-mirage/commit/a73a195c1b991d226429ee369e2af688a95c7d95) @john-kurkowski
+  - [BREAKING CHANGE] Change `model.type` to `model.modelName`, ensure it's dasherized #454
   - Other bugfixes/enhancements @jherdman, @ef4, @seanpdoyle, @alecho, @bekzod
 
 ## 0.2.0.beta-1

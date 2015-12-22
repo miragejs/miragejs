@@ -2,7 +2,7 @@ import Association from './association';
 import Collection from '../collection';
 import _assign from 'lodash/object/assign';
 import _compact from 'lodash/array/compact';
-import { capitalize } from 'ember-cli-mirage/utils/inflector';
+import { capitalize, camelize } from 'ember-cli-mirage/utils/inflector';
 
 class HasMany extends Association {
 
@@ -10,11 +10,11 @@ class HasMany extends Association {
     The hasMany association adds a fk to the target of the association
   */
   getForeignKeyArray() {
-    return [this.target, `${this.owner}Id`];
+    return [camelize(this.target), `${camelize(this.owner)}Id`];
   }
 
   getForeignKey() {
-    return `${this.owner}Id`;
+    return `${camelize(this.owner)}Id`;
   }
 
   addMethodsToModelClass(ModelClass, key, schema) {
@@ -24,7 +24,7 @@ class HasMany extends Association {
 
     var association = this;
     var foreignKey = this.getForeignKey();
-    var relationshipIdsKey = association.target + 'Ids';
+    var relationshipIdsKey = camelize(association.target) + 'Ids';
 
     var associationHash = {[key]: this};
     modelPrototype.hasManyAssociations = _assign(modelPrototype.hasManyAssociations, associationHash);
@@ -42,7 +42,7 @@ class HasMany extends Association {
 
         if (!this.isNew()) {
           var query = {[foreignKey]: this.id};
-          var savedModels = schema[association.target].where(query);
+          var savedModels = schema[camelize(association.target)].where(query);
 
           models = savedModels.mergeCollection(models);
         }
@@ -58,15 +58,15 @@ class HasMany extends Association {
         ids = ids || [];
 
         if (this.isNew()) {
-          association._cachedChildren = schema[association.target].find(ids);
+          association._cachedChildren = schema[camelize(association.target)].find(ids);
 
         } else {
           // Set current children's fk to null
           var query = {[foreignKey]: this.id};
-          schema[association.target].where(query).update(foreignKey, null);
+          schema[camelize(association.target)].where(query).update(foreignKey, null);
 
           // Associate the new childrens to this model
-          schema[association.target].find(ids).update(foreignKey, this.id);
+          schema[camelize(association.target)].find(ids).update(foreignKey, this.id);
 
           // Clear out any old cached children
           association._cachedChildren = [];
@@ -91,7 +91,7 @@ class HasMany extends Association {
         } else {
           var query = {};
           query[foreignKey] = this.id;
-          var savedModels = schema[association.target].where(query);
+          var savedModels = schema[camelize(association.target)].where(query);
 
           return savedModels.mergeCollection(tempModels);
         }
@@ -113,14 +113,14 @@ class HasMany extends Association {
 
           // Set current children's fk to null
           var query = {[foreignKey]: this.id};
-          schema[association.target].where(query).update(foreignKey, null);
+          schema[camelize(association.target)].where(query).update(foreignKey, null);
 
           // Save any children that are new
           models.filter(model => model.isNew())
             .forEach(model => model.save());
 
           // Associate the new children to this model
-          schema[association.target].find(models.map(m => m.id)).update(foreignKey, this.id);
+          schema[(association.target)].find(models.map(m => m.id)).update(foreignKey, this.id);
 
           // Clear out any old cached children
           association._cachedChildren = [];
@@ -132,12 +132,12 @@ class HasMany extends Association {
       object.newChild
         - creates a new unsaved associated child
     */
-    modelPrototype['new' + capitalize(association.target)] = function(attrs = {}) {
+    modelPrototype['new' + capitalize(camelize(association.target))] = function(attrs = {}) {
       if (!this.isNew()) {
         attrs = _assign(attrs, { [foreignKey]: this.id });
       }
 
-      var child = schema[association.target].new(attrs);
+      var child = schema[camelize(association.target)].new(attrs);
 
       association._cachedChildren = association._cachedChildren || new Collection(association.target);
       association._cachedChildren.push(child);
@@ -151,13 +151,13 @@ class HasMany extends Association {
           updates the target's foreign key
         - parent must be saved
     */
-    modelPrototype['create' + capitalize(association.target)] = function(attrs = {}) {
+    modelPrototype['create' + capitalize(camelize(association.target))] = function(attrs = {}) {
       if (this.isNew()) {
         throw 'You cannot call create unless the parent is saved';
       }
 
       var augmentedAttrs = _assign(attrs, { [foreignKey]: this.id });
-      var child = schema[association.target].create(augmentedAttrs);
+      var child = schema[camelize(association.target)].create(augmentedAttrs);
 
       return child;
     };

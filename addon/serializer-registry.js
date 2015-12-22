@@ -69,7 +69,7 @@ export default class SerializerRegistry {
         let serializer = this._serializerFor(collection);
 
         if (serializer.embed) {
-          json[pluralize(collection.type)] = this._serializeModelOrCollection(collection);
+          json[pluralize(collection.modelName)] = this._serializeModelOrCollection(collection);
         } else {
           json = _assign(json, this._serializeSideloadedModelOrCollection(collection));
         }
@@ -95,7 +95,7 @@ export default class SerializerRegistry {
 
     // We have an empty collection
     } else {
-      return {[pluralize(modelOrCollection.type)]: []};
+      return {[this._keyForModelOrCollection(modelOrCollection)]: []};
     }
   }
 
@@ -105,7 +105,8 @@ export default class SerializerRegistry {
     // Add this model's attrs
     this._augmentAlreadySerialized(model);
     let modelAttrs = this._attrsForModel(model, false, true);
-    let key = serializer.keyForModel(model.type);
+    let key = this._keyForModelOrCollection(model);
+
     if (topLevelIsArray) {
       key = root ? root : pluralize(key);
       allAttrs[key] = allAttrs[key] || [];
@@ -125,7 +126,7 @@ export default class SerializerRegistry {
             return;
           }
 
-          this._serializeSideloadedModelResponse(relatedModel, true, allAttrs, serializer.keyForRelationship(relatedModel.type));
+          this._serializeSideloadedModelResponse(relatedModel, true, allAttrs, serializer.keyForRelationship(relatedModel.modelName));
         });
       });
 
@@ -134,11 +135,7 @@ export default class SerializerRegistry {
 
   _formatResponse(modelOrCollection, attrs) {
     let serializer = this._serializerFor(modelOrCollection);
-    let key = modelOrCollection.type;
-
-    if (this._isCollection(modelOrCollection)) {
-      key = pluralize(key);
-    }
+    let key = this._keyForModelOrCollection(modelOrCollection);
 
     return serializer.root ? { [key]: attrs } : attrs;
   }
@@ -180,7 +177,7 @@ export default class SerializerRegistry {
         .map(key => model[camelize(key)])
         .filter(relatedCollection => this._isCollection(relatedCollection))
         .forEach(relatedCollection => {
-          attrs[serializer.keyForRelationshipIds(relatedCollection.type)] = relatedCollection.map(obj => obj.id);
+          attrs[serializer.keyForRelationshipIds(relatedCollection.modelName)] = relatedCollection.map(obj => obj.id);
         });
     }
 
@@ -202,13 +199,13 @@ export default class SerializerRegistry {
   }
 
   _hasBeenSerialized(model) {
-    let relationshipKey = `${model.type}Ids`;
+    let relationshipKey = `${camelize(model.modelName)}Ids`;
 
     return (this.alreadySerialized[relationshipKey] && this.alreadySerialized[relationshipKey].indexOf(model.id) > -1);
   }
 
   _augmentAlreadySerialized(model) {
-    let modelKey = `${model.type}Ids`;
+    let modelKey = `${camelize(model.modelName)}Ids`;
 
     this.alreadySerialized[modelKey] = this.alreadySerialized[modelKey] || [];
     this.alreadySerialized[modelKey].push(model.id);
@@ -219,7 +216,7 @@ export default class SerializerRegistry {
   }
 
   _serializerFor(modelOrCollection) {
-    let type = modelOrCollection.type;
+    let type = modelOrCollection.modelName ? camelize(modelOrCollection.modelName) : null;
     let ModelSerializer = this._serializerMap && (this._serializerMap[type] || this._serializerMap['application']);
 
     /*
@@ -237,12 +234,24 @@ export default class SerializerRegistry {
     return object instanceof Model;
   }
 
+  // TODO: Once we implement https://github.com/samselikoff/ember-cli-mirage/issues/450, this should
+  // simplify to `object instanceof Collection`
   _isCollection(object) {
     return object instanceof Collection || (_isArray(object) && this._isModel(object[0]));
   }
 
   _isModelOrCollection(object) {
     return this._isModel(object) || this._isCollection(object);
+  }
+
+  _keyForModelOrCollection(modelOrCollection) {
+    let serializer = this._serializerFor(modelOrCollection);
+
+    if (this._isModel(modelOrCollection)) {
+      return serializer.keyForModel(modelOrCollection.modelName);
+    } else {
+      return serializer.keyForCollection(modelOrCollection.modelName);
+    }
   }
 
 }

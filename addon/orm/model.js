@@ -1,10 +1,10 @@
-import { pluralize } from '../utils/inflector';
+import { pluralize, camelize } from '../utils/inflector';
 import extend from '../utils/extend';
 
 /*
   The Model class. Notes:
 
-  - We need to pass in type, because models are created with
+  - We need to pass in modelName, because models are created with
     .extend and anonymous functions, so you cannot use
     reflection to find the name of the constructor.
 */
@@ -14,12 +14,12 @@ import extend from '../utils/extend';
 */
 class Model {
 
-  constructor(schema, type, attrs, fks) {
+  constructor(schema, modelName, attrs, fks) {
     if (!schema) { throw 'Mirage: A model requires a schema'; }
-    if (!type) { throw 'Mirage: A model requires a type'; }
+    if (!modelName) { throw 'Mirage: A model requires a modelName'; }
 
     this._schema = schema;
-    this.type = type;
+    this.modelName = modelName;
     this.fks = fks || [];
     attrs = attrs || {};
 
@@ -33,7 +33,7 @@ class Model {
     Create or save the model
   */
   save() {
-    var collection = pluralize(this.type);
+    var collection = pluralize(camelize(this.modelName));
 
     if (this.isNew()) {
       // Update the attrs with the db response
@@ -79,7 +79,7 @@ class Model {
     Destroy the db record
   */
   destroy() {
-    var collection = pluralize(this.type);
+    var collection = pluralize(camelize(this.modelName));
     this._schema.db[collection].remove(this.attrs.id);
   }
 
@@ -96,7 +96,7 @@ class Model {
   */
   reload() {
     var _this = this;
-    var collection = pluralize(this.type);
+    var collection = pluralize(camelize(this.modelName));
     var attrs = this._schema.db[collection].find(this.id);
 
     Object.keys(attrs)
@@ -195,7 +195,7 @@ class Model {
   }
 
   toString() {
-    return `model:${this.type}(${this.id})`;
+    return `model:${this.modelName}(${this.id})`;
   }
 }
 

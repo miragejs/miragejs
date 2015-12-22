@@ -1,5 +1,5 @@
 import BaseShorthandRouteHandler from './base';
-import { pluralize } from 'ember-cli-mirage/utils/inflector';
+import { pluralize, camelize } from 'ember-cli-mirage/utils/inflector';
 import Db from 'ember-cli-mirage/db';
 
 export default class PutShorthandRouteHandler extends BaseShorthandRouteHandler {
@@ -9,8 +9,9 @@ export default class PutShorthandRouteHandler extends BaseShorthandRouteHandler 
 
       this.stub('put', '/contacts/:id', 'user');
   */
-  handleStringShorthand(type, dbOrSchema, request) {
+  handleStringShorthand(string, dbOrSchema, request) {
     var id = this._getIdForRequest(request);
+    let type = camelize(string);
     var collection = pluralize(type);
 
     if (dbOrSchema instanceof Db) {
@@ -45,9 +46,9 @@ export default class PutShorthandRouteHandler extends BaseShorthandRouteHandler 
   handleUndefinedShorthand(undef, dbOrSchema, request) {
     var id = this._getIdForRequest(request);
     var url = this._getUrlForRequest(request);
-    var type = this._getTypeFromUrl(url, id);
+    var modelName = this._getModelNameFromUrl(url, id);
 
-    return this.handleStringShorthand(type, dbOrSchema, request);
+    return this.handleStringShorthand(modelName, dbOrSchema, request);
   }
 
 }

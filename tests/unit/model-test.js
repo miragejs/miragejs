@@ -14,8 +14,8 @@ test('it cannot be instantiated without a schema', function(assert) {
   }, /requires a schema/);
 });
 
-test('it cannot be instantiated without a type', function(assert) {
+test('it cannot be instantiated without a modelName', function(assert) {
   assert.throws(function() {
     new Model({});
-  }, /requires a type/);
+  }, /requires a modelName/);
 });

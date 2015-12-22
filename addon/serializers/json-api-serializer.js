@@ -8,9 +8,6 @@ import _trim from 'lodash/string/trim';
 import _isString from 'lodash/lang/isString';
 import _ from 'lodash';
 
-
-
-
 class JsonApiSerializer {
 
   constructor(serializerMap) {
@@ -19,7 +16,7 @@ class JsonApiSerializer {
     this.alreadySerialized = {};
   }
 
-  serialize(modelOrCollection, request) {
+  serialize(modelOrCollection, request={}) {
     let response;
 
     if (modelOrCollection instanceof Model) {
@@ -129,7 +126,7 @@ class JsonApiSerializer {
   }
 
   typeKeyForModel(model) {
-    return dasherize(pluralize(model.type));
+    return dasherize(pluralize(model.modelName));
   }
 
   normalize(json) {
@@ -169,7 +166,7 @@ class JsonApiSerializer {
   }
 
   _serializerFor(modelOrCollection) {
-    let type = modelOrCollection.type;
+    let type = camelize(modelOrCollection.modelName);
     let ModelSerializer = this._serializerMap && (this._serializerMap[type] || this._serializerMap['application']);
 
     /*
@@ -192,13 +189,13 @@ class JsonApiSerializer {
   }
 
   _hasBeenSerialized(model) {
-    let relationshipKey = `${model.type}Ids`;
+    let relationshipKey = `${model.modelName}Ids`;
 
     return (this.alreadySerialized[relationshipKey] && this.alreadySerialized[relationshipKey].indexOf(model.id) > -1);
   }
 
   _augmentAlreadySerialized(model) {
-    let modelKey = `${model.type}Ids`;
+    let modelKey = `${model.modelName}Ids`;
 
     this.alreadySerialized[modelKey] = this.alreadySerialized[modelKey] || [];
     this.alreadySerialized[modelKey].push(model.id);
@@ -232,7 +229,7 @@ class JsonApiSerializer {
 }
 
 // Defaults
-JsonApiSerializer.prototype.relationships = [];
+JsonApiSerializer.prototype.include = [];
 
 JsonApiSerializer.extend = extend;
 

@@ -29,12 +29,12 @@ test('it returns a string if it\'s a string', function(assert) {
   assert.equal(this.handler._getIdForRequest(this.request), "someID", 'it returns a number');
 });
 
-test('url without id returns correct type', function (assert) {
-  var urlWithSlash = '/api/users/?test=true';
-  var urlWithoutSlash = '/api/users?test=true';
-  var urlWithIdAndSlash = '/api/users/1/?test=true';
+test('getModelNameFromUrl works', function (assert) {
+  var urlWithSlash = '/api/fancy-users/?test=true';
+  var urlWithoutSlash = '/api/fancy-users?test=true';
+  var urlWithIdAndSlash = '/api/fancy-users/1/?test=true';
 
-  assert.equal(this.handler._getTypeFromUrl(urlWithSlash), 'user', 'it returns a singular type');
-  assert.equal(this.handler._getTypeFromUrl(urlWithoutSlash), 'user', 'it returns a singular type');
-  assert.equal(this.handler._getTypeFromUrl(urlWithIdAndSlash, true), 'user', 'it returns a singular type');
+  assert.equal(this.handler._getModelNameFromUrl(urlWithSlash), 'fancy-user', 'it returns a singular model name');
+  assert.equal(this.handler._getModelNameFromUrl(urlWithoutSlash), 'fancy-user', 'it returns a singular model name');
+  assert.equal(this.handler._getModelNameFromUrl(urlWithIdAndSlash, true), 'fancy-user', 'it returns a singular model name');
 });
