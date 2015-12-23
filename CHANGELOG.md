@@ -24,6 +24,7 @@ Update notes:
   ```
 
   - We now use `destroyApp` test helper in Ember-CLI to shutdown the Mirage server after each test to resolve a memory leak reported in #226. It's important to run `ember g ember-cli-mirage` when upgrading to take advantage of this fix.
+  - [BREAKING CHANGE] Inserting records with numerical IDs that have already have been used will throw an per changes from #417
 
 Changes:
   - [FEATURE] Add `?include` query param support in JSONAPISerializer @lolmaus

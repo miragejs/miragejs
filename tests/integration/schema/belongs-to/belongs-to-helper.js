@@ -23,8 +23,9 @@ class BelongsToHelper {
     });
     this.schema = new Schema(this.db);
 
-    var User = Model;
-    var Address = Model.extend({
+    let User = Model;
+
+    let Address = Model.extend({
       user: Mirage.belongsTo()
     });
 
@@ -35,27 +36,26 @@ class BelongsToHelper {
   }
 
   savedChildNoParent() {
-    this.db.addresses.insert({id: 1, name: 'foo'});
+    let insertedAddress = this.db.addresses.insert({name: 'foo'});
 
-    return [this.schema.address.find(1), undefined];
+    return [this.schema.address.find(insertedAddress.id), undefined];
   }
 
   savedChildNewParent() {
-    this.db.addresses.insert({id: 1, name: 'foo'});
+    let insertedAddress = this.db.addresses.insert({name: 'foo'});
+    let address = this.schema.address.find(insertedAddress.id);
+    let user = this.schema.user.new({name: 'Newbie'});
 
-    var address = this.schema.address.find(1);
-    var user = this.schema.user.new({name: 'Newbie'});
     address.user = user;
 
     return [address, user];
   }
 
   savedChildSavedParent() {
-    this.db.users.insert({id: 1, name: 'some user'});
-    this.db.addresses.insert({id: 1, name: 'foo', userId: 1});
-
-    var address = this.schema.address.find(1);
-    var user = this.schema.user.find(1);
+    let insertedUser = this.db.users.insert({name: 'some user'});
+    let insertedAddress = this.db.addresses.insert({name: 'foo', userId: insertedUser.id});
+    let address = this.schema.address.find(insertedAddress.id);
+    let user = this.schema.user.find(insertedUser.id);
 
     return [address, user];
   }
@@ -65,18 +65,18 @@ class BelongsToHelper {
   }
 
   newChildNewParent() {
-    var address = this.schema.address.new({name: 'New addr'});
-    var newUser = this.schema.user.new({name: 'Newbie'});
+    let address = this.schema.address.new({name: 'New addr'});
+    let newUser = this.schema.user.new({name: 'Newbie'});
     address.user = newUser;
 
     return [address, newUser];
   }
 
   newChildSavedParent() {
-    this.db.users.insert({id: 1, name: 'some user'});
+    let insertedUser = this.db.users.insert({name: 'some user'});
+    let address = this.schema.address.new({name: 'New addr'});
+    let savedUser = this.schema.user.find(insertedUser.id);
 
-    var address = this.schema.address.new({name: 'New addr'});
-    var savedUser = this.schema.user.find(1);
     address.user = savedUser;
 
     return [address, savedUser];
@@ -85,9 +85,9 @@ class BelongsToHelper {
   // Just a saved unassociated parent. The id is high so as not to
   // interfere with any other parents
   savedParent() {
-    this.db.users.insert({id: 100, name: 'bar'});
+    let insertedUser = this.db.users.insert({name: 'bar'});
 
-    return this.schema.user.find(100);
+    return this.schema.user.find(insertedUser.id);
   }
 
   newParent() {

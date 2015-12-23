@@ -250,7 +250,7 @@ test(`it gracefully handles null belongs-to relationship`, function(assert) {
     })
   });
 
-  this.schema.blogPost.create({ id: 3, title: 'Lorem3' });
+  this.schema.blogPost.create({ title: 'Lorem3' });
   let blogPost = this.schema.blogPost.find(3);
   let result = registry.serialize(blogPost);
 

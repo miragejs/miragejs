@@ -154,7 +154,7 @@ test('it can insert an array and return it', function(assert) {
 test('it does not add ids to array data if present', function(assert) {
   db.contacts.insert([{id: 2, name: 'Link'}, {id: 1, name: 'Ganon'}]);
 
-  assert.deepEqual(db.contacts, [{id: 2, name: 'Link'}, {id: 1, name: 'Ganon'}]);
+  assert.deepEqual(db.contacts, [{id: 1, name: 'Ganon'}, {id: 2, name: 'Link'}]);
 });
 
 test('it can insert a record with an id of 0', function(assert) {
@@ -163,14 +163,39 @@ test('it can insert a record with an id of 0', function(assert) {
   assert.deepEqual(db.contacts, [{id: 0, name: 'Link'}]);
 });
 
+test('IDs increment correctly, even after a record is removed', function(assert) {
+  let records = db.contacts.insert([{ name: 'Link'}, { name: 'Ganon' }]);
+
+  db.contacts.remove(records[0]);
+
+  let record = db.contacts.insert({ name: 'Zelda' });
+
+  assert.equal(record.id, 3);
+});
+
+test('inserting a record with an already used ID throws an error', function(assert) {
+  assert.expect(2);
+
+  db.contacts.insert({ id: 1, name: 'Duncan McCleod' });
+
+  assert.throws(function() {
+    db.contacts.insert({ id: 1, name: 'Duncan McCleod' });
+  });
+
+  db.contacts.insert({ id: 'atp', name: 'Adenosine Triphosphate' });
+
+  assert.throws(function() {
+  db.contacts.insert({ id: 'atp', name: 'Adenosine Triphosphate' });
+  });
+});
 
 module('Unit | Db #find', {
   beforeEach: function() {
     db = new Db();
     db.createCollection('contacts');
     db.contacts.insert([
-      {id: 1, name: 'Zelda'},
-      {id: 2, name: 'Link'},
+      { name: 'Zelda'},
+      { name: 'Link'},
       {id: 'abc', name: 'Ganon'}
     ]);
   },
@@ -300,9 +325,9 @@ module('Unit | Db #update', {
     db = new Db();
     db.createCollection('contacts');
     db.contacts.insert([
-      {id: 1, name: 'Link', evil: false},
-      {id: 2, name: 'Zelda', evil: false},
-      {id: 3, name: 'Ganon', evil: true},
+      { name: 'Link', evil: false},
+      { name: 'Zelda', evil: false},
+      { name: 'Ganon', evil: true},
       {id: '123-abc', name: 'Epona', evil: false}
     ]);
   },
@@ -314,12 +339,18 @@ module('Unit | Db #update', {
 test('it can update the whole collection', function(assert) {
   db.contacts.update({name: 'Sam', evil: false});
 
-  assert.deepEqual(db.contacts, [
-    {id: 1, name: 'Sam', evil: false},
-    {id: 2, name: 'Sam', evil: false},
-    {id: 3, name: 'Sam', evil: false},
-    {id: '123-abc', name: 'Sam', evil: false}
-  ]);
+  let actualContacts = db.contacts;
+
+  let expectedContacts = [
+      {id: '123-abc', name: 'Sam', evil: false},
+      {id: 1, name: 'Sam', evil: false},
+      {id: 2, name: 'Sam', evil: false},
+      {id: 3, name: 'Sam', evil: false}
+    ];
+
+  assert.deepEqual(
+    actualContacts, expectedContacts, [actualContacts.map(function(r) { return r.id; }).join(','), expectedContacts.map(function(r) { return r.id; }).join(',')].join(';')
+  );
 });
 
 test('it can update a record by id', function(assert) {
@@ -350,10 +381,10 @@ test('it can update records by query', function(assert) {
   db.contacts.update({evil: false}, {name: 'Sam'});
 
   assert.deepEqual(db.contacts, [
+    {id: '123-abc', name: 'Sam', evil: false},
     {id: 1, name: 'Sam', evil: false},
     {id: 2, name: 'Sam', evil: false},
-    {id: 3, name: 'Ganon', evil: true},
-    {id: '123-abc', name: 'Sam', evil: false}
+    {id: 3, name: 'Ganon', evil: true}
   ]);
 });
 
@@ -365,33 +396,41 @@ test('updating a single record returns that record', function(assert) {
 test('updating a collection returns the updated records', function(assert) {
   var characters = db.contacts.update({evil: true});
   assert.deepEqual(characters, [
+    {id: '123-abc', name: 'Epona', evil: true},
     {id: 1, name: 'Link', evil: true},
     {id: 2, name: 'Zelda', evil: true},
-    {id: '123-abc', name: 'Epona', evil: true}
   ]);
 });
 
 test('updating multiple records returns the updated records', function(assert) {
   var characters = db.contacts.update({evil: false}, {evil: true});
   assert.deepEqual(characters, [
+    {id: '123-abc', name: 'Epona', evil: true},
     {id: 1, name: 'Link', evil: true},
     {id: 2, name: 'Zelda', evil: true},
-    {id: '123-abc', name: 'Epona', evil: true}
   ]);
 });
 
+test('throws when updating an ID is attempted', function(assert) {
+  assert.expect(1);
+
+  assert.throws(function() {
+    db.contacts.update(1, { id: 3 });
+  });
+});
 
 module('Unit | Db #remove', {
   beforeEach: function() {
     db = new Db();
     db.createCollection('contacts');
     db.contacts.insert([
-      {id: 1, name: 'Link', evil: false},
-      {id: 2, name: 'Zelda', evil: false},
-      {id: 3, name: 'Ganon', evil: true},
+      { name: 'Link', evil: false},
+      { name: 'Zelda', evil: false},
+      { name: 'Ganon', evil: true},
       {id: '123-abc', name: 'Epona', evil: false}
     ]);
   },
+
   afterEach: function() {
     db.emptyData();
   }
@@ -407,9 +446,9 @@ test('it can remove a single record by id', function(assert) {
   db.contacts.remove(1);
 
   assert.deepEqual(db.contacts, [
+    {id: '123-abc', name: 'Epona', evil: false},
     {id: 2, name: 'Zelda', evil: false},
     {id: 3, name: 'Ganon', evil: true},
-    {id: '123-abc', name: 'Epona', evil: false}
   ]);
 });
 
@@ -427,8 +466,8 @@ test('it can remove multiple records by ids', function(assert) {
   db.contacts.remove([1, 2]);
 
   assert.deepEqual(db.contacts, [
+    {id: '123-abc', name: 'Epona', evil: false},
     {id: 3, name: 'Ganon', evil: true},
-    {id: '123-abc', name: 'Epona', evil: false}
   ]);
 });
 

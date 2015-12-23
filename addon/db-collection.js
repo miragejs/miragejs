@@ -20,6 +20,7 @@ class DbCollection {
   constructor(name, initialData) {
     this.name = name;
     this._records = [];
+    this.identityManager = new IdentityManagaer();
 
     if (initialData) {
       this.insert(initialData);
@@ -34,33 +35,24 @@ class DbCollection {
   }
 
   insert(data) {
-    let copy = data ? duplicate(data) : {};
-    let records = this._records;
-    let returnData;
-
-    if (!_isArray(copy)) {
-      let attrs = copy;
-      if (attrs.id === undefined || attrs.id === null) {
-        attrs.id = records.length + 1;
-      }
-
-      records.push(attrs);
-      returnData = duplicate(attrs);
-
+    if (!_isArray(data)) {
+      return this._insertRecord(data);
     } else {
-      returnData = [];
-      copy.forEach(data => {
-        if (data.id === undefined || data.id === null) {
-          data.id = records.length + 1;
-        }
-
-        records.push(data);
-        returnData.push(data);
-        returnData = returnData.map(duplicate);
-      });
+      // Need to sort in order to ensure IDs inserted in the correct order
+      return data
+        .sort(function(a, b) {
+          // typeof ... is to hack around Chrome versus Phantom behaviour
+          if (typeof a.id === 'string' || a.id < b.id) {
+            return -1;
+          } else if (a.id === b.id) {
+            return 0;
+          }
+          else {
+            return 1;
+          }
+        })
+        .map(this._insertRecord.bind(this));
     }
-
-    return returnData;
   }
 
   find(ids) {
@@ -106,12 +98,11 @@ class DbCollection {
     if (typeof attrs === 'undefined') {
       attrs = target;
       let changedRecords = [];
-      this._records.forEach(function(record) {
-        let oldRecord = duplicate(record);
 
-        for (let attr in attrs) {
-          record[attr] = attrs[attr];
-        }
+      this._records.forEach(record => {
+        let oldRecord = _assign({}, record);
+
+        this._updateRecord(record, attrs);
 
         if (!_isEqual(oldRecord, record)) {
           changedRecords.push(record);
@@ -124,9 +115,7 @@ class DbCollection {
       let id = target;
       let record = this._findRecord(id);
 
-      for (let attr in attrs) {
-        record[attr] = attrs[attr];
-      }
+      this._updateRecord(record, attrs);
 
       return record;
 
@@ -135,9 +124,7 @@ class DbCollection {
       records = this._findRecords(ids);
 
       records.forEach(record => {
-        for (let attr in attrs) {
-          record[attr] = attrs[attr];
-        }
+        this._updateRecord(record, attrs);
       });
 
       return records;
@@ -147,9 +134,7 @@ class DbCollection {
       records = this._findRecordsWhere(query);
 
       records.forEach(record => {
-        for (let attr in attrs) {
-          record[attr] = attrs[attr];
-        }
+        this._updateRecord(record, attrs);
       });
 
       return records;
@@ -161,6 +146,7 @@ class DbCollection {
 
     if (typeof target === 'undefined') {
       this._records = [];
+      this.identityManager.reset();
 
     } else if (typeof target === 'number' || typeof target === 'string') {
       let record = this._findRecord(target);
@@ -224,6 +210,74 @@ class DbCollection {
     let queryFunction = typeof query === 'object' ? defaultQueryFunction : query;
 
     return records.filter(queryFunction);
+  }
+
+  _insertRecord(data) {
+    let attrs = duplicate(data);
+
+    if (attrs && (attrs.id === undefined || attrs.id === null)) {
+      attrs.id = this.identityManager.fetch();
+    } else {
+      this.identityManager.set(attrs.id);
+    }
+
+    this._records.push(attrs);
+
+    return duplicate(attrs);
+  }
+
+  _updateRecord(record, attrs) {
+    for (let attr in attrs) {
+      if (attr === 'id' && record[attr] !== attrs[attr]) {
+        throw new Error('Updating the ID of a record is not permitted');
+      }
+
+      record[attr] = attrs[attr];
+    }
+  }
+}
+
+class IdentityManagaer {
+  constructor() {
+    this._currentValue = null;
+    this._ids = {};
+  }
+
+  get() {
+    return this._currentValue || 1;
+  }
+
+  set(n) {
+    if (this._ids[n]) {
+      throw new Error(`Attempting to use the ID ${n}, but it's already been used`);
+    }
+
+    if (typeof n === 'number' && n > this._currentValue) {
+      this._currentValue = n;
+    }
+
+    this._ids[n] = true;
+  }
+
+  inc() {
+    let nextValue = this.get() + 1;
+
+    this.set(nextValue);
+
+    return nextValue;
+  }
+
+  fetch() {
+    let id = this.get();
+
+    this.inc();
+
+    return id;
+  }
+
+  reset() {
+    this._ids = {};
+    this._currentValue = null;
   }
 }
 
