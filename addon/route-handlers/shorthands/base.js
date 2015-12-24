@@ -44,11 +44,11 @@ export default class BaseShorthandRouteHandler {
   }
 
   _getTypeFromUrl(url, hasId) {
-    let urlNoId = hasId ? url.substr(0, url.lastIndexOf('/')) : url;
-    let urlSplit = urlNoId.split('?');
-    let urlNoIdNoQuery = urlSplit[0].slice(-1) === '/' ? urlSplit[0].slice(0, -1) : urlSplit[0];
-    let type = camelize(singularize(urlNoIdNoQuery.substr(urlNoIdNoQuery.lastIndexOf('/') + 1)));
-
+    let [ urlSplit ] = url.split('?');
+    let path = urlSplit.split('/');
+    path = path[path.length - 1] === '' ? path.slice(0, path.length - 1) : path; // when trailing slash
+    let typePath = hasId ? path[path.length - 2] : path[path.length - 1];
+    let type = camelize(singularize(typePath));
     return type;
   }
 
