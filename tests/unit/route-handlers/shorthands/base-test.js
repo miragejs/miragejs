@@ -32,7 +32,9 @@ test('it returns a string if it\'s a string', function(assert) {
 test('url without id returns correct type', function (assert) {
   var urlWithSlash = '/api/users/?test=true';
   var urlWithoutSlash = '/api/users?test=true';
+  var urlWithIdAndSlash = '/api/users/1/?test=true';
 
   assert.equal(this.handler._getTypeFromUrl(urlWithSlash), 'user', 'it returns a singular type');
   assert.equal(this.handler._getTypeFromUrl(urlWithoutSlash), 'user', 'it returns a singular type');
+  assert.equal(this.handler._getTypeFromUrl(urlWithIdAndSlash, true), 'user', 'it returns a singular type');
 });
