@@ -1,21 +1,16 @@
 import Ember from 'ember';
-import { module, test } from 'qunit';
-import startApp from '../helpers/start-app';
+import moduleForAcceptance from '../helpers/module-for-acceptance';
+import { test } from 'qunit';
 
-var App, appStore, rex, toby, sam, andy;
+let appStore, rex, toby, sam, andy;
 
-module('Acceptance: Custom handlers', {
-  beforeEach: function() {
-    App = startApp();
-    appStore = App.__container__.lookup('service:store');
+moduleForAcceptance('Acceptance | Custom handlers', {
+  beforeEach() {
+    appStore = this.application.__container__.lookup('service:store');
     rex  = server.create('pet', { name: 'Rex',  alive: true  });
     toby = server.create('pet', { name: 'Toby', alive: false });
     sam  = server.create('pet', { name: 'Sam',  alive: false });
     andy = server.create('pet', { name: 'Andy', alive: true  });
-  },
-  afterEach: function() {
-    server.shutdown();
-    Ember.run(App, 'destroy');
   }
 });
 

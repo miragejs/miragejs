@@ -3,7 +3,6 @@
     "document",
     "window",
     "-Promise",
-    "_",
     "faker"
   ],
   "browser": true,
