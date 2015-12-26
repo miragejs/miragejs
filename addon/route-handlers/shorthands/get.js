@@ -19,7 +19,7 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
     if (dbOrSchema instanceof Db) {
       let db = dbOrSchema;
       let key = string;
-      let collection = pluralize(string);
+      let collection = pluralize(camelize(string));
       let data = {};
       let record;
 
@@ -146,10 +146,10 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
       Ex: this.stub('get', '/contacts/:id');
   */
   handleUndefinedShorthand(undef, dbOrSchema, request, options) {
-    var id = this._getIdForRequest(request);
-    var url = this._getUrlForRequest(request);
-    var type = this._getTypeFromUrl(url, id);
-    var str = id ? type : pluralize(type);
+    let id = this._getIdForRequest(request);
+    let url = this._getUrlForRequest(request);
+    let modelName = this._getModelNameFromUrl(url, id);
+    let str = id ? modelName : pluralize(modelName);
 
     return this.handleStringShorthand(str, dbOrSchema, request, options);
   }

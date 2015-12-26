@@ -4,11 +4,11 @@ import _isArray from 'lodash/lang/isArray';
   An array of models, returned from one of the schema query
   methods (all, find, where). Knows how to update and destroy its models.
 */
-var Collection = function(type, ...args) {
-  if (!type || typeof type !== 'string') {
-    throw 'You must pass a type into a Collection';
+var Collection = function(modelName, ...args) {
+  if (!modelName || typeof modelName !== 'string') {
+    throw 'You must pass a `modelName` into a Collection';
   }
-  this.type = type;
+  this.modelName = modelName;
 
   if (_isArray(args[0])) {
     args = args[0];

@@ -50,7 +50,7 @@ test('undefined shorthand updates the record and returns the model', function(as
 
   assert.equal(this.schema.db.authors.length, 1);
   assert.ok(model instanceof Model);
-  assert.equal(model.type, 'author');
+  assert.equal(model.modelName, 'author');
   assert.equal(model.firstName, 'Ganondorf');
 });
 
@@ -62,7 +62,7 @@ test('query params are ignored', function(assert) {
 
   assert.equal(this.schema.db.authors.length, 1);
   assert.ok(model instanceof Model);
-  assert.equal(model.type, 'author');
+  assert.equal(model.modelName, 'author');
   assert.equal(model.firstName, 'Ganondorf');
 });
 
@@ -74,6 +74,6 @@ test('string shorthand updates the record of the specified type and returns the 
 
   assert.equal(this.schema.db.authors.length, 1);
   assert.ok(model instanceof Model);
-  assert.equal(model.type, 'author');
+  assert.equal(model.modelName, 'author');
   assert.equal(model.firstName, 'Ganondorf');
 });

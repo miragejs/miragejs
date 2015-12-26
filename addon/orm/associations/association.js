@@ -1,12 +1,12 @@
 class Association {
 
-  constructor(type) {
-    this.type = type;
+  constructor(modelName) {
+    this.modelName = modelName;
 
-    // The model type that owns this association
+    // The modelName that owns this association
     this.owner = '';
 
-    // The model type this association refers to
+    // The modelName this association refers to
     this.target = '';
   }
 

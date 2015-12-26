@@ -18,15 +18,15 @@ class Serializer {
   /*
     Used to format the key of a primary model.
   */
-  keyForModel(type) {
-    return type;
+  keyForModel(modelName) {
+    return camelize(modelName);
   }
 
   /*
     Used to format the key of a primary collection.
   */
-  keyForCollection(type) {
-    return _compose(camelize, pluralize)(this.keyForModel(type));
+  keyForCollection(modelName) {
+    return pluralize(this.keyForModel(modelName));
   }
 
   /*
@@ -54,8 +54,8 @@ class Serializer {
       'blog-posts': [...]
     }
   */
-  keyForRelationship(type) {
-    return _compose(camelize, pluralize)(type);
+  keyForRelationship(modelName) {
+    return _compose(camelize, pluralize)(modelName);
   }
 
   /*
@@ -79,8 +79,8 @@ class Serializer {
       'blog-posts': [...]
     }
   */
-  keyForRelationshipIds(type) {
-    return `${singularize(type)}Ids`;
+  keyForRelationshipIds(modelName) {
+    return `${singularize(camelize(modelName))}Ids`;
   }
 
   /*

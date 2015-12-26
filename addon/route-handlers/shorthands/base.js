@@ -1,4 +1,4 @@
-import { singularize, capitalize, camelize } from 'ember-cli-mirage/utils/inflector';
+import { singularize, capitalize, camelize, dasherize } from 'ember-cli-mirage/utils/inflector';
 import _isArray from 'lodash/lang/isArray';
 
 const allDigitsRegex = /^\d+$/;
@@ -43,13 +43,14 @@ export default class BaseShorthandRouteHandler {
     return url;
   }
 
-  _getTypeFromUrl(url, hasId) {
+  _getModelNameFromUrl(url, hasId) {
     let [ urlSplit ] = url.split('?');
     let path = urlSplit.split('/');
     path = path[path.length - 1] === '' ? path.slice(0, path.length - 1) : path; // when trailing slash
     let typePath = hasId ? path[path.length - 2] : path[path.length - 1];
     let type = camelize(singularize(typePath));
-    return type;
+
+    return dasherize(type);
   }
 
   _getJsonBodyForRequest(request) {

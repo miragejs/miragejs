@@ -1,6 +1,6 @@
 import Association from './association';
 import _assign from 'lodash/object/assign';
-import { capitalize } from 'ember-cli-mirage/utils/inflector';
+import { capitalize, camelize } from 'ember-cli-mirage/utils/inflector';
 
 class BelongsTo extends Association {
 
@@ -8,11 +8,11 @@ class BelongsTo extends Association {
     The belongsTo association adds a fk to the owner of the association
   */
   getForeignKeyArray() {
-    return [this.owner, `${this.target}Id`];
+    return [camelize(this.owner), `${camelize(this.target)}Id`];
   }
 
   getForeignKey() {
-    return `${this.target}Id`;
+    return `${camelize(this.target)}Id`;
   }
 
   addMethodsToModelClass(ModelClass, key, schema) {
@@ -41,7 +41,7 @@ class BelongsTo extends Association {
           - sets the associated parent (via id)
       */
       set: function(id) {
-        if (id && !schema[association.target].find(id)) {
+        if (id && !schema[camelize(association.target)].find(id)) {
           throw 'Couldn\'t find ' + association.target + ' with id = ' + id;
         }
 
@@ -59,7 +59,7 @@ class BelongsTo extends Association {
         var foreignKeyId = this[foreignKey];
         if (foreignKeyId) {
           association._tempParent = null;
-          return schema[association.target].find(foreignKeyId);
+          return schema[camelize(association.target)].find(foreignKeyId);
 
         } else if (association._tempParent) {
           return association._tempParent;

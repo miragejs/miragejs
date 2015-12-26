@@ -1,4 +1,4 @@
-import { singularize, pluralize, camelize } from '../utils/inflector';
+import { singularize, pluralize, camelize, dasherize } from '../utils/inflector';
 import Association from './associations/association';
 import Collection from './collection';
 import _isArray from 'lodash/lang/isArray';
@@ -15,8 +15,8 @@ export default function(db) {
   this.registerModels = function(hash) {
     var _this = this;
 
-    Object.keys(hash).forEach(function(type) {
-      _this.registerModel(type, hash[type]);
+    Object.keys(hash).forEach(function(key) {
+      _this.registerModel(key, hash[key]);
     });
   };
 
@@ -37,12 +37,12 @@ export default function(db) {
     ModelClass.prototype.associationKeys = [];       // ex: address.user, user.addresses
     ModelClass.prototype.associationIdKeys = [];     // ex: address.user_id, user.address_ids. may or may not be a fk.
 
-    for (var key in ModelClass.prototype) {
-      if (ModelClass.prototype[key] instanceof Association) {
-        var association = ModelClass.prototype[key];
-        var associatedType = association.type || singularize(key);
-        association.owner = type;
-        association.target = associatedType;
+    for (var associationProperty in ModelClass.prototype) {
+      if (ModelClass.prototype[associationProperty] instanceof Association) {
+        let association = ModelClass.prototype[associationProperty];
+        let associationModelName = association.modelName || dasherize(singularize(associationProperty));
+        association.owner = dasherize(type);
+        association.target = associationModelName;
 
         // Update the registry with this association's foreign keys. This is
         // essentially our "db migration", since we must know about the fks.
@@ -52,7 +52,7 @@ export default function(db) {
         _this._addForeignKeyToRegistry(fkHolder, fk);
 
         // Augment the Model's class with any methods added by this association
-        association.addMethodsToModelClass(ModelClass, key, _this);
+        association.addMethodsToModelClass(ModelClass, associationProperty, _this);
       }
     }
 
@@ -75,20 +75,20 @@ export default function(db) {
   };
 
   this.new = function(type, attrs) {
-    return this._instantiateModel(type, attrs);
+    return this._instantiateModel(dasherize(type), attrs);
   };
 
   this.create = function(type, attrs) {
     var collection = this._collectionForType(type);
     var augmentedAttrs = collection.insert(attrs);
 
-    return this._instantiateModel(type, augmentedAttrs);
+    return this._instantiateModel(dasherize(type), augmentedAttrs);
   };
 
   this.all = function(type) {
     var collection = this._collectionForType(type);
 
-    return this._hydrate(collection, type);
+    return this._hydrate(collection, dasherize(type));
   };
 
   this.find = function(type, ids) {
@@ -101,14 +101,14 @@ export default function(db) {
       }
     }
 
-    return this._hydrate(records, type);
+    return this._hydrate(records, dasherize(type));
   };
 
   this.where = function(type, query) {
     var collection = this._collectionForType(type);
     var records = collection.where(query);
 
-    return this._hydrate(records, type);
+    return this._hydrate(records, dasherize(type));
   };
 
   /*
@@ -128,38 +128,38 @@ export default function(db) {
     this._registry[type].foreignKeys.push(fk);
   };
 
-  this._instantiateModel = function(type, attrs) {
-    var ModelClass = this._modelFor(type);
-    var fks = this._foreignKeysFor(type);
+  this._instantiateModel = function(modelName, attrs) {
+    var ModelClass = this._modelFor(modelName);
+    var fks = this._foreignKeysFor(modelName);
 
-    return new ModelClass(this, type, attrs, fks);
+    return new ModelClass(this, modelName, attrs, fks);
   };
 
-  this._modelFor = function(type) {
-    return this._registry[type].class;
+  this._modelFor = function(modelName) {
+    return this._registry[camelize(modelName)].class;
   };
 
-  this._foreignKeysFor = function(type) {
-    return this._registry[type].foreignKeys;
+  this._foreignKeysFor = function(modelName) {
+    return this._registry[camelize(modelName)].foreignKeys;
   };
 
   /*
     Takes a record and returns a model, or an array of records
     and returns a collection.
   */
-  this._hydrate = function(records, type) {
+  this._hydrate = function(records, modelName) {
     var _this = this;
 
     if (_isArray(records)) {
       var models = records.map(function(record) {
-        return _this._instantiateModel(type, record);
+        return _this._instantiateModel(modelName, record);
       });
 
-      return new Collection(type, models);
+      return new Collection(modelName, models);
 
     } else {
       var record = records;
-      return !record ? null : this._instantiateModel(type, record);
+      return !record ? null : this._instantiateModel(modelName, record);
     }
   };
 }

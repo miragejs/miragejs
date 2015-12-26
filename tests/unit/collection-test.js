@@ -8,8 +8,8 @@ test('it can be instantiated', function(assert) {
   assert.ok(collection);
 });
 
-test('it cannot be instantiated without a type', function(assert) {
+test('it cannot be instantiated without a modelName', function(assert) {
   assert.throws(() => {
     new Collection();
-  }, /must pass a type/);
+  }, /must pass a `modelName`/);
 });
