@@ -129,7 +129,7 @@ export default class Server {
     });
   }
 
-  create(type, overrides, collectionFromCreateList) {
+  build(type, overrides) {
 
     // Store sequence for factory type as instance variable
     this.factorySequences = this.factorySequences || {};
@@ -144,7 +144,21 @@ export default class Server {
     const factory = new Factory();
 
     const sequence = this.factorySequences[type];
-    const attrs = factory.build(sequence);
+    return factory.build(sequence);
+  }
+
+  buildList(type, amount, overrides) {
+    const list = [];
+
+    for (let i = 0; i < amount; i++) {
+      list.push(this.build(type, overrides));
+    }
+
+    return list;
+  }
+
+  create(type, overrides, collectionFromCreateList) {
+    const attrs = this.build(type, overrides);
 
     const collectionName = this.schema ? pluralize(camelize(type)) : pluralize(type);
     const collection = collectionFromCreateList || this.db[collectionName];

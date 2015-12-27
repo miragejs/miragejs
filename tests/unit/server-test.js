@@ -235,3 +235,193 @@ test('createList respects attr overrides', function(assert) {
   assert.deepEqual(links[0], {id: 3, name: 'Link'});
   assert.deepEqual(links[1], {id: 4, name: 'Link'});
 });
+
+module('Unit | Server #build', {
+  beforeEach: function() {
+    server = new Server({environment: 'test'});
+  }
+});
+
+test('build fails when no factories are regisered', function(assert) {
+  assert.throws(function() {
+    server.build('contact');
+  });
+});
+
+test('build fails when an expected factory isn\'t registered', function(assert) {
+  server.loadFactories({
+    address: Factory.extend()
+  });
+
+  assert.throws(function() {
+    server.build('contact');
+  });
+});
+
+test('build does not add the data to the db', function(assert) {
+  server.loadFactories({
+    contact: Factory.extend({name: 'Sam'})
+  });
+
+  server.build('contact');
+  var contactsInDb = server.db.contacts;
+
+  assert.equal(contactsInDb.length, 0);
+});
+
+test('build returns the new attrs with no id', function(assert) {
+  server.loadFactories({
+    contact: Factory.extend({name: 'Sam'})
+  });
+
+  var contact = server.build('contact');
+
+  assert.deepEqual(contact, {name: 'Sam'});
+});
+
+test('build allows for attr overrides', function(assert) {
+  server.loadFactories({
+    contact: Factory.extend({name: 'Sam'})
+  });
+
+  var sam = server.build('contact');
+  var link = server.build('contact', {name: 'Link'});
+
+  assert.deepEqual(sam, {name: 'Sam'});
+  assert.deepEqual(link, {name: 'Link'});
+});
+
+test('build allows for attr overrides with extended factories', function(assert) {
+  var ContactFactory = Factory.extend({
+    name: 'Link',
+    age: 500
+  });
+  var FriendFactory = ContactFactory.extend({
+    is_young: function() {
+      return this.age < 18;
+    }
+  });
+  server.loadFactories({
+    contact: ContactFactory,
+    friend: FriendFactory
+  });
+
+  var link = server.build('friend');
+  var youngLink = server.build('friend', {age: 10});
+
+  assert.deepEqual(link, {name: 'Link', age: 500, is_young: false});
+  assert.deepEqual(youngLink, {name: 'Link', age: 10, is_young: true});
+});
+
+test('build allows for attr overrides with arrays', function(assert) {
+  server.loadFactories({
+    contact: Factory.extend({name: ['Sam', 'Carl']})
+  });
+
+  var sam = server.build('contact');
+  var link = server.build('contact', {name: ['Link']});
+  var noname = server.build('contact', {name: []});
+
+  assert.deepEqual(sam, {name: ['Sam', 'Carl']});
+  assert.deepEqual(link, {name: ['Link']});
+  assert.deepEqual(noname, {name: []});
+});
+
+test('build allows for nested attr overrides', function(assert) {
+  server.loadFactories({
+    contact: Factory.extend({
+      address: {
+        streetName: 'Main',
+        streetAddress(i) {
+          return 1000 + i;
+        }
+      }
+    })
+  });
+
+  var contact1 = server.build('contact');
+  var contact2 = server.build('contact');
+
+  assert.deepEqual(contact1, {address: {streetName: 'Main', streetAddress: 1000}});
+  assert.deepEqual(contact2, {address: {streetName: 'Main', streetAddress: 1001}});
+});
+
+test('build allows for arrays of attr overrides', function(assert) {
+  server.loadFactories({
+    contact: Factory.extend({
+      websites: [
+        'http://example.com',
+        function(i) {
+          return `http://placekitten.com/${320 + i}/${240 + i}`;
+        }
+      ]
+    })
+  });
+
+  var contact1 = server.build('contact');
+  var contact2 = server.build('contact');
+
+  assert.deepEqual(contact1, {websites: ['http://example.com', 'http://placekitten.com/320/240']});
+  assert.deepEqual(contact2, {websites: ['http://example.com', 'http://placekitten.com/321/241']});
+});
+
+module('Unit | Server #buildList', {
+  beforeEach: function() {
+    server = new Server({environment: 'test'});
+  }
+});
+
+test('buildList does not add elements to the db', function(assert) {
+  server.loadFactories({
+    contact: Factory.extend({name: 'Sam'})
+  });
+
+  server.buildList('contact', 3);
+  var contactsInDb = server.db.contacts;
+
+  assert.equal(contactsInDb.length, 0);
+});
+
+test('buildList returns the built elements without ids', function(assert) {
+  server.loadFactories({
+    contact: Factory.extend({name: 'Sam'})
+  });
+
+  server.create('contact');
+  var contacts = server.buildList('contact', 3);
+
+  assert.equal(contacts.length, 3);
+  assert.deepEqual(contacts[0], {name: 'Sam'});
+  assert.deepEqual(contacts[1], {name: 'Sam'});
+  assert.deepEqual(contacts[2], {name: 'Sam'});
+});
+
+test('buildList respects sequences', function(assert) {
+  server.loadFactories({
+    contact: Factory.extend({
+      name: function(i) {
+        return 'name' + i;
+      }
+    })
+  });
+
+  var contacts = server.buildList('contact', 3);
+
+  assert.deepEqual(contacts[0], {name: 'name0'});
+  assert.deepEqual(contacts[1], {name: 'name1'});
+  assert.deepEqual(contacts[2], {name: 'name2'});
+});
+
+test('buildList respects attr overrides', function(assert) {
+  server.loadFactories({
+    contact: Factory.extend({name: 'Sam'})
+  });
+
+  var sams = server.buildList('contact', 2);
+  var links = server.buildList('contact', 2, {name: 'Link'});
+
+  assert.deepEqual(sams[0], {name: 'Sam'});
+  assert.deepEqual(sams[1], {name: 'Sam'});
+  assert.deepEqual(links[0], {name: 'Link'});
+  assert.deepEqual(links[1], {name: 'Link'});
+});
