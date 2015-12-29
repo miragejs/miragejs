@@ -32,6 +32,7 @@ Changes:
   - [BREAKING CHANGE] Change `model.type` to `model.modelName`, ensure it's dasherized #454
   - [BREAKING CHANGE] Inserting records with numerical IDs that have already have been used will throw an per changes from #417
   - [FEATURE] Add `?include` query param support in JSONAPISerializer @lolmaus
+  - [FEATURE] Add `build` & `buildList` to factories #459 @ballpointpenguin
   - [ENHANCEMENT] JSONAPISerializer defaults to dasherized types and relationships (and other JSONAPI enhancements) @lolmaus
   - [ENHANCEMENT] shutdown Mirage server on destroyAppp @blimmer
   - [ENHANCEMENT] createList perf enhancement @alvinvogelzang
