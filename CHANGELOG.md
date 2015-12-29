@@ -24,7 +24,7 @@ Update notes:
   ```
 
   - We now use `destroyApp` test helper in Ember-CLI to shutdown the Mirage server after each test to resolve a memory leak reported in #226. It's important to run `ember g ember-cli-mirage` when upgrading to take advantage of this fix.
-  - Inserting records with numerical IDs that have already have been used will throw an per changes from #417
+  - Inserting records with numerical IDs that have already have been used will throw an error per changes from #417
   - `model.type` was renamed to `model.modelName`, and is dasherized (instead of camelized)
 
 Changes:
