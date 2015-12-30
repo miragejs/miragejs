@@ -1,6 +1,7 @@
 import _assign from 'lodash/object/assign';
 import _isArray from 'lodash/lang/isArray';
 import _isEqual from 'lodash/lang/isEqual';
+import _sortBy from 'lodash/collection/sortBy';
 
 function duplicate(data) {
   if (_isArray(data)) {
@@ -39,18 +40,7 @@ class DbCollection {
       return this._insertRecord(data);
     } else {
       // Need to sort in order to ensure IDs inserted in the correct order
-      return data
-        .sort(function(a, b) {
-          if (a.id < b.id) {
-            return -1;
-          } else if (a.id === b.id) {
-            return 0;
-          }
-          else {
-            return 1;
-          }
-        })
-        .map(this._insertRecord.bind(this));
+      return _sortBy(data, 'id').map(this._insertRecord.bind(this));
     }
   }
 
