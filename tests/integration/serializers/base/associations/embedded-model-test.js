@@ -38,11 +38,11 @@ test(`it can embed has-many relationships`, function(assert) {
 
   assert.deepEqual(result, {
     wordSmith: {
-      id: 1,
+      id: '1',
       name: 'Link',
       blogPosts: [
-        {id: 1, title: 'Lorem'},
-        {id: 2, title: 'Ipsum'}
+        {id: '1', title: 'Lorem'},
+        {id: '2', title: 'Ipsum'}
       ]
     }
   });
@@ -64,13 +64,13 @@ test(`it can embed a chain of has-many relationships`, function(assert) {
 
   assert.deepEqual(result, {
     wordSmith: {
-      id: 1,
+      id: '1',
       name: 'Link',
       blogPosts: [
-        {id: 1, title: 'Lorem', fineComments: [
-          {id: 1, text: 'pwned'}
+        {id: '1', title: 'Lorem', fineComments: [
+          {id: '1', text: 'pwned'}
         ]},
-        {id: 2, title: 'Ipsum', fineComments: []}
+        {id: '2', title: 'Ipsum', fineComments: []}
       ]
     }
   });
@@ -90,9 +90,9 @@ test(`it can embed a belongs-to relationship`, function(assert) {
 
   assert.deepEqual(result, {
     blogPost: {
-      id: 1,
+      id: '1',
       title: 'Lorem',
-      wordSmith: {id: 1, name: 'Link'}
+      wordSmith: {id: '1', name: 'Link'}
     }
   });
 });
@@ -113,13 +113,13 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
 
   assert.deepEqual(result, {
     fineComment: {
-      id: 1,
+      id: '1',
       text: 'pwned',
       blogPost: {
-        id: 1,
+        id: '1',
         title: 'Lorem',
         wordSmith: {
-          id: 1, name: 'Link'
+          id: '1', name: 'Link'
         }
       },
     }
@@ -142,11 +142,11 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
 
   assert.deepEqual(result, {
     wordSmith: {
-      id: 1,
+      id: '1',
       name: 'Link',
       blogPosts: [
-        {id: 1, title: 'Lorem'},
-        {id: 2, title: 'Ipsum'}
+        {id: '1', title: 'Lorem'},
+        {id: '2', title: 'Ipsum'}
       ]
     }
   });
@@ -172,13 +172,13 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
 
   assert.deepEqual(result, {
     wordSmith :{
-      id: 1,
+      id: '1',
       name: 'Link',
       blogPosts: [
-        {id: 1, title: 'Lorem', fineComments: [
-          {id: 1, text: 'pwned'}
+        {id: '1', title: 'Lorem', fineComments: [
+          {id: '1', text: 'pwned'}
         ]},
-        {id: 2, title: 'Ipsum', fineComments: []}
+        {id: '2', title: 'Ipsum', fineComments: []}
       ]
     }
   });

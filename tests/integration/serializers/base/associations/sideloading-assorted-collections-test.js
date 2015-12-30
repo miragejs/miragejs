@@ -19,17 +19,17 @@ module('Integration | Serializers | Base | Associations | Sideloading Assorted C
       })
     });
     this.wordSmiths = [
-      {id: 1, name: 'Link'},
-      {id: 2, name: 'Zelda'},
-      {id: 3, name: 'Epona'}
+      {id: '1', name: 'Link'},
+      {id: '2', name: 'Zelda'},
+      {id: '3', name: 'Epona'}
     ];
     this.blogPosts = [
-      {id: 1, title: 'Lorem', wordSmithId: 1},
-      {id: 2, title: 'Ipsum', wordSmithId: 1}
+      {id: '1', title: 'Lorem', wordSmithId: '1'},
+      {id: '2', title: 'Ipsum', wordSmithId: '1'}
     ];
     this.greatPhotos = [
-      {id: 1, title: 'Amazing', location: 'Hyrule'},
-      {id: 2, title: 'greatPhoto', location: 'Goron City'}
+      {id: '1', title: 'Amazing', location: 'Hyrule'},
+      {id: '2', title: 'greatPhoto', location: 'Goron City'}
     ];
     this.schema.db.loadData({
       wordSmiths: this.wordSmiths,

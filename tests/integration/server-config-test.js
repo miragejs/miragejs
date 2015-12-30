@@ -16,12 +16,12 @@ module('Integration | Server Config', {
 
 test("namespace can be configured", function(assert) {
   assert.expect(1);
-  var done = assert.async();
-  var server = this.server;
+  let done = assert.async();
+  let server = this.server;
 
-  var contacts = [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'},
+  let contacts = [
+    {id: '1', name: 'Link'},
+    {id: '2', name: 'Zelda'},
   ];
   server.db.loadData({
     contacts: contacts
@@ -37,12 +37,12 @@ test("namespace can be configured", function(assert) {
 
 test("urlPrefix can be configured", function(assert) {
   assert.expect(1);
-  var done = assert.async();
-  var server = this.server;
+  let done = assert.async();
+  let server = this.server;
 
-  var contacts = [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'},
+  let contacts = [
+    {id: '1', name: 'Link'},
+    {id: '2', name: 'Zelda'},
   ];
   server.db.loadData({
     contacts: contacts
@@ -58,12 +58,12 @@ test("urlPrefix can be configured", function(assert) {
 
 test("urlPrefix and namespace can be configured simultaneously", function(assert) {
   assert.expect(1);
-  var done = assert.async();
-  var server = this.server;
+  let done = assert.async();
+  let server = this.server;
 
-  var contacts = [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'},
+  let contacts = [
+    {id: '1', name: 'Link'},
+    {id: '2', name: 'Zelda'},
   ];
   server.db.loadData({
     contacts: contacts
@@ -80,12 +80,12 @@ test("urlPrefix and namespace can be configured simultaneously", function(assert
 
 test("fully qualified domain names can be used in configuration", function(assert) {
   assert.expect(1);
-  var done = assert.async();
-  var server = this.server;
+  let done = assert.async();
+  let server = this.server;
 
-  var contacts = [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'},
+  let contacts = [
+    {id: '1', name: 'Link'},
+    {id: '2', name: 'Zelda'},
   ];
   server.db.loadData({
     contacts: contacts
@@ -103,9 +103,9 @@ test("urlPrefix/namespace are ignored when fully qualified domain names are used
   var done = assert.async();
   var server = this.server;
 
-  var contacts = [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'},
+  let contacts = [
+    {id: '1', name: 'Link'},
+    {id: '2', name: 'Zelda'},
   ];
   server.db.loadData({
     contacts: contacts

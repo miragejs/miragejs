@@ -44,8 +44,8 @@ test('it can make new models and then save them', function(assert) {
   user.save();
 
   assert.ok(user.id, 'user has an id getter');
-  assert.deepEqual(user.attrs, {id: 1, name: 'Link'});
-  assert.deepEqual(db.users, [{id: 1, name: 'Link'}]);
+  assert.deepEqual(user.attrs, {id: '1', name: 'Link'});
+  assert.deepEqual(db.users, [{id: '1', name: 'Link'}]);
 });
 
 test('it can create new models, saved directly to the db', function(assert) {
@@ -53,6 +53,6 @@ test('it can create new models, saved directly to the db', function(assert) {
 
   assert.ok(user instanceof Model);
   assert.ok(user instanceof User);
-  assert.deepEqual(user.attrs, {id: 1, name: 'Link'});
-  assert.deepEqual(db.users, [{id: 1, name: 'Link'}]);
+  assert.deepEqual(user.attrs, {id: '1', name: 'Link'});
+  assert.deepEqual(db.users, [{id: '1', name: 'Link'}]);
 });

@@ -39,15 +39,15 @@ test(`it can embed a collection with a has-many relationship`, function(assert) 
   assert.deepEqual(result, {
     wordSmiths: [
       {
-        id: 1,
+        id: '1',
         name: 'Link',
         blogPosts: [
-          {id: 1, title: 'Lorem'},
-          {id: 2, title: 'Ipsum'}
+          {id: '1', title: 'Lorem'},
+          {id: '2', title: 'Ipsum'}
         ]
       },
       {
-        id: 2,
+        id: '2',
         name: 'Zelda',
         blogPosts: []
       }
@@ -72,25 +72,25 @@ test(`it can embed a collection with a chain of has-many relationships`, functio
   assert.deepEqual(result, {
     wordSmiths: [
       {
-        id: 1,
+        id: '1',
         name: 'Link',
         blogPosts: [
           {
-            id: 1,
+            id: '1',
             title: 'Lorem',
             fineComments: [
-              {id: 1, text: 'pwned'}
+              {id: '1', text: 'pwned'}
             ]
           },
           {
-            id: 2,
+            id: '2',
             title: 'Ipsum',
             fineComments: []
           }
         ]
       },
       {
-        id: 2,
+        id: '2',
         name: 'Zelda',
         blogPosts: []
       }
@@ -112,14 +112,14 @@ test(`it can embed a collection with a belongs-to relationship`, function(assert
   assert.deepEqual(result, {
     blogPosts: [
       {
-        id: 1,
+        id: '1',
         title: 'Lorem',
-        wordSmith: {id: 1, name: 'Link'}
+        wordSmith: {id: '1', name: 'Link'}
       },
       {
-        id: 2,
+        id: '2',
         title: 'Ipsum',
-        wordSmith: {id: 1, name: 'Link'}
+        wordSmith: {id: '1', name: 'Link'}
       }
     ]
   });
@@ -142,12 +142,12 @@ test(`it can embed a collection with a chain of belongs-to relationships`, funct
   assert.deepEqual(result, {
     fineComments: [
       {
-        id: 1,
+        id: '1',
         text: 'pwned',
         blogPost: {
-          id: 1,
+          id: '1',
           title: 'Lorem',
-          wordSmith: {id: 1, name: 'Link'}
+          wordSmith: {id: '1', name: 'Link'}
         }
       }
     ]

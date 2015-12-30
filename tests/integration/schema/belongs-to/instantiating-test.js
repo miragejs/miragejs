@@ -56,7 +56,7 @@ test('the child accepts a saved parent model', function(assert) {
 
   assert.equal(address.userId, 1);
   assert.deepEqual(address.user, link);
-  assert.deepEqual(address.attrs, {userId: 1});
+  assert.deepEqual(address.attrs, {userId: '1'});
 });
 
 test('the child accepts a new parent model', function(assert) {
@@ -79,7 +79,7 @@ test('the child accepts a null parent model', function(assert) {
 test('the child accepts a parent model and id', function(assert) {
   var address = schema.address.new({user: link, userId: 1});
 
-  assert.equal(address.userId, 1);
+  assert.equal(address.userId, '1');
   assert.deepEqual(address.user, link);
   assert.deepEqual(address.attrs, {userId: 1});
 });

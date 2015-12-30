@@ -45,20 +45,20 @@ test('it sideloads associations and snake-cases relationships and attributes cor
 
   assert.deepEqual(result, {
     word_smith: {
-      id: 1,
+      id: '1',
       name: 'Link',
-      blog_post_ids: [1, 2]
+      blog_post_ids: ['1', '2']
     },
     blog_posts: [
       {
-        id: 1,
+        id: '1',
         title: 'Lorem',
-        word_smith_id: 1
+        word_smith_id: '1'
       },
       {
-        id: 2,
+        id: '2',
         title: 'Ipsum',
-        word_smith_id: 1
+        word_smith_id: '1'
       }
     ]
   });
@@ -72,26 +72,26 @@ test('it sideloads associations and snake-cases relationships and attributes cor
   assert.deepEqual(result, {
     word_smiths: [
       {
-        id: 1,
+        id: '1',
         name: 'Link',
-        blog_post_ids: [1, 2]
+        blog_post_ids: ['1', '2']
       },
       {
-        id: 2,
+        id: '2',
         name: 'Zelda',
         blog_post_ids: []
       }
     ],
     blog_posts: [
       {
-        id: 1,
+        id: '1',
         title: 'Lorem',
-        word_smith_id: 1
+        word_smith_id: '1'
       },
       {
-        id: 2,
+        id: '2',
         title: 'Ipsum',
-        word_smith_id: 1
+        word_smith_id: '1'
       }
     ]
   });

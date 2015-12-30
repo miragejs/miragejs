@@ -8,17 +8,17 @@ module('Integration | Route Handlers | GET', {
 
   beforeEach: function() {
     this.contacts = [
-      {id: 1, name: 'Link', address_ids: [1]},
-      {id: 2, name: 'Zelda', address_ids: [2]},
-      {id: 3, name: 'Epona', address_ids: []}
+      {id: '1', name: 'Link', address_ids: [1]},
+      {id: '2', name: 'Zelda', address_ids: [2]},
+      {id: '3', name: 'Epona', address_ids: []}
     ];
     this.addresses = [
-      {id: 1, name: '123 Hyrule Way', contact_id: 1},
-      {id: 2, name: '456 Hyrule Way', contact_id: 2}
+      {id: '1', name: '123 Hyrule Way', contact_id: 1},
+      {id: '2', name: '456 Hyrule Way', contact_id: 2}
     ];
     this.photos = [
-      {id: 1, title: 'Awesome'},
-      {id: 2, title: 'Photo'}
+      {id: '1', title: 'Awesome'},
+      {id: '2', title: 'Photo'}
     ];
 
     this.db = new Db({
@@ -56,7 +56,7 @@ test('undefined shorthand can coalesce ids', function(assert) {
 
   let result = handler.handle(request);
 
-  assert.deepEqual(result, {contacts: this.contacts.filter(contact => [1, 3].indexOf(contact.id) > -1)});
+  assert.deepEqual(result, {contacts: this.contacts.filter(contact => ['1', '3'].indexOf(contact.id) > -1)});
 });
 
 test('undefined shorthand can return a singular resource', function(assert) {
@@ -103,7 +103,7 @@ test('string shorthand can coalesce ids', function(assert) {
 
   let result = handler.handle(request);
 
-  assert.deepEqual(result, {contacts: this.contacts.filter(contact => [1, 3].indexOf(contact.id) > -1)});
+  assert.deepEqual(result, {contacts: this.contacts.filter(contact => ['1', '3'].indexOf(contact.id) > -1)});
 });
 
 test('string shorthand with an id returns the named record', function(assert) {

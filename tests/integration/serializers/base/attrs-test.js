@@ -27,7 +27,7 @@ test(`it returns only the whitelisted attrs when serializing a model`, function(
   let result = this.registry.serialize(wordSmith);
   assert.deepEqual(result, {
     wordSmith: {
-      id: 1,
+      id: '1',
       name: 'Link'
     }
   });
@@ -43,8 +43,8 @@ test(`it returns only the whitelisted attrs when serializing a collection`, func
 
   assert.deepEqual(result, {
     wordSmiths: [
-      {id: 1, name: 'Link'},
-      {id: 2, name: 'Zelda'}
+      {id: '1', name: 'Link'},
+      {id: '2', name: 'Zelda'}
     ]
   });
 });
