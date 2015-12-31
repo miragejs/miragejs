@@ -189,6 +189,13 @@ test('inserting a record with an already used ID throws an error', function(asse
   });
 });
 
+test('tracks the correct IDs being used', function(assert) {
+  db.contacts.insert({ name: 'Vegeta' });
+  db.contacts.insert({ id: 2, name: 'Krilli' });
+
+  assert.equal(db.contacts.length, 2);
+});
+
 module('Unit | Db #find', {
   beforeEach: function() {
     db = new Db();

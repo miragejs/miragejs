@@ -262,13 +262,15 @@ class IdentityManagaer {
   inc() {
     let nextValue = this.get() + 1;
 
-    this.set(nextValue);
+    this._currentValue = nextValue;
 
     return nextValue;
   }
 
   fetch() {
     let id = this.get();
+
+    this._ids[id] = true;
 
     this.inc();
 
