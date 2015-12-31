@@ -5,9 +5,7 @@ import _sortBy from 'lodash/collection/sortBy';
 
 function duplicate(data) {
   if (_isArray(data)) {
-    return data.map(function(el) {
-      return _assign({}, el);
-    });
+    return data.map(duplicate);
   } else {
     return _assign({}, data);
   }
@@ -29,7 +27,7 @@ class DbCollection {
   }
 
   /*
-    Returns a copy of the data, to prevent inadvertant data manipulation.
+    Returns a copy of the data, to prevent inadvertent data manipulation.
   */
   all() {
     return duplicate(this._records);
@@ -40,18 +38,17 @@ class DbCollection {
       return this._insertRecord(data);
     } else {
       // Need to sort in order to ensure IDs inserted in the correct order
-      return _sortBy(data, 'id').map(this._insertRecord.bind(this));
+      return _sortBy(data, 'id').map(this._insertRecord, this);
     }
   }
 
   find(ids) {
     if (_isArray(ids)) {
       let records = this._findRecords(ids)
-        .filter(r => r !== undefined);
+        .filter(Boolean)
+        .map(duplicate); // Return a copy
 
-      // Return a copy
-      return records.map(duplicate);
-
+      return records;
     } else {
       let record = this._findRecord(ids);
       if (!record) { return null; }
@@ -62,9 +59,7 @@ class DbCollection {
   }
 
   where(query) {
-    let records = this._findRecordsWhere(query);
-
-    return records.map(duplicate);
+    return this._findRecordsWhere(query).map(duplicate);
   }
 
   firstOrCreate(query, attributesForNew={}) {
@@ -175,9 +170,7 @@ class DbCollection {
   }
 
   _findRecords(ids) {
-    let records = ids.map(id => this._findRecord(id));
-
-    return records;
+    return ids.map(this._findRecord, this);
   }
 
   _findRecordsWhere(query) {
