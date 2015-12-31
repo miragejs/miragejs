@@ -71,13 +71,13 @@ test(`it can sideload a collection with a has-many relationship`, function(asser
 
   assert.deepEqual(result, {
     wordSmiths: [
-      {id: 1, name: 'Link', blogPostIds: [1, 2]},
-      {id: 2, name: 'Zelda', blogPostIds: [3]},
+      {id: '1', name: 'Link', blogPostIds: ['1', '2']},
+      {id: '2', name: 'Zelda', blogPostIds: ['3']},
     ],
     blogPosts: [
-      {id: 1, title: 'Lorem', wordSmithId: 1},
-      {id: 2, title: 'Ipsum', wordSmithId: 1},
-      {id: 3, title: 'Zeldas blogPost', wordSmithId: 2}
+      {id: '1', title: 'Lorem', wordSmithId: '1'},
+      {id: '2', title: 'Ipsum', wordSmithId: '1'},
+      {id: '3', title: 'Zeldas blogPost', wordSmithId: '2'}
     ]
   });
 });
@@ -99,16 +99,16 @@ test(`it can sideload a collection with a chain of has-many relationships`, func
 
   assert.deepEqual(result, {
     wordSmiths: [
-      {id: 1, name: 'Link', blogPostIds: [1, 2]},
-      {id: 2, name: 'Zelda', blogPostIds: [3]}
+      {id: '1', name: 'Link', blogPostIds: ['1', '2']},
+      {id: '2', name: 'Zelda', blogPostIds: ['3']}
     ],
     blogPosts: [
-      {id: 1, title: 'Lorem', wordSmithId: 1, fineCommentIds: [1]},
-      {id: 2, title: 'Ipsum', wordSmithId: 1, fineCommentIds: []},
-      {id: 3, title: 'Zeldas blogPost', wordSmithId: 2, fineCommentIds: []}
+      {id: '1', title: 'Lorem', wordSmithId: '1', fineCommentIds: ['1']},
+      {id: '2', title: 'Ipsum', wordSmithId: '1', fineCommentIds: []},
+      {id: '3', title: 'Zeldas blogPost', wordSmithId: '2', fineCommentIds: []}
     ],
     fineComments: [
-      {id: 1, text: 'pwned', blogPostId: 1}
+      {id: '1', text: 'pwned', blogPostId: '1'}
     ]
   });
 });
@@ -130,13 +130,13 @@ test(`it avoids circularity when serializing a collection`, function(assert) {
 
   assert.deepEqual(result, {
     wordSmiths: [
-      {id: 1, name: 'Link', blogPostIds: [1, 2] },
-      {id: 2, name: 'Zelda', blogPostIds: [3] },
+      {id: '1', name: 'Link', blogPostIds: ['1', '2'] },
+      {id: '2', name: 'Zelda', blogPostIds: ['3'] },
     ],
     blogPosts: [
-      {id: 1, title: 'Lorem', wordSmithId: 1},
-      {id: 2, title: 'Ipsum', wordSmithId: 1},
-      {id: 3, title: 'Zeldas blogPost', wordSmithId: 2},
+      {id: '1', title: 'Lorem', wordSmithId: '1'},
+      {id: '2', title: 'Ipsum', wordSmithId: '1'},
+      {id: '3', title: 'Zeldas blogPost', wordSmithId: '2'},
     ]
   });
 });
@@ -155,13 +155,13 @@ test(`it can sideload a collection with a belongs-to relationship`, function(ass
 
   assert.deepEqual(result, {
     blogPosts: [
-      {id: 1, title: 'Lorem', wordSmithId: 1 },
-      {id: 2, title: 'Ipsum', wordSmithId: 1 },
-      {id: 3, title: 'Zeldas blogPost', wordSmithId: 2 },
+      {id: '1', title: 'Lorem', wordSmithId: '1' },
+      {id: '2', title: 'Ipsum', wordSmithId: '1' },
+      {id: '3', title: 'Zeldas blogPost', wordSmithId: '2' },
     ],
     wordSmiths: [
-      {id: 1, name: 'Link'},
-      {id: 2, name: 'Zelda'}
+      {id: '1', name: 'Link'},
+      {id: '2', name: 'Zelda'}
     ]
   });
 });
@@ -183,13 +183,13 @@ test(`it can sideload a collection with a chain of belongs-to relationships`, fu
 
   assert.deepEqual(result, {
     fineComments: [
-      {id: 1, text: 'pwned', blogPostId: 1}
+      {id: '1', text: 'pwned', blogPostId: '1'}
     ],
     blogPosts: [
-      {id: 1, title: 'Lorem', wordSmithId: 1}
+      {id: '1', title: 'Lorem', wordSmithId: '1'}
     ],
     wordSmiths: [
-      {id: 1, name: 'Link'}
+      {id: '1', name: 'Link'}
     ]
   });
 });

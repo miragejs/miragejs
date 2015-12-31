@@ -56,18 +56,18 @@ test('it can create many collections', function(assert) {
 
 
 module('Unit | Db #loadData', {
-  beforeEach: function() {
+  beforeEach() {
     db = new Db();
   },
-  afterEach: function() {
+  afterEach() {
     db.emptyData();
   }
 });
 
 test('it can load an object of data', function(assert) {
-  var data = {
-    contacts: [{id: 1, name: 'Link'}],
-    addresses: [{id: 1, name: '123 Hyrule Way'}]
+  let data = {
+    contacts: [{id: '1', name: 'Link'}],
+    addresses: [{id: '1', name: '123 Hyrule Way'}]
   };
   db.loadData(data);
 
@@ -76,15 +76,15 @@ test('it can load an object of data', function(assert) {
 });
 
 module('Unit | Db #all', {
-  beforeEach: function() {
+  beforeEach() {
     this.data = {
-      contacts: [{id: 1, name: 'Link'}],
-      addresses: [{id: 1, name: '123 Hyrule Way'}]
+      contacts: [{id: '1', name: 'Link'}],
+      addresses: [{id: '1', name: '123 Hyrule Way'}]
     };
 
     db = new Db(this.data);
   },
-  afterEach: function() {
+  afterEach() {
     db.emptyData();
   }
 });
@@ -104,63 +104,80 @@ test('the collection is a copy', function(assert) {
 });
 
 module('Unit | Db #insert', {
-  beforeEach: function() {
+  beforeEach() {
     db = new Db();
     db.createCollection('contacts');
   },
-  afterEach: function() {
+
+  afterEach() {
     db.emptyData();
   }
 });
 
 test('it inserts an object and returns it', function(assert) {
-  var link = db.contacts.insert({name: 'Link'});
+  let link = db.contacts.insert({name: 'Link'});
+  let expectedRecord = {
+    id: '1',
+    name: 'Link'
+  };
 
-  assert.deepEqual(db.contacts, [{id: 1, name: 'Link'}]);
-  assert.deepEqual(link, {id: 1, name: 'Link'});
+  assert.deepEqual(db.contacts, [expectedRecord]);
+  assert.deepEqual(link, expectedRecord);
 });
 
 test('it returns a copy', function(assert) {
-  var link = db.contacts.insert({name: 'Link'});
+  let link = db.contacts.insert({name: 'Link'});
+  let expectedRecord = {
+    id: '1',
+    name: 'Link'
+  };
 
-  assert.deepEqual(link, {id: 1, name: 'Link'});
+  assert.deepEqual(link, expectedRecord);
 
   link.name = 'Young link';
 
-  assert.deepEqual(db.contacts.find(1), {id: 1, name: 'Link'});
+  assert.deepEqual(db.contacts.find(1), expectedRecord);
 });
 
 test('it can insert objects sequentially', function(assert) {
   db.contacts.insert({name: 'Link'});
   db.contacts.insert({name: 'Ganon'});
 
-  assert.deepEqual(db.contacts, [{id: 1, name: 'Link'}, {id: 2, name: 'Ganon'}]);
+  let records = [
+    { id: '1', name: 'Link' },
+    { id: '2', name: 'Ganon' }
+  ];
+
+  assert.deepEqual(db.contacts, records);
 });
 
 test('it does not add an id if present', function(assert) {
-  db.contacts.insert({id: 5, name: 'Link'});
+  let attrs = { id: '5', name: 'Link' };
 
-  assert.deepEqual(db.contacts, [{id: 5, name: 'Link'}]);
+  db.contacts.insert(attrs);
+
+  assert.deepEqual(db.contacts, [attrs]);
 });
 
 test('it can insert an array and return it', function(assert) {
   db.contacts.insert({name: 'Link'});
-  var contacts = db.contacts.insert([{name: 'Zelda'}, {name: 'Ganon'}]);
 
-  assert.deepEqual(db.contacts, [{id: 1, name: 'Link'}, {id: 2, name: 'Zelda'}, {id: 3, name: 'Ganon'}]);
-  assert.deepEqual(contacts, [{id: 2, name: 'Zelda'}, {id: 3, name: 'Ganon'}]);
+  let contacts = db.contacts.insert([{name: 'Zelda'}, {name: 'Ganon'}]);
+
+  assert.deepEqual(db.contacts, [{id: '1', name: 'Link'}, {id: '2', name: 'Zelda'}, {id: '3', name: 'Ganon'}]);
+  assert.deepEqual(contacts, [{id: '2', name: 'Zelda'}, {id: '3', name: 'Ganon'}]);
 });
 
 test('it does not add ids to array data if present', function(assert) {
   db.contacts.insert([{id: 2, name: 'Link'}, {id: 1, name: 'Ganon'}]);
 
-  assert.deepEqual(db.contacts, [{id: 1, name: 'Ganon'}, {id: 2, name: 'Link'}]);
+  assert.deepEqual(db.contacts, [{id: '1', name: 'Ganon'}, {id: '2', name: 'Link'}]);
 });
 
 test('it can insert a record with an id of 0', function(assert) {
   db.contacts.insert({id: 0, name: 'Link'});
 
-  assert.deepEqual(db.contacts, [{id: 0, name: 'Link'}]);
+  assert.deepEqual(db.contacts, [{id: '0', name: 'Link'}]);
 });
 
 test('IDs increment correctly, even after a record is removed', function(assert) {
@@ -185,7 +202,7 @@ test('inserting a record with an already used ID throws an error', function(asse
   db.contacts.insert({ id: 'atp', name: 'Adenosine Triphosphate' });
 
   assert.throws(function() {
-  db.contacts.insert({ id: 'atp', name: 'Adenosine Triphosphate' });
+    db.contacts.insert({ id: 'atp', name: 'Adenosine Triphosphate' });
   });
 });
 
@@ -214,23 +231,17 @@ module('Unit | Db #find', {
 test('returns a record that matches a numerical id', function(assert) {
   var contact = db.contacts.find(2);
 
-  assert.deepEqual(contact, {id: 2, name: 'Link'});
+  assert.deepEqual(contact, {id: '2', name: 'Link'});
 });
 
 test('returns a copy not a reference', function(assert) {
   var contact = db.contacts.find(2);
 
-  assert.deepEqual(contact, {id: 2, name: 'Link'});
+  assert.deepEqual(contact, {id: '2', name: 'Link'});
 
   contact.name = 'blah';
 
-  assert.deepEqual(db.contacts.find(2), {id: 2, name: 'Link'});
-});
-
-test('coerces interger-like ids to integers', function(assert) {
-  var contact = db.contacts.find('2');
-
-  assert.deepEqual(contact, {id: 2, name: 'Link'});
+  assert.deepEqual(db.contacts.find(2), {id: '2', name: 'Link'});
 });
 
 test('returns a record that matches a string id', function(assert) {
@@ -239,10 +250,10 @@ test('returns a record that matches a string id', function(assert) {
   assert.deepEqual(contact, {id: 'abc', name: 'Ganon'});
 });
 
-test('returns multiple record that matche an arrya of ids', function(assert) {
+test('returns multiple record that matches an array of ids', function(assert) {
   var contacts = db.contacts.find([1, 2]);
 
-  assert.deepEqual(contacts, [{id: 1, name: 'Zelda'}, {id: 2, name: 'Link'}]);
+  assert.deepEqual(contacts, [{id: '1', name: 'Zelda'}, {id: '2', name: 'Link'}]);
 });
 
 test('returns a record whose id is a string that start with numbers', function(assert) {
@@ -258,7 +269,7 @@ test('returns a record whose id is a string that start with numbers', function(a
 test('returns multiple record that match an array of ids', function(assert) {
   var contacts = db.contacts.find([1, 2]);
 
-  assert.deepEqual(contacts, [{id: 1, name: 'Zelda'}, {id: 2, name: 'Link'}]);
+  assert.deepEqual(contacts, [{id: '1', name: 'Zelda'}, {id: '2', name: 'Link'}]);
 });
 
 test('returns an empty array when it doesnt find multiple ids', function(assert) {
@@ -287,7 +298,7 @@ test('returns an array of records that match the query', function(assert) {
   var result = db.contacts.where({evil: true});
 
   assert.deepEqual(result, [
-    {id: 3, name: 'Ganon', evil: true, age: 45}
+    {id: '3', name: 'Ganon', evil: true, age: 45}
   ]);
 });
 
@@ -295,7 +306,7 @@ test('it coerces query params to strings', function(assert) {
   var result = db.contacts.where({age: '45'});
 
   assert.deepEqual(result, [
-    {id: 3, name: 'Ganon', evil: true, age: 45}
+    {id: '3', name: 'Ganon', evil: true, age: 45}
   ]);
 });
 
@@ -303,13 +314,13 @@ test('returns a copy, not a referecne', function(assert) {
   var result = db.contacts.where({evil: true});
 
   assert.deepEqual(result, [
-    {id: 3, name: 'Ganon', evil: true, age: 45}
+    {id: '3', name: 'Ganon', evil: true, age: 45}
   ]);
 
   result[0].evil = false;
 
   assert.deepEqual(db.contacts.where({evil: true}), [
-    {id: 3, name: 'Ganon', evil: true, age: 45}
+    {id: '3', name: 'Ganon', evil: true, age: 45}
   ]);
 });
 
@@ -323,7 +334,7 @@ test('accepts a filter function', function(assert) {
   let result = db.contacts.where(function(record) { return record.age === 45; });
 
   assert.deepEqual(result, [
-    {id: 3, name: 'Ganon', evil: true, age: 45}
+    {id: '3', name: 'Ganon', evil: true, age: 45}
   ]);
 });
 
@@ -350,9 +361,9 @@ test('it can update the whole collection', function(assert) {
 
   let expectedContacts = [
       {id: '123-abc', name: 'Sam', evil: false},
-      {id: 1, name: 'Sam', evil: false},
-      {id: 2, name: 'Sam', evil: false},
-      {id: 3, name: 'Sam', evil: false}
+      {id: '1', name: 'Sam', evil: false},
+      {id: '2', name: 'Sam', evil: false},
+      {id: '3', name: 'Sam', evil: false}
     ];
 
   assert.deepEqual(
@@ -364,7 +375,7 @@ test('it can update a record by id', function(assert) {
   db.contacts.update(3, {name: 'Ganondorf', evil: false});
   var ganon = db.contacts.find(3);
 
-  assert.deepEqual(ganon, {id: 3, name: 'Ganondorf', evil: false});
+  assert.deepEqual(ganon, {id: '3', name: 'Ganondorf', evil: false});
 });
 
 test('it can update a record by id when the id is a string', function(assert) {
@@ -389,23 +400,23 @@ test('it can update records by query', function(assert) {
 
   assert.deepEqual(db.contacts, [
     {id: '123-abc', name: 'Sam', evil: false},
-    {id: 1, name: 'Sam', evil: false},
-    {id: 2, name: 'Sam', evil: false},
-    {id: 3, name: 'Ganon', evil: true}
+    {id: '1', name: 'Sam', evil: false},
+    {id: '2', name: 'Sam', evil: false},
+    {id: '3', name: 'Ganon', evil: true}
   ]);
 });
 
 test('updating a single record returns that record', function(assert) {
   var ganon = db.contacts.update(3, {name: 'Ganondorf'});
-  assert.deepEqual(ganon, {id: 3, name: 'Ganondorf', evil: true});
+  assert.deepEqual(ganon, {id: '3', name: 'Ganondorf', evil: true});
 });
 
 test('updating a collection returns the updated records', function(assert) {
   var characters = db.contacts.update({evil: true});
   assert.deepEqual(characters, [
     {id: '123-abc', name: 'Epona', evil: true},
-    {id: 1, name: 'Link', evil: true},
-    {id: 2, name: 'Zelda', evil: true},
+    {id: '1', name: 'Link', evil: true},
+    {id: '2', name: 'Zelda', evil: true},
   ]);
 });
 
@@ -413,8 +424,8 @@ test('updating multiple records returns the updated records', function(assert) {
   var characters = db.contacts.update({evil: false}, {evil: true});
   assert.deepEqual(characters, [
     {id: '123-abc', name: 'Epona', evil: true},
-    {id: 1, name: 'Link', evil: true},
-    {id: 2, name: 'Zelda', evil: true},
+    {id: '1', name: 'Link', evil: true},
+    {id: '2', name: 'Zelda', evil: true},
   ]);
 });
 
@@ -454,8 +465,8 @@ test('it can remove a single record by id', function(assert) {
 
   assert.deepEqual(db.contacts, [
     {id: '123-abc', name: 'Epona', evil: false},
-    {id: 2, name: 'Zelda', evil: false},
-    {id: 3, name: 'Ganon', evil: true},
+    {id: '2', name: 'Zelda', evil: false},
+    {id: '3', name: 'Ganon', evil: true},
   ]);
 });
 
@@ -463,9 +474,9 @@ test('it can remove a single record when the id is a string', function(assert) {
   db.contacts.remove('123-abc');
 
   assert.deepEqual(db.contacts, [
-    {id: 1, name: 'Link', evil: false},
-    {id: 2, name: 'Zelda', evil: false},
-    {id: 3, name: 'Ganon', evil: true},
+    {id: '1', name: 'Link', evil: false},
+    {id: '2', name: 'Zelda', evil: false},
+    {id: '3', name: 'Ganon', evil: true},
   ]);
 });
 
@@ -474,7 +485,7 @@ test('it can remove multiple records by ids', function(assert) {
 
   assert.deepEqual(db.contacts, [
     {id: '123-abc', name: 'Epona', evil: false},
-    {id: 3, name: 'Ganon', evil: true},
+    {id: '3', name: 'Ganon', evil: true},
   ]);
 });
 
@@ -482,7 +493,7 @@ test('it can remove multiple records by query', function(assert) {
   db.contacts.remove({evil: false});
 
   assert.deepEqual(db.contacts, [
-    {id: 3, name: 'Ganon', evil: true},
+    {id: '3', name: 'Ganon', evil: true},
   ]);
 });
 
@@ -492,7 +503,7 @@ test('it can add a record after removing all records', function(assert) {
 
   assert.equal(db.contacts.length, 1);
   assert.deepEqual(db.contacts, [
-    {id: 1, name: 'Foo'}
+    {id: '1', name: 'Foo'}
   ]);
 });
 
@@ -515,7 +526,7 @@ module('Unit | Db #firstOrCreate', {
 test('it can find the first record available from the query', function(assert) {
   let record = db.contacts.firstOrCreate({ name: 'Link' });
 
-  assert.deepEqual(record, { id: 1, name: 'Link', evil: false });
+  assert.deepEqual(record, { id: '1', name: 'Link', evil: false });
 });
 
 test('it creates a new record from query + attrs if none found', function(assert) {

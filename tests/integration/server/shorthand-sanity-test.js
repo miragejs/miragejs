@@ -35,7 +35,7 @@ test('a get shorthand works', function(assert) {
     url: '/contacts'
   }).done(function(res, status, xhr) {
     assert.equal(xhr.status, 200);
-    assert.deepEqual(res, {contacts: [{id: 1, name: 'Link'}]});
+    assert.deepEqual(res, {contacts: [{id: '1', name: 'Link'}]});
     done();
   });
 });

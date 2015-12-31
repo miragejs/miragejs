@@ -34,7 +34,7 @@ module('Integration | Schema | hasMany instantiating with params', {
 test('children have fks added to their attrs', function(assert) {
   var newChild = schema.address.new();
   assert.deepEqual(newChild.attrs, {userId: null});
-  assert.deepEqual(child1.attrs, {id: 1, name: '123 Hyrule Way', userId: null});
+  assert.deepEqual(child1.attrs, {id: '1', name: '123 Hyrule Way', userId: null});
 });
 
 test('the parent accepts an array of saved children ids', function(assert) {
@@ -43,7 +43,7 @@ test('the parent accepts an array of saved children ids', function(assert) {
   assert.equal(user.addresses.length, 2);
   assert.deepEqual(user.addresses[0], child1);
   assert.deepEqual(user.addresses[1], child2);
-  assert.deepEqual(user.addressIds, [1, 2]);
+  assert.deepEqual(user.addressIds, ['1', '2']);
 });
 
 test('the parent errors if one of the child ids doesnt exist', function(assert) {
@@ -61,7 +61,7 @@ test('the parent accepts an empty childIds array', function(assert) {
 test('the parent accepts an array of saved child models', function(assert) {
   var user = schema.user.new({addresses: [child1, child2]});
 
-  assert.deepEqual(user.addressIds, [1, 2]);
+  assert.deepEqual(user.addressIds, ['1', '2']);
   assert.equal(user.addresses.length, 2);
   assert.deepEqual(user.addresses[0], child1);
 });
@@ -80,7 +80,7 @@ test('the parent accepts a mixed array of new and saved child models', function(
   var newAddress1 = schema.address.new();
   var user = schema.user.new({addresses: [child1, newAddress1]});
 
-  assert.deepEqual(user.addressIds, [1, undefined]);
+  assert.deepEqual(user.addressIds, ['1', undefined]);
   assert.equal(user.addresses.length, 2);
   assert.deepEqual(user.addresses[0], child1);
   assert.deepEqual(user.addresses[1], newAddress1);

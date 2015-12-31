@@ -26,7 +26,7 @@ test(`it includes all attributes for a model`, function(assert) {
   assert.deepEqual(result, {
     data: {
       type: 'word-smiths',
-      id: 1,
+      id: '1',
       attributes: {
         'first-name': 'Link',
         age: 123
@@ -51,7 +51,7 @@ test(`it includes all attributes for each model in a collection`, function(asser
   assert.deepEqual(result, {
     data: [{
       type: 'word-smiths',
-      id: 1,
+      id: '1',
       attributes: {
         'first-name': 'Link',
         age: 123
@@ -63,7 +63,7 @@ test(`it includes all attributes for each model in a collection`, function(asser
       }
     }, {
       type: 'word-smiths',
-      id: 2,
+      id: '2',
       attributes: {
         'first-name': 'Zelda',
         age: 456

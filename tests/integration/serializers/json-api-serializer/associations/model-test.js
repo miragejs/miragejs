@@ -34,15 +34,15 @@ test(`it can include a has many relationship`, function(assert) {
   assert.deepEqual(result, {
     data: {
       type: 'word-smiths',
-      id: 1,
+      id: '1',
       attributes: {
         'first-name': 'Link',
       },
       relationships: {
         'blog-posts': {
           data: [
-            {type: 'blog-posts', id: 1},
-            {type: 'blog-posts', id: 2},
+            {type: 'blog-posts', id: '1'},
+            {type: 'blog-posts', id: '2'},
           ]
         }
       }
@@ -50,7 +50,7 @@ test(`it can include a has many relationship`, function(assert) {
     included: [
       {
         type: 'blog-posts',
-        id: 1,
+        id: '1',
         attributes: {
           title: 'Lorem'
         },
@@ -58,14 +58,14 @@ test(`it can include a has many relationship`, function(assert) {
           "fine-comments": {
             data: [
               {
-                id: 1,
+                id: '1',
                 type: "fine-comments"
               }
             ]
           },
           "word-smith": {
             data: {
-              id: 1,
+              id: '1',
               type: "word-smiths"
             }
           }
@@ -73,7 +73,7 @@ test(`it can include a has many relationship`, function(assert) {
       },
       {
         type: 'blog-posts',
-        id: 2,
+        id: '2',
         attributes: {
           title: 'Ipsum'
         },
@@ -83,7 +83,7 @@ test(`it can include a has many relationship`, function(assert) {
           },
           "word-smith": {
             data: {
-              id: 1,
+              id: '1',
               type: "word-smiths"
             }
           }
@@ -110,15 +110,15 @@ test(`it can include a chain of has-many relationships`, function(assert) {
   assert.deepEqual(result, {
     data: {
       type: 'word-smiths',
-      id: 1,
+      id: '1',
       attributes: {
         'first-name': 'Link',
       },
       relationships: {
         'blog-posts': {
           data: [
-            {type: 'blog-posts', id: 1},
-            {type: 'blog-posts', id: 2},
+            {type: 'blog-posts', id: '1'},
+            {type: 'blog-posts', id: '2'},
           ]
         }
       }
@@ -126,19 +126,19 @@ test(`it can include a chain of has-many relationships`, function(assert) {
     included: [
       {
         type: 'blog-posts',
-        id: 1,
+        id: '1',
         attributes: {
           title: 'Lorem'
         },
         relationships: {
           'fine-comments': {
             data: [
-              {type: 'fine-comments', id: 1},
+              {type: 'fine-comments', id: '1'},
             ]
           },
           "word-smith": {
             data: {
-              id: 1,
+              id: '1',
               type: "word-smiths"
             }
           }
@@ -146,14 +146,14 @@ test(`it can include a chain of has-many relationships`, function(assert) {
       },
       {
         type: 'fine-comments',
-        id: 1,
+        id: '1',
         attributes: {
           text: 'pwned'
         },
         relationships: {
           "blog-post": {
             data: {
-              id: 1,
+              id: '1',
               type: "blog-posts"
             }
           }
@@ -161,7 +161,7 @@ test(`it can include a chain of has-many relationships`, function(assert) {
       },
       {
         type: 'blog-posts',
-        id: 2,
+        id: '2',
         attributes: {
           title: 'Ipsum'
         },
@@ -171,7 +171,7 @@ test(`it can include a chain of has-many relationships`, function(assert) {
           },
           "word-smith": {
             data: {
-              id: 1,
+              id: '1',
               type: "word-smiths"
             }
           }
@@ -195,7 +195,7 @@ test(`it can embed a belongs-to relationship`, function(assert) {
   assert.deepEqual(result, {
     data: {
       type: 'blog-posts',
-      id: 1,
+      id: '1',
       attributes: {
         title: 'Lorem'
       },
@@ -203,14 +203,14 @@ test(`it can embed a belongs-to relationship`, function(assert) {
         "fine-comments": {
           data: [
             {
-              id: 1,
+              id: '1',
               type: "fine-comments"
             }
           ]
         },
         'word-smith': {
           data: {
-            id: 1,
+            id: '1',
             type: "word-smiths"
           }
         }
@@ -221,17 +221,17 @@ test(`it can embed a belongs-to relationship`, function(assert) {
         attributes: {
           'first-name': "Link"
         },
-        id: 1,
+        id: '1',
         type: "word-smiths",
         relationships: {
           "blog-posts": {
             data: [
               {
-                id: 1,
+                id: '1',
                 type: "blog-posts"
               },
               {
-                id: 2,
+                id: '2',
                 type: "blog-posts"
               }
             ]
@@ -257,7 +257,7 @@ test(`it gracefully handles null belongs-to relationship`, function(assert) {
   assert.deepEqual(result, {
     data: {
       type: 'blog-posts',
-      id: 3,
+      id: '3',
       attributes: {
         title: 'Lorem3'
       },
@@ -287,14 +287,14 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
   assert.deepEqual(result, {
     data: {
       type: 'fine-comments',
-      id: 1,
+      id: '1',
       attributes: {
         text: 'pwned'
       },
       relationships: {
         'blog-post': {
           data: {
-            id: 1,
+            id: '1',
             type: "blog-posts"
           }
         }
@@ -303,7 +303,7 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
     "included": [
       {
         type: 'blog-posts',
-        id: 1,
+        id: '1',
         attributes: {
           title: 'Lorem'
         },
@@ -311,7 +311,7 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
           "fine-comments": {
             data: [
               {
-                id: 1,
+                id: '1',
                 type: "fine-comments"
               }
             ]
@@ -319,14 +319,14 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
           'word-smith': {
             data: {
               type: 'word-smiths',
-              id: 1
+              id: '1'
             }
           }
         }
       },
       {
         type: "word-smiths",
-        id: 1,
+        id: '1',
         attributes: {
           'first-name': "Link"
         },
@@ -334,11 +334,11 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
           "blog-posts": {
             data: [
               {
-                id: 1,
+                id: '1',
                 type: "blog-posts"
               },
               {
-                id: 2,
+                id: '2',
                 type: "blog-posts"
               }
             ]
@@ -368,12 +368,12 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
       attributes: {
         'first-name': "Link"
       },
-      id: 1,
+      id: '1',
       relationships: {
         'blog-posts': {
           data: [
-            {type: 'blog-posts', id: 1},
-            {type: 'blog-posts', id: 2},
+            {type: 'blog-posts', id: '1'},
+            {type: 'blog-posts', id: '2'},
           ]
         }
       },
@@ -384,25 +384,25 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
         attributes: {
           title: "Lorem"
         },
-        id: 1,
+        id: '1',
         relationships: {
           "fine-comments": {
             data: [
               {
-                id: 1,
+                id: '1',
                 type: "fine-comments"
               }
             ]
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: 1}
+            data: {type: 'word-smiths', id: '1'}
           }
         },
         type: "blog-posts"
       },
       {
         type: "blog-posts",
-        id: 2,
+        id: '2',
         attributes: {
           title: "Ipsum"
         },
@@ -411,7 +411,7 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
             data: []
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: 1}
+            data: {type: 'word-smiths', id: '1'}
           }
         },
       }
@@ -441,12 +441,12 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
       attributes: {
         'first-name': "Link"
       },
-      id: 1,
+      id: '1',
       relationships: {
         'blog-posts': {
           data: [
-            {type: 'blog-posts', id: 1},
-            {type: 'blog-posts', id: 2},
+            {type: 'blog-posts', id: '1'},
+            {type: 'blog-posts', id: '2'},
           ]
         }
       },
@@ -455,42 +455,42 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
     included: [
       {
         type: "blog-posts",
-        id: 1,
+        id: '1',
         attributes: {
           title: "Lorem"
         },
         relationships: {
           'word-smith': {
-            data: {type: 'word-smiths', id: 1}
+            data: {type: 'word-smiths', id: '1'}
           },
           'fine-comments': {
             data: [
-              {type: 'fine-comments', id: 1}
+              {type: 'fine-comments', id: '1'}
             ]
           }
         },
       },
       {
         type: "fine-comments",
-        id: 1,
+        id: '1',
         attributes: {
           text: 'pwned'
         },
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: 1}
+            data: {type: 'blog-posts', id: '1'}
           }
         },
       },
       {
         type: "blog-posts",
-        id: 2,
+        id: '2',
         attributes: {
           title: "Ipsum"
         },
         relationships: {
           'word-smith': {
-            data: {type: 'word-smiths', id: 1}
+            data: {type: 'word-smiths', id: '1'}
           },
           'fine-comments': {
             data: []

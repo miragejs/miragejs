@@ -73,7 +73,7 @@ test('create adds the data to the db', function(assert) {
   var contactsInDb = server.db.contacts;
 
   assert.equal(contactsInDb.length, 1);
-  assert.deepEqual(contactsInDb[0], {id: 1, name: 'Sam'});
+  assert.deepEqual(contactsInDb[0], {id: '1', name: 'Sam'});
 });
 
 test('create returns the new data in the db', function(assert) {
@@ -83,7 +83,7 @@ test('create returns the new data in the db', function(assert) {
 
   var contact = server.create('contact');
 
-  assert.deepEqual(contact, {id: 1, name: 'Sam'});
+  assert.deepEqual(contact, {id: '1', name: 'Sam'});
 });
 
 test('create allows for attr overrides', function(assert) {
@@ -94,8 +94,8 @@ test('create allows for attr overrides', function(assert) {
   var sam = server.create('contact');
   var link = server.create('contact', {name: 'Link'});
 
-  assert.deepEqual(sam, {id: 1, name: 'Sam'});
-  assert.deepEqual(link, {id: 2, name: 'Link'});
+  assert.deepEqual(sam, {id: '1', name: 'Sam'});
+  assert.deepEqual(link, {id: '2', name: 'Link'});
 });
 
 test('create allows for attr overrides with extended factories', function(assert) {
@@ -116,8 +116,8 @@ test('create allows for attr overrides with extended factories', function(assert
   var link = server.create('friend');
   var youngLink = server.create('friend', {age: 10});
 
-  assert.deepEqual(link, {id: 1, name: 'Link', age: 500, is_young: false});
-  assert.deepEqual(youngLink, {id: 2, name: 'Link', age: 10, is_young: true});
+  assert.deepEqual(link, {id: '1', name: 'Link', age: 500, is_young: false});
+  assert.deepEqual(youngLink, {id: '2', name: 'Link', age: 10, is_young: true});
 });
 
 test('create allows for attr overrides with arrays', function(assert) {
@@ -129,9 +129,9 @@ test('create allows for attr overrides with arrays', function(assert) {
   var link = server.create('contact', {name: ['Link']});
   var noname = server.create('contact', {name: []});
 
-  assert.deepEqual(sam, {id: 1, name: ['Sam', 'Carl']});
-  assert.deepEqual(link, {id: 2, name: ['Link']});
-  assert.deepEqual(noname, {id: 3, name: []});
+  assert.deepEqual(sam, {id: '1', name: ['Sam', 'Carl']});
+  assert.deepEqual(link, {id: '2', name: ['Link']});
+  assert.deepEqual(noname, {id: '3', name: []});
 });
 
 test('create allows for nested attr overrides', function(assert) {
@@ -149,8 +149,8 @@ test('create allows for nested attr overrides', function(assert) {
   var contact1 = server.create('contact');
   var contact2 = server.create('contact');
 
-  assert.deepEqual(contact1, {id: 1, address: {streetName: 'Main', streetAddress: 1000}});
-  assert.deepEqual(contact2, {id: 2, address: {streetName: 'Main', streetAddress: 1001}});
+  assert.deepEqual(contact1, {id: '1', address: {streetName: 'Main', streetAddress: 1000}});
+  assert.deepEqual(contact2, {id: '2', address: {streetName: 'Main', streetAddress: 1001}});
 });
 
 test('create allows for arrays of attr overrides', function(assert) {
@@ -168,8 +168,8 @@ test('create allows for arrays of attr overrides', function(assert) {
   var contact1 = server.create('contact');
   var contact2 = server.create('contact');
 
-  assert.deepEqual(contact1, {id: 1, websites: ['http://example.com', 'http://placekitten.com/320/240']});
-  assert.deepEqual(contact2, {id: 2, websites: ['http://example.com', 'http://placekitten.com/321/241']});
+  assert.deepEqual(contact1, {id: '1', websites: ['http://example.com', 'http://placekitten.com/320/240']});
+  assert.deepEqual(contact2, {id: '2', websites: ['http://example.com', 'http://placekitten.com/321/241']});
 });
 
 module('Unit | Server #createList', {
@@ -187,9 +187,9 @@ test('createList adds the given number of elements to the db', function(assert) 
   var contactsInDb = server.db.contacts;
 
   assert.equal(contactsInDb.length, 3);
-  assert.deepEqual(contactsInDb[0], {id: 1, name: 'Sam'});
-  assert.deepEqual(contactsInDb[1], {id: 2, name: 'Sam'});
-  assert.deepEqual(contactsInDb[2], {id: 3, name: 'Sam'});
+  assert.deepEqual(contactsInDb[0], {id: '1', name: 'Sam'});
+  assert.deepEqual(contactsInDb[1], {id: '2', name: 'Sam'});
+  assert.deepEqual(contactsInDb[2], {id: '3', name: 'Sam'});
 });
 
 test('createList returns the created elements', function(assert) {
@@ -201,9 +201,9 @@ test('createList returns the created elements', function(assert) {
   var contacts = server.createList('contact', 3);
 
   assert.equal(contacts.length, 3);
-  assert.deepEqual(contacts[0], {id: 2, name: 'Sam'});
-  assert.deepEqual(contacts[1], {id: 3, name: 'Sam'});
-  assert.deepEqual(contacts[2], {id: 4, name: 'Sam'});
+  assert.deepEqual(contacts[0], {id: '2', name: 'Sam'});
+  assert.deepEqual(contacts[1], {id: '3', name: 'Sam'});
+  assert.deepEqual(contacts[2], {id: '4', name: 'Sam'});
 });
 
 test('createList respects sequences', function(assert) {
@@ -217,9 +217,9 @@ test('createList respects sequences', function(assert) {
 
   var contacts = server.createList('contact', 3);
 
-  assert.deepEqual(contacts[0], {id: 1, name: 'name0'});
-  assert.deepEqual(contacts[1], {id: 2, name: 'name1'});
-  assert.deepEqual(contacts[2], {id: 3, name: 'name2'});
+  assert.deepEqual(contacts[0], {id: '1', name: 'name0'});
+  assert.deepEqual(contacts[1], {id: '2', name: 'name1'});
+  assert.deepEqual(contacts[2], {id: '3', name: 'name2'});
 });
 
 test('createList respects attr overrides', function(assert) {
@@ -230,10 +230,10 @@ test('createList respects attr overrides', function(assert) {
   var sams = server.createList('contact', 2);
   var links = server.createList('contact', 2, {name: 'Link'});
 
-  assert.deepEqual(sams[0], {id: 1, name: 'Sam'});
-  assert.deepEqual(sams[1], {id: 2, name: 'Sam'});
-  assert.deepEqual(links[0], {id: 3, name: 'Link'});
-  assert.deepEqual(links[1], {id: 4, name: 'Link'});
+  assert.deepEqual(sams[0], {id: '1', name: 'Sam'});
+  assert.deepEqual(sams[1], {id: '2', name: 'Sam'});
+  assert.deepEqual(links[0], {id: '3', name: 'Link'});
+  assert.deepEqual(links[1], {id: '4', name: 'Link'});
 });
 
 module('Unit | Server #build', {

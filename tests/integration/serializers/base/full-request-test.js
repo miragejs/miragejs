@@ -62,10 +62,10 @@ test('the appropriate serializer is used', function(assert) {
   }).done(function(res) {
     assert.deepEqual(res, {
       author: {
-        id: 1,
+        id: '1',
         first: 'Link',
         posts: [
-          {id: 1, title: 'Lorem ipsum'}
+          {id: '1', title: 'Lorem ipsum'}
         ]
       }
     });
@@ -92,7 +92,7 @@ test('a response falls back to the application serializer, if it exists', functi
     url: '/posts/1'
   }).done(function(res) {
     assert.deepEqual(res, {
-      id: 1,
+      id: '1',
       title: 'Lorem',
       date: '20001010'
     });

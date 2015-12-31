@@ -57,16 +57,16 @@ test(`model: it can include relationships specified by the include query param`,
   assert.propEqual(result, {
     data: {
       type: 'blog-posts',
-      id: 1,
+      id: '1',
       attributes: {},
       relationships: {
         'word-smith': {
-          data: {type: 'word-smiths', id: 1}
+          data: {type: 'word-smiths', id: '1'}
         },
         'fine-comments': {
           data: [
-            {type: 'fine-comments', id: 1},
-            {type: 'fine-comments', id: 2}
+            {type: 'fine-comments', id: '1'},
+            {type: 'fine-comments', id: '2'}
           ]
         }
       }
@@ -74,33 +74,33 @@ test(`model: it can include relationships specified by the include query param`,
     included: [
       {
         type: 'word-smiths',
-        id: 1,
+        id: '1',
         attributes: {},
         relationships: {
           'blog-posts': {
             data: [
-              {type: 'blog-posts', id: 1}
+              {type: 'blog-posts', id: '1'}
             ]
           }
         }
       },
       {
         type: 'fine-comments',
-        id: 1,
+        id: '1',
         attributes: {},
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: 1}
+            data: {type: 'blog-posts', id: '1'}
           }
         }
       },
       {
         type: 'fine-comments',
-        id: 2,
+        id: '2',
         attributes: {},
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: 1}
+            data: {type: 'blog-posts', id: '1'}
           }
         }
       }
@@ -127,16 +127,16 @@ test(`model: it can include relationships specified by a combination of the incl
   assert.propEqual(result, {
     data: {
       type: 'blog-posts',
-      id: 1,
+      id: '1',
       attributes: {},
       relationships: {
         'word-smith': {
-          data: {type: 'word-smiths', id: 1}
+          data: {type: 'word-smiths', id: '1'}
         },
         'fine-comments': {
           data: [
-            {type: 'fine-comments', id: 1},
-            {type: 'fine-comments', id: 2}
+            {type: 'fine-comments', id: '1'},
+            {type: 'fine-comments', id: '2'}
           ]
         }
       }
@@ -144,21 +144,21 @@ test(`model: it can include relationships specified by a combination of the incl
     included: [
       {
         type: 'fine-comments',
-        id: 1,
+        id: '1',
         attributes: {},
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: 1}
+            data: {type: 'blog-posts', id: '1'}
           }
         }
       },
       {
         type: 'fine-comments',
-        id: 2,
+        id: '2',
         attributes: {},
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: 1}
+            data: {type: 'blog-posts', id: '1'}
           }
         }
       }
@@ -186,16 +186,16 @@ test(`model: it can include relationships specified by a combination of the incl
   assert.propEqual(result, {
     data: {
       type: 'blog-posts',
-      id: 1,
+      id: '1',
       attributes: {},
       relationships: {
         'word-smith': {
-          data: {type: 'word-smiths', id: 1}
+          data: {type: 'word-smiths', id: '1'}
         },
         'fine-comments': {
           data: [
-            {type: 'fine-comments', id: 1},
-            {type: 'fine-comments', id: 2}
+            {type: 'fine-comments', id: '1'},
+            {type: 'fine-comments', id: '2'}
           ]
         }
       }
@@ -203,12 +203,12 @@ test(`model: it can include relationships specified by a combination of the incl
     included: [
       {
         type: 'word-smiths',
-        id: 1,
+        id: '1',
         attributes: {},
         relationships: {
           'blog-posts': {
             data: [
-              {type: 'blog-posts', id: 1}
+              {type: 'blog-posts', id: '1'}
             ]
           }
         }
@@ -235,23 +235,23 @@ test(`collection: it can include relationships specified by the include query pa
     data: [
       {
         type: 'blog-posts',
-        id: 1,
+        id: '1',
         attributes: {},
         relationships: {
           'word-smith': {
-            data: {type: 'word-smiths', id: 1}
+            data: {type: 'word-smiths', id: '1'}
           },
           'fine-comments': {
             data: [
-              {type: 'fine-comments', id: 1},
-              {type: 'fine-comments', id: 2}
+              {type: 'fine-comments', id: '1'},
+              {type: 'fine-comments', id: '2'}
             ]
           }
         }
       },
       {
         type: 'blog-posts',
-        id: 2,
+        id: '2',
         attributes: {},
         relationships: {
           'fine-comments': {
@@ -263,33 +263,33 @@ test(`collection: it can include relationships specified by the include query pa
     included: [
       {
         type: 'word-smiths',
-        id: 1,
+        id: '1',
         attributes: {},
         relationships: {
           'blog-posts': {
             data: [
-              {type: 'blog-posts', id: 1}
+              {type: 'blog-posts', id: '1'}
             ]
           }
         }
       },
       {
         type: 'fine-comments',
-        id: 1,
+        id: '1',
         attributes: {},
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: 1}
+            data: {type: 'blog-posts', id: '1'}
           }
         }
       },
       {
         type: 'fine-comments',
-        id: 2,
+        id: '2',
         attributes: {},
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: 1}
+            data: {type: 'blog-posts', id: '1'}
           }
         }
       }
@@ -314,33 +314,33 @@ test(`dot-paths in include query params include query param`, function(assert) {
   assert.propEqual(result, {
     data: {
       type: 'foos',
-      id: 1,
+      id: '1',
       attributes: {},
       relationships: {
         'bar': {
-          data: {type: 'bars', id: 1}
+          data: {type: 'bars', id: '1'}
         }
       }
     },
     included: [
       {
         type: 'lols',
-        id: 1,
+        id: '1',
         attributes: {},
       },
       {
         type: 'lols',
-        id: 2,
+        id: '2',
         attributes: {},
       },
       {
         type: 'lols',
-        id: 3,
+        id: '3',
         attributes: {},
       },
       {
         type: 'lols',
-        id: 4,
+        id: '4',
         attributes: {},
       },
     ]

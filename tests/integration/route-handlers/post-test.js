@@ -20,7 +20,7 @@ test('undefined shorthand works', function(assert) {
   let result = handler.handle(request);
 
   assert.equal(this.db.contacts.length, 1);
-  assert.deepEqual(result, {contact: {id: 1, first_name: 'Ganon'}});
+  assert.deepEqual(result, {contact: {id: '1', first_name: 'Ganon'}});
 });
 
 test('string shorthand works', function(assert) {
@@ -31,7 +31,7 @@ test('string shorthand works', function(assert) {
   let result = handler.handle(request);
 
   assert.equal(this.db.contacts.length, 1);
-  assert.deepEqual(result, {contact: {id: 1, first_name: 'Ganon'}});
+  assert.deepEqual(result, {contact: {id: '1', first_name: 'Ganon'}});
 });
 
 test('undefined shorthand works when query params present', function(assert) {
@@ -42,5 +42,5 @@ test('undefined shorthand works when query params present', function(assert) {
   let result = handler.handle(request);
 
   assert.equal(this.db.contacts.length, 1);
-  assert.deepEqual(result, {contact: {id: 1, first_name: 'Ganon'}});
+  assert.deepEqual(result, {contact: {id: '1', first_name: 'Ganon'}});
 });

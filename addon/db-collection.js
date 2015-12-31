@@ -1,6 +1,7 @@
 import _assign from 'lodash/object/assign';
 import _isArray from 'lodash/lang/isArray';
 import _isEqual from 'lodash/lang/isEqual';
+import _sortBy from 'lodash/collection/sortBy';
 
 function duplicate(data) {
   if (_isArray(data)) {
@@ -39,19 +40,7 @@ class DbCollection {
       return this._insertRecord(data);
     } else {
       // Need to sort in order to ensure IDs inserted in the correct order
-      return data
-        .sort(function(a, b) {
-          // typeof ... is to hack around Chrome versus Phantom behaviour
-          if (typeof a.id === 'string' || a.id < b.id) {
-            return -1;
-          } else if (a.id === b.id) {
-            return 0;
-          }
-          else {
-            return 1;
-          }
-        })
-        .map(this._insertRecord.bind(this));
+      return _sortBy(data, 'id').map(this._insertRecord.bind(this));
     }
   }
 
@@ -178,12 +167,7 @@ class DbCollection {
   */
 
   _findRecord(id) {
-    let allDigitsRegex = /^\d+$/;
-
-    // If parses, coerce to integer
-    if (typeof id === 'string' && allDigitsRegex.test(id)) {
-      id = parseInt(id, 10);
-    }
+    id = id.toString();
 
     let record = this._records.filter(obj => obj.id === id)[0];
 
@@ -218,6 +202,8 @@ class DbCollection {
     if (attrs && (attrs.id === undefined || attrs.id === null)) {
       attrs.id = this.identityManager.fetch();
     } else {
+      attrs.id = attrs.id.toString();
+
       this.identityManager.set(attrs.id);
     }
 
@@ -227,10 +213,15 @@ class DbCollection {
   }
 
   _updateRecord(record, attrs) {
+    let targetId = (attrs && attrs.hasOwnProperty('id')) ? attrs.id.toString() : null;
+    let currentId = record.id;
+
+    if (targetId && currentId !== targetId) {
+      throw new Error('Updating the ID of a record is not permitted');
+    }
+
     for (let attr in attrs) {
-      if (attr === 'id' && record[attr] !== attrs[attr]) {
-        throw new Error('Updating the ID of a record is not permitted');
-      }
+      if (attr === 'id') { continue; }
 
       record[attr] = attrs[attr];
     }
@@ -274,7 +265,7 @@ class IdentityManagaer {
 
     this.inc();
 
-    return id;
+    return id.toString();
   }
 
   reset() {

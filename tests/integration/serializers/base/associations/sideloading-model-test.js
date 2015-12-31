@@ -53,13 +53,13 @@ test(`it can sideload a model with a has-many relationship`, function(assert) {
 
   assert.deepEqual(result, {
     wordSmith: {
-      id: 1,
+      id: '1',
       name: 'Link',
-      blogPostIds: [1, 2]
+      blogPostIds: ['1', '2']
     },
     blogPosts: [
-      {id: 1, title: 'Lorem', wordSmithId: 1},
-      {id: 2, title: 'Ipsum', wordSmithId: 1}
+      {id: '1', title: 'Lorem', wordSmithId: '1'},
+      {id: '2', title: 'Ipsum', wordSmithId: '1'}
     ]
   });
 });
@@ -80,16 +80,16 @@ test(`it can sideload a model with a chain of has-many relationships`, function(
 
   assert.deepEqual(result, {
     wordSmith: {
-      id: 1,
+      id: '1',
       name: 'Link',
-      blogPostIds: [1, 2]
+      blogPostIds: ['1', '2']
     },
     blogPosts: [
-      {id: 1, title: 'Lorem', wordSmithId: 1, fineCommentIds: [1]},
-      {id: 2, title: 'Ipsum', wordSmithId: 1, fineCommentIds: []}
+      {id: '1', title: 'Lorem', wordSmithId: '1', fineCommentIds: ['1']},
+      {id: '2', title: 'Ipsum', wordSmithId: '1', fineCommentIds: []}
     ],
     fineComments: [
-      {id: 1, text: 'pwned', blogPostId: 1}
+      {id: '1', text: 'pwned', blogPostId: '1'}
     ]
   });
 });
@@ -110,13 +110,13 @@ test(`it avoids circularity when serializing a model`, function(assert) {
 
   assert.deepEqual(result, {
     wordSmith: {
-      id: 1,
+      id: '1',
       name: 'Link',
-      blogPostIds: [1, 2]
+      blogPostIds: ['1', '2']
     },
     blogPosts: [
-      {id: 1, title: 'Lorem', wordSmithId: 1},
-      {id: 2, title: 'Ipsum', wordSmithId: 1}
+      {id: '1', title: 'Lorem', wordSmithId: '1'},
+      {id: '2', title: 'Ipsum', wordSmithId: '1'}
     ]
   });
 });
@@ -134,10 +134,10 @@ test(`it can sideload a model with a belongs-to relationship`, function(assert) 
 
   assert.deepEqual(result, {
     blogPost: {
-      id: 1, title: 'Lorem', wordSmithId: 1
+      id: '1', title: 'Lorem', wordSmithId: '1'
     },
     wordSmiths: [
-      {id: 1, name: 'Link'}
+      {id: '1', name: 'Link'}
     ]
   });
 });
@@ -158,13 +158,13 @@ test(`it can sideload a model with a chain of belongs-to relationships`, functio
 
   assert.deepEqual(result, {
     fineComment: {
-      id: 1, text: 'pwned', blogPostId: 1
+      id: '1', text: 'pwned', blogPostId: '1'
     },
     blogPosts: [
-      {id: 1, title: 'Lorem', wordSmithId: 1}
+      {id: '1', title: 'Lorem', wordSmithId: '1'}
     ],
     wordSmiths: [
-      {id: 1, name: 'Link'}
+      {id: '1', name: 'Link'}
     ]
   });
 });

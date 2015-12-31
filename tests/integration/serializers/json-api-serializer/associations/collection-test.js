@@ -35,22 +35,22 @@ test(`it can serialize a collection with a has-many relationship`, function(asse
     data: [
       {
         type: 'word-smiths',
-        id: 1,
+        id: '1',
         attributes: {
           'first-name': 'Link',
         },
         relationships: {
           'blog-posts': {
             data: [
-              {type: 'blog-posts', id: 1},
-              {type: 'blog-posts', id: 2},
+              {type: 'blog-posts', id: '1'},
+              {type: 'blog-posts', id: '2'},
             ]
           }
         }
       },
       {
         type: 'word-smiths',
-        id: 2,
+        id: '2',
         attributes: {
           'first-name': 'Zelda'
         },
@@ -64,24 +64,24 @@ test(`it can serialize a collection with a has-many relationship`, function(asse
     included: [
       {
         type: 'blog-posts',
-        id: 1,
+        id: '1',
         attributes: {
           title: 'Lorem'
         },
         relationships: {
           'fine-comments': {
             data: [
-              {type: 'fine-comments', id: 1}
+              {type: 'fine-comments', id: '1'}
             ]
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: 1}
+            data: {type: 'word-smiths', id: '1'}
           }
         }
       },
       {
         type: 'blog-posts',
-        id: 2,
+        id: '2',
         attributes: {
           title: 'Ipsum'
         },
@@ -90,7 +90,7 @@ test(`it can serialize a collection with a has-many relationship`, function(asse
             data: []
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: 1}
+            data: {type: 'word-smiths', id: '1'}
           }
         }
       }
@@ -116,22 +116,22 @@ test(`it can serialize a collection with a chain of has-many relationships`, fun
     data: [
       {
         type: 'word-smiths',
-        id: 1,
+        id: '1',
         attributes: {
           'first-name': 'Link',
         },
         relationships: {
           'blog-posts': {
             data: [
-              {type: 'blog-posts', id: 1},
-              {type: 'blog-posts', id: 2},
+              {type: 'blog-posts', id: '1'},
+              {type: 'blog-posts', id: '2'},
             ]
           }
         }
       },
       {
         type: 'word-smiths',
-        id: 2,
+        id: '2',
         attributes: {
           'first-name': 'Zelda'
         },
@@ -145,36 +145,36 @@ test(`it can serialize a collection with a chain of has-many relationships`, fun
     included: [
       {
         type: 'blog-posts',
-        id: 1,
+        id: '1',
         attributes: {
           title: 'Lorem'
         },
         relationships: {
           'fine-comments': {
             data: [
-              {type: 'fine-comments', id: 1}
+              {type: 'fine-comments', id: '1'}
             ]
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: 1}
+            data: {type: 'word-smiths', id: '1'}
           }
         }
       },
       {
         type: 'fine-comments',
-        id: 1,
+        id: '1',
         attributes: {
           text: 'pwned'
         },
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: 1}
+            data: {type: 'blog-posts', id: '1'}
           }
         }
       },
       {
         type: 'blog-posts',
-        id: 2,
+        id: '2',
         attributes: {
           title: 'Ipsum'
         },
@@ -183,7 +183,7 @@ test(`it can serialize a collection with a chain of has-many relationships`, fun
             data: []
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: 1}
+            data: {type: 'word-smiths', id: '1'}
           }
         }
       }
@@ -206,24 +206,24 @@ test(`it can serialize a collection with a belongs-to relationship`, function(as
     data: [
       {
         type: 'blog-posts',
-        id: 1,
+        id: '1',
         attributes: {
           title: 'Lorem'
         },
         relationships: {
           'fine-comments': {
             data: [
-              {type: 'fine-comments', id: 1}
+              {type: 'fine-comments', id: '1'}
             ]
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: 1}
+            data: {type: 'word-smiths', id: '1'}
           }
         }
       },
       {
         type: 'blog-posts',
-        id: 2,
+        id: '2',
         attributes: {
           title: 'Ipsum'
         },
@@ -232,7 +232,7 @@ test(`it can serialize a collection with a belongs-to relationship`, function(as
             data: []
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: 1}
+            data: {type: 'word-smiths', id: '1'}
           }
         }
       }
@@ -240,15 +240,15 @@ test(`it can serialize a collection with a belongs-to relationship`, function(as
     included: [
       {
         type: 'word-smiths',
-        id: 1,
+        id: '1',
         attributes: {
           'first-name': 'Link',
         },
         relationships: {
           'blog-posts': {
             data: [
-              {type: 'blog-posts', id: 1},
-              {type: 'blog-posts', id: 2}
+              {type: 'blog-posts', id: '1'},
+              {type: 'blog-posts', id: '2'}
             ]
           }
         }
@@ -275,13 +275,13 @@ test(`it can serialize a collection with a chain of belongs-to relationships`, f
     data: [
       {
         type: 'fine-comments',
-        id: 1,
+        id: '1',
         attributes: {
           text: 'pwned'
         },
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: 1}
+            data: {type: 'blog-posts', id: '1'}
           }
         }
       }
@@ -289,7 +289,7 @@ test(`it can serialize a collection with a chain of belongs-to relationships`, f
     included: [
       {
         type: 'blog-posts',
-        id: 1,
+        id: '1',
         attributes: {
           title: 'Lorem'
         },
@@ -297,19 +297,19 @@ test(`it can serialize a collection with a chain of belongs-to relationships`, f
           "fine-comments": {
             data: [
               {
-                  id: 1,
+                id: '1',
                 type: "fine-comments"
               }
             ]
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: 1}
+            data: {type: 'word-smiths', id: '1'}
           }
         }
       },
       {
         type: 'word-smiths',
-        id: 1,
+        id: '1',
         attributes: {
           'first-name': 'Link'
         },
@@ -317,11 +317,11 @@ test(`it can serialize a collection with a chain of belongs-to relationships`, f
           "blog-posts": {
             data: [
               {
-                id: 1,
+                id: '1',
                 type: "blog-posts"
               },
               {
-                id: 2,
+                id: '2',
                 type: "blog-posts"
               }
             ]
@@ -346,23 +346,23 @@ test(`it can serialize a collection of models that have both belongs-to and has-
   assert.deepEqual(result, {
     data: {
       type: 'blog-posts',
-      id: 1,
+      id: '1',
       attributes: {
         title: 'Lorem'
       },
       relationships: {
         'word-smith': {
-          data: {type: 'word-smiths', id: 1}
+          data: {type: 'word-smiths', id: '1'}
         },
         'fine-comments': {
-          data: [{type: 'fine-comments', id: 1}]
+          data: [{type: 'fine-comments', id: '1'}]
         }
       }
     },
     included: [
       {
         type: 'word-smiths',
-        id: 1,
+        id: '1',
         attributes: {
           'first-name': 'Link'
         },
@@ -370,11 +370,11 @@ test(`it can serialize a collection of models that have both belongs-to and has-
           "blog-posts": {
             data: [
               {
-                id: 1,
+                id: '1',
                 type: "blog-posts"
               },
               {
-                id: 2,
+                id: '2',
                 type: "blog-posts"
               }
             ]
@@ -383,14 +383,14 @@ test(`it can serialize a collection of models that have both belongs-to and has-
       },
       {
         type: 'fine-comments',
-        id: 1,
+        id: '1',
         attributes: {
           'text': 'pwned'
         },
         relationships: {
           "blog-post": {
             data: {
-              id: 1,
+              id: '1',
               type: "blog-posts"
             }
           }

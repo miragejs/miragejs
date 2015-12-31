@@ -32,7 +32,7 @@ test(`keyForAttribute formats the attributes of a model`, function(assert) {
 
   assert.deepEqual(result, {
     wordSmith: {
-      id: 1,
+      id: '1',
       firstName: 'Link',
       lastName: 'Jackson',
       age: 323
@@ -49,8 +49,8 @@ test(`keyForAttribute also formats the models in a collections`, function(assert
 
   assert.deepEqual(result, {
     wordSmiths: [
-      {id: 1, firstName: 'Link', lastName: 'Jackson'},
-      {id: 2, firstName: 'Zelda', lastName: 'Brown'}
+      {id: '1', firstName: 'Link', lastName: 'Jackson'},
+      {id: '2', firstName: 'Zelda', lastName: 'Brown'}
     ]
   });
 });

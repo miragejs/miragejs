@@ -20,13 +20,13 @@ module('Integration | Serializers | Base | Root', {
 
 test(`if root is false, it serializes a model by returning its attrs`, function(assert) {
   var wordSmith = this.schema.wordSmith.create({
-    id: 1,
+    id: '1',
     name: 'Link',
   });
 
   var result = this.registry.serialize(wordSmith);
   assert.deepEqual(result, {
-    id: 1,
+    id: '1',
     name: 'Link',
   });
 });
@@ -39,8 +39,8 @@ test(`if root is false, it serializes a collection of models by returning an arr
   var result = this.registry.serialize(wordSmiths);
 
   assert.deepEqual(result, [
-    {id: 1, name: 'Link'},
-    {id: 2, name: 'Zelda'}
+    {id: '1', name: 'Link'},
+    {id: '2', name: 'Zelda'}
   ]);
 });
 

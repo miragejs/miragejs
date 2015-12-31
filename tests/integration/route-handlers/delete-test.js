@@ -7,12 +7,12 @@ module('Integration | Route Handlers | DELETE', {
 
   beforeEach: function() {
     this.contacts = [
-      {id: 1, name: 'Link', address_ids: [1]},
-      {id: 2, name: 'Zelda', address_ids: [2]}
+      {id: '1', name: 'Link', address_ids: [1]},
+      {id: '2', name: 'Zelda', address_ids: [2]}
     ];
     this.addresses = [
-      {id: 1, name: '123 Hyrule Way', contact_id: 1},
-      {id: 2, name: '456 Hyrule Way', contact_id: 2}
+      {id: '1', name: '123 Hyrule Way', contact_id: 1},
+      {id: '2', name: '456 Hyrule Way', contact_id: 2}
     ];
 
     this.db = new Db({
