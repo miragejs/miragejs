@@ -7,6 +7,16 @@ import { pluralize, camelize } from './utils/inflector';
 import _assign from 'lodash/object/assign';
 import _isArray from 'lodash/lang/isArray';
 
+function isModel(object) {
+  return object instanceof Model;
+}
+
+// TODO: Once we implement https://github.com/samselikoff/ember-cli-mirage/issues/450, this should
+// simplify to `object instanceof Collection`
+function isCollection(object) {
+  return object instanceof Collection || (_isArray(object) && isModel(object[0]));
+}
+
 export default class SerializerRegistry {
 
   constructor(schema, serializerMap = {}) {
@@ -16,14 +26,15 @@ export default class SerializerRegistry {
   }
 
   normalize(payload) {
-    return this._serializerFor(payload[Object.keys(payload)[0]]).normalize(payload);
+    let model = payload[Object.keys(payload)[0]];
+    return this._serializerFor(model.modelName).normalize(payload);
   }
 
   serialize(response, request) {
     this.alreadySerialized = {};
 
     if (this._isModelOrCollection(response)) {
-      let serializer = this._serializerFor(response);
+      let serializer = this._serializerFor(response.modelName);
 
       /*
         TODO:
@@ -41,7 +52,7 @@ export default class SerializerRegistry {
       if (serializer.embed) {
         let json;
 
-        if (this._isModel(response)) {
+        if (isModel(response)) {
           json = this._serializeModel(response, request);
         } else {
           json = response.reduce((allAttrs, model) => {
@@ -64,9 +75,9 @@ export default class SerializerRegistry {
       The array shorthand can return this, e.g.
         this.get('/home', ['authors', 'photos'])
     */
-    } else if (_isArray(response) && response.filter(item => (this._isCollection(item))).length) {
+    } else if (_isArray(response) && response.filter(isCollection).length) {
       return response.reduce((json, collection) => {
-        let serializer = this._serializerFor(collection);
+        let serializer = this._serializerFor(collection.modelName);
 
         if (serializer.embed) {
           json[pluralize(collection.modelName)] = this._serializeModelOrCollection(collection);
@@ -84,7 +95,7 @@ export default class SerializerRegistry {
   }
 
   _serializeSideloadedModelOrCollection(modelOrCollection) {
-    if (this._isModel(modelOrCollection)) {
+    if (isModel(modelOrCollection)) {
       return this._serializeSideloadedModelResponse(modelOrCollection);
     } else if (modelOrCollection.length) {
 
@@ -100,7 +111,7 @@ export default class SerializerRegistry {
   }
 
   _serializeSideloadedModelResponse(model, topLevelIsArray = false, allAttrs = {}, root = null) {
-    let serializer = this._serializerFor(model);
+    let serializer = this._serializerFor(model.modelName);
 
     // Add this model's attrs
     this._augmentAlreadySerialized(model);
@@ -119,7 +130,7 @@ export default class SerializerRegistry {
     serializer.include
       .map(key => model[camelize(key)])
       .forEach(relationship => {
-        let relatedModels = this._isModel(relationship) ? [relationship] : relationship;
+        let relatedModels = isModel(relationship) ? [relationship] : relationship;
 
         relatedModels.forEach(relatedModel => {
           if (this._hasBeenSerialized(relatedModel)) {
@@ -134,14 +145,14 @@ export default class SerializerRegistry {
   }
 
   _formatResponse(modelOrCollection, attrs) {
-    let serializer = this._serializerFor(modelOrCollection);
+    let serializer = this._serializerFor(modelOrCollection.modelName);
     let key = this._keyForModelOrCollection(modelOrCollection);
 
     return serializer.root ? { [key]: attrs } : attrs;
   }
 
   _serializeModelOrCollection(modelOrCollection, removeForeignKeys, serializeRelationships) {
-    if (this._isModel(modelOrCollection)) {
+    if (isModel(modelOrCollection)) {
       return this._serializeModel(modelOrCollection, removeForeignKeys, serializeRelationships);
 
     } else {
@@ -163,7 +174,7 @@ export default class SerializerRegistry {
   }
 
   _attrsForModel(model, removeForeignKeys, embedRelatedIds) {
-    let serializer = this._serializerFor(model);
+    let serializer = this._serializerFor(model.modelName);
     let attrs = serializer.serialize(model);
 
     if (removeForeignKeys) {
@@ -175,7 +186,7 @@ export default class SerializerRegistry {
     if (embedRelatedIds) {
       serializer.include
         .map(key => model[camelize(key)])
-        .filter(relatedCollection => this._isCollection(relatedCollection))
+        .filter(isCollection)
         .forEach(relatedCollection => {
           attrs[serializer.keyForRelationshipIds(relatedCollection.modelName)] = relatedCollection.map(obj => obj.id);
         });
@@ -185,7 +196,7 @@ export default class SerializerRegistry {
   }
 
   _attrsForRelationships(model) {
-    let serializer = this._serializerFor(model);
+    let serializer = this._serializerFor(model.modelName);
 
     return serializer.include.reduce((attrs, key) => {
       let relatedAttrs = this._serializeModelOrCollection(model[camelize(key)]);
@@ -215,8 +226,8 @@ export default class SerializerRegistry {
     this.alreadySerialized = {};
   }
 
-  _serializerFor(modelOrCollection) {
-    let type = modelOrCollection.modelName ? camelize(modelOrCollection.modelName) : null;
+  _serializerFor(modelName) {
+    let type = modelName ? camelize(modelName) : null;
     let ModelSerializer = this._serializerMap && (this._serializerMap[type] || this._serializerMap['application']);
 
     /*
@@ -230,24 +241,14 @@ export default class SerializerRegistry {
     return ModelSerializer ? new ModelSerializer(this._serializerMap) : this.baseSerializer;
   }
 
-  _isModel(object) {
-    return object instanceof Model;
-  }
-
-  // TODO: Once we implement https://github.com/samselikoff/ember-cli-mirage/issues/450, this should
-  // simplify to `object instanceof Collection`
-  _isCollection(object) {
-    return object instanceof Collection || (_isArray(object) && this._isModel(object[0]));
-  }
-
   _isModelOrCollection(object) {
-    return this._isModel(object) || this._isCollection(object);
+    return isModel(object) || isCollection(object);
   }
 
   _keyForModelOrCollection(modelOrCollection) {
-    let serializer = this._serializerFor(modelOrCollection);
+    let serializer = this._serializerFor(modelOrCollection.modelName);
 
-    if (this._isModel(modelOrCollection)) {
+    if (isModel(modelOrCollection)) {
       return serializer.keyForModel(modelOrCollection.modelName);
     } else {
       return serializer.keyForCollection(modelOrCollection.modelName);
