@@ -31,6 +31,7 @@ Changes:
   - [BREAKING CHANGE] Serializer#relationships was renamed to Serializer#include #424 @lolmaus
   - [BREAKING CHANGE] Change `model.type` to `model.modelName`, ensure it's dasherized #454
   - [BREAKING CHANGE] Inserting records with numerical IDs that have already have been used will throw an per changes from #417
+  - [BREAKING CHANGE] DB stores ids as strings #462 @jherdman
   - [FEATURE] Add `?include` query param support in JSONAPISerializer @lolmaus
   - [FEATURE] Add `build` & `buildList` to factories #459 @ballpointpenguin
   - [ENHANCEMENT] JSONAPISerializer defaults to dasherized types and relationships (and other JSONAPI enhancements) @lolmaus
