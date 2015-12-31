@@ -1,13 +1,13 @@
 export default class FunctionRouteHandler {
 
-  constructor(dbOrSchema, serializerOrRegistry, userFunction) {
-    this.dbOrSchema = dbOrSchema;
+  constructor(schema, serializerOrRegistry, userFunction) {
+    this.schema = schema;
     this.serializerOrRegistry = serializerOrRegistry;
     this.userFunction = userFunction;
   }
 
   handle(request) {
-    return this.userFunction(this.dbOrSchema, request);
+    return this.userFunction(this.schema, request);
   }
 
 }

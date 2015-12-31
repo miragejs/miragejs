@@ -6,7 +6,7 @@ import Mirage from 'ember-cli-mirage';
 import GetShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthands/get';
 import JSONAPISerializer from 'ember-cli-mirage/serializers/json-api-serializer';
 
-module('Integration | Route Handlers | GET with ORM', {
+module('Integration | Route Handlers | GET shorthand', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development',
@@ -196,4 +196,13 @@ test('shorthand for list of models with a dash in their name', function(assert) 
   assert.equal(models.length, 1);
   assert.ok(models[0] instanceof Model);
   assert.equal(models[0].modelName, 'project-owner');
+});
+
+test('if a shorthand tries to access an unknown type it throws an error', function(assert) {
+  let request = {url: '/foobars'};
+  let handler = new GetShorthandRouteHandler(this.schema, this.serializer);
+
+  assert.throws(function() {
+    handler.handle(request);
+  }, /model doesn't exist/);
 });

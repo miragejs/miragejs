@@ -1,13 +1,16 @@
 import {module, test} from 'qunit';
-import { Factory } from 'ember-cli-mirage';
+import { Model, ActiveModelSerializer } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
 
 module('Integration | Server | Shorthand sanity check', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'test',
-      factories: {
-        contact: Factory
+      models: {
+        contact: Model
+      },
+      serializers: {
+        application: ActiveModelSerializer
       }
     });
     this.server.timing = 0;

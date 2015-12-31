@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import MirageError from 'ember-cli-mirage/error';
 import Response from './response';
 import FunctionHandler from './route-handlers/function';
 import ObjectHandler from './route-handlers/object';
@@ -14,10 +15,10 @@ const { isBlank, typeOf } = Ember;
 
 export default class RouteHandler {
 
-  constructor(dbOrSchema, verb, args, serializerOrRegistry) {
+  constructor(schema, verb, args, serializerOrRegistry) {
     let [rawHandler, customizedCode, options] = this._extractArguments(args);
 
-    this.dbOrSchema = dbOrSchema;
+    this.schema = schema;
     this.serializerOrRegistry = serializerOrRegistry;
     this.verb = verb;
     this.rawHandler = rawHandler;
@@ -34,7 +35,7 @@ export default class RouteHandler {
 
   _getMirageResponseForRequest(request) {
     let type = this._rawHandlerType();
-    let args = [ this.dbOrSchema, this.serializerOrRegistry, this.rawHandler, this.options ];
+    let args = [ this.schema, this.serializerOrRegistry, this.rawHandler, this.options ];
     let handler;
     if (type === 'function') {
       handler = new FunctionHandler(...args);
@@ -54,8 +55,12 @@ export default class RouteHandler {
 
     try {
       response = handler.handle(request);
-    } catch(error) {
-      throw new Error('Mirage: Your handler for the url ' + request.url + ' threw an error:', error.message, error.stack);
+    } catch(e) {
+      if (e instanceof MirageError) {
+        throw e;
+      } else {
+        throw new MirageError(`Your handler for the url ${request.url} threw an error: ${e.message}`);
+      }
     }
 
     return this._toMirageResponse(response);

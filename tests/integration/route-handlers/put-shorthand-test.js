@@ -4,7 +4,7 @@ import Server from 'ember-cli-mirage/server';
 import Model from 'ember-cli-mirage/orm/model';
 import JSONAPISerializer from 'ember-cli-mirage/serializers/json-api-serializer';
 
-module('Integration | Route Handlers | PUT with ORM', {
+module('Integration | Route Handlers | PUT shorthand', {
 
   beforeEach: function() {
     this.server = new Server({
@@ -76,4 +76,14 @@ test('string shorthand updates the record of the specified type and returns the 
   assert.ok(model instanceof Model);
   assert.equal(model.modelName, 'author');
   assert.equal(model.firstName, 'Ganondorf');
+});
+
+test('if a shorthand tries to access an unknown type it throws an error', function(assert) {
+  let handler = new PutShorthandRouteHandler(this.schema, this.serializer);
+  let request = {requestBody: JSON.stringify(this.body), url: '/foobars/1', params: {id: '1'}};
+
+  assert.throws(function() {
+    handler.handle(request);
+  }, /model doesn't exist/);
+  assert.ok(true);
 });

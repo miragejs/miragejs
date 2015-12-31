@@ -7,7 +7,7 @@ module('Integration | Server with ORM', {
     this.server = new Server({
       environment: 'test',
       models: {
-        'blog-post': Model
+        blogPost: Model
       },
       factories: {
         'blog-post': Factory

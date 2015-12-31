@@ -28,10 +28,13 @@ Update notes:
   - `model.type` was renamed to `model.modelName`, and is dasherized (instead of camelized)
 
 Changes:
+  - [BREAKING CHANGE] POST and PUT shorthands require a Serializer#normalize function, and will transform your attrs to camelCase. To keep using the db yourself, write custom POST and PUT route handlers.
   - [BREAKING CHANGE] Serializer#relationships was renamed to Serializer#include #424 @lolmaus
   - [BREAKING CHANGE] Change `model.type` to `model.modelName`, ensure it's dasherized #454
   - [BREAKING CHANGE] Inserting records with numerical IDs that have already have been used will throw an per changes from #417
   - [BREAKING CHANGE] DB stores ids as strings #462 @jherdman
+  - [BREAKING CHANGE] GET shorthand with single owner and many children throws an error.
+  - [BREAKING CHANGE] Arrays in shorthands should always contain singularzied model names (e.g. dasherized)
   - [FEATURE] Add `?include` query param support in JSONAPISerializer @lolmaus
   - [FEATURE] Add `build` & `buildList` to factories #459 @ballpointpenguin
   - [ENHANCEMENT] JSONAPISerializer defaults to dasherized types and relationships (and other JSONAPI enhancements) @lolmaus

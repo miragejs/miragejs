@@ -1,131 +1,60 @@
+import MirageError from 'ember-cli-mirage/error';
 import BaseShorthandRouteHandler from './base';
-import Response from 'ember-cli-mirage/response';
-import { singularize, pluralize, camelize } from 'ember-cli-mirage/utils/inflector';
-import Db from 'ember-cli-mirage/db';
+import { singularize, camelize } from 'ember-cli-mirage/utils/inflector';
 
 export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler {
 
   /*
-    Retrieve *key* from the db. If it's singular,
-    retrieve a single model by id.
+    Retrieve a model/collection from the db.
 
     Examples:
-      this.stub('get', '/contacts', 'contacts');
-      this.stub('get', '/contacts/:id', 'contact');
+      this.get('/contacts', 'contact');
+      this.get('/contacts/:id', 'contact');
   */
-  handleStringShorthand(modelName, dbOrSchema, request, options = {}) {
+  handleStringShorthand(modelName, schema, request, options = {}) {
     let id = this._getIdForRequest(request);
+    let type = camelize(modelName);
 
-    if (dbOrSchema instanceof Db) {
-      let db = dbOrSchema;
-      let collection = pluralize(camelize(modelName));
-      let data = {};
-      let record;
+    if (!schema[type]) {
+      throw new MirageError(`The route handler for ${request.url} is trying to access the ${type} model, but that model doesn't exist. Create it using 'ember g mirage-model ${modelName}'.`);
+    }
 
-      if (!db[collection]) {
-        throw new Error("Mirage: The route handler for " + request.url + " is requesting data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
-      }
-
-      if (id) {
-        record = db[collection].find(id);
-        if (!record) {
-          return new Response(404, {}, {});
-        }
-        data[modelName] = record;
-      } else if (options.coalesce && request.queryParams && request.queryParams.ids) {
-        data[pluralize(modelName)] = db[collection].find(request.queryParams.ids);
-      } else {
-        data[pluralize(modelName)] = db[collection];
-      }
-      return data;
+    if (id) {
+      return schema[type].find(id);
+    } else if (options.coalesce && request.queryParams && request.queryParams.ids) {
+      return schema[type].find(request.queryParams.ids);
     } else {
-      let schema = dbOrSchema;
-      let type = camelize(modelName);
-
-      if (id) {
-        return schema[type].find(id);
-      } else if (options.coalesce && request.queryParams && request.queryParams.ids) {
-        return schema[type].find(request.queryParams.ids);
-      } else {
-        return schema[type].all();
-      }
+      return schema[type].all();
     }
   }
 
   /*
-    Retrieve *keys* from the db.
+    Retrieve an array of collections from the db.
 
-    If all keys plural, retrieve all objects from db.
-      Ex: this.stub('get', '/contacts', ['contacts', 'pictures']);
-
-
-    If first is singular, find first by id, and filter all
-    subsequent models by related.
-      Ex: this.stub('get', '/contacts/:id', ['contact', 'addresses']);
+    Ex: this.get('/home', ['contacts', 'pictures']);
   */
-  handleArrayShorthand(array, dbOrSchema, request) {
-    var keys = array;
-    var owner;
-    var ownerKey;
+  handleArrayShorthand(array, schema, request) {
+    let keys = array;
 
-    if (dbOrSchema instanceof Db) {
-      let data = {};
-      let db = dbOrSchema;
+    let id = this._getIdForRequest(request);
 
-      keys.forEach(key => {
-        var collection = pluralize(key);
-
-        if (!db[collection]) {
-          throw new Error("Mirage: The route handler for " + request.url + " is requesting data from the " + collection + " collection, but that collection doesn't exist. To create it, create an empty fixture file or factory.");
-        }
-
-        // There's an owner. Find only related.
-        if (ownerKey) {
-          var ownerIdKey = singularize(ownerKey) + '_id';
-          var query = {};
-          query[ownerIdKey] = owner.id;
-          data[key] = db[collection].where(query);
-
-        } else {
-
-          // TODO: This is a crass way of checking if we're looking for a single model, doens't work for e.g. sheep
-          if (singularize(key) === key) {
-            ownerKey = key;
-            var id = this._getIdForRequest(request);
-            var model = db[collection].find(id);
-            data[key] = model;
-            owner = model;
-
-          } else {
-            data[key] = db[collection];
-          }
-        }
-      });
-
-      return data;
+    /*
+    If the first key is singular and we have an id param in
+    the request, we're dealing with the version of the shorthand
+    that has a parent model and several has-many relationships.
+    We throw an error, because the serializer is the appropriate
+    place for this now.
+    */
+    if (id && singularize(keys[0]) === keys[0]) {
+      throw new MirageError(`Mirage: It looks like you're using the "Single record with
+      related records" version of the array shorthand, in addition to opting
+      in to the model layer. This shorthand was made when there was no
+      serializer layer. Now that you're using models, please ensure your
+      relationships are defined, and create a serializer for the parent
+      model, adding the relationships there.`);
 
     } else {
-      let schema = dbOrSchema;
-      let id = this._getIdForRequest(request);
-
-      /*
-      If the first key is singular and we have an id param in
-      the request, we're dealing with the version of the shorthand
-      that has a parent model and several has-many relationships.
-      We throw an error, because the serializer is the appropriate
-      place for this now.
-      */
-      if (id && singularize(keys[0]) === keys[0]) {
-        throw `Mirage: It looks like you're using the "Single record with
-        related records" version of the array shorthand, in addition to opting
-        in to the model layer. This shorthand was made when there was no
-        serializer layer. Now that you're using models, please ensure your
-        relationships are defined, and create a serializer for the parent
-        model, adding the relationships there.`;
-
-      } else {
-        return keys.map(type => schema[singularize(type)].all());
-      }
+      return keys.map(type => schema[singularize(type)].all());
     }
   }
 

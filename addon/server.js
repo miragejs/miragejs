@@ -2,7 +2,6 @@ import { pluralize, camelize } from './utils/inflector';
 import Pretender from 'pretender';
 import Db from './db';
 import Schema from './orm/schema';
-import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
 import SerializerRegistry from './serializer-registry';
 import RouteHandler from './route-handler';
 
@@ -26,8 +25,6 @@ export default class Server {
 
       TODO: Inject / belongs in a container
     */
-    this.db = new Db();
-
     this.pretender = this.interceptor = new Pretender(function() {
       this.prepareBody = function(body) {
         if (body) {
@@ -46,14 +43,10 @@ export default class Server {
       };
     });
 
-    if (this._hasModulesOfType(options, 'models')) {
-      // TODO: really should be injected into Controller, server doesn't need to know about schema
-      this.schema = new Schema(this.db);
-      this.schema.registerModels(options.models);
-      this.serializerOrRegistry = new SerializerRegistry(this.schema, options.serializers);
-    } else {
-      this.serializerOrRegistry = new ActiveModelSerializer();
-    }
+    this.db = new Db();
+    this.schema = new Schema(this.db);
+    this.schema.registerModels(options.models);
+    this.serializerOrRegistry = new SerializerRegistry(this.schema, options.serializers);
 
     // TODO: Better way to inject server into test env
     if (this.environment === 'test') {
@@ -196,8 +189,7 @@ export default class Server {
   }
 
   _registerRouteHandler(verb, path, args) {
-    let dbOrSchema = (this.schema || this.db);
-    let routeHandler = new RouteHandler(dbOrSchema, verb, args, this.serializerOrRegistry);
+    let routeHandler = new RouteHandler(this.schema, verb, args, this.serializerOrRegistry);
     let fullPath = this._getFullPath(path);
 
     this.pretender[verb](fullPath, request => {
