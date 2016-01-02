@@ -8,6 +8,10 @@ import _trim from 'lodash/string/trim';
 import _isString from 'lodash/lang/isString';
 import _ from 'lodash';
 
+function isCollection(object) {
+  return object instanceof Collection;
+}
+
 class JsonApiSerializer {
 
   constructor(serializerMap) {
@@ -97,7 +101,7 @@ class JsonApiSerializer {
       const relationship = model[camelizedType];
       const dasherizedType = dasherize(camelizedType);
 
-      if (this._isCollection(relationship)) {
+      if (isCollection(relationship)) {
         if (!obj.relationships) { obj.relationships = {}; }
         obj.relationships[dasherizedType] = {
           data: relationship.map(model => {
@@ -178,14 +182,6 @@ class JsonApiSerializer {
     }
 
     return ModelSerializer ? new ModelSerializer(this._serializerMap) : this.baseSerializer;
-  }
-
-  _isModel(object) {
-    return object instanceof Model;
-  }
-
-  _isCollection(object) {
-    return object instanceof Collection;
   }
 
   _hasBeenSerialized(model) {
