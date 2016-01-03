@@ -34,25 +34,20 @@ export default class RouteHandler {
 
   _getMirageResponseForRequest(request) {
     let type = this._rawHandlerType();
+    let args = [ this.dbOrSchema, this.serializerOrRegistry, this.rawHandler, this.options ];
     let handler;
-
     if (type === 'function') {
-      handler = new FunctionHandler(this.dbOrSchema, this.serializerOrRegistry, this.rawHandler);
-
+      handler = new FunctionHandler(...args);
     } else if (type === 'object') {
-      handler = new ObjectHandler(this.dbOrSchema, this.serializerOrRegistry, this.rawHandler);
-
+      handler = new ObjectHandler(...args);
     } else if (this.verb === 'get') {
-      handler = new GetShorthandHandler(this.dbOrSchema, this.serializerOrRegistry, this.rawHandler, this.options);
-
+      handler = new GetShorthandHandler(...args);
     } else if (this.verb === 'post') {
-      handler = new PostShorthandHandler(this.dbOrSchema, this.serializerOrRegistry, this.rawHandler, this.options);
-
+      handler = new PostShorthandHandler(...args);
     } else if (this.verb === 'put' || this.verb === 'patch') {
-      handler = new PutShorthandHandler(this.dbOrSchema, this.serializerOrRegistry, this.rawHandler, this.options);
-
+      handler = new PutShorthandHandler(...args);
     } else if (this.verb === 'delete') {
-      handler = new DeleteShorthandHandler(this.dbOrSchema, this.serializerOrRegistry, this.rawHandler, this.options);
+      handler = new DeleteShorthandHandler(...args);
     }
 
     let response;
