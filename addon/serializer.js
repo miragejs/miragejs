@@ -9,7 +9,6 @@ class Serializer {
   serialize(response, request) {
     if (response instanceof Model) {
       return this._attrsForModel(response);
-
     } else {
       return response;
     }

@@ -13,15 +13,12 @@ export default function(db) {
   this._registry = {};
 
   this.registerModels = function(hash) {
-    var _this = this;
-
     Object.keys(hash).forEach(function(key) {
-      _this.registerModel(key, hash[key]);
-    });
+      this.registerModel(key, hash[key]);
+    }, this);
   };
 
   this.registerModel = function(type, ModelClass) {
-    var _this = this;
     type = camelize(type);
 
     // Avoid mutating original class, because we may want to reuse it across many tests
@@ -49,10 +46,10 @@ export default function(db) {
         var result = association.getForeignKeyArray();
         var fkHolder = result[0];
         var fk = result[1];
-        _this._addForeignKeyToRegistry(fkHolder, fk);
+        this._addForeignKeyToRegistry(fkHolder, fk);
 
         // Augment the Model's class with any methods added by this association
-        association.addMethodsToModelClass(ModelClass, associationProperty, _this);
+        association.addMethodsToModelClass(ModelClass, associationProperty, this);
       }
     }
 
@@ -148,15 +145,11 @@ export default function(db) {
     and returns a collection.
   */
   this._hydrate = function(records, modelName) {
-    var _this = this;
-
     if (_isArray(records)) {
       var models = records.map(function(record) {
-        return _this._instantiateModel(modelName, record);
-      });
-
+        return this._instantiateModel(modelName, record);
+      }, this);
       return new Collection(modelName, models);
-
     } else {
       var record = records;
       return !record ? null : this._instantiateModel(modelName, record);
