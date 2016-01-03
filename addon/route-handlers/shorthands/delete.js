@@ -10,9 +10,9 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
     This would remove the user with id :id:
       Ex: this.stub('delete', '/contacts/:id', 'user');
   */
-  handleStringShorthand(type, dbOrSchema, request) {
+  handleStringShorthand(modelName, dbOrSchema, request) {
     var id = this._getIdForRequest(request);
-    var collection = pluralize(type);
+    var collection = pluralize(modelName);
 
     if (dbOrSchema instanceof Db) {
       let db = dbOrSchema;
@@ -21,11 +21,10 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
       }
 
       db[collection].remove(id);
-
     } else {
       let schema = dbOrSchema;
 
-      return schema[type].find(id).destroy();
+      return schema[modelName].find(id).destroy();
     }
   }
 

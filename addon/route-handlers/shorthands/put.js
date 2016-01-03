@@ -9,9 +9,9 @@ export default class PutShorthandRouteHandler extends BaseShorthandRouteHandler 
 
       this.stub('put', '/contacts/:id', 'user');
   */
-  handleStringShorthand(string, dbOrSchema, request) {
+  handleStringShorthand(modelName, dbOrSchema, request) {
     var id = this._getIdForRequest(request);
-    let type = camelize(string);
+    let type = camelize(modelName);
     var collection = pluralize(type);
 
     if (dbOrSchema instanceof Db) {
@@ -28,7 +28,6 @@ export default class PutShorthandRouteHandler extends BaseShorthandRouteHandler 
       response[type] = data;
 
       return response;
-
     } else {
       let attrs = this._getAttrsForRequest(request);
       let schema = dbOrSchema;

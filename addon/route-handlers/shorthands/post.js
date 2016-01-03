@@ -10,8 +10,8 @@ export default class PostShorthandRouteHandler extends BaseShorthandRouteHandler
     For example, this will push a 'user':
       this.stub('post', '/contacts', 'contact');
   */
-  handleStringShorthand(string, dbOrSchema, request) {
-    let type = camelize(string);
+  handleStringShorthand(modelName, dbOrSchema, request) {
+    let type = camelize(modelName);
     let collection = pluralize(type);
 
     if (dbOrSchema instanceof Db) {
@@ -28,7 +28,6 @@ export default class PostShorthandRouteHandler extends BaseShorthandRouteHandler
       response[type] = model;
 
       return response;
-
     } else {
       let attrs = this._getAttrsForRequest(request);
       let schema = dbOrSchema;

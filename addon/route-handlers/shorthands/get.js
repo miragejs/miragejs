@@ -13,13 +13,12 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
       this.stub('get', '/contacts', 'contacts');
       this.stub('get', '/contacts/:id', 'contact');
   */
-  handleStringShorthand(string, dbOrSchema, request, options = {}) {
+  handleStringShorthand(modelName, dbOrSchema, request, options = {}) {
     let id = this._getIdForRequest(request);
 
     if (dbOrSchema instanceof Db) {
       let db = dbOrSchema;
-      let key = string;
-      let collection = pluralize(camelize(string));
+      let collection = pluralize(camelize(modelName));
       let data = {};
       let record;
 
@@ -32,17 +31,16 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
         if (!record) {
           return new Response(404, {}, {});
         }
-        data[key] = record;
+        data[modelName] = record;
       } else if (options.coalesce && request.queryParams && request.queryParams.ids) {
-        data[pluralize(key)] = db[collection].find(request.queryParams.ids);
+        data[pluralize(modelName)] = db[collection].find(request.queryParams.ids);
       } else {
-        data[pluralize(key)] = db[collection];
+        data[pluralize(modelName)] = db[collection];
       }
       return data;
-
     } else {
       let schema = dbOrSchema;
-      let type = camelize(singularize(string));
+      let type = camelize(modelName);
 
       if (id) {
         return schema[type].find(id);
