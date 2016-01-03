@@ -218,7 +218,7 @@ class JsonApiSerializer {
           .map(r => r.reload()[camelize(relationshipName)])
           .map(r => r instanceof Array ? [...r] : r) // Turning Collections into Arrays for lodash to recognize
           .flatten()
-          .filter(r => r)
+          .filter()
           .value();
       }, [parentModel]);
   }
