@@ -34,9 +34,9 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
         }
         data[key] = record;
       } else if (options.coalesce && request.queryParams && request.queryParams.ids) {
-        data[key] = db[collection].find(request.queryParams.ids);
+        data[pluralize(key)] = db[collection].find(request.queryParams.ids);
       } else {
-        data[key] = db[collection];
+        data[pluralize(key)] = db[collection];
       }
       return data;
 
@@ -149,9 +149,8 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
     let id = this._getIdForRequest(request);
     let url = this._getUrlForRequest(request);
     let modelName = this._getModelNameFromUrl(url, id);
-    let str = id ? modelName : pluralize(modelName);
 
-    return this.handleStringShorthand(str, dbOrSchema, request, options);
+    return this.handleStringShorthand(modelName, dbOrSchema, request, options);
   }
 
 

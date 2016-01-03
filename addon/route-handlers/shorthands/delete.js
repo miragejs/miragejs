@@ -25,10 +25,8 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
     } else {
       let schema = dbOrSchema;
 
-      return schema[type].find(id).destroy();
+      return dbOrSchema[type].find(id).destroy();
     }
-
-    return undefined;
   }
 
   /*
@@ -92,8 +90,7 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
     var id = this._getIdForRequest(request);
     var url = this._getUrlForRequest(request);
     let modelName = this._getModelNameFromUrl(url, id);
-    let str = id ? modelName : pluralize(modelName);
 
-    return this.handleStringShorthand(str, dbOrSchema, request);
+    return this.handleStringShorthand(modelName, dbOrSchema, request);
   }
 }
