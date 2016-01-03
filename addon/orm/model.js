@@ -56,7 +56,6 @@ class Model {
     Update the db record
   */
   update(key, val) {
-    var _this = this;
     var attrs;
     if (key == null) {return this;}
 
@@ -67,8 +66,8 @@ class Model {
     }
 
     Object.keys(attrs).forEach(function(attr) {
-      _this[attr] = attrs[attr];
-    });
+      this[attr] = attrs[attr];
+    }, this);
 
     this.save();
 
@@ -95,15 +94,14 @@ class Model {
     Reload data from the db
   */
   reload() {
-    var _this = this;
     var collection = pluralize(camelize(this.modelName));
     var attrs = this._schema.db[collection].find(this.id);
 
     Object.keys(attrs)
       .filter(function(attr) { return attr !== 'id'; })
       .forEach(function(attr) {
-        _this[attr] = attrs[attr];
-      });
+        this[attr] = attrs[attr];
+      }, this);
 
     return this;
   }
@@ -115,14 +113,11 @@ class Model {
     table fields.
   */
   _setupAttrs(attrs) {
-    var _this = this;
-
     // Filter out association keys
-    var hash = Object.keys(attrs).reduce(function(memo, attr) {
-      if (_this.associationKeys.indexOf(attr) === -1 && _this.associationIdKeys.indexOf(attr) === -1) {
+    var hash = Object.keys(attrs).reduce((memo, attr) => {
+      if (this.associationKeys.indexOf(attr) === -1 && this.associationIdKeys.indexOf(attr) === -1) {
         memo[attr] = attrs[attr];
       }
-
       return memo;
     }, {});
 
@@ -135,10 +130,10 @@ class Model {
 
     // define plain getter/setters for non-association keys
     Object.keys(hash).forEach(function(attr) {
-      if (_this.associationKeys.indexOf(attr) === -1 && _this.associationIdKeys.indexOf(attr) === -1) {
-        _this._definePlainAttribute(attr);
+      if (this.associationKeys.indexOf(attr) === -1 && this.associationIdKeys.indexOf(attr) === -1) {
+        this._definePlainAttribute(attr);
       }
-    });
+    }, this);
   }
 
   /*
@@ -160,20 +155,17 @@ class Model {
   }
 
   _setupRelationships(attrs) {
-    var _this = this;
-
     // Only want association keys and fks
-    var hash = Object.keys(attrs).reduce(function(memo, attr) {
-      if (_this.associationKeys.indexOf(attr) > -1 || _this.associationIdKeys.indexOf(attr) > -1 || _this.fks.indexOf(attr) > -1) {
+    var hash = Object.keys(attrs).reduce((memo, attr) => {
+      if (this.associationKeys.indexOf(attr) > -1 || this.associationIdKeys.indexOf(attr) > -1 || this.fks.indexOf(attr) > -1) {
         memo[attr] = attrs[attr];
       }
-
       return memo;
     }, {});
 
     Object.keys(hash).forEach(function(attr) {
-      _this[attr] = hash[attr];
-    });
+      this[attr] = hash[attr];
+    }, this);
   }
 
   _saveAssociations() {
