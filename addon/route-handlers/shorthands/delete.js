@@ -25,7 +25,7 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
     } else {
       let schema = dbOrSchema;
 
-      return dbOrSchema[type].find(id).destroy();
+      return schema[type].find(id).destroy();
     }
   }
 
@@ -79,18 +79,4 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
     }
   }
 
-  /*
-    Remove the model from the db based on singular version
-    of the last portion of the url.
-
-    This would remove contact with id :id:
-      Ex: this.stub('delete', '/contacts/:id');
-  */
-  handleUndefinedShorthand(undef, dbOrSchema, request) {
-    var id = this._getIdForRequest(request);
-    var url = this._getUrlForRequest(request);
-    let modelName = this._getModelNameFromUrl(url, id);
-
-    return this.handleStringShorthand(modelName, dbOrSchema, request);
-  }
 }

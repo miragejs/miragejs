@@ -77,4 +77,12 @@ export default class BaseShorthandRouteHandler {
     return attrs;
   }
 
+  handleUndefinedShorthand(undef, dbOrSchema, request, options) {
+    let id = this._getIdForRequest(request);
+    let url = this._getUrlForRequest(request);
+    let modelName = this._getModelNameFromUrl(url, id);
+
+    return this.handleStringShorthand(modelName, dbOrSchema, request, options);
+  }
+
 }

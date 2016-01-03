@@ -131,27 +131,4 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
     }
   }
 
-  /*
-    Retrieve objects from the db based on singular version
-    of the last portion of the url.
-
-    This would return all contacts:
-      Ex: this.stub('get', '/contacts');
-
-    If an id is present, return a single model by id.
-      Ex: this.stub('get', '/contacts/:id');
-
-    If the options contain a `coalesce: true` option and the queryParams have `ids`, it
-    returns the models with those ids.
-      Ex: this.stub('get', '/contacts/:id');
-  */
-  handleUndefinedShorthand(undef, dbOrSchema, request, options) {
-    let id = this._getIdForRequest(request);
-    let url = this._getUrlForRequest(request);
-    let modelName = this._getModelNameFromUrl(url, id);
-
-    return this.handleStringShorthand(modelName, dbOrSchema, request, options);
-  }
-
-
 }

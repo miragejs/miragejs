@@ -38,19 +38,4 @@ export default class PostShorthandRouteHandler extends BaseShorthandRouteHandler
     }
   }
 
-  /*
-    Push a new model to the db. The type is found
-    by singularizing the last portion of the URL.
-
-    For example, this will push a 'contact'.
-      this.stub('post', '/contacts');
-  */
-  handleUndefinedShorthand(undef, dbOrSchema, request) {
-    let url = this._getUrlForRequest(request);
-    let modelName = this._getModelNameFromUrl(url);
-
-    return this.handleStringShorthand(modelName, dbOrSchema, request);
-  }
-
-
 }

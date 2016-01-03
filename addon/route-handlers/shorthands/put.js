@@ -37,18 +37,4 @@ export default class PutShorthandRouteHandler extends BaseShorthandRouteHandler 
     }
   }
 
-  /*
-    Update an object from the db based on singular version
-    of the last portion of the url.
-
-      this.stub('put', '/contacts/:id');
-  */
-  handleUndefinedShorthand(undef, dbOrSchema, request) {
-    var id = this._getIdForRequest(request);
-    var url = this._getUrlForRequest(request);
-    var modelName = this._getModelNameFromUrl(url, id);
-
-    return this.handleStringShorthand(modelName, dbOrSchema, request);
-  }
-
 }
