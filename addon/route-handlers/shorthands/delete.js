@@ -1,5 +1,5 @@
 import BaseShorthandRouteHandler from './base';
-import { pluralize, singularize } from 'ember-cli-mirage/utils/inflector';
+import { pluralize } from 'ember-cli-mirage/utils/inflector';
 import Db from 'ember-cli-mirage/db';
 
 export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandler {
@@ -79,8 +79,6 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
       // Delete the parent
       parent.destroy();
     }
-
-    return undefined;
   }
 
   /*
@@ -93,9 +91,9 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
   handleUndefinedShorthand(undef, dbOrSchema, request) {
     var id = this._getIdForRequest(request);
     var url = this._getUrlForRequest(request);
-    var urlNoId = id ? url.substr(0, url.lastIndexOf('/')) : url;
-    var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
+    let modelName = this._getModelNameFromUrl(url, id);
+    let str = id ? modelName : pluralize(modelName);
 
-    return this.handleStringShorthand(type, dbOrSchema, request);
+    return this.handleStringShorthand(str, dbOrSchema, request);
   }
 }

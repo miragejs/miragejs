@@ -48,9 +48,9 @@ export default class BaseShorthandRouteHandler {
     let path = urlSplit.split('/');
     path = path[path.length - 1] === '' ? path.slice(0, path.length - 1) : path; // when trailing slash
     let typePath = hasId ? path[path.length - 2] : path[path.length - 1];
-    let type = camelize(singularize(typePath));
+    let modelName = dasherize(camelize(singularize(typePath)));
 
-    return dasherize(type);
+    return modelName;
   }
 
   _getJsonBodyForRequest(request) {
