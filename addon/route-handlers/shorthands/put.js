@@ -9,9 +9,9 @@ export default class PutShorthandRouteHandler extends BaseShorthandRouteHandler 
 
       this.stub('put', '/contacts/:id', 'user');
   */
-  handleStringShorthand(string, dbOrSchema, request) {
+  handleStringShorthand(modelName, dbOrSchema, request) {
     var id = this._getIdForRequest(request);
-    let type = camelize(string);
+    let type = camelize(modelName);
     var collection = pluralize(type);
 
     if (dbOrSchema instanceof Db) {
@@ -28,27 +28,12 @@ export default class PutShorthandRouteHandler extends BaseShorthandRouteHandler 
       response[type] = data;
 
       return response;
-
     } else {
       let attrs = this._getAttrsForRequest(request);
       let schema = dbOrSchema;
 
       return schema[type].find(id).update(attrs);
     }
-  }
-
-  /*
-    Update an object from the db based on singular version
-    of the last portion of the url.
-
-      this.stub('put', '/contacts/:id');
-  */
-  handleUndefinedShorthand(undef, dbOrSchema, request) {
-    var id = this._getIdForRequest(request);
-    var url = this._getUrlForRequest(request);
-    var modelName = this._getModelNameFromUrl(url, id);
-
-    return this.handleStringShorthand(modelName, dbOrSchema, request);
   }
 
 }

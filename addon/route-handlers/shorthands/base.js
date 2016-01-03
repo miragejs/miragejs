@@ -48,9 +48,9 @@ export default class BaseShorthandRouteHandler {
     let path = urlSplit.split('/');
     path = path[path.length - 1] === '' ? path.slice(0, path.length - 1) : path; // when trailing slash
     let typePath = hasId ? path[path.length - 2] : path[path.length - 1];
-    let type = camelize(singularize(typePath));
+    let modelName = dasherize(camelize(singularize(typePath)));
 
-    return dasherize(type);
+    return modelName;
   }
 
   _getJsonBodyForRequest(request) {
@@ -75,6 +75,14 @@ export default class BaseShorthandRouteHandler {
     attrs.id = id;
 
     return attrs;
+  }
+
+  handleUndefinedShorthand(undef, dbOrSchema, request, options) {
+    let id = this._getIdForRequest(request);
+    let url = this._getUrlForRequest(request);
+    let modelName = this._getModelNameFromUrl(url, id);
+
+    return this.handleStringShorthand(modelName, dbOrSchema, request, options);
   }
 
 }

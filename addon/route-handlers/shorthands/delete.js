@@ -1,5 +1,5 @@
 import BaseShorthandRouteHandler from './base';
-import { pluralize, singularize } from 'ember-cli-mirage/utils/inflector';
+import { pluralize } from 'ember-cli-mirage/utils/inflector';
 import Db from 'ember-cli-mirage/db';
 
 export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandler {
@@ -10,9 +10,9 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
     This would remove the user with id :id:
       Ex: this.stub('delete', '/contacts/:id', 'user');
   */
-  handleStringShorthand(type, dbOrSchema, request) {
+  handleStringShorthand(modelName, dbOrSchema, request) {
     var id = this._getIdForRequest(request);
-    var collection = pluralize(type);
+    var collection = pluralize(modelName);
 
     if (dbOrSchema instanceof Db) {
       let db = dbOrSchema;
@@ -21,14 +21,11 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
       }
 
       db[collection].remove(id);
-
     } else {
       let schema = dbOrSchema;
 
-      return schema[type].find(id).destroy();
+      return schema[modelName].find(id).destroy();
     }
-
-    return undefined;
   }
 
   /*
@@ -79,23 +76,6 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
       // Delete the parent
       parent.destroy();
     }
-
-    return undefined;
   }
 
-  /*
-    Remove the model from the db based on singular version
-    of the last portion of the url.
-
-    This would remove contact with id :id:
-      Ex: this.stub('delete', '/contacts/:id');
-  */
-  handleUndefinedShorthand(undef, dbOrSchema, request) {
-    var id = this._getIdForRequest(request);
-    var url = this._getUrlForRequest(request);
-    var urlNoId = id ? url.substr(0, url.lastIndexOf('/')) : url;
-    var type = singularize(urlNoId.substr(urlNoId.lastIndexOf('/') + 1));
-
-    return this.handleStringShorthand(type, dbOrSchema, request);
-  }
 }
