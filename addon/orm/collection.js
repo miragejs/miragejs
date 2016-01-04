@@ -28,6 +28,10 @@ export default class Collection {
     return this._models.length;
   }
 
+  push() {
+    this._models.push(...arguments);
+  }
+
   destroy() {
     this._models.forEach((model) => model.destroy());
     return this;
@@ -44,6 +48,10 @@ export default class Collection {
 
   map() {
     return this._models.map.apply(this._models, arguments);
+  }
+
+  forEach() {
+    this._models.forEach.apply(this._models, arguments);
   }
 
   toArray() {
