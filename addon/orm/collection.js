@@ -68,7 +68,7 @@ export default class Collection {
   }
 
   reload(){
-    this._models.forEach((model) => model.save());
+    this._models.forEach((model) => model.reload());
     return this;
   }
 

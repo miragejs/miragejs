@@ -8,6 +8,12 @@ test('it can be instantiated', function(assert) {
   assert.ok(collection);
 });
 
+test('collection.filter returns collection instance', function(assert) {
+  var collection = new Collection('type');
+  var filteredCollection = collection.filter(Boolean);
+  assert.ok(filteredCollection instanceof Collection);
+});
+
 test('it cannot be instantiated without a modelName', function(assert) {
   assert.throws(() => {
     new Collection();
