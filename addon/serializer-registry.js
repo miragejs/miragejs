@@ -11,10 +11,8 @@ function isModel(object) {
   return object instanceof Model;
 }
 
-// TODO: Once we implement https://github.com/samselikoff/ember-cli-mirage/issues/450, this should
-// simplify to `object instanceof Collection`
 function isCollection(object) {
-  return object instanceof Collection || (_isArray(object) && isModel(object[0]));
+  return object instanceof Collection;
 }
 
 export default class SerializerRegistry {
@@ -88,7 +86,6 @@ export default class SerializerRegistry {
         return json;
       }, {});
 
-
     } else {
       return response;
     }
@@ -154,9 +151,9 @@ export default class SerializerRegistry {
   _serializeModelOrCollection(modelOrCollection, removeForeignKeys, serializeRelationships) {
     if (isModel(modelOrCollection)) {
       return this._serializeModel(modelOrCollection, removeForeignKeys, serializeRelationships);
-
     } else {
-      return modelOrCollection.map(model => this._serializeModel(model, removeForeignKeys, serializeRelationships));
+      return modelOrCollection
+        .map(model => this._serializeModel(model, removeForeignKeys, serializeRelationships));
     }
   }
 

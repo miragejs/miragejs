@@ -150,9 +150,10 @@ export default function(db) {
         return this._instantiateModel(modelName, record);
       }, this);
       return new Collection(modelName, models);
+    } else if (records) {
+      return this._instantiateModel(modelName, records);
     } else {
-      var record = records;
-      return !record ? null : this._instantiateModel(modelName, record);
+      return null;
     }
   };
 }
