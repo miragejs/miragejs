@@ -13,17 +13,67 @@ import _isArray from 'lodash/lang/isArray';
 
 const { isBlank, typeOf } = Ember;
 
+function isNotBlankResponse(response) {
+  return response &&
+    !(typeOf(response) === 'object' && _keys(response).length === 0) &&
+    (_isArray(response) || !isBlank(response));
+}
+
+const DEFAULT_CODES = { get: 200, put: 204, post: 201, 'delete': 204 };
+
+function createHandler({ verb, schema, serializerOrRegistry, rawHandler, options }) {
+  let handler;
+  let args = [ schema, serializerOrRegistry, rawHandler, options ];
+  let type = typeOf(rawHandler);
+  if (type === 'function') {
+    handler = new FunctionHandler(...args);
+  } else if (type === 'object') {
+    handler = new ObjectHandler(...args);
+  } else if (verb === 'get') {
+    handler = new GetShorthandHandler(...args);
+  } else if (verb === 'post') {
+    handler = new PostShorthandHandler(...args);
+  } else if (verb === 'put' || verb === 'patch') {
+    handler = new PutShorthandHandler(...args);
+  } else if (verb === 'delete') {
+    handler = new DeleteShorthandHandler(...args);
+  }
+  return handler;
+}
+
+/*
+  Args can be of the form
+    [options]
+    [object, code]
+    [function, code]
+    [shorthand, options]
+    [shorthand, code, options]
+    with all optional. This method returns an array of
+    [handler (i.e. the function, object or shorthand), code, options].
+*/
+function extractArguments(args) {
+  var argsLength = args.length;
+  var lastArgument = args[argsLength - 1];
+  var t = argsLength;
+  if (lastArgument && lastArgument.hasOwnProperty('coalesce')) {
+    t--;
+  } else {
+    args.push({ colesce: false });
+  }
+  for (var i = 0; i < 4 - args.length; i++) {
+    args.splice(t, 0, undefined);
+  }
+  return args;
+}
+
 export default class RouteHandler {
 
   constructor(schema, verb, args, serializerOrRegistry) {
-    let [rawHandler, customizedCode, options] = this._extractArguments(args);
-
-    this.schema = schema;
-    this.serializerOrRegistry = serializerOrRegistry;
+    let [rawHandler, customizedCode, options] = extractArguments(args);
     this.verb = verb;
-    this.rawHandler = rawHandler;
     this.customizedCode = customizedCode;
-    this.options = options;
+    this.serializerOrRegistry = serializerOrRegistry;
+    this.handler = createHandler({ verb, schema, serializerOrRegistry, rawHandler, options });
   }
 
   handle(request) {
@@ -34,27 +84,9 @@ export default class RouteHandler {
   }
 
   _getMirageResponseForRequest(request) {
-    let type = this._rawHandlerType();
-    let args = [ this.schema, this.serializerOrRegistry, this.rawHandler, this.options ];
-    let handler;
-    if (type === 'function') {
-      handler = new FunctionHandler(...args);
-    } else if (type === 'object') {
-      handler = new ObjectHandler(...args);
-    } else if (this.verb === 'get') {
-      handler = new GetShorthandHandler(...args);
-    } else if (this.verb === 'post') {
-      handler = new PostShorthandHandler(...args);
-    } else if (this.verb === 'put' || this.verb === 'patch') {
-      handler = new PutShorthandHandler(...args);
-    } else if (this.verb === 'delete') {
-      handler = new DeleteShorthandHandler(...args);
-    }
-
     let response;
-
     try {
-      response = handler.handle(request);
+      response = this.handler.handle(request);
     } catch(e) {
       if (e instanceof MirageError) {
         throw e;
@@ -64,37 +96,6 @@ export default class RouteHandler {
     }
 
     return this._toMirageResponse(response);
-  }
-
-  /*
-    Args can be of the form
-      [function, code]
-      [object, code]
-      [shorthand, code, options]
-      [shorthand, options]
-      [options]
-    with all optional. This method returns an array of
-      [handler (i.e. the function, object or shorthand), code, options].
-  */
-  _extractArguments(ary) {
-    var argsInitialLength = ary.length;
-    var lastArgument = ary && ary[ary.length - 1];
-    var options;
-    var i = 0;
-    if (lastArgument && lastArgument.hasOwnProperty('coalesce')) {
-      argsInitialLength--;
-    } else {
-      options = { colesce: false };
-      ary.push(options);
-    }
-    for(; i < 4 - ary.length; i++) {
-      ary.splice(argsInitialLength, 0, undefined);
-    }
-    return ary;
-  }
-
-  _rawHandlerType() {
-    return _isArray(this.rawHandler) ? 'array' : typeof this.rawHandler;
   }
 
   _toMirageResponse(response) {
@@ -112,28 +113,19 @@ export default class RouteHandler {
 
   _getCodeForResponse(response) {
     let code;
-    let responseIsEmptyObject = typeOf(response) === 'object' && _keys(response).length === 0;
-    let responseHasContent = response && !responseIsEmptyObject && (_isArray(response) || !isBlank(response));
-
     if (this.customizedCode) {
       code = this.customizedCode;
     } else {
-      code = this._defaultCodeFor(this.verb);
-      if (code === 204 && responseHasContent) {
+      code = DEFAULT_CODES[this.verb];
+      if (code === 204 && isNotBlankResponse(response)) {
         code = 200;
       }
     }
-
     return code;
-  }
-
-  _defaultCodeFor(verb) {
-    return { get: 200, put: 204, post: 201, 'delete': 204 }[verb];
   }
 
   _serialize(mirageResponse, request) {
     mirageResponse.data = this.serializerOrRegistry.serialize(mirageResponse.data, request);
-
     return mirageResponse;
   }
 }
