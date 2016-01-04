@@ -23,7 +23,7 @@ module('Integration | Schema | hasMany #createAssociation', {
     assert.ok(springfield.id, 'the child was persisted');
     assert.equal(springfield.userId, 1, 'the fk is set');
     assert.equal(user.addresses.length, startingCount + 1, 'the collection length is correct');
-    assert.deepEqual(user.addresses.filter(a => a.id === springfield.id)[0], springfield, 'the address was added to user.addresses');
+    assert.deepEqual(user.addresses.filter(a => a.id === springfield.id).objectAt(0), springfield, 'the address was added to user.addresses');
     assert.ok(user.addressIds.indexOf(springfield.id) > -1, 'the id was added to the fks array');
   });
 
@@ -32,7 +32,7 @@ module('Integration | Schema | hasMany #createAssociation', {
 
     var springfield = user.createAddress();
 
-    assert.deepEqual(user.addresses.filter(a => a.id === springfield.id)[0], springfield, 'the address was added to user.addresses');
+    assert.deepEqual(user.addresses.filter(a => a.id === springfield.id).objectAt(0), springfield, 'the address was added to user.addresses');
   });
 
 });

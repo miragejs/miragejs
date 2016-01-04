@@ -25,7 +25,7 @@ module('Integration | Schema | hasMany #newAssociation', {
     var springfield = user.newAddress({name: '1 Springfield ave'});
 
     assert.ok(!springfield.id, 'the child was not persisted');
-    assert.deepEqual(user.addresses[startingCount], springfield, `the child is appended to the parent's collection`);
+    assert.deepEqual(user.addresses.objectAt(startingCount), springfield, `the child is appended to the parent's collection`);
 
     if (!user.isNew()) {
       assert.equal(springfield.userId, user.id, `the new address's fk reference the saved parent`);
@@ -44,7 +44,7 @@ module('Integration | Schema | hasMany #newAssociation', {
 
     var springfield = user.newAddress();
 
-    assert.deepEqual(user.addresses[startingCount], springfield, `the child is appended to the parent's collection`);
+    assert.deepEqual(user.addresses.objectAt(startingCount), springfield, `the child is appended to the parent's collection`);
   });
 
 });

@@ -41,8 +41,8 @@ test('the parent accepts an array of saved children ids', function(assert) {
   var user = schema.user.new({addressIds: [1, 2]});
 
   assert.equal(user.addresses.length, 2);
-  assert.deepEqual(user.addresses[0], child1);
-  assert.deepEqual(user.addresses[1], child2);
+  assert.deepEqual(user.addresses.objectAt(0), child1);
+  assert.deepEqual(user.addresses.objectAt(1), child2);
   assert.deepEqual(user.addressIds, ['1', '2']);
 });
 
@@ -63,7 +63,7 @@ test('the parent accepts an array of saved child models', function(assert) {
 
   assert.deepEqual(user.addressIds, ['1', '2']);
   assert.equal(user.addresses.length, 2);
-  assert.deepEqual(user.addresses[0], child1);
+  assert.deepEqual(user.addresses.objectAt(0), child1);
 });
 
 test('the parent accepts an array of new child models', function(assert) {
@@ -73,7 +73,7 @@ test('the parent accepts an array of new child models', function(assert) {
 
   assert.deepEqual(user.addressIds, [undefined, undefined]);
   assert.equal(user.addresses.length, 2);
-  assert.deepEqual(user.addresses[0], newAddress1);
+  assert.deepEqual(user.addresses.objectAt(0), newAddress1);
 });
 
 test('the parent accepts a mixed array of new and saved child models', function(assert) {
@@ -82,8 +82,8 @@ test('the parent accepts a mixed array of new and saved child models', function(
 
   assert.deepEqual(user.addressIds, ['1', undefined]);
   assert.equal(user.addresses.length, 2);
-  assert.deepEqual(user.addresses[0], child1);
-  assert.deepEqual(user.addresses[1], newAddress1);
+  assert.deepEqual(user.addresses.objectAt(0), child1);
+  assert.deepEqual(user.addresses.objectAt(1), newAddress1);
 });
 
 test('the parent accepts null child models', function(assert) {

@@ -29,7 +29,7 @@ module('Integration | Schema | hasMany #accessor', {
     assert.equal(user.addressIds.length, addresses.length, 'parent has correct number of child ids');
 
     addresses.forEach(function(address, i) {
-      assert.deepEqual(user.addresses[i], addresses[i], 'each child is in parent.children array');
+      assert.deepEqual(user.addresses.objectAt(i), addresses[i], 'each child is in parent.children array');
 
       if (!address.isNew()) {
         assert.ok(user.addressIds.indexOf(address.id) > -1, 'each saved child id is in parent.childrenIds array');
