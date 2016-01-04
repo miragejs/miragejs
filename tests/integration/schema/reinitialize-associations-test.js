@@ -31,8 +31,8 @@ module('Integration | Schema | reinitialize associations', {
 // By running two tests, we force the statically-defined classes to be
 // registered twice.
 test('safely initializes associations', function(assert) {
-  assert.equal(this.schema.user.find(1).address.objectAt(0).country, 'Hyrule');
+  assert.equal(this.schema.user.find(1).address[0].country, 'Hyrule');
 });
 test('safely initializes associations again', function(assert) {
-  assert.equal(this.schema.user.find(1).address.objectAt(0).country, 'Hyrule');
+  assert.equal(this.schema.user.find(1).address[0].country, 'Hyrule');
 });

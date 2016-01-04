@@ -1,5 +1,6 @@
 import _isArray from 'lodash/lang/isArray';
 
+const { forEach, filter, reduce, push, map, slice } = Array.prototype;
 /*
   An array of models, returned from one of the schema query
   methods (all, find, where). Knows how to update and destroy its models.
@@ -16,64 +17,60 @@ export default class Collection {
   if (_isArray(args[0])) {
     args = args[0];
   }
-  this._models = args || [];
+  this.length = 0;
+  if (args.length) {
+    push.apply(this, args);
+  }
  }
 
   update(key, val) {
-    this._models.forEach((model) => model.update(key, val));
+    forEach.call(this, (model) => model.update(key, val));
     return this;
-  }
-
-  get length() {
-    return this._models.length;
-  }
-
-  push() {
-    this._models.push(...arguments);
   }
 
   destroy() {
-    this._models.forEach((model) => model.destroy());
+    forEach.call(this, (model) => model.destroy());
     return this;
-  }
-
-  objectAt(index) {
-    return this._models[index];
   }
 
   save() {
-    this._models.forEach((model) => model.save());
+    forEach.call(this, (model) => model.save());
     return this;
+  }
+
+  reload() {
+    forEach.call(this, (model) => model.reload());
+    return this;
+  }
+
+  push() {
+    push.apply(this, arguments);
   }
 
   map() {
-    return this._models.map.apply(this._models, arguments);
+    return map.apply(this, arguments);
   }
 
+
   forEach() {
-    this._models.forEach.apply(this._models, arguments);
+    forEach.apply(this, arguments);
   }
 
   toArray() {
-    return this._models.slice();
+    return slice.apply(this);
   }
 
   reduce() {
-    return this._models.reduce.apply(this._models, arguments);
+    return reduce.apply(this, arguments);
   }
 
   filter() {
-    var models = this._models.filter.apply(this._models, arguments);
+    var models = filter.apply(this, arguments);
     return new Collection(this.modelName, models);
   }
 
-  reload(){
-    this._models.forEach((model) => model.reload());
-    return this;
-  }
-
   mergeCollection(collection) {
-    collection.forEach((model) => this._models.push(model));
+    collection.forEach((model) => this.push(model));
     return this;
   }
 }

@@ -25,7 +25,7 @@ module('Integration | Schema | hasMany #setAssociationIds', {
     user.addressIds = [savedAddress.id];
     savedAddress.reload();
 
-    assert.deepEqual(user.addresses.objectAt(0), savedAddress);
+    assert.deepEqual(user.addresses[0], savedAddress);
     addresses.forEach(function(address) {
       if (address.isSaved()) {
         address.reload();

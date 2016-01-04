@@ -33,8 +33,8 @@ test('it can update its models with a key and value', function(assert) {
     {id: '1', name: 'Link', location: 'Hyrule', evil: true},
     {id: '2', name: 'Zelda', location: 'Hyrule', evil: true},
   ]);
-  assert.deepEqual(collection.objectAt(0).attrs, {id: '1', name: 'Link', location: 'Hyrule', evil: true});
-  assert.deepEqual(collection.objectAt(1).attrs, {id: '2', name: 'Zelda', location: 'Hyrule', evil: true});
+  assert.deepEqual(collection[0].attrs, {id: '1', name: 'Link', location: 'Hyrule', evil: true});
+  assert.deepEqual(collection[1].attrs, {id: '2', name: 'Zelda', location: 'Hyrule', evil: true});
 });
 
 test('it can update its models with a hash of attrs', function(assert) {
@@ -49,8 +49,8 @@ test('it can update its models with a hash of attrs', function(assert) {
     {id: '1', name: 'Link', location: 'The water temple', evil: true},
     {id: '2', name: 'Zelda', location: 'The water temple', evil: true},
   ]);
-  assert.deepEqual(collection.objectAt(0).attrs, {id: '1', name: 'Link', location: 'The water temple', evil: true});
-  assert.deepEqual(collection.objectAt(1).attrs, {id: '2', name: 'Zelda', location: 'The water temple', evil: true});
+  assert.deepEqual(collection[0].attrs, {id: '1', name: 'Link', location: 'The water temple', evil: true});
+  assert.deepEqual(collection[1].attrs, {id: '2', name: 'Zelda', location: 'The water temple', evil: true});
 });
 
 

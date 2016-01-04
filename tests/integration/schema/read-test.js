@@ -18,9 +18,9 @@ test('it can return all models', function(assert) {
 
   var users = schema.user.all();
   assert.ok(users instanceof Collection, 'it returns a collection');
-  assert.ok(users.objectAt(0) instanceof User, 'each member of the collection is a model');
+  assert.ok(users[0] instanceof User, 'each member of the collection is a model');
   assert.equal(users.length, 2);
-  assert.deepEqual(users.objectAt(1).attrs, {id: '2', name: 'Zelda'});
+  assert.deepEqual(users[1].attrs, {id: '2', name: 'Zelda'});
 });
 
 test('it returns an empty array when no models exist', function(assert) {
@@ -69,9 +69,9 @@ test('it can find multiple models by ids', function(assert) {
   var users = schema.user.find([1, 2]);
 
   assert.ok(users instanceof Collection, 'it returns a collection');
-  assert.ok(users.objectAt(0) instanceof User);
+  assert.ok(users[0] instanceof User);
   assert.equal(users.length, 2);
-  assert.deepEqual(users.objectAt(1).attrs, {id: '2', name: 'Zelda'});
+  assert.deepEqual(users[1].attrs, {id: '2', name: 'Zelda'});
 });
 
 test('it errors if incorrect number of models are found for an array of ids', function(assert) {
@@ -103,8 +103,8 @@ test('it returns models that match a query with where', function(assert) {
 
   assert.ok(users instanceof Collection, 'it returns a collection');
   assert.equal(users.length, 1);
-  assert.ok(users.objectAt(0) instanceof User);
-  assert.deepEqual(users.objectAt(0).attrs, {id: '3', name: 'Ganon', good: false});
+  assert.ok(users[0] instanceof User);
+  assert.deepEqual(users[0].attrs, {id: '3', name: 'Ganon', good: false});
 });
 
 test('it returns models that match using a query function', function(assert) {
@@ -112,8 +112,8 @@ test('it returns models that match using a query function', function(assert) {
 
   assert.ok(users instanceof Collection, 'it returns a collection');
   assert.equal(users.length, 1);
-  assert.ok(users.objectAt(0) instanceof User);
-  assert.deepEqual(users.objectAt(0).attrs, {id: '3', name: 'Ganon', good: false});
+  assert.ok(users[0] instanceof User);
+  assert.deepEqual(users[0].attrs, {id: '3', name: 'Ganon', good: false});
 });
 
 test('it returns an empty collection if no models match a query', function(assert) {

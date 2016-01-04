@@ -25,7 +25,7 @@ module('Integration | Schema | hasMany #setAssociation', {
     user.addresses = [savedAddress];
     savedAddress.reload();
 
-    assert.deepEqual(user.addresses.objectAt(0), savedAddress);
+    assert.deepEqual(user.addresses[0], savedAddress);
     addresses.forEach(function(address) {
       if (address.isSaved()) {
         address.reload();
@@ -76,7 +76,7 @@ module('Integration | Schema | hasMany #setAssociation', {
       address.reload();
     }
 
-    assert.deepEqual(user.addresses.objectAt(0), address);
+    assert.deepEqual(user.addresses[0], address);
     addresses.forEach(function(address) {
       if (address.isSaved()) {
         address.reload();
@@ -130,8 +130,8 @@ module('Integration | Schema | hasMany #setAssociation', {
       newAddress.reload();
     }
 
-    assert.deepEqual(user.addresses.objectAt(0), savedAddress);
-    assert.deepEqual(user.addresses.objectAt(1), newAddress);
+    assert.deepEqual(user.addresses[0], savedAddress);
+    assert.deepEqual(user.addresses[1], newAddress);
     addresses.forEach(function(address) {
       if (address.isSaved()) {
         address.reload();

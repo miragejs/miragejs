@@ -66,8 +66,8 @@ test('undefined shorthand returns the collection of models', function(assert) {
   let authors = handler.handle(request);
 
   assert.equal(authors.length, 3);
-  assert.ok(authors.objectAt(0) instanceof Model);
-  assert.equal(authors.objectAt(0).modelName, 'author');
+  assert.ok(authors[0] instanceof Model);
+  assert.equal(authors[0].modelName, 'author');
 });
 
 test('undefined shorthand ignores query params', function(assert) {
@@ -77,8 +77,8 @@ test('undefined shorthand ignores query params', function(assert) {
   let authors = handler.handle(request);
 
   assert.equal(authors.length, 3);
-  assert.ok(authors.objectAt(0) instanceof Model);
-  assert.equal(authors.objectAt(0).modelName, 'author');
+  assert.ok(authors[0] instanceof Model);
+  assert.equal(authors[0].modelName, 'author');
 });
 
 test('undefined shorthand can return a single model', function(assert) {
@@ -130,8 +130,8 @@ test('string shorthand returns the correct collection of models', function(asser
   let authors = handler.handle(request);
 
   assert.equal(authors.length, 3);
-  assert.ok(authors.objectAt(0) instanceof Model);
-  assert.equal(authors.objectAt(0).modelName, 'author');
+  assert.ok(authors[0] instanceof Model);
+  assert.equal(authors[0].modelName, 'author');
 });
 
 test('string shorthand with an id returns the correct model', function(assert) {
@@ -194,8 +194,8 @@ test('shorthand for list of models with a dash in their name', function(assert) 
   let handler = new GetShorthandRouteHandler(this.schema, this.serializer);
   let models = handler.handle(request);
   assert.equal(models.length, 1);
-  assert.ok(models.objectAt(0) instanceof Model);
-  assert.equal(models.objectAt(0).modelName, 'project-owner');
+  assert.ok(models[0] instanceof Model);
+  assert.equal(models[0].modelName, 'project-owner');
 });
 
 test('if a shorthand tries to access an unknown type it throws an error', function(assert) {
