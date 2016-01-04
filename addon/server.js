@@ -10,13 +10,12 @@ import _isArray from 'lodash/lang/isArray';
 import _keys from 'lodash/object/keys';
 import _pick from 'lodash/object/pick';
 
-function createPretender() {
+function createPretender(shouldLog) {
   return new Pretender(function() {
-    this.prepareBody = function(body) {
-      if (body) {
-        return typeof body !== 'string' ? JSON.stringify(body) : body;
-      } else {
-        return '{"error": "not found"}';
+    this.handledRequest = function(verb, path, request) {
+      if (shouldLog) {
+        console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
+        console.log(request.responseText);
       }
     };
 
@@ -43,12 +42,6 @@ export default class Server {
 
     this._defineRouteHandlerHelpers();
 
-    /*
-      Bootstrap dependencies
-      TODO: Inject / belongs in a container
-    */
-    this.pretender = createPretender();
-
     this.db = new Db();
     this.schema = new Schema(this.db);
     this.schema.registerModels(options.models);
@@ -57,6 +50,8 @@ export default class Server {
     const isTest = this.environment === 'test';
     const hasFactories = this._hasModulesOfType(options, 'factories');
     const hasDefaultScenario = options.scenarios && options.scenarios.hasOwnProperty('default');
+    const shouldLog = typeof this.logging !== 'undefined' ? this.logging : !isTest;
+    this.pretender = createPretender(shouldLog);
 
     if (options.baseConfig) {
       this.loadConfig(options.baseConfig);
@@ -193,28 +188,27 @@ export default class Server {
     });
   }
 
+  _serialize(body) {
+    if (body) {
+      return typeof body !== 'string' ? JSON.stringify(body) : body;
+    } else {
+      return '{"error": "not found"}';
+    }
+  }
+
   _registerRouteHandler(verb, path, args) {
     let routeHandler = new RouteHandler(this.schema, verb, args, this.serializerOrRegistry);
     let fullPath = this._getFullPath(path);
 
     this.pretender[verb](fullPath, request => {
-      let rackResponse = routeHandler.handle(request);
-
-      let shouldLog = typeof this.logging !== 'undefined' ? this.logging : (this.environment !== 'test');
-
-      if (shouldLog) {
-        console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
-        console.log(rackResponse[2]);
-      }
-
-      return rackResponse;
+      let [ code, headers, response ] = routeHandler.handle(request);
+      return [ code, headers, this._serialize(response) ];
     }, () => { return this.timing; });
   }
 
   _hasModulesOfType(modules, type) {
-    let modulesOfType = modules[type] || {};
-
-    return _keys(modulesOfType).length > 0;
+    let modulesOfType = modules[type];
+    return modulesOfType ? _keys(modulesOfType).length > 0 : false;
   }
 
   /*
