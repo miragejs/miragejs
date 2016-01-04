@@ -2,12 +2,35 @@ import { pluralize, camelize } from './utils/inflector';
 import Pretender from 'pretender';
 import Db from './db';
 import Schema from './orm/schema';
+import MirageError from './error';
 import SerializerRegistry from './serializer-registry';
 import RouteHandler from './route-handler';
 
 import _isArray from 'lodash/lang/isArray';
 import _keys from 'lodash/object/keys';
 import _pick from 'lodash/object/pick';
+
+function createPretender() {
+  return new Pretender(function() {
+    this.prepareBody = function(body) {
+      if (body) {
+        return typeof body !== 'string' ? JSON.stringify(body) : body;
+      } else {
+        return '{"error": "not found"}';
+      }
+    };
+
+    this.unhandledRequest = function(verb, path) {
+      path = decodeURI(path);
+      throw new MirageError(
+                      "Mirage: Your Ember app tried to " + verb + " '" + path +
+                      "', but there was no route defined to handle this " +
+                      "request. Define a route that matches this path in your " +
+                      "mirage/config.js file. Did you forget to add your namespace?"
+                    );
+    };
+  });
+}
 
 export default class Server {
 
@@ -22,55 +45,33 @@ export default class Server {
 
     /*
       Bootstrap dependencies
-
       TODO: Inject / belongs in a container
     */
-    this.pretender = this.interceptor = new Pretender(function() {
-      this.prepareBody = function(body) {
-        if (body) {
-          return typeof body !== 'string' ? JSON.stringify(body) : body;
-        } else {
-          return '{"error": "not found"}';
-        }
-      };
-
-      this.unhandledRequest = function(verb, path) {
-        path = decodeURI(path);
-        throw new Error("Mirage: Your Ember app tried to " + verb + " '" + path +
-                      "', but there was no route defined to handle this " +
-                      "request. Define a route that matches this path in your " +
-                      "mirage/config.js file. Did you forget to add your namespace?");
-      };
-    });
+    this.pretender = createPretender();
 
     this.db = new Db();
     this.schema = new Schema(this.db);
     this.schema.registerModels(options.models);
     this.serializerOrRegistry = new SerializerRegistry(this.schema, options.serializers);
 
-    // TODO: Better way to inject server into test env
-    if (this.environment === 'test') {
-      window.server = this;
-    }
-
-    let hasFactories = this._hasModulesOfType(options, 'factories');
-    let hasDefaultScenario = options.scenarios && options.scenarios.hasOwnProperty('default');
+    const isTest = this.environment === 'test';
+    const hasFactories = this._hasModulesOfType(options, 'factories');
+    const hasDefaultScenario = options.scenarios && options.scenarios.hasOwnProperty('default');
 
     if (options.baseConfig) {
       this.loadConfig(options.baseConfig);
     }
 
-    if (this.environment === 'test' && options.testConfig) {
-      this.loadConfig(options.testConfig);
+    if (isTest) {
+      if (options.testConfig) { this.loadConfig(options.testConfig); }
+      window.server = this; // TODO: Better way to inject server into test env
     }
 
-    if (this.environment === 'test' && hasFactories) {
+    if (isTest && hasFactories) {
       this.loadFactories(options.factories);
-
-    } else if (this.environment !== 'test' && hasDefaultScenario && hasFactories) {
+    } else if (!isTest && hasDefaultScenario && hasFactories) {
       this.loadFactories(options.factories);
       options.scenarios.default(this);
-
     } else {
       this.loadFixtures();
     }
@@ -152,9 +153,13 @@ export default class Server {
 
   create(type, overrides, collectionFromCreateList) {
     const attrs = this.build(type, overrides);
-
-    const collectionName = this.schema ? pluralize(camelize(type)) : pluralize(type);
-    const collection = collectionFromCreateList || this.db[collectionName];
+    let collection, collectionName;
+    if (collectionFromCreateList) {
+      collection = collectionFromCreateList;
+    } else {
+      collectionName = this.schema ? pluralize(camelize(type)) : pluralize(type);
+      collection = this.db[collectionName];
+    }
 
     return collection.insert(attrs);
   }
