@@ -1,10 +1,14 @@
 import {module, test} from 'qunit';
+import { Model } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
 
 module('Integration | Server Config', {
   beforeEach: function() {
     this.server = new Server({
-      environment: 'development'
+      environment: 'development',
+      models: {
+        contact: Model
+      }
     });
     this.server.timing = 0;
     this.server.logging = false;
@@ -17,20 +21,19 @@ module('Integration | Server Config', {
 test("namespace can be configured", function(assert) {
   assert.expect(1);
   let done = assert.async();
-  let server = this.server;
 
   let contacts = [
     {id: '1', name: 'Link'},
     {id: '2', name: 'Zelda'},
   ];
-  server.db.loadData({
+  this.server.db.loadData({
     contacts: contacts
   });
-  server.namespace = 'api';
-  server.get('/contacts');
+  this.server.namespace = 'api';
+  this.server.get('/contacts');
 
   $.getJSON('/api/contacts', function(data) {
-    assert.deepEqual(data, { contacts: contacts });
+    assert.deepEqual(data, { contacts });
     done();
   });
 });
@@ -81,19 +84,18 @@ test("urlPrefix and namespace can be configured simultaneously", function(assert
 test("fully qualified domain names can be used in configuration", function(assert) {
   assert.expect(1);
   let done = assert.async();
-  let server = this.server;
 
   let contacts = [
     {id: '1', name: 'Link'},
     {id: '2', name: 'Zelda'},
   ];
-  server.db.loadData({
+  this.server.db.loadData({
     contacts: contacts
   });
-  server.get('http://example.org/api/contacts', 'contacts');
+  this.server.get('http://example.org/api/contacts');
 
   $.getJSON('http://example.org/api/contacts', function(data) {
-    assert.deepEqual(data, { contacts: contacts });
+    assert.deepEqual(data, { contacts });
     done();
   });
 });
@@ -111,7 +113,7 @@ test("urlPrefix/namespace are ignored when fully qualified domain names are used
     contacts: contacts
   });
   this.urlPrefix = 'https://example.net';
-  server.get('http://example.org/api/contacts', 'contacts');
+  server.get('http://example.org/api/contacts');
 
   $.getJSON('http://example.org/api/contacts', function(data) {
     assert.deepEqual(data, { contacts: contacts });

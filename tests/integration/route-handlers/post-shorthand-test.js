@@ -4,7 +4,7 @@ import Model from 'ember-cli-mirage/orm/model';
 import PostShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthands/post';
 import JSONAPISerializer from 'ember-cli-mirage/serializers/json-api-serializer';
 
-module('Integration | Route Handlers | POST with ORM', {
+module('Integration | Route Handlers | POST shorthand', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development',
@@ -67,4 +67,14 @@ test('query params are ignored', function(assert) {
   assert.ok(model instanceof Model);
   assert.equal(model.modelName, 'author');
   assert.equal(model.firstName, 'Ganon');
+});
+
+test('if a shorthand tries to access an unknown type it throws an error', function(assert) {
+  let request = {requestBody: JSON.stringify(this.body), url: '/foobars'};
+  let handler = new PostShorthandRouteHandler(this.schema, this.serializer);
+
+  assert.throws(function() {
+    handler.handle(request);
+  }, /model doesn't exist/);
+  assert.ok(true);
 });

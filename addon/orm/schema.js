@@ -12,7 +12,7 @@ export default function(db) {
   this.db = db;
   this._registry = {};
 
-  this.registerModels = function(hash) {
+  this.registerModels = function(hash = {}) {
     Object.keys(hash).forEach(function(key) {
       this.registerModel(key, hash[key]);
     }, this);

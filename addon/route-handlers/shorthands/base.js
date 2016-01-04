@@ -1,12 +1,13 @@
 import { singularize, capitalize, camelize, dasherize } from 'ember-cli-mirage/utils/inflector';
 import _isArray from 'lodash/lang/isArray';
+import MirageError from 'ember-cli-mirage/error';
 
 const allDigitsRegex = /^\d+$/;
 
 export default class BaseShorthandRouteHandler {
 
-  constructor(dbOrSchema, serializerOrRegistry, shorthand, options) {
-    this.dbOrSchema = dbOrSchema;
+  constructor(schema, serializerOrRegistry, shorthand, options) {
+    this.schema = schema;
     this.serializerOrRegistry = serializerOrRegistry;
     this.shorthand = shorthand;
     this.options = options;
@@ -16,7 +17,7 @@ export default class BaseShorthandRouteHandler {
     let type = _isArray(this.shorthand) ? 'array' : typeof this.shorthand;
     let typeHandler = `handle${capitalize(type)}Shorthand`;
 
-    return this[typeHandler](this.shorthand, this.dbOrSchema, request, this.options);
+    return this[typeHandler](this.shorthand, this.schema, request, this.options);
   }
 
   _getIdForRequest(request) {
@@ -67,6 +68,11 @@ export default class BaseShorthandRouteHandler {
     let id = this._getIdForRequest(request);
     let json = this._getJsonBodyForRequest(request);
     let jsonApiDoc = this.serializerOrRegistry.normalize(json);
+
+    if (!jsonApiDoc.data || !jsonApiDoc.data.attributes) {
+      throw new MirageError(`You're using a shorthand but your serializer's normalize function did not return a valid JSON:API document. http://www.ember-cli-mirage.com/docs/v0.2.x/serializers/#normalizejson`);
+    }
+
     let attrs = {};
     Object.keys(jsonApiDoc.data.attributes).forEach(key => {
       attrs[camelize(key)] = jsonApiDoc.data.attributes[key];
@@ -77,12 +83,12 @@ export default class BaseShorthandRouteHandler {
     return attrs;
   }
 
-  handleUndefinedShorthand(undef, dbOrSchema, request, options) {
+  handleUndefinedShorthand(undef, schema, request, options) {
     let id = this._getIdForRequest(request);
     let url = this._getUrlForRequest(request);
     let modelName = this._getModelNameFromUrl(url, id);
 
-    return this.handleStringShorthand(modelName, dbOrSchema, request, options);
+    return this.handleStringShorthand(modelName, schema, request, options);
   }
 
 }
