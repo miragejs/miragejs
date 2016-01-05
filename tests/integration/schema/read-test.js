@@ -17,7 +17,6 @@ test('it can return all models', function(assert) {
   schema.registerModel('user', User);
 
   var users = schema.user.all();
-
   assert.ok(users instanceof Collection, 'it returns a collection');
   assert.ok(users[0] instanceof User, 'each member of the collection is a model');
   assert.equal(users.length, 2);

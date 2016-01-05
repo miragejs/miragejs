@@ -186,8 +186,8 @@ class JsonApiSerializer {
 
   _hasBeenSerialized(model) {
     let relationshipKey = `${model.modelName}Ids`;
-
-    return (this.alreadySerialized[relationshipKey] && this.alreadySerialized[relationshipKey].indexOf(model.id) > -1);
+    let obj = this.alreadySerialized[relationshipKey];
+    return obj && obj.indexOf(model.id) > -1;
   }
 
   _augmentAlreadySerialized(model) {
@@ -216,7 +216,7 @@ class JsonApiSerializer {
       .reduce((related, relationshipName) => {
         return _(related)
           .map(r => r.reload()[camelize(relationshipName)])
-          .map(r => r instanceof Array ? [...r] : r) // Turning Collections into Arrays for lodash to recognize
+          .map(r => isCollection(r) ? r.toArray() : r) // Turning Collections into Arrays for lodash to recognize
           .flatten()
           .filter()
           .value();

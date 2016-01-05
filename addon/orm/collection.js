@@ -1,55 +1,76 @@
 import _isArray from 'lodash/lang/isArray';
 
+const { forEach, filter, reduce, push, map, slice } = Array.prototype;
 /*
   An array of models, returned from one of the schema query
   methods (all, find, where). Knows how to update and destroy its models.
 */
-var Collection = function(modelName, ...args) {
+
+export default class Collection {
+ constructor(modelName, ...args) {
   if (!modelName || typeof modelName !== 'string') {
     throw 'You must pass a `modelName` into a Collection';
   }
+
   this.modelName = modelName;
 
   if (_isArray(args[0])) {
     args = args[0];
   }
-  this.push.apply(this, args);
+  this.length = 0;
+  if (args.length) {
+    push.apply(this, args);
+  }
+ }
 
-  this.update = function(key, val) {
-    this.forEach((model) => {
-      model.update(key, val);
-    });
-  };
-
-  this.destroy = function() {
-    this.forEach((model) => {
-      model.destroy();
-    });
-  };
-
-  this.save = function() {
-    this.forEach((model) => {
-      model.save();
-    });
-  };
-
-  this.reload = function() {
-    this.forEach((model) => {
-      model.reload();
-    });
-  };
-
-  this.mergeCollection = function(collection) {
-    collection.forEach((model) => {
-      this.push(model);
-    });
-
+  update(key, val) {
+    forEach.call(this, (model) => model.update(key, val));
     return this;
-  };
+  }
 
-  return this;
-};
+  destroy() {
+    forEach.call(this, (model) => model.destroy());
+    return this;
+  }
 
-Collection.prototype = Object.create(Array.prototype);
+  save() {
+    forEach.call(this, (model) => model.save());
+    return this;
+  }
 
-export default Collection;
+  reload() {
+    forEach.call(this, (model) => model.reload());
+    return this;
+  }
+
+  push() {
+    push.apply(this, arguments);
+  }
+
+  map() {
+    return map.apply(this, arguments);
+  }
+
+
+  forEach() {
+    forEach.apply(this, arguments);
+  }
+
+  toArray() {
+    return slice.apply(this);
+  }
+
+  reduce() {
+    return reduce.apply(this, arguments);
+  }
+
+  filter() {
+    var models = filter.apply(this, arguments);
+    return new Collection(this.modelName, models);
+  }
+
+  mergeCollection(collection) {
+    collection.forEach((model) => this.push(model));
+    return this;
+  }
+}
