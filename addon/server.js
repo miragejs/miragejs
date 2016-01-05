@@ -22,11 +22,11 @@ function createPretender(shouldLog) {
     this.unhandledRequest = function(verb, path) {
       path = decodeURI(path);
       throw new MirageError(
-                      "Mirage: Your Ember app tried to " + verb + " '" + path +
-                      "', but there was no route defined to handle this " +
-                      "request. Define a route that matches this path in your " +
-                      "mirage/config.js file. Did you forget to add your namespace?"
-                    );
+        `Mirage: Your Ember app tried to ${verb} '${path}',
+         but there was no route defined to handle this request.
+         Define a route that matches this path in your
+         mirage/config.js file. Did you forget to add your namespace?`
+      );
     };
   });
 }
@@ -51,6 +51,7 @@ export default class Server {
     const hasFactories = this._hasModulesOfType(options, 'factories');
     const hasDefaultScenario = options.scenarios && options.scenarios.hasOwnProperty('default');
     const shouldLog = typeof this.logging !== 'undefined' ? this.logging : !isTest;
+
     this.pretender = createPretender(shouldLog);
 
     if (options.baseConfig) {
