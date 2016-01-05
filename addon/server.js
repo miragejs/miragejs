@@ -10,10 +10,10 @@ import _isArray from 'lodash/lang/isArray';
 import _keys from 'lodash/object/keys';
 import _pick from 'lodash/object/pick';
 
-function createPretender(shouldLog) {
+function createPretender(server) {
   return new Pretender(function() {
     this.handledRequest = function(verb, path, request) {
-      if (shouldLog) {
+      if (server.shouldLog()) {
         console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
         console.log(request.responseText);
       }
@@ -47,30 +47,36 @@ export default class Server {
     this.schema.registerModels(options.models);
     this.serializerOrRegistry = new SerializerRegistry(this.schema, options.serializers);
 
-    const isTest = this.environment === 'test';
     const hasFactories = this._hasModulesOfType(options, 'factories');
     const hasDefaultScenario = options.scenarios && options.scenarios.hasOwnProperty('default');
-    const shouldLog = typeof this.logging !== 'undefined' ? this.logging : !isTest;
 
-    this.pretender = createPretender(shouldLog);
+    this.pretender = createPretender(this);
 
     if (options.baseConfig) {
       this.loadConfig(options.baseConfig);
     }
 
-    if (isTest) {
+    if (this.isTest()) {
       if (options.testConfig) { this.loadConfig(options.testConfig); }
       window.server = this; // TODO: Better way to inject server into test env
     }
 
-    if (isTest && hasFactories) {
+    if (this.isTest() && hasFactories) {
       this.loadFactories(options.factories);
-    } else if (!isTest && hasDefaultScenario && hasFactories) {
+    } else if (!this.isTest() && hasDefaultScenario && hasFactories) {
       this.loadFactories(options.factories);
       options.scenarios.default(this);
     } else {
       this.loadFixtures();
     }
+  }
+
+  isTest() {
+    return this.environment === 'test';
+  }
+
+  shouldLog() {
+    return typeof this.logging !== 'undefined' ? this.logging : !this.isTest();
   }
 
   loadConfig(config) {

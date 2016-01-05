@@ -2,7 +2,7 @@ import {module, test} from 'qunit';
 import Server from 'ember-cli-mirage/server';
 import Response from 'ember-cli-mirage/response';
 
-module('Integration | HTTP Verbs', {
+module('Integration | Response string', {
   beforeEach: function() {
     this.server = new Server({
       environment: 'development'
