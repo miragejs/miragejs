@@ -1,0 +1,11 @@
+{{#if error}}
+  <p class='error'>There was an error: <span>{{error}}</span></p>
+{{else}}
+  <ul>
+    {{#each model as |pet|}}
+      <li><span class='name'>{{pet.name}}</span> / alive: <span class='alive'>{{pet.alive}}</span></li>
+    {{/each}}
+    {{input value=petName}}
+    <button {{action 'createPet'}}>create</button>
+  </ul>
+{{/if}}

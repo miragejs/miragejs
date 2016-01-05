@@ -13,6 +13,7 @@ Router.map(function() {
   this.route('friends');
   this.route('friend', { path: '/friends/:friend_id'});
   this.route('close-friends');
+  this.route('pets');
 });
 
 export default Router;
