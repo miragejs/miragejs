@@ -10,10 +10,10 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
     This would remove the user with id :id:
       Ex: this.del('/contacts/:id', 'user');
   */
-  handleStringShorthand(modelName, schema, request) {
+  handleStringShorthand(request, modelName) {
     let id = this._getIdForRequest(request);
     let type = camelize(modelName);
-    let modelClass = schema[type];
+    let modelClass = this.schema[type];
 
     assert(
       modelClass,
@@ -30,11 +30,11 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
     as this contact's addresses and phone numbers.
       Ex: this.del('/contacts/:id', ['contact', 'addresses', 'numbers');
   */
-  handleArrayShorthand(array, schema, request) {
+  handleArrayShorthand(request, array) {
     let id = this._getIdForRequest(request);
     let parentType = camelize(array[0]);
     let childTypes = array.slice(1).map(camelize);
-    let parent = schema[parentType].find(id);
+    let parent = this.schema[parentType].find(id);
 
     // Delete related children
     childTypes.forEach(type => {

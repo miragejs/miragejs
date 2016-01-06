@@ -10,10 +10,10 @@ export default class PostShorthandRouteHandler extends BaseShorthandRouteHandler
     For example, this will push a 'user':
       this.post('/contacts', 'user');
   */
-  handleStringShorthand(modelName, schema, request) {
+  handleStringShorthand(request, modelName) {
     let type = camelize(modelName);
     let attrs = this._getAttrsForRequest(request);
-    let modelClass = schema[type];
+    let modelClass = this.schema[type];
 
     assert(
       modelClass,
