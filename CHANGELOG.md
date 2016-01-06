@@ -28,7 +28,7 @@ Update notes:
   - `model.type` was renamed to `model.modelName`, and is dasherized (instead of camelized)
 
 Changes:
-  - [BREAKING CHANGE] POST and PUT shorthands require a Serializer#normalize function, and will transform your attrs to camelCase. To keep using the db yourself, write custom POST and PUT route handlers.
+  - [BREAKING CHANGE] POST and PUT shorthands require a Serializer#normalize function, and will transform your attrs to camelCase. (If you're using JsonApiSerializer or ActiveModelSerializer, this is done for you). To keep using the db yourself, write custom POST and PUT route handlers.
   - [BREAKING CHANGE] Serializer#relationships was renamed to Serializer#include #424 @lolmaus
   - [BREAKING CHANGE] Change `model.type` to `model.modelName`, ensure it's dasherized #454
   - [BREAKING CHANGE] Inserting records with numerical IDs that have already have been used will throw an per changes from #417
