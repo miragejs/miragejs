@@ -41,35 +41,9 @@ function createHandler({ verb, schema, serializerOrRegistry, rawHandler, options
   return handler;
 }
 
-/*
-  Args can be of the form
-    [options]
-    [object, code]
-    [function, code]
-    [shorthand, options]
-    [shorthand, code, options]
-    with all optional. This method returns an array of
-    [handler (i.e. the function, object or shorthand), code, options].
-*/
-function extractArguments(args) {
-  var argsLength = args.length;
-  var lastArgument = args[argsLength - 1];
-  var t = argsLength;
-  if (lastArgument && lastArgument.hasOwnProperty('coalesce')) {
-    t--;
-  } else {
-    args.push({ colesce: false });
-  }
-  for (var i = 0; i < 4 - args.length; i++) {
-    args.splice(t, 0, undefined);
-  }
-  return args;
-}
-
 export default class RouteHandler {
 
-  constructor(schema, verb, args, serializerOrRegistry) {
-    let [rawHandler, customizedCode, options] = extractArguments(args);
+  constructor({ schema, verb, rawHandler, customizedCode, options, serializerOrRegistry }) {
     this.verb = verb;
     this.customizedCode = customizedCode;
     this.serializerOrRegistry = serializerOrRegistry;

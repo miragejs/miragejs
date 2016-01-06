@@ -31,6 +31,31 @@ function createPretender(server) {
   });
 }
 
+/*
+  Args can be of the form
+    [options]
+    [object, code]
+    [function, code]
+    [shorthand, options]
+    [shorthand, code, options]
+    with all optional. This method returns an array of
+    [handler (i.e. the function, object or shorthand), code, options].
+*/
+function extractRouteArguments(args) {
+  var argsLength = args.length;
+  var lastArgument = args[argsLength - 1];
+  var t = argsLength;
+  if (lastArgument && lastArgument.hasOwnProperty('coalesce')) {
+    t--;
+  } else {
+    args.push({ colesce: false });
+  }
+  for (var i = 0; i < 4 - args.length; i++) {
+    args.splice(t, 0, undefined);
+  }
+  return args;
+}
+
 export default class Server {
 
   constructor(options = {}) {
@@ -188,7 +213,8 @@ export default class Server {
   _defineRouteHandlerHelpers() {
     [['get'], ['post'], ['put'], ['delete', 'del'], ['patch']].forEach(([verb, alias]) => {
       this[verb] = (path, ...args) => {
-        this._registerRouteHandler(verb, path, args);
+        let [ rawHandler, customizedCode, options ] = extractRouteArguments(args);
+        this._registerRouteHandler(verb, path, rawHandler, customizedCode, options);
       };
 
       if (alias) { this[alias] = this[verb]; }
@@ -203,8 +229,14 @@ export default class Server {
     }
   }
 
-  _registerRouteHandler(verb, path, args) {
-    let routeHandler = new RouteHandler(this.schema, verb, args, this.serializerOrRegistry);
+  _registerRouteHandler(verb, path, rawHandler, customizedCode, options) {
+
+    let routeHandler = new RouteHandler({
+      schema: this.schema,
+      verb, rawHandler, customizedCode, options,
+      serializerOrRegistry: this.serializerOrRegistry
+    });
+
     let fullPath = this._getFullPath(path);
 
     this.pretender[verb](fullPath, request => {
