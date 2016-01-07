@@ -9,6 +9,7 @@ import RouteHandler from './route-handler';
 import _isArray from 'lodash/lang/isArray';
 import _keys from 'lodash/object/keys';
 import _pick from 'lodash/object/pick';
+import _assign from 'lodash/object/assign';
 
 function createPretender(server) {
   return new Pretender(function() {
@@ -31,6 +32,24 @@ function createPretender(server) {
   });
 }
 
+const defaultRouteOptions = {
+  coalesce: false,
+  timing: undefined
+};
+
+function isOption(option) {
+  if (!option || typeof option !== 'object') { return false; }
+  const allOptions = Object.keys(defaultRouteOptions);
+  const optionKeys = Object.keys(option);
+  for (var i = 0; i < optionKeys.length; i++) {
+    var key = optionKeys[i];
+    if (allOptions.indexOf(key) > -1) {
+      return true;
+    }
+  }
+  return false;
+}
+
 /*
   Args can be of the form
     [options]
@@ -41,18 +60,20 @@ function createPretender(server) {
     with all optional. This method returns an array of
     [handler (i.e. the function, object or shorthand), code, options].
 */
+
 function extractRouteArguments(args) {
-  var argsLength = args.length;
-  var lastArg = args[argsLength - 1];
-  var t = argsLength;
-  if (lastArg && (lastArg.hasOwnProperty('coalesce') || lastArg.hasOwnProperty('timing'))) {
-    t--;
+  var lastArg = args.splice(-1)[0];
+  if (isOption(lastArg)) {
+    lastArg = _assign({}, defaultRouteOptions, lastArg);
   } else {
-    args.push({ colesce: false });
+    args.push(lastArg);
+    lastArg = defaultRouteOptions;
   }
-  for (var i = 0; i < 4 - args.length; i++) {
-    args.splice(t, 0, undefined);
+  var t = 2 - args.length;
+  while(t-->0) {
+    args.push(undefined);
   }
+  args.push(lastArg);
   return args;
 }
 
@@ -106,7 +127,7 @@ export default class Server {
 
   loadConfig(config) {
     config.call(this);
-    this.timing = this.environment === 'test' ? 0 : (this.timing || 0);
+    this.timing = this.isTest() ? 0 : (this.timing || 0);
   }
 
   passthrough(...paths) {
@@ -229,7 +250,7 @@ export default class Server {
     }
   }
 
-  _registerRouteHandler(verb, path, rawHandler, customizedCode, options={}) {
+  _registerRouteHandler(verb, path, rawHandler, customizedCode, options) {
 
     let routeHandler = new RouteHandler({
       schema: this.schema,
@@ -242,7 +263,7 @@ export default class Server {
 
     this.pretender[verb](
       fullPath,
-      request => {
+      (request) => {
         let [ code, headers, response ] = routeHandler.handle(request);
         return [ code, headers, this._serialize(response) ];
       },
