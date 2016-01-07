@@ -1,6 +1,6 @@
 import { singularize, capitalize, camelize, dasherize } from 'ember-cli-mirage/utils/inflector';
 import _isArray from 'lodash/lang/isArray';
-import MirageError from 'ember-cli-mirage/error';
+import assert from 'ember-cli-mirage/assert';
 
 const allDigitsRegex = /^\d+$/;
 
@@ -69,9 +69,10 @@ export default class BaseShorthandRouteHandler {
     let json = this._getJsonBodyForRequest(request);
     let jsonApiDoc = this.serializerOrRegistry.normalize(json);
 
-    if (!jsonApiDoc.data || !jsonApiDoc.data.attributes) {
-      throw new MirageError(`You're using a shorthand but your serializer's normalize function did not return a valid JSON:API document. http://www.ember-cli-mirage.com/docs/v0.2.x/serializers/#normalizejson`);
-    }
+    assert(
+      jsonApiDoc.data && jsonApiDoc.data.attributes,
+      `You're using a shorthand but your serializer's normalize function did not return a valid JSON:API document. http://www.ember-cli-mirage.com/docs/v0.2.x/serializers/#normalizejson`
+    );
 
     let attrs = {};
     Object.keys(jsonApiDoc.data.attributes).forEach(key => {

@@ -2,7 +2,7 @@ import { pluralize, camelize } from './utils/inflector';
 import Pretender from 'pretender';
 import Db from './db';
 import Schema from './orm/schema';
-import MirageError from './error';
+import assert from './assert';
 import SerializerRegistry from './serializer-registry';
 import RouteHandler from './route-handler';
 
@@ -21,7 +21,7 @@ function createPretender(server) {
 
     this.unhandledRequest = function(verb, path) {
       path = decodeURI(path);
-      throw new MirageError(
+      assert(
         `Mirage: Your Ember app tried to ${verb} '${path}',
          but there was no route defined to handle this request.
          Define a route that matches this path in your
