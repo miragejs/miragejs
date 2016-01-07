@@ -43,9 +43,9 @@ function createPretender(server) {
 */
 function extractRouteArguments(args) {
   var argsLength = args.length;
-  var lastArgument = args[argsLength - 1];
+  var lastArg = args[argsLength - 1];
   var t = argsLength;
-  if (lastArgument && lastArgument.hasOwnProperty('coalesce')) {
+  if (lastArg && (lastArg.hasOwnProperty('coalesce') || lastArg.hasOwnProperty('timing'))) {
     t--;
   } else {
     args.push({ colesce: false });
@@ -229,7 +229,7 @@ export default class Server {
     }
   }
 
-  _registerRouteHandler(verb, path, rawHandler, customizedCode, options) {
+  _registerRouteHandler(verb, path, rawHandler, customizedCode, options={}) {
 
     let routeHandler = new RouteHandler({
       schema: this.schema,
@@ -238,11 +238,16 @@ export default class Server {
     });
 
     let fullPath = this._getFullPath(path);
+    let timing = options.timing !== undefined ? options.timing : (() => this.timing);
 
-    this.pretender[verb](fullPath, request => {
-      let [ code, headers, response ] = routeHandler.handle(request);
-      return [ code, headers, this._serialize(response) ];
-    }, () => { return this.timing; });
+    this.pretender[verb](
+      fullPath,
+      request => {
+        let [ code, headers, response ] = routeHandler.handle(request);
+        return [ code, headers, this._serialize(response) ];
+      },
+      timing
+    );
   }
 
   _hasModulesOfType(modules, type) {
