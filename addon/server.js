@@ -12,6 +12,12 @@ import _pick from 'lodash/object/pick';
 
 function createPretender(server) {
   return new Pretender(function() {
+    this.passthroughRequest = function(verb, path, request) {
+      if (server.shouldLog()) {
+        console.log('Passthrough request: ' + verb.toUpperCase() + ' ' + request.url);
+      }
+    };
+
     this.handledRequest = function(verb, path, request) {
       if (server.shouldLog()) {
         console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
@@ -120,10 +126,10 @@ export default class Server {
     }
 
     verbs.forEach(verb => {
-      paths.map(path => this._getFullPath(path))
-        .forEach(path => {
-          this.pretender[verb](path, this.pretender.passthrough);
-        });
+      paths.forEach(path => {
+        let fullPath = this._getFullPath(path);
+        this.pretender[verb](fullPath, this.pretender.passthrough);
+      });
     });
   }
 
