@@ -52,13 +52,9 @@ module.exports = {
       );
     }
 
-    return this.addPackagesToProject([
-      { name: 'ember-lodash', target: '0.0.5' }
-    ]).then(function() {
-      return this.addBowerPackagesToProject([
-        { name: 'pretender', target: '~0.10.1' },
-        { name: 'Faker', target: '~3.0.0' }
-      ]);
-    }.bind(this));
+    return this.addBowerPackagesToProject([
+      { name: 'pretender', target: '~0.10.1' },
+      { name: 'Faker', target: '~3.0.0' }
+    ]);
   }
 };
