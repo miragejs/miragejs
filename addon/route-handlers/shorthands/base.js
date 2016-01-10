@@ -1,4 +1,4 @@
-import { singularize, capitalize, camelize, dasherize } from 'ember-cli-mirage/utils/inflector';
+import { singularize, camelize, dasherize } from 'ember-cli-mirage/utils/inflector';
 import _isArray from 'lodash/lang/isArray';
 import assert from 'ember-cli-mirage/assert';
 
@@ -6,19 +6,39 @@ const allDigitsRegex = /^\d+$/;
 
 export default class BaseShorthandRouteHandler {
 
-  constructor(schema, serializerOrRegistry, shorthand, options) {
+  constructor(schema, serializerOrRegistry, shorthand, options={}) {
     this.schema = schema;
     this.serializerOrRegistry = serializerOrRegistry;
     this.shorthand = shorthand;
     this.options = options;
+
+    let type = _isArray(this.shorthand) ? 'array' : typeof this.shorthand;
+    let handler;
+    if (type === 'undefined') {
+      handler = this.handleUndefinedShorthand;
+    } else if (type === 'string') {
+      handler = this.handleStringShorthand;
+    } else if (type === 'array') {
+      handler = this.handleArrayShorthand;
+    }
+
+    this.handler = handler;
   }
 
   handle(request) {
-    let type = _isArray(this.shorthand) ? 'array' : typeof this.shorthand;
-    let typeHandler = `handle${capitalize(type)}Shorthand`;
-
-    return this[typeHandler](this.shorthand, this.schema, request, this.options);
+    return this.handler(request, this.shorthand);
   }
+
+  handleUndefinedShorthand(request) {
+    let id = this._getIdForRequest(request);
+    let url = this._getUrlForRequest(request);
+    let modelName = this._getModelNameFromUrl(url, id);
+
+    return this.handleStringShorthand(request, modelName);
+  }
+
+  handleStringShorthand() { }
+  handleArrayShorthand() { }
 
   _getIdForRequest(request) {
     let id;
@@ -35,13 +55,7 @@ export default class BaseShorthandRouteHandler {
   }
 
   _getUrlForRequest(request) {
-    let url;
-
-    if (request && request.url) {
-      url = request.url;
-    }
-
-    return url;
+    return request && request.url;
   }
 
   _getModelNameFromUrl(url, hasId) {
@@ -84,12 +98,5 @@ export default class BaseShorthandRouteHandler {
     return attrs;
   }
 
-  handleUndefinedShorthand(undef, schema, request, options) {
-    let id = this._getIdForRequest(request);
-    let url = this._getUrlForRequest(request);
-    let modelName = this._getModelNameFromUrl(url, id);
-
-    return this.handleStringShorthand(modelName, schema, request, options);
-  }
 
 }

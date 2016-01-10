@@ -11,10 +11,10 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
       this.get('/contacts', 'contact');
       this.get('/contacts/:id', 'contact');
   */
-  handleStringShorthand(modelName, schema, request, options = {}) {
+  handleStringShorthand(request, modelName) {
     let id = this._getIdForRequest(request);
     let type = camelize(modelName);
-    let modelClass = schema[type];
+    let modelClass = this.schema[type];
 
     assert(
       modelClass,
@@ -23,7 +23,7 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
 
     if (id) {
       return modelClass.find(id);
-    } else if (options.coalesce && request.queryParams && request.queryParams.ids) {
+    } else if (this.options.coalesce && request.queryParams && request.queryParams.ids) {
       return modelClass.find(request.queryParams.ids);
     } else {
       return modelClass.all();
@@ -35,7 +35,7 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
 
     Ex: this.get('/home', ['contacts', 'pictures']);
   */
-  handleArrayShorthand(array, schema, request) {
+  handleArrayShorthand(request, array) {
     let keys = array;
 
     let id = this._getIdForRequest(request);
@@ -57,7 +57,7 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
       model, adding the relationships there.`
     );
 
-    return keys.map(type => schema[singularize(type)].all());
+    return keys.map(type => this.schema[singularize(type)].all());
   }
 
 }

@@ -9,11 +9,11 @@ export default class PutShorthandRouteHandler extends BaseShorthandRouteHandler 
 
       this.put('/contacts/:id', 'user');
   */
-  handleStringShorthand(modelName, schema, request) {
+  handleStringShorthand(request, modelName) {
     let id = this._getIdForRequest(request);
     let type = camelize(modelName);
     let attrs = this._getAttrsForRequest(request);
-    let modelClass = schema[type];
+    let modelClass = this.schema[type];
 
     assert(
       modelClass,
