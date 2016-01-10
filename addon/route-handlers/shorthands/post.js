@@ -1,4 +1,4 @@
-import MirageError from 'ember-cli-mirage/error';
+import assert from 'ember-cli-mirage/assert';
 import BaseShorthandRouteHandler from './base';
 import { camelize } from 'ember-cli-mirage/utils/inflector';
 
@@ -13,12 +13,14 @@ export default class PostShorthandRouteHandler extends BaseShorthandRouteHandler
   handleStringShorthand(modelName, schema, request) {
     let type = camelize(modelName);
     let attrs = this._getAttrsForRequest(request);
+    let modelClass = schema[type];
 
-    if (!schema[type]) {
-      throw new MirageError(`The route handler for ${request.url} is trying to access the ${type} model, but that model doesn't exist. Create it using 'ember g mirage-model ${modelName}'.`);
-    }
+    assert(
+      modelClass,
+      `The route handler for ${request.url} is trying to access the ${type} model, but that model doesn't exist. Create it using 'ember g mirage-model ${modelName}'.`
+    );
 
-    return schema[type].create(attrs);
+    return modelClass.create(attrs);
   }
 
 }

@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import MirageError from 'ember-cli-mirage/error';
+import { MirageError } from 'ember-cli-mirage/assert';
 import Response from './response';
 import FunctionHandler from './route-handlers/function';
 import ObjectHandler from './route-handlers/object';
