@@ -11,16 +11,16 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
       this.get('/contacts', 'contact');
       this.get('/contacts/:id', 'contact');
   */
-  handleStringShorthand(request, modelName) {
-    let id = this._getIdForRequest(request);
+  handleStringShorthand(request, modelClass) {
+    let modelName = this.shorthand;
     let camelizedModelName = camelize(modelName);
-    let modelClass = this.schema[camelizedModelName];
 
     assert(
       modelClass,
       `The route handler for ${request.url} is trying to access the ${camelizedModelName} model, but that model doesn't exist. Create it using 'ember g mirage-model ${modelName}'.`
     );
 
+    let id = this._getIdForRequest(request);
     if (id) {
       return modelClass.find(id);
     } else if (this.options.coalesce && request.queryParams && request.queryParams.ids) {
@@ -35,9 +35,8 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
 
     Ex: this.get('/home', ['contacts', 'pictures']);
   */
-  handleArrayShorthand(request, array) {
-    let keys = array;
-
+  handleArrayShorthand(request, modelClasses) {
+    let keys = this.shorthand;
     let id = this._getIdForRequest(request);
 
     /*
@@ -57,7 +56,7 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
       model, adding the relationships there.`
     );
 
-    return keys.map(type => this.schema[singularize(type)].all());
+    return modelClasses.map((modelClass) => modelClass.all());
   }
 
 }

@@ -1,40 +1,44 @@
-import { singularize, camelize, dasherize } from 'ember-cli-mirage/utils/inflector';
 import _isArray from 'lodash/lang/isArray';
 import assert from 'ember-cli-mirage/assert';
+import { camelize, singularize, dasherize } from 'ember-cli-mirage/utils/inflector';
 
 const allDigitsRegex = /^\d+$/;
 
 export default class BaseShorthandRouteHandler {
 
-  constructor(schema, serializerOrRegistry, shorthand, options={}) {
+  constructor(schema, serializerOrRegistry, shorthand, path, options={}) {
+    shorthand = shorthand || this.getModelClassFromPath(path);
     this.schema = schema;
     this.serializerOrRegistry = serializerOrRegistry;
     this.shorthand = shorthand;
     this.options = options;
 
-    let type = _isArray(this.shorthand) ? 'array' : typeof this.shorthand;
-    let handler;
-    if (type === 'undefined') {
-      handler = this.handleUndefinedShorthand;
-    } else if (type === 'string') {
-      handler = this.handleStringShorthand;
+    let type = _isArray(shorthand) ? 'array' : typeof shorthand;
+    if (type === 'string') {
+      let modelClass = this.schema[camelize(singularize(shorthand))];
+      this.handle = (request) => {
+        return this.handleStringShorthand(request, modelClass);
+      };
     } else if (type === 'array') {
-      handler = this.handleArrayShorthand;
+      let modelClasses = shorthand.map((modelName) => this.schema[camelize(singularize(modelName))]);
+      this.handle = (request) => {
+        return this.handleArrayShorthand(request, modelClasses);
+      };
     }
-
-    this.handler = handler;
   }
 
-  handle(request) {
-    return this.handler(request, this.shorthand);
-  }
-
-  handleUndefinedShorthand(request) {
-    let id = this._getIdForRequest(request);
-    let url = this._getUrlForRequest(request);
-    let modelName = this._getModelNameFromUrl(url, id);
-
-    return this.handleStringShorthand(request, modelName);
+  getModelClassFromPath(fullPath) {
+    if (!fullPath) { return; }
+    let path = fullPath.split('/');
+    let lastPath;
+    while (path.length > 0) {
+      lastPath = path.splice(-1)[0];
+      if (lastPath && lastPath !== ':id') {
+        break;
+      }
+    }
+    let modelName = dasherize(camelize(singularize(lastPath)));
+    return modelName;
   }
 
   handleStringShorthand() { }
@@ -42,7 +46,6 @@ export default class BaseShorthandRouteHandler {
 
   _getIdForRequest(request) {
     let id;
-
     if (request && request.params && request.params.id) {
       id = request.params.id;
       // If parses, coerce to integer
@@ -50,48 +53,30 @@ export default class BaseShorthandRouteHandler {
         id = parseInt(request.params.id, 10);
       }
     }
-
     return id;
   }
 
-  _getUrlForRequest(request) {
-    return request && request.url;
-  }
-
-  _getModelNameFromUrl(url, hasId) {
-    let [ urlSplit ] = url.split('?');
-    let path = urlSplit.split('/');
-    path = path[path.length - 1] === '' ? path.slice(0, path.length - 1) : path; // when trailing slash
-    let typePath = hasId ? path[path.length - 2] : path[path.length - 1];
-    let modelName = dasherize(camelize(singularize(typePath)));
-
-    return modelName;
-  }
-
-  _getJsonBodyForRequest(request) {
+  _getJsonApiDocForRequest(request, modelName) {
     let body;
-
     if (request && request.requestBody) {
       body = JSON.parse(request.requestBody);
     }
-
-    return body;
+    return this.serializerOrRegistry.normalize(body, modelName);
   }
 
   _getAttrsForRequest(request, modelName) {
     let id = this._getIdForRequest(request);
-    let json = this._getJsonBodyForRequest(request);
-    let jsonApiDoc = this.serializerOrRegistry.normalize(json, modelName);
+    let json = this._getJsonApiDocForRequest(request, modelName);
 
     assert(
-      jsonApiDoc.data && jsonApiDoc.data.attributes,
+      json.data && json.data.attributes,
       `You're using a shorthand but your serializer's normalize function did not return a valid JSON:API document. http://www.ember-cli-mirage.com/docs/v0.2.x/serializers/#normalizejson`
     );
 
-    let attrs = {};
-    Object.keys(jsonApiDoc.data.attributes).forEach(key => {
-      attrs[camelize(key)] = jsonApiDoc.data.attributes[key];
-    });
+    let attrs = Object.keys(json.data.attributes).reduce((sum, key) => {
+      sum[camelize(key)] = json.data.attributes[key];
+      return sum;
+    }, {});
 
     attrs.id = id;
 

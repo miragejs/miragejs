@@ -10,16 +10,15 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
     This would remove the user with id :id:
       Ex: this.del('/contacts/:id', 'user');
   */
-  handleStringShorthand(request, modelName) {
-    let id = this._getIdForRequest(request);
+  handleStringShorthand(request, modelClass) {
+    let modelName = this.shorthand;
     let camelizedModelName = camelize(modelName);
-    let modelClass = this.schema[camelizedModelName];
-
     assert(
       modelClass,
       `The route handler for ${request.url} is trying to access the ${camelizedModelName} model, but that model doesn't exist. Create it using 'ember g mirage-model ${modelName}'.`
     );
 
+    let id = this._getIdForRequest(request);
     return modelClass.find(id).destroy();
   }
 
@@ -30,18 +29,15 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
     as this contact's addresses and phone numbers.
       Ex: this.del('/contacts/:id', ['contact', 'addresses', 'numbers');
   */
-  handleArrayShorthand(request, array) {
+  handleArrayShorthand(request, modelClasses) {
     let id = this._getIdForRequest(request);
-    let parentType = camelize(array[0]);
-    let childTypes = array.slice(1).map(camelize);
-    let parent = this.schema[parentType].find(id);
+
+    let parent = modelClasses[0].find(id);
+    let childTypes = modelClasses.slice(1)
+      .map((modelClass) => pluralize(modelClass.camelizedModelName));
 
     // Delete related children
-    childTypes.forEach(type => {
-      parent[pluralize(type)].destroy();
-    });
-
-    // Delete the parent
+    childTypes.forEach(type => parent[type].destroy());
     parent.destroy();
   }
 

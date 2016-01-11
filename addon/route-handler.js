@@ -21,9 +21,9 @@ function isNotBlankResponse(response) {
 
 const DEFAULT_CODES = { get: 200, put: 204, post: 201, 'delete': 204 };
 
-function createHandler({ verb, schema, serializerOrRegistry, rawHandler, options }) {
+function createHandler({ verb, schema, serializerOrRegistry, path, rawHandler, options }) {
   let handler;
-  let args = [ schema, serializerOrRegistry, rawHandler, options ];
+  let args = [ schema, serializerOrRegistry, rawHandler, path, options ];
   let type = typeOf(rawHandler);
   if (type === 'function') {
     handler = new FunctionHandler(...args);
@@ -43,11 +43,11 @@ function createHandler({ verb, schema, serializerOrRegistry, rawHandler, options
 
 export default class RouteHandler {
 
-  constructor({ schema, verb, rawHandler, customizedCode, options, serializerOrRegistry }) {
+  constructor({ schema, verb, rawHandler, customizedCode, options, path, serializerOrRegistry }) {
     this.verb = verb;
     this.customizedCode = customizedCode;
     this.serializerOrRegistry = serializerOrRegistry;
-    this.handler = createHandler({ verb, schema, serializerOrRegistry, rawHandler, options });
+    this.handler = createHandler({ verb, schema, path, serializerOrRegistry, rawHandler, options });
   }
 
   handle(request) {

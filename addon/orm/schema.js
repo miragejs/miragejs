@@ -65,6 +65,7 @@ export default class Schema {
 
     // Create the entity methods
     this[camelizedModelName] = {
+      camelizedModelName,
       new: (attrs) => this.new(camelizedModelName, attrs),
       create: (attrs) => this.create(camelizedModelName, attrs),
       all: (attrs) => this.all(camelizedModelName, attrs),
