@@ -22,7 +22,16 @@ function createPretender(server) {
     this.handledRequest = function(verb, path, request) {
       if (server.shouldLog()) {
         console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
-        console.log(request.responseText);
+        let responseText = request.responseText;
+        let loggedResponse;
+
+        try {
+          loggedResponse = JSON.parse(responseText);
+        } catch(e) {
+          loggedResponse = responseText;
+        }
+
+        console.log(loggedResponse);
       }
     };
 
