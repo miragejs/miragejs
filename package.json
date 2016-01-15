@@ -63,10 +63,10 @@
     "broccoli-funnel": "^1.0.1",
     "broccoli-merge-trees": "^1.1.0",
     "broccoli-unwatched-tree": "^0.1.1",
-    "ember-cli-babel": "^5.1.5",
-    "ember-lodash": "0.0.6",
-    "ember-inflector": "^1.9.2",
     "chalk": "^1.1.1",
+    "ember-cli-babel": "^5.1.5",
+    "ember-inflector": "^1.9.2",
+    "ember-lodash": "0.0.6",
     "exists-sync": "0.0.3"
   }
 }
