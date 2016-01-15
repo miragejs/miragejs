@@ -4,6 +4,8 @@ In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
 ## master
 
+## 0.2.0.beta-2
+
 Update notes:
   - `Serializer#relationships` was renamed to `Serializer#include`.
 
