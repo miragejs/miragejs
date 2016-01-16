@@ -166,7 +166,8 @@ export default class Server {
   loadFixtures(...args) {
     let fixtures = this.options.fixtures;
     if (args.length) {
-      fixtures = _pick(fixtures, ...args);
+      let camelizedArgs = args.map(camelize);
+      fixtures = _pick(fixtures, ...camelizedArgs);
     }
 
     this.db.loadData(fixtures);
