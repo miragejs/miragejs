@@ -2,9 +2,10 @@
 
 In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
-## master
+## 0.2.0.beta-3
 
 Update notes:
+
   - There was a bug where dasherized multiword serializers and fixtures were not registered correctly. This has been fixed, so if you happen to have camelized multiword serializers or fixtures
 
         /mirage/serializers/blogPost.js
@@ -17,6 +18,11 @@ Update notes:
 
     In Mirage 0.2, all filenames should be dasherized, following the conventions of Ember CLI. If you ever encounter a situation where this doesn't work, please file an issue, as this is a bug.
 
+Changes:  
+
+  - [ENHANCEMENT] Better blueprints
+  - [BUGFIX] Ensure multiword dasherized serializers work #333
+  - [BUGFIX] Ensure multiword dasherized fixtures work
 
 ## 0.2.0.beta-2
 
