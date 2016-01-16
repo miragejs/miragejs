@@ -5,6 +5,7 @@
 
 import Ember from 'ember';
 import _keys from 'lodash/object/keys';
+import _camelCase from 'lodash/string/camelCase';
 
 /*
   This function looks through all files that have been loaded by Ember CLI and
@@ -40,7 +41,7 @@ export default function(prefix) {
 
     let data = module['default'];
 
-    modulesMap[moduleType][moduleKey] = data;
+    modulesMap[moduleType][_camelCase(moduleKey)] = data;
   });
 
   return modulesMap;

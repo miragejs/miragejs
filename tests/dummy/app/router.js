@@ -14,6 +14,8 @@ Router.map(function() {
   this.route('friend', { path: '/friends/:friend_id'});
   this.route('close-friends');
   this.route('pets');
+
+  this.route('word-smith', { path: '/word-smiths/:word_smith_id'} );
 });
 
 export default Router;

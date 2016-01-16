@@ -187,20 +187,22 @@ export default class Server {
   }
 
   build(type, overrides) {
+    let camelizedType = camelize(type);
 
     // Store sequence for factory type as instance variable
     this.factorySequences = this.factorySequences || {};
-    this.factorySequences[type] = this.factorySequences[type] + 1 || 0;
+    this.factorySequences[camelizedType] = this.factorySequences[camelizedType] + 1 || 0;
 
-    if (!this._factoryMap || !this._factoryMap[type]) {
-      throw "You're trying to create a " + type + ", but no factory for this type was found";
+
+    if (!this._factoryMap || !this._factoryMap[camelizedType]) {
+      throw "You're trying to create a " + camelizedType + ", but no factory for this type was found";
     }
 
-    const OriginalFactory = this._factoryMap[type];
+    const OriginalFactory = this._factoryMap[camelizedType];
     const Factory = OriginalFactory.extend(overrides);
     const factory = new Factory();
 
-    const sequence = this.factorySequences[type];
+    const sequence = this.factorySequences[camelizedType];
     return factory.build(sequence);
   }
 

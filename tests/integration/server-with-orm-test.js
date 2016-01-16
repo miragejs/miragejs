@@ -10,7 +10,7 @@ module('Integration | Server with ORM', {
         blogPost: Model
       },
       factories: {
-        'blog-post': Factory
+        blogPost: Factory
       }
     });
     this.server.timing = 0;
