@@ -49,7 +49,7 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
     */
     assert(
       !id || singularize(keys[0]) !== keys[0],
-      `Mirage: It looks like you're using the "Single record with
+      `It looks like you're using the "Single record with
       related records" version of the array shorthand, in addition to opting
       in to the model layer. This shorthand was made when there was no
       serializer layer. Now that you're using models, please ensure your

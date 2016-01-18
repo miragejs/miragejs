@@ -38,7 +38,7 @@ function createPretender(server) {
     this.unhandledRequest = function(verb, path) {
       path = decodeURI(path);
       assert(
-        `Mirage: Your Ember app tried to ${verb} '${path}',
+        `Your Ember app tried to ${verb} '${path}',
          but there was no route defined to handle this request.
          Define a route that matches this path in your
          mirage/config.js file. Did you forget to add your namespace?`
@@ -194,9 +194,10 @@ export default class Server {
     this.factorySequences[camelizedType] = this.factorySequences[camelizedType] + 1 || 0;
 
 
-    if (!this._factoryMap || !this._factoryMap[camelizedType]) {
-      throw "You're trying to create a " + camelizedType + ", but no factory for this type was found";
-    }
+    assert(
+      this._factoryMap && this._factoryMap[camelizedType],
+      `You're trying to create a ${camelizedType}, but no factory for this type was found`
+    );
 
     const OriginalFactory = this._factoryMap[camelizedType];
     const Factory = OriginalFactory.extend(overrides);

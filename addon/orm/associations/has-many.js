@@ -3,6 +3,7 @@ import Collection from '../collection';
 import _assign from 'lodash/object/assign';
 import _compact from 'lodash/array/compact';
 import { capitalize, camelize } from 'ember-cli-mirage/utils/inflector';
+import assert from 'ember-cli-mirage/assert';
 
 class HasMany extends Association {
 
@@ -152,9 +153,7 @@ class HasMany extends Association {
         - parent must be saved
     */
     modelPrototype['create' + capitalize(camelize(association.target))] = function(attrs = {}) {
-      if (this.isNew()) {
-        throw 'You cannot call create unless the parent is saved';
-      }
+      assert(!this.isNew(), 'You cannot call create unless the parent is saved');
 
       var augmentedAttrs = _assign(attrs, { [foreignKey]: this.id });
       var child = schema[camelize(association.target)].create(augmentedAttrs);

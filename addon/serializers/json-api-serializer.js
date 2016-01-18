@@ -7,6 +7,7 @@ import _get from 'lodash/object/get';
 import _trim from 'lodash/string/trim';
 import _isString from 'lodash/lang/isString';
 import _ from 'lodash';
+import assert from '../assert';
 
 function isCollection(object) {
   return object instanceof Collection;
@@ -177,9 +178,13 @@ class JsonApiSerializer {
       TODO: This check should exist within the Serializer class, when the logic is moved from the registry to the
       individual serializers (see TODO above).
     */
-    if (ModelSerializer && (!ModelSerializer.prototype.embed) && (!ModelSerializer.prototype.root) && (!(new ModelSerializer() instanceof JsonApiSerializer))) {
-      throw 'Mirage: You cannot have a serializer that sideloads (embed: false) and disables the root (root: false).';
-    }
+    assert(
+      !ModelSerializer ||
+      ModelSerializer.prototype.embed ||
+      ModelSerializer.prototype.root ||
+      (new ModelSerializer() instanceof JsonApiSerializer),
+      'You cannot have a serializer that sideloads (embed: false) and disables the root (root: false).'
+    );
 
     return ModelSerializer ? new ModelSerializer(this._serializerMap) : this.baseSerializer;
   }
