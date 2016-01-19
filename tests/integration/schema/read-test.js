@@ -84,6 +84,25 @@ test('it errors if incorrect number of models are found for an array of ids', fu
   }, /Couldn't find all users/);
 });
 
+var schema;
+var User = Model.extend();
+module('Integration | Schema | read#first', {
+  beforeEach: function() {
+    var db = new Db();
+    db.createCollection('users');
+    db.users.insert([{id: 1, name: 'Link'}, {id: 2, name: 'Zelda'}]);
+    schema = new Schema(db);
+
+    schema.registerModel('user', User);
+  }
+});
+
+test('it can find the first model', function(assert) {
+  var record = schema.user.first();
+
+  assert.ok(record instanceof User);
+  assert.deepEqual(record.attrs, {id: '1', name: 'Link'});
+});
 
 var schema;
 var User = Model.extend();
