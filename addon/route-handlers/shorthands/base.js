@@ -78,10 +78,10 @@ export default class BaseShorthandRouteHandler {
     return body;
   }
 
-  _getAttrsForRequest(request) {
+  _getAttrsForRequest(request, modelName) {
     let id = this._getIdForRequest(request);
     let json = this._getJsonBodyForRequest(request);
-    let jsonApiDoc = this.serializerOrRegistry.normalize(json);
+    let jsonApiDoc = this.serializerOrRegistry.normalize(json, modelName);
 
     assert(
       jsonApiDoc.data && jsonApiDoc.data.attributes,

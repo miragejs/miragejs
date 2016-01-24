@@ -23,9 +23,8 @@ export default class SerializerRegistry {
     this._serializerMap = serializerMap;
   }
 
-  normalize(payload) {
-    let model = payload[Object.keys(payload)[0]];
-    return this._serializerFor(model.modelName).normalize(payload);
+  normalize(payload, modelName) {
+    return this._serializerFor(modelName).normalize(payload);
   }
 
   serialize(response, request) {
