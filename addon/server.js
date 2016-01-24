@@ -104,8 +104,7 @@ export default class Server {
     this._defineRouteHandlerHelpers();
 
     this.db = new Db();
-    this.schema = new Schema(this.db);
-    this.schema.registerModels(options.models);
+    this.schema = new Schema(this.db, options.models);
     this.serializerOrRegistry = new SerializerRegistry(this.schema, options.serializers);
 
     const hasFactories = this._hasModulesOfType(options, 'factories');

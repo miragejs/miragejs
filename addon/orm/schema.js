@@ -2,22 +2,25 @@ import { singularize, pluralize, camelize, dasherize } from '../utils/inflector'
 import Association from './associations/association';
 import Collection from './collection';
 import _isArray from 'lodash/lang/isArray';
+import _forIn from 'lodash/object/forIn';
+import _includes from 'lodash/collection/includes';
 
 export default class Schema {
 
-  constructor(db) {
+  constructor(db, modelsMap = {}) {
     if (!db) {
       throw 'Mirage: A schema requires a db';
     }
 
     this.db = db;
     this._registry = {};
+    this.registerModels(modelsMap);
   }
 
   registerModels(hash = {}) {
-    Object.keys(hash).forEach(function(key) {
+    _forIn(hash, (model, key) => {
       this.registerModel(key, hash[key]);
-    }, this);
+    });
   }
 
   registerModel(type, ModelClass) {
@@ -124,7 +127,11 @@ export default class Schema {
 
   _addForeignKeyToRegistry(type, fk) {
     this._registry[type] = this._registry[type] || {class: null, foreignKeys: []};
-    this._registry[type].foreignKeys.push(fk);
+
+    let fks = this._registry[type].foreignKeys;
+    if (!_includes(fks, fk)) {
+      fks.push(fk);
+    }
   }
 
   _instantiateModel(modelName, attrs) {
