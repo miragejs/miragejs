@@ -4,13 +4,12 @@ import Collection from './collection';
 import _isArray from 'lodash/lang/isArray';
 import _forIn from 'lodash/object/forIn';
 import _includes from 'lodash/collection/includes';
+import assert from '../assert';
 
 export default class Schema {
 
   constructor(db, modelsMap = {}) {
-    if (!db) {
-      throw 'Mirage: A schema requires a db';
-    }
+    assert(db, 'A schema requires a db');
 
     this.db = db;
     this._registry = {};
@@ -98,9 +97,10 @@ export default class Schema {
     var records = collection.find(ids);
 
     if (_isArray(ids)) {
-      if (records.length !== ids.length) {
-        throw 'Couldn\'t find all ' + pluralize(type) + ' with ids: (' + ids.join(',') + ') (found ' + records.length + ' results, but was looking for ' + ids.length + ')';
-      }
+      assert(
+        records.length === ids.length,
+        `Couldn\'t find all ${pluralize(type)} with ids: (${ids.join(',')}) (found ${records.length} results, but was looking for ${ids.length})`
+      );
     }
 
     return this._hydrate(records, dasherize(type));
@@ -118,9 +118,10 @@ export default class Schema {
   */
   _collectionForType(type) {
     var collection = pluralize(type);
-    if (!this.db[collection]) {
-      throw 'Mirage: You\'re trying to find model(s) of type ' + type + ' but this collection doesn\'t exist in the database.';
-    }
+    assert(
+      this.db[collection],
+      `You\'re trying to find model(s) of type ${type} but this collection doesn\'t exist in the database.`
+    );
 
     return this.db[collection];
   }

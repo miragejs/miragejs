@@ -1,4 +1,5 @@
 import _isArray from 'lodash/lang/isArray';
+import assert from '../assert';
 
 const { forEach, filter, reduce, push, map, slice } = Array.prototype;
 /*
@@ -8,9 +9,10 @@ const { forEach, filter, reduce, push, map, slice } = Array.prototype;
 
 export default class Collection {
  constructor(modelName, ...args) {
-  if (!modelName || typeof modelName !== 'string') {
-    throw 'You must pass a `modelName` into a Collection';
-  }
+  assert(
+    modelName && typeof modelName === 'string',
+    'You must pass a `modelName` into a Collection'
+  );
 
   this.modelName = modelName;
 

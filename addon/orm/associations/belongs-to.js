@@ -1,6 +1,7 @@
 import Association from './association';
 import _assign from 'lodash/object/assign';
 import { capitalize, camelize } from 'ember-cli-mirage/utils/inflector';
+import assert from 'ember-cli-mirage/assert';
 
 class BelongsTo extends Association {
 
@@ -32,7 +33,7 @@ class BelongsTo extends Association {
         object.parentId
           - returns the associated parent's id
       */
-      get: function() {
+      get() {
         return this.attrs[foreignKey];
       },
 
@@ -40,10 +41,11 @@ class BelongsTo extends Association {
         object.parentId = (parentId)
           - sets the associated parent (via id)
       */
-      set: function(id) {
-        if (id && !schema[camelize(association.target)].find(id)) {
-          throw 'Couldn\'t find ' + association.target + ' with id = ' + id;
-        }
+      set(id) {
+        assert(
+          !id || schema[camelize(association.target)].find(id),
+          `Couldn\'t find ${association.target} with id = ' + id`
+        );
 
         this.attrs[foreignKey] = id;
         return this;
@@ -55,7 +57,7 @@ class BelongsTo extends Association {
         object.parent
           - returns the associated parent
       */
-      get: function() {
+      get() {
         var foreignKeyId = this[foreignKey];
         if (foreignKeyId) {
           association._tempParent = null;
@@ -72,7 +74,7 @@ class BelongsTo extends Association {
         object.parent = (parentModel)
           - sets the associated parent (via model)
       */
-      set: function(newModel) {
+      set(newModel) {
         if (newModel && newModel.isNew()) {
           this[foreignKey] = null;
           association._tempParent = newModel;

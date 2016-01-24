@@ -1,5 +1,6 @@
 import { pluralize, camelize } from '../utils/inflector';
 import extend from '../utils/extend';
+import assert from '../assert';
 
 /*
   The Model class. Notes:
@@ -15,8 +16,8 @@ import extend from '../utils/extend';
 class Model {
 
   constructor(schema, modelName, attrs, fks) {
-    if (!schema) { throw 'Mirage: A model requires a schema'; }
-    if (!modelName) { throw 'Mirage: A model requires a modelName'; }
+    assert(schema, 'A model requires a schema');
+    assert(modelName, 'A model requires a modelName');
 
     this._schema = schema;
     this.modelName = modelName;

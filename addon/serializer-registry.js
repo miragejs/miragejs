@@ -3,6 +3,7 @@ import Collection from 'ember-cli-mirage/orm/collection';
 import Serializer from 'ember-cli-mirage/serializer';
 import JsonApiSerializer from 'ember-cli-mirage/serializers/json-api-serializer';
 import { pluralize, camelize } from './utils/inflector';
+import assert from './assert';
 
 import _assign from 'lodash/object/assign';
 import _isArray from 'lodash/lang/isArray';
@@ -230,9 +231,13 @@ export default class SerializerRegistry {
       TODO: This check should exist within the Serializer class, when the logic is moved from the registry to the
       individual serializers (see TODO above).
     */
-    if (ModelSerializer && (!ModelSerializer.prototype.embed) && (!ModelSerializer.prototype.root) && (!(new ModelSerializer() instanceof JsonApiSerializer))) {
-      throw 'Mirage: You cannot have a serializer that sideloads (embed: false) and disables the root (root: false).';
-    }
+    assert(
+      !ModelSerializer ||
+      (ModelSerializer.prototype.embed) ||
+      (ModelSerializer.prototype.root) ||
+      (new ModelSerializer() instanceof JsonApiSerializer),
+      'You cannot have a serializer that sideloads (embed: false) and disables the root (root: false).'
+    );
 
     return ModelSerializer ? new ModelSerializer(this._serializerMap) : this.baseSerializer;
   }
