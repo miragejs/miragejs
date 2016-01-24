@@ -27,10 +27,11 @@ var db, schema, User;
 module('Integration | Schema | Creating a Model', {
   beforeEach: function() {
     db = new Db();
-    schema = new Schema(db);
 
     User = Model.extend();
-    schema.registerModel('user', User);
+    schema = new Schema(db, {
+      user: User
+    });
   }
 });
 

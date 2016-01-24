@@ -21,16 +21,12 @@ class HasManyHelper {
       users: [],
       addresses: []
     });
-    this.schema = new Schema(this.db);
 
-    var User = Model.extend({
-      addresses: Mirage.hasMany()
-    });
-    var Address = Model;
-
-    this.schema.registerModels({
-      user: User,
-      address: Address
+    this.schema = new Schema(this.db, {
+      user: Model.extend({
+        addresses: Mirage.hasMany()
+      }),
+      address: Model
     });
   }
 

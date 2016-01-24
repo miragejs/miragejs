@@ -21,17 +21,12 @@ class BelongsToHelper {
       users: [],
       addresses: []
     });
-    this.schema = new Schema(this.db);
 
-    let User = Model;
-
-    let Address = Model.extend({
-      user: Mirage.belongsTo()
-    });
-
-    this.schema.registerModels({
-      user: User,
-      address: Address
+    this.schema = new Schema(this.db, {
+      user: Model.extend(),
+      address: Model.extend({
+        user: Mirage.belongsTo()
+      })
     });
   }
 

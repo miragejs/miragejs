@@ -16,9 +16,8 @@ module('Integration | Schema | reinitialize associations', {
       users: [],
       addresses: []
     });
-    this.schema = new Schema(this.db);
 
-    this.schema.registerModels({
+    this.schema = new Schema(this.db, {
       address: Address,
       user: User
     });

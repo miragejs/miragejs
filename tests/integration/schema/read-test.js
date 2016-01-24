@@ -8,13 +8,16 @@ import {module, test} from 'qunit';
 module('Integration | Schema | read#all');
 
 test('it can return all models', function(assert) {
-  var db = new Db();
-  db.createCollection('users');
-  db.users.insert([{id: 1, name: 'Link'}, {id: 2, name: 'Zelda'}]);
-  var schema = new Schema(db);
+  var db = new Db({
+    users: [
+      {id: 1, name: 'Link'},
+      {id: 2, name: 'Zelda'}
+    ]
+  });
 
-  var User = Model.extend();
-  schema.registerModel('user', User);
+  var schema = new Schema(db, {
+    user: User
+  });
 
   var users = schema.user.all();
   assert.ok(users instanceof Collection, 'it returns a collection');
@@ -24,12 +27,11 @@ test('it can return all models', function(assert) {
 });
 
 test('it returns an empty array when no models exist', function(assert) {
-  var db = new Db();
-  db.createCollection('users');
-  var schema = new Schema(db);
+  var db = new Db({users: []});
 
-  var User = Model.extend();
-  schema.registerModel('user', User);
+  var schema = new Schema(db, {
+    user: User
+  });
 
   var users = schema.user.all();
 
@@ -43,12 +45,14 @@ var schema;
 var User = Model.extend();
 module('Integration | Schema | read#find', {
   beforeEach: function() {
-    var db = new Db();
-    db.createCollection('users');
-    db.users.insert([{id: 1, name: 'Link'}, {id: 2, name: 'Zelda'}]);
-    schema = new Schema(db);
+    var db = new Db({users: [
+      {id: 1, name: 'Link'},
+      {id: 2, name: 'Zelda'}
+    ]});
 
-    schema.registerModel('user', User);
+    schema = new Schema(db, {
+      user: User
+    });
   }
 });
 
@@ -85,16 +89,15 @@ var schema;
 var User = Model.extend();
 module('Integration | Schema | read#where', {
   beforeEach: function() {
-    var db = new Db();
-    db.createCollection('users');
-    db.users.insert([
+    var db = new Db({users: [
       {id: 1, name: 'Link', good: true},
       {id: 2, name: 'Zelda', good: true},
       {id: 3, name: 'Ganon', good: false}
-    ]);
-    schema = new Schema(db);
+    ]});
 
-    schema.registerModel('user', User);
+    schema = new Schema(db, {
+      user: User
+    });
   }
 });
 
@@ -127,14 +130,13 @@ test('it returns an empty collection if no models match a query', function(asser
 var db, schema, User;
 module('Integration | Schema | Reading a models attrs', {
   beforeEach: function() {
-    db = new Db();
-    db.createCollection('users');
-    db.users.insert([
+    db = new Db({users: [
       {id: 1, name: 'Link', evil: false}
-    ]);
-    schema = new Schema(db);
-    User = Model.extend();
-    schema.registerModel('user', User);
+    ]});
+
+    schema = new Schema(db, {
+      user: User
+    });
   }
 });
 

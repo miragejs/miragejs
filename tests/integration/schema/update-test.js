@@ -7,12 +7,11 @@ import {module, test} from 'qunit';
 var db, collection;
 module('Integration | Schema | Updating a Collection', {
   beforeEach: function() {
-    db = new Db();
-    db.createCollection('users');
-    var schema = new Schema(db);
+    db = new Db({users: []});
 
-    var User = Model.extend();
-    schema.registerModel('user', User);
+    var schema = new Schema(db, {
+      user: Model
+    });
 
     collection = new Collection('user', [
       schema.user.create({name: 'Link', location: 'Hyrule', evil: false}),
@@ -54,17 +53,16 @@ test('it can update its models with a hash of attrs', function(assert) {
 });
 
 
-var db, schema, User;
+var db, schema;
 module('Integration | Schema | Updating a Model', {
   beforeEach: function() {
-    db = new Db();
-    db.createCollection('users');
-    db.users.insert([
+    db = new Db({users: [
       {id: 1, name: 'Link', evil: false}
-    ]);
-    schema = new Schema(db);
-    User = Model.extend();
-    schema.registerModel('user', User);
+    ]});
+
+    schema = new Schema(db, {
+      user: Model
+    });
   }
 });
 
