@@ -3,22 +3,24 @@ import Association from './associations/association';
 import Collection from './collection';
 import _isArray from 'lodash/lang/isArray';
 
-export default function(db) {
+export default class Schema {
 
-  if (!db) {
-    throw 'Mirage: A schema requires a db';
+  constructor(db) {
+    if (!db) {
+      throw 'Mirage: A schema requires a db';
+    }
+
+    this.db = db;
+    this._registry = {};
   }
 
-  this.db = db;
-  this._registry = {};
-
-  this.registerModels = function(hash = {}) {
+  registerModels(hash = {}) {
     Object.keys(hash).forEach(function(key) {
       this.registerModel(key, hash[key]);
     }, this);
-  };
+  }
 
-  this.registerModel = function(type, ModelClass) {
+  registerModel(type, ModelClass) {
     type = camelize(type);
 
     // Avoid mutating original class, because we may want to reuse it across many tests
@@ -69,26 +71,26 @@ export default function(db) {
     };
 
     return this;
-  };
+  }
 
-  this.new = function(type, attrs) {
+  new(type, attrs) {
     return this._instantiateModel(dasherize(type), attrs);
-  };
+  }
 
-  this.create = function(type, attrs) {
+  create(type, attrs) {
     var collection = this._collectionForType(type);
     var augmentedAttrs = collection.insert(attrs);
 
     return this._instantiateModel(dasherize(type), augmentedAttrs);
-  };
+  }
 
-  this.all = function(type) {
+  all(type) {
     var collection = this._collectionForType(type);
 
     return this._hydrate(collection, dasherize(type));
-  };
+  }
 
-  this.find = function(type, ids) {
+  find(type, ids) {
     var collection = this._collectionForType(type);
     var records = collection.find(ids);
 
@@ -99,52 +101,52 @@ export default function(db) {
     }
 
     return this._hydrate(records, dasherize(type));
-  };
+  }
 
-  this.where = function(type, query) {
+  where(type, query) {
     var collection = this._collectionForType(type);
     var records = collection.where(query);
 
     return this._hydrate(records, dasherize(type));
-  };
+  }
 
   /*
     Private methods
   */
-  this._collectionForType = function(type) {
+  _collectionForType(type) {
     var collection = pluralize(type);
     if (!this.db[collection]) {
       throw 'Mirage: You\'re trying to find model(s) of type ' + type + ' but this collection doesn\'t exist in the database.';
     }
 
     return this.db[collection];
-  };
+  }
 
-  this._addForeignKeyToRegistry = function(type, fk) {
+  _addForeignKeyToRegistry(type, fk) {
     this._registry[type] = this._registry[type] || {class: null, foreignKeys: []};
     this._registry[type].foreignKeys.push(fk);
-  };
+  }
 
-  this._instantiateModel = function(modelName, attrs) {
+  _instantiateModel(modelName, attrs) {
     var ModelClass = this._modelFor(modelName);
     var fks = this._foreignKeysFor(modelName);
 
     return new ModelClass(this, modelName, attrs, fks);
-  };
+  }
 
-  this._modelFor = function(modelName) {
+  _modelFor(modelName) {
     return this._registry[camelize(modelName)].class;
-  };
+  }
 
-  this._foreignKeysFor = function(modelName) {
+  _foreignKeysFor(modelName) {
     return this._registry[camelize(modelName)].foreignKeys;
-  };
+  }
 
   /*
     Takes a record and returns a model, or an array of records
     and returns a collection.
   */
-  this._hydrate = function(records, modelName) {
+  _hydrate(records, modelName) {
     if (_isArray(records)) {
       var models = records.map(function(record) {
         return this._instantiateModel(modelName, record);
@@ -155,5 +157,5 @@ export default function(db) {
     } else {
       return null;
     }
-  };
+  }
 }
