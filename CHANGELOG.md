@@ -63,6 +63,7 @@ Changes:
   - [ENHANCEMENT] shutdown Mirage server on destroyAppp @blimmer
   - [ENHANCEMENT] createList perf enhancement @alvinvogelzang
   - [ENHANCEMENT] improve DB autoincrement @jherdman
+  - [ENHANCEMENT] #493 Ability to set timing parameter for individual routes @bekzod
   - [FEATURE] [Allow nested factory objects](https://github.com/samselikoff/ember-cli-mirage/commit/a73a195c1b991d226429ee369e2af688a95c7d95) @john-kurkowski
   - Other bugfixes/enhancements @jherdman, @ef4, @seanpdoyle, @alecho, @bekzod
 
