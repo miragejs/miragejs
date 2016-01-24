@@ -2,6 +2,16 @@
 
 In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
+## master
+
+Update notes: None.
+
+Changes:
+
+ - [BUGFIX] #506 Ensure serializer#normalize looks up model-specific serializers @2468ben
+ - [BUGFIX] #507 Ensure foreign keys are added once @samselikoff
+ - General cleanup @bekzod
+
 ## 0.2.0.beta-3
 
 Update notes:
