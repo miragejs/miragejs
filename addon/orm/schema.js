@@ -69,7 +69,8 @@ export default class Schema {
       create: (attrs) => this.create(type, attrs),
       all: (attrs) => this.all(type, attrs),
       find: (attrs) => this.find(type, attrs),
-      where: (attrs) => this.where(type, attrs)
+      where: (attrs) => this.where(type, attrs),
+      first: (attrs) => this.first(type, attrs)
     };
 
     return this;
@@ -111,6 +112,13 @@ export default class Schema {
     var records = collection.where(query);
 
     return this._hydrate(records, dasherize(type));
+  }
+
+  first(type) {
+    var collection = this._collectionForType(type);
+    var record = collection[0];
+
+    return this._hydrate(record, dasherize(type));
   }
 
   /*
