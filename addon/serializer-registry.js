@@ -78,9 +78,9 @@ export default class SerializerRegistry {
         let serializer = this._serializerFor(collection.modelName);
 
         if (serializer.embed) {
-          json[pluralize(collection.modelName)] = this._serializeModelOrCollection(collection);
+          json[pluralize(collection.modelName)] = this._serializeModelOrCollection(collection, request);
         } else {
-          json = _assign(json, this._serializeSideloadedModelOrCollection(collection));
+          json = _assign(json, this._serializeSideloadedModelOrCollection(collection, request));
         }
 
         return json;
@@ -91,14 +91,14 @@ export default class SerializerRegistry {
     }
   }
 
-  _serializeSideloadedModelOrCollection(modelOrCollection) {
+  _serializeSideloadedModelOrCollection(modelOrCollection, request) {
     if (isModel(modelOrCollection)) {
-      return this._serializeSideloadedModelResponse(modelOrCollection);
+      return this._serializeSideloadedModelResponse(modelOrCollection, request);
     } else if (modelOrCollection.length) {
 
       return modelOrCollection.reduce((allAttrs, model) => {
         this._augmentAlreadySerialized(model);
-        return this._serializeSideloadedModelResponse(model, true, allAttrs);
+        return this._serializeSideloadedModelResponse(model, request, true, allAttrs);
       }, {});
 
     // We have an empty collection
@@ -107,12 +107,12 @@ export default class SerializerRegistry {
     }
   }
 
-  _serializeSideloadedModelResponse(model, topLevelIsArray = false, allAttrs = {}, root = null) {
+  _serializeSideloadedModelResponse(model, request, topLevelIsArray = false, allAttrs = {}, root = null) {
     let serializer = this._serializerFor(model.modelName);
 
     // Add this model's attrs
     this._augmentAlreadySerialized(model);
-    let modelAttrs = this._attrsForModel(model, false, true);
+    let modelAttrs = this._attrsForModel(model, request, false, true);
     let key = this._keyForModelOrCollection(model);
 
     if (topLevelIsArray) {
@@ -134,7 +134,7 @@ export default class SerializerRegistry {
             return;
           }
 
-          this._serializeSideloadedModelResponse(relatedModel, true, allAttrs, serializer.keyForRelationship(relatedModel.modelName));
+          this._serializeSideloadedModelResponse(relatedModel, request, true, allAttrs, serializer.keyForRelationship(relatedModel.modelName));
         });
       });
 
@@ -148,31 +148,31 @@ export default class SerializerRegistry {
     return serializer.root ? { [key]: attrs } : attrs;
   }
 
-  _serializeModelOrCollection(modelOrCollection, removeForeignKeys, serializeRelationships) {
+  _serializeModelOrCollection(modelOrCollection, request, removeForeignKeys, serializeRelationships) {
     if (isModel(modelOrCollection)) {
-      return this._serializeModel(modelOrCollection, removeForeignKeys, serializeRelationships);
+      return this._serializeModel(modelOrCollection, request, removeForeignKeys, serializeRelationships);
     } else {
       return modelOrCollection
-        .map(model => this._serializeModel(model, removeForeignKeys, serializeRelationships));
+        .map(model => this._serializeModel(model, request, removeForeignKeys, serializeRelationships));
     }
   }
 
-  _serializeModel(model, removeForeignKeys = true, serializeRelationships = true) {
+  _serializeModel(model, request, removeForeignKeys = true, serializeRelationships = true) {
     if (this._hasBeenSerialized(model)) {
       return;
     }
 
-    let attrs = this._attrsForModel(model, removeForeignKeys);
+    let attrs = this._attrsForModel(model, request, removeForeignKeys);
 
     this._augmentAlreadySerialized(model);
-    let relatedAttrs = serializeRelationships ? this._attrsForRelationships(model) : {};
+    let relatedAttrs = serializeRelationships ? this._attrsForRelationships(model, request) : {};
 
     return _assign(attrs, relatedAttrs);
   }
 
-  _attrsForModel(model, removeForeignKeys, embedRelatedIds) {
+  _attrsForModel(model, request, removeForeignKeys, embedRelatedIds) {
     let serializer = this._serializerFor(model.modelName);
-    let attrs = serializer.serialize(model);
+    let attrs = serializer.serialize(model, request);
 
     if (removeForeignKeys) {
       model.fks.forEach(key => {
@@ -192,11 +192,11 @@ export default class SerializerRegistry {
     return attrs;
   }
 
-  _attrsForRelationships(model) {
+  _attrsForRelationships(model, request) {
     let serializer = this._serializerFor(model.modelName);
 
     return serializer.include.reduce((attrs, key) => {
-      let relatedAttrs = this._serializeModelOrCollection(model[camelize(key)]);
+      let relatedAttrs = this._serializeModelOrCollection(model[camelize(key)], request);
 
       if (relatedAttrs) {
         attrs[camelize(key)] = relatedAttrs;
