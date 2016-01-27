@@ -126,6 +126,7 @@ export default class SerializerRegistry {
     // Traverse this model's relationships
     serializer.include
       .map(key => model[camelize(key)])
+      .filter(Boolean)
       .forEach(relationship => {
         let relatedModels = isModel(relationship) ? [relationship] : relationship;
 
