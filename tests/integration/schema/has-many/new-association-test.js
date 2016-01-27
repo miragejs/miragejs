@@ -19,13 +19,13 @@ module('Integration | Schema | hasMany #newAssociation', {
 ].forEach(state => {
 
   test(`a ${state} can build a new associated parent`, function(assert) {
-    var [user, addresses] = this.helper[state]();
-    var startingCount = addresses.length;
+    var [user, homeAddresses] = this.helper[state]();
+    var startingCount = homeAddresses.length;
 
-    var springfield = user.newAddress({name: '1 Springfield ave'});
+    var springfield = user.newHomeAddress({name: '1 Springfield ave'});
 
     assert.ok(!springfield.id, 'the child was not persisted');
-    assert.deepEqual(user.addresses[startingCount], springfield, `the child is appended to the parent's collection`);
+    assert.deepEqual(user.homeAddresses[startingCount], springfield, `the child is appended to the parent's collection`);
 
     if (!user.isNew()) {
       assert.equal(springfield.userId, user.id, `the new address's fk reference the saved parent`);
@@ -39,12 +39,12 @@ module('Integration | Schema | hasMany #newAssociation', {
   });
 
   test(`a ${state} can build a new associated parent without passing in attrs (regression)`, function(assert) {
-    var [user, addresses] = this.helper[state]();
-    var startingCount = addresses.length;
+    var [user, homeAddresses] = this.helper[state]();
+    var startingCount = homeAddresses.length;
 
-    var springfield = user.newAddress();
+    var springfield = user.newHomeAddress();
 
-    assert.deepEqual(user.addresses[startingCount], springfield, `the child is appended to the parent's collection`);
+    assert.deepEqual(user.homeAddresses[startingCount], springfield, `the child is appended to the parent's collection`);
   });
 
 });
