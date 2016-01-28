@@ -23,16 +23,16 @@ module('Integration | Schema | hasMany #accessor', {
 ].forEach(state => {
 
   test(`the references of a ${state} are correct`, function(assert) {
-    var [user, addresses] = this.helper[state]();
+    var [user, homeAddresses] = this.helper[state]();
 
-    assert.equal(user.addresses.length, addresses.length, 'parent has correct number of children');
-    assert.equal(user.addressIds.length, addresses.length, 'parent has correct number of child ids');
+    assert.equal(user.homeAddresses.length, homeAddresses.length, 'parent has correct number of children');
+    assert.equal(user.homeAddressIds.length, homeAddresses.length, 'parent has correct number of child ids');
 
-    addresses.forEach(function(address, i) {
-      assert.deepEqual(user.addresses[i], addresses[i], 'each child is in parent.children array');
+    homeAddresses.forEach(function(homeAddress, i) {
+      assert.deepEqual(user.homeAddresses[i], homeAddresses[i], 'each child is in parent.children array');
 
-      if (!address.isNew()) {
-        assert.ok(user.addressIds.indexOf(address.id) > -1, 'each saved child id is in parent.childrenIds array');
+      if (!homeAddress.isNew()) {
+        assert.ok(user.homeAddressIds.indexOf(homeAddress.id) > -1, 'each saved child id is in parent.childrenIds array');
       }
     });
   });

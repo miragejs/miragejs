@@ -19,14 +19,14 @@ class HasManyHelper {
   constructor() {
     this.db = new Db({
       users: [],
-      addresses: []
+      homeAddresses: []
     });
 
     this.schema = new Schema(this.db, {
       user: Model.extend({
-        addresses: Mirage.hasMany()
+        homeAddresses: Mirage.hasMany()
       }),
-      address: Model
+      homeAddress: Model
     });
   }
 
@@ -40,30 +40,30 @@ class HasManyHelper {
     let insertedUser = this.db.users.insert({name: 'Link'});
 
     var user = this.schema.user.find(insertedUser.id);
-    var newAddress = user.newAddress();
+    var newHomeAddress = user.newHomeAddress();
 
-    return [user, [newAddress]];
+    return [user, [newHomeAddress]];
   }
 
   savedParentSavedChildren() {
     let insertedUser = this.db.users.insert({name: 'Link'});
-    let insertedAddress = this.db.addresses.insert({name: '123 Hyrule Way', userId: insertedUser.id});
+    let insertedHomeAddress = this.db.homeAddresses.insert({name: '123 Hyrule Way', userId: insertedUser.id});
 
     var user = this.schema.user.find(insertedUser.id);
-    var address = this.schema.address.find(insertedAddress.id);
+    var homeAddress = this.schema.homeAddress.find(insertedHomeAddress.id);
 
-    return [user, [address]];
+    return [user, [homeAddress]];
   }
 
   savedParentMixedChildren() {
     let insertedUser = this.db.users.insert({name: 'Link'});
-    let insertedAddress = this.db.addresses.insert({name: '123 Hyrule Way', userId: insertedUser.id});
+    let insertedHomeAddress = this.db.homeAddresses.insert({name: '123 Hyrule Way', userId: insertedUser.id});
 
     var user = this.schema.user.find(insertedUser.id);
-    var savedAddress = this.schema.address.find(insertedAddress.id);
-    var newAddress = user.newAddress();
+    var savedHomeAddress = this.schema.homeAddress.find(insertedHomeAddress.id);
+    var newHomeAddress = user.newHomeAddress();
 
-    return [user, [savedAddress, newAddress]];
+    return [user, [savedHomeAddress, newHomeAddress]];
   }
 
   newParentNoChildren() {
@@ -74,39 +74,39 @@ class HasManyHelper {
 
   newParentNewChildren() {
     var user = this.schema.user.new();
-    var newAddress = user.newAddress();
+    var newHomeAddress = user.newHomeAddress();
 
-    return [user, [newAddress]];
+    return [user, [newHomeAddress]];
   }
 
   newParentSavedChildren() {
-    let insertedAddress = this.db.addresses.insert({name: '123 Hyrule Way'});
-    let savedAddress = this.schema.address.find(insertedAddress.id);
-    let newUser = this.schema.user.new({addresses: [savedAddress]});
+    let insertedHomeAddress = this.db.homeAddresses.insert({name: '123 Hyrule Way'});
+    let savedHomeAddress = this.schema.homeAddress.find(insertedHomeAddress.id);
+    let newUser = this.schema.user.new({homeAddresses: [savedHomeAddress]});
 
-    return [newUser, [savedAddress]];
+    return [newUser, [savedHomeAddress]];
   }
 
   newParentMixedChildren() {
-    let insertedAddress = this.db.addresses.insert({name: '123 Hyrule Way'});
-    var savedAddress = this.schema.address.find(insertedAddress.id);
-    var newAddress = this.schema.address.new();
+    let insertedHomeAddress = this.db.homeAddresses.insert({name: '123 Hyrule Way'});
+    var savedHomeAddress = this.schema.homeAddress.find(insertedHomeAddress.id);
+    var newHomeAddress = this.schema.homeAddress.new();
 
-    var newUser = this.schema.user.new({addresses: [savedAddress, newAddress]});
+    var newUser = this.schema.user.new({homeAddresses: [savedHomeAddress, newHomeAddress]});
 
-    return [newUser, [savedAddress, newAddress]];
+    return [newUser, [savedHomeAddress, newHomeAddress]];
   }
 
   // Just a saved unassociated child. The id is high so as not to
   // interfere with any other children
   savedChild() {
-    let insertedAddress = this.db.addresses.insert({name: 'foo'});
+    let insertedHomeAddress = this.db.homeAddresses.insert({name: 'foo'});
 
-    return this.schema.address.find(insertedAddress.id);
+    return this.schema.homeAddress.find(insertedHomeAddress.id);
   }
 
   newChild() {
-    return this.schema.address.new({name: 'Newbie'});
+    return this.schema.homeAddress.new({name: 'Newbie'});
   }
 
 

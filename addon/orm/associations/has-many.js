@@ -121,7 +121,7 @@ class HasMany extends Association {
             .forEach(model => model.save());
 
           // Associate the new children to this model
-          schema[(association.target)].find(models.map(m => m.id)).update(foreignKey, this.id);
+          schema[camelize(association.target)].find(models.map(m => m.id)).update(foreignKey, this.id);
 
           // Clear out any old cached children
           association._cachedChildren = [];

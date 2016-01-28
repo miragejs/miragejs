@@ -18,21 +18,21 @@ module('Integration | Schema | hasMany #createAssociation', {
     var [user, children] = this.helper[state]();
     var startingCount = children.length;
 
-    var springfield = user.createAddress({name: '1 Springfield ave'});
+    var springfield = user.createHomeAddress({name: '1 Springfield ave'});
 
     assert.ok(springfield.id, 'the child was persisted');
     assert.equal(springfield.userId, 1, 'the fk is set');
-    assert.equal(user.addresses.length, startingCount + 1, 'the collection length is correct');
-    assert.deepEqual(user.addresses.filter(a => a.id === springfield.id)[0], springfield, 'the address was added to user.addresses');
-    assert.ok(user.addressIds.indexOf(springfield.id) > -1, 'the id was added to the fks array');
+    assert.equal(user.homeAddresses.length, startingCount + 1, 'the collection length is correct');
+    assert.deepEqual(user.homeAddresses.filter(a => a.id === springfield.id)[0], springfield, 'the homeAddress was added to user.homeAddresses');
+    assert.ok(user.homeAddressIds.indexOf(springfield.id) > -1, 'the id was added to the fks array');
   });
 
   test(`a ${state} can create an associated child without passing attrs (regression)`, function(assert) {
     var [user] = this.helper[state]();
 
-    var springfield = user.createAddress();
+    var springfield = user.createHomeAddress();
 
-    assert.deepEqual(user.addresses.filter(a => a.id === springfield.id)[0], springfield, 'the address was added to user.addresses');
+    assert.deepEqual(user.homeAddresses.filter(a => a.id === springfield.id)[0], springfield, 'the homeAddress was added to user.homeAddresses');
   });
 
 });
@@ -48,7 +48,7 @@ module('Integration | Schema | hasMany #createAssociation', {
     var [user] = this.helper[state]();
 
     assert.throws(function() {
-      user.createAddress({name: '1 Springfield ave'});
+      user.createHomeAddress({name: '1 Springfield ave'});
     }, /unless the parent is saved/);
   });
 
