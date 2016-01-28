@@ -193,3 +193,21 @@ test(`it can sideload a collection with a chain of belongs-to relationships`, fu
     ]
   });
 });
+
+test(`it skips an empty belongs-to relationship`, function(assert) {
+  let registry = new SerializerRegistry(this.schema, {
+    application: this.BaseSerializer,
+    foo: this.BaseSerializer.extend({
+      include: ['bar']
+    })
+  });
+
+  let foo1 = this.schema.foo.create({name: 'test foo'});
+  let result = registry.serialize(foo1);
+
+  assert.deepEqual(result, {
+    foo:
+      {id: '1', name: 'test foo', barId: null}
+  });
+});
+
