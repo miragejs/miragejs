@@ -4,16 +4,9 @@ import schemaHelper from '../schema-helper';
 import { underscore } from 'ember-cli-mirage/utils/inflector';
 import {module, test} from 'qunit';
 
-module('Integration | Serializers | JSON API Serializer | Attribute Key Formatting', {
+module('Integration | Serializers | JSON API Serializer | Key Formatting', {
   beforeEach() {
     this.schema = schemaHelper.setup();
-    this.registry = new SerializerRegistry(this.schema, {
-      application: JsonApiSerializer.extend({
-        keyForAttribute(key) {
-          return underscore(key);
-        }
-      })
-    });
   },
   afterEach() {
     this.schema.db.emptyData();
@@ -21,6 +14,11 @@ module('Integration | Serializers | JSON API Serializer | Attribute Key Formatti
 });
 
 test(`keyForAttribute formats the attributes of a model`, function(assert) {
+  let registry = new SerializerRegistry(this.schema, {
+    application: JsonApiSerializer.extend({
+      keyForAttribute: underscore
+    })
+  });
   let wordSmith = this.schema.wordSmith.create({
     id: 1,
     firstName: 'Link',
@@ -28,7 +26,7 @@ test(`keyForAttribute formats the attributes of a model`, function(assert) {
     age: 323,
   });
 
-  let result = this.registry.serialize(wordSmith);
+  let result = registry.serialize(wordSmith);
 
   assert.deepEqual(result, {
     data: {
@@ -49,11 +47,17 @@ test(`keyForAttribute formats the attributes of a model`, function(assert) {
 });
 
 test(`keyForAttribute also formats the models in a collections`, function(assert) {
+  let registry = new SerializerRegistry(this.schema, {
+    application: JsonApiSerializer.extend({
+      keyForAttribute: underscore
+    })
+  });
+
   this.schema.wordSmith.create({id: 1, 'firstName': 'Link', 'lastName': 'Jackson'});
   this.schema.wordSmith.create({id: 2, 'firstName': 'Zelda', 'lastName': 'Brown'});
   let wordSmiths = this.schema.wordSmith.all();
 
-  let result = this.registry.serialize(wordSmiths);
+  let result = registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
     data: [{
@@ -81,5 +85,63 @@ test(`keyForAttribute also formats the models in a collections`, function(assert
         }
       }
     }]
+  });
+});
+
+test(`keyForRelationship works`, function(assert) {
+  let registry = new SerializerRegistry(this.schema, {
+    wordSmith: JsonApiSerializer.extend({
+      keyForRelationship: underscore,
+      include: ['blogPosts'],
+    })
+  });
+
+  let wordSmith = this.schema.wordSmith.create({
+    id: 1,
+    firstName: 'Link',
+    lastName: 'Jackson',
+    age: 323,
+  });
+  wordSmith.createBlogPost({title: 'Lorem ipsum'});
+
+  let result = registry.serialize(wordSmith);
+
+  assert.deepEqual(result, {
+    data: {
+      type: 'word-smiths',
+      id: '1',
+      attributes: {
+        age: 323,
+        'first-name': 'Link',
+        'last-name': 'Jackson'
+      },
+      relationships: {
+        "blog_posts": {
+          data: [
+            {id: '1', type: 'blog-posts'}
+          ]
+        }
+      }
+    },
+    included: [
+      {
+        attributes: {
+          title: 'Lorem ipsum'
+        },
+        id: '1',
+        relationships: {
+          fine_comments: {
+            data: []
+          },
+          word_smith: {
+            data: {
+              type: 'word-smiths',
+              id: '1'
+            }
+          }
+        },
+        type: 'blog-posts'
+      }
+    ]
   });
 });

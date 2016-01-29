@@ -100,11 +100,11 @@ class JsonApiSerializer {
 
     model.associationKeys.forEach(camelizedType => {
       const relationship = model[camelizedType];
-      const dasherizedType = dasherize(camelizedType);
+      const relationshipKey = this.keyForRelationship(camelizedType);
 
       if (isCollection(relationship)) {
         if (!obj.relationships) { obj.relationships = {}; }
-        obj.relationships[dasherizedType] = {
+        obj.relationships[relationshipKey] = {
           data: relationship.map(model => {
             return {
               type: this.typeKeyForModel(model),
@@ -114,7 +114,7 @@ class JsonApiSerializer {
         };
       } else if (relationship) {
         if (!obj.relationships) { obj.relationships = {}; }
-        obj.relationships[dasherizedType] = {
+        obj.relationships[relationshipKey] = {
           data: {
             type: this.typeKeyForModel(relationship),
             id: relationship.id
@@ -128,6 +128,10 @@ class JsonApiSerializer {
 
   keyForAttribute(attr) {
     return dasherize(attr);
+  }
+
+  keyForRelationship(key) {
+    return dasherize(key);
   }
 
   typeKeyForModel(model) {
