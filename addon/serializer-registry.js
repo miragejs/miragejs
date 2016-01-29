@@ -7,6 +7,7 @@ import assert from './assert';
 
 import _assign from 'lodash/object/assign';
 import _isArray from 'lodash/lang/isArray';
+import _isFunction from 'lodash/lang/isFunction';
 
 function isModel(object) {
   return object instanceof Model;
@@ -124,7 +125,7 @@ export default class SerializerRegistry {
     }
 
     // Traverse this model's relationships
-    serializer.include
+    this._valueForInclude(serializer, request)
       .map(key => model[camelize(key)])
       .filter(Boolean)
       .forEach(relationship => {
@@ -182,7 +183,7 @@ export default class SerializerRegistry {
     }
 
     if (embedRelatedIds) {
-      serializer.include
+      this._valueForInclude(serializer, request)
         .map(key => model[camelize(key)])
         .filter(isCollection)
         .forEach(relatedCollection => {
@@ -196,7 +197,7 @@ export default class SerializerRegistry {
   _attrsForRelationships(model, request) {
     let serializer = this._serializerFor(model.modelName);
 
-    return serializer.include.reduce((attrs, key) => {
+    return this._valueForInclude(serializer, request).reduce((attrs, key) => {
       let relatedAttrs = this._serializeModelOrCollection(model[camelize(key)], request);
 
       if (relatedAttrs) {
@@ -257,4 +258,12 @@ export default class SerializerRegistry {
     }
   }
 
+  _valueForInclude(serializer, request) {
+    let include = serializer.include;
+    if (_isFunction(include)) {
+      return include(request);
+    } else {
+      return include;
+    }
+  }
 }
