@@ -5,19 +5,19 @@ import { pluralize, camelize } from 'ember-cli-mirage/utils/inflector';
 export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandler {
 
   /*
-    Remove the model from the db of type *type*.
+    Remove the model from the db of type *camelizedModelName*.
 
     This would remove the user with id :id:
       Ex: this.del('/contacts/:id', 'user');
   */
   handleStringShorthand(request, modelName) {
     let id = this._getIdForRequest(request);
-    let type = camelize(modelName);
-    let modelClass = this.schema[type];
+    let camelizedModelName = camelize(modelName);
+    let modelClass = this.schema[camelizedModelName];
 
     assert(
       modelClass,
-      `The route handler for ${request.url} is trying to access the ${type} model, but that model doesn't exist. Create it using 'ember g mirage-model ${modelName}'.`
+      `The route handler for ${request.url} is trying to access the ${camelizedModelName} model, but that model doesn't exist. Create it using 'ember g mirage-model ${modelName}'.`
     );
 
     return modelClass.find(id).destroy();
