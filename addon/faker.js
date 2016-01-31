@@ -19,7 +19,7 @@ var list = {
 faker.list = list;
 
 faker.random.number.range = function (min, max) {
-  return function (i) {
+  return function (/* i */) {
     return Math.random() * (max - min) + min;
   };
 };

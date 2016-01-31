@@ -15,7 +15,7 @@ module('Integration | Serializers | Base | Overriding Serialize', {
 test(`it can use a completely custom serialize function`, function(assert) {
   this.registry = new SerializerRegistry(this.schema, {
     wordSmith: Serializer.extend({
-      serialize(response, request) {
+      serialize() {
         return 'blah';
       }
     })
