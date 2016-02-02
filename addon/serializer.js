@@ -6,7 +6,7 @@ import { singularize, pluralize, camelize } from './utils/inflector';
 
 class Serializer {
 
-  serialize(response, request) {
+  serialize(response /*, request */) {
     if (response instanceof Model) {
       return this._attrsForModel(response);
     } else {

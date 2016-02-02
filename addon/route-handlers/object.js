@@ -6,7 +6,7 @@ export default class ObjectRouteHandler {
     this.object = object;
   }
 
-  handle(request) {
+  handle(/* request */) {
     return this.object;
   }
 

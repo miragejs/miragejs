@@ -89,7 +89,7 @@ class JsonApiSerializer {
     this._serializeRelationshipsFor(model, request);
   }
 
-  _resourceObjectFor(model, request) {
+  _resourceObjectFor(model /*, request */) {
     const attrs = this._attrsForModel(model);
 
     const obj = {

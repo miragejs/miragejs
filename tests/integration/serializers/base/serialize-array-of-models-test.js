@@ -19,7 +19,7 @@ test(`it applies correct serializer when the response is an array of models`, fu
   let wordSmiths = this.schema.wordSmith.all().filter(() => true);
   let registry = new SerializerRegistry(this.schema, {
     wordSmith: Serializer.extend({
-      serialize(response, request) {
+      serialize() {
         assert.ok('serializer ran');
         return {};
       }

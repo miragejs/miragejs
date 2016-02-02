@@ -59,7 +59,7 @@ test('it can passthrough certain verbs for individual paths', function(assert) {
     });
     this.passthrough('/addresses', ['post']);
   });
-  server.pretender.unhandledRequest = function(verb, path) {
+  server.pretender.unhandledRequest = function(/* verb, path */) {
     assert.ok(true, 'it doesnt passthrough GET');
     done2();
   };
@@ -176,7 +176,7 @@ test('passthrough without args allows all paths on the current domain to passthr
   $.ajax({
     method: "GET",
     url: "/addresses",
-    error: function(reason) {
+    error: function(/* reason */) {
       assert.ok(true);
       done2();
     }
