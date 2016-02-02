@@ -29,6 +29,13 @@ module('Integration | Serializers | Base | Full Request', {
           embed: true,
           attrs: ['id', 'first'],
           include: ['posts']
+        }),
+        comment: Serializer.extend({
+          embed: true,
+          root: false,
+          include(request) {
+            return request.queryParams.include_post ? ['post'] : [];
+          }
         })
       }
     });
@@ -95,6 +102,39 @@ test('a response falls back to the application serializer, if it exists', functi
       id: '1',
       title: 'Lorem',
       date: '20001010'
+    });
+    done();
+  });
+});
+
+test('serializer.include is invoked when it is a function', function(assert) {
+  assert.expect(1);
+  var done = assert.async();
+  let post = this.server.schema.post.create({
+    title: 'Lorem',
+    date: '20001010'
+  });
+  post.createComment({
+    description: 'Lorem is the best'
+  });
+
+  this.server.get('/comments/:id', function(schema, request) {
+    let id = request.params.id;
+    return schema.comment.find(id);
+  });
+
+  $.ajax({
+    method: 'GET',
+    url: '/comments/1?include_post=true'
+  }).done(function(res) {
+    assert.deepEqual(res, {
+      id: '1',
+      description: 'Lorem is the best',
+      post: {
+        id: '1',
+        title: 'Lorem',
+        date: '20001010'
+      }
     });
     done();
   });
