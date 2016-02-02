@@ -175,8 +175,8 @@ class JsonApiSerializer {
   }
 
   _serializerFor(modelOrCollection) {
-    let type = camelize(modelOrCollection.modelName);
-    let ModelSerializer = this._serializerMap && (this._serializerMap[type] || this._serializerMap['application']);
+    let camelizedModelName = camelize(modelOrCollection.modelName);
+    let ModelSerializer = this._serializerMap && (this._serializerMap[camelizedModelName] || this._serializerMap['application']);
 
     /*
       TODO: This check should exist within the Serializer class, when the logic is moved from the registry to the

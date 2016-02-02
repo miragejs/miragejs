@@ -225,8 +225,8 @@ export default class SerializerRegistry {
   }
 
   _serializerFor(modelName) {
-    let type = modelName ? camelize(modelName) : null;
-    let ModelSerializer = this._serializerMap && (this._serializerMap[type] || this._serializerMap['application']);
+    let camelizedModelName = modelName ? camelize(modelName) : null;
+    let ModelSerializer = this._serializerMap && (this._serializerMap[camelizedModelName] || this._serializerMap['application']);
 
     /*
       TODO: This check should exist within the Serializer class, when the logic is moved from the registry to the

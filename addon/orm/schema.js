@@ -23,14 +23,14 @@ export default class Schema {
   }
 
   registerModel(type, ModelClass) {
-    type = camelize(type);
+    let camelizedModelName = camelize(type);
 
     // Avoid mutating original class, because we may want to reuse it across many tests
     ModelClass = ModelClass.extend();
 
     // Store model & fks in registry
-    this._registry[type] = this._registry[type] || {class: null, foreignKeys: []}; // we may have created this key before, if another model added fks to it
-    this._registry[type].class = ModelClass;
+    this._registry[camelizedModelName] = this._registry[camelizedModelName] || {class: null, foreignKeys: []}; // we may have created this key before, if another model added fks to it
+    this._registry[camelizedModelName].class = ModelClass;
 
     // Set up associations
     ModelClass.prototype.hasManyAssociations = {};   // a registry of the model's hasMany associations. Key is key from model definition, value is association instance itself
@@ -42,7 +42,7 @@ export default class Schema {
       if (ModelClass.prototype[associationProperty] instanceof Association) {
         let association = ModelClass.prototype[associationProperty];
         let associationModelName = association.modelName || dasherize(singularize(associationProperty));
-        association.owner = dasherize(type);
+        association.owner = dasherize(camelizedModelName);
         association.target = associationModelName;
 
         // Update the registry with this association's foreign keys. This is
@@ -58,19 +58,19 @@ export default class Schema {
     }
 
     // Create a db collection for this model, if doesn't exist
-    var collection = pluralize(type);
+    var collection = pluralize(camelizedModelName);
     if (!this.db[collection]) {
       this.db.createCollection(collection);
     }
 
     // Create the entity methods
-    this[type] = {
-      new: (attrs) => this.new(type, attrs),
-      create: (attrs) => this.create(type, attrs),
-      all: (attrs) => this.all(type, attrs),
-      find: (attrs) => this.find(type, attrs),
-      where: (attrs) => this.where(type, attrs),
-      first: (attrs) => this.first(type, attrs)
+    this[camelizedModelName] = {
+      new: (attrs) => this.new(camelizedModelName, attrs),
+      create: (attrs) => this.create(camelizedModelName, attrs),
+      all: (attrs) => this.all(camelizedModelName, attrs),
+      find: (attrs) => this.find(camelizedModelName, attrs),
+      where: (attrs) => this.where(camelizedModelName, attrs),
+      first: (attrs) => this.first(camelizedModelName, attrs)
     };
 
     return this;

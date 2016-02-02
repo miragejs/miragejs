@@ -11,13 +11,13 @@ export default class PutShorthandRouteHandler extends BaseShorthandRouteHandler 
   */
   handleStringShorthand(request, modelName) {
     let id = this._getIdForRequest(request);
-    let type = camelize(modelName);
+    let camelizedModelName = camelize(modelName);
     let attrs = this._getAttrsForRequest(request, modelName);
-    let modelClass = this.schema[type];
+    let modelClass = this.schema[camelizedModelName];
 
     assert(
       modelClass,
-      `The route handler for ${request.url} is trying to access the ${type} model, but that model doesn't exist. Create it using 'ember g mirage-model ${modelName}'.`
+      `The route handler for ${request.url} is trying to access the ${camelizedModelName} model, but that model doesn't exist. Create it using 'ember g mirage-model ${modelName}'.`
     );
 
     return modelClass.find(id).update(attrs);
