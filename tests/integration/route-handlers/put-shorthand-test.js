@@ -43,7 +43,7 @@ module('Integration | Route Handlers | PUT shorthand', {
 });
 
 test('undefined shorthand updates the record and returns the model', function(assert) {
-  let handler = new PutShorthandRouteHandler(this.schema, this.serializer);
+  let handler = new PutShorthandRouteHandler(this.schema, this.serializer, undefined, '/authors/:id');
   let request = {requestBody: JSON.stringify(this.body), url: '/authors/1', params: {id: '1'}};
 
   let model = handler.handle(request);
@@ -54,8 +54,9 @@ test('undefined shorthand updates the record and returns the model', function(as
   assert.equal(model.firstName, 'Ganondorf');
 });
 
+
 test('query params are ignored', function(assert) {
-  let handler = new PutShorthandRouteHandler(this.schema, this.serializer);
+  let handler = new PutShorthandRouteHandler(this.schema, this.serializer, 'author');
   let request = {requestBody: JSON.stringify(this.body), url: '/authors/1?foo=bar', params: {id: '1'}, queryParams: {foo: 'bar'}};
 
   let model = handler.handle(request);
@@ -67,8 +68,8 @@ test('query params are ignored', function(assert) {
 });
 
 test('string shorthand updates the record of the specified type and returns the model', function(assert) {
-  let handler = new PutShorthandRouteHandler(this.schema, this.serializer, 'author');
-  let request = {requestBody: JSON.stringify(this.body), url: '/people/1', params: {id: '1'}};
+  let handler = new PutShorthandRouteHandler(this.schema, this.serializer, undefined, '/authors/:id');
+  let request = {requestBody: JSON.stringify(this.body), url: '/authors/1', params: {id: '1'}};
 
   let model = handler.handle(request);
 
@@ -79,7 +80,7 @@ test('string shorthand updates the record of the specified type and returns the 
 });
 
 test('if a shorthand tries to access an unknown type it throws an error', function(assert) {
-  let handler = new PutShorthandRouteHandler(this.schema, this.serializer);
+  let handler = new PutShorthandRouteHandler(this.schema, this.serializer, undefined, '/foobars/:id');
   let request = {requestBody: JSON.stringify(this.body), url: '/foobars/1', params: {id: '1'}};
 
   assert.throws(function() {

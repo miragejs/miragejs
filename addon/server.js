@@ -85,7 +85,7 @@ function extractRouteArguments(args) {
     lastArg = defaultRouteOptions;
   }
   var t = 2 - args.length;
-  while(t-->0) {
+  while (t-- > 0) {
     args.push(undefined);
   }
   args.push(lastArg);
@@ -272,7 +272,7 @@ export default class Server {
 
     let routeHandler = new RouteHandler({
       schema: this.schema,
-      verb, rawHandler, customizedCode, options,
+      verb, rawHandler, customizedCode, options, path,
       serializerOrRegistry: this.serializerOrRegistry
     });
 

@@ -25,7 +25,6 @@ class DbCollection {
       this.insert(initialData);
     }
   }
-
   /*
     Returns a copy of the data, to prevent inadvertent data manipulation.
   */

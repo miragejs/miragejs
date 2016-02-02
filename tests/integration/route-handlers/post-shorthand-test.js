@@ -33,17 +33,6 @@ module('Integration | Route Handlers | POST shorthand', {
   }
 });
 
-test('undefined shorthand creates a record and returns the new model', function(assert) {
-  let request = {requestBody: JSON.stringify(this.body), url: '/authors'};
-  let handler = new PostShorthandRouteHandler(this.schema, this.serializer);
-
-  let model = handler.handle(request);
-
-  assert.equal(this.schema.db.authors.length, 1);
-  assert.ok(model instanceof Model);
-  assert.equal(model.modelName, 'author');
-  assert.equal(model.firstName, 'Ganon');
-});
 
 test('string shorthand creates a record of the specified type and returns the new model', function(assert) {
   let request = {requestBody: JSON.stringify(this.body), url: '/people'};
@@ -59,7 +48,19 @@ test('string shorthand creates a record of the specified type and returns the ne
 
 test('query params are ignored', function(assert) {
   let request = {requestBody: JSON.stringify(this.body), url: '/authors?foo=bar', queryParams: {foo: 'bar'}};
-  let handler = new PostShorthandRouteHandler(this.schema, this.serializer);
+  let handler = new PostShorthandRouteHandler(this.schema, this.serializer, 'author');
+
+  let model = handler.handle(request);
+
+  assert.equal(this.schema.db.authors.length, 1);
+  assert.ok(model instanceof Model);
+  assert.equal(model.modelName, 'author');
+  assert.equal(model.firstName, 'Ganon');
+});
+
+test('undefined shorthand creates a record and returns the new model', function(assert) {
+  let request = {requestBody: JSON.stringify(this.body), url: '/authors'};
+  let handler = new PostShorthandRouteHandler(this.schema, this.serializer, null, '/authors');
 
   let model = handler.handle(request);
 
@@ -71,7 +72,7 @@ test('query params are ignored', function(assert) {
 
 test('if a shorthand tries to access an unknown type it throws an error', function(assert) {
   let request = {requestBody: JSON.stringify(this.body), url: '/foobars'};
-  let handler = new PostShorthandRouteHandler(this.schema, this.serializer);
+  let handler = new PostShorthandRouteHandler(this.schema, this.serializer, 'foobar');
 
   assert.throws(function() {
     handler.handle(request);

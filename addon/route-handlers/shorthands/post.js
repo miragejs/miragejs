@@ -10,16 +10,16 @@ export default class PostShorthandRouteHandler extends BaseShorthandRouteHandler
     For example, this will push a 'user':
       this.post('/contacts', 'user');
   */
-  handleStringShorthand(request, modelName) {
-    let camelizedModelName = camelize(modelName);
-    let attrs = this._getAttrsForRequest(request, modelName);
-    let modelClass = this.schema[camelizedModelName];
 
+  handleStringShorthand(request, modelClass) {
+    let modelName = this.shorthand;
+    let camelizedModelName = camelize(modelName);
     assert(
       modelClass,
       `The route handler for ${request.url} is trying to access the ${camelizedModelName} model, but that model doesn't exist. Create it using 'ember g mirage-model ${modelName}'.`
     );
 
+    let attrs = this._getAttrsForRequest(request, modelClass.camelizedModelName);
     return modelClass.create(attrs);
   }
 
