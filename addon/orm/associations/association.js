@@ -1,15 +1,14 @@
-class Association {
+export default class Association {
 
   constructor(modelName) {
+    // The modelName of the association
     this.modelName = modelName;
 
-    // The modelName that owns this association
-    this.owner = '';
+    // The key pointing to the association
+    this.key = '';
 
-    // The modelName this association refers to
-    this.target = '';
+    // The modelName that owns this association
+    this.ownerModelName = '';
   }
 
 }
-
-export default Association;

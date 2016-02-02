@@ -41,9 +41,9 @@ export default class Schema {
     for (var associationProperty in ModelClass.prototype) {
       if (ModelClass.prototype[associationProperty] instanceof Association) {
         let association = ModelClass.prototype[associationProperty];
-        let associationModelName = association.modelName || dasherize(singularize(associationProperty));
-        association.owner = dasherize(camelizedModelName);
-        association.target = associationModelName;
+        association.key = associationProperty;
+        association.modelName = association.modelName || dasherize(singularize(associationProperty));
+        association.ownerModelName = dasherize(camelizedModelName);
 
         // Update the registry with this association's foreign keys. This is
         // essentially our "db migration", since we must know about the fks.

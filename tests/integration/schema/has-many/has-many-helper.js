@@ -1,7 +1,7 @@
-import Mirage from 'ember-cli-mirage';
 import Model from 'ember-cli-mirage/orm/model';
 import Schema from 'ember-cli-mirage/orm/schema';
 import Db from 'ember-cli-mirage/db';
+import { hasMany } from 'ember-cli-mirage';
 
 /*
   A model with a hasMany association can be in eight states
@@ -17,14 +17,11 @@ import Db from 'ember-cli-mirage/db';
 class HasManyHelper {
 
   constructor() {
-    this.db = new Db({
-      users: [],
-      homeAddresses: []
-    });
+    this.db = new Db();
 
     this.schema = new Schema(this.db, {
       user: Model.extend({
-        homeAddresses: Mirage.hasMany()
+        homeAddresses: hasMany()
       }),
       homeAddress: Model
     });

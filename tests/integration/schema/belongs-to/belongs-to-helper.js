@@ -17,10 +17,7 @@ import Db from 'ember-cli-mirage/db';
 class BelongsToHelper {
 
   constructor() {
-    this.db = new Db({
-      users: [],
-      addresses: []
-    });
+    this.db = new Db();
 
     this.schema = new Schema(this.db, {
       user: Model.extend(),
