@@ -6,11 +6,21 @@ In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
 Update notes: None.
 
+Changes: 
+
+## 0.2.0.beta-4
+
+Update notes: None.
+
 Changes:
 
+ - [ENHANCEMENT] #501 Adds ModelClass.first @lependu 
+ - [BUGFIX] #543 Ensure Mirage works within Addons @cibernox
+ - [BUGFIX] #535 Include original message on rethrow errors @hamled
+ - [BUGFIX] #515 Ensure serializer#serialize always receives request @2468ben
  - [BUGFIX] #506 Ensure serializer#normalize looks up model-specific serializers @2468ben
  - [BUGFIX] #507 Ensure foreign keys are added once @samselikoff
- - General cleanup @bekzod
+ - General cleanup @bekzod, @alecho, @koriroys, @cibernox
 
 ## 0.2.0.beta-3
 
