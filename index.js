@@ -55,7 +55,12 @@ module.exports = {
 
   _shouldIncludeFiles: function() {
     var enabledInProd = this.app.env === 'production' && this.addonConfig.enabled;
-
-    return enabledInProd || (this.app.env !== 'production');
+    var explicitExcludeFiles = this.addonConfig.excludeFilesFromBuild;
+    if (enabledInProd && explicitExcludeFiles) {
+      throw new Error('Mirage was explicitly enabled in production, but its files were excluded ' +
+                      'from the build. Please, use only ENV[\'ember-cli-mirage\'].enabled in ' +
+                      'production environment.');
+    }
+    return enabledInProd || (this.app.env !== 'production' && explicitExcludeFiles !== true);
   }
 };
