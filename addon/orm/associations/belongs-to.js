@@ -9,11 +9,11 @@ class BelongsTo extends Association {
     The belongsTo association adds a fk to the owner of the association
   */
   getForeignKeyArray() {
-    return [camelize(this.owner), `${camelize(this.target)}Id`];
+    return [camelize(this.ownerModelName), `${camelize(this.key)}Id`];
   }
 
   getForeignKey() {
-    return `${camelize(this.target)}Id`;
+    return `${camelize(this.key)}Id`;
   }
 
   addMethodsToModelClass(ModelClass, key, schema) {
@@ -43,8 +43,8 @@ class BelongsTo extends Association {
       */
       set(id) {
         assert(
-          !id || schema[camelize(association.target)].find(id),
-          `Couldn\'t find ${association.target} with id = ' + id`
+          !id || schema[camelize(association.modelName)].find(id),
+          `Couldn\'t find ${association.modelName} with id = ' + id`
         );
 
         this.attrs[foreignKey] = id;
@@ -61,7 +61,7 @@ class BelongsTo extends Association {
         var foreignKeyId = this[foreignKey];
         if (foreignKeyId) {
           association._tempParent = null;
-          return schema[camelize(association.target)].find(foreignKeyId);
+          return schema[camelize(association.modelName)].find(foreignKeyId);
 
         } else if (association._tempParent) {
           return association._tempParent;
@@ -93,7 +93,7 @@ class BelongsTo extends Association {
         - creates a new unsaved associated parent
     */
     modelPrototype['new' + capitalize(key)] = function(attrs) {
-      var parent = schema[key].new(attrs);
+      var parent = schema[camelize(association.modelName)].new(attrs);
 
       this[key] = parent;
 
@@ -106,7 +106,7 @@ class BelongsTo extends Association {
           and updates the owner's foreign key
     */
     modelPrototype['create' + capitalize(key)] = function(attrs) {
-      var parent = schema[key].create(attrs);
+      var parent = schema[camelize(association.modelName)].create(attrs);
 
       this[foreignKey] = parent.id;
 
