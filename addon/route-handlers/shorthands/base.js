@@ -2,8 +2,6 @@ import _isArray from 'lodash/lang/isArray';
 import assert from 'ember-cli-mirage/assert';
 import { camelize, singularize, dasherize } from 'ember-cli-mirage/utils/inflector';
 
-const allDigitsRegex = /^\d+$/;
-
 export default class BaseShorthandRouteHandler {
 
   constructor(schema, serializerOrRegistry, shorthand, path, options={}) {
@@ -44,14 +42,12 @@ export default class BaseShorthandRouteHandler {
   handleStringShorthand() { }
   handleArrayShorthand() { }
 
-  _getIdForRequest(request) {
+  _getIdForRequest(request, jsonApiDoc) {
     let id;
     if (request && request.params && request.params.id) {
       id = request.params.id;
-      // If parses, coerce to integer
-      if (typeof id === "string" && allDigitsRegex.test(id)) {
-        id = parseInt(request.params.id, 10);
-      }
+    } else if (jsonApiDoc && jsonApiDoc.data && jsonApiDoc.data.id) {
+      id = jsonApiDoc.data.id;
     }
     return id;
   }
@@ -65,8 +61,8 @@ export default class BaseShorthandRouteHandler {
   }
 
   _getAttrsForRequest(request, modelName) {
-    let id = this._getIdForRequest(request);
     let json = this._getJsonApiDocForRequest(request, modelName);
+    let id = this._getIdForRequest(request, json);
 
     assert(
       json.data && json.data.attributes,

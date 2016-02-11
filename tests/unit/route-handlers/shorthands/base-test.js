@@ -37,3 +37,13 @@ test('getModelClassFromPath works', function (assert) {
   assert.equal(this.handler.getModelClassFromPath(urlWithIdAndSlash, true), 'fancy-user', 'it returns a singular model name');
 });
 
+test('it can read the id from the url', function(assert) {
+  let request = { params: { id: 'test-id' } };
+  assert.equal(this.handler._getIdForRequest(request), 'test-id', 'it returns id from url parameters.');
+});
+
+test('it can read the id from the request body', function(assert) {
+  let request = { params: {} };
+  let jsonApiDoc = { data: { id: 'jsonapi-id' } };
+  assert.equal(this.handler._getIdForRequest(request, jsonApiDoc), 'jsonapi-id', 'it returns id from json api data.');
+});
