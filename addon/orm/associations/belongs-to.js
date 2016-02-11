@@ -59,7 +59,7 @@ class BelongsTo extends Association {
       */
       get() {
         var foreignKeyId = this[foreignKey];
-        if (foreignKeyId) {
+        if (foreignKeyId != null) {
           association._tempParent = null;
           return schema[camelize(association.modelName)].find(foreignKeyId);
 
