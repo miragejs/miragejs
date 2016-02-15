@@ -228,11 +228,11 @@ export default class Server {
     }
 
     let inserted = collection.insert(attrs);
-    if (this.schema && this.schema[type]) {
+    if (this.schema && this.schema[camelize(type)]) {
       // When there is a Model defined, we should return an instance
       // of it instead of returning the bare attributes.
       // https://github.com/samselikoff/ember-cli-mirage/issues/427
-      return this.schema[type].find(inserted.id);
+      return this.schema[camelize(type)].find(inserted.id);
     } else {
       return inserted;
     }
