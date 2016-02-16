@@ -19,6 +19,7 @@ function usingProxy() {
 module.exports = function(environment, appConfig) {
   appConfig['ember-cli-mirage'] = appConfig['ember-cli-mirage'] || {};
   appConfig['ember-cli-mirage']['usingProxy'] = usingProxy();
+  appConfig['ember-cli-mirage']['useDefaultPassthroughs'] = true;
 
   return {};
 };
