@@ -47,3 +47,41 @@ test('it can read the id from the request body', function(assert) {
   let jsonApiDoc = { data: { id: 'jsonapi-id' } };
   assert.equal(this.handler._getIdForRequest(request, jsonApiDoc), 'jsonapi-id', 'it returns id from json api data.');
 });
+
+test('_getAttrsForRequest works', function(assert) {
+  var payload = {
+    'data': {
+      'attributes': {
+        'does-mirage': true,
+        'name': 'Sam'
+      },
+      'relationships': {
+        'company': {
+          'data': {
+            'id': '1',
+            'type': 'companies'
+          }
+        },
+        'github-account': {
+          'data': {
+            'id': '1',
+            'type': 'github-accounts'
+          }
+        }
+      },
+      'type': 'github-account'
+    }
+  };
+
+  this.handler._getJsonApiDocForRequest = function(request, modelName) {
+    return payload;
+  };
+
+  var attrs = this.handler._getAttrsForRequest(this.request, 'user');
+
+  assert.deepEqual(
+    attrs,
+    {id: undefined, name: 'Sam', doesMirage: true, companyId: '1', githubAccountId: '1'},
+    'it normalizes data correctly.'
+  );
+});

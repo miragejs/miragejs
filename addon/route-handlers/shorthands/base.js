@@ -74,6 +74,16 @@ export default class BaseShorthandRouteHandler {
       return sum;
     }, {});
 
+    if (json.data.relationships) {
+      Object.keys(json.data.relationships).forEach((key) => {
+        let relationship = json.data.relationships[key];
+
+        if (typeof relationship.data === "object") {
+          attrs[`${camelize(key)}Id`] = relationship.data.id;
+        }
+      }, {});
+    }
+
     attrs.id = id;
 
     return attrs;
