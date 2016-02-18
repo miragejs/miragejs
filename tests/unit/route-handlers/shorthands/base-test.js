@@ -67,6 +67,12 @@ test('_getAttrsForRequest works', function(assert) {
             'id': '1',
             'type': 'github-accounts'
           }
+        },
+        'something': {
+          'data': null
+        },
+        'many-things': {
+          'data': []
         }
       },
       'type': 'github-account'
@@ -81,7 +87,14 @@ test('_getAttrsForRequest works', function(assert) {
 
   assert.deepEqual(
     attrs,
-    {id: undefined, name: 'Sam', doesMirage: true, companyId: '1', githubAccountId: '1'},
+    {
+      id: undefined,
+      name: 'Sam',
+      doesMirage: true,
+      companyId: '1',
+      githubAccountId: '1',
+      somethingId: null
+    },
     'it normalizes data correctly.'
   );
 });

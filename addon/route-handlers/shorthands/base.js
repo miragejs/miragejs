@@ -78,8 +78,8 @@ export default class BaseShorthandRouteHandler {
       Object.keys(json.data.relationships).forEach((key) => {
         let relationship = json.data.relationships[key];
 
-        if (typeof relationship.data === "object") {
-          attrs[`${camelize(key)}Id`] = relationship.data.id;
+        if (!_isArray(relationship.data)) {
+          attrs[`${camelize(key)}Id`] = relationship.data && relationship.data.id;
         }
       }, {});
     }
