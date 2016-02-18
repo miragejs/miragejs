@@ -52,6 +52,11 @@ const defaultRouteOptions = {
   timing: undefined
 };
 
+const defaultPassthroughs = [
+  'http://localhost:0/chromecheckurl'
+];
+export { defaultPassthroughs };
+
 function isOption(option) {
   if (!option || typeof option !== 'object') { return false; }
   const allOptions = Object.keys(defaultRouteOptions);
@@ -128,6 +133,10 @@ export default class Server {
       options.scenarios.default(this);
     } else {
       this.loadFixtures();
+    }
+
+    if (options.useDefaultPassthroughs) {
+      this._configureDefaultPassthroughs();
     }
   }
 
@@ -334,4 +343,9 @@ export default class Server {
     return fullPath;
   }
 
+  _configureDefaultPassthroughs() {
+    defaultPassthroughs.forEach(passthroughUrl => {
+      this.passthrough(passthroughUrl);
+    });
+  }
 }

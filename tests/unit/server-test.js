@@ -1,4 +1,4 @@
-import Server from 'ember-cli-mirage/server';
+import Server, { defaultPassthroughs } from 'ember-cli-mirage/server';
 import {module, test} from 'qunit';
 import Factory from 'ember-cli-mirage/factory';
 
@@ -422,4 +422,31 @@ test('buildList respects attr overrides', function(assert) {
   assert.deepEqual(sams[1], {name: 'Sam'});
   assert.deepEqual(links[0], {name: 'Link'});
   assert.deepEqual(links[1], {name: 'Link'});
+});
+
+
+module('Unit | Server #defaultPassthroughs');
+
+test('server configures default passthroughs when useDefaultPassthroughs is true', function(assert) {
+  var server = new Server({ useDefaultPassthroughs: true });
+
+  assert.expect(defaultPassthroughs.length);
+  defaultPassthroughs.forEach(passthroughUrl => {
+    var passthroughRequest = { method: 'GET', url: passthroughUrl },
+        isPassedThrough = server.pretender.checkPassthrough(passthroughRequest);
+
+    assert.ok(isPassedThrough);
+  });
+});
+
+test('server does not configure default passthroughs when useDefaultPassthroughs is false', function(assert) {
+  var server = new Server({ useDefaultPassthroughs: false });
+
+  assert.expect(defaultPassthroughs.length);
+  defaultPassthroughs.forEach(passthroughUrl => {
+    var passthroughRequest = { method: 'GET', url: passthroughUrl },
+        isPassedThrough = server.pretender.checkPassthrough(passthroughRequest);
+
+    assert.ok(!isPassedThrough);
+  });
 });
