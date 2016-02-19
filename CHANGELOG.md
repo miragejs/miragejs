@@ -2,11 +2,19 @@
 
 In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
-## master
+## 0.2.0.beta-5
 
 Update notes: None.
 
 Changes: 
+
+ - [ENHANCEMENT] Allow files to be excluded from non-prodution builds Danail Nachev
+ - [ENHANCEMENT] #552 Add default passthroughs @anulman
+ - [ENHANCEMENT] #427 Factories return models @ef4
+ - [ENHANCEMENT] #561 Ensure foreign keys are picked up in shorthands @abuiles
+ - [ENHANCEMENT] #546 Add named associations @samselikoff
+ - [BUGFIX] #548 Shorthands can read ID from json:api request body @lkhaas
+ - General cleanup and updates @ef4 @abuiles @elwayman02 
 
 ## 0.2.0.beta-4
 
