@@ -1,5 +1,4 @@
 import _assign from 'lodash/object/assign';
-import _isNumber from 'lodash/lang/isNumber';
 import _isArray from 'lodash/lang/isArray';
 import _isEqual from 'lodash/lang/isEqual';
 import _sortBy from 'lodash/collection/sortBy';
