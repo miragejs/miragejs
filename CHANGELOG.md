@@ -2,6 +2,15 @@
 
 In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
+## 0.2.0.beta-6
+
+Update notes: None.
+
+Changes: 
+
+ - [BUGFIX] #585 Ensure DB autoincrement ids account for string ints @samselikoff
+ - [BUGFIX] #592 GET shorthands 404s for nonexistant singular resources @samselikoff
+
 ## 0.2.0.beta-5
 
 Update notes: None.
