@@ -1,10 +1,14 @@
-import {module, test} from 'qunit';
-import Model from 'ember-cli-mirage/orm/model';
+import { module, test } from 'qunit';
+import {
+  Model,
+  hasMany,
+  belongsTo,
+  JSONAPISerializer,
+  Response
+} from 'ember-cli-mirage';
 import Collection from 'ember-cli-mirage/orm/collection';
 import Server from 'ember-cli-mirage/server';
-import Mirage from 'ember-cli-mirage';
 import GetShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthands/get';
-import JSONAPISerializer from 'ember-cli-mirage/serializers/json-api-serializer';
 
 module('Integration | Route Handlers | GET shorthand', {
   beforeEach: function() {
@@ -12,14 +16,14 @@ module('Integration | Route Handlers | GET shorthand', {
       environment: 'development',
       models: {
         author: Model.extend({
-          posts: Mirage.hasMany()
+          posts: hasMany()
         }),
         post: Model.extend({
-          author: Mirage.belongsTo(),
-          comments: Mirage.hasMany()
+          author: belongsTo(),
+          comments: hasMany()
         }),
         comment: Model.extend({
-          post: Mirage.belongsTo()
+          post: belongsTo()
         }),
         photo: Model,
         'project-owner': Model
@@ -92,13 +96,14 @@ test('undefined shorthand can return a single model', function(assert) {
   assert.equal(author.name, 'Zelda');
 });
 
-test('undefined shorthand returns null if a singular resource does not exist', function(assert) {
+test('undefined shorthand returns a 404 if a singular resource does not exist', function(assert) {
   let request = {url: '/authors/99', params: {id: 99}};
   let handler = new GetShorthandRouteHandler(this.schema, this.serializer, undefined, '/authors/:id');
 
   let author = handler.handle(request);
 
-  assert.ok(author === null);
+  assert.ok(author instanceof Response);
+  assert.equal(author.code, 404);
 });
 
 test('undefined shorthand ignores query params for a singular resource', function(assert) {
@@ -145,13 +150,14 @@ test('string shorthand with an id returns the correct model', function(assert) {
   assert.equal(author.name, 'Zelda');
 });
 
-test('string shorthand with an id returns null if the model is not found', function(assert) {
+test('string shorthand with an id 404s if the model is not found', function(assert) {
   let request = {url: '/people/99', params: {id: 99}};
   let handler = new GetShorthandRouteHandler(this.schema, this.serializer, 'author');
 
   let author = handler.handle(request);
 
-  assert.ok(author === null);
+  assert.ok(author instanceof Response);
+  assert.equal(author.code, 404);
 });
 
 test('string shorthand with coalesce returns the correct models', function(assert) {

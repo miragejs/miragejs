@@ -1,5 +1,6 @@
 import assert from 'ember-cli-mirage/assert';
 import BaseShorthandRouteHandler from './base';
+import { Response } from 'ember-cli-mirage';
 import { singularize, camelize } from 'ember-cli-mirage/utils/inflector';
 
 export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler {
@@ -22,7 +23,12 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
 
     let id = this._getIdForRequest(request);
     if (id) {
-      return modelClass.find(id);
+      let model = modelClass.find(id);
+      if (!model) {
+        return new Response(404);
+      } else {
+        return model;
+      }
     } else if (this.options.coalesce && request.queryParams && request.queryParams.ids) {
       return modelClass.find(request.queryParams.ids);
     } else {
