@@ -1,50 +1,38 @@
 import HasManyHelper from './has-many-helper';
 import {module, test} from 'qunit';
 
-module('Integration | Schema | hasMany #newAssociation', {
-  beforeEach: function() {
-    this.helper = new HasManyHelper();
-  }
-});
+module('Integration | Schema | hasMany #newAssociation');
 
-[
-  'savedParentNoChildren',
-  'savedParentNewChildren',
-  'savedParentSavedChildren',
-  'savedParentMixedChildren',
-  'newParentNoChildren',
-  'newParentNewChildren',
-  'newParentSavedChildren',
-  'newParentMixedChildren',
-].forEach(state => {
+HasManyHelper.forEachScenario(scenario => {
 
-  test(`a ${state} can build a new associated parent`, function(assert) {
-    var [user, homeAddresses] = this.helper[state]();
+  test(`${scenario.title} can build a new associated parent`, function(assert) {
+    let { parent: user, children: homeAddresses, newAccessor, accessor, otherIdAccessor } = scenario.go();
+
     var startingCount = homeAddresses.length;
 
-    var springfield = user.newHomeAddress({name: '1 Springfield ave'});
+    var springfield = user[newAccessor]({name: '1 Springfield ave'});
 
     assert.ok(!springfield.id, 'the child was not persisted');
-    assert.deepEqual(user.homeAddresses[startingCount], springfield, `the child is appended to the parent's collection`);
+    assert.deepEqual(user[accessor][startingCount], springfield, `the child is appended to the parent's collection`);
 
     if (!user.isNew()) {
-      assert.equal(springfield.userId, user.id, `the new address's fk reference the saved parent`);
+      assert.equal(springfield[otherIdAccessor], user.id, `the new address's fk reference the saved parent`);
     }
 
     user.save();
 
     assert.ok(springfield.id, 'saving the parent persists the child');
-    assert.equal(springfield.userId, user.id, 'the childs fk was updated');
+    assert.equal(springfield[otherIdAccessor], user.id, 'the childs fk was updated');
     assert.equal(springfield.name, '1 Springfield ave', 'the childs attrs were saved');
   });
 
-  test(`a ${state} can build a new associated parent without passing in attrs (regression)`, function(assert) {
-    var [user, homeAddresses] = this.helper[state]();
+  test(`${scenario.title} can build a new associated parent without passing in attrs (regression)`, function(assert) {
+    let { parent: user, children: homeAddresses, newAccessor, accessor } = scenario.go();
     var startingCount = homeAddresses.length;
 
-    var springfield = user.newHomeAddress();
+    var springfield = user[newAccessor]();
 
-    assert.deepEqual(user.homeAddresses[startingCount], springfield, `the child is appended to the parent's collection`);
+    assert.deepEqual(user[accessor][startingCount], springfield, `the child is appended to the parent's collection`);
   });
 
 });
