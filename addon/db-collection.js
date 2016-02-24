@@ -1,4 +1,5 @@
 import _assign from 'lodash/object/assign';
+import _isNumber from 'lodash/lang/isNumber';
 import _isArray from 'lodash/lang/isArray';
 import _isEqual from 'lodash/lang/isEqual';
 import _sortBy from 'lodash/collection/sortBy';
@@ -11,6 +12,10 @@ function duplicate(data) {
   }
 }
 
+function isNumber(n) {
+  return (+n).toString() === n.toString();
+}
+
 /*
   A collection of db records i.e. a database table.
 */
@@ -19,7 +24,7 @@ class DbCollection {
   constructor(name, initialData) {
     this.name = name;
     this._records = [];
-    this.identityManager = new IdentityManagaer();
+    this.identityManager = new IdentityManager();
 
     if (initialData) {
       this.insert(initialData);
@@ -220,7 +225,7 @@ class DbCollection {
   }
 }
 
-class IdentityManagaer {
+class IdentityManager {
   constructor() {
     this._currentValue = null;
     this._ids = {};
@@ -235,8 +240,8 @@ class IdentityManagaer {
       throw new Error(`Attempting to use the ID ${n}, but it's already been used`);
     }
 
-    if (typeof n === 'number' && n > this._currentValue) {
-      this._currentValue = n;
+    if (isNumber(n) && +n > this._currentValue) {
+      this._currentValue = +n + 1;
     }
 
     this._ids[n] = true;
@@ -267,3 +272,5 @@ class IdentityManagaer {
 }
 
 export default DbCollection;
+
+export { IdentityManager };
