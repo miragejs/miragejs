@@ -226,12 +226,12 @@ class DbCollection {
 
 class IdentityManager {
   constructor() {
-    this._currentValue = null;
+    this._nextId = 1;
     this._ids = {};
   }
 
   get() {
-    return this._currentValue || 1;
+    return this._nextId;
   }
 
   set(n) {
@@ -239,8 +239,8 @@ class IdentityManager {
       throw new Error(`Attempting to use the ID ${n}, but it's already been used`);
     }
 
-    if (isNumber(n) && +n > this._currentValue) {
-      this._currentValue = +n + 1;
+    if (isNumber(n) && +n >= this._nextId) {
+      this._nextId = +n + 1;
     }
 
     this._ids[n] = true;
@@ -249,7 +249,7 @@ class IdentityManager {
   inc() {
     let nextValue = this.get() + 1;
 
-    this._currentValue = nextValue;
+    this._nextId = nextValue;
 
     return nextValue;
   }
@@ -265,8 +265,8 @@ class IdentityManager {
   }
 
   reset() {
+    this._nextId = 1;
     this._ids = {};
-    this._currentValue = null;
   }
 }
 

@@ -42,12 +42,30 @@ test(`a numerical value passed into set affects future ids used by fetch`, funct
   assert.equal(manager.fetch(), 7);
 });
 
+test(`multiple numerical values passed into set affects future ids used by fetch`, function(assert) {
+  let manager = new IdentityManager();
+  manager.set(5);
+  manager.set(6);
+
+  assert.equal(manager.fetch(), 7);
+  assert.equal(manager.fetch(), 8);
+});
+
 test(`an int as a string passed into set affects future ids used by fetch`, function(assert) {
   let manager = new IdentityManager();
   manager.set('5');
 
   assert.equal(manager.fetch(), 6);
   assert.equal(manager.fetch(), 7);
+});
+
+test(`multiple ints as a string passed into set affects future ids used by fetch`, function(assert) {
+  let manager = new IdentityManager();
+  manager.set('5');
+  manager.set('6');
+
+  assert.equal(manager.fetch(), 7);
+  assert.equal(manager.fetch(), 8);
 });
 
 test(`a string value that doesn't parse as an int passed into set doesn't affect future ids used by fetch`, function(assert) {
