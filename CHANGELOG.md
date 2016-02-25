@@ -2,6 +2,14 @@
 
 In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
+## 0.2.0.beta-7
+
+Update notes: none.
+
+Changes:
+
+ - [BUGFIX] #602 Fix regression in Db IdentityManager @samselikoff
+
 ## 0.2.0.beta-6
 
 Update notes: None.
