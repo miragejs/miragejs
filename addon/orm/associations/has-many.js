@@ -11,11 +11,11 @@ class HasMany extends Association {
     The hasMany association adds a fk to the target model of the association
   */
   getForeignKeyArray() {
-    return [camelize(this.modelName), `${camelize(this.ownerModelName)}Id`];
+    return [camelize(this.modelName), this.getForeignKey()];
   }
 
   getForeignKey() {
-    return `${camelize(this.ownerModelName)}Id`;
+    return `${this.opts.inverseOf || camelize(this.ownerModelName)}Id`;
   }
 
   addMethodsToModelClass(ModelClass, key, schema) {
@@ -134,7 +134,7 @@ class HasMany extends Association {
       object.newChild
         - creates a new unsaved associated child
     */
-    modelPrototype['new' + capitalize(camelize(association.modelName))] = function(attrs = {}) {
+    modelPrototype['new' + capitalize(camelize(singularize(association.key)))] = function(attrs = {}) {
       if (!this.isNew()) {
         attrs = _assign(attrs, { [foreignKey]: this.id });
       }
@@ -153,7 +153,7 @@ class HasMany extends Association {
           updates the association's foreign key
         - parent must be saved
     */
-    modelPrototype['create' + capitalize(camelize(association.modelName))] = function(attrs = {}) {
+    modelPrototype['create' + capitalize(camelize(singularize(association.key)))] = function(attrs = {}) {
       assert(!this.isNew(), 'You cannot call create unless the parent is saved');
 
       var augmentedAttrs = _assign(attrs, { [foreignKey]: this.id });

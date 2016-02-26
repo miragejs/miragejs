@@ -2,6 +2,8 @@ import Model from 'ember-cli-mirage/orm/model';
 import Schema from 'ember-cli-mirage/orm/schema';
 import Db from 'ember-cli-mirage/db';
 import { hasMany } from 'ember-cli-mirage';
+import { pluralize, singularize, capitalize, camelize } from 'ember-cli-mirage/utils/inflector';
+import _ from 'lodash';
 
 /*
   A model with a hasMany association can be in eight states
@@ -16,80 +18,100 @@ import { hasMany } from 'ember-cli-mirage';
 */
 class HasManyHelper {
 
-  constructor() {
+  constructor(opts) {
+
+    let { ownKey, ownModel, otherKey, otherModel } = _.defaults({}, opts, {
+      ownKey: 'homeAddresses',
+      ownModel: 'user',
+      otherKey: 'user',
+      otherModel: 'homeAddress'
+    });
+
+    this.ownKey = ownKey;
+    this.ownModel = ownModel;
+    this.otherKey = otherKey;
+    this.otherModel = otherModel;
     this.db = new Db();
 
+    let hasManyArgs = [];
+    if (pluralize(otherModel) !== ownKey) {
+      hasManyArgs.push(otherModel);
+    }
+    if (ownModel !== otherKey) {
+      hasManyArgs.push({ inverseOf: otherKey });
+    }
+
     this.schema = new Schema(this.db, {
-      user: Model.extend({
-        homeAddresses: hasMany()
+      [ownModel]: Model.extend({
+        [ownKey]: hasMany(...hasManyArgs)
       }),
-      homeAddress: Model
+      [otherModel]: Model
     });
   }
 
   savedParentNoChildren() {
-    let insertedUser = this.db.users.insert({name: 'Link'});
+    let insertedUser = this.db[pluralize(this.ownModel)].insert({name: 'Link'});
 
-    return [this.schema.user.find(insertedUser.id), []];
+    return [this.schema[this.ownModel].find(insertedUser.id), []];
   }
 
   savedParentNewChildren() {
-    let insertedUser = this.db.users.insert({name: 'Link'});
+    let insertedUser = this.db[pluralize(this.ownModel)].insert({name: 'Link'});
 
-    var user = this.schema.user.find(insertedUser.id);
-    var newHomeAddress = user.newHomeAddress();
+    var user = this.schema[this.ownModel].find(insertedUser.id);
+    var newHomeAddress = user[`new${singularize(capitalize(this.ownKey))}`]();
 
     return [user, [newHomeAddress]];
   }
 
   savedParentSavedChildren() {
-    let insertedUser = this.db.users.insert({name: 'Link'});
-    let insertedHomeAddress = this.db.homeAddresses.insert({name: '123 Hyrule Way', userId: insertedUser.id});
+    let insertedUser = this.db[pluralize(this.ownModel)].insert({name: 'Link'});
+    let insertedHomeAddress = this.db[pluralize(this.otherModel)].insert({name: '123 Hyrule Way', [camelize(this.otherKey) + 'Id']: insertedUser.id});
 
-    var user = this.schema.user.find(insertedUser.id);
-    var homeAddress = this.schema.homeAddress.find(insertedHomeAddress.id);
+    var user = this.schema[this.ownModel].find(insertedUser.id);
+    var homeAddress = this.schema[this.otherModel].find(insertedHomeAddress.id);
 
     return [user, [homeAddress]];
   }
 
   savedParentMixedChildren() {
-    let insertedUser = this.db.users.insert({name: 'Link'});
-    let insertedHomeAddress = this.db.homeAddresses.insert({name: '123 Hyrule Way', userId: insertedUser.id});
+    let insertedUser = this.db[pluralize(this.ownModel)].insert({name: 'Link'});
+    let insertedHomeAddress = this.db[pluralize(this.otherModel)].insert({name: '123 Hyrule Way', [camelize(this.otherKey) + 'Id']: insertedUser.id});
 
-    var user = this.schema.user.find(insertedUser.id);
-    var savedHomeAddress = this.schema.homeAddress.find(insertedHomeAddress.id);
-    var newHomeAddress = user.newHomeAddress();
+    var user = this.schema[this.ownModel].find(insertedUser.id);
+    var savedHomeAddress = this.schema[this.otherModel].find(insertedHomeAddress.id);
+    var newHomeAddress = user[`new${singularize(capitalize(this.ownKey))}`]();
 
     return [user, [savedHomeAddress, newHomeAddress]];
   }
 
   newParentNoChildren() {
-    var user = this.schema.user.new();
+    var user = this.schema[this.ownModel].new();
 
     return [user, []];
   }
 
   newParentNewChildren() {
-    var user = this.schema.user.new();
-    var newHomeAddress = user.newHomeAddress();
+    var user = this.schema[this.ownModel].new();
+    var newHomeAddress = user[`new${singularize(capitalize(this.ownKey))}`]();
 
     return [user, [newHomeAddress]];
   }
 
   newParentSavedChildren() {
-    let insertedHomeAddress = this.db.homeAddresses.insert({name: '123 Hyrule Way'});
-    let savedHomeAddress = this.schema.homeAddress.find(insertedHomeAddress.id);
-    let newUser = this.schema.user.new({homeAddresses: [savedHomeAddress]});
+    let insertedHomeAddress = this.db[pluralize(this.otherModel)].insert({name: '123 Hyrule Way'});
+    let savedHomeAddress = this.schema[this.otherModel].find(insertedHomeAddress.id);
+    let newUser = this.schema[this.ownModel].new({[this.ownKey]: [savedHomeAddress]});
 
     return [newUser, [savedHomeAddress]];
   }
 
   newParentMixedChildren() {
-    let insertedHomeAddress = this.db.homeAddresses.insert({name: '123 Hyrule Way'});
-    var savedHomeAddress = this.schema.homeAddress.find(insertedHomeAddress.id);
-    var newHomeAddress = this.schema.homeAddress.new();
+    let insertedHomeAddress = this.db[pluralize(this.otherModel)].insert({name: '123 Hyrule Way'});
+    var savedHomeAddress = this.schema[this.otherModel].find(insertedHomeAddress.id);
+    var newHomeAddress = this.schema[this.otherModel].new();
 
-    var newUser = this.schema.user.new({homeAddresses: [savedHomeAddress, newHomeAddress]});
+    var newUser = this.schema[this.ownModel].new({[this.ownKey]: [savedHomeAddress, newHomeAddress]});
 
     return [newUser, [savedHomeAddress, newHomeAddress]];
   }
@@ -97,16 +119,82 @@ class HasManyHelper {
   // Just a saved unassociated child. The id is high so as not to
   // interfere with any other children
   savedChild() {
-    let insertedHomeAddress = this.db.homeAddresses.insert({name: 'foo'});
+    let insertedHomeAddress = this.db[pluralize(this.otherModel)].insert({name: 'foo'});
 
-    return this.schema.homeAddress.find(insertedHomeAddress.id);
+    return this.schema[this.otherModel].find(insertedHomeAddress.id);
   }
 
   newChild() {
-    return this.schema.homeAddress.new({name: 'Newbie'});
+    return this.schema[this.otherModel].new({name: 'Newbie'});
   }
 
-
 }
+
+HasManyHelper.forEachScenario = function(fn) {
+  [
+    [true, true],
+    [true, false],
+    [false, true],
+    [false, false]
+  ].forEach(([useDefaultOwnKey, useDefaultOtherKey]) => {
+
+    let accessor = 'homeAddresses';
+    let idsAccessor = 'homeAddressIds';
+    let createAccessor = 'createHomeAddress';
+    let newAccessor = 'newHomeAddress';
+    let otherAccessor = 'user';
+    let otherIdAccessor = 'userId';
+
+    let opts = {};
+    if (!useDefaultOwnKey) {
+      opts.ownKey = 'altHomeAddresses';
+      accessor = 'altHomeAddresses';
+      idsAccessor = 'altHomeAddressIds';
+      createAccessor = 'createAltHomeAddress';
+      newAccessor = 'newAltHomeAddress';
+    }
+    if (!useDefaultOtherKey) {
+      opts.otherKey = 'altUser';
+      otherAccessor = 'altUser';
+      otherIdAccessor = 'altUserId';
+    }
+
+    [
+      'savedParentNoChildren',
+      'savedParentNewChildren',
+      'savedParentSavedChildren',
+      'savedParentMixedChildren',
+      'newParentNoChildren',
+      'newParentNewChildren',
+      'newParentSavedChildren',
+      'newParentMixedChildren',
+    ].forEach(state => {
+      let title = `${state} with ${useDefaultOwnKey ? 'default' : 'non-default'} own key and ${useDefaultOtherKey ? 'default' : 'non-default'} other key`;
+      fn({
+        go() {
+          let helper = new HasManyHelper(opts);
+
+          let [parent, children] = helper[state]();
+          return {
+            parent,
+            children,
+            title,
+            accessor,
+            idsAccessor,
+            createAccessor,
+            newAccessor,
+            otherAccessor,
+            otherIdAccessor,
+            helper
+          };
+        },
+        title,
+        state,
+        useDefaultOwnKey,
+        useDefaultOtherKey
+      });
+    });
+  });
+};
 
 export default HasManyHelper;

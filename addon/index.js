@@ -8,11 +8,11 @@ import JSONAPISerializer from './serializers/json-api-serializer';
 import HasMany from './orm/associations/has-many';
 import BelongsTo from './orm/associations/belongs-to';
 
-function hasMany(modelName) {
-  return new HasMany(modelName);
+function hasMany(...args) {
+  return new HasMany(...args);
 }
-function belongsTo(modelName) {
-  return new BelongsTo(modelName);
+function belongsTo(...args) {
+  return new BelongsTo(...args);
 }
 
 export {
