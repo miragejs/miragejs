@@ -9,6 +9,13 @@ module.exports = {
   name: 'ember-cli-mirage',
 
   included: function included(app) {
+    this._super.included.apply(this, arguments);
+
+    // see: https://github.com/ember-cli/ember-cli/issues/3718
+    if (typeof app.import !== 'function' && app.app) {
+      app = app.app;
+    }
+
     this.app = app;
     this.addonConfig = this.app.project.config(app.env)['ember-cli-mirage'] || {};
     this.addonBuildConfig = this.app.options['ember-cli-mirage'] || {};
