@@ -48,7 +48,7 @@ test('it can read the id from the request body', function(assert) {
   assert.equal(this.handler._getIdForRequest(request, jsonApiDoc), 'jsonapi-id', 'it returns id from json api data.');
 });
 
-test('_getAttrsForRequest works', function(assert) {
+test('_getAttrsForRequest works with attributes and relationships', function(assert) {
   var payload = {
     'data': {
       'attributes': {
@@ -94,6 +94,37 @@ test('_getAttrsForRequest works', function(assert) {
       companyId: '1',
       githubAccountId: '1',
       somethingId: null
+    },
+    'it normalizes data correctly.'
+  );
+});
+
+test('_getAttrsForRequest works with just relationships', function(assert) {
+  var payload = {
+    'data': {
+      'relationships': {
+        'company': {
+          'data': {
+            'id': '1',
+            'type': 'companies'
+          }
+        }
+      },
+      'type': 'github-account'
+    }
+  };
+
+  this.handler._getJsonApiDocForRequest = function(request, modelName) {
+    return payload;
+  };
+
+  var attrs = this.handler._getAttrsForRequest(this.request, 'user');
+
+  assert.deepEqual(
+    attrs,
+    {
+      id: undefined,
+      companyId: '1',
     },
     'it normalizes data correctly.'
   );

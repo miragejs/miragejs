@@ -63,16 +63,19 @@ export default class BaseShorthandRouteHandler {
   _getAttrsForRequest(request, modelName) {
     let json = this._getJsonApiDocForRequest(request, modelName);
     let id = this._getIdForRequest(request, json);
+    let attrs = {};
 
     assert(
-      json.data && json.data.attributes,
+      json.data && (json.data.attributes || json.data.relationships),
       `You're using a shorthand but your serializer's normalize function did not return a valid JSON:API document. http://www.ember-cli-mirage.com/docs/v0.2.x/serializers/#normalizejson`
     );
 
-    let attrs = Object.keys(json.data.attributes).reduce((sum, key) => {
-      sum[camelize(key)] = json.data.attributes[key];
-      return sum;
-    }, {});
+    if (json.data.attributes) {
+      attrs = Object.keys(json.data.attributes).reduce((sum, key) => {
+        sum[camelize(key)] = json.data.attributes[key];
+        return sum;
+      }, {});
+    }
 
     if (json.data.relationships) {
       Object.keys(json.data.relationships).forEach((key) => {
