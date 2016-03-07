@@ -3,6 +3,7 @@ import { dasherize, pluralize, camelize } from '../utils/inflector';
 import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
 import _assign from 'lodash/object/assign';
+import _flatten from 'lodash/array/flatten';
 import _get from 'lodash/object/get';
 import _trim from 'lodash/string/trim';
 import _isString from 'lodash/lang/isString';
@@ -211,7 +212,12 @@ class JsonApiSerializer {
 
     if (_isString(requestRelationships)) {
       if(requestRelationships.length) {
-        return requestRelationships.split(',').map(_trim);
+        const relationships = requestRelationships
+          .split(',')
+          .map(_trim)
+          .map((r) => r.split('.').map((_, index, elements) => elements.slice(0, index + 1).join('.')));
+
+        return _flatten(relationships);
       }
       return [];
     }
