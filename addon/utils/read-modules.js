@@ -6,6 +6,7 @@
 import Ember from 'ember';
 import _keys from 'lodash/object/keys';
 import _camelCase from 'lodash/string/camelCase';
+import { pluralize } from 'ember-cli-mirage/utils/inflector';
 
 /*
   This function looks through all files that have been loaded by Ember CLI and
@@ -31,9 +32,17 @@ export default function(prefix) {
     let moduleKey = moduleParts[moduleParts.length - 1];
     Ember.assert('Subdirectories under ' + moduleType + ' are not supported',
                  moduleParts[moduleParts.length - 3] === 'mirage');
+
     if (moduleType === 'scenario'){
       Ember.assert('Only scenario/default.js is supported at this time.',
                    moduleKey !== 'default');
+    }
+
+    /*
+      Ensure fixture keys are pluralized
+    */
+    if (moduleType === 'fixtures'){
+      moduleKey = pluralize(moduleKey);
     }
 
     let module = require(moduleName, null, null, true);
