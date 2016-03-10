@@ -11,16 +11,20 @@ export default {
       var container = arguments[0],
           application = arguments[1];
     }
-    let environment = ENV.environment;
 
-    if (_shouldUseMirage(environment, ENV['ember-cli-mirage'])) {
-      let modules = readModules(ENV.modulePrefix);
-      let options = _assign(modules, {environment, baseConfig, testConfig})
-
-      new Server(options);
+    if (_shouldUseMirage(ENV.environment, ENV['ember-cli-mirage'])) {
+      startMirage(ENV);
     }
   }
 };
+
+export function startMirage(env = ENV) {
+  let environment = env.environment;
+  let modules = readModules(env.modulePrefix);
+  let options = _assign(modules, {environment, baseConfig, testConfig});
+
+  return new Server(options);
+}
 
 function _shouldUseMirage(env, addonConfig) {
   let userDeclaredEnabled = typeof addonConfig.enabled !== 'undefined';
