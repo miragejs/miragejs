@@ -15,7 +15,7 @@ module('Acceptance: Manually starting Mirage', {
   afterEach: function() {
     server.shutdown();
     Ember.run(App, 'destroy');
-    ENV['ember-cli-mirage'] = undefined;
+    ENV['ember-cli-mirage'].enabled = undefined;
   }
 });
 
