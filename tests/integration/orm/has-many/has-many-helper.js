@@ -38,7 +38,7 @@ class HasManyHelper {
       hasManyArgs.push(otherModel);
     }
     if (ownModel !== otherKey) {
-      hasManyArgs.push({ inverseOf: otherKey });
+      hasManyArgs.push({ inverse: otherKey });
     }
 
     this.schema = new Schema(this.db, {

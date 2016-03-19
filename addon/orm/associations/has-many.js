@@ -16,7 +16,7 @@ class HasMany extends Association {
   }
 
   getForeignKey() {
-    return `${this.opts.inverseOf || camelize(this.ownerModelName)}Id`;
+    return `${this.opts.inverse || camelize(this.ownerModelName)}Id`;
   }
 
   addMethodsToModelClass(ModelClass, key, schema) {
