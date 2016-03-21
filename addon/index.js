@@ -5,6 +5,7 @@ import Model from './orm/model';
 import Serializer from './serializer';
 import ActiveModelSerializer from './serializers/active-model-serializer';
 import JSONAPISerializer from './serializers/json-api-serializer';
+import RestSerializer from './serializers/rest-serializer';
 import HasMany from './orm/associations/has-many';
 import BelongsTo from './orm/associations/belongs-to';
 
@@ -23,6 +24,7 @@ export {
   Serializer,
   ActiveModelSerializer,
   JSONAPISerializer,
+  RestSerializer,
   hasMany,
   belongsTo
 };
