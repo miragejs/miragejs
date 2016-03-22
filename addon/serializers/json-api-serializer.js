@@ -122,9 +122,39 @@ class JsonApiSerializer {
           }
         };
       }
+
+      this._addLinkData(obj, model, relationshipKey);
     });
 
     return obj;
+  }
+
+  _addLinkData(json, model, relationshipKey) {
+    let serializer = this._serializerFor(model);
+
+    if (serializer && serializer.links) {
+      let linkData = serializer.links(model);
+
+      for (let key in linkData) {
+        if (linkData[key]) {
+          if (!json.relationships[relationshipKey]) { json.relationships[relationshipKey] = {}; }
+
+          // ember-data will not use links if data is present
+          delete json.relationships[relationshipKey].data;
+          json.relationships[relationshipKey].links = {};
+
+          let selfLink = linkData[key]['self'];
+          if (selfLink) {
+            json.relationships[relationshipKey].links.self = { href: selfLink };
+          }
+
+          let relatedLink = linkData[key]['related'];
+          if (relatedLink) {
+            json.relationships[relationshipKey].links.related = { href: relatedLink };
+          }
+        }
+      }
+    }
   }
 
   keyForAttribute(attr) {
