@@ -15,6 +15,7 @@ Changes:
   - [ENHANCEMENT] #610 Allow Mirage to be a dependency of another addon @donovan-graham
   - [ENHANCEMENT] #610 Allow Mirage to be a dependency of another addon @donovan-graham
   - General cleanup and updates @lolmaus, @samselikoff
+  - [FEATURE] #655 Add importable rest-serializer
 
 ## 0.2.0.beta-7
 
