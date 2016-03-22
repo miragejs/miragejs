@@ -23,12 +23,16 @@ module('Integration | Serializers | JSON API Serializer | Associations | Links',
 test(`it can link to relationships, omitting 'data'`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
-    wordSmith: JsonApiSerializer.extend({
+    blogPost: JsonApiSerializer.extend({
       links(model) {
         return {
-          'blogPosts': {
-            related: `/api/blog_posts?word_smith_id=${model.id}`,
-            self: `/api/word_smiths/${model.id}/relationships/blog_posts`
+          'wordSmith': {
+            related: `/api/word_smiths/${model.id}`,
+            self: `/api/blog_posts/${model.id}/relationships/word_smith`
+          },
+          'fineComments': {
+            related: `/api/fine_comments?blog_post_id=${model.id}`,
+            self: `/api/blog_posts/${model.id}/relationships/fine_comments`
           }
         };
       }
@@ -36,23 +40,34 @@ test(`it can link to relationships, omitting 'data'`, function(assert) {
   });
 
   let wordSmith = this.schema.wordSmith.find(1);
-  let result = registry.serialize(wordSmith);
+  let blogPost = this.schema.blogPost.find(1);
+  let result = registry.serialize(blogPost);
 
   assert.deepEqual(result, {
     data: {
-      type: 'word-smiths',
-      id: '1',
+      type: 'blog-posts',
+      id: blogPost.id,
       attributes: {
-        'first-name': 'Link',
+        'title': 'Lorem',
       },
       relationships: {
-        'blog-posts': {
+        'word-smith': {
           links: {
             related: {
-              href: `/api/blog_posts?word_smith_id=${wordSmith.id}`
+              href: `/api/word_smiths/${wordSmith.id}`
             },
             self: {
-              href: `/api/word_smiths/${wordSmith.id}/relationships/blog_posts`
+              href: `/api/blog_posts/${blogPost.id}/relationships/word_smith`
+            }
+          }
+        },
+        'fine-comments': {
+          links: {
+            related: {
+              href: `/api/fine_comments?blog_post_id=${blogPost.id}`,
+            },
+            self: {
+              href: `/api/blog_posts/${blogPost.id}/relationships/fine_comments`
             }
           }
         }

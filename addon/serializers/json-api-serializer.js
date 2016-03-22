@@ -99,6 +99,8 @@ class JsonApiSerializer {
       attributes: attrs
     };
 
+    let linkData = this._linkDataFor(model);
+
     model.associationKeys.forEach(camelizedType => {
       const relationship = model[camelizedType];
       const relationshipKey = this.keyForRelationship(camelizedType);
@@ -123,37 +125,35 @@ class JsonApiSerializer {
         };
       }
 
-      this._addLinkData(obj, model, relationshipKey);
+      if (linkData && linkData[camelizedType]) {
+        this._addLinkData(obj, relationshipKey, linkData[camelizedType]);
+      }
     });
 
     return obj;
   }
 
-  _addLinkData(json, model, relationshipKey) {
+  _linkDataFor(model) {
     let serializer = this._serializerFor(model);
-
+    let linkData   = null;
     if (serializer && serializer.links) {
-      let linkData = serializer.links(model);
+      linkData = serializer.links(model);
+    }
+    return linkData;
+  }
 
-      for (let key in linkData) {
-        if (linkData[key]) {
-          if (!json.relationships[relationshipKey]) { json.relationships[relationshipKey] = {}; }
+  _addLinkData(json, relationshipKey, linkData) {
+    if (!json.relationships[relationshipKey]) { json.relationships[relationshipKey] = {}; }
 
-          // ember-data will not use links if data is present
-          delete json.relationships[relationshipKey].data;
-          json.relationships[relationshipKey].links = {};
+    delete json.relationships[relationshipKey].data;
+    json.relationships[relationshipKey].links = {};
 
-          let selfLink = linkData[key]['self'];
-          if (selfLink) {
-            json.relationships[relationshipKey].links.self = { href: selfLink };
-          }
+    if (linkData['self']) {
+      json.relationships[relationshipKey].links.self = { href: linkData['self'] };
+    }
 
-          let relatedLink = linkData[key]['related'];
-          if (relatedLink) {
-            json.relationships[relationshipKey].links.related = { href: relatedLink };
-          }
-        }
-      }
+    if (linkData['related']) {
+      json.relationships[relationshipKey].links.related = { href: linkData['related'] };
     }
   }
 
