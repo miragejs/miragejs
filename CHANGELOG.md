@@ -4,10 +4,14 @@ In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
 ## master
 
+## 0.2.0.beta-8
+
 Update notes: 
 
 Changes: 
 
+  - [FEATURE] #622 Add `links` method to JSONAPISerializer @richmolj
+  - [FEATURE] #655 Add importable rest-serializer @rondale-sc
   - [FEATURE] #269 Dynamic factory attributes can reference other dynamic attributes @lazybensch
   - [FEATURE] #603 Support inverse foreign keys @ef4
   - [ENHANCEMENT] #632 Extract startMirage from initializer @mitchlloyd
@@ -15,7 +19,6 @@ Changes:
   - [ENHANCEMENT] #610 Allow Mirage to be a dependency of another addon @donovan-graham
   - [ENHANCEMENT] #610 Allow Mirage to be a dependency of another addon @donovan-graham
   - General cleanup and updates @lolmaus, @samselikoff
-  - [FEATURE] #655 Add importable rest-serializer
 
 ## 0.2.0.beta-7
 
