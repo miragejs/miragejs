@@ -3,14 +3,14 @@ import {module, test} from 'qunit';
 
 module('Integration | Schema | hasMany #newAssociation');
 
-HasManyHelper.forEachScenario(scenario => {
+HasManyHelper.forEachScenario((scenario) => {
 
   test(`${scenario.title} can build a new associated parent`, function(assert) {
     let { parent: user, children: homeAddresses, newAccessor, accessor, otherIdAccessor } = scenario.go();
 
-    var startingCount = homeAddresses.length;
+    let startingCount = homeAddresses.length;
 
-    var springfield = user[newAccessor]({name: '1 Springfield ave'});
+    let springfield = user[newAccessor]({ name: '1 Springfield ave' });
 
     assert.ok(!springfield.id, 'the child was not persisted');
     assert.deepEqual(user[accessor][startingCount], springfield, `the child is appended to the parent's collection`);
@@ -28,9 +28,9 @@ HasManyHelper.forEachScenario(scenario => {
 
   test(`${scenario.title} can build a new associated parent without passing in attrs (regression)`, function(assert) {
     let { parent: user, children: homeAddresses, newAccessor, accessor } = scenario.go();
-    var startingCount = homeAddresses.length;
+    let startingCount = homeAddresses.length;
 
-    var springfield = user[newAccessor]();
+    let springfield = user[newAccessor]();
 
     assert.deepEqual(user[accessor][startingCount], springfield, `the child is appended to the parent's collection`);
   });

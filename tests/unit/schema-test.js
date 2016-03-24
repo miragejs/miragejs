@@ -4,8 +4,8 @@ import {module, test} from 'qunit';
 module('Unit | Schema');
 
 test('it can be instantiated', function(assert) {
-  var dbMock = {};
-  var schema = new Schema(dbMock);
+  let dbMock = {};
+  let schema = new Schema(dbMock);
   assert.ok(schema);
 });
 

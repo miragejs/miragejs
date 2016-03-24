@@ -2,7 +2,6 @@ import RestSerializer from 'ember-cli-mirage/serializers/rest-serializer';
 
 import {module, test} from 'qunit';
 
-
 module('Unit | Serializers | RestSerializer', {
   beforeEach() {
     this.serializer = new RestSerializer();

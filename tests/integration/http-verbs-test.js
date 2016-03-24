@@ -2,21 +2,21 @@ import {module, test} from 'qunit';
 import Server from 'ember-cli-mirage/server';
 
 module('Integration | HTTP Verbs', {
-  beforeEach: function() {
+  beforeEach() {
     this.server = new Server({
       environment: 'development'
     });
     this.server.timing = 0;
     this.server.logging = false;
   },
-  afterEach: function() {
+  afterEach() {
     this.server.shutdown();
   }
 });
 
 test('mirage responds to get', function(assert) {
   assert.expect(1);
-  var done = assert.async();
+  let done = assert.async();
 
   this.server.get('/contacts', function() {
     return true;
@@ -33,7 +33,7 @@ test('mirage responds to get', function(assert) {
 
 test('mirage responds to post', function(assert) {
   assert.expect(1);
-  var done = assert.async();
+  let done = assert.async();
 
   this.server.post('/contacts', function() {
     return true;
@@ -50,7 +50,7 @@ test('mirage responds to post', function(assert) {
 
 test('mirage responds to put', function(assert) {
   assert.expect(1);
-  var done = assert.async();
+  let done = assert.async();
 
   this.server.put('/contacts', function() {
     return true;
@@ -67,7 +67,7 @@ test('mirage responds to put', function(assert) {
 
 test('mirage responds to delete', function(assert) {
   assert.expect(1);
-  var done = assert.async();
+  let done = assert.async();
 
   this.server['delete']('/contacts', function() {
     return true;
@@ -84,7 +84,7 @@ test('mirage responds to delete', function(assert) {
 
 test('mirage responds to patch', function(assert) {
   assert.expect(1);
-  var done = assert.async();
+  let done = assert.async();
 
   this.server.patch('/contacts', function() {
     return true;
@@ -101,7 +101,7 @@ test('mirage responds to patch', function(assert) {
 
 test('response code can be customized', function(assert) {
   assert.expect(1);
-  var done = assert.async();
+  let done = assert.async();
 
   this.server.get('/contacts', {}, 404);
 
@@ -113,4 +113,3 @@ test('response code can be customized', function(assert) {
     done();
   });
 });
-

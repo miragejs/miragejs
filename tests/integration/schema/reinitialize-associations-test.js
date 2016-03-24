@@ -11,7 +11,7 @@ var User = Model.extend({
 var Address = Model.extend();
 
 module('Integration | Schema | reinitialize associations', {
-  beforeEach: function() {
+  beforeEach() {
     this.db = new Db({
       users: [],
       addresses: []

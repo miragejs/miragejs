@@ -4,16 +4,16 @@ import schemaHelper from '../../schema-helper';
 import { module, test } from 'qunit';
 
 module('Integration | Serializers | Base | Associations | Sideloading Models', {
-  beforeEach: function() {
+  beforeEach() {
     this.schema = schemaHelper.setup();
 
-    let wordSmith = this.schema.wordSmith.create({name: 'Link'});
-    let blogPost = wordSmith.createBlogPost({title: 'Lorem'});
-    blogPost.createFineComment({text: 'pwned'});
+    let wordSmith = this.schema.wordSmith.create({ name: 'Link' });
+    let blogPost = wordSmith.createBlogPost({ title: 'Lorem' });
+    blogPost.createFineComment({ text: 'pwned' });
 
-    wordSmith.createBlogPost({title: 'Ipsum'});
+    wordSmith.createBlogPost({ title: 'Ipsum' });
 
-    this.schema.wordSmith.create({name: 'Zelda'});
+    this.schema.wordSmith.create({ name: 'Zelda' });
 
     this.BaseSerializer = Serializer.extend({
       embed: false
@@ -29,7 +29,7 @@ test(`it throws an error if embed is false and root is false`, function(assert) 
   let registry = new SerializerRegistry(this.schema, {
     wordSmith: this.BaseSerializer.extend({
       root: false,
-      include: ['blogPosts'],
+      include: ['blogPosts']
     })
   });
 
@@ -44,7 +44,7 @@ test(`it can sideload a model with a has-many relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      include: ['blogPosts'],
+      include: ['blogPosts']
     })
   });
 
@@ -58,8 +58,8 @@ test(`it can sideload a model with a has-many relationship`, function(assert) {
       blogPostIds: ['1', '2']
     },
     blogPosts: [
-      {id: '1', title: 'Lorem', wordSmithId: '1'},
-      {id: '2', title: 'Ipsum', wordSmithId: '1'}
+      { id: '1', title: 'Lorem', wordSmithId: '1' },
+      { id: '2', title: 'Ipsum', wordSmithId: '1' }
     ]
   });
 });
@@ -85,11 +85,11 @@ test(`it can sideload a model with a chain of has-many relationships`, function(
       blogPostIds: ['1', '2']
     },
     blogPosts: [
-      {id: '1', title: 'Lorem', wordSmithId: '1', fineCommentIds: ['1']},
-      {id: '2', title: 'Ipsum', wordSmithId: '1', fineCommentIds: []}
+      { id: '1', title: 'Lorem', wordSmithId: '1', fineCommentIds: ['1'] },
+      { id: '2', title: 'Ipsum', wordSmithId: '1', fineCommentIds: [] }
     ],
     fineComments: [
-      {id: '1', text: 'pwned', blogPostId: '1'}
+      { id: '1', text: 'pwned', blogPostId: '1' }
     ]
   });
 });
@@ -115,8 +115,8 @@ test(`it avoids circularity when serializing a model`, function(assert) {
       blogPostIds: ['1', '2']
     },
     blogPosts: [
-      {id: '1', title: 'Lorem', wordSmithId: '1'},
-      {id: '2', title: 'Ipsum', wordSmithId: '1'}
+      { id: '1', title: 'Lorem', wordSmithId: '1' },
+      { id: '2', title: 'Ipsum', wordSmithId: '1' }
     ]
   });
 });
@@ -137,7 +137,7 @@ test(`it can sideload a model with a belongs-to relationship`, function(assert) 
       id: '1', title: 'Lorem', wordSmithId: '1'
     },
     wordSmiths: [
-      {id: '1', name: 'Link'}
+      { id: '1', name: 'Link' }
     ]
   });
 });
@@ -161,10 +161,10 @@ test(`it can sideload a model with a chain of belongs-to relationships`, functio
       id: '1', text: 'pwned', blogPostId: '1'
     },
     blogPosts: [
-      {id: '1', title: 'Lorem', wordSmithId: '1'}
+      { id: '1', title: 'Lorem', wordSmithId: '1' }
     ],
     wordSmiths: [
-      {id: '1', name: 'Link'}
+      { id: '1', name: 'Link' }
     ]
   });
 });

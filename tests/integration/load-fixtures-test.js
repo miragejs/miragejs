@@ -2,7 +2,7 @@ import {module, test} from 'qunit';
 import Server from 'ember-cli-mirage/server';
 
 module('Integration | Server #loadFixtures', {
-  beforeEach: function() {
+  beforeEach() {
     this.server = new Server({
       environment: 'development',
       scenarios: {
@@ -15,20 +15,20 @@ module('Integration | Server #loadFixtures', {
       },
       fixtures: {
         authors: [
-          {id: 1, name: 'Zelda'},
-          {id: 2, name: 'Link'},
+          { id: 1, name: 'Zelda' },
+          { id: 2, name: 'Link' }
         ],
         posts: [
-          {id: 1, title: 'Lorem'},
-          {id: 2, title: 'Ipsum'},
+          { id: 1, title: 'Lorem' },
+          { id: 2, title: 'Ipsum' }
         ],
         comments: [
-          {id: 1, title: 'Lorem'}
+          { id: 1, title: 'Lorem' }
         ]
       }
     });
   },
-  afterEach: function() {
+  afterEach() {
     this.server.shutdown();
   }
 });

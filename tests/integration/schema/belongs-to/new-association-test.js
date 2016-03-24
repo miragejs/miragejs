@@ -2,7 +2,7 @@ import BelongsToHelper from './belongs-to-helper';
 import {module, test} from 'qunit';
 
 module('Integration | Schema | belongsTo #newAssociation', {
-  beforeEach: function() {
+  beforeEach() {
     this.helper = new BelongsToHelper();
   }
 });
@@ -17,13 +17,13 @@ module('Integration | Schema | belongsTo #newAssociation', {
   'savedChildSavedParent',
   'newChildNoParent',
   'newChildNewParent',
-  'newChildSavedParent',
-].forEach(state => {
+  'newChildSavedParent'
+].forEach((state) => {
 
   test(`a ${state} can build a new associated parent`, function(assert) {
-    var [address] = this.helper[state]();
+    let [address] = this.helper[state]();
 
-    var ganon = address.newUser({name: 'Ganon'});
+    let ganon = address.newUser({ name: 'Ganon' });
 
     assert.ok(!ganon.id, 'the parent was not persisted');
     assert.deepEqual(address.user, ganon);

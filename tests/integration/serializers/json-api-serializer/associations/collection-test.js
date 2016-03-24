@@ -4,16 +4,16 @@ import schemaHelper from '../../schema-helper';
 import { module, test } from 'qunit';
 
 module('Integration | Serializers | JSON API Serializer | Associations | Collection', {
-  beforeEach: function() {
+  beforeEach() {
     this.schema = schemaHelper.setup();
 
-    let link = this.schema.wordSmith.create({firstName: 'Link'});
-    let blogPost = link.createBlogPost({title: 'Lorem'});
-    blogPost.createFineComment({text: 'pwned'});
+    let link = this.schema.wordSmith.create({ firstName: 'Link' });
+    let blogPost = link.createBlogPost({ title: 'Lorem' });
+    blogPost.createFineComment({ text: 'pwned' });
 
-    link.createBlogPost({title: 'Ipsum'});
+    link.createBlogPost({ title: 'Ipsum' });
 
-    this.schema.wordSmith.create({firstName: 'Zelda'});
+    this.schema.wordSmith.create({ firstName: 'Zelda' });
   },
   afterEach() {
     this.schema.db.emptyData();
@@ -24,7 +24,7 @@ test(`it can serialize a collection with a has-many relationship`, function(asse
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     wordSmith: JsonApiSerializer.extend({
-      include: ['blogPosts'],
+      include: ['blogPosts']
     })
   });
 
@@ -37,13 +37,13 @@ test(`it can serialize a collection with a has-many relationship`, function(asse
         type: 'word-smiths',
         id: '1',
         attributes: {
-          'first-name': 'Link',
+          'first-name': 'Link'
         },
         relationships: {
           'blog-posts': {
             data: [
-              {type: 'blog-posts', id: '1'},
-              {type: 'blog-posts', id: '2'},
+              { type: 'blog-posts', id: '1' },
+              { type: 'blog-posts', id: '2' }
             ]
           }
         }
@@ -71,11 +71,11 @@ test(`it can serialize a collection with a has-many relationship`, function(asse
         relationships: {
           'fine-comments': {
             data: [
-              {type: 'fine-comments', id: '1'}
+              { type: 'fine-comments', id: '1' }
             ]
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: '1'}
+            data: { type: 'word-smiths', id: '1' }
           }
         }
       },
@@ -90,7 +90,7 @@ test(`it can serialize a collection with a has-many relationship`, function(asse
             data: []
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: '1'}
+            data: { type: 'word-smiths', id: '1' }
           }
         }
       }
@@ -118,13 +118,13 @@ test(`it can serialize a collection with a chain of has-many relationships`, fun
         type: 'word-smiths',
         id: '1',
         attributes: {
-          'first-name': 'Link',
+          'first-name': 'Link'
         },
         relationships: {
           'blog-posts': {
             data: [
-              {type: 'blog-posts', id: '1'},
-              {type: 'blog-posts', id: '2'},
+              { type: 'blog-posts', id: '1' },
+              { type: 'blog-posts', id: '2' }
             ]
           }
         }
@@ -152,11 +152,11 @@ test(`it can serialize a collection with a chain of has-many relationships`, fun
         relationships: {
           'fine-comments': {
             data: [
-              {type: 'fine-comments', id: '1'}
+              { type: 'fine-comments', id: '1' }
             ]
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: '1'}
+            data: { type: 'word-smiths', id: '1' }
           }
         }
       },
@@ -168,7 +168,7 @@ test(`it can serialize a collection with a chain of has-many relationships`, fun
         },
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: '1'}
+            data: { type: 'blog-posts', id: '1' }
           }
         }
       },
@@ -183,7 +183,7 @@ test(`it can serialize a collection with a chain of has-many relationships`, fun
             data: []
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: '1'}
+            data: { type: 'word-smiths', id: '1' }
           }
         }
       }
@@ -213,11 +213,11 @@ test(`it can serialize a collection with a belongs-to relationship`, function(as
         relationships: {
           'fine-comments': {
             data: [
-              {type: 'fine-comments', id: '1'}
+              { type: 'fine-comments', id: '1' }
             ]
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: '1'}
+            data: { type: 'word-smiths', id: '1' }
           }
         }
       },
@@ -232,7 +232,7 @@ test(`it can serialize a collection with a belongs-to relationship`, function(as
             data: []
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: '1'}
+            data: { type: 'word-smiths', id: '1' }
           }
         }
       }
@@ -242,13 +242,13 @@ test(`it can serialize a collection with a belongs-to relationship`, function(as
         type: 'word-smiths',
         id: '1',
         attributes: {
-          'first-name': 'Link',
+          'first-name': 'Link'
         },
         relationships: {
           'blog-posts': {
             data: [
-              {type: 'blog-posts', id: '1'},
-              {type: 'blog-posts', id: '2'}
+              { type: 'blog-posts', id: '1' },
+              { type: 'blog-posts', id: '2' }
             ]
           }
         }
@@ -281,7 +281,7 @@ test(`it can serialize a collection with a chain of belongs-to relationships`, f
         },
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: '1'}
+            data: { type: 'blog-posts', id: '1' }
           }
         }
       }
@@ -294,16 +294,16 @@ test(`it can serialize a collection with a chain of belongs-to relationships`, f
           title: 'Lorem'
         },
         relationships: {
-          "fine-comments": {
+          'fine-comments': {
             data: [
               {
                 id: '1',
-                type: "fine-comments"
+                type: 'fine-comments'
               }
             ]
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: '1'}
+            data: { type: 'word-smiths', id: '1' }
           }
         }
       },
@@ -314,15 +314,15 @@ test(`it can serialize a collection with a chain of belongs-to relationships`, f
           'first-name': 'Link'
         },
         relationships: {
-          "blog-posts": {
+          'blog-posts': {
             data: [
               {
                 id: '1',
-                type: "blog-posts"
+                type: 'blog-posts'
               },
               {
                 id: '2',
-                type: "blog-posts"
+                type: 'blog-posts'
               }
             ]
           }
@@ -352,10 +352,10 @@ test(`it can serialize a collection of models that have both belongs-to and has-
       },
       relationships: {
         'word-smith': {
-          data: {type: 'word-smiths', id: '1'}
+          data: { type: 'word-smiths', id: '1' }
         },
         'fine-comments': {
-          data: [{type: 'fine-comments', id: '1'}]
+          data: [{ type: 'fine-comments', id: '1' }]
         }
       }
     },
@@ -367,15 +367,15 @@ test(`it can serialize a collection of models that have both belongs-to and has-
           'first-name': 'Link'
         },
         relationships: {
-          "blog-posts": {
+          'blog-posts': {
             data: [
               {
                 id: '1',
-                type: "blog-posts"
+                type: 'blog-posts'
               },
               {
                 id: '2',
-                type: "blog-posts"
+                type: 'blog-posts'
               }
             ]
           }
@@ -388,10 +388,10 @@ test(`it can serialize a collection of models that have both belongs-to and has-
           'text': 'pwned'
         },
         relationships: {
-          "blog-post": {
+          'blog-post': {
             data: {
               id: '1',
-              type: "blog-posts"
+              type: 'blog-posts'
             }
           }
         }

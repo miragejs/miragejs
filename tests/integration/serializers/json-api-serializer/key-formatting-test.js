@@ -23,7 +23,7 @@ test(`keyForAttribute formats the attributes of a model`, function(assert) {
     id: 1,
     firstName: 'Link',
     lastName: 'Jackson',
-    age: 323,
+    age: 323
   });
 
   let result = registry.serialize(wordSmith);
@@ -38,7 +38,7 @@ test(`keyForAttribute formats the attributes of a model`, function(assert) {
         last_name: 'Jackson'
       },
       relationships: {
-        "blog-posts": {
+        'blog-posts': {
           data: []
         }
       }
@@ -53,8 +53,8 @@ test(`keyForAttribute also formats the models in a collections`, function(assert
     })
   });
 
-  this.schema.wordSmith.create({id: 1, 'firstName': 'Link', 'lastName': 'Jackson'});
-  this.schema.wordSmith.create({id: 2, 'firstName': 'Zelda', 'lastName': 'Brown'});
+  this.schema.wordSmith.create({ id: 1, 'firstName': 'Link', 'lastName': 'Jackson' });
+  this.schema.wordSmith.create({ id: 2, 'firstName': 'Zelda', 'lastName': 'Brown' });
   let wordSmiths = this.schema.wordSmith.all();
 
   let result = registry.serialize(wordSmiths);
@@ -65,10 +65,10 @@ test(`keyForAttribute also formats the models in a collections`, function(assert
       id: '1',
       attributes: {
         'first_name': 'Link',
-        'last_name': 'Jackson',
+        'last_name': 'Jackson'
       },
       relationships: {
-        "blog-posts": {
+        'blog-posts': {
           data: []
         }
       }
@@ -77,10 +77,10 @@ test(`keyForAttribute also formats the models in a collections`, function(assert
       id: '2',
       attributes: {
         'first_name': 'Zelda',
-        'last_name': 'Brown',
+        'last_name': 'Brown'
       },
       relationships: {
-        "blog-posts": {
+        'blog-posts': {
           data: []
         }
       }
@@ -92,7 +92,7 @@ test(`keyForRelationship works`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     wordSmith: JsonApiSerializer.extend({
       keyForRelationship: underscore,
-      include: ['blogPosts'],
+      include: ['blogPosts']
     })
   });
 
@@ -100,9 +100,9 @@ test(`keyForRelationship works`, function(assert) {
     id: 1,
     firstName: 'Link',
     lastName: 'Jackson',
-    age: 323,
+    age: 323
   });
-  wordSmith.createBlogPost({title: 'Lorem ipsum'});
+  wordSmith.createBlogPost({ title: 'Lorem ipsum' });
 
   let result = registry.serialize(wordSmith);
 
@@ -116,9 +116,9 @@ test(`keyForRelationship works`, function(assert) {
         'last-name': 'Jackson'
       },
       relationships: {
-        "blog_posts": {
+        'blog_posts': {
           data: [
-            {id: '1', type: 'blog-posts'}
+            { id: '1', type: 'blog-posts' }
           ]
         }
       }

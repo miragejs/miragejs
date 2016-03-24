@@ -7,9 +7,9 @@ import { hasMany, belongsTo } from 'ember-cli-mirage';
 module('Integration | Schema | Named associations test');
 
 test('schemas with a single hasMany have correct foreign keys', function(assert) {
-  var schema = new Schema(new Db(), {
+  let schema = new Schema(new Db(), {
     user: Model.extend({
-      projects: hasMany(),
+      projects: hasMany()
     }),
     project: Model
   });
@@ -41,7 +41,7 @@ What should the behavior be??
 */
 
 test('schemas with a single belongsTo have correct foreign keys', function(assert) {
-  var schema = new Schema(new Db(), {
+  let schema = new Schema(new Db(), {
     user: Model,
     project: Model.extend({
       user: belongsTo()
@@ -60,7 +60,7 @@ test('schemas with a single belongsTo have correct foreign keys', function(asser
 });
 
 test('schemas with a single belongsTo with a different property name have correct foreign keys', function(assert) {
-  var schema = new Schema(new Db(), {
+  let schema = new Schema(new Db(), {
     user: Model,
     project: Model.extend({
       owner: belongsTo('user')
@@ -79,7 +79,7 @@ test('schemas with a single belongsTo with a different property name have correc
 });
 
 test('schemas with a single hasMany and belongsTo have correct foreign keys', function(assert) {
-  var schema = new Schema(new Db(), {
+  let schema = new Schema(new Db(), {
     user: Model.extend({
       projects: hasMany()
     }),
@@ -100,7 +100,7 @@ test('schemas with a single hasMany and belongsTo have correct foreign keys', fu
 });
 
 test('complex schemas have correct foreign keys', function(assert) {
-  var schema = new Schema(new Db(), {
+  let schema = new Schema(new Db(), {
     user: Model.extend({
       projects: hasMany(),
       tasks: hasMany()
@@ -111,7 +111,7 @@ test('complex schemas have correct foreign keys', function(assert) {
     }),
     task: Model.extend({
       user: belongsTo(),
-      project: belongsTo(),
+      project: belongsTo()
     })
   });
 
@@ -130,11 +130,11 @@ test('complex schemas have correct foreign keys', function(assert) {
 });
 
 test('foreign keys should be named appropriately for multiword properties', function(assert) {
-  var schema = new Schema(new Db(), {
+  let schema = new Schema(new Db(), {
     author: Model,
     post: Model.extend({
-      wordSmith: belongsTo('author'),
-    }),
+      wordSmith: belongsTo('author')
+    })
   });
 
   // Fks are set up correctly
@@ -150,11 +150,11 @@ test('foreign keys should be named appropriately for multiword properties', func
 });
 
 test('foreign keys should be named appropriately for multiword model names', function(assert) {
-  var schema = new Schema(new Db(), {
+  let schema = new Schema(new Db(), {
     wordSmith: Model,
     post: Model.extend({
-      author: belongsTo('word-smith'),
-    }),
+      author: belongsTo('word-smith')
+    })
   });
 
   assert.deepEqual(schema._registry.wordSmith.foreignKeys, []);
@@ -169,11 +169,11 @@ test('foreign keys should be named appropriately for multiword model names', fun
 });
 
 test('foreign keys should be named appropriately for multiword properties and model names', function(assert) {
-  var schema = new Schema(new Db(), {
+  let schema = new Schema(new Db(), {
     wordSmith: Model,
     post: Model.extend({
-      brilliantWriter: belongsTo('word-smith'),
-    }),
+      brilliantWriter: belongsTo('word-smith')
+    })
   });
 
   assert.deepEqual(schema._registry.wordSmith.foreignKeys, []);
@@ -188,12 +188,12 @@ test('foreign keys should be named appropriately for multiword properties and mo
 });
 
 test('a model can have multiple belongsTo associations of the same type', function(assert) {
-  var schema = new Schema(new Db(), {
+  let schema = new Schema(new Db(), {
     user: Model,
     project: Model.extend({
       admin: belongsTo('user'),
       specialUser: belongsTo('user')
-    }),
+    })
   });
 
   assert.deepEqual(schema._registry.user.foreignKeys, []);

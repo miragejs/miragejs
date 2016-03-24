@@ -3,7 +3,7 @@ import { Model, Factory } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
 
 module('Integration | Server | Model creation', {
-  beforeEach: function() {
+  beforeEach() {
     this.Contact = Model.extend();
     this.AmazingContact = Model.extend();
     this.server = new Server({
@@ -20,7 +20,7 @@ module('Integration | Server | Model creation', {
     this.server.timing = 0;
     this.server.logging = false;
   },
-  afterEach: function() {
+  afterEach() {
     this.server.shutdown();
   }
 });

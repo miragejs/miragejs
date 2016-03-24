@@ -5,7 +5,7 @@ import PostShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthand
 import JSONAPISerializer from 'ember-cli-mirage/serializers/json-api-serializer';
 
 module('Integration | Route Handlers | POST shorthand', {
-  beforeEach: function() {
+  beforeEach() {
     this.server = new Server({
       environment: 'development',
       models: {
@@ -23,19 +23,18 @@ module('Integration | Route Handlers | POST shorthand', {
         type: 'authors',
         attributes: {
           'first-name': 'Ganon',
-          'last-name': 'Dorf',
+          'last-name': 'Dorf'
         }
       }
     };
   },
-  afterEach: function() {
+  afterEach() {
     this.server.shutdown();
   }
 });
 
-
 test('string shorthand creates a record of the specified type and returns the new model', function(assert) {
-  let request = {requestBody: JSON.stringify(this.body), url: '/people'};
+  let request = { requestBody: JSON.stringify(this.body), url: '/people' };
   let handler = new PostShorthandRouteHandler(this.schema, this.serializer, 'author');
 
   let model = handler.handle(request);
@@ -47,7 +46,7 @@ test('string shorthand creates a record of the specified type and returns the ne
 });
 
 test('query params are ignored', function(assert) {
-  let request = {requestBody: JSON.stringify(this.body), url: '/authors?foo=bar', queryParams: {foo: 'bar'}};
+  let request = { requestBody: JSON.stringify(this.body), url: '/authors?foo=bar', queryParams: { foo: 'bar' } };
   let handler = new PostShorthandRouteHandler(this.schema, this.serializer, 'author');
 
   let model = handler.handle(request);
@@ -59,7 +58,7 @@ test('query params are ignored', function(assert) {
 });
 
 test('undefined shorthand creates a record and returns the new model', function(assert) {
-  let request = {requestBody: JSON.stringify(this.body), url: '/authors'};
+  let request = { requestBody: JSON.stringify(this.body), url: '/authors' };
   let handler = new PostShorthandRouteHandler(this.schema, this.serializer, null, '/authors');
 
   let model = handler.handle(request);
@@ -71,7 +70,7 @@ test('undefined shorthand creates a record and returns the new model', function(
 });
 
 test('if a shorthand tries to access an unknown type it throws an error', function(assert) {
-  let request = {requestBody: JSON.stringify(this.body), url: '/foobars'};
+  let request = { requestBody: JSON.stringify(this.body), url: '/foobars' };
   let handler = new PostShorthandRouteHandler(this.schema, this.serializer, 'foobar');
 
   assert.throws(function() {

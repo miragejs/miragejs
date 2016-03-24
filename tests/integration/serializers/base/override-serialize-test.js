@@ -23,7 +23,7 @@ test(`it can use a completely custom serialize function`, function(assert) {
 
   let wordSmith = this.schema.wordSmith.create({
     id: 1,
-    title: 'Link',
+    title: 'Link'
   });
 
   let result = this.registry.serialize(wordSmith);
@@ -44,10 +44,10 @@ test(`it can access the request in a custom serialize function`, function(assert
 
   let wordSmith = this.schema.wordSmith.create({
     id: 1,
-    title: 'Link',
+    title: 'Link'
   });
 
-  let request = {url: '/word-smiths/1?foo=bar', params: {id: '1'}, queryParams: {foo: 'bar'}};
+  let request = { url: '/word-smiths/1?foo=bar', params: { id: '1' }, queryParams: { foo: 'bar' } };
   let result = this.registry.serialize(wordSmith, request);
 
   assert.deepEqual(result, {

@@ -4,16 +4,16 @@ import schemaHelper from '../../schema-helper';
 import { module, test } from 'qunit';
 
 module('Integration | Serializers | JSON API Serializer | Associations | Model', {
-  beforeEach: function() {
+  beforeEach() {
     this.schema = schemaHelper.setup();
 
-    let link = this.schema.wordSmith.create({firstName: 'Link'});
-    let blogPost = link.createBlogPost({title: 'Lorem'});
-    blogPost.createFineComment({text: 'pwned'});
+    let link = this.schema.wordSmith.create({ firstName: 'Link' });
+    let blogPost = link.createBlogPost({ title: 'Lorem' });
+    blogPost.createFineComment({ text: 'pwned' });
 
-    link.createBlogPost({title: 'Ipsum'});
+    link.createBlogPost({ title: 'Ipsum' });
 
-    this.schema.wordSmith.create({name: 'Zelda'});
+    this.schema.wordSmith.create({ name: 'Zelda' });
   },
   afterEach() {
     this.schema.db.emptyData();
@@ -24,7 +24,7 @@ test(`it can include a has many relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     wordSmith: JsonApiSerializer.extend({
-      include: ['blogPosts'],
+      include: ['blogPosts']
     })
   });
 
@@ -36,13 +36,13 @@ test(`it can include a has many relationship`, function(assert) {
       type: 'word-smiths',
       id: '1',
       attributes: {
-        'first-name': 'Link',
+        'first-name': 'Link'
       },
       relationships: {
         'blog-posts': {
           data: [
-            {type: 'blog-posts', id: '1'},
-            {type: 'blog-posts', id: '2'},
+            { type: 'blog-posts', id: '1' },
+            { type: 'blog-posts', id: '2' }
           ]
         }
       }
@@ -55,18 +55,18 @@ test(`it can include a has many relationship`, function(assert) {
           title: 'Lorem'
         },
         relationships: {
-          "fine-comments": {
+          'fine-comments': {
             data: [
               {
                 id: '1',
-                type: "fine-comments"
+                type: 'fine-comments'
               }
             ]
           },
-          "word-smith": {
+          'word-smith': {
             data: {
               id: '1',
-              type: "word-smiths"
+              type: 'word-smiths'
             }
           }
         }
@@ -78,13 +78,13 @@ test(`it can include a has many relationship`, function(assert) {
           title: 'Ipsum'
         },
         relationships: {
-          "fine-comments": {
+          'fine-comments': {
             data: []
           },
-          "word-smith": {
+          'word-smith': {
             data: {
               id: '1',
-              type: "word-smiths"
+              type: 'word-smiths'
             }
           }
         }
@@ -97,10 +97,10 @@ test(`it can include a chain of has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     wordSmith: JsonApiSerializer.extend({
-      include: ['blogPosts'],
+      include: ['blogPosts']
     }),
     blogPost: JsonApiSerializer.extend({
-      include: ['fineComments'],
+      include: ['fineComments']
     })
   });
 
@@ -112,13 +112,13 @@ test(`it can include a chain of has-many relationships`, function(assert) {
       type: 'word-smiths',
       id: '1',
       attributes: {
-        'first-name': 'Link',
+        'first-name': 'Link'
       },
       relationships: {
         'blog-posts': {
           data: [
-            {type: 'blog-posts', id: '1'},
-            {type: 'blog-posts', id: '2'},
+            { type: 'blog-posts', id: '1' },
+            { type: 'blog-posts', id: '2' }
           ]
         }
       }
@@ -133,13 +133,13 @@ test(`it can include a chain of has-many relationships`, function(assert) {
         relationships: {
           'fine-comments': {
             data: [
-              {type: 'fine-comments', id: '1'},
+              { type: 'fine-comments', id: '1' }
             ]
           },
-          "word-smith": {
+          'word-smith': {
             data: {
               id: '1',
-              type: "word-smiths"
+              type: 'word-smiths'
             }
           }
         }
@@ -151,10 +151,10 @@ test(`it can include a chain of has-many relationships`, function(assert) {
           text: 'pwned'
         },
         relationships: {
-          "blog-post": {
+          'blog-post': {
             data: {
               id: '1',
-              type: "blog-posts"
+              type: 'blog-posts'
             }
           }
         }
@@ -169,10 +169,10 @@ test(`it can include a chain of has-many relationships`, function(assert) {
           'fine-comments': {
             data: []
           },
-          "word-smith": {
+          'word-smith': {
             data: {
               id: '1',
-              type: "word-smiths"
+              type: 'word-smiths'
             }
           }
         }
@@ -185,7 +185,7 @@ test(`it can embed a belongs-to relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     blogPost: JsonApiSerializer.extend({
-      include: ['wordSmith'],
+      include: ['wordSmith']
     })
   });
 
@@ -200,39 +200,39 @@ test(`it can embed a belongs-to relationship`, function(assert) {
         title: 'Lorem'
       },
       relationships: {
-        "fine-comments": {
+        'fine-comments': {
           data: [
             {
               id: '1',
-              type: "fine-comments"
+              type: 'fine-comments'
             }
           ]
         },
         'word-smith': {
           data: {
             id: '1',
-            type: "word-smiths"
+            type: 'word-smiths'
           }
         }
-      },
+      }
     },
-    "included": [
+    'included': [
       {
         attributes: {
-          'first-name': "Link"
+          'first-name': 'Link'
         },
         id: '1',
-        type: "word-smiths",
+        type: 'word-smiths',
         relationships: {
-          "blog-posts": {
+          'blog-posts': {
             data: [
               {
                 id: '1',
-                type: "blog-posts"
+                type: 'blog-posts'
               },
               {
                 id: '2',
-                type: "blog-posts"
+                type: 'blog-posts'
               }
             ]
           }
@@ -262,7 +262,7 @@ test(`it gracefully handles null belongs-to relationship`, function(assert) {
         title: 'Lorem3'
       },
       relationships: {
-        "fine-comments": {
+        'fine-comments': {
           data: []
         }
       }
@@ -274,10 +274,10 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     blogPost: JsonApiSerializer.extend({
-      include: ['wordSmith'],
+      include: ['wordSmith']
     }),
     fineComment: JsonApiSerializer.extend({
-      include: ['blogPost'],
+      include: ['blogPost']
     })
   });
 
@@ -295,12 +295,12 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
         'blog-post': {
           data: {
             id: '1',
-            type: "blog-posts"
+            type: 'blog-posts'
           }
         }
-      },
+      }
     },
-    "included": [
+    'included': [
       {
         type: 'blog-posts',
         id: '1',
@@ -308,11 +308,11 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
           title: 'Lorem'
         },
         relationships: {
-          "fine-comments": {
+          'fine-comments': {
             data: [
               {
                 id: '1',
-                type: "fine-comments"
+                type: 'fine-comments'
               }
             ]
           },
@@ -325,21 +325,21 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
         }
       },
       {
-        type: "word-smiths",
+        type: 'word-smiths',
         id: '1',
         attributes: {
-          'first-name': "Link"
+          'first-name': 'Link'
         },
         relationships: {
-          "blog-posts": {
+          'blog-posts': {
             data: [
               {
                 id: '1',
-                type: "blog-posts"
+                type: 'blog-posts'
               },
               {
                 id: '2',
-                type: "blog-posts"
+                type: 'blog-posts'
               }
             ]
           }
@@ -353,10 +353,10 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     wordSmith: JsonApiSerializer.extend({
-      include: ['blogPosts'],
+      include: ['blogPosts']
     }),
     blogPost: JsonApiSerializer.extend({
-      include: ['wordSmith'],
+      include: ['wordSmith']
     })
   });
 
@@ -366,54 +366,54 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
   assert.deepEqual(result, {
     data: {
       attributes: {
-        'first-name': "Link"
+        'first-name': 'Link'
       },
       id: '1',
       relationships: {
         'blog-posts': {
           data: [
-            {type: 'blog-posts', id: '1'},
-            {type: 'blog-posts', id: '2'},
+            { type: 'blog-posts', id: '1' },
+            { type: 'blog-posts', id: '2' }
           ]
         }
       },
-      type: "word-smiths"
+      type: 'word-smiths'
     },
     included: [
       {
         attributes: {
-          title: "Lorem"
+          title: 'Lorem'
         },
         id: '1',
         relationships: {
-          "fine-comments": {
+          'fine-comments': {
             data: [
               {
                 id: '1',
-                type: "fine-comments"
+                type: 'fine-comments'
               }
             ]
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: '1'}
+            data: { type: 'word-smiths', id: '1' }
           }
         },
-        type: "blog-posts"
+        type: 'blog-posts'
       },
       {
-        type: "blog-posts",
+        type: 'blog-posts',
         id: '2',
         attributes: {
-          title: "Ipsum"
+          title: 'Ipsum'
         },
         relationships: {
-          "fine-comments": {
+          'fine-comments': {
             data: []
           },
           'word-smith': {
-            data: {type: 'word-smiths', id: '1'}
+            data: { type: 'word-smiths', id: '1' }
           }
-        },
+        }
       }
     ]
   });
@@ -423,10 +423,10 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
   let registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     wordSmith: JsonApiSerializer.extend({
-      include: ['blogPosts'],
+      include: ['blogPosts']
     }),
     blogPost: JsonApiSerializer.extend({
-      include: ['wordSmith', 'fineComments'],
+      include: ['wordSmith', 'fineComments']
     }),
     fineComment: JsonApiSerializer.extend({
       include: ['blogPost']
@@ -439,63 +439,63 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
   assert.deepEqual(result, {
     data: {
       attributes: {
-        'first-name': "Link"
+        'first-name': 'Link'
       },
       id: '1',
       relationships: {
         'blog-posts': {
           data: [
-            {type: 'blog-posts', id: '1'},
-            {type: 'blog-posts', id: '2'},
+            { type: 'blog-posts', id: '1' },
+            { type: 'blog-posts', id: '2' }
           ]
         }
       },
-      type: "word-smiths"
+      type: 'word-smiths'
     },
     included: [
       {
-        type: "blog-posts",
+        type: 'blog-posts',
         id: '1',
         attributes: {
-          title: "Lorem"
+          title: 'Lorem'
         },
         relationships: {
           'word-smith': {
-            data: {type: 'word-smiths', id: '1'}
+            data: { type: 'word-smiths', id: '1' }
           },
           'fine-comments': {
             data: [
-              {type: 'fine-comments', id: '1'}
+              { type: 'fine-comments', id: '1' }
             ]
           }
-        },
+        }
       },
       {
-        type: "fine-comments",
+        type: 'fine-comments',
         id: '1',
         attributes: {
           text: 'pwned'
         },
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: '1'}
+            data: { type: 'blog-posts', id: '1' }
           }
-        },
+        }
       },
       {
-        type: "blog-posts",
+        type: 'blog-posts',
         id: '2',
         attributes: {
-          title: "Ipsum"
+          title: 'Ipsum'
         },
         relationships: {
           'word-smith': {
-            data: {type: 'word-smiths', id: '1'}
+            data: { type: 'word-smiths', id: '1' }
           },
           'fine-comments': {
             data: []
           }
-        },
+        }
       }
     ]
   });

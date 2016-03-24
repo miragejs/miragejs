@@ -6,59 +6,58 @@ import {module, test} from 'qunit';
 
 var db, collection;
 module('Integration | Schema | Updating a Collection', {
-  beforeEach: function() {
-    db = new Db({users: []});
+  beforeEach() {
+    db = new Db({ users: [] });
 
-    var schema = new Schema(db, {
+    let schema = new Schema(db, {
       user: Model
     });
 
     collection = new Collection('user', [
-      schema.user.create({name: 'Link', location: 'Hyrule', evil: false}),
-      schema.user.create({name: 'Zelda', location: 'Hyrule', evil: false}),
+      schema.user.create({ name: 'Link', location: 'Hyrule', evil: false }),
+      schema.user.create({ name: 'Zelda', location: 'Hyrule', evil: false })
     ]);
   }
 });
 
 test('it can update its models with a key and value', function(assert) {
   assert.deepEqual(db.users, [
-    {id: '1', name: 'Link', location: 'Hyrule', evil: false},
-    {id: '2', name: 'Zelda', location: 'Hyrule', evil: false},
+    { id: '1', name: 'Link', location: 'Hyrule', evil: false },
+    { id: '2', name: 'Zelda', location: 'Hyrule', evil: false }
   ]);
 
   collection.update('evil', true);
 
   assert.deepEqual(db.users, [
-    {id: '1', name: 'Link', location: 'Hyrule', evil: true},
-    {id: '2', name: 'Zelda', location: 'Hyrule', evil: true},
+    { id: '1', name: 'Link', location: 'Hyrule', evil: true },
+    { id: '2', name: 'Zelda', location: 'Hyrule', evil: true }
   ]);
-  assert.deepEqual(collection[0].attrs, {id: '1', name: 'Link', location: 'Hyrule', evil: true});
-  assert.deepEqual(collection[1].attrs, {id: '2', name: 'Zelda', location: 'Hyrule', evil: true});
+  assert.deepEqual(collection[0].attrs, { id: '1', name: 'Link', location: 'Hyrule', evil: true });
+  assert.deepEqual(collection[1].attrs, { id: '2', name: 'Zelda', location: 'Hyrule', evil: true });
 });
 
 test('it can update its models with a hash of attrs', function(assert) {
   assert.deepEqual(db.users, [
-    {id: '1', name: 'Link', location: 'Hyrule', evil: false},
-    {id: '2', name: 'Zelda', location: 'Hyrule', evil: false},
+    { id: '1', name: 'Link', location: 'Hyrule', evil: false },
+    { id: '2', name: 'Zelda', location: 'Hyrule', evil: false }
   ]);
 
-  collection.update({location: 'The water temple', evil: true});
+  collection.update({ location: 'The water temple', evil: true });
 
   assert.deepEqual(db.users, [
-    {id: '1', name: 'Link', location: 'The water temple', evil: true},
-    {id: '2', name: 'Zelda', location: 'The water temple', evil: true},
+    { id: '1', name: 'Link', location: 'The water temple', evil: true },
+    { id: '2', name: 'Zelda', location: 'The water temple', evil: true }
   ]);
-  assert.deepEqual(collection[0].attrs, {id: '1', name: 'Link', location: 'The water temple', evil: true});
-  assert.deepEqual(collection[1].attrs, {id: '2', name: 'Zelda', location: 'The water temple', evil: true});
+  assert.deepEqual(collection[0].attrs, { id: '1', name: 'Link', location: 'The water temple', evil: true });
+  assert.deepEqual(collection[1].attrs, { id: '2', name: 'Zelda', location: 'The water temple', evil: true });
 });
-
 
 var db, schema;
 module('Integration | Schema | Updating a Model', {
-  beforeEach: function() {
-    db = new Db({users: [
-      {id: 1, name: 'Link', evil: false}
-    ]});
+  beforeEach() {
+    db = new Db({ users: [
+      { id: 1, name: 'Link', evil: false }
+    ] });
 
     schema = new Schema(db, {
       user: Model
@@ -67,31 +66,31 @@ module('Integration | Schema | Updating a Model', {
 });
 
 test('it can set an attribute and then save the model', function(assert) {
-  var user = schema.user.find(1);
+  let user = schema.user.find(1);
 
   user.name = 'Young link';
 
-  assert.deepEqual(user.attrs, {id: '1', name: 'Young link', evil: false});
-  assert.deepEqual(db.users, [{id: '1', name: 'Link', evil: false}]);
+  assert.deepEqual(user.attrs, { id: '1', name: 'Young link', evil: false });
+  assert.deepEqual(db.users, [{ id: '1', name: 'Link', evil: false }]);
 
   user.save();
 
-  assert.deepEqual(user.attrs, {id: '1', name: 'Young link', evil: false});
-  assert.deepEqual(db.users, [{id: '1', name: 'Young link', evil: false}]);
+  assert.deepEqual(user.attrs, { id: '1', name: 'Young link', evil: false });
+  assert.deepEqual(db.users, [{ id: '1', name: 'Young link', evil: false }]);
 });
 
 test('it can update a single attr immediately', function(assert) {
-  var link = schema.user.find(1);
+  let link = schema.user.find(1);
   link.update('evil', true);
 
-  assert.deepEqual(link.attrs, {id: '1', name: 'Link', evil: true});
-  assert.deepEqual(db.users.find(1), {id: '1', name: 'Link', evil: true});
+  assert.deepEqual(link.attrs, { id: '1', name: 'Link', evil: true });
+  assert.deepEqual(db.users.find(1), { id: '1', name: 'Link', evil: true });
 });
 
 test('it can update a hash of attrs immediately', function(assert) {
   var link = schema.user.find(1);
-  link.update({name: 'Evil link', evil: true});
+  link.update({ name: 'Evil link', evil: true });
 
-  assert.deepEqual(link.attrs, {id: '1', name: 'Evil link', evil: true});
-  assert.deepEqual(db.users.find(1), {id: '1', name: 'Evil link', evil: true});
+  assert.deepEqual(link.attrs, { id: '1', name: 'Evil link', evil: true });
+  assert.deepEqual(db.users.find(1), { id: '1', name: 'Evil link', evil: true });
 });

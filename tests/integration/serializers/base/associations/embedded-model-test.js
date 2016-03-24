@@ -4,16 +4,16 @@ import schemaHelper from '../../schema-helper';
 import { module, test } from 'qunit';
 
 module('Integration | Serializers | Base | Associations | Embedded Models', {
-  beforeEach: function() {
+  beforeEach() {
     this.schema = schemaHelper.setup();
 
-    let wordSmith = this.schema.wordSmith.create({name: 'Link'});
-    let post = wordSmith.createBlogPost({title: 'Lorem'});
-    post.createFineComment({text: 'pwned'});
+    let wordSmith = this.schema.wordSmith.create({ name: 'Link' });
+    let post = wordSmith.createBlogPost({ title: 'Lorem' });
+    post.createFineComment({ text: 'pwned' });
 
-    wordSmith.createBlogPost({title: 'Ipsum'});
+    wordSmith.createBlogPost({ title: 'Ipsum' });
 
-    this.schema.wordSmith.create({name: 'Zelda'});
+    this.schema.wordSmith.create({ name: 'Zelda' });
 
     this.BaseSerializer = Serializer.extend({
       embed: true
@@ -34,15 +34,15 @@ test(`it can embed has-many relationships`, function(assert) {
   });
 
   let link = this.schema.wordSmith.find(1);
-  var result = registry.serialize(link);
+  let result = registry.serialize(link);
 
   assert.deepEqual(result, {
     wordSmith: {
       id: '1',
       name: 'Link',
       blogPosts: [
-        {id: '1', title: 'Lorem'},
-        {id: '2', title: 'Ipsum'}
+        { id: '1', title: 'Lorem' },
+        { id: '2', title: 'Ipsum' }
       ]
     }
   });
@@ -60,17 +60,17 @@ test(`it can embed a chain of has-many relationships`, function(assert) {
   });
 
   let wordSmith = this.schema.wordSmith.find(1);
-  var result = registry.serialize(wordSmith);
+  let result = registry.serialize(wordSmith);
 
   assert.deepEqual(result, {
     wordSmith: {
       id: '1',
       name: 'Link',
       blogPosts: [
-        {id: '1', title: 'Lorem', fineComments: [
-          {id: '1', text: 'pwned'}
-        ]},
-        {id: '2', title: 'Ipsum', fineComments: []}
+        { id: '1', title: 'Lorem', fineComments: [
+          { id: '1', text: 'pwned' }
+        ] },
+        { id: '2', title: 'Ipsum', fineComments: [] }
       ]
     }
   });
@@ -86,13 +86,13 @@ test(`it can embed a belongs-to relationship`, function(assert) {
   });
 
   let blogPost = this.schema.blogPost.find(1);
-  var result = registry.serialize(blogPost);
+  let result = registry.serialize(blogPost);
 
   assert.deepEqual(result, {
     blogPost: {
       id: '1',
       title: 'Lorem',
-      wordSmith: {id: '1', name: 'Link'}
+      wordSmith: { id: '1', name: 'Link' }
     }
   });
 });
@@ -109,7 +109,7 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
   });
 
   let fineComment = this.schema.fineComment.find(1);
-  var result = registry.serialize(fineComment);
+  let result = registry.serialize(fineComment);
 
   assert.deepEqual(result, {
     fineComment: {
@@ -121,7 +121,7 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
         wordSmith: {
           id: '1', name: 'Link'
         }
-      },
+      }
     }
   });
 });
@@ -138,15 +138,15 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
   });
 
   let wordSmith = this.schema.wordSmith.find(1);
-  var result = registry.serialize(wordSmith);
+  let result = registry.serialize(wordSmith);
 
   assert.deepEqual(result, {
     wordSmith: {
       id: '1',
       name: 'Link',
       blogPosts: [
-        {id: '1', title: 'Lorem'},
-        {id: '2', title: 'Ipsum'}
+        { id: '1', title: 'Lorem' },
+        { id: '2', title: 'Ipsum' }
       ]
     }
   });
@@ -168,17 +168,17 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
   });
 
   let wordSmith = this.schema.wordSmith.find(1);
-  var result = registry.serialize(wordSmith);
+  let result = registry.serialize(wordSmith);
 
   assert.deepEqual(result, {
-    wordSmith :{
+    wordSmith: {
       id: '1',
       name: 'Link',
       blogPosts: [
-        {id: '1', title: 'Lorem', fineComments: [
-          {id: '1', text: 'pwned'}
-        ]},
-        {id: '2', title: 'Ipsum', fineComments: []}
+        { id: '1', title: 'Lorem', fineComments: [
+          { id: '1', text: 'pwned' }
+        ] },
+        { id: '2', title: 'Ipsum', fineComments: [] }
       ]
     }
   });

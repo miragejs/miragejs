@@ -6,7 +6,7 @@ import Db from 'ember-cli-mirage/db';
 import {module, test} from 'qunit';
 
 module('Integration | Schema | belongsTo #accessor', {
-  beforeEach: function() {
+  beforeEach() {
     this.helper = new BelongsToHelper();
   }
 });
@@ -21,11 +21,11 @@ module('Integration | Schema | belongsTo #accessor', {
   'savedChildSavedParent',
   'newChildNoParent',
   'newChildNewParent',
-  'newChildSavedParent',
-].forEach(state => {
+  'newChildSavedParent'
+].forEach((state) => {
 
   test(`the references of a ${state} are correct`, function(assert) {
-    var [address, user] = this.helper[state]();
+    let [address, user] = this.helper[state]();
 
     assert.deepEqual(address.user, user ? user : null, 'the model reference is correct');
     assert.equal(address.userId, user ? user.id : null, 'the modelId reference is correct');
@@ -46,7 +46,7 @@ test('belongsTo accessors works when foreign key is present but falsy', function
     })
   });
 
-  db.users.insert({id: 0, name: 'some user' });
+  db.users.insert({ id: 0, name: 'some user' });
   let insertedAddress = db.addresses.insert({ name: 'foo', userId: 0 });
   let relatedUser = schema.address.find(insertedAddress.id).user;
   assert.equal('some user', relatedUser ? relatedUser.name : undefined);

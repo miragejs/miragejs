@@ -2,23 +2,23 @@ import {module, test} from 'qunit';
 import Server from 'ember-cli-mirage/server';
 
 module('Integration | Passthrough', {
-  beforeEach: function() {
+  beforeEach() {
     this.server = new Server({
       environment: 'development'
     });
     this.server.timing = 0;
     this.server.logging = false;
   },
-  afterEach: function() {
+  afterEach() {
     this.server.shutdown();
   }
 });
 
 test('it can passthrough individual paths', function(assert) {
   assert.expect(2);
-  var done1 = assert.async();
-  var done2 = assert.async();
-  var server = this.server;
+  let done1 = assert.async();
+  let done2 = assert.async();
+  let { server } = this;
 
   server.loadConfig(function() {
     this.get('/contacts', function() {
@@ -28,18 +28,18 @@ test('it can passthrough individual paths', function(assert) {
   });
 
   $.ajax({
-    method: "GET",
-    url: "/contacts",
-    success: function(data) {
+    method: 'GET',
+    url: '/contacts',
+    success(data) {
       assert.equal(data, 123);
       done1();
     }
   });
 
   $.ajax({
-    method: "GET",
-    url: "/addresses",
-    error: function(reason) {
+    method: 'GET',
+    url: '/addresses',
+    error(reason) {
       assert.equal(reason.status, 404);
       done2();
     }
@@ -48,10 +48,10 @@ test('it can passthrough individual paths', function(assert) {
 
 test('it can passthrough certain verbs for individual paths', function(assert) {
   assert.expect(3);
-  var done1 = assert.async();
-  var done2 = assert.async();
-  var done3 = assert.async();
-  var server = this.server;
+  let done1 = assert.async();
+  let done2 = assert.async();
+  let done3 = assert.async();
+  let { server } = this;
 
   server.loadConfig(function() {
     this.get('/contacts', function() {
@@ -64,25 +64,24 @@ test('it can passthrough certain verbs for individual paths', function(assert) {
     done2();
   };
 
-
   $.ajax({
-    method: "GET",
-    url: "/contacts",
-    success: function(data) {
+    method: 'GET',
+    url: '/contacts',
+    success(data) {
       assert.equal(data, 123);
       done1();
     }
   });
 
   $.ajax({
-    method: "GET",
-    url: "/addresses"
+    method: 'GET',
+    url: '/addresses'
   });
 
   $.ajax({
-    method: "POST",
-    url: "/addresses",
-    error: function(reason) {
+    method: 'POST',
+    url: '/addresses',
+    error(reason) {
       assert.equal(reason.status, 404);
       done3();
     }
@@ -91,9 +90,9 @@ test('it can passthrough certain verbs for individual paths', function(assert) {
 
 test('it can passthrough multiple paths in a single call', function(assert) {
   assert.expect(2);
-  var done1 = assert.async();
-  var done2 = assert.async();
-  var server = this.server;
+  let done1 = assert.async();
+  let done2 = assert.async();
+  let { server } = this;
 
   server.loadConfig(function() {
     this.get('/contacts', function() {
@@ -103,18 +102,18 @@ test('it can passthrough multiple paths in a single call', function(assert) {
   });
 
   $.ajax({
-    method: "GET",
-    url: "/contacts",
-    error: function(reason) {
+    method: 'GET',
+    url: '/contacts',
+    error(reason) {
       assert.equal(reason.status, 404);
       done1();
     }
   });
 
   $.ajax({
-    method: "POST",
-    url: "/addresses",
-    error: function(reason) {
+    method: 'POST',
+    url: '/addresses',
+    error(reason) {
       assert.equal(reason.status, 404);
       done2();
     }
@@ -123,9 +122,9 @@ test('it can passthrough multiple paths in a single call', function(assert) {
 
 test('user can call passthrough multiple times', function(assert) {
   assert.expect(2);
-  var done1 = assert.async();
-  var done2 = assert.async();
-  var server = this.server;
+  let done1 = assert.async();
+  let done2 = assert.async();
+  let { server } = this;
 
   server.loadConfig(function() {
     this.passthrough('/contacts');
@@ -133,18 +132,18 @@ test('user can call passthrough multiple times', function(assert) {
   });
 
   $.ajax({
-    method: "GET",
-    url: "/contacts",
-    error: function(reason) {
+    method: 'GET',
+    url: '/contacts',
+    error(reason) {
       assert.equal(reason.status, 404);
       done1();
     }
   });
 
   $.ajax({
-    method: "POST",
-    url: "/addresses",
-    error: function(reason) {
+    method: 'POST',
+    url: '/addresses',
+    error(reason) {
       assert.equal(reason.status, 404);
       done2();
     }
@@ -153,9 +152,9 @@ test('user can call passthrough multiple times', function(assert) {
 
 test('passthrough without args allows all paths on the current domain to passthrough', function(assert) {
   assert.expect(2);
-  var done1 = assert.async();
-  var done2 = assert.async();
-  var server = this.server;
+  let done1 = assert.async();
+  let done2 = assert.async();
+  let { server } = this;
 
   server.loadConfig(function() {
     this.get('/contacts', function() {
@@ -165,18 +164,18 @@ test('passthrough without args allows all paths on the current domain to passthr
   });
 
   $.ajax({
-    method: "GET",
-    url: "/contacts",
-    success: function(data) {
+    method: 'GET',
+    url: '/contacts',
+    success(data) {
       assert.equal(data, 123);
       done1();
     }
   });
 
   $.ajax({
-    method: "GET",
-    url: "/addresses",
-    error: function(/* reason */) {
+    method: 'GET',
+    url: '/addresses',
+    error(/* reason */) {
       assert.ok(true);
       done2();
     }
@@ -185,17 +184,17 @@ test('passthrough without args allows all paths on the current domain to passthr
 
 test('it can passthrough other-origin hosts', function(assert) {
   assert.expect(1);
-  var done1 = assert.async();
-  var server = this.server;
+  let done1 = assert.async();
+  let { server } = this;
 
   server.loadConfig(function() {
     this.passthrough('http://api.foo.bar/**');
   });
 
   $.ajax({
-    method: "GET",
-    url: "http://api.foo.bar/contacts",
-    error: function() {
+    method: 'GET',
+    url: 'http://api.foo.bar/contacts',
+    error() {
       assert.ok(true);
       done1();
     }

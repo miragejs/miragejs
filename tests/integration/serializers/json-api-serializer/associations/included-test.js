@@ -4,7 +4,7 @@ import schemaHelper from '../../schema-helper';
 import { module, test } from 'qunit';
 
 module('Integration | Serializers | JSON API Serializer | Associations | Included', {
-  beforeEach: function() {
+  beforeEach() {
     this.schema = schemaHelper.setup();
 
     const smith = this.schema.wordSmith.create();
@@ -49,7 +49,7 @@ test(`model: it can include relationships specified by the include query param`,
   const post = this.schema.blogPost.find(1);
   const request = {
     queryParams: {
-      include: "word-smith,fine-comments"
+      include: 'word-smith,fine-comments'
     }
   };
   const result = registry.serialize(post, request);
@@ -61,12 +61,12 @@ test(`model: it can include relationships specified by the include query param`,
       attributes: {},
       relationships: {
         'word-smith': {
-          data: {type: 'word-smiths', id: '1'}
+          data: { type: 'word-smiths', id: '1' }
         },
         'fine-comments': {
           data: [
-            {type: 'fine-comments', id: '1'},
-            {type: 'fine-comments', id: '2'}
+            { type: 'fine-comments', id: '1' },
+            { type: 'fine-comments', id: '2' }
           ]
         }
       }
@@ -79,7 +79,7 @@ test(`model: it can include relationships specified by the include query param`,
         relationships: {
           'blog-posts': {
             data: [
-              {type: 'blog-posts', id: '1'}
+              { type: 'blog-posts', id: '1' }
             ]
           }
         }
@@ -90,7 +90,7 @@ test(`model: it can include relationships specified by the include query param`,
         attributes: {},
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: '1'}
+            data: { type: 'blog-posts', id: '1' }
           }
         }
       },
@@ -100,7 +100,7 @@ test(`model: it can include relationships specified by the include query param`,
         attributes: {},
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: '1'}
+            data: { type: 'blog-posts', id: '1' }
           }
         }
       }
@@ -112,14 +112,14 @@ test(`model: it can include relationships specified by a combination of the incl
   const registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     blogPost: JsonApiSerializer.extend({
-      include: ['wordSmith'],
+      include: ['wordSmith']
     })
   });
 
   const post = this.schema.blogPost.find(1);
   const request = {
     queryParams: {
-      include: "fine-comments"
+      include: 'fine-comments'
     }
   };
   const result = registry.serialize(post, request);
@@ -131,12 +131,12 @@ test(`model: it can include relationships specified by a combination of the incl
       attributes: {},
       relationships: {
         'word-smith': {
-          data: {type: 'word-smiths', id: '1'}
+          data: { type: 'word-smiths', id: '1' }
         },
         'fine-comments': {
           data: [
-            {type: 'fine-comments', id: '1'},
-            {type: 'fine-comments', id: '2'}
+            { type: 'fine-comments', id: '1' },
+            { type: 'fine-comments', id: '2' }
           ]
         }
       }
@@ -148,7 +148,7 @@ test(`model: it can include relationships specified by a combination of the incl
         attributes: {},
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: '1'}
+            data: { type: 'blog-posts', id: '1' }
           }
         }
       },
@@ -158,7 +158,7 @@ test(`model: it can include relationships specified by a combination of the incl
         attributes: {},
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: '1'}
+            data: { type: 'blog-posts', id: '1' }
           }
         }
       }
@@ -166,19 +166,18 @@ test(`model: it can include relationships specified by a combination of the incl
   });
 });
 
-
 test(`model: it can include relationships specified by a combination of the include query param (belongsTo) and serializer.relationships (hasMany, ignored)`, function(assert) {
   const registry = new SerializerRegistry(this.schema, {
     application: JsonApiSerializer,
     blogPost: JsonApiSerializer.extend({
-      include: ['fineComments'],
+      include: ['fineComments']
     })
   });
 
   const post = this.schema.blogPost.find(1);
   const request = {
     queryParams: {
-      include: "word-smith"
+      include: 'word-smith'
     }
   };
   const result = registry.serialize(post, request);
@@ -190,12 +189,12 @@ test(`model: it can include relationships specified by a combination of the incl
       attributes: {},
       relationships: {
         'word-smith': {
-          data: {type: 'word-smiths', id: '1'}
+          data: { type: 'word-smiths', id: '1' }
         },
         'fine-comments': {
           data: [
-            {type: 'fine-comments', id: '1'},
-            {type: 'fine-comments', id: '2'}
+            { type: 'fine-comments', id: '1' },
+            { type: 'fine-comments', id: '2' }
           ]
         }
       }
@@ -208,7 +207,7 @@ test(`model: it can include relationships specified by a combination of the incl
         relationships: {
           'blog-posts': {
             data: [
-              {type: 'blog-posts', id: '1'}
+              { type: 'blog-posts', id: '1' }
             ]
           }
         }
@@ -216,7 +215,6 @@ test(`model: it can include relationships specified by a combination of the incl
     ]
   });
 });
-
 
 test(`collection: it can include relationships specified by the include query param`, function(assert) {
   const registry = new SerializerRegistry(this.schema, {
@@ -226,7 +224,7 @@ test(`collection: it can include relationships specified by the include query pa
   const post = this.schema.blogPost.find([1, 2]);
   const request = {
     queryParams: {
-      include: "word-smith,fine-comments"
+      include: 'word-smith,fine-comments'
     }
   };
   const result = registry.serialize(post, request);
@@ -239,12 +237,12 @@ test(`collection: it can include relationships specified by the include query pa
         attributes: {},
         relationships: {
           'word-smith': {
-            data: {type: 'word-smiths', id: '1'}
+            data: { type: 'word-smiths', id: '1' }
           },
           'fine-comments': {
             data: [
-              {type: 'fine-comments', id: '1'},
-              {type: 'fine-comments', id: '2'}
+              { type: 'fine-comments', id: '1' },
+              { type: 'fine-comments', id: '2' }
             ]
           }
         }
@@ -268,7 +266,7 @@ test(`collection: it can include relationships specified by the include query pa
         relationships: {
           'blog-posts': {
             data: [
-              {type: 'blog-posts', id: '1'}
+              { type: 'blog-posts', id: '1' }
             ]
           }
         }
@@ -279,7 +277,7 @@ test(`collection: it can include relationships specified by the include query pa
         attributes: {},
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: '1'}
+            data: { type: 'blog-posts', id: '1' }
           }
         }
       },
@@ -289,14 +287,13 @@ test(`collection: it can include relationships specified by the include query pa
         attributes: {},
         relationships: {
           'blog-post': {
-            data: {type: 'blog-posts', id: '1'}
+            data: { type: 'blog-posts', id: '1' }
           }
         }
       }
     ]
   });
 });
-
 
 test(`dot-paths in include query params include query param`, function(assert) {
   const registry = new SerializerRegistry(this.schema, {
@@ -306,7 +303,7 @@ test(`dot-paths in include query params include query param`, function(assert) {
   const foo = this.schema.foo.find(1);
   const request = {
     queryParams: {
-      include: "bar.baz.quuxes.zomgs.lol"
+      include: 'bar.baz.quuxes.zomgs.lol'
     }
   };
   const result = registry.serialize(foo, request);
@@ -318,7 +315,7 @@ test(`dot-paths in include query params include query param`, function(assert) {
       attributes: {},
       relationships: {
         'bar': {
-          data: {type: 'bars', id: '1'}
+          data: { type: 'bars', id: '1' }
         }
       }
     },
@@ -329,9 +326,9 @@ test(`dot-paths in include query params include query param`, function(assert) {
         attributes: {},
         relationships: {
           'baz': {
-            data: {type: 'bazs', id: '1'}
+            data: { type: 'bazs', id: '1' }
           }
-        },
+        }
       },
       {
         type: 'bazs',
@@ -340,11 +337,11 @@ test(`dot-paths in include query params include query param`, function(assert) {
         relationships: {
           'quuxes': {
             data: [
-              {type: 'quuxes', id: '1'},
-              {type: 'quuxes', id: '2'}
+              { type: 'quuxes', id: '1' },
+              { type: 'quuxes', id: '2' }
             ]
           }
-        },
+        }
       },
       {
         type: 'quuxes',
@@ -353,11 +350,11 @@ test(`dot-paths in include query params include query param`, function(assert) {
         relationships: {
           'zomgs': {
             data: [
-              {type: 'zomgs', id: '1'},
-              {type: 'zomgs', id: '2'}
+              { type: 'zomgs', id: '1' },
+              { type: 'zomgs', id: '2' }
             ]
           }
-        },
+        }
       },
       {
         type: 'quuxes',
@@ -366,11 +363,11 @@ test(`dot-paths in include query params include query param`, function(assert) {
         relationships: {
           'zomgs': {
             data: [
-              {type: 'zomgs', id: '3'},
-              {type: 'zomgs', id: '4'}
+              { type: 'zomgs', id: '3' },
+              { type: 'zomgs', id: '4' }
             ]
           }
-        },
+        }
       },
       {
         type: 'zomgs',
@@ -378,9 +375,9 @@ test(`dot-paths in include query params include query param`, function(assert) {
         attributes: {},
         relationships: {
           'lol': {
-            data: {type: 'lols', id: '1'}
+            data: { type: 'lols', id: '1' }
           }
-        },
+        }
       },
       {
         type: 'zomgs',
@@ -388,9 +385,9 @@ test(`dot-paths in include query params include query param`, function(assert) {
         attributes: {},
         relationships: {
           'lol': {
-            data: {type: 'lols', id: '2'}
+            data: { type: 'lols', id: '2' }
           }
-        },
+        }
       },
       {
         type: 'zomgs',
@@ -398,9 +395,9 @@ test(`dot-paths in include query params include query param`, function(assert) {
         attributes: {},
         relationships: {
           'lol': {
-            data: {type: 'lols', id: '3'}
+            data: { type: 'lols', id: '3' }
           }
-        },
+        }
       },
       {
         type: 'zomgs',
@@ -408,30 +405,30 @@ test(`dot-paths in include query params include query param`, function(assert) {
         attributes: {},
         relationships: {
           'lol': {
-            data: {type: 'lols', id: '4'}
+            data: { type: 'lols', id: '4' }
           }
-        },
+        }
       },
       {
         type: 'lols',
         id: '1',
-        attributes: {},
+        attributes: {}
       },
       {
         type: 'lols',
         id: '2',
-        attributes: {},
+        attributes: {}
       },
       {
         type: 'lols',
         id: '3',
-        attributes: {},
+        attributes: {}
       },
       {
         type: 'lols',
         id: '4',
-        attributes: {},
-      },
+        attributes: {}
+      }
     ]
   });
 });

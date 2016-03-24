@@ -48,12 +48,11 @@ test('it hyphenates snake_cased words', function(assert) {
   });
 });
 
-
 test('it works without an id', function(assert) {
   let payload = {
     contact: {
       first_name: 'Link',
-      last_name: 'zor',
+      last_name: 'zor'
     }
   };
   let jsonApiDoc = this.serializer.normalize(payload);

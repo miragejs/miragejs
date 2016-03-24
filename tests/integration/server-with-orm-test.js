@@ -3,7 +3,7 @@ import { Model, Factory } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
 
 module('Integration | Server with ORM', {
-  beforeEach: function() {
+  beforeEach() {
     this.server = new Server({
       environment: 'test',
       models: {
@@ -16,7 +16,7 @@ module('Integration | Server with ORM', {
     this.server.timing = 0;
     this.server.logging = false;
   },
-  afterEach: function() {
+  afterEach() {
     this.server.shutdown();
   }
 });

@@ -7,9 +7,9 @@ moduleForAcceptance('Acceptance | Serializers', {
   }
 });
 
-test("Serializers can provide default includes", function(assert) {
+test('Serializers can provide default includes', function(assert) {
   let wordSmith = server.create('word-smith');
-  server.createList('blog-post', 3, {wordSmithId: wordSmith.id});
+  server.createList('blog-post', 3, { wordSmithId: wordSmith.id });
 
   visit(`/word-smiths/${wordSmith.id}`);
 

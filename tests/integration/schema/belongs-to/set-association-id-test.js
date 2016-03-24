@@ -2,7 +2,7 @@ import BelongsToHelper from './belongs-to-helper';
 import {module, test} from 'qunit';
 
 module('Integration | Schema | belongsTo #setAssociationId', {
-  beforeEach: function() {
+  beforeEach() {
     this.helper = new BelongsToHelper();
   }
 });
@@ -13,12 +13,12 @@ module('Integration | Schema | belongsTo #setAssociationId', {
   'savedChildSavedParent',
   'newChildNoParent',
   'newChildNewParent',
-  'newChildSavedParent',
-].forEach(state => {
+  'newChildSavedParent'
+].forEach((state) => {
 
   test(`a ${state} can update its association to a saved parent via parentId`, function(assert) {
-    var [address] = this.helper[state]();
-    var savedUser = this.helper.savedParent();
+    let [address] = this.helper[state]();
+    let savedUser = this.helper.savedParent();
 
     address.userId = savedUser.id;
 
@@ -30,11 +30,11 @@ module('Integration | Schema | belongsTo #setAssociationId', {
 
 [
   'savedChildSavedParent',
-  'newChildSavedParent',
-].forEach(state => {
+  'newChildSavedParent'
+].forEach((state) => {
 
   test(`a ${state} can clear its association via a null parentId`, function(assert) {
-    var [address] = this.helper[state]();
+    let [address] = this.helper[state]();
 
     address.userId = null;
 
