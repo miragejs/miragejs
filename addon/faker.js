@@ -1,16 +1,16 @@
-var list = {
-  random: function () {
-    var items = arguments.length > 0 ? arguments : [];
+let list = {
+  random() {
+    let items = arguments.length > 0 ? arguments : [];
 
-    return function () {
+    return function() {
       return faker.random.arrayElement(items);
     };
   },
 
-  cycle: function () {
-    var items = arguments.length > 0 ? arguments : [];
+  cycle() {
+    let items = arguments.length > 0 ? arguments : [];
 
-    return function (i) {
+    return function(i) {
       return items[i % items.length];
     };
   }
@@ -18,8 +18,8 @@ var list = {
 
 faker.list = list;
 
-faker.random.number.range = function (min, max) {
-  return function (/* i */) {
+faker.random.number.range = function(min, max) {
+  return function(/* i */) {
     return Math.random() * (max - min) + min;
   };
 };

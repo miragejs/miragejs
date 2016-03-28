@@ -54,7 +54,9 @@ class DbCollection {
       return records;
     } else {
       let record = this._findRecord(ids);
-      if (!record) { return null; }
+      if (!record) {
+        return null;
+      }
 
       // Return a copy
       return duplicate(record);
@@ -67,7 +69,7 @@ class DbCollection {
 
   firstOrCreate(query, attributesForNew={}) {
     let queryResult = this.where(query);
-    let record = queryResult[0];
+    let [ record ] = queryResult;
 
     if (record) {
       return record;
@@ -86,7 +88,7 @@ class DbCollection {
       attrs = target;
       let changedRecords = [];
 
-      this._records.forEach(record => {
+      this._records.forEach((record) => {
         let oldRecord = _assign({}, record);
 
         this._updateRecord(record, attrs);
@@ -110,7 +112,7 @@ class DbCollection {
       let ids = target;
       records = this._findRecords(ids);
 
-      records.forEach(record => {
+      records.forEach((record) => {
         this._updateRecord(record, attrs);
       });
 
@@ -120,7 +122,7 @@ class DbCollection {
       let query = target;
       records = this._findRecordsWhere(query);
 
-      records.forEach(record => {
+      records.forEach((record) => {
         this._updateRecord(record, attrs);
       });
 
@@ -142,20 +144,19 @@ class DbCollection {
 
     } else if (_isArray(target)) {
       records = this._findRecords(target);
-      records.forEach(record =>  {
+      records.forEach((record) =>  {
         let index = this._records.indexOf(record);
         this._records.splice(index, 1);
       });
 
     } else if (typeof target === 'object') {
       records = this._findRecordsWhere(target);
-      records.forEach(record =>  {
+      records.forEach((record) =>  {
         let index = this._records.indexOf(record);
         this._records.splice(index, 1);
       });
     }
   }
-
 
   /*
     Private methods.
@@ -167,7 +168,7 @@ class DbCollection {
   _findRecord(id) {
     id = id.toString();
 
-    let record = this._records.filter(obj => obj.id === id)[0];
+    let [ record ] = this._records.filter((obj) => obj.id === id);
 
     return record;
   }
@@ -179,7 +180,7 @@ class DbCollection {
   _findRecordsWhere(query) {
     let records = this._records;
 
-    function defaultQueryFunction (record) {
+    function defaultQueryFunction(record) {
       let keys = Object.keys(query);
 
       return keys.every(function(key) {
@@ -217,7 +218,9 @@ class DbCollection {
     }
 
     for (let attr in attrs) {
-      if (attr === 'id') { continue; }
+      if (attr === 'id') {
+        continue;
+      }
 
       record[attr] = attrs[attr];
     }

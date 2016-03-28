@@ -6,11 +6,11 @@ import _mapValues from 'lodash/object/mapValues';
 import referenceSort from './utils/reference-sort';
 import _isPlainObject from 'lodash/lang/isPlainObject';
 
-var Factory = function() {
+let Factory = function() {
   this.build = function(sequence) {
-    const object = {};
-    const topLevelAttrs = this.attrs || {};
-    const keys = sortAttrs(topLevelAttrs, sequence);
+    let object = {};
+    let topLevelAttrs = this.attrs || {};
+    let keys = sortAttrs(topLevelAttrs, sequence);
 
     keys.forEach(function(key) {
 
@@ -33,7 +33,7 @@ var Factory = function() {
         }
       };
 
-      const value = topLevelAttrs[key];
+      let value = topLevelAttrs[key];
       if (_isFunction(value)) {
         object[key] = value.call(object, sequence);
       } else {
@@ -48,9 +48,9 @@ var Factory = function() {
 
 Factory.extend = function(attrs) {
   // Merge the new attributes with existing ones. If conflict, new ones win.
-  var newAttrs = _assign({}, this.attrs, attrs);
+  let newAttrs = _assign({}, this.attrs, attrs);
 
-  var Subclass = function() {
+  let Subclass = function() {
     this.attrs = newAttrs;
     Factory.call(this);
   };
@@ -65,23 +65,23 @@ Factory.extend = function(attrs) {
 };
 
 function sortAttrs(attrs, sequence) {
-  var Temp = function() {};
-  var obj = new Temp();
-  var refs = [];
-  var property;
+  let Temp = function() {};
+  let obj = new Temp();
+  let refs = [];
+  let property;
 
   _keys(attrs).forEach(function(key) {
     Object.defineProperty(obj.constructor.prototype, key, {
-        get: function () {
-          refs.push([property, key]);
-        },
-        enumerable: false,
-        configurable: true
+      get() {
+        refs.push([property, key]);
+      },
+      enumerable: false,
+      configurable: true
     });
   });
 
   _keys(attrs).forEach(function(key) {
-    var value = attrs[key];
+    let value = attrs[key];
     property = key;
 
     if (typeof value === 'function') {
