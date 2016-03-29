@@ -6,20 +6,20 @@ import {module, test} from 'qunit';
 
 var schema, child1, child2;
 module('Integration | Schema | hasMany instantiating with params', {
-  beforeEach: function() {
-    var db = new Db({
+  beforeEach() {
+    let db = new Db({
       users: [],
       homeAddresses: [
-        {id: 1, name: '123 Hyrule Way'},
-        {id: 2, name: '12 Goron City'},
+        { id: 1, name: '123 Hyrule Way' },
+        { id: 2, name: '12 Goron City' }
       ]
     });
     schema = new Schema(db);
 
-    var User = Model.extend({
+    let User = Model.extend({
       homeAddresses: Mirage.hasMany()
     });
-    var HomeAddress = Model.extend();
+    let HomeAddress = Model.extend();
 
     schema.registerModels({
       user: User,
@@ -32,13 +32,13 @@ module('Integration | Schema | hasMany instantiating with params', {
 });
 
 test('children have fks added to their attrs', function(assert) {
-  var newChild = schema.homeAddress.new();
-  assert.deepEqual(newChild.attrs, {userId: null});
-  assert.deepEqual(child1.attrs, {id: '1', name: '123 Hyrule Way', userId: null});
+  let newChild = schema.homeAddress.new();
+  assert.deepEqual(newChild.attrs, { userId: null });
+  assert.deepEqual(child1.attrs, { id: '1', name: '123 Hyrule Way', userId: null });
 });
 
 test('the parent accepts an array of saved children ids', function(assert) {
-  var user = schema.user.new({homeAddressIds: [1, 2]});
+  let user = schema.user.new({ homeAddressIds: [1, 2] });
 
   assert.equal(user.homeAddresses.length, 2);
   assert.deepEqual(user.homeAddresses[0], child1);
@@ -48,18 +48,18 @@ test('the parent accepts an array of saved children ids', function(assert) {
 
 test('the parent errors if one of the child ids doesnt exist', function(assert) {
   assert.throws(function() {
-    schema.user.new({homeAddressIds: [1, 9]});
+    schema.user.new({ homeAddressIds: [1, 9] });
   }, /Couldn't find/);
 });
 
 test('the parent accepts an empty childIds array', function(assert) {
-  var user = schema.user.new({homeAddressIds: []});
+  let user = schema.user.new({ homeAddressIds: [] });
 
   assert.equal(user.homeAddresses.length, 0);
 });
 
 test('the parent accepts an array of saved child models', function(assert) {
-  var user = schema.user.new({homeAddresses: [child1, child2]});
+  let user = schema.user.new({ homeAddresses: [child1, child2] });
 
   assert.deepEqual(user.homeAddressIds, ['1', '2']);
   assert.equal(user.homeAddresses.length, 2);
@@ -67,9 +67,9 @@ test('the parent accepts an array of saved child models', function(assert) {
 });
 
 test('the parent accepts an array of new child models', function(assert) {
-  var newAddress1 = schema.homeAddress.new();
-  var newAddress2 = schema.homeAddress.new();
-  var user = schema.user.new({homeAddresses: [newAddress1, newAddress2]});
+  let newAddress1 = schema.homeAddress.new();
+  let newAddress2 = schema.homeAddress.new();
+  let user = schema.user.new({ homeAddresses: [newAddress1, newAddress2] });
 
   assert.deepEqual(user.homeAddressIds, [undefined, undefined]);
   assert.equal(user.homeAddresses.length, 2);
@@ -77,8 +77,8 @@ test('the parent accepts an array of new child models', function(assert) {
 });
 
 test('the parent accepts a mixed array of new and saved child models', function(assert) {
-  var newAddress1 = schema.homeAddress.new();
-  var user = schema.user.new({homeAddresses: [child1, newAddress1]});
+  let newAddress1 = schema.homeAddress.new();
+  let user = schema.user.new({ homeAddresses: [child1, newAddress1] });
 
   assert.deepEqual(user.homeAddressIds, ['1', undefined]);
   assert.equal(user.homeAddresses.length, 2);
@@ -87,21 +87,21 @@ test('the parent accepts a mixed array of new and saved child models', function(
 });
 
 test('the parent accepts null child models', function(assert) {
-  var user = schema.user.new({addresses: [null]});
+  let user = schema.user.new({ addresses: [null] });
 
   assert.deepEqual(user.homeAddressIds, []);
   assert.equal(user.homeAddresses.length, 0);
 });
 
 test('the parent accepts no reference to a child id or model as empty obj', function(assert) {
-  var user = schema.user.new({});
+  let user = schema.user.new({});
 
   assert.deepEqual(user.homeAddressIds, []);
   assert.equal(user.homeAddresses.length, 0);
 });
 
 test('the parent accepts no reference to a child id or model', function(assert) {
-  var user = schema.user.new();
+  let user = schema.user.new();
 
   assert.deepEqual(user.homeAddressIds, []);
   assert.equal(user.homeAddresses.length, 0);

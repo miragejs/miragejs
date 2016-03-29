@@ -28,7 +28,6 @@ test('_getRelationshipNames should prefer relationships from request', function(
   assert.deepEqual(result, ['baz', 'quux']);
 });
 
-
 test('_getRelationshipNames should not choke on missing request', function(assert) {
 
   const otherSerializer = {
@@ -39,7 +38,6 @@ test('_getRelationshipNames should not choke on missing request', function(asser
 
   assert.deepEqual(result, ['foo', 'bar']);
 });
-
 
 test('_getRelationshipNames should not choke on empty request', function(assert) {
 
@@ -54,20 +52,18 @@ test('_getRelationshipNames should not choke on empty request', function(assert)
   assert.deepEqual(result, ['foo', 'bar']);
 });
 
-
 test('_getRelationshipNames should not choke on empty queryParams', function(assert) {
 
   const otherSerializer = {
     include: ['foo', 'bar']
   };
 
-  const request = {queryParams: {}};
+  const request = { queryParams: {} };
 
   const result = this.serializer._getRelationshipNames(otherSerializer, request);
 
   assert.deepEqual(result, ['foo', 'bar']);
 });
-
 
 test('_getRelationshipNames should not choke on empty included', function(assert) {
 
@@ -99,7 +95,6 @@ test('_getRelationshipNames should not choke on missing serializer.relationships
 
   assert.deepEqual(result, ['baz', 'quux']);
 });
-
 
 test('_getRelatedModelWithPath belongsTo', function(assert) {
   const schema = schemaHelper.setup();

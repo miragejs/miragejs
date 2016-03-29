@@ -3,7 +3,7 @@ import { Model, ActiveModelSerializer } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
 
 module('Integration | Server | Shorthand sanity check', {
-  beforeEach: function() {
+  beforeEach() {
     this.server = new Server({
       environment: 'test',
       models: {
@@ -16,18 +16,18 @@ module('Integration | Server | Shorthand sanity check', {
     this.server.timing = 0;
     this.server.logging = false;
   },
-  afterEach: function() {
+  afterEach() {
     this.server.shutdown();
   }
 });
 
 test('a get shorthand works', function(assert) {
   assert.expect(2);
-  var done = assert.async();
+  let done = assert.async();
 
   this.server.db.loadData({
     contacts: [
-      {id: 1, name: 'Link'}
+      { id: 1, name: 'Link' }
     ]
   });
 
@@ -38,13 +38,13 @@ test('a get shorthand works', function(assert) {
     url: '/contacts'
   }).done(function(res, status, xhr) {
     assert.equal(xhr.status, 200);
-    assert.deepEqual(res, {contacts: [{id: '1', name: 'Link'}]});
+    assert.deepEqual(res, { contacts: [{ id: '1', name: 'Link' }] });
     done();
   });
 });
 
 test('a post shorthand works', function(assert) {
-  let server = this.server;
+  let { server } = this;
   assert.expect(2);
   let done = assert.async();
 
@@ -66,13 +66,13 @@ test('a post shorthand works', function(assert) {
 });
 
 test('a put shorthand works', function(assert) {
-  let server = this.server;
+  let { server } = this;
   assert.expect(2);
   let done = assert.async();
 
   this.server.db.loadData({
     contacts: [
-      {id: 1, name: 'Link'}
+      { id: 1, name: 'Link' }
     ]
   });
 
@@ -94,13 +94,13 @@ test('a put shorthand works', function(assert) {
 });
 
 test('a patch shorthand works', function(assert) {
-  let server = this.server;
+  let { server } = this;
   assert.expect(2);
   let done = assert.async();
 
   this.server.db.loadData({
     contacts: [
-      {id: 1, name: 'Link'}
+      { id: 1, name: 'Link' }
     ]
   });
 
@@ -122,13 +122,13 @@ test('a patch shorthand works', function(assert) {
 });
 
 test('a delete shorthand works', function(assert) {
-  let server = this.server;
+  let { server } = this;
   assert.expect(2);
   let done = assert.async();
 
   this.server.db.loadData({
     contacts: [
-      {id: 1, name: 'Link'}
+      { id: 1, name: 'Link' }
     ]
   });
 
@@ -136,7 +136,7 @@ test('a delete shorthand works', function(assert) {
 
   $.ajax({
     method: 'DELETE',
-    url: '/contacts/1',
+    url: '/contacts/1'
   }).done((res, status, xhr) => {
     assert.equal(xhr.status, 204);
     assert.equal(server.db.contacts.length, 0);

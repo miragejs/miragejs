@@ -7,19 +7,19 @@ import ENV from 'dummy/config/environment';
 let App;
 
 module('Acceptance: Manually starting Mirage', {
-  beforeEach: function() {
+  beforeEach() {
     ENV['ember-cli-mirage'] = { enabled: false };
     App = startApp();
   },
 
-  afterEach: function() {
+  afterEach() {
     server.shutdown();
     Ember.run(App, 'destroy');
     ENV['ember-cli-mirage'].enabled = undefined;
   }
 });
 
-test("The server can be started manually when configured with { enabled: false }", function(assert) {
+test('The server can be started manually when configured with { enabled: false }', function(assert) {
   assert.equal(window.server, undefined, 'There is no server at first');
   startMirage();
   assert.ok(window.server, 'There is a server after starting');
@@ -29,6 +29,6 @@ test("The server can be started manually when configured with { enabled: false }
 
   andThen(function() {
     assert.equal(currentRouteName(), 'contact');
-    assert.equal(find('p:first').text(), 'The contact is ' + contact.name, 'The manually started server works');
+    assert.equal(find('p:first').text(), `The contact is ${contact.name}`, 'The manually started server works');
   });
 });

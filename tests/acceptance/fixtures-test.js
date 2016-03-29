@@ -7,7 +7,7 @@ moduleForAcceptance('Acceptance | Fixtures', {
   }
 });
 
-test("I can use fixtures", function(assert) {
+test('I can use fixtures', function(assert) {
   server.loadFixtures();
 
   visit(`/word-smiths/1`);
@@ -21,7 +21,7 @@ test("I can use fixtures", function(assert) {
   });
 });
 
-test("I can use fixtures with the filename api", function(assert) {
+test('I can use fixtures with the filename api', function(assert) {
   server.loadFixtures('word-smiths', 'blog-posts');
 
   visit(`/word-smiths/1`);

@@ -2,15 +2,15 @@ import HasManyHelper from './has-many-helper';
 import {module, test} from 'qunit';
 
 module('Integration | Schema | hasMany #setAssociation', {
-  beforeEach: function() {
+  beforeEach() {
     this.helper = new HasManyHelper();
   }
 });
 
-HasManyHelper.forEachScenario(scenario => {
+HasManyHelper.forEachScenario((scenario) => {
   test(`${scenario.title} can update its association to a list of saved children`, function(assert) {
     let { parent: user, children: homeAddresses, helper, accessor, otherIdAccessor } = scenario.go();
-    var savedHomeAddress = helper.savedChild();
+    let savedHomeAddress = helper.savedChild();
 
     user[accessor] = [savedHomeAddress];
     savedHomeAddress.reload();
@@ -27,7 +27,7 @@ HasManyHelper.forEachScenario(scenario => {
   if (/^savedParent/.test(scenario.state)) {
     test(`updating an association to a list of saved children updates the child's fk when ${scenario.title}`, function(assert) {
       let { parent: user, helper, accessor, otherIdAccessor } = scenario.go();
-      var savedHomeAddress = helper.savedChild();
+      let savedHomeAddress = helper.savedChild();
 
       user[accessor] = [savedHomeAddress];
       savedHomeAddress.reload();
@@ -38,7 +38,7 @@ HasManyHelper.forEachScenario(scenario => {
 
   test(`${scenario.title} can update its association to a list of new children`, function(assert) {
     let { parent: user, children: homeAddresses, helper, accessor, otherIdAccessor } = scenario.go();
-    var address = helper.newChild();
+    let address = helper.newChild();
 
     user[accessor] = [address];
     // The address is saved if the user is a saved user. In that case, we need to reload.
@@ -59,7 +59,7 @@ HasManyHelper.forEachScenario(scenario => {
 
     test(`updating an association to a list of new children saves the children and updates their fks when ${scenario.title}`, function(assert) {
       let { parent: user, helper, accessor, otherIdAccessor } = scenario.go();
-      var address = helper.newChild();
+      let address = helper.newChild();
 
       user[accessor] = [address];
       address.reload();
@@ -71,8 +71,8 @@ HasManyHelper.forEachScenario(scenario => {
 
   test(`${scenario.title} can update its association to a list of mixed children`, function(assert) {
     let { parent: user, children: homeAddresses, helper, accessor, otherIdAccessor } = scenario.go();
-    var savedHomeAddress = helper.savedChild();
-    var newAddress = helper.newChild();
+    let savedHomeAddress = helper.savedChild();
+    let newAddress = helper.newChild();
 
     user[accessor] = [savedHomeAddress, newAddress];
     savedHomeAddress.reload();
@@ -94,8 +94,8 @@ HasManyHelper.forEachScenario(scenario => {
   if (/^savedParent/.test(scenario.state)) {
     test(`updating an association to a list of mixed children saves the new children and updates all children's fks when ${scenario.title}`, function(assert) {
       let { parent: user, helper, accessor, otherIdAccessor } = scenario.go();
-      var savedHomeAddress = helper.savedChild();
-      var newHomeAddress = helper.newChild();
+      let savedHomeAddress = helper.savedChild();
+      let newHomeAddress = helper.newChild();
 
       user[accessor] = [savedHomeAddress, newHomeAddress];
       savedHomeAddress.reload();
@@ -106,7 +106,6 @@ HasManyHelper.forEachScenario(scenario => {
       assert.equal(newHomeAddress[otherIdAccessor], user.id, `the new child's fk was set`);
     });
   }
-
 
   test(`${scenario.title} can update its association to an empty list`, function(assert) {
     let { parent: user, children: homeAddresses, accessor, otherIdAccessor } = scenario.go();

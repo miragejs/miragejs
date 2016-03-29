@@ -7,7 +7,7 @@ import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import { module, test } from 'qunit';
 
 module('Integration | Serializer | RestSerializer', {
-  beforeEach: function() {
+  beforeEach() {
     let db = new Db();
     this.schema = new Schema(db);
     this.schema.registerModels({
@@ -19,11 +19,11 @@ module('Integration | Serializer | RestSerializer', {
       })
     });
 
-    let link = this.schema.wordSmith.create({name: 'Link', age: 123});
-    link.createBlogPost({title: 'Lorem'});
-    link.createBlogPost({title: 'Ipsum'});
+    let link = this.schema.wordSmith.create({ name: 'Link', age: 123 });
+    link.createBlogPost({ title: 'Lorem' });
+    link.createBlogPost({ title: 'Ipsum' });
 
-    this.schema.wordSmith.create({name: 'Zelda', age: 230});
+    this.schema.wordSmith.create({ name: 'Zelda', age: 230 });
 
     this.registry = new SerializerRegistry(this.schema, {
       application: RestSerializer,

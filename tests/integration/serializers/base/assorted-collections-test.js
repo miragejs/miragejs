@@ -12,17 +12,17 @@ module('Integration | Serializers | Base | Assorted Collections', {
       })
     });
     this.wordSmiths = [
-      {id: '1', name: 'Link'},
-      {id: '2', name: 'Zelda'},
-      {id: '3', name: 'Epona'}
+      { id: '1', name: 'Link' },
+      { id: '2', name: 'Zelda' },
+      { id: '3', name: 'Epona' }
     ];
     this.greatPhotos = [
-      {id: '1', title: 'Amazing', location: 'Hyrule'},
-      {id: '2', title: 'greatPhoto', location: 'Goron City'}
+      { id: '1', title: 'Amazing', location: 'Hyrule' },
+      { id: '2', title: 'greatPhoto', location: 'Goron City' }
     ];
     this.schema.db.loadData({
       wordSmiths: this.wordSmiths,
-      greatPhotos: this.greatPhotos,
+      greatPhotos: this.greatPhotos
     });
   },
   afterEach() {
@@ -35,6 +35,9 @@ test(`an array of assorted collections can be serialized`, function(assert) {
 
   assert.deepEqual(result, {
     wordSmiths: this.wordSmiths,
-    greatPhotos: this.greatPhotos.map(attrs => { delete attrs.location; return attrs; })
+    greatPhotos: this.greatPhotos.map((attrs) => {
+      delete attrs.location;
+      return attrs;
+    })
   });
 });

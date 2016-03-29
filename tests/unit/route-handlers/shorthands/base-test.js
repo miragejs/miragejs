@@ -3,9 +3,9 @@ import BaseShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthand
 import {module, test} from 'qunit';
 
 module('Unit | Route handlers | Shorthands | BaseShorthandRouteHandler', {
-  beforeEach: function() {
+  beforeEach() {
     this.handler = new BaseShorthandRouteHandler();
-    this.request = { params: {id: ''} };
+    this.request = { params: { id: '' } };
   }
 });
 
@@ -15,23 +15,23 @@ test('it returns a number if it\'s a number', function(assert) {
 });
 
 test('it returns a number if it\'s a string represented number', function(assert) {
-  this.request.params.id = "2";
+  this.request.params.id = '2';
   assert.equal(this.handler._getIdForRequest(this.request), 2, 'it returns a number');
 });
 
 test('it returns a string it\'s a dasherized number', function(assert) {
-  this.request.params.id = "2-1";
-  assert.equal(this.handler._getIdForRequest(this.request), "2-1", 'it returns a number');
+  this.request.params.id = '2-1';
+  assert.equal(this.handler._getIdForRequest(this.request), '2-1', 'it returns a number');
 });
 
 test('it returns a string if it\'s a string', function(assert) {
-  this.request.params.id = "someID";
-  assert.equal(this.handler._getIdForRequest(this.request), "someID", 'it returns a number');
+  this.request.params.id = 'someID';
+  assert.equal(this.handler._getIdForRequest(this.request), 'someID', 'it returns a number');
 });
 
-test('getModelClassFromPath works', function (assert) {
-  var urlWithSlash = '/api/fancy-users';
-  var urlWithIdAndSlash = '/api/fancy-users/:id';
+test('getModelClassFromPath works', function(assert) {
+  let urlWithSlash = '/api/fancy-users';
+  let urlWithIdAndSlash = '/api/fancy-users/:id';
 
   assert.equal(this.handler.getModelClassFromPath(urlWithSlash), 'fancy-user', 'it returns a singular model name');
   assert.equal(this.handler.getModelClassFromPath(urlWithIdAndSlash, true), 'fancy-user', 'it returns a singular model name');
@@ -49,7 +49,7 @@ test('it can read the id from the request body', function(assert) {
 });
 
 test('_getAttrsForRequest works with attributes and relationships', function(assert) {
-  var payload = {
+  let payload = {
     'data': {
       'attributes': {
         'does-mirage': true,
@@ -83,7 +83,7 @@ test('_getAttrsForRequest works with attributes and relationships', function(ass
     return payload;
   };
 
-  var attrs = this.handler._getAttrsForRequest(this.request, 'user');
+  let attrs = this.handler._getAttrsForRequest(this.request, 'user');
 
   assert.deepEqual(
     attrs,
@@ -100,7 +100,7 @@ test('_getAttrsForRequest works with attributes and relationships', function(ass
 });
 
 test('_getAttrsForRequest works with just relationships', function(assert) {
-  var payload = {
+  let payload = {
     'data': {
       'relationships': {
         'company': {
@@ -118,13 +118,13 @@ test('_getAttrsForRequest works with just relationships', function(assert) {
     return payload;
   };
 
-  var attrs = this.handler._getAttrsForRequest(this.request, 'user');
+  let attrs = this.handler._getAttrsForRequest(this.request, 'user');
 
   assert.deepEqual(
     attrs,
     {
       id: undefined,
-      companyId: '1',
+      companyId: '1'
     },
     'it normalizes data correctly.'
   );

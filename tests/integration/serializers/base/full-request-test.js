@@ -5,7 +5,7 @@ import Serializer from 'ember-cli-mirage/serializer';
 import {module, test} from 'qunit';
 
 module('Integration | Serializers | Base | Full Request', {
-  beforeEach: function() {
+  beforeEach() {
     this.server = new Server({
       environment: 'development',
       models: {
@@ -18,7 +18,7 @@ module('Integration | Serializers | Base | Full Request', {
         }),
         comment: Model.extend({
           post: Mirage.belongsTo()
-        }),
+        })
       },
       serializers: {
         application: Serializer.extend({
@@ -42,23 +42,23 @@ module('Integration | Serializers | Base | Full Request', {
     this.server.timing = 0;
     this.server.logging = false;
   },
-  afterEach: function() {
+  afterEach() {
     this.server.shutdown();
   }
 });
 
 test('the appropriate serializer is used', function(assert) {
   assert.expect(1);
-  var done = assert.async();
+  let done = assert.async();
   let author = this.server.schema.author.create({
     first: 'Link',
     last: 'of Hyrule',
     age: 323
   });
-  author.createPost({title: 'Lorem ipsum'});
+  author.createPost({ title: 'Lorem ipsum' });
 
   this.server.get('/authors/:id', function(schema, request) {
-    let id = request.params.id;
+    let { id } = request.params;
 
     return schema.author.find(id);
   });
@@ -72,7 +72,7 @@ test('the appropriate serializer is used', function(assert) {
         id: '1',
         first: 'Link',
         posts: [
-          {id: '1', title: 'Lorem ipsum'}
+          { id: '1', title: 'Lorem ipsum' }
         ]
       }
     });
@@ -82,14 +82,14 @@ test('the appropriate serializer is used', function(assert) {
 
 test('a response falls back to the application serializer, if it exists', function(assert) {
   assert.expect(1);
-  var done = assert.async();
+  let done = assert.async();
   this.server.schema.post.create({
     title: 'Lorem',
     date: '20001010'
   });
 
   this.server.get('/posts/:id', function(schema, request) {
-    let id = request.params.id;
+    let { id } = request.params;
 
     return schema.post.find(id);
   });
@@ -109,7 +109,7 @@ test('a response falls back to the application serializer, if it exists', functi
 
 test('serializer.include is invoked when it is a function', function(assert) {
   assert.expect(1);
-  var done = assert.async();
+  let done = assert.async();
   let post = this.server.schema.post.create({
     title: 'Lorem',
     date: '20001010'
@@ -119,7 +119,7 @@ test('serializer.include is invoked when it is a function', function(assert) {
   });
 
   this.server.get('/comments/:id', function(schema, request) {
-    let id = request.params.id;
+    let { id } = request.params;
     return schema.comment.find(id);
   });
 

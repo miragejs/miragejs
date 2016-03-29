@@ -5,7 +5,7 @@ export default Ember.Route.extend({
   model() {
     return this.store.findAll('contact')
       .catch((reason) => {
-        var errorMsg = reason.responseJSON ? reason.responseJSON.errors[0] : reason.errors[0];
+        let errorMsg = reason.responseJSON ? reason.responseJSON.errors[0] : reason.errors[0];
 
         this.set('error', errorMsg);
       });

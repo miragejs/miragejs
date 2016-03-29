@@ -9,23 +9,21 @@ moduleForAcceptance('Acceptance | Contact', {
   }
 });
 
-test("I can view a contact", function(assert) {
+test('I can view a contact', function(assert) {
   visit('/1');
 
   andThen(function() {
     assert.equal(currentRouteName(), 'contact');
-    assert.equal( find('p:first').text(), 'The contact is ' + contact.name );
+    assert.equal(find('p:first').text(), `The contact is ${contact.name}`);
   });
 });
 
-test("I can delete a contact", function(assert) {
+test('I can delete a contact', function(assert) {
   visit('/1');
   click('button:contains(Delete)');
 
   andThen(function() {
     assert.equal(currentRouteName(), 'contacts');
-    assert.equal( find('p').length, 0 );
+    assert.equal(find('p').length, 0);
   });
 });
-
-

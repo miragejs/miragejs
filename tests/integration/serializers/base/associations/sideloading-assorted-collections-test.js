@@ -19,22 +19,22 @@ module('Integration | Serializers | Base | Associations | Sideloading Assorted C
       })
     });
     this.wordSmiths = [
-      {id: '1', name: 'Link'},
-      {id: '2', name: 'Zelda'},
-      {id: '3', name: 'Epona'}
+      { id: '1', name: 'Link' },
+      { id: '2', name: 'Zelda' },
+      { id: '3', name: 'Epona' }
     ];
     this.blogPosts = [
-      {id: '1', title: 'Lorem', wordSmithId: '1'},
-      {id: '2', title: 'Ipsum', wordSmithId: '1'}
+      { id: '1', title: 'Lorem', wordSmithId: '1' },
+      { id: '2', title: 'Ipsum', wordSmithId: '1' }
     ];
     this.greatPhotos = [
-      {id: '1', title: 'Amazing', location: 'Hyrule'},
-      {id: '2', title: 'greatPhoto', location: 'Goron City'}
+      { id: '1', title: 'Amazing', location: 'Hyrule' },
+      { id: '2', title: 'greatPhoto', location: 'Goron City' }
     ];
     this.schema.db.loadData({
       wordSmiths: this.wordSmiths,
       blogPosts: this.blogPosts,
-      greatPhotos: this.greatPhotos,
+      greatPhotos: this.greatPhotos
     });
   },
   afterEach() {
@@ -49,11 +49,14 @@ test(`it can sideload an array of assorted collections that have relationships`,
   let result = this.registry.serialize([this.schema.wordSmith.all(), this.schema.greatPhoto.all()]);
 
   assert.deepEqual(result, {
-    wordSmiths: this.wordSmiths.map(attrs => {
-      attrs.blogPostIds = this.blogPosts.filter(blogPost => blogPost.wordSmithId === attrs.id).map(blogPost => blogPost.id);
+    wordSmiths: this.wordSmiths.map((attrs) => {
+      attrs.blogPostIds = this.blogPosts.filter((blogPost) => blogPost.wordSmithId === attrs.id).map((blogPost) => blogPost.id);
       return attrs;
     }),
     blogPosts: this.blogPosts,
-    greatPhotos: this.greatPhotos.map(attrs => { delete attrs.location; return attrs; })
+    greatPhotos: this.greatPhotos.map((attrs) => {
+      delete attrs.location;
+      return attrs;
+    })
   });
 });

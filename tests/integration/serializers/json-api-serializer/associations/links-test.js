@@ -4,16 +4,16 @@ import schemaHelper from '../../schema-helper';
 import { module, test } from 'qunit';
 
 module('Integration | Serializers | JSON API Serializer | Associations | Links', {
-  beforeEach: function() {
+  beforeEach() {
     this.schema = schemaHelper.setup();
 
-    let link = this.schema.wordSmith.create({firstName: 'Link'});
-    let blogPost = link.createBlogPost({title: 'Lorem'});
-    blogPost.createFineComment({text: 'pwned'});
+    let link = this.schema.wordSmith.create({ firstName: 'Link' });
+    let blogPost = link.createBlogPost({ title: 'Lorem' });
+    blogPost.createFineComment({ text: 'pwned' });
 
-    link.createBlogPost({title: 'Ipsum'});
+    link.createBlogPost({ title: 'Ipsum' });
 
-    this.schema.wordSmith.create({name: 'Zelda'});
+    this.schema.wordSmith.create({ name: 'Zelda' });
   },
   afterEach() {
     this.schema.db.emptyData();
@@ -48,7 +48,7 @@ test(`it can link to relationships, omitting 'data'`, function(assert) {
       type: 'blog-posts',
       id: blogPost.id,
       attributes: {
-        'title': 'Lorem',
+        'title': 'Lorem'
       },
       relationships: {
         'word-smith': {
@@ -64,7 +64,7 @@ test(`it can link to relationships, omitting 'data'`, function(assert) {
         'fine-comments': {
           links: {
             related: {
-              href: `/api/fine_comments?blog_post_id=${blogPost.id}`,
+              href: `/api/fine_comments?blog_post_id=${blogPost.id}`
             },
             self: {
               href: `/api/blog_posts/${blogPost.id}/relationships/fine_comments`

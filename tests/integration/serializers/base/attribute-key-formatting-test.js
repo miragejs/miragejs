@@ -21,11 +21,11 @@ module('Integration | Serializers | Base | Attribute Key Formatting', {
 });
 
 test(`keyForAttribute formats the attributes of a model`, function(assert) {
-  var wordSmith = this.schema.wordSmith.create({
+  let wordSmith = this.schema.wordSmith.create({
     id: 1,
     'first-name': 'Link',
     'last-name': 'Jackson',
-    age: 323,
+    age: 323
   });
 
   let result = this.registry.serialize(wordSmith);
@@ -41,16 +41,16 @@ test(`keyForAttribute formats the attributes of a model`, function(assert) {
 });
 
 test(`keyForAttribute also formats the models in a collections`, function(assert) {
-  this.schema.wordSmith.create({id: 1, 'first-name': 'Link', 'last-name': 'Jackson'});
-  this.schema.wordSmith.create({id: 2, 'first-name': 'Zelda', 'last-name': 'Brown'});
+  this.schema.wordSmith.create({ id: 1, 'first-name': 'Link', 'last-name': 'Jackson' });
+  this.schema.wordSmith.create({ id: 2, 'first-name': 'Zelda', 'last-name': 'Brown' });
   let wordSmiths = this.schema.wordSmith.all();
 
   let result = this.registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
     wordSmiths: [
-      {id: '1', firstName: 'Link', lastName: 'Jackson'},
-      {id: '2', firstName: 'Zelda', lastName: 'Brown'}
+      { id: '1', firstName: 'Link', lastName: 'Jackson' },
+      { id: '2', firstName: 'Zelda', lastName: 'Brown' }
     ]
   });
 });

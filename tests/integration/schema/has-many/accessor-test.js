@@ -7,7 +7,7 @@ module('Integration | Schema | hasMany #accessor');
   #association behavior works regardless of the state of the parent
 */
 
-HasManyHelper.forEachScenario(scenario => {
+HasManyHelper.forEachScenario((scenario) => {
   test(`the references of a ${scenario.title} are correct`, function(assert) {
     let { parent, children, accessor, idsAccessor } = scenario.go();
     assert.equal(parent[accessor].length, children.length, 'parent has correct number of children');

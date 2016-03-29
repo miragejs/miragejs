@@ -3,7 +3,7 @@ import Server from 'ember-cli-mirage/server';
 import { Model, Factory } from 'ember-cli-mirage';
 
 module('Integration | Database', {
-  beforeEach: function() {
+  beforeEach() {
     this.server = new Server({
       environment: 'development',
       scenarios: {
@@ -17,12 +17,12 @@ module('Integration | Database', {
       },
       fixtures: {
         authors: [
-          {id: 1, name: 'Zelda'}
-        ],
+          { id: 1, name: 'Zelda' }
+        ]
       }
     });
   },
-  afterEach: function() {
+  afterEach() {
     this.server.shutdown();
   }
 });
@@ -32,8 +32,8 @@ test(`[regression] When loaded, fixture files correctly update the database's au
 
   this.server.schema.author.create({});
 
-  let authors = this.server.db.authors;
+  let { authors } = this.server.db;
   assert.equal(authors.length, 2);
-  assert.deepEqual(authors.map(a => a.id), ['1', '2']);
+  assert.deepEqual(authors.map((a) => a.id), ['1', '2']);
 });
 

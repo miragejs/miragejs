@@ -3,11 +3,11 @@ import {module, test} from 'qunit';
 
 module('Integration | Schema | hasMany #setAssociationIds');
 
-HasManyHelper.forEachScenario(scenario => {
+HasManyHelper.forEachScenario((scenario) => {
   test(`${scenario.title} can update its associationIds to a list of saved child ids`, function(assert) {
     let { parent: user, children: homeAddresses, helper, idsAccessor, accessor, otherIdAccessor } = scenario.go();
 
-    var savedHomeAddress = helper.savedChild();
+    let savedHomeAddress = helper.savedChild();
 
     user[idsAccessor] = [savedHomeAddress.id];
     savedHomeAddress.reload();
@@ -21,12 +21,11 @@ HasManyHelper.forEachScenario(scenario => {
     });
   });
 
-
   if (/^savedParent/.test(scenario.state)) {
     test(`updating associationIds to a list of saved children ids updates the child's fk, with ${scenario.title}`, function(assert) {
 
-      var { parent: user, helper, idsAccessor, otherIdAccessor } = scenario.go();
-      var savedHomeAddress = helper.savedChild();
+      let { parent: user, helper, idsAccessor, otherIdAccessor } = scenario.go();
+      let savedHomeAddress = helper.savedChild();
 
       user[idsAccessor] = [savedHomeAddress.id];
       savedHomeAddress.reload();

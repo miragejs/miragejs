@@ -4,16 +4,16 @@ import schemaHelper from '../../schema-helper';
 import { module, test } from 'qunit';
 
 module('Integration | Serializers | Base | Associations | Embedded Collections', {
-  beforeEach: function() {
+  beforeEach() {
     this.schema = schemaHelper.setup();
 
-    let wordSmith = this.schema.wordSmith.create({name: 'Link'});
-    let blogPost = wordSmith.createBlogPost({title: 'Lorem'});
-    blogPost.createFineComment({text: 'pwned'});
+    let wordSmith = this.schema.wordSmith.create({ name: 'Link' });
+    let blogPost = wordSmith.createBlogPost({ title: 'Lorem' });
+    blogPost.createFineComment({ text: 'pwned' });
 
-    wordSmith.createBlogPost({title: 'Ipsum'});
+    wordSmith.createBlogPost({ title: 'Ipsum' });
 
-    this.schema.wordSmith.create({name: 'Zelda'});
+    this.schema.wordSmith.create({ name: 'Zelda' });
 
     this.BaseSerializer = Serializer.extend({
       embed: true
@@ -34,7 +34,7 @@ test(`it can embed a collection with a has-many relationship`, function(assert) 
   });
 
   let wordSmiths = this.schema.wordSmith.all();
-  var result = registry.serialize(wordSmiths);
+  let result = registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
     wordSmiths: [
@@ -42,8 +42,8 @@ test(`it can embed a collection with a has-many relationship`, function(assert) 
         id: '1',
         name: 'Link',
         blogPosts: [
-          {id: '1', title: 'Lorem'},
-          {id: '2', title: 'Ipsum'}
+          { id: '1', title: 'Lorem' },
+          { id: '2', title: 'Ipsum' }
         ]
       },
       {
@@ -67,7 +67,7 @@ test(`it can embed a collection with a chain of has-many relationships`, functio
   });
 
   let wordSmiths = this.schema.wordSmith.all();
-  var result = registry.serialize(wordSmiths);
+  let result = registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
     wordSmiths: [
@@ -79,7 +79,7 @@ test(`it can embed a collection with a chain of has-many relationships`, functio
             id: '1',
             title: 'Lorem',
             fineComments: [
-              {id: '1', text: 'pwned'}
+              { id: '1', text: 'pwned' }
             ]
           },
           {
@@ -107,19 +107,19 @@ test(`it can embed a collection with a belongs-to relationship`, function(assert
   });
 
   let blogPosts = this.schema.blogPost.all();
-  var result = registry.serialize(blogPosts);
+  let result = registry.serialize(blogPosts);
 
   assert.deepEqual(result, {
     blogPosts: [
       {
         id: '1',
         title: 'Lorem',
-        wordSmith: {id: '1', name: 'Link'}
+        wordSmith: { id: '1', name: 'Link' }
       },
       {
         id: '2',
         title: 'Ipsum',
-        wordSmith: {id: '1', name: 'Link'}
+        wordSmith: { id: '1', name: 'Link' }
       }
     ]
   });
@@ -137,7 +137,7 @@ test(`it can embed a collection with a chain of belongs-to relationships`, funct
   });
 
   let fineComments = this.schema.fineComment.all();
-  var result = registry.serialize(fineComments);
+  let result = registry.serialize(fineComments);
 
   assert.deepEqual(result, {
     fineComments: [
@@ -147,7 +147,7 @@ test(`it can embed a collection with a chain of belongs-to relationships`, funct
         blogPost: {
           id: '1',
           title: 'Lorem',
-          wordSmith: {id: '1', name: 'Link'}
+          wordSmith: { id: '1', name: 'Link' }
         }
       }
     ]

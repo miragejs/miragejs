@@ -5,27 +5,27 @@ import {module, test} from 'qunit';
 
 var schema;
 module('Integration | Schema | Creating an Unregistered Model', {
-  beforeEach: function() {
+  beforeEach() {
     schema = new Schema(new Db());
   }
 });
 
 test('it cannot make new models that havent been registered', function(assert) {
   assert.throws(function() {
-    schema.user.new({name: 'Link'});
+    schema.user.new({ name: 'Link' });
   });
 });
 
 test('it cannot create models that havent been registered', function(assert) {
   assert.throws(function() {
-    schema.user.create({name: 'Link'});
+    schema.user.create({ name: 'Link' });
   });
 });
 
 
 var db, schema, User;
 module('Integration | Schema | Creating a Model', {
-  beforeEach: function() {
+  beforeEach() {
     db = new Db();
 
     User = Model.extend();
@@ -36,24 +36,24 @@ module('Integration | Schema | Creating a Model', {
 });
 
 test('it can make new models and then save them', function(assert) {
-  var user = schema.user.new({name: 'Link'});
+  let user = schema.user.new({ name: 'Link' });
 
   assert.ok(user instanceof User);
-  assert.deepEqual(user.attrs, {name: 'Link'});
+  assert.deepEqual(user.attrs, { name: 'Link' });
   assert.deepEqual(db.users, []);
 
   user.save();
 
   assert.ok(user.id, 'user has an id getter');
-  assert.deepEqual(user.attrs, {id: '1', name: 'Link'});
-  assert.deepEqual(db.users, [{id: '1', name: 'Link'}]);
+  assert.deepEqual(user.attrs, { id: '1', name: 'Link' });
+  assert.deepEqual(db.users, [{ id: '1', name: 'Link' }]);
 });
 
 test('it can create new models, saved directly to the db', function(assert) {
-  var user = schema.user.create({name: 'Link'});
+  let user = schema.user.create({ name: 'Link' });
 
   assert.ok(user instanceof Model);
   assert.ok(user instanceof User);
-  assert.deepEqual(user.attrs, {id: '1', name: 'Link'});
-  assert.deepEqual(db.users, [{id: '1', name: 'Link'}]);
+  assert.deepEqual(user.attrs, { id: '1', name: 'Link' });
+  assert.deepEqual(db.users, [{ id: '1', name: 'Link' }]);
 });

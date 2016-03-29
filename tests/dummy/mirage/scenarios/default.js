@@ -6,8 +6,8 @@ export default function(server) {
   server.create('address', {name: 'Mount Doom', contact_id: bob.id});
   server.create('contact', {name: 'Susan'});
 
-  server.create('friend', {name: 'Joe', age: 10, is_young: true});
-  server.create('friend', {name: 'Bob', age: 80, is_young: false});
+  server.create('friend', {name: 'Joe', age: 10, isYoung: true});
+  server.create('friend', {name: 'Bob', age: 80, isYoung: false});
 
   server.create('pet', {name: 'Pinky', alive: true});
   server.create('pet', {name: 'Bobby', alive: true});

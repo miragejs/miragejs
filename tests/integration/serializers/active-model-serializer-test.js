@@ -7,7 +7,7 @@ import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import { module, test } from 'qunit';
 
 module('Integration | Serializer | ActiveModelSerializer', {
-  beforeEach: function() {
+  beforeEach() {
     let db = new Db();
     this.schema = new Schema(db);
     this.schema.registerModels({
@@ -19,11 +19,11 @@ module('Integration | Serializer | ActiveModelSerializer', {
       })
     });
 
-    let link = this.schema.wordSmith.create({name: 'Link', age: 123});
-    link.createBlogPost({title: 'Lorem'});
-    link.createBlogPost({title: 'Ipsum'});
+    let link = this.schema.wordSmith.create({ name: 'Link', age: 123 });
+    link.createBlogPost({ title: 'Lorem' });
+    link.createBlogPost({ title: 'Ipsum' });
 
-    this.schema.wordSmith.create({name: 'Zelda', age: 230});
+    this.schema.wordSmith.create({ name: 'Zelda', age: 230 });
 
     this.registry = new SerializerRegistry(this.schema, {
       application: ActiveModelSerializer,
@@ -63,7 +63,6 @@ test('it sideloads associations and snake-cases relationships and attributes cor
     ]
   });
 });
-
 
 test('it sideloads associations and snake-cases relationships and attributes correctly for a collection', function(assert) {
   let wordSmiths = this.schema.wordSmith.all();

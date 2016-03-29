@@ -19,34 +19,34 @@ module('Integration | Serializers | Base | Root', {
 });
 
 test(`if root is false, it serializes a model by returning its attrs`, function(assert) {
-  var wordSmith = this.schema.wordSmith.create({
+  let wordSmith = this.schema.wordSmith.create({
     id: '1',
-    name: 'Link',
+    name: 'Link'
   });
 
-  var result = this.registry.serialize(wordSmith);
+  let result = this.registry.serialize(wordSmith);
   assert.deepEqual(result, {
     id: '1',
-    name: 'Link',
+    name: 'Link'
   });
 });
 
 test(`if root is false, it serializes a collection of models by returning an array of their attrs`, function(assert) {
-  this.schema.wordSmith.create({id: 1, name: 'Link'});
-  this.schema.wordSmith.create({id: 2, name: 'Zelda'});
+  this.schema.wordSmith.create({ id: 1, name: 'Link' });
+  this.schema.wordSmith.create({ id: 2, name: 'Zelda' });
   let wordSmiths = this.schema.wordSmith.all();
 
-  var result = this.registry.serialize(wordSmiths);
+  let result = this.registry.serialize(wordSmiths);
 
   assert.deepEqual(result, [
-    {id: '1', name: 'Link'},
-    {id: '2', name: 'Zelda'}
+    { id: '1', name: 'Link' },
+    { id: '2', name: 'Zelda' }
   ]);
 });
 
 test(`if root is false, it serializes an empty collection by returning an empty array`, function(assert) {
-  var emptywordSmithCollection = this.schema.wordSmith.all();
-  var result = this.registry.serialize(emptywordSmithCollection);
+  let emptywordSmithCollection = this.schema.wordSmith.all();
+  let result = this.registry.serialize(emptywordSmithCollection);
 
   assert.deepEqual(result, []);
 });

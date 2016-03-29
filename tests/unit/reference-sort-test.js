@@ -4,7 +4,7 @@ import {module, test} from 'qunit';
 module('mirage:reference-sort');
 
 test('it sorts property references', function(assert) {
-  var sorted = referenceSort([
+  let sorted = referenceSort([
     ['propA'],
     ['propB', 'propC'],
     ['propC', 'propA'],
@@ -15,10 +15,10 @@ test('it sorts property references', function(assert) {
 });
 
 test('it throws on circular dependency', function(assert) {
-  assert.throws(function () {
+  assert.throws(function() {
     referenceSort([
       ['propA', 'propB'],
-      ['propB', 'propA'],
+      ['propB', 'propA']
     ]);
   }, function(e) {
     return e.toString() === 'Error: Cyclic dependency in properties ["propB","propA"]';
@@ -27,7 +27,7 @@ test('it throws on circular dependency', function(assert) {
 });
 
 test('it works with no references', function(assert) {
-  var sorted = referenceSort([
+  let sorted = referenceSort([
     ['propA'],
     ['propB'],
     ['propC'],

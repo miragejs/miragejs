@@ -4,7 +4,7 @@ import {module, test} from 'qunit';
 module('Unit | Model');
 
 test('it can be instantiated', function(assert) {
-  var model = new Model({}, 'user');
+  let  model = new Model({}, 'user');
   assert.ok(model);
 });
 

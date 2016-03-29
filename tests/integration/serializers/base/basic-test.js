@@ -13,13 +13,13 @@ module('Integration | Serializers | Base | Basic', {
 });
 
 test('it returns objects unaffected', function(assert) {
-  let result = this.registry.serialize({oh: 'hai'});
+  let result = this.registry.serialize({ oh: 'hai' });
 
-  assert.deepEqual(result, {oh: 'hai'});
+  assert.deepEqual(result, { oh: 'hai' });
 });
 
 test('it returns arrays unaffected', function(assert) {
-  let data = [{id: '1', name: 'Link'}, {id: '2', name: 'Zelda'}];
+  let data = [{ id: '1', name: 'Link' }, { id: '2', name: 'Zelda' }];
   let result = this.registry.serialize(data);
 
   assert.deepEqual(result, data);
@@ -28,21 +28,21 @@ test('it returns arrays unaffected', function(assert) {
 test(`it serializes a model by returning its attrs under a root`, function(assert) {
   let wordSmith = this.schema.wordSmith.create({
     id: 1,
-    name: 'Link',
+    name: 'Link'
   });
 
   let result = this.registry.serialize(wordSmith);
   assert.deepEqual(result, {
     wordSmith: {
       id: '1',
-      name: 'Link',
+      name: 'Link'
     }
   });
 });
 
 test(`it serializes a collection of models by returning an array of their attrs under a puralized root`, function(assert) {
-  this.schema.wordSmith.create({id: 1, name: 'Link'});
-  this.schema.wordSmith.create({id: 2, name: 'Zelda'});
+  this.schema.wordSmith.create({ id: 1, name: 'Link' });
+  this.schema.wordSmith.create({ id: 2, name: 'Zelda' });
 
   let wordSmiths = this.schema.wordSmith.all();
 
@@ -50,8 +50,8 @@ test(`it serializes a collection of models by returning an array of their attrs 
 
   assert.deepEqual(result, {
     wordSmiths: [
-      {id: '1', name: 'Link'},
-      {id: '2', name: 'Zelda'}
+      { id: '1', name: 'Link' },
+      { id: '2', name: 'Zelda' }
     ]
   });
 });

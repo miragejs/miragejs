@@ -4,7 +4,7 @@ import { camelize } from 'ember-cli-mirage/utils/inflector';
 import Server from 'ember-cli-mirage/server';
 
 module('Integration | Server | Customized normalize method', {
-  beforeEach: function() {
+  beforeEach() {
     this.server = new Server({
       environment: 'test',
       models: {
@@ -31,13 +31,13 @@ module('Integration | Server | Customized normalize method', {
     this.server.timing = 0;
     this.server.logging = false;
   },
-  afterEach: function() {
+  afterEach() {
     this.server.shutdown();
   }
 });
 
 test('custom model-specific normalize functions are used', function(assert) {
-  let server = this.server;
+  let { server } = this;
   assert.expect(3);
   let done = assert.async();
 
