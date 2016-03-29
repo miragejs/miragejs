@@ -21,15 +21,15 @@ class Db {
 
   createCollection(name, initialData) {
     if (!this[name]) {
-      var newCollection = new DbCollection(name, initialData);
+      let newCollection = new DbCollection(name, initialData);
 
       Object.defineProperty(this, name, {
         get() {
-          var recordsCopy = newCollection.all();
+          let recordsCopy = newCollection.all();
 
           ['insert', 'find', 'where', 'update', 'remove', 'firstOrCreate']
             .forEach(function(method) {
-              recordsCopy[method] = function () {
+              recordsCopy[method] = function() {
                 return newCollection[method](...arguments);
               };
             });
@@ -48,11 +48,11 @@ class Db {
   }
 
   createCollections(...collections) {
-    collections.forEach( c => this.createCollection(c) );
+    collections.forEach((c) => this.createCollection(c));
   }
 
   emptyData() {
-    this._collections.forEach( c => c.remove() );
+    this._collections.forEach((c) => c.remove());
   }
 }
 

@@ -1,4 +1,4 @@
-var errorProps = [
+let errorProps = [
   'description',
   'fileName',
   'lineNumber',
@@ -14,17 +14,18 @@ export default function assert(bool, text) {
   }
 
   if (!bool) {
-    throw new MirageError(text || "Assertion failed");
+    throw new MirageError(text || 'Assertion failed');
   }
 }
 
 /**
+  @public
   Copied from ember-metal/error
 */
 export function MirageError() {
-  var tmp = Error.apply(this, arguments);
+  let tmp = Error.apply(this, arguments);
 
-  for (var idx = 0; idx < errorProps.length; idx++) {
+  for (let idx = 0; idx < errorProps.length; idx++) {
     let prop = errorProps[idx];
 
     if (['description', 'message', 'stack'].indexOf(prop) > -1) {
