@@ -16,10 +16,11 @@ function isCollection(object) {
 
 class JsonApiSerializer {
 
-  constructor(serializerMap) {
+  constructor(serializerMap, modelName, included=[], alreadySerialized={}) {
+    this.modelName = modelName;
     this._serializerMap = serializerMap;
-    this.included = [];
-    this.alreadySerialized = {};
+    this.included = included;
+    this.alreadySerialized = alreadySerialized;
   }
 
   serialize(modelOrCollection, request={}) {
@@ -63,18 +64,19 @@ class JsonApiSerializer {
   }
 
   _serializeRelationshipsFor(model, request) {
-    let serializer = this._serializerFor(model);
-
-    const relationshipNames = this._getRelationshipNames(serializer, request);
+    let relationshipNames = this._getRelationshipNames(request);
 
     relationshipNames.forEach(relationshipName => {
-      let related = this._getRelatedWithPath(model, relationshipName);
+      let association = this._getRelatedWithPath(model, relationshipName);
 
-      if (related instanceof Model) {
-        this._serializeIncludedModel(related, request);
-      } else if (related) {
-        related.forEach(model => {
-          this._serializeIncludedModel(model, request);
+      if (association instanceof Model) {
+        let serializer = this._serializerFor(association);
+        serializer._serializeIncludedModel.call(serializer, association, request);
+
+      } else if (association) {
+        association.forEach(model => {
+          let serializer = this._serializerFor(model);
+          serializer._serializeIncludedModel.call(serializer, model, request);
         });
       }
     });
@@ -91,9 +93,9 @@ class JsonApiSerializer {
   }
 
   _resourceObjectFor(model /*, request */) {
-    const attrs = this._attrsForModel(model);
+    let attrs = this._attrsForModel(model);
 
-    const obj = {
+    let obj = {
       type: this.typeKeyForModel(model),
       id: model.id,
       attributes: attrs
@@ -102,11 +104,14 @@ class JsonApiSerializer {
     let linkData = this._linkDataFor(model);
 
     model.associationKeys.forEach(camelizedType => {
-      const relationship = model[camelizedType];
-      const relationshipKey = this.keyForRelationship(camelizedType);
+      let relationship = model[camelizedType];
+      let relationshipKey = this.keyForRelationship(camelizedType);
 
       if (isCollection(relationship)) {
-        if (!obj.relationships) { obj.relationships = {}; }
+        if (!obj.relationships) {
+          obj.relationships = {};
+        }
+
         obj.relationships[relationshipKey] = {
           data: relationship.map(model => {
             return {
@@ -116,7 +121,10 @@ class JsonApiSerializer {
           })
         };
       } else if (relationship) {
-        if (!obj.relationships) { obj.relationships = {}; }
+        if (!obj.relationships) {
+          obj.relationships = {};
+        }
+
         obj.relationships[relationshipKey] = {
           data: {
             type: this.typeKeyForModel(relationship),
@@ -143,17 +151,19 @@ class JsonApiSerializer {
   }
 
   _addLinkData(json, relationshipKey, linkData) {
-    if (!json.relationships[relationshipKey]) { json.relationships[relationshipKey] = {}; }
+    if (!json.relationships[relationshipKey]) {
+      json.relationships[relationshipKey] = {};
+    }
 
     delete json.relationships[relationshipKey].data;
     json.relationships[relationshipKey].links = {};
 
-    if (linkData['self']) {
-      json.relationships[relationshipKey].links.self = { href: linkData['self'] };
+    if (linkData.self) {
+      json.relationships[relationshipKey].links.self = { href: linkData.self };
     }
 
-    if (linkData['related']) {
-      json.relationships[relationshipKey].links.related = { href: linkData['related'] };
+    if (linkData.related) {
+      json.relationships[relationshipKey].links.related = { href: linkData.related };
     }
   }
 
@@ -205,9 +215,12 @@ class JsonApiSerializer {
     return formattedAttrs;
   }
 
+  // TODO: this method is duplicated. We should just use the one
+  // in serializer-registry, meaning we should pass in a ref to that
+  // object
   _serializerFor(modelOrCollection) {
     let camelizedModelName = camelize(modelOrCollection.modelName);
-    let ModelSerializer = this._serializerMap && (this._serializerMap[camelizedModelName] || this._serializerMap['application']);
+    let ModelSerializer = this._serializerMap && (this._serializerMap[camelizedModelName] || this._serializerMap.application);
 
     /*
       TODO: This check should exist within the Serializer class, when the logic is moved from the registry to the
@@ -221,7 +234,7 @@ class JsonApiSerializer {
       'You cannot have a serializer that sideloads (embed: false) and disables the root (root: false).'
     );
 
-    return ModelSerializer ? new ModelSerializer(this._serializerMap) : this.baseSerializer;
+    return ModelSerializer ? new ModelSerializer(this._serializerMap, modelOrCollection.modelName, this.included, this.alreadySerialized) : this.baseSerializer;
   }
 
   _hasBeenSerialized(model) {
@@ -237,12 +250,12 @@ class JsonApiSerializer {
     this.alreadySerialized[modelKey].push(model.id);
   }
 
-  _getRelationshipNames(serializer = {}, request = {}) {
-    const requestRelationships = _get(request, 'queryParams.include');
+  _getRelationshipNames(request = {}) {
+    let requestRelationships = _get(request, 'queryParams.include');
 
     if (_isString(requestRelationships)) {
-      if(requestRelationships.length) {
-        const relationships = requestRelationships
+      if (requestRelationships.length) {
+        let relationships = requestRelationships
           .split(',')
           .map(_trim)
           .map((r) => r.split('.').map((_, index, elements) => elements.slice(0, index + 1).join('.')));
@@ -252,7 +265,7 @@ class JsonApiSerializer {
       return [];
     }
 
-    return _get(serializer, 'include', []);
+    return _get(this, 'include', []);
   }
 
   _getRelatedWithPath(parentModel, path) {
@@ -266,6 +279,10 @@ class JsonApiSerializer {
           .filter()
           .value();
       }, [parentModel]);
+  }
+
+  toString() {
+    return `serializer:${this.modelName}`;
   }
 }
 

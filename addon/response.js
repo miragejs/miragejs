@@ -7,7 +7,7 @@ export default class Response {
   }
 
   toRackResponse() {
-    let headers = this.headers;
+    let { headers } = this;
     if (!headers.hasOwnProperty('Content-Type')) {
       headers['Content-Type'] = 'application/json';
     }

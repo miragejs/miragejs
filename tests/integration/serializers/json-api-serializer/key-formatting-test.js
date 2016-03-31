@@ -89,13 +89,15 @@ test(`keyForAttribute also formats the models in a collections`, function(assert
 });
 
 test(`keyForRelationship works`, function(assert) {
+  let ApplicationSerializer = JsonApiSerializer.extend({
+    keyForRelationship: underscore
+  });
   let registry = new SerializerRegistry(this.schema, {
-    wordSmith: JsonApiSerializer.extend({
-      keyForRelationship: underscore,
+    application: ApplicationSerializer,
+    wordSmith: ApplicationSerializer.extend({
       include: ['blogPosts']
     })
   });
-
   let wordSmith = this.schema.wordSmith.create({
     id: 1,
     firstName: 'Link',

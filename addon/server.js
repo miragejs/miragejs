@@ -15,14 +15,14 @@ function createPretender(server) {
   return new Pretender(function() {
     this.passthroughRequest = function(verb, path, request) {
       if (server.shouldLog()) {
-        console.log('Passthrough request: ' + verb.toUpperCase() + ' ' + request.url);
+        console.log(`Passthrough request: ${verb.toUpperCase()} ${request.url}`);
       }
     };
 
     this.handledRequest = function(verb, path, request) {
       if (server.shouldLog()) {
-        console.log('Successful request: ' + verb.toUpperCase() + ' ' + request.url);
-        let responseText = request.responseText;
+        console.log(`Successful request: ${verb.toUpperCase()} $[request.url}`);
+        let { responseText } = request;
         let loggedResponse;
 
         try {
@@ -58,11 +58,14 @@ const defaultPassthroughs = [
 export { defaultPassthroughs };
 
 function isOption(option) {
-  if (!option || typeof option !== 'object') { return false; }
-  const allOptions = Object.keys(defaultRouteOptions);
-  const optionKeys = Object.keys(option);
-  for (var i = 0; i < optionKeys.length; i++) {
-    var key = optionKeys[i];
+  if (!option || typeof option !== 'object') {
+    return false;
+  }
+
+  let allOptions = Object.keys(defaultRouteOptions);
+  let optionKeys = Object.keys(option);
+  for (let i = 0; i < optionKeys.length; i++) {
+    let key = optionKeys[i];
     if (allOptions.indexOf(key) > -1) {
       return true;
     }
@@ -82,14 +85,14 @@ function isOption(option) {
 */
 
 function extractRouteArguments(args) {
-  var lastArg = args.splice(-1)[0];
+  let [ lastArg ] = args.splice(-1);
   if (isOption(lastArg)) {
     lastArg = _assign({}, defaultRouteOptions, lastArg);
   } else {
     args.push(lastArg);
     lastArg = defaultRouteOptions;
   }
-  var t = 2 - args.length;
+  let t = 2 - args.length;
   while (t-- > 0) {
     args.push(undefined);
   }
@@ -112,8 +115,8 @@ export default class Server {
     this.schema = new Schema(this.db, options.models);
     this.serializerOrRegistry = new SerializerRegistry(this.schema, options.serializers);
 
-    const hasFactories = this._hasModulesOfType(options, 'factories');
-    const hasDefaultScenario = options.scenarios && options.scenarios.hasOwnProperty('default');
+    let hasFactories = this._hasModulesOfType(options, 'factories');
+    let hasDefaultScenario = options.scenarios && options.scenarios.hasOwnProperty('default');
 
     this.pretender = createPretender(this);
 
@@ -122,7 +125,10 @@ export default class Server {
     }
 
     if (this.isTest()) {
-      if (options.testConfig) { this.loadConfig(options.testConfig); }
+      if (options.testConfig) {
+        this.loadConfig(options.testConfig);
+      }
+
       window.server = this; // TODO: Better way to inject server into test env
     }
 
@@ -155,7 +161,7 @@ export default class Server {
 
   passthrough(...paths) {
     let verbs = ['get', 'post', 'put', 'delete', 'patch'];
-    let lastArg = paths[paths.length-1];
+    let lastArg = paths[paths.length - 1];
 
     if (paths.length === 0) {
       paths = ['/*catchall'];
@@ -172,7 +178,7 @@ export default class Server {
   }
 
   loadFixtures(...args) {
-    let fixtures = this.options.fixtures;
+    let { fixtures } = this.options;
     if (args.length) {
       let camelizedArgs = args.map(camelize);
       fixtures = _pick(fixtures, ...camelizedArgs);
@@ -202,22 +208,21 @@ export default class Server {
     this.factorySequences = this.factorySequences || {};
     this.factorySequences[camelizedType] = this.factorySequences[camelizedType] + 1 || 0;
 
-
     assert(
       this._factoryMap && this._factoryMap[camelizedType],
       `You're trying to create a ${camelizedType}, but no factory for this type was found`
     );
 
-    const OriginalFactory = this._factoryMap[camelizedType];
-    const Factory = OriginalFactory.extend(overrides);
-    const factory = new Factory();
+    let OriginalFactory = this._factoryMap[camelizedType];
+    let Factory = OriginalFactory.extend(overrides);
+    let factory = new Factory();
 
-    const sequence = this.factorySequences[camelizedType];
+    let sequence = this.factorySequences[camelizedType];
     return factory.build(sequence);
   }
 
   buildList(type, amount, overrides) {
-    const list = [];
+    let list = [];
 
     for (let i = 0; i < amount; i++) {
       list.push(this.build(type, overrides));
@@ -227,7 +232,7 @@ export default class Server {
   }
 
   create(type, overrides, collectionFromCreateList) {
-    const attrs = this.build(type, overrides);
+    let attrs = this.build(type, overrides);
     let collection, collectionName;
     if (collectionFromCreateList) {
       collection = collectionFromCreateList;
@@ -248,9 +253,9 @@ export default class Server {
   }
 
   createList(type, amount, overrides) {
-    const list = [];
-    const collectionName = this.schema ? pluralize(camelize(type)) : pluralize(type);
-    const collection = this.db[collectionName];
+    let list = [];
+    let collectionName = this.schema ? pluralize(camelize(type)) : pluralize(type);
+    let collection = this.db[collectionName];
 
     for (let i = 0; i < amount; i++) {
       list.push(this.create(type, overrides, collection));
@@ -273,7 +278,9 @@ export default class Server {
         this._registerRouteHandler(verb, path, rawHandler, customizedCode, options);
       };
 
-      if (alias) { this[alias] = this[verb]; }
+      if (alias) {
+        this[alias] = this[verb];
+      }
     });
   }
 
@@ -328,12 +335,12 @@ export default class Server {
 
       // otherwise, if there is a urlPrefix, use that as the beginning of the path
       if (!!urlPrefix.length) {
-        fullPath += urlPrefix[urlPrefix.length - 1] === '/' ? urlPrefix : urlPrefix + '/';
+        fullPath += urlPrefix[urlPrefix.length - 1] === '/' ? urlPrefix : `${urlPrefix}/`;
       }
 
       // if a namespace has been configured, add it before the path
       if (!!namespace.length) {
-        fullPath += namespace ? namespace + '/' : namespace;
+        fullPath += namespace ? `${namespace}/` : namespace;
       }
 
       // finally add the configured path

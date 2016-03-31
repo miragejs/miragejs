@@ -1,6 +1,7 @@
 {
   "preset": "ember-suave",
   "requireSpread": null,
+  "requireParenthesesAroundArrowParam": false,
   "excludeFiles": [
     "helpers/module-for-acceptance.js",
     "fixtures/config/**",
