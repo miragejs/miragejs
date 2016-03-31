@@ -5,125 +5,112 @@ import _includes from 'lodash/collection/includes';
 
 import {module, test} from 'qunit';
 
-module('Unit | Serializers | JsonApiSerializer', {
-  beforeEach() {
-    this.serializer = new JsonApiSerializer();
-  }
-});
+module('Unit | Serializers | JsonApiSerializer');
 
 test('_getRelationshipNames should prefer relationships from request', function(assert) {
-
-  const otherSerializer = {
+  let serializer = new (JsonApiSerializer.extend({
     include: ['foo', 'bar']
-  };
+  }))();
 
-  const request = {
+  let request = {
     queryParams: {
       include: 'baz,quux'
     }
   };
-
-  const result = this.serializer._getRelationshipNames(otherSerializer, request);
+  let result = serializer._getRelationshipNames(request);
 
   assert.deepEqual(result, ['baz', 'quux']);
 });
 
 test('_getRelationshipNames should not choke on missing request', function(assert) {
-
-  const otherSerializer = {
+  let serializer = new (JsonApiSerializer.extend({
     include: ['foo', 'bar']
-  };
-
-  const result = this.serializer._getRelationshipNames(otherSerializer);
+  }))();
+  let result = serializer._getRelationshipNames();
 
   assert.deepEqual(result, ['foo', 'bar']);
 });
 
 test('_getRelationshipNames should not choke on empty request', function(assert) {
-
-  const otherSerializer = {
+  let serializer = new (JsonApiSerializer.extend({
     include: ['foo', 'bar']
-  };
+  }))();
+  let request = {};
 
-  const request = {};
-
-  const result = this.serializer._getRelationshipNames(otherSerializer, request);
+  let result = serializer._getRelationshipNames(request);
 
   assert.deepEqual(result, ['foo', 'bar']);
 });
 
 test('_getRelationshipNames should not choke on empty queryParams', function(assert) {
-
-  const otherSerializer = {
+  let serializer = new (JsonApiSerializer.extend({
     include: ['foo', 'bar']
-  };
+  }))();
+  let request = { queryParams: {} };
 
-  const request = { queryParams: {} };
-
-  const result = this.serializer._getRelationshipNames(otherSerializer, request);
+  let result = serializer._getRelationshipNames(request);
 
   assert.deepEqual(result, ['foo', 'bar']);
 });
 
 test('_getRelationshipNames should not choke on empty included', function(assert) {
-
-  const otherSerializer = {
+  let serializer = new (JsonApiSerializer.extend({
     include: ['foo', 'bar']
-  };
-
-  const request = {
+  }))();
+  let request = {
     queryParams: {
       include: ''
     }
   };
 
-  const result = this.serializer._getRelationshipNames(otherSerializer, request);
+  let result = serializer._getRelationshipNames(request);
 
   assert.deepEqual(result, []);
 });
 
 
 test('_getRelationshipNames should not choke on missing serializer.relationships', function(assert) {
-
-  const request = {
+  let serializer = new (JsonApiSerializer.extend())();
+  let request = {
     queryParams: {
       include: 'baz,quux'
     }
   };
 
-  const result = this.serializer._getRelationshipNames(undefined, request);
+  let result = serializer._getRelationshipNames(request);
 
   assert.deepEqual(result, ['baz', 'quux']);
 });
 
 test('_getRelatedModelWithPath belongsTo', function(assert) {
-  const schema = schemaHelper.setup();
+  let serializer = new (JsonApiSerializer.extend())();
+  let schema = schemaHelper.setup();
 
-  const foo = schema.foo.create();
-  const bar = foo.createBar();
+  let foo = schema.foo.create();
+  let bar = foo.createBar();
   foo.save();
-  const baz = bar.createBaz();
+  let baz = bar.createBaz();
   bar.save();
-  const quux1 = baz.createQuux();
-  const quux2 = baz.createQuux();
+  let quux1 = baz.createQuux();
+  let quux2 = baz.createQuux();
   baz.save();
-  const zomg1 = quux1.createZomg();
-  const zomg2 = quux1.createZomg();
+  let zomg1 = quux1.createZomg();
+  let zomg2 = quux1.createZomg();
   quux1.save();
-  const zomg3 = quux2.createZomg();
-  const zomg4 = quux2.createZomg();
+  let zomg3 = quux2.createZomg();
+  let zomg4 = quux2.createZomg();
   quux2.save();
-  const lol1 = zomg1.createLol();
-  const lol2 = zomg2.createLol();
-  const lol3 = zomg3.createLol();
-  const lol4 = zomg4.createLol();
+  let lol1 = zomg1.createLol();
+  let lol2 = zomg2.createLol();
+  let lol3 = zomg3.createLol();
+  let lol4 = zomg4.createLol();
   zomg1.save();
   zomg2.save();
   zomg3.save();
   zomg4.save();
 
-  const result = this.serializer._getRelatedWithPath(foo, 'bar.baz.quuxes.zomgs.lol');
-  const ids = _map(result, 'id');
+  let result = serializer._getRelatedWithPath(foo, 'bar.baz.quuxes.zomgs.lol');
+  let ids = _map(result, 'id');
 
   assert.equal(result.length, 4);
   assert.ok(_includes(ids, lol1.id));

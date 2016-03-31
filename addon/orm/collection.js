@@ -8,22 +8,22 @@ const { forEach, filter, reduce, push, map, slice } = Array.prototype;
 */
 
 export default class Collection {
- constructor(modelName, ...args) {
-  assert(
-    modelName && typeof modelName === 'string',
-    'You must pass a `modelName` into a Collection'
-  );
+  constructor(modelName, ...args) {
+    assert(
+      modelName && typeof modelName === 'string',
+      'You must pass a `modelName` into a Collection'
+    );
 
-  this.modelName = modelName;
+    this.modelName = modelName;
 
-  if (_isArray(args[0])) {
-    args = args[0];
+    if (_isArray(args[0])) {
+      args = args[0];
+    }
+    this.length = 0;
+    if (args.length) {
+      push.apply(this, args);
+    }
   }
-  this.length = 0;
-  if (args.length) {
-    push.apply(this, args);
-  }
- }
 
   update(key, val) {
     forEach.call(this, (model) => model.update(key, val));
@@ -53,7 +53,6 @@ export default class Collection {
     return map.apply(this, arguments);
   }
 
-
   forEach() {
     forEach.apply(this, arguments);
   }
@@ -67,7 +66,7 @@ export default class Collection {
   }
 
   filter() {
-    var models = filter.apply(this, arguments);
+    let models = filter.apply(this, arguments);
     return new Collection(this.modelName, models);
   }
 

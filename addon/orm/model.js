@@ -34,7 +34,7 @@ class Model {
     Create or save the model
   */
   save() {
-    var collection = pluralize(camelize(this.modelName));
+    let collection = pluralize(camelize(this.modelName));
 
     if (this.isNew()) {
       // Update the attrs with the db response
@@ -57,8 +57,10 @@ class Model {
     Update the db record
   */
   update(key, val) {
-    var attrs;
-    if (key == null) {return this;}
+    let attrs;
+    if (key == null) {
+      return this;
+    }
 
     if (typeof key === 'object') {
       attrs = key;
@@ -79,7 +81,7 @@ class Model {
     Destroy the db record
   */
   destroy() {
-    var collection = pluralize(camelize(this.modelName));
+    let collection = pluralize(camelize(this.modelName));
     this._schema.db[collection].remove(this.attrs.id);
   }
 
@@ -95,18 +97,19 @@ class Model {
     Reload data from the db
   */
   reload() {
-    var collection = pluralize(camelize(this.modelName));
-    var attrs = this._schema.db[collection].find(this.id);
+    let collection = pluralize(camelize(this.modelName));
+    let attrs = this._schema.db[collection].find(this.id);
 
     Object.keys(attrs)
-      .filter(function(attr) { return attr !== 'id'; })
+      .filter(function(attr) {
+        return attr !== 'id';
+      })
       .forEach(function(attr) {
         this[attr] = attrs[attr];
       }, this);
 
     return this;
   }
-
 
   // Private
   /*
@@ -115,7 +118,7 @@ class Model {
   */
   _setupAttrs(attrs) {
     // Filter out association keys
-    var hash = Object.keys(attrs).reduce((memo, attr) => {
+    let hash = Object.keys(attrs).reduce((memo, attr) => {
       if (this.associationKeys.indexOf(attr) === -1 && this.associationIdKeys.indexOf(attr) === -1) {
         memo[attr] = attrs[attr];
       }
@@ -141,7 +144,9 @@ class Model {
     Define getter/setter for a plain attribute
   */
   _definePlainAttribute(attr) {
-    if (this[attr] !== undefined) { return; }
+    if (this[attr] !== undefined) {
+      return;
+    }
 
     // Ensure the attribute is on the attrs hash
     if (!this.attrs.hasOwnProperty(attr)) {
@@ -150,14 +155,18 @@ class Model {
 
     // Define the getter/setter
     Object.defineProperty(this, attr, {
-      get: function () { return this.attrs[attr]; },
-      set: function (val) { this.attrs[attr] = val; return this; },
+      get() {
+        return this.attrs[attr];
+      },
+      set(val) {
+        this.attrs[attr] = val; return this;
+      }
     });
   }
 
   _setupRelationships(attrs) {
     // Only want association keys and fks
-    var hash = Object.keys(attrs).reduce((memo, attr) => {
+    let hash = Object.keys(attrs).reduce((memo, attr) => {
       if (this.associationKeys.indexOf(attr) > -1 || this.associationIdKeys.indexOf(attr) > -1 || this.fks.indexOf(attr) > -1) {
         memo[attr] = attrs[attr];
       }
@@ -171,18 +180,18 @@ class Model {
 
   _saveAssociations() {
     Object.keys(this.belongsToAssociations).forEach(key => {
-      var association = this.belongsToAssociations[key];
-      var parent = this[key];
+      let association = this.belongsToAssociations[key];
+      let parent = this[key];
       if (parent && parent.isNew()) {
-        var fk = association.getForeignKey();
+        let fk = association.getForeignKey();
         parent.save();
         this.update(fk, parent.id);
       }
     });
 
     Object.keys(this.hasManyAssociations).forEach(key => {
-      var association = this.hasManyAssociations[key];
-      var children = this[key];
+      let association = this.hasManyAssociations[key];
+      let children = this[key];
       children.update(association.getForeignKey(), this.id);
     });
   }
