@@ -29,7 +29,7 @@ export default class Schema {
     ModelClass = ModelClass.extend();
 
     // Store model & fks in registry
-    this._registry[camelizedModelName] = this._registry[camelizedModelName] || {class: null, foreignKeys: []}; // we may have created this key before, if another model added fks to it
+    this._registry[camelizedModelName] = this._registry[camelizedModelName] || { class: null, foreignKeys: [] }; // we may have created this key before, if another model added fks to it
     this._registry[camelizedModelName].class = ModelClass;
 
     // Set up associations
@@ -38,7 +38,7 @@ export default class Schema {
     ModelClass.prototype.associationKeys = [];       // ex: address.user, user.addresses
     ModelClass.prototype.associationIdKeys = [];     // ex: address.user_id, user.address_ids. may or may not be a fk.
 
-    for (var associationProperty in ModelClass.prototype) {
+    for (let associationProperty in ModelClass.prototype) {
       if (ModelClass.prototype[associationProperty] instanceof Association) {
         let association = ModelClass.prototype[associationProperty];
         association.key = associationProperty;
@@ -47,9 +47,8 @@ export default class Schema {
 
         // Update the registry with this association's foreign keys. This is
         // essentially our "db migration", since we must know about the fks.
-        var result = association.getForeignKeyArray();
-        var fkHolder = result[0];
-        var fk = result[1];
+        let result = association.getForeignKeyArray();
+        let [ fkHolder, fk ] = result;
         this._addForeignKeyToRegistry(fkHolder, fk);
 
         // Augment the Model's class with any methods added by this association
@@ -58,7 +57,7 @@ export default class Schema {
     }
 
     // Create a db collection for this model, if doesn't exist
-    var collection = pluralize(camelizedModelName);
+    let collection = pluralize(camelizedModelName);
     if (!this.db[collection]) {
       this.db.createCollection(collection);
     }
@@ -82,21 +81,21 @@ export default class Schema {
   }
 
   create(type, attrs) {
-    var collection = this._collectionForType(type);
-    var augmentedAttrs = collection.insert(attrs);
+    let collection = this._collectionForType(type);
+    let augmentedAttrs = collection.insert(attrs);
 
     return this._instantiateModel(dasherize(type), augmentedAttrs);
   }
 
   all(type) {
-    var collection = this._collectionForType(type);
+    let collection = this._collectionForType(type);
 
     return this._hydrate(collection, dasherize(type));
   }
 
   find(type, ids) {
-    var collection = this._collectionForType(type);
-    var records = collection.find(ids);
+    let collection = this._collectionForType(type);
+    let records = collection.find(ids);
 
     if (_isArray(ids)) {
       assert(
@@ -109,15 +108,15 @@ export default class Schema {
   }
 
   where(type, query) {
-    var collection = this._collectionForType(type);
-    var records = collection.where(query);
+    let collection = this._collectionForType(type);
+    let records = collection.where(query);
 
     return this._hydrate(records, dasherize(type));
   }
 
   first(type) {
-    var collection = this._collectionForType(type);
-    var record = collection[0];
+    let collection = this._collectionForType(type);
+    let [ record ] = collection;
 
     return this._hydrate(record, dasherize(type));
   }
@@ -126,7 +125,7 @@ export default class Schema {
     Private methods
   */
   _collectionForType(type) {
-    var collection = pluralize(type);
+    let collection = pluralize(type);
     assert(
       this.db[collection],
       `You\'re trying to find model(s) of type ${type} but this collection doesn\'t exist in the database.`
@@ -136,7 +135,7 @@ export default class Schema {
   }
 
   _addForeignKeyToRegistry(type, fk) {
-    this._registry[type] = this._registry[type] || {class: null, foreignKeys: []};
+    this._registry[type] = this._registry[type] || { class: null, foreignKeys: [] };
 
     let fks = this._registry[type].foreignKeys;
     if (!_includes(fks, fk)) {
@@ -145,8 +144,8 @@ export default class Schema {
   }
 
   _instantiateModel(modelName, attrs) {
-    var ModelClass = this._modelFor(modelName);
-    var fks = this._foreignKeysFor(modelName);
+    let ModelClass = this._modelFor(modelName);
+    let fks = this._foreignKeysFor(modelName);
 
     return new ModelClass(this, modelName, attrs, fks);
   }
@@ -165,7 +164,7 @@ export default class Schema {
   */
   _hydrate(records, modelName) {
     if (_isArray(records)) {
-      var models = records.map(function(record) {
+      let models = records.map(function(record) {
         return this._instantiateModel(modelName, record);
       }, this);
       return new Collection(modelName, models);
