@@ -1,3 +1,4 @@
+// jscs:disable requireParenthesesAroundArrowParam
 import extend from '../utils/extend';
 import { dasherize, pluralize, camelize } from '../utils/inflector';
 import Model from 'ember-cli-mirage/orm/model';

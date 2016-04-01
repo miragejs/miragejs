@@ -1,3 +1,4 @@
+// jscs:disable disallowVar
 import Mirage from 'ember-cli-mirage';
 import Model from 'ember-cli-mirage/orm/model';
 import Schema from 'ember-cli-mirage/orm/schema';

@@ -1,3 +1,4 @@
+// jscs:disable requireCamelCaseOrUpperCaseIdentifiers, disallowMultipleVarDecl
 import Server, { defaultPassthroughs } from 'ember-cli-mirage/server';
 import {module, test} from 'qunit';
 import Factory from 'ember-cli-mirage/factory';

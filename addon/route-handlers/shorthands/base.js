@@ -26,7 +26,9 @@ export default class BaseShorthandRouteHandler {
   }
 
   getModelClassFromPath(fullPath) {
-    if (!fullPath) { return; }
+    if (!fullPath) {
+      return;
+    }
     let path = fullPath.split('/');
     let lastPath;
     while (path.length > 0) {
@@ -91,6 +93,5 @@ export default class BaseShorthandRouteHandler {
 
     return attrs;
   }
-
 
 }

@@ -1,3 +1,4 @@
+// jscs:disable requireParenthesesAroundArrowParam
 import { pluralize, camelize } from '../utils/inflector';
 import extend from '../utils/extend';
 import assert from '../assert';

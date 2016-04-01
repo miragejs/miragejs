@@ -1,3 +1,4 @@
+// jscs:disable requireParenthesesAroundArrowParam
 import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
 import Serializer from 'ember-cli-mirage/serializer';

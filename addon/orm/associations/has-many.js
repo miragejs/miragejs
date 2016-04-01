@@ -1,3 +1,4 @@
+// jscs:disable requireParenthesesAroundArrowParam
 import Association from './association';
 import Collection from '../collection';
 import _assign from 'lodash/object/assign';

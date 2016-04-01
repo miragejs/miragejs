@@ -1,6 +1,7 @@
+// jscs:disable
 /* global requirejs, require */
 /*jslint node: true */
-
+// jscs:enable
 'use strict';
 
 import Ember from 'ember';
@@ -15,7 +16,7 @@ import { pluralize } from 'ember-cli-mirage/utils/inflector';
 */
 export default function(prefix) {
   let modules = ['factories', 'fixtures', 'scenarios', 'models', 'serializers'];
-  let mirageModuleRegExp = new RegExp(`^${prefix}/mirage/(${modules.join("|")})`);
+  let mirageModuleRegExp = new RegExp(`^${prefix}/mirage/(${modules.join('|')})`);
   let modulesMap = modules.reduce((memo, name) => {
     memo[name] = {};
     return memo;
@@ -30,10 +31,10 @@ export default function(prefix) {
     let moduleParts = moduleName.split('/');
     let moduleType = moduleParts[moduleParts.length - 2];
     let moduleKey = moduleParts[moduleParts.length - 1];
-    Ember.assert('Subdirectories under ' + moduleType + ' are not supported',
+    Ember.assert(`Subdirectories under i${moduleType} are not supported`,
                  moduleParts[moduleParts.length - 3] === 'mirage');
 
-    if (moduleType === 'scenario'){
+    if (moduleType === 'scenario') {
       Ember.assert('Only scenario/default.js is supported at this time.',
                    moduleKey !== 'default');
     }
@@ -41,12 +42,14 @@ export default function(prefix) {
     /*
       Ensure fixture keys are pluralized
     */
-    if (moduleType === 'fixtures'){
+    if (moduleType === 'fixtures') {
       moduleKey = pluralize(moduleKey);
     }
 
     let module = require(moduleName, null, null, true);
-    if (!module) { throw new Error(moduleName + ' must export a ' + moduleType); }
+    if (!module) {
+      throw new Error(`${moduleName} must export a ${moduleType}`);
+    }
 
     let data = module['default'];
 

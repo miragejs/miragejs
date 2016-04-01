@@ -1,3 +1,4 @@
+// jscs:disable disallowVar, requireArrayDestructuring
 import _uniq from 'lodash/array/uniq';
 import _flatten from 'lodash/array/flatten';
 
@@ -10,8 +11,8 @@ export default function(edges) {
 
   var visit = function(node, i, predecessors) {
 
-    if(predecessors.indexOf(node) >= 0) {
-      throw new Error('Cyclic dependency in properties ' + JSON.stringify(predecessors));
+    if (predecessors.indexOf(node) >= 0) {
+      throw new Error(`Cyclic dependency in properties ${JSON.stringify(predecessors)}`);
     }
 
     if (visited[i]) {
@@ -20,7 +21,7 @@ export default function(edges) {
       visited[i] = true;
     }
 
-    var outgoing = edges.filter(function(edge){
+    var outgoing = edges.filter(function(edge) {
       return edge && edge[0] === node;
     });
 

@@ -1,3 +1,4 @@
+// jscs:disable requireArrayDestructuring, requireParenthesesAroundArrowParam
 import Serializer from '../serializer';
 import { underscore, pluralize, dasherize } from '../utils/inflector';
 
