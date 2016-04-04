@@ -68,7 +68,6 @@ test('_getRelationshipNames should not choke on empty included', function(assert
   assert.deepEqual(result, []);
 });
 
-
 test('_getRelationshipNames should not choke on missing serializer.relationships', function(assert) {
   let serializer = new (JsonApiSerializer.extend())();
   let request = {

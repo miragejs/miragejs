@@ -1,3 +1,4 @@
+// jscs:disable disallowVar, requireObjectDestructuring
 import Ember from 'ember';
 export { singularize, pluralize } from 'ember-inflector';
 

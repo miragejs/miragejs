@@ -1,26 +1,3 @@
 {
-  "preset": "ember-suave",
-  "requireSpread": null,
-  "requireParenthesesAroundArrowParam": false,
-  "excludeFiles": [
-    "helpers/module-for-acceptance.js",
-    "fixtures/config/**",
-    "integration/schema/create-test.js",
-    "integration/schema/delete-test.js",
-    "integration/schema/read-test.js",
-    "integration/schema/reinitialize-associations-test.js",
-    "integration/schema/update-test.js",
-    "integration/schema/belongs-to/instantiating-test.js",
-    "integration/schema/has-many/instantiating-test.js",
-    "integration/serializers/active-model-serializer-test.js",
-    "integration/serializers/base/full-request-test.js",
-    "integration/serializers/json-api-serializer/key-formatting-test.js",
-    "integration/serializers/json-api-serializer/associations/included-test.js",
-    "integration/server/customized-normalize-method-test.js",
-    "unit/server-test.js",
-    "unit/serializers/active-model-serializer-test.js",
-    "unit/serializers/json-api-serializer-test.js",
-    "unit/addon-tree-test-node.js",
-    "unit/import-files-test-node.js"
-  ]
+  "preset": "ember-suave"
 }

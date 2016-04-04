@@ -1,3 +1,4 @@
+// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import JsonApiSerializer from 'ember-cli-mirage/serializers/json-api-serializer';
 import schemaHelper from '../schema-helper';

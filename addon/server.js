@@ -1,3 +1,5 @@
+// jscs:disable requireParenthesesAroundArrowParam
+
 import { pluralize, camelize } from './utils/inflector';
 import Pretender from 'pretender';
 import Db from './db';
