@@ -173,10 +173,10 @@ test('passthrough without args allows all paths on the current domain to passthr
   });
 
   $.ajax({
-    method: 'GET',
-    url: '/addresses',
-    error(/* reason */) {
-      assert.ok(true);
+    method: "GET",
+    url: "/addresses",
+    error: function(reason) {
+      assert.equal(reason.status, 404);
       done2();
     }
   });
@@ -232,4 +232,3 @@ test('it can passthrough other-origin hosts', function(assert) {
     }
   });
 });
-
