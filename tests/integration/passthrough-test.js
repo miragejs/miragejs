@@ -182,6 +182,38 @@ test('passthrough without args allows all paths on the current domain to passthr
   });
 });
 
+test('passthrough without args allows index route on current domain to passthrough', function(assert) {
+  assert.expect(2);
+  var done1 = assert.async();
+  var done2 = assert.async();
+  var server = this.server;
+
+  server.loadConfig(function() {
+    this.get('/contacts', function() {
+      return 123;
+    });
+    this.passthrough();
+  });
+
+  $.ajax({
+    method: "GET",
+    url: "/contacts",
+    success: function(data) {
+      assert.equal(data, 123);
+      done1();
+    }
+  });
+
+  $.ajax({
+    method: "GET",
+    url: "/",
+    error: function(reason) {
+      assert.equal(reason.status, 404);
+      done2();
+    }
+  });
+});
+
 test('it can passthrough other-origin hosts', function(assert) {
   assert.expect(1);
   let done1 = assert.async();
