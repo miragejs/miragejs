@@ -173,9 +173,9 @@ test('passthrough without args allows all paths on the current domain to passthr
   });
 
   $.ajax({
-    method: "GET",
-    url: "/addresses",
-    error: function(reason) {
+    method: 'GET',
+    url: '/addresses',
+    error(reason) {
       assert.equal(reason.status, 404);
       done2();
     }
@@ -184,9 +184,9 @@ test('passthrough without args allows all paths on the current domain to passthr
 
 test('passthrough without args allows index route on current domain to passthrough', function(assert) {
   assert.expect(2);
-  var done1 = assert.async();
-  var done2 = assert.async();
-  var server = this.server;
+  let done1 = assert.async();
+  let done2 = assert.async();
+  let { server } = this;
 
   server.loadConfig(function() {
     this.get('/contacts', function() {
@@ -196,20 +196,25 @@ test('passthrough without args allows index route on current domain to passthrou
   });
 
   $.ajax({
-    method: "GET",
-    url: "/contacts",
-    success: function(data) {
-      assert.equal(data, 123);
+    method: 'GET',
+    url: '/contacts',
+    success(data) {
+      assert.equal(data, 123, 'contacts is intercepted');
       done1();
     }
   });
 
   $.ajax({
-    method: "GET",
-    url: "/",
-    error: function(reason) {
-      assert.equal(reason.status, 404);
-      done2();
+    method: 'GET',
+    url: '/',
+    error(reason) {
+      done2(); // test will fail bc only 1 assertion, but we don't have to wait
+    },
+    success(html) {
+      // a passthrough request to index on the current domain
+      // actually succeeds here, since that's where the test runner is served
+      assert.ok(html, '/ is passed through');
+      done2(); // test will fail bc only 1 assertion, but we don't have to wait
     }
   });
 });

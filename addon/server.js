@@ -166,7 +166,8 @@ export default class Server {
     let lastArg = paths[paths.length - 1];
 
     if (paths.length === 0) {
-      paths = ['/*catchall'];
+      // paths = ['http://localhost:7357'];
+      paths = ['/**', '/'];
     } else if (_isArray(lastArg)) {
       verbs = paths.pop();
     }
@@ -343,6 +344,11 @@ export default class Server {
       // if a namespace has been configured, add it before the path
       if (!!namespace.length) {
         fullPath += namespace ? `${namespace}/` : namespace;
+      }
+
+      // we're at the root, ensure a leading /
+      if (!urlPrefix.length && !namespace.length) {
+        fullPath += '/';
       }
 
       // finally add the configured path
