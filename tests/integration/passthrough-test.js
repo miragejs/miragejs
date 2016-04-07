@@ -175,9 +175,46 @@ test('passthrough without args allows all paths on the current domain to passthr
   $.ajax({
     method: 'GET',
     url: '/addresses',
-    error(/* reason */) {
-      assert.ok(true);
+    error(reason) {
+      assert.equal(reason.status, 404);
       done2();
+    }
+  });
+});
+
+test('passthrough without args allows index route on current domain to passthrough', function(assert) {
+  assert.expect(2);
+  let done1 = assert.async();
+  let done2 = assert.async();
+  let { server } = this;
+
+  server.loadConfig(function() {
+    this.get('/contacts', function() {
+      return 123;
+    });
+    this.passthrough();
+  });
+
+  $.ajax({
+    method: 'GET',
+    url: '/contacts',
+    success(data) {
+      assert.equal(data, 123, 'contacts is intercepted');
+      done1();
+    }
+  });
+
+  $.ajax({
+    method: 'GET',
+    url: '/',
+    error(reason) {
+      done2(); // test will fail bc only 1 assertion, but we don't have to wait
+    },
+    success(html) {
+      // a passthrough request to index on the current domain
+      // actually succeeds here, since that's where the test runner is served
+      assert.ok(html, '/ is passed through');
+      done2(); // test will fail bc only 1 assertion, but we don't have to wait
     }
   });
 });
@@ -200,4 +237,3 @@ test('it can passthrough other-origin hosts', function(assert) {
     }
   });
 });
-
