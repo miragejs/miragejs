@@ -31,8 +31,11 @@ class Model {
     return this;
   }
 
-  /*
-    Create or save the model
+  /**
+    Creates or saves the model.
+    @method save
+    @return this
+    @public
   */
   save() {
     let collection = pluralize(camelize(this.modelName));
@@ -54,8 +57,13 @@ class Model {
     return this;
   }
 
-  /*
-    Update the db record
+  /**
+    Update the record in the db.
+    @method update
+    @param {String} key
+    @param {String} val
+    @return this
+    @public
   */
   update(key, val) {
     let attrs;
@@ -78,24 +86,41 @@ class Model {
     return this;
   }
 
-  /*
-    Destroy the db record
+  /**
+    Destroys the db record
+    @method destroy
+    @public
   */
   destroy() {
     let collection = pluralize(camelize(this.modelName));
     this._schema.db[collection].remove(this.attrs.id);
   }
 
+  /**
+    Boolean, true if the model has not been persisted yet to the db.
+    @method isNew
+    @return {Boolean}
+    @public
+  */
   isNew() {
     return this.attrs.id === undefined || this.attrs.id === null;
   }
 
+  /**
+    Boolean, opposite of `isNew`
+    @method isSaved
+    @return {Boolean}
+    @public
+  */
   isSaved() {
     return this.attrs.id !== undefined && this.attrs.id !== null;
   }
 
-  /*
-    Reload data from the db
+  /**
+    Reload a model’s data from the database.
+    @method reload
+    @return this
+    @public
   */
   reload() {
     let collection = pluralize(camelize(this.modelName));
@@ -113,9 +138,13 @@ class Model {
   }
 
   // Private
-  /*
+
+  /**
     model.attrs represents the persistable attributes, i.e. your db
     table fields.
+    @method _setupAttrs
+    @param attrs
+    @private
   */
   _setupAttrs(attrs) {
     // Filter out association keys
@@ -141,8 +170,11 @@ class Model {
     }, this);
   }
 
-  /*
+  /**
     Define getter/setter for a plain attribute
+    @method _definePlainAttribute
+    @param attr
+    @private
   */
   _definePlainAttribute(attr) {
     if (this[attr] !== undefined) {
@@ -165,6 +197,11 @@ class Model {
     });
   }
 
+  /**
+    @method _setupRelationships
+    @param attrs
+    @private
+  */
   _setupRelationships(attrs) {
     // Only want association keys and fks
     let hash = Object.keys(attrs).reduce((memo, attr) => {
@@ -179,6 +216,11 @@ class Model {
     }, this);
   }
 
+  /**
+    Update associated children when saving a collection
+    @method _saveAssociations
+    @private
+  */
   _saveAssociations() {
     Object.keys(this.belongsToAssociations).forEach(key => {
       let association = this.belongsToAssociations[key];
@@ -197,6 +239,12 @@ class Model {
     });
   }
 
+  /**
+    Simple string representation of the model and id.
+    @method toString
+    @return {String}
+    @public
+  */
   toString() {
     return `model:${this.modelName}(${this.id})`;
   }
