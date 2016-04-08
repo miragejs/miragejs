@@ -102,17 +102,17 @@ class DbCollection {
     `query` and optional `attributesForCreate`.
     @method firstOrCreate
     @param query
-    @param attributesForNew
+    @param attributesForCreate
     @public
   */
-  firstOrCreate(query, attributesForNew={}) {
+  firstOrCreate(query, attributesForCreate={}) {
     let queryResult = this.where(query);
     let [ record ] = queryResult;
 
     if (record) {
       return record;
     } else {
-      let mergedAttributes = _assign(attributesForNew, query);
+      let mergedAttributes = _assign(attributesForCreate, query);
       let createdRecord = this.insert(mergedAttributes);
 
       return createdRecord;
