@@ -12,7 +12,7 @@ A client-side server to develop, test and prototype your Ember CLI app.
 
 Are you tired of
 
-- Writing one set of mocks for your tests, and another for development?
+- Writing one set of fixtures for your tests, and another for development?
 - Wiring up tests for each of your apps manually, from scratch?
 - Changing lots of files/tests when your API changes?
 
