@@ -14,9 +14,8 @@ Changes:
   - [FEATURE] #655 Add importable rest-serializer @rondale-sc
   - [FEATURE] #269 Dynamic factory attributes can reference other dynamic attributes @lazybensch
   - [FEATURE] #603 Support inverse foreign keys @ef4
-  - [ENHANCEMENT] #632 Extract startMirage from initializer @mitchlloyd
+  - [ENHANCEMENT] #323 Extract startMirage from initializer @mitchlloyd
   - [ENHANCEMENT] #617 JSON:API Serializer includes intermediate relationships when using dot paths @RSSchermer
-  - [ENHANCEMENT] #610 Allow Mirage to be a dependency of another addon @donovan-graham
   - [ENHANCEMENT] #610 Allow Mirage to be a dependency of another addon @donovan-graham
   - General cleanup and updates @lolmaus, @samselikoff
 
