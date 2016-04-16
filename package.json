@@ -50,7 +50,6 @@
     "ember-suave": "2.0.1",
     "ember-try": "~0.0.8",
     "loader.js": "^4.0.0",
-    "lodash": "^4.6.1",
     "mocha": "^2.1.0"
   },
   "keywords": [
