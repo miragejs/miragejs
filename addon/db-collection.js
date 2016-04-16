@@ -19,6 +19,7 @@ function isNumber(n) {
   A collection of db records i.e. a database table.
   @class DbCollection
   @constructor
+  @public
 */
 class DbCollection {
 
