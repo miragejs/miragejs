@@ -7,13 +7,13 @@ module('Integration | Serializers | Base | Associations | Sideloading Collection
   beforeEach() {
     this.schema = schemaHelper.setup();
 
-    let link = this.schema.wordSmith.create({ name: 'Link' });
+    let link = this.schema.wordSmiths.create({ name: 'Link' });
     let blogPost = link.createBlogPost({ title: 'Lorem' });
     link.createBlogPost({ title: 'Ipsum' });
 
     blogPost.createFineComment({ text: 'pwned' });
 
-    let zelda = this.schema.wordSmith.create({ name: 'Zelda' });
+    let zelda = this.schema.wordSmiths.create({ name: 'Zelda' });
     zelda.createBlogPost({ title: `Zeldas blogPost` });
 
     this.BaseSerializer = Serializer.extend({
@@ -34,7 +34,7 @@ test(`it throws an error if embed is false and root is false`, function(assert) 
     })
   });
 
-  let wordSmiths = this.schema.wordSmith.all();
+  let wordSmiths = this.schema.wordSmiths.all();
 
   assert.throws(function() {
     registry.serialize(wordSmiths);
@@ -50,7 +50,7 @@ test(`it can sideload an empty collection`, function(assert) {
     })
   });
 
-  let result = registry.serialize(this.schema.wordSmith.all());
+  let result = registry.serialize(this.schema.wordSmiths.all());
 
   assert.deepEqual(result, {
     wordSmiths: []
@@ -66,7 +66,7 @@ test(`it can sideload a collection with a has-many relationship`, function(asser
     })
   });
 
-  let wordSmiths = this.schema.wordSmith.all();
+  let wordSmiths = this.schema.wordSmiths.all();
   let result = registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
@@ -94,7 +94,7 @@ test(`it can sideload a collection with a chain of has-many relationships`, func
     })
   });
 
-  let wordSmiths = this.schema.wordSmith.all();
+  let wordSmiths = this.schema.wordSmiths.all();
   let result = registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
@@ -125,7 +125,7 @@ test(`it avoids circularity when serializing a collection`, function(assert) {
     })
   });
 
-  let wordSmiths = this.schema.wordSmith.all();
+  let wordSmiths = this.schema.wordSmiths.all();
   let result = registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
@@ -150,7 +150,7 @@ test(`it can sideload a collection with a belongs-to relationship`, function(ass
     })
   });
 
-  let blogPosts = this.schema.blogPost.all();
+  let blogPosts = this.schema.blogPosts.all();
   let result = registry.serialize(blogPosts);
 
   assert.deepEqual(result, {
@@ -178,7 +178,7 @@ test(`it can sideload a collection with a chain of belongs-to relationships`, fu
     })
   });
 
-  let fineComments = this.schema.fineComment.all();
+  let fineComments = this.schema.fineComments.all();
   let result = registry.serialize(fineComments);
 
   assert.deepEqual(result, {
@@ -202,7 +202,7 @@ test(`it skips an empty belongs-to relationship`, function(assert) {
     })
   });
 
-  let foo1 = this.schema.foo.create({ name: 'test foo' });
+  let foo1 = this.schema.foos.create({ name: 'test foo' });
   let result = registry.serialize(foo1);
 
   assert.deepEqual(result, {
@@ -210,4 +210,3 @@ test(`it skips an empty belongs-to relationship`, function(assert) {
       { id: '1', name: 'test foo', barId: null }
   });
 });
-

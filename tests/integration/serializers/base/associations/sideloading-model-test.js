@@ -7,13 +7,13 @@ module('Integration | Serializers | Base | Associations | Sideloading Models', {
   beforeEach() {
     this.schema = schemaHelper.setup();
 
-    let wordSmith = this.schema.wordSmith.create({ name: 'Link' });
+    let wordSmith = this.schema.wordSmiths.create({ name: 'Link' });
     let blogPost = wordSmith.createBlogPost({ title: 'Lorem' });
     blogPost.createFineComment({ text: 'pwned' });
 
     wordSmith.createBlogPost({ title: 'Ipsum' });
 
-    this.schema.wordSmith.create({ name: 'Zelda' });
+    this.schema.wordSmiths.create({ name: 'Zelda' });
 
     this.BaseSerializer = Serializer.extend({
       embed: false
@@ -33,7 +33,7 @@ test(`it throws an error if embed is false and root is false`, function(assert) 
     })
   });
 
-  let link = this.schema.wordSmith.find(1);
+  let link = this.schema.wordSmiths.find(1);
   assert.throws(function() {
     registry.serialize(link);
   }, /disables the root/);
@@ -48,7 +48,7 @@ test(`it can sideload a model with a has-many relationship`, function(assert) {
     })
   });
 
-  let link = this.schema.wordSmith.find(1);
+  let link = this.schema.wordSmiths.find(1);
   let result = registry.serialize(link);
 
   assert.deepEqual(result, {
@@ -75,7 +75,7 @@ test(`it can sideload a model with a chain of has-many relationships`, function(
     })
   });
 
-  let link = this.schema.wordSmith.find(1);
+  let link = this.schema.wordSmiths.find(1);
   let result = registry.serialize(link);
 
   assert.deepEqual(result, {
@@ -105,7 +105,7 @@ test(`it avoids circularity when serializing a model`, function(assert) {
     })
   });
 
-  let link = this.schema.wordSmith.find(1);
+  let link = this.schema.wordSmiths.find(1);
   let result = registry.serialize(link);
 
   assert.deepEqual(result, {
@@ -129,7 +129,7 @@ test(`it can sideload a model with a belongs-to relationship`, function(assert) 
     })
   });
 
-  let blogPost = this.schema.blogPost.find(1);
+  let blogPost = this.schema.blogPosts.find(1);
   let result = registry.serialize(blogPost);
 
   assert.deepEqual(result, {
@@ -153,7 +153,7 @@ test(`it can sideload a model with a chain of belongs-to relationships`, functio
     })
   });
 
-  let fineComment = this.schema.fineComment.find(1);
+  let fineComment = this.schema.fineComments.find(1);
   let result = registry.serialize(fineComment);
 
   assert.deepEqual(result, {

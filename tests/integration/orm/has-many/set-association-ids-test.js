@@ -1,7 +1,7 @@
 import HasManyHelper from './has-many-helper';
 import {module, test} from 'qunit';
 
-module('Integration | Schema | hasMany #setAssociationIds');
+module('Integration | ORM | hasMany #setAssociationIds');
 
 HasManyHelper.forEachScenario((scenario) => {
   test(`${scenario.title} can update its associationIds to a list of saved child ids`, function(assert) {
@@ -12,7 +12,7 @@ HasManyHelper.forEachScenario((scenario) => {
     user[idsAccessor] = [savedHomeAddress.id];
     savedHomeAddress.reload();
 
-    assert.deepEqual(user[accessor][0], savedHomeAddress);
+    assert.deepEqual(user[accessor].models[0], savedHomeAddress);
     homeAddresses.forEach(function(homeAddress) {
       if (homeAddress.isSaved()) {
         homeAddress.reload();
@@ -39,7 +39,8 @@ HasManyHelper.forEachScenario((scenario) => {
 
     user[idsAccessor] = [];
 
-    assert.equal(user[accessor].length, 0);
+    assert.equal(user[accessor].models.length, 0);
+
     homeAddresses.forEach(function(homeAddress) {
       if (homeAddress.isSaved()) {
         homeAddress.reload();

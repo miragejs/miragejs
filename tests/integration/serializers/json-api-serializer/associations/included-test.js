@@ -8,13 +8,13 @@ module('Integration | Serializers | JSON API Serializer | Associations | Include
   beforeEach() {
     this.schema = schemaHelper.setup();
 
-    const smith = this.schema.wordSmith.create();
+    const smith = this.schema.wordSmiths.create();
     const post = smith.createBlogPost();
     post.createFineComment();
     post.createFineComment();
-    this.schema.blogPost.create();
+    this.schema.blogPosts.create();
 
-    const foo = this.schema.foo.create();
+    const foo = this.schema.foos.create();
     const bar = foo.createBar();
     foo.save();
     const baz = bar.createBaz();
@@ -47,7 +47,7 @@ test(`model: it can include relationships specified by the include query param`,
     application: JsonApiSerializer
   });
 
-  const post = this.schema.blogPost.find(1);
+  const post = this.schema.blogPosts.find(1);
   const request = {
     queryParams: {
       include: 'word-smith,fine-comments'
@@ -117,7 +117,7 @@ test(`model: it can include relationships specified by a combination of the incl
     })
   });
 
-  const post = this.schema.blogPost.find(1);
+  const post = this.schema.blogPosts.find(1);
   const request = {
     queryParams: {
       include: 'fine-comments'
@@ -175,7 +175,7 @@ test(`model: it can include relationships specified by a combination of the incl
     })
   });
 
-  const post = this.schema.blogPost.find(1);
+  const post = this.schema.blogPosts.find(1);
   const request = {
     queryParams: {
       include: 'word-smith'
@@ -222,7 +222,7 @@ test(`collection: it can include relationships specified by the include query pa
     application: JsonApiSerializer
   });
 
-  const post = this.schema.blogPost.find([1, 2]);
+  const post = this.schema.blogPosts.find([1, 2]);
   const request = {
     queryParams: {
       include: 'word-smith,fine-comments'
@@ -301,7 +301,7 @@ test(`dot-paths in include query params include query param`, function(assert) {
     application: JsonApiSerializer
   });
 
-  const foo = this.schema.foo.find(1);
+  const foo = this.schema.foos.find(1);
   const request = {
     queryParams: {
       include: 'bar.baz.quuxes.zomgs.lol'

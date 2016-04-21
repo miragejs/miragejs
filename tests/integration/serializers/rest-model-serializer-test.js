@@ -19,11 +19,11 @@ module('Integration | Serializer | RestSerializer', {
       })
     });
 
-    let link = this.schema.wordSmith.create({ name: 'Link', age: 123 });
+    let link = this.schema.wordSmiths.create({ name: 'Link', age: 123 });
     link.createBlogPost({ title: 'Lorem' });
     link.createBlogPost({ title: 'Ipsum' });
 
-    this.schema.wordSmith.create({ name: 'Zelda', age: 230 });
+    this.schema.wordSmiths.create({ name: 'Zelda', age: 230 });
 
     this.registry = new SerializerRegistry(this.schema, {
       application: RestSerializer,
@@ -40,7 +40,7 @@ module('Integration | Serializer | RestSerializer', {
 });
 
 test('it sideloads associations and camel-cases relationships and attributes correctly for a model', function(assert) {
-  let link = this.schema.wordSmith.find(1);
+  let link = this.schema.wordSmiths.find(1);
   let result = this.registry.serialize(link);
 
   assert.deepEqual(result, {

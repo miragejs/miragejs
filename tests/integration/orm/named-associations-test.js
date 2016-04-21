@@ -4,7 +4,7 @@ import Model from 'ember-cli-mirage/orm/model';
 import Db from 'ember-cli-mirage/db';
 import { hasMany, belongsTo } from 'ember-cli-mirage';
 
-module('Integration | Schema | Named associations test');
+module('Integration | ORM | Named associations test');
 
 test('schemas with a single hasMany have correct foreign keys', function(assert) {
   let schema = new Schema(new Db(), {
@@ -18,7 +18,7 @@ test('schemas with a single hasMany have correct foreign keys', function(assert)
   assert.deepEqual(schema._registry.user.foreignKeys, []);
   assert.deepEqual(schema._registry.project.foreignKeys, ['userId']);
 
-  let user = schema.user.create();
+  let user = schema.users.create();
   let project = user.createProject();
 
   assert.ok(user);
@@ -52,7 +52,7 @@ test('schemas with a single belongsTo have correct foreign keys', function(asser
   assert.deepEqual(schema._registry.user.foreignKeys, []);
   assert.deepEqual(schema._registry.project.foreignKeys, ['userId']);
 
-  let project = schema.project.create();
+  let project = schema.projects.create();
   let user = project.createUser();
 
   assert.ok(user);
@@ -71,7 +71,7 @@ test('schemas with a single belongsTo with a different property name have correc
   assert.deepEqual(schema._registry.user.foreignKeys, []);
   assert.deepEqual(schema._registry.project.foreignKeys, ['ownerId']);
 
-  let project = schema.project.create();
+  let project = schema.projects.create();
   let user = project.createOwner();
 
   assert.ok(user);
@@ -92,7 +92,7 @@ test('schemas with a single hasMany and belongsTo have correct foreign keys', fu
   assert.deepEqual(schema._registry.user.foreignKeys, []);
   assert.deepEqual(schema._registry.project.foreignKeys, ['userId']);
 
-  let project = schema.project.create();
+  let project = schema.projects.create();
   let user = project.createUser();
 
   assert.ok(user);
@@ -120,7 +120,7 @@ test('complex schemas have correct foreign keys', function(assert) {
   assert.deepEqual(schema._registry.project.foreignKeys, ['userId']);
   assert.deepEqual(schema._registry.task.foreignKeys, ['userId', 'projectId']);
 
-  let user = schema.user.create();
+  let user = schema.users.create();
   let project = user.createProject();
   let task = user.createTask();
 
@@ -141,7 +141,7 @@ test('foreign keys should be named appropriately for multiword properties', func
   assert.deepEqual(schema._registry.author.foreignKeys, []);
   assert.deepEqual(schema._registry.post.foreignKeys, ['wordSmithId']);
 
-  let post = schema.post.create();
+  let post = schema.posts.create();
   let wordSmith = post.createWordSmith();
 
   assert.ok(post);
@@ -160,7 +160,7 @@ test('foreign keys should be named appropriately for multiword model names', fun
   assert.deepEqual(schema._registry.wordSmith.foreignKeys, []);
   assert.deepEqual(schema._registry.post.foreignKeys, ['authorId']);
 
-  let post = schema.post.create();
+  let post = schema.posts.create();
   let author = post.createAuthor();
 
   assert.ok(post);
@@ -179,7 +179,7 @@ test('foreign keys should be named appropriately for multiword properties and mo
   assert.deepEqual(schema._registry.wordSmith.foreignKeys, []);
   assert.deepEqual(schema._registry.post.foreignKeys, ['brilliantWriterId']);
 
-  let post = schema.post.create();
+  let post = schema.posts.create();
   let brilliantWriter = post.createBrilliantWriter();
 
   assert.ok(post);
@@ -199,7 +199,7 @@ test('a model can have multiple belongsTo associations of the same type', functi
   assert.deepEqual(schema._registry.user.foreignKeys, []);
   assert.deepEqual(schema._registry.project.foreignKeys, ['adminId', 'specialUserId']);
 
-  let project = schema.project.create();
+  let project = schema.projects.create();
   let admin = project.createAdmin();
   let specialUser = project.createSpecialUser();
 

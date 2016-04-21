@@ -25,6 +25,7 @@ function createHandler({ verb, schema, serializerOrRegistry, path, rawHandler, o
   let handler;
   let args = [ schema, serializerOrRegistry, rawHandler, path, options ];
   let type = typeOf(rawHandler);
+
   if (type === 'function') {
     handler = new FunctionHandler(...args);
   } else if (type === 'object') {
@@ -52,7 +53,7 @@ export default class RouteHandler {
 
   handle(request) {
     let mirageResponse = this._getMirageResponseForRequest(request);
-    let serializedMirageResponse = this._serialize(mirageResponse, request);
+    let serializedMirageResponse = this.serialize(mirageResponse, request);
 
     return serializedMirageResponse.toRackResponse();
   }
@@ -60,6 +61,14 @@ export default class RouteHandler {
   _getMirageResponseForRequest(request) {
     let response;
     try {
+      /*
+       We need to do this for the #serialize convenience method. Probably is
+       a better way.
+     */
+      if (this.handler instanceof FunctionHandler) {
+        this.handler.setRequest(request);
+      }
+
       response = this.handler.handle(request);
     } catch(e) {
       if (e instanceof MirageError) {
@@ -99,7 +108,7 @@ export default class RouteHandler {
     return code;
   }
 
-  _serialize(mirageResponse, request) {
+  serialize(mirageResponse, request) {
     mirageResponse.data = this.serializerOrRegistry.serialize(mirageResponse.data, request);
     return mirageResponse;
   }

@@ -7,13 +7,13 @@ module('Integration | Serializers | JSON API Serializer | Associations | Collect
   beforeEach() {
     this.schema = schemaHelper.setup();
 
-    let link = this.schema.wordSmith.create({ firstName: 'Link' });
+    let link = this.schema.wordSmiths.create({ firstName: 'Link' });
     let blogPost = link.createBlogPost({ title: 'Lorem' });
     blogPost.createFineComment({ text: 'pwned' });
 
     link.createBlogPost({ title: 'Ipsum' });
 
-    this.schema.wordSmith.create({ firstName: 'Zelda' });
+    this.schema.wordSmiths.create({ firstName: 'Zelda' });
   },
   afterEach() {
     this.schema.db.emptyData();
@@ -28,7 +28,7 @@ test(`it can serialize a collection with a has-many relationship`, function(asse
     })
   });
 
-  let wordSmiths = this.schema.wordSmith.all();
+  let wordSmiths = this.schema.wordSmiths.all();
   let result = registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
@@ -109,7 +109,7 @@ test(`it can serialize a collection with a chain of has-many relationships`, fun
     })
   });
 
-  let wordSmiths = this.schema.wordSmith.all();
+  let wordSmiths = this.schema.wordSmiths.all();
   let result = registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
@@ -199,7 +199,7 @@ test(`it can serialize a collection with a belongs-to relationship`, function(as
     })
   });
 
-  let blogPosts = this.schema.blogPost.all();
+  let blogPosts = this.schema.blogPosts.all();
   let result = registry.serialize(blogPosts);
 
   assert.deepEqual(result, {
@@ -268,7 +268,7 @@ test(`it can serialize a collection with a chain of belongs-to relationships`, f
     })
   });
 
-  let fineComments = this.schema.fineComment.all();
+  let fineComments = this.schema.fineComments.all();
   let result = registry.serialize(fineComments);
 
   assert.deepEqual(result, {
@@ -340,7 +340,7 @@ test(`it can serialize a collection of models that have both belongs-to and has-
     })
   });
 
-  let blogPost = this.schema.blogPost.find(1);
+  let blogPost = this.schema.blogPosts.find(1);
   let result = registry.serialize(blogPost);
 
   assert.deepEqual(result, {

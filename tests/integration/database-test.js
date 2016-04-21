@@ -30,7 +30,7 @@ module('Integration | Database', {
 test(`[regression] When loaded, fixture files correctly update the database's autoincrement id`, function(assert) {
   this.server.loadFixtures();
 
-  this.server.schema.author.create({});
+  this.server.schema.authors.create({});
 
   let { authors } = this.server.db;
   assert.equal(authors.length, 2);

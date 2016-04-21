@@ -7,13 +7,13 @@ module('Integration | Serializers | JSON API Serializer | Associations | Model',
   beforeEach() {
     this.schema = schemaHelper.setup();
 
-    let link = this.schema.wordSmith.create({ firstName: 'Link' });
+    let link = this.schema.wordSmiths.create({ firstName: 'Link' });
     let blogPost = link.createBlogPost({ title: 'Lorem' });
     blogPost.createFineComment({ text: 'pwned' });
 
     link.createBlogPost({ title: 'Ipsum' });
 
-    this.schema.wordSmith.create({ name: 'Zelda' });
+    this.schema.wordSmiths.create({ name: 'Zelda' });
   },
   afterEach() {
     this.schema.db.emptyData();
@@ -28,7 +28,7 @@ test(`it can include a has many relationship`, function(assert) {
     })
   });
 
-  let link = this.schema.wordSmith.find(1);
+  let link = this.schema.wordSmiths.find(1);
   let result = registry.serialize(link);
 
   assert.deepEqual(result, {
@@ -104,7 +104,7 @@ test(`it can include a chain of has-many relationships`, function(assert) {
     })
   });
 
-  let link = this.schema.wordSmith.find(1);
+  let link = this.schema.wordSmiths.find(1);
   let result = registry.serialize(link);
 
   assert.deepEqual(result, {
@@ -189,7 +189,7 @@ test(`it can embed a belongs-to relationship`, function(assert) {
     })
   });
 
-  let blogPost = this.schema.blogPost.find(1);
+  let blogPost = this.schema.blogPosts.find(1);
   let result = registry.serialize(blogPost);
 
   assert.deepEqual(result, {
@@ -250,8 +250,8 @@ test(`it gracefully handles null belongs-to relationship`, function(assert) {
     })
   });
 
-  this.schema.blogPost.create({ title: 'Lorem3' });
-  let blogPost = this.schema.blogPost.find(3);
+  this.schema.blogPosts.create({ title: 'Lorem3' });
+  let blogPost = this.schema.blogPosts.find(3);
   let result = registry.serialize(blogPost);
 
   assert.deepEqual(result, {
@@ -281,7 +281,7 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
     })
   });
 
-  let fineComment = this.schema.fineComment.find(1);
+  let fineComment = this.schema.fineComments.find(1);
   let result = registry.serialize(fineComment);
 
   assert.deepEqual(result, {
@@ -360,7 +360,7 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
     })
   });
 
-  let wordSmith = this.schema.wordSmith.find(1);
+  let wordSmith = this.schema.wordSmiths.find(1);
   let result = registry.serialize(wordSmith);
 
   assert.deepEqual(result, {
@@ -433,7 +433,7 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
     })
   });
 
-  let wordSmith = this.schema.wordSmith.find(1);
+  let wordSmith = this.schema.wordSmiths.find(1);
   let result = registry.serialize(wordSmith);
 
   assert.deepEqual(result, {

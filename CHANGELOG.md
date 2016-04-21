@@ -4,11 +4,49 @@ In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
 ## master
 
+Update notes:
+  - schema model classes are pluralized. So
+
+  ```js
+  schema.user.all()
+  schema.user.find(1)
+  ```
+
+  is now
+
+  ```js
+  schema.users.all()
+  schema.users.find(1)
+  ```
+
+  and so on. The upgrade is static so should be a relatively straightforward findAndReplace.
+
+  - Breaking changes on ORM/Collection:
+
+    - Added .models property to Collection
+
+    - Collection no longer attempts to mimic an array. This turned to be confusing, since you can't really subclass arrays in JavaScript, and it would sometimes be compatible with functions that operate on arrays, but sometimes not.
+
+    So, you can no longer use the array accessor on a collection, meaning the following won't work:
+
+    ```js
+    let authors = schema.authors.all();
+
+    // The following no longer work
+    authors[1];
+    authors.length;
+    authors.push(model);
+    authors.map(f);
+    authors.forEach(f);
+    authors.reduce(f);
+    authors.toArray(); // use authors.models
+    ```
+
 ## 0.2.0.beta-8
 
-Update notes: 
+Update notes:
 
-Changes: 
+Changes:
 
   - [FEATURE] #622 Add `links` method to JSONAPISerializer @richmolj
   - [FEATURE] #655 Add importable rest-serializer @rondale-sc
@@ -31,7 +69,7 @@ Changes:
 
 Update notes: None.
 
-Changes: 
+Changes:
 
  - [BUGFIX] #585 Ensure DB autoincrement ids account for string ints @samselikoff
  - [BUGFIX] #592 GET shorthands 404s for nonexistant singular resources @samselikoff
@@ -40,7 +78,7 @@ Changes:
 
 Update notes: None.
 
-Changes: 
+Changes:
 
  - [ENHANCEMENT] Allow files to be excluded from non-prodution builds Danail Nachev
  - [ENHANCEMENT] #552 Add default passthroughs @anulman
@@ -48,7 +86,7 @@ Changes:
  - [ENHANCEMENT] #561 Ensure foreign keys are picked up in shorthands @abuiles
  - [ENHANCEMENT] #546 Add named associations @samselikoff
  - [BUGFIX] #548 Shorthands can read ID from json:api request body @lkhaas
- - General cleanup and updates @ef4 @abuiles @elwayman02 
+ - General cleanup and updates @ef4 @abuiles @elwayman02
 
 ## 0.2.0.beta-4
 
@@ -56,7 +94,7 @@ Update notes: None.
 
 Changes:
 
- - [ENHANCEMENT] #501 Adds ModelClass.first @lependu 
+ - [ENHANCEMENT] #501 Adds ModelClass.first @lependu
  - [BUGFIX] #543 Ensure Mirage works within Addons @cibernox
  - [BUGFIX] #535 Include original message on rethrow errors @hamled
  - [BUGFIX] #515 Ensure serializer#serialize always receives request @2468ben

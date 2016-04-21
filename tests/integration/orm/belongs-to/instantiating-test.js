@@ -6,7 +6,7 @@ import Db from 'ember-cli-mirage/db';
 import {module, test} from 'qunit';
 
 var schema, link;
-module('Integration | Schema | belongsTo instantiating with params', {
+module('Integration | ORM | belongsTo instantiating with params', {
   beforeEach() {
     let db = new Db({
       users: [
@@ -26,12 +26,12 @@ module('Integration | Schema | belongsTo instantiating with params', {
       address: Address
     });
 
-    link = schema.user.find(1);
+    link = schema.users.find(1);
   }
 });
 
 test('the child accepts a saved parents id', function(assert) {
-  let address = schema.address.new({ userId: 1 });
+  let address = schema.addresses.new({ userId: 1 });
 
   assert.equal(address.userId, 1);
   assert.deepEqual(address.user, link);
@@ -40,12 +40,12 @@ test('the child accepts a saved parents id', function(assert) {
 
 test('the child errors if the parent id doesnt exist', function(assert) {
   assert.throws(function() {
-    schema.address.new({ userId: 2 });
+    schema.addresses.new({ userId: 2 });
   }, /Couldn't find user/);
 });
 
 test('the child accepts a null parent id', function(assert) {
-  let address = schema.address.new({ userId: null });
+  let address = schema.addresses.new({ userId: null });
 
   assert.equal(address.userId, null);
   assert.deepEqual(address.user, null);
@@ -53,7 +53,7 @@ test('the child accepts a null parent id', function(assert) {
 });
 
 test('the child accepts a saved parent model', function(assert) {
-  let address = schema.address.new({ user: link });
+  let address = schema.addresses.new({ user: link });
 
   assert.equal(address.userId, 1);
   assert.deepEqual(address.user, link);
@@ -61,8 +61,8 @@ test('the child accepts a saved parent model', function(assert) {
 });
 
 test('the child accepts a new parent model', function(assert) {
-  let zelda = schema.user.new({ name: 'Zelda' });
-  let address = schema.address.new({ user: zelda });
+  let zelda = schema.users.new({ name: 'Zelda' });
+  let address = schema.addresses.new({ user: zelda });
 
   assert.equal(address.userId, null);
   assert.deepEqual(address.user, zelda);
@@ -70,7 +70,7 @@ test('the child accepts a new parent model', function(assert) {
 });
 
 test('the child accepts a null parent model', function(assert) {
-  let address = schema.address.new({ user: null });
+  let address = schema.addresses.new({ user: null });
 
   assert.equal(address.userId, null);
   assert.deepEqual(address.user, null);
@@ -78,7 +78,7 @@ test('the child accepts a null parent model', function(assert) {
 });
 
 test('the child accepts a parent model and id', function(assert) {
-  let address = schema.address.new({ user: link, userId: 1 });
+  let address = schema.addresses.new({ user: link, userId: 1 });
 
   assert.equal(address.userId, '1');
   assert.deepEqual(address.user, link);
@@ -86,7 +86,7 @@ test('the child accepts a parent model and id', function(assert) {
 });
 
 test('the child accepts no reference to a parent id or model as empty obj', function(assert) {
-  let address = schema.address.new({});
+  let address = schema.addresses.new({});
 
   assert.equal(address.userId, null);
   assert.deepEqual(address.user, null);
@@ -94,7 +94,7 @@ test('the child accepts no reference to a parent id or model as empty obj', func
 });
 
 test('the child accepts no reference to a parent id or model', function(assert) {
-  let address = schema.address.new();
+  let address = schema.addresses.new();
 
   assert.equal(address.userId, null);
   assert.deepEqual(address.user, null);

@@ -1,77 +1,54 @@
-import _isArray from 'lodash/lang/isArray';
+import _invoke from 'lodash/collection/invoke';
 import assert from '../assert';
 
-const { forEach, filter, reduce, push, map, slice } = Array.prototype;
 /*
   An array of models, returned from one of the schema query
   methods (all, find, where). Knows how to update and destroy its models.
 */
-
 export default class Collection {
-  constructor(modelName, ...args) {
+  constructor(modelName, models = []) {
     assert(
       modelName && typeof modelName === 'string',
       'You must pass a `modelName` into a Collection'
     );
 
     this.modelName = modelName;
-
-    if (_isArray(args[0])) {
-      args = args[0];
-    }
-    this.length = 0;
-    if (args.length) {
-      push.apply(this, args);
-    }
+    this.models = models;
   }
 
-  update(key, val) {
-    forEach.call(this, (model) => model.update(key, val));
+  update(...args) {
+    _invoke(this.models, 'update', ...args);
+
     return this;
   }
 
   destroy() {
-    forEach.call(this, (model) => model.destroy());
+    _invoke(this.models, 'destroy');
+
     return this;
   }
 
   save() {
-    forEach.call(this, (model) => model.save());
+    _invoke(this.models, 'save');
+
     return this;
   }
 
   reload() {
-    forEach.call(this, (model) => model.reload());
+    _invoke(this.models, 'reload');
+
     return this;
   }
 
-  push() {
-    push.apply(this, arguments);
-  }
+  filter(f) {
+    let filteredModels = this.models.filter(f);
 
-  map() {
-    return map.apply(this, arguments);
-  }
-
-  forEach() {
-    forEach.apply(this, arguments);
-  }
-
-  toArray() {
-    return slice.apply(this);
-  }
-
-  reduce() {
-    return reduce.apply(this, arguments);
-  }
-
-  filter() {
-    let models = filter.apply(this, arguments);
-    return new Collection(this.modelName, models);
+    return new Collection(this.modelName, filteredModels);
   }
 
   mergeCollection(collection) {
-    collection.forEach((model) => this.push(model));
+    this.models = this.models.concat(collection.models);
+
     return this;
   }
 }

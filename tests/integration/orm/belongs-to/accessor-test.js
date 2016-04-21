@@ -5,7 +5,7 @@ import Schema from 'ember-cli-mirage/orm/schema';
 import Db from 'ember-cli-mirage/db';
 import {module, test} from 'qunit';
 
-module('Integration | Schema | belongsTo #accessor', {
+module('Integration | ORM | belongsTo #accessor', {
   beforeEach() {
     this.helper = new BelongsToHelper();
   }
@@ -48,6 +48,6 @@ test('belongsTo accessors works when foreign key is present but falsy', function
 
   db.users.insert({ id: 0, name: 'some user' });
   let insertedAddress = db.addresses.insert({ name: 'foo', userId: 0 });
-  let relatedUser = schema.address.find(insertedAddress.id).user;
+  let relatedUser = schema.addresses.find(insertedAddress.id).user;
   assert.equal('some user', relatedUser ? relatedUser.name : undefined);
 });

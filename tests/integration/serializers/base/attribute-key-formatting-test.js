@@ -21,7 +21,7 @@ module('Integration | Serializers | Base | Attribute Key Formatting', {
 });
 
 test(`keyForAttribute formats the attributes of a model`, function(assert) {
-  let wordSmith = this.schema.wordSmith.create({
+  let wordSmith = this.schema.wordSmiths.create({
     id: 1,
     'first-name': 'Link',
     'last-name': 'Jackson',
@@ -41,9 +41,9 @@ test(`keyForAttribute formats the attributes of a model`, function(assert) {
 });
 
 test(`keyForAttribute also formats the models in a collections`, function(assert) {
-  this.schema.wordSmith.create({ id: 1, 'first-name': 'Link', 'last-name': 'Jackson' });
-  this.schema.wordSmith.create({ id: 2, 'first-name': 'Zelda', 'last-name': 'Brown' });
-  let wordSmiths = this.schema.wordSmith.all();
+  this.schema.wordSmiths.create({ id: 1, 'first-name': 'Link', 'last-name': 'Jackson' });
+  this.schema.wordSmiths.create({ id: 2, 'first-name': 'Zelda', 'last-name': 'Brown' });
+  let wordSmiths = this.schema.wordSmiths.all();
 
   let result = this.registry.serialize(wordSmiths);
 

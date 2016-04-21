@@ -20,7 +20,7 @@ test(`keyForAttribute formats the attributes of a model`, function(assert) {
       keyForAttribute: underscore
     })
   });
-  let wordSmith = this.schema.wordSmith.create({
+  let wordSmith = this.schema.wordSmiths.create({
     id: 1,
     firstName: 'Link',
     lastName: 'Jackson',
@@ -54,9 +54,9 @@ test(`keyForAttribute also formats the models in a collections`, function(assert
     })
   });
 
-  this.schema.wordSmith.create({ id: 1, 'firstName': 'Link', 'lastName': 'Jackson' });
-  this.schema.wordSmith.create({ id: 2, 'firstName': 'Zelda', 'lastName': 'Brown' });
-  let wordSmiths = this.schema.wordSmith.all();
+  this.schema.wordSmiths.create({ id: 1, 'firstName': 'Link', 'lastName': 'Jackson' });
+  this.schema.wordSmiths.create({ id: 2, 'firstName': 'Zelda', 'lastName': 'Brown' });
+  let wordSmiths = this.schema.wordSmiths.all();
 
   let result = registry.serialize(wordSmiths);
 
@@ -99,7 +99,7 @@ test(`keyForRelationship works`, function(assert) {
       include: ['blogPosts']
     })
   });
-  let wordSmith = this.schema.wordSmith.create({
+  let wordSmith = this.schema.wordSmiths.create({
     id: 1,
     firstName: 'Link',
     lastName: 'Jackson',

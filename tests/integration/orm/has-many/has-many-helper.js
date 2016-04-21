@@ -52,13 +52,13 @@ class HasManyHelper {
   savedParentNoChildren() {
     let insertedUser = this.db[pluralize(this.ownModel)].insert({ name: 'Link' });
 
-    return [this.schema[this.ownModel].find(insertedUser.id), []];
+    return [this.schema[pluralize(this.ownModel)].find(insertedUser.id), []];
   }
 
   savedParentNewChildren() {
     let insertedUser = this.db[pluralize(this.ownModel)].insert({ name: 'Link' });
 
-    let user = this.schema[this.ownModel].find(insertedUser.id);
+    let user = this.schema[pluralize(this.ownModel)].find(insertedUser.id);
     let newHomeAddress = user[`new${singularize(capitalize(this.ownKey))}`]();
 
     return [user, [newHomeAddress]];
@@ -68,8 +68,8 @@ class HasManyHelper {
     let insertedUser = this.db[pluralize(this.ownModel)].insert({ name: 'Link' });
     let insertedHomeAddress = this.db[pluralize(this.otherModel)].insert({ name: '123 Hyrule Way', [`${camelize(this.otherKey)}Id`]: insertedUser.id });
 
-    let user = this.schema[this.ownModel].find(insertedUser.id);
-    let homeAddress = this.schema[this.otherModel].find(insertedHomeAddress.id);
+    let user = this.schema[pluralize(this.ownModel)].find(insertedUser.id);
+    let homeAddress = this.schema[pluralize(this.otherModel)].find(insertedHomeAddress.id);
 
     return [user, [homeAddress]];
   }
@@ -78,21 +78,21 @@ class HasManyHelper {
     let insertedUser = this.db[pluralize(this.ownModel)].insert({ name: 'Link' });
     let insertedHomeAddress = this.db[pluralize(this.otherModel)].insert({ name: '123 Hyrule Way', [`${camelize(this.otherKey)}Id`]: insertedUser.id });
 
-    let user = this.schema[this.ownModel].find(insertedUser.id);
-    let savedHomeAddress = this.schema[this.otherModel].find(insertedHomeAddress.id);
+    let user = this.schema[pluralize(this.ownModel)].find(insertedUser.id);
+    let savedHomeAddress = this.schema[pluralize(this.otherModel)].find(insertedHomeAddress.id);
     let newHomeAddress = user[`new${singularize(capitalize(this.ownKey))}`]();
 
     return [user, [savedHomeAddress, newHomeAddress]];
   }
 
   newParentNoChildren() {
-    let user = this.schema[this.ownModel].new();
+    let user = this.schema[pluralize(this.ownModel)].new();
 
     return [user, []];
   }
 
   newParentNewChildren() {
-    let user = this.schema[this.ownModel].new();
+    let user = this.schema[pluralize(this.ownModel)].new();
     let newHomeAddress = user[`new${singularize(capitalize(this.ownKey))}`]();
 
     return [user, [newHomeAddress]];
@@ -100,18 +100,18 @@ class HasManyHelper {
 
   newParentSavedChildren() {
     let insertedHomeAddress = this.db[pluralize(this.otherModel)].insert({ name: '123 Hyrule Way' });
-    let savedHomeAddress = this.schema[this.otherModel].find(insertedHomeAddress.id);
-    let newUser = this.schema[this.ownModel].new({ [this.ownKey]: [savedHomeAddress] });
+    let savedHomeAddress = this.schema[pluralize(this.otherModel)].find(insertedHomeAddress.id);
+    let newUser = this.schema[pluralize(this.ownModel)].new({ [this.ownKey]: [savedHomeAddress] });
 
     return [newUser, [savedHomeAddress]];
   }
 
   newParentMixedChildren() {
     let insertedHomeAddress = this.db[pluralize(this.otherModel)].insert({ name: '123 Hyrule Way' });
-    let savedHomeAddress = this.schema[this.otherModel].find(insertedHomeAddress.id);
-    let newHomeAddress = this.schema[this.otherModel].new();
+    let savedHomeAddress = this.schema[pluralize(this.otherModel)].find(insertedHomeAddress.id);
+    let newHomeAddress = this.schema[pluralize(this.otherModel)].new();
 
-    let newUser = this.schema[this.ownModel].new({ [this.ownKey]: [savedHomeAddress, newHomeAddress] });
+    let newUser = this.schema[pluralize(this.ownModel)].new({ [this.ownKey]: [savedHomeAddress, newHomeAddress] });
 
     return [newUser, [savedHomeAddress, newHomeAddress]];
   }
@@ -121,11 +121,11 @@ class HasManyHelper {
   savedChild() {
     let insertedHomeAddress = this.db[pluralize(this.otherModel)].insert({ name: 'foo' });
 
-    return this.schema[this.otherModel].find(insertedHomeAddress.id);
+    return this.schema[pluralize(this.otherModel)].find(insertedHomeAddress.id);
   }
 
   newChild() {
-    return this.schema[this.otherModel].new({ name: 'Newbie' });
+    return this.schema[pluralize(this.otherModel)].new({ name: 'Newbie' });
   }
 
 }

@@ -1,7 +1,7 @@
 import BelongsToHelper from './belongs-to-helper';
 import {module, test} from 'qunit';
 
-module('Integration | Schema | belongsTo #newAssociation', {
+module('Integration | ORM | belongsTo #newAssociation', {
   beforeEach() {
     this.helper = new BelongsToHelper();
   }

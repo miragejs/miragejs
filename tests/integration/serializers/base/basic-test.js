@@ -2,6 +2,8 @@ import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import schemaHelper from '../schema-helper';
 import { module, test } from 'qunit';
 
+import _uniq from 'lodash/array/uniq';
+
 module('Integration | Serializers | Base | Basic', {
   beforeEach() {
     this.schema = schemaHelper.setup();
@@ -26,12 +28,12 @@ test('it returns arrays unaffected', function(assert) {
 });
 
 test(`it serializes a model by returning its attrs under a root`, function(assert) {
-  let wordSmith = this.schema.wordSmith.create({
+  let wordSmith = this.schema.wordSmiths.create({
     id: 1,
     name: 'Link'
   });
-
   let result = this.registry.serialize(wordSmith);
+
   assert.deepEqual(result, {
     wordSmith: {
       id: '1',
@@ -40,11 +42,11 @@ test(`it serializes a model by returning its attrs under a root`, function(asser
   });
 });
 
-test(`it serializes a collection of models by returning an array of their attrs under a puralized root`, function(assert) {
-  this.schema.wordSmith.create({ id: 1, name: 'Link' });
-  this.schema.wordSmith.create({ id: 2, name: 'Zelda' });
+test(`it serializes a collection of models by returning an array of their attrs under a pluralized root`, function(assert) {
+  this.schema.wordSmiths.create({ id: 1, name: 'Link' });
+  this.schema.wordSmiths.create({ id: 2, name: 'Zelda' });
 
-  let wordSmiths = this.schema.wordSmith.all();
+  let wordSmiths = this.schema.wordSmiths.all();
 
   let result = this.registry.serialize(wordSmiths);
 
@@ -57,10 +59,40 @@ test(`it serializes a collection of models by returning an array of their attrs 
 });
 
 test(`it can serialize an empty collection`, function(assert) {
-  let wordSmiths = this.schema.wordSmith.all();
+  let wordSmiths = this.schema.wordSmiths.all();
   let result = this.registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
     wordSmiths: []
   });
 });
+
+test(`it can serialize a homogenous array of models`, function(assert) {
+  let wordSmiths = this.schema.wordSmiths.all();
+  let result = this.registry.serialize(wordSmiths);
+
+  assert.deepEqual(result, {
+    wordSmiths: []
+  });
+});
+
+test('it can serialize a homogenous JS array of models', function(assert) {
+  this.schema.wordSmiths.create({ name: 'Sam' });
+  this.schema.wordSmiths.create({ name: 'Sam' });
+  this.schema.wordSmiths.create({ name: 'Ganondorf' });
+
+  let wordSmiths = this.schema.wordSmiths.all().models;
+  let uniqueNames = _uniq(wordSmiths, u => u.name);
+  let result = this.registry.serialize(uniqueNames);
+
+  assert.deepEqual(result, {
+    wordSmiths: [
+      { id: '1', name: 'Sam' },
+      { id: '3', name: 'Ganondorf' }
+    ]
+  });
+});
+
+// What should the behavior here be???
+// test('#serialize throws an error on an empty JS array', function(assert) {
+// });

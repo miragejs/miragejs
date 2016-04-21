@@ -1,7 +1,7 @@
 import HasManyHelper from './has-many-helper';
 import {module, test} from 'qunit';
 
-module('Integration | Schema | hasMany #setAssociation', {
+module('Integration | ORM | hasMany #setAssociation', {
   beforeEach() {
     this.helper = new HasManyHelper();
   }
@@ -15,7 +15,7 @@ HasManyHelper.forEachScenario((scenario) => {
     user[accessor] = [savedHomeAddress];
     savedHomeAddress.reload();
 
-    assert.deepEqual(user[accessor][0], savedHomeAddress);
+    assert.deepEqual(user[accessor].models[0], savedHomeAddress);
     homeAddresses.forEach(function(address) {
       if (address.isSaved()) {
         address.reload();
@@ -46,7 +46,7 @@ HasManyHelper.forEachScenario((scenario) => {
       address.reload();
     }
 
-    assert.deepEqual(user[accessor][0], address);
+    assert.deepEqual(user[accessor].models[0], address);
     homeAddresses.forEach(function(address) {
       if (address.isSaved()) {
         address.reload();
@@ -81,8 +81,8 @@ HasManyHelper.forEachScenario((scenario) => {
       newAddress.reload();
     }
 
-    assert.deepEqual(user[accessor][0], savedHomeAddress);
-    assert.deepEqual(user[accessor][1], newAddress);
+    assert.deepEqual(user[accessor].models[0], savedHomeAddress);
+    assert.deepEqual(user[accessor].models[1], newAddress);
     homeAddresses.forEach(function(address) {
       if (address.isSaved()) {
         address.reload();
@@ -112,7 +112,7 @@ HasManyHelper.forEachScenario((scenario) => {
 
     user[accessor] = [];
 
-    assert.equal(user[accessor].length, 0);
+    assert.equal(user[accessor].models.length, 0);
     homeAddresses.forEach(function(address) {
       if (address.isSaved()) {
         address.reload();

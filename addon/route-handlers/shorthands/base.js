@@ -1,6 +1,6 @@
 import _isArray from 'lodash/lang/isArray';
 import assert from 'ember-cli-mirage/assert';
-import { camelize, singularize, dasherize } from 'ember-cli-mirage/utils/inflector';
+import { camelize, singularize, dasherize, pluralize } from 'ember-cli-mirage/utils/inflector';
 
 export default class BaseShorthandRouteHandler {
 
@@ -13,12 +13,12 @@ export default class BaseShorthandRouteHandler {
 
     let type = _isArray(shorthand) ? 'array' : typeof shorthand;
     if (type === 'string') {
-      let modelClass = this.schema[camelize(singularize(shorthand))];
+      let modelClass = this.schema[pluralize(camelize(singularize(shorthand)))];
       this.handle = (request) => {
         return this.handleStringShorthand(request, modelClass);
       };
     } else if (type === 'array') {
-      let modelClasses = shorthand.map((modelName) => this.schema[camelize(singularize(modelName))]);
+      let modelClasses = shorthand.map((modelName) => this.schema[pluralize(camelize(singularize(modelName)))]);
       this.handle = (request) => {
         return this.handleArrayShorthand(request, modelClasses);
       };

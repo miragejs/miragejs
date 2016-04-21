@@ -9,7 +9,6 @@ import _get from 'lodash/object/get';
 import _trim from 'lodash/string/trim';
 import _isString from 'lodash/lang/isString';
 import _ from 'lodash';
-import assert from '../assert';
 
 function isCollection(object) {
   return object instanceof Collection;
@@ -17,9 +16,9 @@ function isCollection(object) {
 
 class JsonApiSerializer {
 
-  constructor(serializerMap, modelName, included=[], alreadySerialized={}) {
-    this.modelName = modelName;
-    this._serializerMap = serializerMap;
+  constructor(registry, type, included=[], alreadySerialized={}) {
+    this.registry = registry;
+    this.type = type;
     this.included = included;
     this.alreadySerialized = alreadySerialized;
   }
@@ -40,6 +39,26 @@ class JsonApiSerializer {
     return response;
   }
 
+  keyForAttribute(attr) {
+    return dasherize(attr);
+  }
+
+  keyForRelationship(key) {
+    return dasherize(key);
+  }
+
+  typeKeyForModel(model) {
+    return dasherize(pluralize(model.modelName));
+  }
+
+  normalize(json) {
+    return json;
+  }
+
+  toString() {
+    return `serializer:${this.type}`;
+  }
+
   _serializePrimaryModel(model, request) {
     this._augmentAlreadySerialized(model);
 
@@ -54,10 +73,10 @@ class JsonApiSerializer {
 
   _serializePrimaryCollection(collection, request) {
     let response = {
-      data: collection.map(model => this._resourceObjectFor(model, request))
+      data: collection.models.map(model => this._resourceObjectFor(model, request))
     };
 
-    collection.forEach(model => {
+    collection.models.forEach(model => {
       this._serializeRelationshipsFor(model, request);
     });
 
@@ -71,12 +90,12 @@ class JsonApiSerializer {
       let association = this._getRelatedWithPath(model, relationshipName);
 
       if (association instanceof Model) {
-        let serializer = this._serializerFor(association);
+        let serializer = this._serializerFor(association.modelName);
         serializer._serializeIncludedModel.call(serializer, association, request);
 
       } else if (association) {
         association.forEach(model => {
-          let serializer = this._serializerFor(model);
+          let serializer = this._serializerFor(model.modelName);
           serializer._serializeIncludedModel.call(serializer, model, request);
         });
       }
@@ -114,7 +133,7 @@ class JsonApiSerializer {
         }
 
         obj.relationships[relationshipKey] = {
-          data: relationship.map(model => {
+          data: relationship.models.map(model => {
             return {
               type: this.typeKeyForModel(model),
               id: model.id
@@ -143,7 +162,7 @@ class JsonApiSerializer {
   }
 
   _linkDataFor(model) {
-    let serializer = this._serializerFor(model);
+    let serializer = this._serializerFor(model.modelName);
     let linkData   = null;
     if (serializer && serializer.links) {
       linkData = serializer.links(model);
@@ -166,22 +185,6 @@ class JsonApiSerializer {
     if (linkData.related) {
       json.relationships[relationshipKey].links.related = { href: linkData.related };
     }
-  }
-
-  keyForAttribute(attr) {
-    return dasherize(attr);
-  }
-
-  keyForRelationship(key) {
-    return dasherize(key);
-  }
-
-  typeKeyForModel(model) {
-    return dasherize(pluralize(model.modelName));
-  }
-
-  normalize(json) {
-    return json;
   }
 
   _attrsForModel(model) {
@@ -216,26 +219,12 @@ class JsonApiSerializer {
     return formattedAttrs;
   }
 
-  // TODO: this method is duplicated. We should just use the one
-  // in serializer-registry, meaning we should pass in a ref to that
-  // object
-  _serializerFor(modelOrCollection) {
-    let camelizedModelName = camelize(modelOrCollection.modelName);
-    let ModelSerializer = this._serializerMap && (this._serializerMap[camelizedModelName] || this._serializerMap.application);
+  _serializerFor(type) {
 
-    /*
-      TODO: This check should exist within the Serializer class, when the logic is moved from the registry to the
-      individual serializers (see TODO above).
-    */
-    assert(
-      !ModelSerializer ||
-      ModelSerializer.prototype.embed ||
-      ModelSerializer.prototype.root ||
-      (new ModelSerializer() instanceof JsonApiSerializer),
-      'You cannot have a serializer that sideloads (embed: false) and disables the root (root: false).'
-    );
-
-    return ModelSerializer ? new ModelSerializer(this._serializerMap, modelOrCollection.modelName, this.included, this.alreadySerialized) : this.baseSerializer;
+    return this.registry.serializerFor(type, {
+      included: this.included,
+      alreadySerialized: this.alreadySerialized
+    });
   }
 
   _hasBeenSerialized(model) {
@@ -275,15 +264,11 @@ class JsonApiSerializer {
       .reduce((related, relationshipName) => {
         return _(related)
           .map(r => r.reload()[camelize(relationshipName)])
-          .map(r => isCollection(r) ? r.toArray() : r) // Turning Collections into Arrays for lodash to recognize
+          .map(r => isCollection(r) ? r.models : r) // Turning Collections into Arrays for lodash to recognize
           .flatten()
           .filter()
           .value();
       }, [parentModel]);
-  }
-
-  toString() {
-    return `serializer:${this.modelName}`;
   }
 }
 

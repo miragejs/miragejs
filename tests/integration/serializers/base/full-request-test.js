@@ -51,7 +51,7 @@ module('Integration | Serializers | Base | Full Request', {
 test('the appropriate serializer is used', function(assert) {
   assert.expect(1);
   let done = assert.async();
-  let author = this.server.schema.author.create({
+  let author = this.server.schema.authors.create({
     first: 'Link',
     last: 'of Hyrule',
     age: 323
@@ -61,7 +61,7 @@ test('the appropriate serializer is used', function(assert) {
   this.server.get('/authors/:id', function(schema, request) {
     let { id } = request.params;
 
-    return schema.author.find(id);
+    return schema.authors.find(id);
   });
 
   $.ajax({
@@ -84,7 +84,7 @@ test('the appropriate serializer is used', function(assert) {
 test('a response falls back to the application serializer, if it exists', function(assert) {
   assert.expect(1);
   let done = assert.async();
-  this.server.schema.post.create({
+  this.server.schema.posts.create({
     title: 'Lorem',
     date: '20001010'
   });
@@ -92,7 +92,7 @@ test('a response falls back to the application serializer, if it exists', functi
   this.server.get('/posts/:id', function(schema, request) {
     let { id } = request.params;
 
-    return schema.post.find(id);
+    return schema.posts.find(id);
   });
 
   $.ajax({
@@ -111,7 +111,7 @@ test('a response falls back to the application serializer, if it exists', functi
 test('serializer.include is invoked when it is a function', function(assert) {
   assert.expect(1);
   let done = assert.async();
-  let post = this.server.schema.post.create({
+  let post = this.server.schema.posts.create({
     title: 'Lorem',
     date: '20001010'
   });
@@ -121,7 +121,7 @@ test('serializer.include is invoked when it is a function', function(assert) {
 
   this.server.get('/comments/:id', function(schema, request) {
     let { id } = request.params;
-    return schema.comment.find(id);
+    return schema.comments.find(id);
   });
 
   $.ajax({

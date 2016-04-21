@@ -7,13 +7,13 @@ module('Integration | Serializers | Base | Associations | Embedded Collections',
   beforeEach() {
     this.schema = schemaHelper.setup();
 
-    let wordSmith = this.schema.wordSmith.create({ name: 'Link' });
+    let wordSmith = this.schema.wordSmiths.create({ name: 'Link' });
     let blogPost = wordSmith.createBlogPost({ title: 'Lorem' });
     blogPost.createFineComment({ text: 'pwned' });
 
     wordSmith.createBlogPost({ title: 'Ipsum' });
 
-    this.schema.wordSmith.create({ name: 'Zelda' });
+    this.schema.wordSmiths.create({ name: 'Zelda' });
 
     this.BaseSerializer = Serializer.extend({
       embed: true
@@ -33,7 +33,7 @@ test(`it can embed a collection with a has-many relationship`, function(assert) 
     })
   });
 
-  let wordSmiths = this.schema.wordSmith.all();
+  let wordSmiths = this.schema.wordSmiths.all();
   let result = registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
@@ -66,7 +66,7 @@ test(`it can embed a collection with a chain of has-many relationships`, functio
     })
   });
 
-  let wordSmiths = this.schema.wordSmith.all();
+  let wordSmiths = this.schema.wordSmiths.all();
   let result = registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
@@ -106,7 +106,7 @@ test(`it can embed a collection with a belongs-to relationship`, function(assert
     })
   });
 
-  let blogPosts = this.schema.blogPost.all();
+  let blogPosts = this.schema.blogPosts.all();
   let result = registry.serialize(blogPosts);
 
   assert.deepEqual(result, {
@@ -136,7 +136,7 @@ test(`it can embed a collection with a chain of belongs-to relationships`, funct
     })
   });
 
-  let fineComments = this.schema.fineComment.all();
+  let fineComments = this.schema.fineComments.all();
   let result = registry.serialize(fineComments);
 
   assert.deepEqual(result, {

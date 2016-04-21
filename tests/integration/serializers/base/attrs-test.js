@@ -18,7 +18,7 @@ module('Integration | Serializers | Base | Attrs List', {
 });
 
 test(`it returns only the whitelisted attrs when serializing a model`, function(assert) {
-  let wordSmith = this.schema.wordSmith.create({
+  let wordSmith = this.schema.wordSmiths.create({
     id: 1,
     name: 'Link',
     age: 123
@@ -35,10 +35,10 @@ test(`it returns only the whitelisted attrs when serializing a model`, function(
 
 test(`it returns only the whitelisted attrs when serializing a collection`, function(assert) {
   let { schema } = this;
-  schema.wordSmith.create({ id: 1, name: 'Link', age: 123 });
-  schema.wordSmith.create({ id: 2, name: 'Zelda', age: 456 });
+  schema.wordSmiths.create({ id: 1, name: 'Link', age: 123 });
+  schema.wordSmiths.create({ id: 2, name: 'Zelda', age: 456 });
 
-  let collection = this.schema.wordSmith.all();
+  let collection = this.schema.wordSmiths.all();
   let result = this.registry.serialize(collection);
 
   assert.deepEqual(result, {

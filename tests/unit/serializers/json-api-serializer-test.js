@@ -85,7 +85,7 @@ test('_getRelatedModelWithPath belongsTo', function(assert) {
   let serializer = new (JsonApiSerializer.extend())();
   let schema = schemaHelper.setup();
 
-  let foo = schema.foo.create();
+  let foo = schema.foos.create();
   let bar = foo.createBar();
   foo.save();
   let baz = bar.createBaz();

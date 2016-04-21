@@ -6,7 +6,7 @@ import { module, test } from 'qunit';
 module('Integration | Serializers | Base | Array of Models', {
   beforeEach() {
     this.schema = schemaHelper.setup();
-    this.schema.wordSmith.create({ id: 1, title: 'Link' });
+    this.schema.wordSmiths.create({ id: 1, title: 'Link' });
   },
   afterEach() {
     this.schema.db.emptyData();
@@ -16,7 +16,7 @@ module('Integration | Serializers | Base | Array of Models', {
 test(`it applies correct serializer when the response is an array of models`, function(assert) {
   assert.expect(1);
 
-  let wordSmiths = this.schema.wordSmith.all().filter(() => true);
+  let wordSmiths = this.schema.wordSmiths.all().filter(() => true);
   let registry = new SerializerRegistry(this.schema, {
     wordSmith: Serializer.extend({
       serialize() {

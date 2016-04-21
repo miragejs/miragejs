@@ -16,7 +16,7 @@ module('Integration | Serializers | JSON API Serializer | Base', {
 });
 
 test(`it includes all attributes for a model`, function(assert) {
-  let user = this.schema.wordSmith.create({
+  let user = this.schema.wordSmiths.create({
     id: 1,
     firstName: 'Link',
     age: 123
@@ -42,10 +42,10 @@ test(`it includes all attributes for a model`, function(assert) {
 
 test(`it includes all attributes for each model in a collection`, function(assert) {
   let { schema } = this;
-  schema.wordSmith.create({ id: 1, firstName: 'Link', age: 123 });
-  schema.wordSmith.create({ id: 2, firstName: 'Zelda', age: 456 });
+  schema.wordSmiths.create({ id: 1, firstName: 'Link', age: 123 });
+  schema.wordSmiths.create({ id: 2, firstName: 'Zelda', age: 456 });
 
-  let collection = this.schema.wordSmith.all();
+  let collection = this.schema.wordSmiths.all();
   let result = this.registry.serialize(collection);
 
   assert.deepEqual(result, {
@@ -78,10 +78,46 @@ test(`it includes all attributes for each model in a collection`, function(asser
 });
 
 test(`it can serialize an empty collection`, function(assert) {
-  let wordSmiths = this.schema.wordSmith.all();
+  let wordSmiths = this.schema.wordSmiths.all();
   let result = this.registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
     data: []
+  });
+});
+
+test(`it can serialize a homogenous JS array of models`, function(assert) {
+  this.schema.wordSmiths.create({ id: 1, firstName: 'Link', age: 123 });
+  this.schema.wordSmiths.create({ id: 2, firstName: 'Zelda', age: 456 });
+
+  let wordsmiths = this.schema.wordSmiths.all().models;
+  let result = this.registry.serialize(wordsmiths);
+
+  assert.deepEqual(result, {
+    data: [{
+      type: 'word-smiths',
+      id: '1',
+      attributes: {
+        'first-name': 'Link',
+        age: 123
+      },
+      relationships: {
+        'blog-posts': {
+          data: []
+        }
+      }
+    }, {
+      type: 'word-smiths',
+      id: '2',
+      attributes: {
+        'first-name': 'Zelda',
+        age: 456
+      },
+      relationships: {
+        'blog-posts': {
+          data: []
+        }
+      }
+    }]
   });
 });

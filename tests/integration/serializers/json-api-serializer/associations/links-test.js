@@ -7,13 +7,13 @@ module('Integration | Serializers | JSON API Serializer | Associations | Links',
   beforeEach() {
     this.schema = schemaHelper.setup();
 
-    let link = this.schema.wordSmith.create({ firstName: 'Link' });
+    let link = this.schema.wordSmiths.create({ firstName: 'Link' });
     let blogPost = link.createBlogPost({ title: 'Lorem' });
     blogPost.createFineComment({ text: 'pwned' });
 
     link.createBlogPost({ title: 'Ipsum' });
 
-    this.schema.wordSmith.create({ name: 'Zelda' });
+    this.schema.wordSmiths.create({ name: 'Zelda' });
   },
   afterEach() {
     this.schema.db.emptyData();
@@ -39,8 +39,8 @@ test(`it can link to relationships, omitting 'data'`, function(assert) {
     })
   });
 
-  let wordSmith = this.schema.wordSmith.find(1);
-  let blogPost = this.schema.blogPost.find(1);
+  let wordSmith = this.schema.wordSmiths.find(1);
+  let blogPost = this.schema.blogPosts.find(1);
   let result = registry.serialize(blogPost);
 
   assert.deepEqual(result, {

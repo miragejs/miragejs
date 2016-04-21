@@ -31,7 +31,7 @@ module('Integration | Serializers | Base | Assorted Collections', {
 });
 
 test(`an array of assorted collections can be serialized`, function(assert) {
-  let result = this.registry.serialize([this.schema.wordSmith.all(), this.schema.greatPhoto.all()]);
+  let result = this.registry.serialize([this.schema.wordSmiths.all(), this.schema.greatPhotos.all()]);
 
   assert.deepEqual(result, {
     wordSmiths: this.wordSmiths,

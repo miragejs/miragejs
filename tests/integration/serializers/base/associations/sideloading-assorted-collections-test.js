@@ -46,7 +46,7 @@ module('Integration | Serializers | Base | Associations | Sideloading Assorted C
   This is a strange response from a route handler, but it's used in the array get shorthand. Deprecate that shorthand?
 */
 test(`it can sideload an array of assorted collections that have relationships`, function(assert) {
-  let result = this.registry.serialize([this.schema.wordSmith.all(), this.schema.greatPhoto.all()]);
+  let result = this.registry.serialize([this.schema.wordSmiths.all(), this.schema.greatPhotos.all()]);
 
   assert.deepEqual(result, {
     wordSmiths: this.wordSmiths.map((attrs) => {

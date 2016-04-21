@@ -1,7 +1,7 @@
 import HasManyHelper from './has-many-helper';
 import {module, test} from 'qunit';
 
-module('Integration | Schema | hasMany #createAssociation');
+module('Integration | ORM | hasMany #createAssociation');
 
 HasManyHelper.forEachScenario((scenario) => {
   if (/^savedParent/.test(scenario.state)) {
@@ -14,8 +14,8 @@ HasManyHelper.forEachScenario((scenario) => {
 
       assert.ok(springfield.id, 'the child was persisted');
       assert.equal(springfield[otherIdAccessor], 1, 'the fk is set');
-      assert.equal(user[accessor].length, startingCount + 1, 'the collection length is correct');
-      assert.deepEqual(user[accessor].filter((a) => a.id === springfield.id)[0], springfield, 'the homeAddress was added to user.homeAddresses');
+      assert.equal(user[accessor].models.length, startingCount + 1, 'the collection length is correct');
+      assert.deepEqual(user[accessor].filter((a) => a.id === springfield.id).models[0], springfield, 'the homeAddress was added to user.homeAddresses');
       assert.ok(user[idsAccessor].indexOf(springfield.id) > -1, 'the id was added to the fks array');
     });
 
@@ -24,7 +24,7 @@ HasManyHelper.forEachScenario((scenario) => {
 
       let springfield = user[createAccessor]();
 
-      assert.deepEqual(user[accessor].filter((a) => a.id === springfield.id)[0], springfield, `the homeAddress was added to user.${accessor}`);
+      assert.deepEqual(user[accessor].filter((a) => a.id === springfield.id).models[0], springfield, `the homeAddress was added to user.${accessor}`);
     });
   }
 

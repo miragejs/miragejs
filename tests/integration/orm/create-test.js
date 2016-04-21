@@ -4,39 +4,31 @@ import Model from 'ember-cli-mirage/orm/model';
 import Db from 'ember-cli-mirage/db';
 import {module, test} from 'qunit';
 
-var schema;
-module('Integration | Schema | Creating an Unregistered Model', {
-  beforeEach() {
-    schema = new Schema(new Db());
-  }
-});
-
-test('it cannot make new models that havent been registered', function(assert) {
-  assert.throws(function() {
-    schema.user.new({ name: 'Link' });
-  });
-});
-
-test('it cannot create models that havent been registered', function(assert) {
-  assert.throws(function() {
-    schema.user.create({ name: 'Link' });
-  });
-});
-
 var db, schema, User;
-module('Integration | Schema | Creating a Model', {
+module('Integration | ORM | create', {
   beforeEach() {
-    db = new Db();
-
     User = Model.extend();
+    db = new Db();
     schema = new Schema(db, {
       user: User
     });
   }
 });
 
+test('it cannot make new models that havent been registered', function(assert) {
+  assert.throws(function() {
+    schema.authors.new({ name: 'Link' });
+  });
+});
+
+test('it cannot create models that havent been registered', function(assert) {
+  assert.throws(function() {
+    schema.authors.create({ name: 'Link' });
+  });
+});
+
 test('it can make new models and then save them', function(assert) {
-  let user = schema.user.new({ name: 'Link' });
+  let user = schema.users.new({ name: 'Link' });
 
   assert.ok(user instanceof User);
   assert.deepEqual(user.attrs, { name: 'Link' });
@@ -50,7 +42,7 @@ test('it can make new models and then save them', function(assert) {
 });
 
 test('it can create new models, saved directly to the db', function(assert) {
-  let user = schema.user.create({ name: 'Link' });
+  let user = schema.users.create({ name: 'Link' });
 
   assert.ok(user instanceof Model);
   assert.ok(user instanceof User);

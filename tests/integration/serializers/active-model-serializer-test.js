@@ -20,11 +20,11 @@ module('Integration | Serializer | ActiveModelSerializer', {
       })
     });
 
-    let link = this.schema.wordSmith.create({ name: 'Link', age: 123 });
+    let link = this.schema.wordSmiths.create({ name: 'Link', age: 123 });
     link.createBlogPost({ title: 'Lorem' });
     link.createBlogPost({ title: 'Ipsum' });
 
-    this.schema.wordSmith.create({ name: 'Zelda', age: 230 });
+    this.schema.wordSmiths.create({ name: 'Zelda', age: 230 });
 
     this.registry = new SerializerRegistry(this.schema, {
       application: ActiveModelSerializer,
@@ -41,7 +41,7 @@ module('Integration | Serializer | ActiveModelSerializer', {
 });
 
 test('it sideloads associations and snake-cases relationships and attributes correctly for a model', function(assert) {
-  let link = this.schema.wordSmith.find(1);
+  let link = this.schema.wordSmiths.find(1);
   let result = this.registry.serialize(link);
 
   assert.deepEqual(result, {
@@ -66,7 +66,7 @@ test('it sideloads associations and snake-cases relationships and attributes cor
 });
 
 test('it sideloads associations and snake-cases relationships and attributes correctly for a collection', function(assert) {
-  let wordSmiths = this.schema.wordSmith.all();
+  let wordSmiths = this.schema.wordSmiths.all();
   let result = this.registry.serialize(wordSmiths);
 
   assert.deepEqual(result, {
@@ -96,4 +96,3 @@ test('it sideloads associations and snake-cases relationships and attributes cor
     ]
   });
 });
-
