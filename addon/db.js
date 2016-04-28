@@ -1,8 +1,11 @@
 import DbCollection from './db-collection';
 
-/*
-  The db, an identity map.
-*/
+/**
+ * The db, an identity map.
+ * @class Db
+ * @constructor
+ * @public
+ */
 class Db {
 
   constructor(initialData) {
@@ -13,12 +16,23 @@ class Db {
     }
   }
 
+  /**
+   * @method loadData
+   * @param data
+   * @public
+   */
   loadData(data) {
     for (let key in data) {
       this.createCollection(key, data[key]);
     }
   }
 
+  /**
+   * @method createCollection
+   * @param name
+   * @param initialData
+   * @public
+   */
   createCollection(name, initialData) {
     if (!this[name]) {
       let newCollection = new DbCollection(name, initialData);
@@ -47,10 +61,19 @@ class Db {
     return this;
   }
 
+  /**
+   * @method createCollections
+   * @param ...collections
+   * @public
+   */
   createCollections(...collections) {
     collections.forEach((c) => this.createCollection(c));
   }
 
+  /**
+   * @method emptyData
+   * @public
+   */
   emptyData() {
     this._collections.forEach((c) => c.remove());
   }

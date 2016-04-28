@@ -16,11 +16,11 @@ function isNumber(n) {
 }
 
 /**
-  A collection of db records i.e. a database table.
-  @class DbCollection
-  @constructor
-  @public
-*/
+ *  A collection of db records i.e. a database table.
+ *  @class DbCollection
+ *  @constructor
+ *  @public
+ */
 class DbCollection {
 
   constructor(name, initialData) {
@@ -34,21 +34,21 @@ class DbCollection {
   }
 
   /**
-    Returns a copy of the data, to prevent inadvertent data manipulation.
-    @method all
-    @public
-  */
+   * Returns a copy of the data, to prevent inadvertent data manipulation.
+   * @method all
+   * @public
+   */
   all() {
     return duplicate(this._records);
   }
 
   /**
-    Inserts `data` into the collection. `data` can be a single object
-    or an array of objects. Returns the inserted record.
-    @method insert
-    @param data
-    @public
-  */
+   * Inserts `data` into the collection. `data` can be a single object
+   * or an array of objects. Returns the inserted record.
+   * @method insert
+   * @param data
+   * @public
+   */
   insert(data) {
     if (!_isArray(data)) {
       return this._insertRecord(data);
@@ -59,14 +59,14 @@ class DbCollection {
   }
 
   /**
-    Returns a single record from the `collection` if `ids` is a single
-    id, or an array of records if `ids` is an array of ids. Note
-    each id can be an int or a string, but integer ids as strings
-    (e.g. the string “1”) will be treated as integers.
-    @method find
-    @param ids
-    @public
-  */
+   * Returns a single record from the `collection` if `ids` is a single
+   * id, or an array of records if `ids` is an array of ids. Note
+   * each id can be an int or a string, but integer ids as strings
+   * (e.g. the string “1”) will be treated as integers.
+   * @method find
+   * @param ids
+   * @public
+   */
   find(ids) {
     if (_isArray(ids)) {
       let records = this._findRecords(ids)
@@ -86,26 +86,26 @@ class DbCollection {
   }
 
   /**
-    Returns an array of models from `collection` that match the
-    key-value pairs in the `query` object. Note that a string
-    comparison is used. `query` is a POJO.
-    @method where
-    @param query
-    @public
-  */
+   * Returns an array of models from `collection` that match the
+   * key-value pairs in the `query` object. Note that a string
+   * comparison is used. `query` is a POJO.
+   * @method where
+   * @param query
+   * @public
+   */
   where(query) {
     return this._findRecordsWhere(query).map(duplicate);
   }
 
   /**
-    Finds the first record matching the provided query in
-    `collection`, or creates a new record using a merge of the
-    `query` and optional `attributesForCreate`.
-    @method firstOrCreate
-    @param query
-    @param attributesForCreate
-    @public
-  */
+   * Finds the first record matching the provided query in
+   * `collection`, or creates a new record using a merge of the
+   * `query` and optional `attributesForCreate`.
+   * @method firstOrCreate
+   * @param query
+   * @param attributesForCreate
+   * @public
+   */
   firstOrCreate(query, attributesForCreate={}) {
     let queryResult = this.where(query);
     let [ record ] = queryResult;
@@ -121,20 +121,20 @@ class DbCollection {
   }
 
   /**
-    Updates one or more records in collection.
-    If attrs is the only arg present, updates all records
-    in the collection according to the key-value pairs in attrs.
-    If target is present, restricts updates to those that
-    match target. If target is a number or string, finds a
-    single record whose id is target to update. If target is
-    a POJO, queries collection for records that match the
-    key-value pairs in target, and updates their attrs.
-    Returns the updated record or records.
-    @method update
-    @param target
-    @param attrs
-    @public
-  */
+   * Updates one or more records in collection.
+   * If attrs is the only arg present, updates all records
+   * in the collection according to the key-value pairs in attrs.
+   * If target is present, restricts updates to those that
+   * match target. If target is a number or string, finds a
+   * single record whose id is target to update. If target is
+   * a POJO, queries collection for records that match the
+   * key-value pairs in target, and updates their attrs.
+   * Returns the updated record or records.
+   * @method update
+   * @param target
+   * @param attrs
+   * @public
+   */
   update(target, attrs) {
     let records;
 
@@ -185,17 +185,17 @@ class DbCollection {
   }
 
   /**
-    Removes one or more records in `collection`.
-    If `target` is undefined, removes all records.
-    If `target` is a number or string, removes a
-    single record using `target` as id. If `target` is
-    a POJO, queries `collection` for records that
-    match the key-value pairs in `target`, and
-    removes them from the collection.
-    @method remove
-    @param target
-    @public
-  */
+   * Removes one or more records in `collection`.
+   * If `target` is undefined, removes all records.
+   * If `target` is a number or string, removes a
+   * single record using `target` as id. If `target` is
+   * a POJO, queries `collection` for records that
+   * match the key-value pairs in `target`, and
+   * removes them from the collection.
+   * @method remove
+   * @param target
+   * @public
+   */
   remove(target) {
     let records;
 
@@ -232,10 +232,10 @@ class DbCollection {
   */
 
   /**
-    @method _findRecord
-    @param id
-    @private
-  */
+   * @method _findRecord
+   * @param id
+   * @private
+   */
   _findRecord(id) {
     id = id.toString();
 
@@ -245,19 +245,19 @@ class DbCollection {
   }
 
   /**
-    @method _findRecords
-    @param ids
-    @private
-  */
+   * @method _findRecords
+   * @param ids
+   * @private
+   */
   _findRecords(ids) {
     return ids.map(this._findRecord, this);
   }
 
   /**
-    @method _findRecordsWhere
-    @param query
-    @private
-  */
+   * @method _findRecordsWhere
+   * @param query
+   * @private
+   */
   _findRecordsWhere(query) {
     let records = this._records;
 
@@ -275,10 +275,10 @@ class DbCollection {
   }
 
   /**
-    @method _insertRecord
-    @param data
-    @private
-  */
+   * @method _insertRecord
+   * @param data
+   * @private
+   */
   _insertRecord(data) {
     let attrs = duplicate(data);
 
@@ -296,11 +296,11 @@ class DbCollection {
   }
 
   /**
-    @method _updateRecord
-    @param record
-    @param attrs
-    @private
-  */
+   * @method _updateRecord
+   * @param record
+   * @param attrs
+   * @private
+   */
   _updateRecord(record, attrs) {
     let targetId = (attrs && attrs.hasOwnProperty('id')) ? attrs.id.toString() : null;
     let currentId = record.id;
