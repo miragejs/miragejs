@@ -242,20 +242,23 @@ class JsonApiSerializer {
 
   _getRelationshipNames(request = {}) {
     let requestRelationships = _get(request, 'queryParams.include');
+    let relationships;
 
     if (_isString(requestRelationships)) {
-      if (requestRelationships.length) {
-        let relationships = requestRelationships
-          .split(',')
-          .map(_trim)
-          .map((r) => r.split('.').map((_, index, elements) => elements.slice(0, index + 1).join('.')));
-
-        return _flatten(relationships);
-      }
-      return [];
+      relationships = requestRelationships;
+    } else {
+      relationships = _get(this, 'include', []).join(',');
     }
 
-    return _get(this, 'include', []);
+    if (relationships.length) {
+      let expandedRelationships = relationships
+        .split(',')
+        .map(_trim)
+        .map((r) => r.split('.').map((_, index, elements) => elements.slice(0, index + 1).join('.')));
+
+      return _flatten(expandedRelationships);
+    }
+    return [];
   }
 
   _getRelatedWithPath(parentModel, path) {
