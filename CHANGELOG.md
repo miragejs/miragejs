@@ -25,7 +25,7 @@ Update notes:
 
     - Added .models property to Collection
 
-    - Collection no longer attempts to mimic an array. This turned to be confusing, since you can't really subclass arrays in JavaScript, and it would sometimes be compatible with functions that operate on arrays, but sometimes not.
+    - Collection no longer attempts to mimic an array. This turned out to be confusing, since you can't really subclass arrays in JavaScript, and it would sometimes be compatible with functions that operate on arrays, but sometimes not.
 
     So, you can no longer use the array accessor on a collection, meaning the following won't work:
 
