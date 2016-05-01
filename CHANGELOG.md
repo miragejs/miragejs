@@ -4,8 +4,15 @@ In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
 ## master
 
+## 0.2.0-beta.9
+
+This is the last planned release of the 0.2.0 beta series, and it contains some breaking changes from 0.2.0-beta.8.
+
 Update notes:
-  - schema model classes are pluralized. So
+
+  - Schema model classes are now pluralized. They used to be singularized, taking after Rails' conventions, but this didn't really make sense. Better to stick match our `db.users` conventions.
+
+  So
 
   ```js
   schema.user.all()
@@ -19,11 +26,16 @@ Update notes:
   schema.users.find(1)
   ```
 
-  and so on. The upgrade is static so should be a relatively straightforward findAndReplace.
+  and so on. The upgrade should be a relatively straightforward.
 
   - Breaking changes on ORM/Collection:
 
-    - Added .models property to Collection
+    - There's now a `.models` property on Collections, which gives you access to the underlying JavaScript array. This should be used if you want to munge the collection using Lodash, Ramda et al.
+
+    ```js
+    let usersCollection = schema.users.all();
+    _.uniq(usersCollection.models, u => u.firstName);
+    ```
 
     - Collection no longer attempts to mimic an array. This turned out to be confusing, since you can't really subclass arrays in JavaScript, and it would sometimes be compatible with functions that operate on arrays, but sometimes not.
 
@@ -39,8 +51,10 @@ Update notes:
     authors.map(f);
     authors.forEach(f);
     authors.reduce(f);
-    authors.toArray(); // use authors.models
+    authors.toArray(); // use authors.models instead
     ```
+
+Changes:
 
 ## 0.2.0.beta-8
 
