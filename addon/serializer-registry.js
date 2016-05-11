@@ -8,7 +8,6 @@ import assert from './assert';
 
 import _assign from 'lodash/object/assign';
 import _isArray from 'lodash/lang/isArray';
-import _every from 'lodash/collection/every';
 
 export default class SerializerRegistry {
 
@@ -22,8 +21,6 @@ export default class SerializerRegistry {
   }
 
   serialize(response, request) {
-    response = this._possiblyTransformArrayIntoCollection(response);
-
     if (this._isModelOrCollection(response)) {
       let serializer = this.serializerFor(response.modelName);
 
@@ -76,14 +73,6 @@ export default class SerializerRegistry {
 
   _isModelOrCollection(object) {
     return this._isModel(object) || this._isCollection(object);
-  }
-
-  _possiblyTransformArrayIntoCollection(response) {
-    if (response && response.length > 0 && _every(response, m => m instanceof Model)) {
-      response = new Collection(response[0].modelName, response);
-    }
-
-    return response;
   }
 
 }

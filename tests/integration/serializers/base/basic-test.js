@@ -27,6 +27,12 @@ test('it returns arrays unaffected', function(assert) {
   assert.deepEqual(result, data);
 });
 
+test('it returns empty arrays unaffected', function(assert) {
+  let result = this.registry.serialize([]);
+
+  assert.deepEqual(result, []);
+});
+
 test(`it serializes a model by returning its attrs under a root`, function(assert) {
   let wordSmith = this.schema.wordSmiths.create({
     id: 1,
@@ -67,16 +73,7 @@ test(`it can serialize an empty collection`, function(assert) {
   });
 });
 
-test(`it can serialize a homogenous array of models`, function(assert) {
-  let wordSmiths = this.schema.wordSmiths.all();
-  let result = this.registry.serialize(wordSmiths);
-
-  assert.deepEqual(result, {
-    wordSmiths: []
-  });
-});
-
-test('it can serialize a homogenous JS array of models', function(assert) {
+test('it returns POJAs of models unaffected', function(assert) {
   this.schema.wordSmiths.create({ name: 'Sam' });
   this.schema.wordSmiths.create({ name: 'Sam' });
   this.schema.wordSmiths.create({ name: 'Ganondorf' });
@@ -85,14 +82,5 @@ test('it can serialize a homogenous JS array of models', function(assert) {
   let uniqueNames = _uniq(wordSmiths, u => u.name);
   let result = this.registry.serialize(uniqueNames);
 
-  assert.deepEqual(result, {
-    wordSmiths: [
-      { id: '1', name: 'Sam' },
-      { id: '3', name: 'Ganondorf' }
-    ]
-  });
+  assert.deepEqual(result, uniqueNames);
 });
-
-// What should the behavior here be???
-// test('#serialize throws an error on an empty JS array', function(assert) {
-// });

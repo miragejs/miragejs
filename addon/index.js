@@ -2,6 +2,7 @@ import Factory from './factory';
 import Response from './response';
 import faker from './faker';
 import Model from './orm/model';
+import Collection from './orm/collection';
 import Serializer from './serializer';
 import ActiveModelSerializer from './serializers/active-model-serializer';
 import JSONAPISerializer from './serializers/json-api-serializer';
@@ -21,6 +22,7 @@ export {
   Response,
   faker,
   Model,
+  Collection,
   Serializer,
   ActiveModelSerializer,
   JSONAPISerializer,

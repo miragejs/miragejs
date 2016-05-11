@@ -1,5 +1,5 @@
 import {module, test} from 'qunit';
-import { Model, Serializer } from 'ember-cli-mirage';
+import { Model, Collection, Serializer } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
 import Response from 'ember-cli-mirage/response';
 import FunctionRouteHandler from 'ember-cli-mirage/route-handlers/function';
@@ -71,16 +71,6 @@ test('#serialize uses the default serializer on a collection', function(assert) 
   });
 });
 
-test('#serialize throws an error when trying to specify a serializer that doesnt exist', function(assert) {
-  this.schema.users.create({ name: 'Sam' });
-
-  let users = this.schema.users.all();
-
-  assert.throws(function() {
-    this.functionHandler.serialize(users, 'foo-user');
-  }, /that serializer doesn't exist/);
-});
-
 test('#serialize takes an optional serializer type', function(assert) {
   this.schema.users.create({ name: 'Sam', tall: true, evil: false });
   this.schema.users.create({ name: 'Ganondorf', tall: true, evil: true });
@@ -96,45 +86,42 @@ test('#serialize takes an optional serializer type', function(assert) {
   });
 });
 
-test('#serialize can take a plain JS array of models', function(assert) {
+test('#serialize throws an error when trying to specify a serializer that doesnt exist', function(assert) {
+  this.schema.users.create({ name: 'Sam' });
+
+  let users = this.schema.users.all();
+
+  assert.throws(function() {
+    this.functionHandler.serialize(users, 'foo-user');
+  }, /that serializer doesn't exist/);
+});
+
+test('#serialize noops on plain JS arrays', function(assert) {
   this.server.schema.users.create({ name: 'Sam' });
   this.server.schema.users.create({ name: 'Sam' });
   this.server.schema.users.create({ name: 'Ganondorf' });
 
   let users = this.schema.users.all().models;
   let uniqueNames = _uniq(users, u => u.name);
-  let json = this.functionHandler.serialize(uniqueNames);
+  let serializedResponse = this.functionHandler.serialize(uniqueNames);
 
-  assert.deepEqual(json, {
-    users: [
-      { id: '1', name: 'Sam' },
-      { id: '3', name: 'Ganondorf' }
-    ]
-  });
+  assert.deepEqual(serializedResponse, uniqueNames);
 });
 
-test('#serialize on a plain JS array of models takes an optional serializer type', function(assert) {
+test('#serialize on a Collection takes an optional serializer type', function(assert) {
   this.server.schema.users.create({ name: 'Sam', tall: true, evil: false });
   this.server.schema.users.create({ name: 'Sam', tall: true, evil: false });
   this.server.schema.users.create({ name: 'Ganondorf', tall: true, evil: true });
 
   let users = this.schema.users.all().models;
   let uniqueNames = _uniq(users, u => u.name);
-  let json = this.functionHandler.serialize(uniqueNames, 'sparse-user');
+  let collection = new Collection('user', uniqueNames);
+  let json = this.functionHandler.serialize(collection, 'sparse-user');
 
   assert.deepEqual(json, {
     users: [
       { id: '1', name: 'Sam', tall: true },
       { id: '3', name: 'Ganondorf', tall: true }
-    ]
-  });
-});
-
-test('#serialize takes a modelName option in the event of an empty array', function(assert) {
-  let json = this.functionHandler.serialize([], 'sparse-user', { modelName: 'user' });
-
-  assert.deepEqual(json, {
-    users: [
     ]
   });
 });

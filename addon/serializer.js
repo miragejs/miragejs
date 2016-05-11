@@ -6,7 +6,6 @@ import extend from './utils/extend';
 import { singularize, pluralize, camelize } from './utils/inflector';
 
 import _isFunction from 'lodash/lang/isFunction';
-import _every from 'lodash/collection/every';
 
 class Serializer {
 
@@ -34,8 +33,6 @@ class Serializer {
    * @public
    */
   serialize(response, request={}) {
-    response = this._possiblyTransformArrayIntoCollection(response);
-
     if (this.embed) {
       let json;
 
@@ -480,19 +477,6 @@ class Serializer {
     } else {
       return include;
     }
-  }
-
-  /**
-   * @method _possiblyTransformArrayIntoCollection
-   * @param response
-   * @private
-   */
-  _possiblyTransformArrayIntoCollection(response) {
-    if (response && response.length > 0 && _every(response, m => m instanceof Model)) {
-      response = new Collection(response[0].modelName, response);
-    }
-
-    return response;
   }
 }
 

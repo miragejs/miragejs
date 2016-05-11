@@ -85,39 +85,3 @@ test(`it can serialize an empty collection`, function(assert) {
     data: []
   });
 });
-
-test(`it can serialize a homogenous JS array of models`, function(assert) {
-  this.schema.wordSmiths.create({ id: 1, firstName: 'Link', age: 123 });
-  this.schema.wordSmiths.create({ id: 2, firstName: 'Zelda', age: 456 });
-
-  let wordsmiths = this.schema.wordSmiths.all().models;
-  let result = this.registry.serialize(wordsmiths);
-
-  assert.deepEqual(result, {
-    data: [{
-      type: 'word-smiths',
-      id: '1',
-      attributes: {
-        'first-name': 'Link',
-        age: 123
-      },
-      relationships: {
-        'blog-posts': {
-          data: []
-        }
-      }
-    }, {
-      type: 'word-smiths',
-      id: '2',
-      attributes: {
-        'first-name': 'Zelda',
-        age: 456
-      },
-      relationships: {
-        'blog-posts': {
-          data: []
-        }
-      }
-    }]
-  });
-});

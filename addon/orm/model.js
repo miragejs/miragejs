@@ -137,6 +137,10 @@ class Model {
     return this;
   }
 
+  toJSON() {
+    return this.attrs;
+  }
+
   // Private
 
   /**
