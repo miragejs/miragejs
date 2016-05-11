@@ -211,17 +211,16 @@ export default class Server {
     this.factorySequences = this.factorySequences || {};
     this.factorySequences[camelizedType] = this.factorySequences[camelizedType] + 1 || 0;
 
-    assert(
-      this._factoryMap && this._factoryMap[camelizedType],
-      `You're trying to create a ${camelizedType}, but no factory for this type was found`
-    );
+    if (this._factoryMap && this._factoryMap[camelizedType]) {
+      let OriginalFactory = this._factoryMap[camelizedType];
+      let Factory = OriginalFactory.extend(overrides);
+      let factory = new Factory();
 
-    let OriginalFactory = this._factoryMap[camelizedType];
-    let Factory = OriginalFactory.extend(overrides);
-    let factory = new Factory();
-
-    let sequence = this.factorySequences[camelizedType];
-    return factory.build(sequence);
+      let sequence = this.factorySequences[camelizedType];
+      return factory.build(sequence);
+    } else {
+      return overrides;
+    }
   }
 
   buildList(type, amount, overrides) {

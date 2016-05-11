@@ -240,22 +240,6 @@ module('Unit | Server #build', {
   }
 });
 
-test('build fails when no factories are regisered', function(assert) {
-  assert.throws(function() {
-    this.server.build('contact');
-  });
-});
-
-test('build fails when an expected factory isn\'t registered', function(assert) {
-  this.server.loadFactories({
-    address: Factory.extend()
-  });
-
-  assert.throws(function() {
-    this.server.build('contact');
-  });
-});
-
 test('build does not add the data to the db', function(assert) {
   this.server.loadFactories({
     contact: Factory.extend({ name: 'Sam' })
