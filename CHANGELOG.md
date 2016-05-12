@@ -6,20 +6,20 @@ In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
 ## 0.2.0-beta.9
 
-This is the last planned release of the 0.2.0 beta series, and it contains some breaking changes from 0.2.0-beta.8.
+This release contains some breaking changes from 0.2.0-beta.8.
 
 Update notes:
 
-  - Schema model classes are now pluralized. They used to be singularized, taking after Rails' conventions, but this didn't really make sense. Better to stick match our `db.users` conventions.
+  - Schema model classes are now pluralized. They used to be singularized, taking after Rails' conventions, but I think it's better to match our db conventions (e.g. `db.users`).
 
-  So
+  So you'll need to change
 
   ```js
   schema.user.all()
   schema.user.find(1)
   ```
 
-  is now
+  to
 
   ```js
   schema.users.all()
@@ -34,7 +34,7 @@ Update notes:
 
     ```js
     let usersCollection = schema.users.all();
-    _.uniq(usersCollection.models, u => u.firstName);
+    let uniqueUsers = _.uniq(usersCollection.models, u => u.firstName);
     ```
 
     - Collection no longer attempts to mimic an array. This turned out to be confusing, since you can't really subclass arrays in JavaScript, and it would sometimes be compatible with functions that operate on arrays, but sometimes not.
@@ -54,7 +54,28 @@ Update notes:
     authors.toArray(); // use authors.models instead
     ```
 
+    Instead, if you need to use array-methods on `Collections`, access the `.models` property. You can always convert your transformed array back to a `Collection`, for example to tell Mirage to serialize your response:
+
+    ```js
+    import { Collection } from 'ember-cli-mirage';
+
+    let authors = schema.authors.all().models;
+    let topPosts = authors.map(a => a.topPost);
+
+    return new Collection('post', topPosts);
+    ```
+
 Changes:
+
+  - [BREAKING CHANGE] #705 Drop Collection.[], add Collection.models @samselikoff
+  - [BREAKING CHANGE] #705 Pluralize Schema class names @samselikoff
+  - [FEATURE] #705 Add this.serialize to function route handlers @samselikoff
+  - [ENHANCEMENT] Server.create falls back to Models if Factories don't exist @samselikoff
+  - [ENHANCEMENT] Support aliases for --proxy @elbeezy
+  - [ENHANCEMENT] Do not include files if on Fastboot @locks
+  - [BUGFIX] #709 Fix Serializer include logic @cibernox
+  - [BUGFIX] #666 Ensure model serializers are used for JSONAPI @samselikoff
+  - General cleanup, updates and docs @lizzerdrix, @lependu, @amyrlam, @blimmer, @noslouch, @bgentry, @mitchlloyd, @BrianSipple, @acorncom, @stefanpennar
 
 ## 0.2.0.beta-8
 
