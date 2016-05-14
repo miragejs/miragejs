@@ -4,6 +4,10 @@ In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
 ## master
 
+Changes:
+
+  - [FEATURE] #729 Add `this.normalizedRequestAttrs` helper method to function route handler @samselikoff
+
 ## 0.2.0-beta.9
 
 This release contains some breaking changes from 0.2.0-beta.8.

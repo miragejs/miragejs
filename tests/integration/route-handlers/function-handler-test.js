@@ -1,4 +1,4 @@
-import {module, test} from 'qunit';
+import { module, test } from 'qunit';
 import { Model, Collection, Serializer } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
 import Response from 'ember-cli-mirage/response';

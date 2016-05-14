@@ -88,7 +88,6 @@ test('_getAttrsForRequest works with attributes and relationships', function(ass
   assert.deepEqual(
     attrs,
     {
-      id: undefined,
       name: 'Sam',
       doesMirage: true,
       companyId: '1',
@@ -123,7 +122,6 @@ test('_getAttrsForRequest works with just relationships', function(assert) {
   assert.deepEqual(
     attrs,
     {
-      id: undefined,
       companyId: '1'
     },
     'it normalizes data correctly.'
