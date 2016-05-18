@@ -92,4 +92,14 @@ export default class Collection {
 
     return this;
   }
+
+  /**
+   * Simple string representation of the collection and id.
+   * @method toString
+   * @return {String}
+   * @public
+   */
+  toString() {
+    return `collection:${this.modelName}(${this.models.map(m => m.id).join(',')})`;
+  }
 }

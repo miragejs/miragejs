@@ -233,25 +233,31 @@ export default class Server {
     return list;
   }
 
+  // When there is a Model defined, we should return an instance
+  // of it instead of returning the bare attributes.
   create(type, overrides, collectionFromCreateList) {
     let attrs = this.build(type, overrides);
-    let collection, collectionName;
-    if (collectionFromCreateList) {
-      collection = collectionFromCreateList;
+    let modelOrRecord;
+
+    if (this.schema && this.schema[pluralize(camelize(type))]) {
+      let modelClass = this.schema[pluralize(camelize(type))];
+
+      modelOrRecord = modelClass.create(attrs);
+
     } else {
-      collectionName = this.schema ? pluralize(camelize(type)) : pluralize(type);
-      collection = this.db[collectionName];
+      let collection, collectionName;
+
+      if (collectionFromCreateList) {
+        collection = collectionFromCreateList;
+      } else {
+        collectionName = this.schema ? pluralize(camelize(type)) : pluralize(type);
+        collection = this.db[collectionName];
+      }
+
+      modelOrRecord = collection.insert(attrs);
     }
 
-    let inserted = collection.insert(attrs);
-    if (this.schema && this.schema[pluralize(camelize(type))]) {
-      // When there is a Model defined, we should return an instance
-      // of it instead of returning the bare attributes.
-      // https://github.com/samselikoff/ember-cli-mirage/issues/427
-      return this.schema[pluralize(camelize(type))].find(inserted.id);
-    } else {
-      return inserted;
-    }
+    return modelOrRecord;
   }
 
   createList(type, amount, overrides) {

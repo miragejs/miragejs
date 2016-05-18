@@ -2,6 +2,7 @@
 import { pluralize, camelize } from '../utils/inflector';
 import extend from '../utils/extend';
 import assert from '../assert';
+import Collection from './collection';
 
 /*
   The Model class. Notes:
@@ -98,12 +99,28 @@ class Model {
 
   /**
    * Boolean, true if the model has not been persisted yet to the db.
+   *
+   * Originally this method simply checked if the model had an id; however,
+   * we let people create models with pre-specified ids. So, we have to
+   * check whether the record is in the actual databse or not.
+   *
    * @method isNew
    * @return {Boolean}
    * @public
    */
   isNew() {
-    return this.attrs.id === undefined || this.attrs.id === null;
+    let hasDbRecord = false;
+    let hasId = this.attrs.id !== undefined && this.attrs.id !== null;
+
+    if (hasId) {
+      let collectionName = pluralize(camelize(this.modelName));
+      let record = this._schema.db[collectionName].find(this.attrs.id);
+      if (record) {
+        hasDbRecord = true;
+      }
+    }
+
+    return !hasDbRecord;
   }
 
   /**
@@ -113,7 +130,7 @@ class Model {
    * @public
    */
   isSaved() {
-    return this.attrs.id !== undefined && this.attrs.id !== null;
+    return !this.isNew();
   }
 
   /**
@@ -151,10 +168,22 @@ class Model {
    * @private
    */
   _setupAttrs(attrs) {
+    // Verify no undefined associations are passed in
+    Object.keys(attrs)
+      .filter(key => {
+        let value = attrs[key];
+        return (value instanceof Model || value instanceof Collection);
+      })
+      .forEach(key => {
+        let modelOrCollection = attrs[key];
+
+        assert(this.associationKeys.indexOf(key) > -1, `You're trying to create a ${this.modelName} model and you passed in a ${modelOrCollection.toString()} under the ${key} key, but you haven't defined that key as an association on your model.`);
+      });
+
     // Filter out association keys
-    let hash = Object.keys(attrs).reduce((memo, attr) => {
-      if (this.associationKeys.indexOf(attr) === -1 && this.associationIdKeys.indexOf(attr) === -1) {
-        memo[attr] = attrs[attr];
+    let hash = Object.keys(attrs).reduce((memo, key) => {
+      if (this.associationKeys.indexOf(key) === -1 && this.associationIdKeys.indexOf(key) === -1) {
+        memo[key] = attrs[key];
       }
       return memo;
     }, {});

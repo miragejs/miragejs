@@ -1,19 +1,25 @@
-import {module, test} from 'qunit';
-import { Model, Factory } from 'ember-cli-mirage';
+import { module, test } from 'qunit';
+import { Model, Factory, hasMany, belongsTo } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
 
 module('Integration | Server | Factory creation', {
   beforeEach() {
     this.Contact = Model.extend();
     this.AmazingContact = Model.extend();
-    this.Post = Model.extend();
+    this.Post = Model.extend({
+      author: belongsTo()
+    });
+    this.Author = Model.extend({
+      posts: hasMany()
+    });
 
     this.server = new Server({
       environment: 'test',
       models: {
         contact: this.Contact,
         amazingContact: this.AmazingContact,
-        post: this.Post
+        post: this.Post,
+        author: this.Author
       },
       factories: {
         contact: Factory,
@@ -65,4 +71,26 @@ test('createList falls back to a model if no factory is defined', function(asser
   assert.ok(posts[0] instanceof this.Post);
   assert.equal(posts.length, 2);
   assert.equal(posts[0].id, 1);
+});
+
+test('create sets up the db correctly when passing in fks', function(assert) {
+  let author = server.create('author');
+  let post = this.server.create('post', {
+    authorId: author.id
+  });
+
+  assert.equal(author.posts.models.length, 1);
+  assert.deepEqual(post.author.attrs, author.attrs);
+  assert.equal(this.server.db.posts[0].authorId, author.id);
+});
+
+test('create sets up the db correctly when passing in models', function(assert) {
+  let author = server.create('author');
+  let post = this.server.create('post', {
+    author
+  });
+
+  assert.equal(author.posts.models.length, 1);
+  assert.deepEqual(post.author.attrs, author.attrs);
+  assert.equal(this.server.db.posts[0].authorId, author.id);
 });

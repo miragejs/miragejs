@@ -81,10 +81,7 @@ export default class Schema {
   }
 
   create(type, attrs) {
-    let collection = this._collectionForType(type);
-    let augmentedAttrs = collection.insert(attrs);
-
-    return this._instantiateModel(dasherize(type), augmentedAttrs);
+    return this.new(type, attrs).save();
   }
 
   all(type) {
