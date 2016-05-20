@@ -6,6 +6,11 @@ import _forIn from 'lodash/object/forIn';
 import _includes from 'lodash/collection/includes';
 import assert from '../assert';
 
+/**
+ * @class Schema
+ * @constructor
+ * @public
+ */
 export default class Schema {
 
   constructor(db, modelsMap = {}) {
@@ -16,12 +21,23 @@ export default class Schema {
     this.registerModels(modelsMap);
   }
 
+  /**
+   * @method registerModels
+   * @param hash
+   * @public
+   */
   registerModels(hash = {}) {
     _forIn(hash, (model, key) => {
       this.registerModel(key, hash[key]);
     });
   }
 
+  /**
+   * @method registerModel
+   * @param type
+   * @param ModelClass
+   * @public
+   */
   registerModel(type, ModelClass) {
     let camelizedModelName = camelize(type);
 
@@ -76,20 +92,43 @@ export default class Schema {
     return this;
   }
 
+  /**
+   * @method new
+   * @param type
+   * @param attrs
+   * @public
+   */
   new(type, attrs) {
     return this._instantiateModel(dasherize(type), attrs);
   }
 
+  /**
+   * @method create
+   * @param type
+   * @param attrs
+   * @public
+   */
   create(type, attrs) {
     return this.new(type, attrs).save();
   }
 
+  /**
+   * @method all
+   * @param type
+   * @public
+   */
   all(type) {
     let collection = this._collectionForType(type);
 
     return this._hydrate(collection, dasherize(type));
   }
 
+  /**
+   * @method find
+   * @param type
+   * @param ids
+   * @public
+   */
   find(type, ids) {
     let collection = this._collectionForType(type);
     let records = collection.find(ids);
@@ -104,6 +143,12 @@ export default class Schema {
     return this._hydrate(records, dasherize(type));
   }
 
+  /**
+   * @method where
+   * @param type
+   * @param query
+   * @public
+   */
   where(type, query) {
     let collection = this._collectionForType(type);
     let records = collection.where(query);
@@ -111,6 +156,11 @@ export default class Schema {
     return this._hydrate(records, dasherize(type));
   }
 
+  /**
+   * @method first
+   * @param type
+   * @public
+   */
   first(type) {
     let collection = this._collectionForType(type);
     let [ record ] = collection;
@@ -121,6 +171,12 @@ export default class Schema {
   /*
     Private methods
   */
+
+  /**
+   * @method _collectionForType
+   * @param type
+   * @private
+   */
   _collectionForType(type) {
     let collection = pluralize(type);
     assert(
@@ -131,6 +187,12 @@ export default class Schema {
     return this.db[collection];
   }
 
+  /**
+   * @method _addForeignKeyToRegistry
+   * @param type
+   * @param fk
+   * @private
+   */
   _addForeignKeyToRegistry(type, fk) {
     this._registry[type] = this._registry[type] || { class: null, foreignKeys: [] };
 
@@ -140,6 +202,12 @@ export default class Schema {
     }
   }
 
+  /**
+   * @method _instantiateModel
+   * @param modelName
+   * @param attrs
+   * @private
+   */
   _instantiateModel(modelName, attrs) {
     let ModelClass = this._modelFor(modelName);
     let fks = this._foreignKeysFor(modelName);
@@ -147,18 +215,32 @@ export default class Schema {
     return new ModelClass(this, modelName, attrs, fks);
   }
 
+  /**
+   * @method _modelFor
+   * @param modelName
+   * @private
+   */
   _modelFor(modelName) {
     return this._registry[camelize(modelName)].class;
   }
 
+  /**
+   * @method _foreignKeysFor
+   * @param modelName
+   * @private
+   */
   _foreignKeysFor(modelName) {
     return this._registry[camelize(modelName)].foreignKeys;
   }
 
-  /*
-    Takes a record and returns a model, or an array of records
-    and returns a collection.
-  */
+  /**
+   * Takes a record and returns a model, or an array of records
+   * and returns a collection.
+   * @method _hydrate
+   * @param records
+   * @param modelName
+   * @private
+   */
   _hydrate(records, modelName) {
     if (_isArray(records)) {
       let models = records.map(function(record) {
