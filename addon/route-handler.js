@@ -7,6 +7,7 @@ import GetShorthandHandler from './route-handlers/shorthands/get';
 import PostShorthandHandler from './route-handlers/shorthands/post';
 import PutShorthandHandler from './route-handlers/shorthands/put';
 import DeleteShorthandHandler from './route-handlers/shorthands/delete';
+import HeadShorthandHandler from './route-handlers/shorthands/head';
 
 import _keys from 'lodash/object/keys';
 import _isArray from 'lodash/lang/isArray';
@@ -38,6 +39,8 @@ function createHandler({ verb, schema, serializerOrRegistry, path, rawHandler, o
     handler = new PutShorthandHandler(...args);
   } else if (verb === 'delete') {
     handler = new DeleteShorthandHandler(...args);
+  } else if (verb === 'head') {
+    handler = new HeadShorthandHandler(...args);
   }
   return handler;
 }
