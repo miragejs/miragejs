@@ -43,7 +43,7 @@ class BelongsTo extends Association {
       */
       set(id) {
         assert(
-          !id || schema[pluralize(camelize(association.modelName))].find(id),
+          !id || schema.db[pluralize(camelize(association.modelName))].find(id),
           `Couldn\'t find ${association.modelName} with id = ${id}`
         );
 
