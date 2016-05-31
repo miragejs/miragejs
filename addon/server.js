@@ -136,7 +136,7 @@ export default class Server {
 
     if (this.isTest() && hasFactories) {
       this.loadFactories(options.factories);
-    } else if (!this.isTest() && hasDefaultScenario && hasFactories) {
+    } else if (!this.isTest() && hasDefaultScenario) {
       this.loadFactories(options.factories);
       options.scenarios.default(this);
     } else {
@@ -254,6 +254,7 @@ export default class Server {
         collection = this.db[collectionName];
       }
 
+      assert(collection, `You called server.create(${type}) but no model or factory was found. Try \`ember g mirage-model ${type}\`.`);
       modelOrRecord = collection.insert(attrs);
     }
 

@@ -1,13 +1,26 @@
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers, disallowMultipleVarDecl
 import Server, { defaultPassthroughs } from 'ember-cli-mirage/server';
 import {module, test} from 'qunit';
-import Factory from 'ember-cli-mirage/factory';
+import { Model, Factory } from 'ember-cli-mirage';
 
 module('Unit | Server');
 
 test('it can be instantiated', function(assert) {
   let server = new Server({ environment: 'test' });
   assert.ok(server);
+});
+
+test('it runs the default scenario in non-test environments', function(assert) {
+  assert.expect(1);
+
+  new Server({
+    environment: 'development',
+    scenarios: {
+      default(server) {
+        assert.ok(true);
+      }
+    }
+  });
 });
 
 module('Unit | Server #loadConfig');
@@ -40,57 +53,85 @@ test('its db is isolated across instances', function(assert) {
   assert.equal(server2.contacts, undefined);
 });
 
-module('Unit | Server #create', {
-  beforeEach() {
-    this.server = new Server({ environment: 'test' });
-  }
-});
+module('Unit | Server #create');
 
-test('create fails when no factories are regisered', function(assert) {
+test('create fails when no factories or models are registered', function(assert) {
+  let server = new Server({ environment: 'test' });
+
   assert.throws(function() {
-    this.server.create('contact');
+    server.create('contact');
   });
 });
 
 test('create fails when an expected factory isn\'t registered', function(assert) {
-  this.server.loadFactories({
-    address: Factory.extend()
+  let server = new Server({
+    environment: 'test',
+    factories: {
+      address: Factory
+    }
   });
 
   assert.throws(function() {
-    this.server.create('contact');
+    server.create('contact');
+  }, /no model or factory was found/);
+});
+
+test('create works when models but no factories are registered', function(assert) {
+  let server = new Server({
+    environment: 'test',
+    models: {
+      contact: Model
+    }
   });
+
+  server.create('contact');
+  assert.equal(server.db.contacts.length, 1);
 });
 
 test('create adds the data to the db', function(assert) {
-  this.server.loadFactories({
-    contact: Factory.extend({ name: 'Sam' })
+  let server = new Server({
+    environment: 'test',
+    factories: {
+      contact: Factory.extend({
+        name: 'Sam'
+      })
+    }
   });
 
-  this.server.create('contact');
-  let contactsInDb = this.server.db.contacts;
+  server.create('contact');
+  let contactsInDb = server.db.contacts;
 
   assert.equal(contactsInDb.length, 1);
   assert.deepEqual(contactsInDb[0], { id: '1', name: 'Sam' });
 });
 
 test('create returns the new data in the db', function(assert) {
-  this.server.loadFactories({
-    contact: Factory.extend({ name: 'Sam' })
+  let server = new Server({
+    environment: 'test',
+    factories: {
+      contact: Factory.extend({
+        name: 'Sam'
+      })
+    }
   });
 
-  let contact = this.server.create('contact');
+  let contact = server.create('contact');
 
   assert.deepEqual(contact, { id: '1', name: 'Sam' });
 });
 
 test('create allows for attr overrides', function(assert) {
-  this.server.loadFactories({
-    contact: Factory.extend({ name: 'Sam' })
+  let server = new Server({
+    environment: 'test',
+    factories: {
+      contact: Factory.extend({
+        name: 'Sam'
+      })
+    }
   });
 
-  let sam = this.server.create('contact');
-  let link = this.server.create('contact', { name: 'Link' });
+  let sam = server.create('contact');
+  let link = server.create('contact', { name: 'Link' });
 
   assert.deepEqual(sam, { id: '1', name: 'Sam' });
   assert.deepEqual(link, { id: '2', name: 'Link' });
@@ -106,26 +147,35 @@ test('create allows for attr overrides with extended factories', function(assert
       return this.age < 18;
     }
   });
-  this.server.loadFactories({
-    contact: ContactFactory,
-    friend: FriendFactory
+
+  let server = new Server({
+    environment: 'test',
+    factories: {
+      contact: ContactFactory,
+      friend: FriendFactory
+    }
   });
 
-  let link = this.server.create('friend');
-  let youngLink = this.server.create('friend', { age: 10 });
+  let link = server.create('friend');
+  let youngLink = server.create('friend', { age: 10 });
 
   assert.deepEqual(link, { id: '1', name: 'Link', age: 500, is_young: false });
   assert.deepEqual(youngLink, { id: '2', name: 'Link', age: 10, is_young: true });
 });
 
 test('create allows for attr overrides with arrays', function(assert) {
-  this.server.loadFactories({
-    contact: Factory.extend({ name: ['Sam', 'Carl'] })
+  let server = new Server({
+    environment: 'test',
+    factories: {
+      contact: Factory.extend({
+        name: ['Sam', 'Carl']
+      })
+    }
   });
 
-  let sam = this.server.create('contact');
-  let link = this.server.create('contact', { name: ['Link'] });
-  let noname = this.server.create('contact', { name: [] });
+  let sam = server.create('contact');
+  let link = server.create('contact', { name: ['Link'] });
+  let noname = server.create('contact', { name: [] });
 
   assert.deepEqual(sam, { id: '1', name: ['Sam', 'Carl'] });
   assert.deepEqual(link, { id: '2', name: ['Link'] });
@@ -133,38 +183,44 @@ test('create allows for attr overrides with arrays', function(assert) {
 });
 
 test('create allows for nested attr overrides', function(assert) {
-  this.server.loadFactories({
-    contact: Factory.extend({
-      address: {
-        streetName: 'Main',
-        streetAddress(i) {
-          return 1000 + i;
+  let server = new Server({
+    environment: 'test',
+    factories: {
+      contact: Factory.extend({
+        address: {
+          streetName: 'Main',
+          streetAddress(i) {
+            return 1000 + i;
+          }
         }
-      }
-    })
+      })
+    }
   });
 
-  let contact1 = this.server.create('contact');
-  let contact2 = this.server.create('contact');
+  let contact1 = server.create('contact');
+  let contact2 = server.create('contact');
 
   assert.deepEqual(contact1, { id: '1', address: { streetName: 'Main', streetAddress: 1000 } });
   assert.deepEqual(contact2, { id: '2', address: { streetName: 'Main', streetAddress: 1001 } });
 });
 
 test('create allows for arrays of attr overrides', function(assert) {
-  this.server.loadFactories({
-    contact: Factory.extend({
-      websites: [
-        'http://example.com',
-        function(i) {
-          return `http://placekitten.com/${320 + i}/${240 + i}`;
-        }
-      ]
-    })
+  let server = new Server({
+    environment: 'test',
+    factories: {
+      contact: Factory.extend({
+        websites: [
+          'http://example.com',
+          function(i) {
+            return `http://placekitten.com/${320 + i}/${240 + i}`;
+          }
+        ]
+      })
+    }
   });
 
-  let contact1 = this.server.create('contact');
-  let contact2 = this.server.create('contact');
+  let contact1 = server.create('contact');
+  let contact2 = server.create('contact');
 
   assert.deepEqual(contact1, { id: '1', websites: ['http://example.com', 'http://placekitten.com/320/240'] });
   assert.deepEqual(contact2, { id: '2', websites: ['http://example.com', 'http://placekitten.com/321/241'] });
