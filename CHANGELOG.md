@@ -2,11 +2,19 @@
 
 In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
-## master
+## 0.2.0
+
+Update notes:
+
+  - The `inverseOf` options was renamed to `inverse`, to be consistent with Ember Data
 
 Changes:
 
+  - [BREAKING CHANGE] #640 `inverseOf` was renamed to `inverse` @samselikoff
   - [FEATURE] #729 Add `this.normalizedRequestAttrs` helper method to function route handler @samselikoff
+  - [ENHANCEMENT] #743 Ensure associations can be passed in during model creation @samselikoff
+  - [BUGFIX] #738 Ensure directory location can be configured @gthmb
+  - General cleanup, updates and docs @lizzerdrix, @timjcook, @samselikoff
 
 ## 0.2.0-beta.9
 
