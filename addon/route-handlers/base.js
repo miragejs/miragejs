@@ -45,7 +45,7 @@ export default class BaseRouteHandler {
 
     assert(
       json.data && (json.data.attributes || json.data.relationships),
-      `You're using a shorthand or #normalizedRequestAttrs, but your serializer's normalize function did not return a valid JSON:API document. http://www.ember-cli-mirage.com/docs/v0.2.0-beta.9/serializers/#normalizejson`
+      `You're using a shorthand or #normalizedRequestAttrs, but your serializer's normalize function did not return a valid JSON:API document. http://www.ember-cli-mirage.com/docs/v0.2.x/serializers/#normalizejson`
     );
 
     if (json.data.attributes) {
