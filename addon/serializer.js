@@ -4,6 +4,7 @@ import _assign from 'lodash/object/assign';
 import extend from './utils/extend';
 import { singularize, pluralize, camelize } from './utils/inflector';
 import _isFunction from 'lodash/lang/isFunction';
+import _ from 'lodash';
 
 class Serializer {
 
@@ -37,12 +38,7 @@ class Serializer {
       if (this.isModel(response)) {
         json = this._serializeModel(response, request);
       } else {
-        json = response.models.reduce((allAttrs, model) => {
-          allAttrs.push(this._serializeModel(model));
-          this._resetAlreadySerialized();
-
-          return allAttrs;
-        }, []);
+        json = this._serializeCollection(response, request);
       }
 
       return this._formatResponse(response, json);
@@ -234,6 +230,21 @@ class Serializer {
   }
 
   /**
+   * @method _serializeCollection
+   * @param collection
+   * @param request
+   * @private
+   */
+  _serializeCollection(collection, request, removeForeignKeys, serializeRelationships) {
+    return collection.models.reduce((allAttrs, model) => {
+      allAttrs.push(this._serializeModel(model, request, removeForeignKeys, serializeRelationships));
+      this._resetAlreadySerialized();
+
+      return allAttrs;
+    }, []);
+  }
+
+  /**
    * @method _oldAttrsForModel
    * @param model
    * @private
@@ -286,11 +297,11 @@ class Serializer {
    */
   _serializeSideloadedModelOrCollection(modelOrCollection, request) {
     if (this.isModel(modelOrCollection)) {
-      return this._serializeSideloadedModelResponse(modelOrCollection, request);
+      return this._serializeIncludedModel(modelOrCollection, request);
     } else if (modelOrCollection.models && modelOrCollection.models.length) {
 
       return modelOrCollection.models.reduce((allAttrs, model) => {
-        return this._serializeSideloadedModelResponse(model, request, true, allAttrs);
+        return this._serializeIncludedModel(model, request, true, allAttrs);
       }, {});
 
       // We have an empty collection
@@ -300,7 +311,30 @@ class Serializer {
   }
 
   /**
-   * @method _serializeSideloadedModelResponse
+   * @method _serializeRelationshipsFor
+   * @param model
+   * @param request
+   * @private
+   */
+  _serializeRelationshipsFor(model, request, topLevelIsArray = false, allAttrs = {}, root = null) {
+    let relationshipNames = this._getRelationshipNames(request);
+
+    relationshipNames
+    .map((relationshipName) => this._getRelated(model, relationshipName))
+    .filter(Boolean)
+    .forEach(relationship => {
+      let relatedModels = this.isModel(relationship) ? [relationship] : relationship;
+
+      relatedModels.forEach(relatedModel => {
+        let serializer = this.serializerFor(relatedModel.modelName);
+        let relationshipKey = serializer.keyForRelationship(relatedModel.modelName);
+        serializer._serializeIncludedModel(relatedModel, request, true, allAttrs, relationshipKey);
+      });
+    });
+  }
+
+  /**
+   * @method _serializeIncludedModel
    * @param model
    * @param request
    * @param [topLevelIsArray=false]
@@ -308,7 +342,7 @@ class Serializer {
    * @param [root=null]
    * @private
    */
-  _serializeSideloadedModelResponse(model, request, topLevelIsArray = false, allAttrs = {}, root = null) {
+  _serializeIncludedModel(model, request, topLevelIsArray = false, allAttrs = {}, root = null) {
     if (this._hasBeenSerialized(model)) {
       return allAttrs;
     }
@@ -327,18 +361,7 @@ class Serializer {
       allAttrs[key] = modelAttrs;
     }
 
-    // Traverse this model's relationships
-    this._valueForInclude(this, request)
-    .map(key => model[camelize(key)])
-    .filter(Boolean)
-    .forEach(relationship => {
-      let relatedModels = this.isModel(relationship) ? [relationship] : relationship.models;
-
-      relatedModels.forEach(relatedModel => {
-        let serializer = this.serializerFor(relatedModel.modelName);
-        serializer._serializeSideloadedModelResponse(relatedModel, request, true, allAttrs, serializer.keyForRelationship(relatedModel.modelName));
-      });
-    });
+    this._serializeRelationshipsFor(model, request, topLevelIsArray, allAttrs, root);
 
     return allAttrs;
   }
@@ -386,14 +409,14 @@ class Serializer {
     let attrs = this.oldSerialize(model, request);
 
     if (removeForeignKeys) {
-      model.fks.forEach(key => {
+      model.fks.map(this._serializeForeignKey).forEach(key => {
         delete attrs[key];
       });
     }
 
     if (embedRelatedIds) {
-      this._valueForInclude(this, request)
-      .map(key => model[camelize(key)])
+      this._getRelationshipNames(request)
+      .map((key) => this._getRelatedValue(model, key))
       .filter(this.isCollection)
       .forEach(relatedCollection => {
         attrs[this.keyForRelationshipIds(relatedCollection.modelName)] = relatedCollection.models.map(model => model.id);
@@ -403,6 +426,10 @@ class Serializer {
     return attrs;
   }
 
+  _serializeForeignKey(key) {
+    return key;
+  }
+
   /**
    * @method _attrsForRelationships
    * @param model
@@ -410,7 +437,7 @@ class Serializer {
    * @private
    */
   _attrsForRelationships(model, request) {
-    return this._valueForInclude(this, request)
+    return this._getRelationshipNames(request)
     .reduce((attrs, key) => {
       let modelOrCollection = model[camelize(key)];
       let serializer = this.serializerFor(modelOrCollection.modelName);
@@ -434,9 +461,9 @@ class Serializer {
    * @private
    */
   _hasBeenSerialized(model) {
-    let relationshipKey = `${camelize(model.modelName)}Ids`;
-
-    return (this.alreadySerialized[relationshipKey] && this.alreadySerialized[relationshipKey].indexOf(model.id) > -1);
+    let relationshipKey = this.keyForRelationshipIds(model.modelName);
+    let obj = this.alreadySerialized[relationshipKey];
+    return obj && obj.indexOf(model.id) > -1;
   }
 
   /**
@@ -445,7 +472,7 @@ class Serializer {
    * @private
    */
   _augmentAlreadySerialized(model) {
-    let modelKey = `${camelize(model.modelName)}Ids`;
+    let modelKey = this.keyForRelationshipIds(model.modelName);
 
     this.alreadySerialized[modelKey] = this.alreadySerialized[modelKey] || [];
     this.alreadySerialized[modelKey].push(model.id);
@@ -467,18 +494,38 @@ class Serializer {
   }
 
   /**
-   * @method _valueForInclude
+   * @method _getRelationshipNames
    * @param serializer
    * @param request
    * @private
    */
-  _valueForInclude(serializer, request) {
-    let { include } = serializer;
+  _getRelationshipNames(request) {
+    let { include } = this;
 
     if (_isFunction(include)) {
       return include(request);
     } else {
       return include;
+    }
+  }
+
+  _getRelated(parentModel, path) {
+    return path.split('.').reduce((related, relationshipName) => {
+      return _(related)
+        .map(r => this._getRelatedValue(r.reload(), relationshipName))
+        .map(r => this.isCollection(r) ? r.models : r) // Turning Collections into Arrays for lodash to recognize
+        .flatten()
+        .filter()
+        .value();
+    }, [parentModel]);
+  }
+
+  _getRelatedValue(model, key) {
+    let camelizedKey = camelize(key);
+    if (_isFunction(this[camelizedKey])) {
+      return this[camelizedKey](model);
+    } else {
+      return model[camelizedKey];
     }
   }
 }

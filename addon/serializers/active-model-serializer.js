@@ -1,6 +1,6 @@
 // jscs:disable requireArrayDestructuring, requireParenthesesAroundArrowParam
 import Serializer from '../serializer';
-import { underscore, pluralize, dasherize } from '../utils/inflector';
+import { underscore, pluralize, dasherize, singularize } from '../utils/inflector';
 
 export default Serializer.extend({
 
@@ -17,7 +17,7 @@ export default Serializer.extend({
   },
 
   keyForRelationshipIds(type) {
-    return `${underscore(type)}_ids`;
+    return `${underscore(singularize(type))}_ids`;
   },
 
   normalize(payload) {

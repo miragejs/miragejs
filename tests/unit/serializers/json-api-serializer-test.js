@@ -108,7 +108,7 @@ test('_getRelatedModelWithPath belongsTo', function(assert) {
   zomg3.save();
   zomg4.save();
 
-  let result = serializer._getRelatedWithPath(foo, 'bar.baz.quuxes.zomgs.lol');
+  let result = serializer._getRelated(foo, 'bar.baz.quuxes.zomgs.lol');
   let ids = _map(result, 'id');
 
   assert.equal(result.length, 4);
