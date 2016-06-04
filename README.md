@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/samselikoff/ember-cli-mirage.png?label=ready&title=Ready)](https://waffle.io/samselikoff/ember-cli-mirage)
 # Ember CLI Mirage
 
 [![Build Status](https://travis-ci.org/samselikoff/ember-cli-mirage.svg?branch=master)](https://travis-ci.org/samselikoff/ember-cli-mirage)
