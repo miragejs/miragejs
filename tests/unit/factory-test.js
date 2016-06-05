@@ -218,3 +218,22 @@ test('throws meaningfull exception on circular reference', function(assert) {
     return e.toString() === 'Error: Cyclic dependency in properties ["foo","bar"]';
   });
 });
+
+test('it skips invoking `afterCreate`', function(assert) {
+  var skipped = true;
+  var PostFactory = Mirage.Factory.extend({
+   afterCreate() {
+     skipped = false;
+   }
+  });
+
+  var factory = new PostFactory();
+  var post = factory.build(0);
+
+  assert.ok(skipped, 'skips invoking `afterCreate`');
+  assert.equal(
+    typeof post.afterCreate,
+    'undefined',
+    'does not build `afterCreate` attribute'
+  );
+});

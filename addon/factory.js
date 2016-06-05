@@ -22,7 +22,9 @@ let Factory = function() {
       };
 
       buildSingleValue = (value) => {
-        if (_isArray(value)) {
+        if (key === 'afterCreate') {
+          // no op
+        } else if (_isArray(value)) {
           return value.map(buildSingleValue);
         } else if (_isPlainObject(value)) {
           return buildAttrs(value);

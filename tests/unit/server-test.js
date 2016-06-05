@@ -226,6 +226,39 @@ test('create allows for arrays of attr overrides', function(assert) {
   assert.deepEqual(contact2, { id: '2', websites: ['http://example.com', 'http://placekitten.com/321/241'] });
 });
 
+test('invokes `afterCreate` hooks', function(assert) {
+  var afterCreateInvocations = 0;
+  var invocationArguments = [];
+  server.loadFactories({
+    post: Factory.extend({
+      title: 'the-title',
+
+      afterCreate(db) {
+        invocationArguments.push(db);
+        afterCreateInvocations++;
+      }
+    }),
+  });
+
+  server.create('post', {
+    afterCreate(db) {
+      invocationArguments.push(db);
+      afterCreateInvocations++;
+    },
+  });
+
+  assert.equal(
+    afterCreateInvocations,
+    2,
+    'calls `afterCreate`s defined in both the factory and the test'
+  );
+  assert.deepEqual(
+    invocationArguments,
+    [server.db, server.db],
+    'invoked with `db` as argument'
+  );
+});
+
 module('Unit | Server #createList', {
   beforeEach() {
     this.server = new Server({ environment: 'test' });
