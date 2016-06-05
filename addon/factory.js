@@ -9,11 +9,11 @@ import _isPlainObject from 'lodash/lang/isPlainObject';
 let Factory = function() {
   this.build = function(sequence) {
     let object = {};
-    let topLevelAttrs = this.attrs || {};
+    let topLevelAttrs = _assign({}, this.attrs);
+    delete topLevelAttrs.afterCreate;
     let keys = sortAttrs(topLevelAttrs, sequence);
 
     keys.forEach(function(key) {
-
       let buildAttrs;
       let buildSingleValue;
 
@@ -22,9 +22,7 @@ let Factory = function() {
       };
 
       buildSingleValue = (value) => {
-        if (key === 'afterCreate') {
-          // no op
-        } else if (_isArray(value)) {
+        if (_isArray(value)) {
           return value.map(buildSingleValue);
         } else if (_isPlainObject(value)) {
           return buildAttrs(value);

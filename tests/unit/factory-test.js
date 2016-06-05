@@ -219,16 +219,16 @@ test('throws meaningfull exception on circular reference', function(assert) {
   });
 });
 
-test('it skips invoking `afterCreate`', function(assert) {
-  var skipped = true;
-  var PostFactory = Mirage.Factory.extend({
-   afterCreate() {
-     skipped = false;
-   }
+test('#build skips invoking `afterCreate`', function(assert) {
+  let skipped = true;
+  let PostFactory = Mirage.Factory.extend({
+    afterCreate() {
+      skipped = false;
+    }
   });
 
-  var factory = new PostFactory();
-  var post = factory.build(0);
+  let factory = new PostFactory();
+  let post = factory.build(0);
 
   assert.ok(skipped, 'skips invoking `afterCreate`');
   assert.equal(
