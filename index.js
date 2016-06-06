@@ -54,13 +54,43 @@ module.exports = {
     return this._super.treeFor.apply(this, arguments);
   },
 
-  treeForApp: function(name) {
-    var originalAppTree = unwatchedTree(path.resolve(__dirname, 'app'));
+  _lintMirageTree: function(mirageTree) {
+    var lintedMirageTrees;
+    // _eachProjectAddonInvoke was added in ember-cli@2.5.0
+    // this conditional can be removed when we no longer support
+    // versions older than 2.5.0
+    if (this._eachProjectAddonInvoke) {
+      lintedMirageTrees = this._eachProjectAddonInvoke('lintTree', ['mirage', mirageTree]);
+    } else {
+      lintedMirageTrees = this.project.addons.map(function(addon) {
+        if (addon.lintTree) {
+          return addon.lintTree('mirage', mirageTree);
+        }
+      }).filter(Boolean);
+    }
+
+    var lintedMirage = mergeTrees(lintedMirageTrees, {
+      overwrite: true,
+      annotation: 'TreeMerger (mirage-lint)'
+    });
+
+    return new Funnel(lintedMirage, {
+      destDir: 'tests/mirage/'
+    });
+  },
+
+  treeForApp: function(appTree) {
+    var trees = [ appTree ];
     var mirageFilesTree = new Funnel(this.mirageDirectory, {
       destDir: 'mirage'
     });
+    trees.push(mirageFilesTree);
 
-    return mergeTrees([originalAppTree, mirageFilesTree]);
+    if (this.hintingEnabled()) {
+      trees.push(this._lintMirageTree(mirageFilesTree));
+    }
+
+    return mergeTrees(trees);
   },
 
   _shouldIncludeFiles: function() {
