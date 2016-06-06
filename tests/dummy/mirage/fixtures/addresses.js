@@ -8,5 +8,5 @@ export default [
     id: 2,
     name: 'Mount Doom',
     contact_id: 2
-  },
+  }
 ];

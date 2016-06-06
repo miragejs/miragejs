@@ -14,12 +14,12 @@ export default function() {
   this.get('/friends', { coalesce: true });
 
   // Pets
-  this.get('/pets', function({db}) {
+  this.get('/pets', function({ db }) {
     return { pets: db.pets.filter(pet => pet.alive) };
   });
 
-  this.post('/pets', function({db}, req) {
-    let pet = JSON.parse(req.requestBody).pet;
+  this.post('/pets', function({ db }, req) {
+    let { pet } = JSON.parse(req.requestBody);
     if (Ember.isBlank(pet.name)) {
       let body = { errors: { name: ["can't be blank"] } };
       return new Mirage.Response(422, { some: 'header' }, body);
@@ -28,13 +28,13 @@ export default function() {
     }
   });
 
-  this.put('/pets/:id', function({db}, req) {
-    let pet = JSON.parse(req.requestBody).pet;
+  this.put('/pets/:id', function({ db }, req) {
+    let { pet } = JSON.parse(req.requestBody);
     db.pets.update(pet.id, pet);
     return pet;
   });
 
-  this.delete('/pets/:id', function({db}, req) { }, 200);
+  this.delete('/pets/:id', function({ db }, req) { }, 200);
 
   this.get('/word-smiths/:id');
 

@@ -6,11 +6,11 @@ export default Mirage.Factory.extend({
   name: faker.name.firstName,
   age: 20,
 
-  email: function(i) {
+  email(i) {
     return `person${i}@test.com`;
   },
 
-  admin: function() {
+  admin() {
     return this.age > 30;
   }
 
