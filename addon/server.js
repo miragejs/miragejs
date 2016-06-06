@@ -204,6 +204,14 @@ export default class Server {
     });
   }
 
+  factoryFor(type) {
+    let camelizedType = camelize(type);
+
+    if (this._factoryMap && this._factoryMap[camelizedType]) {
+      return this._factoryMap[camelizedType];
+    }
+  }
+
   build(type, overrides) {
     let camelizedType = camelize(type);
 
@@ -211,8 +219,8 @@ export default class Server {
     this.factorySequences = this.factorySequences || {};
     this.factorySequences[camelizedType] = this.factorySequences[camelizedType] + 1 || 0;
 
-    if (this._factoryMap && this._factoryMap[camelizedType]) {
-      let OriginalFactory = this._factoryMap[camelizedType];
+    let OriginalFactory = this.factoryFor(type);
+    if (OriginalFactory) {
       let Factory = OriginalFactory.extend(overrides);
       let factory = new Factory();
 
@@ -256,6 +264,11 @@ export default class Server {
 
       assert(collection, `You called server.create(${type}) but no model or factory was found. Try \`ember g mirage-model ${type}\`.`);
       modelOrRecord = collection.insert(attrs);
+    }
+
+    let OriginalFactory = this.factoryFor(type);
+    if (OriginalFactory && OriginalFactory.attrs && OriginalFactory.attrs.afterCreate) {
+      OriginalFactory.attrs.afterCreate(modelOrRecord, this);
     }
 
     return modelOrRecord;
