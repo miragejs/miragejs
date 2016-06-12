@@ -17,6 +17,12 @@ module('Integration | Serializer | ActiveModelSerializer', {
       }),
       blogPost: Model.extend({
         wordSmith: belongsTo()
+      }),
+      user: Model.extend({
+        contactInfos: hasMany()
+      }),
+      contactInfo: Model.extend({
+        user: belongsTo()
       })
     });
 
@@ -26,11 +32,22 @@ module('Integration | Serializer | ActiveModelSerializer', {
 
     this.schema.wordSmiths.create({ name: 'Zelda', age: 230 });
 
+    let user = this.schema.users.create({ name: 'John Peach', age: 123 });
+    user.createContactInfo({ email: 'peach@bb.me' });
+    user.createContactInfo({ email: 'john3000@mail.com' });
+
+    this.schema.users.create({ name: 'Pine Apple', age: 230 });
+
     this.registry = new SerializerRegistry(this.schema, {
       application: ActiveModelSerializer,
       wordSmith: ActiveModelSerializer.extend({
         attrs: ['id', 'name'],
         include: ['blogPosts']
+      }),
+      user: ActiveModelSerializer.extend({
+        attrs: ['id', 'name'],
+        include: ['ContactInfos'],
+        embed: true
       })
     });
   },
@@ -92,6 +109,37 @@ test('it sideloads associations and snake-cases relationships and attributes cor
         id: '2',
         title: 'Ipsum',
         word_smith_id: '1'
+      }
+    ]
+  });
+});
+
+test('it embeds associations and snake-cases relationships and attributes correctly for a collection', function(assert) {
+  let users = this.schema.users.all();
+  let result = this.registry.serialize(users);
+
+  assert.deepEqual(result, {
+    users: [
+      {
+        id: '1',
+        name: 'John Peach',
+        contact_infos: [
+          {
+            id: '1',
+            email: 'peach@bb.me',
+            user_id: '1'
+          },
+          {
+            id: '2',
+            email: 'john3000@mail.com',
+            user_id: '1'
+          }
+        ]
+      },
+      {
+        id: '2',
+        name: 'Pine Apple',
+        contact_infos: []
       }
     ]
   });

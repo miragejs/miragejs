@@ -418,7 +418,11 @@ class Serializer {
       let relatedAttrs = serializer._serializeModelOrCollection(modelOrCollection, request);
 
       if (relatedAttrs) {
-        attrs[camelize(key)] = relatedAttrs;
+        if (this.isModel(modelOrCollection)) {
+          attrs[this.keyForModel(key)] = relatedAttrs;
+        } else {
+          attrs[this.keyForRelationship(key)] = relatedAttrs;
+        }
       }
 
       return attrs;
