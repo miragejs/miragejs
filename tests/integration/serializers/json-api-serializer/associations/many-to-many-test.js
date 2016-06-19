@@ -1,4 +1,4 @@
-import { module, test } from 'qunit';
+import { module, skip } from 'qunit';
 import { Collection, Model, hasMany, belongsTo, JSONAPISerializer } from 'ember-cli-mirage';
 import Db from 'ember-cli-mirage/db';
 import Schema from 'ember-cli-mirage/orm/schema';
@@ -34,7 +34,7 @@ module('Integration | Serializers | JSON API Serializer | Associations | Many To
   }
 });
 
-test(`it serializes manyToMany if properly configured to passthrough `, function(assert) {
+skip(`it serializes manyToMany if properly configured to passthrough `, function(assert) {
   let contactSerializer = JSONAPISerializer.extend({
     addresses(model) {
       let models = model.contactAddresses.models.map(ca => ca.address);
@@ -82,7 +82,7 @@ test(`it serializes manyToMany if properly configured to passthrough `, function
   });
 });
 
-test(`it sideloads manyToMany if properly configured to passthrough and include`, function(assert) {
+skip(`it sideloads manyToMany if properly configured to passthrough and include`, function(assert) {
   let contactSerializer = JSONAPISerializer.extend({
     include: ['addresses'],
     addresses(model) {

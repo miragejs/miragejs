@@ -160,7 +160,7 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
       include: ['blogPosts']
     }),
     blogPost: this.BaseSerializer.extend({
-      include: ['word-smith', 'fine-comments']
+      include: ['wordSmith', 'fineComments']
     }),
     fineComment: this.BaseSerializer.extend({
       include: ['blogPost']

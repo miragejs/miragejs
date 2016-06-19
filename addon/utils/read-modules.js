@@ -8,6 +8,8 @@ import Ember from 'ember';
 import _camelCase from 'lodash/string/camelCase';
 import { pluralize } from 'ember-cli-mirage/utils/inflector';
 
+const { assert } = Ember;
+
 /*
   This function looks through all files that have been loaded by Ember CLI and
   finds the ones under /mirage/[factories, fixtures, scenarios, models]/, and exports
@@ -30,11 +32,11 @@ export default function(prefix) {
     let moduleParts = moduleName.split('/');
     let moduleType = moduleParts[moduleParts.length - 2];
     let moduleKey = moduleParts[moduleParts.length - 1];
-    Ember.assert(`Subdirectories under i${moduleType} are not supported`,
+    assert(`Subdirectories under i${moduleType} are not supported`,
                  moduleParts[moduleParts.length - 3] === 'mirage');
 
     if (moduleType === 'scenario') {
-      Ember.assert('Only scenario/default.js is supported at this time.',
+      assert('Only scenario/default.js is supported at this time.',
                    moduleKey !== 'default');
     }
 

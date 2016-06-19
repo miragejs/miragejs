@@ -1,28 +1,24 @@
+import Schema from 'ember-cli-mirage/orm/schema';
+import Db from 'ember-cli-mirage/db';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
-import JsonApiSerializer from 'ember-cli-mirage/serializers/json-api-serializer';
-import schemaHelper from '../schema-helper';
+import { Model, JSONAPISerializer } from 'ember-cli-mirage';
 import { module, test } from 'qunit';
 
 module('Integration | Serializers | JSON API Serializer | Base', {
   beforeEach() {
-    this.schema = schemaHelper.setup();
-    this.registry = new SerializerRegistry(this.schema, {
-      application: JsonApiSerializer
+    this.schema = new Schema(new Db(), {
+      wordSmith: Model
     });
-  },
-  afterEach() {
-    this.schema.db.emptyData();
+    this.registry = new SerializerRegistry(this.schema, {
+      application: JSONAPISerializer
+    });
   }
 });
 
 test(`it includes all attributes for a model`, function(assert) {
-  let user = this.schema.wordSmiths.create({
-    id: 1,
-    firstName: 'Link',
-    age: 123
-  });
+  let link = this.schema.wordSmiths.create({ firstName: 'Link', age: 123 });
+  let result = this.registry.serialize(link);
 
-  let result = this.registry.serialize(user);
   assert.deepEqual(result, {
     data: {
       type: 'word-smiths',
@@ -30,20 +26,15 @@ test(`it includes all attributes for a model`, function(assert) {
       attributes: {
         'first-name': 'Link',
         age: 123
-      },
-      relationships: {
-        'blog-posts': {
-          data: []
-        }
       }
     }
   });
 });
 
 test(`it includes all attributes for each model in a collection`, function(assert) {
-  let { schema } = this;
-  schema.wordSmiths.create({ id: 1, firstName: 'Link', age: 123 });
-  schema.wordSmiths.create({ id: 2, firstName: 'Zelda', age: 456 });
+  this.schema.wordSmiths.create({ firstName: 'Link', age: 123 });
+  this.schema.wordSmiths.create({ id: 1, firstName: 'Link', age: 123 });
+  this.schema.wordSmiths.create({ id: 2, firstName: 'Zelda', age: 456 });
 
   let collection = this.schema.wordSmiths.all();
   let result = this.registry.serialize(collection);
@@ -55,11 +46,6 @@ test(`it includes all attributes for each model in a collection`, function(asser
       attributes: {
         'first-name': 'Link',
         age: 123
-      },
-      relationships: {
-        'blog-posts': {
-          data: []
-        }
       }
     }, {
       type: 'word-smiths',
@@ -67,11 +53,6 @@ test(`it includes all attributes for each model in a collection`, function(asser
       attributes: {
         'first-name': 'Zelda',
         age: 456
-      },
-      relationships: {
-        'blog-posts': {
-          data: []
-        }
       }
     }]
   });

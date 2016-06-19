@@ -1,192 +1,195 @@
-// jscs:disable requireParenthesesAroundArrowParam
 import Serializer from '../serializer';
-import { dasherize, pluralize, singularize } from '../utils/inflector';
-import extend from './../utils/extend';
+import { dasherize, pluralize, camelize } from '../utils/inflector';
 
-import _flatten from 'lodash/array/flatten';
 import _get from 'lodash/object/get';
-import _trim from 'lodash/string/trim';
-import _isString from 'lodash/lang/isString';
+import _ from 'lodash';
 
-class JsonApiSerializer extends Serializer {
+export default Serializer.extend({
 
-  serialize(modelOrCollection, request={}) {
-    let response;
+  keyForModel(modelName) {
+    return dasherize(modelName);
+  },
 
-    if (this.isModel(modelOrCollection)) {
-      response = this._serializeModel(modelOrCollection, request);
-    } else {
-      response = this._serializeCollection(modelOrCollection, request);
-    }
-
-    if (this.included.length) {
-      response.included = this.included;
-    }
-
-    return response;
-  }
+  keyForCollection(modelName) {
+    return dasherize(modelName);
+  },
 
   keyForAttribute(attr) {
     return dasherize(attr);
-  }
+  },
 
   keyForRelationship(key) {
     return dasherize(key);
-  }
+  },
 
-  keyForRelationshipIds(modelName) {
-    return `${singularize(modelName)}Ids`;
-  }
+  getHashForPrimaryResource(resource) {
+    let resourceHash = this.getHashForResource(resource);
+    let hashWithRoot = { data: resourceHash };
+    let addToIncludes = this.getAddToIncludesForResource(resource);
 
-  typeKeyForModel(model) {
-    return dasherize(pluralize(model.modelName));
-  }
+    return [ hashWithRoot, addToIncludes ];
+  },
 
-  toString() {
-    return `serializer:${this.type}`;
-  }
+  getHashForIncludedResource(resource) {
+    let hash = this.getHashForResource(resource);
+    let hashWithRoot = { included: (this.isModel(resource) ? [ hash ] : hash) };
+    let addToIncludes = [];
 
-  _serializeModel(model, request) {
-    this._augmentAlreadySerialized(model);
+    if (!this.hasQueryParamIncludes()) {
+      addToIncludes = this.getAddToIncludesForResource(resource);
+    }
 
-    let response = {
-      data: this._resourceObjectFor(model, request)
-    };
+    return [ hashWithRoot, addToIncludes ];
+  },
 
-    this._serializeRelationshipsFor(model, request);
+  getHashForResource(resource) {
+    let hash;
 
-    return response;
-  }
+    if (this.isModel(resource)) {
+      hash = this._getResourceObjectForModel(resource);
+    } else {
+      hash = resource.models.map(m => this._getResourceObjectForModel(m));
+    }
 
-  _serializeCollection(collection, request) {
-    let response = {
-      data: collection.models.map(model => this._resourceObjectFor(model, request))
-    };
+    return hash;
+  },
 
-    collection.models.forEach(model => {
-      this._serializeRelationshipsFor(model, request);
+  /*
+    Returns a flat unique list of resources that need to be added to includes
+  */
+  getAddToIncludesForResource(resource) {
+    let relationshipPaths;
+
+    if (_get(this, 'request.queryParams.include')) {
+      relationshipPaths = this.request.queryParams.include.split(',');
+    } else {
+      let serializer = this.serializerFor(resource.modelName);
+      relationshipPaths = serializer.getKeysForIncluded();
+    }
+
+    return this.getAddToIncludesForResourceAndPaths(resource, relationshipPaths);
+  },
+
+  getAddToIncludesForResourceAndPaths(resource, relationshipPaths) {
+    let includes = [];
+
+    relationshipPaths.forEach(path => {
+      let relationshipNames = path.split('.');
+      let newIncludes = this.getIncludesForResourceAndPath(resource, ...relationshipNames);
+      includes.push(newIncludes);
     });
 
-    return response;
-  }
+    return _(includes)
+      .flatten()
+      .compact()
+      .uniq(m => m.toString())
+      .value();
+  },
 
-  _serializeIncludedModel(model, request) {
-    if (this._hasBeenSerialized(model)) {
-      return;
+  getIncludesForResourceAndPath(resource, ...names) {
+    let nameForCurrentResource = camelize(names.shift());
+    let includes = [];
+    let modelsToAdd = [];
+
+    if (this.isModel(resource)) {
+      let relationship = resource[nameForCurrentResource];
+
+      if (this.isModel(relationship)) {
+        modelsToAdd = [ relationship ];
+      } else if (this.isCollection(relationship)) {
+        modelsToAdd = relationship.models;
+      }
+
+    } else {
+      resource.models.forEach(model => {
+        let relationship = model[nameForCurrentResource];
+
+        if (this.isModel(relationship)) {
+          modelsToAdd.push(relationship);
+        } else if (this.isCollection(relationship)) {
+          modelsToAdd = modelsToAdd.concat(relationship.models);
+        }
+      });
     }
-    this._augmentAlreadySerialized(model);
 
-    this.included.push(this._resourceObjectFor(model, request));
-    this._serializeRelationshipsFor(model, request);
-  }
+    includes = includes.concat(modelsToAdd);
 
-  _serializeForeignKey(key) {
-    return dasherize(key);
-  }
+    if (names.length) {
+      modelsToAdd.forEach(model => {
+        includes = includes.concat(this.getIncludesForResourceAndPath(model, ...names));
+      });
+    }
 
-  _resourceObjectFor(model, _request) {
-    let attrs = this._attrsForModel(model, _request, true, false);
+    return includes;
+  },
 
-    let obj = {
+  _getResourceObjectForModel(model) {
+    let attrs = this._attrsForModel(model, true);
+    delete attrs.id;
+
+    let hash = {
       type: this.typeKeyForModel(model),
       id: model.id,
       attributes: attrs
     };
 
-    let linkData = this._linkDataFor(model);
+    model.associationKeys.forEach(key => {
+      let relationship = model[key];
+      let relationshipKey = this.keyForRelationship(key);
+      let relationshipHash;
+      hash.relationships = hash.relationships || {};
 
-    model.associationKeys.forEach(camelizedType => {
-      let relationship = this._getRelatedValue(model, camelizedType);
-      let relationshipKey = this.keyForRelationship(camelizedType);
+      if (this.hasLinksForRelationship(model, key)) {
+        let serializer = this.serializerFor(model.modelName);
+        let links = serializer.links(model);
+        relationshipHash = { links: links[key] };
 
-      if (!obj.relationships) {
-        obj.relationships = {};
-      }
+      } else {
+        let data = null;
 
-      if (this.isCollection(relationship)) {
-        obj.relationships[relationshipKey] = {
-          data: relationship.models.map(model => {
+        if (this.isModel(relationship)) {
+          data = {
+            type: this.typeKeyForModel(relationship),
+            id: relationship.id
+          };
+        } else if (this.isCollection(relationship)) {
+          data = relationship.models.map(model => {
             return {
               type: this.typeKeyForModel(model),
               id: model.id
             };
-          })
-        };
-      } else if (relationship) {
-        obj.relationships[relationshipKey] = {
-          data: {
-            type: this.typeKeyForModel(relationship),
-            id: relationship.id
-          }
-        };
-      } else {
-        obj.relationships[relationshipKey] = {
-          data: null
-        };
+          });
+        }
+
+        relationshipHash = { data };
       }
 
-      if (linkData && linkData[camelizedType]) {
-        this._addLinkData(obj, relationshipKey, linkData[camelizedType]);
-      }
+      hash.relationships[relationshipKey] = relationshipHash;
     });
 
-    return obj;
-  }
+    return hash;
+  },
 
-  _attrsForModel(model, _request = null, removeForeignKeys = true) {
-    let attrs = super._attrsForModel(model, _request, removeForeignKeys);
-    delete attrs.id;
-    return attrs;
-  }
-
-  _linkDataFor(model) {
+  hasLinksForRelationship(model, relationshipKey) {
     let serializer = this.serializerFor(model.modelName);
-    let linkData   = null;
-    if (serializer && serializer.links) {
-      linkData = serializer.links(model);
+    let links;
+    if (serializer.links) {
+      links = serializer.links(model);
+
+      return links[relationshipKey] != null;
     }
-    return linkData;
+  },
+
+  getQueryParamIncludes() {
+    return (_get(this, 'request.queryParams.include'));
+  },
+
+  hasQueryParamIncludes() {
+    return !!this.getQueryParamIncludes();
+  },
+
+  typeKeyForModel(model) {
+    return dasherize(pluralize(model.modelName));
   }
 
-  _addLinkData(json, relationshipKey, linkData) {
-    if (!json.relationships[relationshipKey]) {
-      json.relationships[relationshipKey] = {};
-    }
-
-    delete json.relationships[relationshipKey].data;
-    json.relationships[relationshipKey].links = {};
-
-    if (linkData.self) {
-      json.relationships[relationshipKey].links.self = { href: linkData.self };
-    }
-
-    if (linkData.related) {
-      json.relationships[relationshipKey].links.related = { href: linkData.related };
-    }
-  }
-
-  _getRelationshipNames(request = {}) {
-    let requestRelationships = _get(request, 'queryParams.include');
-    let relationships;
-
-    if (_isString(requestRelationships)) {
-      relationships = requestRelationships;
-    } else {
-      relationships = _get(this, 'include', []).join(',');
-    }
-
-    if (relationships.length) {
-      let expandedRelationships = relationships
-        .split(',')
-        .map(_trim)
-        .map((r) => r.split('.').map((_, index, elements) => elements.slice(0, index + 1).join('.')));
-
-      return _flatten(expandedRelationships);
-    }
-    return [];
-  }
-}
-
-JsonApiSerializer.extend = extend;
-
-export default JsonApiSerializer;
+});

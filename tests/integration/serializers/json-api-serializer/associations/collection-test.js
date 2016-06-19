@@ -1,35 +1,79 @@
+import Schema from 'ember-cli-mirage/orm/schema';
+import Db from 'ember-cli-mirage/db';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
-import JsonApiSerializer from 'ember-cli-mirage/serializers/json-api-serializer';
-import schemaHelper from '../../schema-helper';
+import { Model, hasMany, belongsTo, JSONAPISerializer } from 'ember-cli-mirage';
 import { module, test } from 'qunit';
 
 module('Integration | Serializers | JSON API Serializer | Associations | Collection', {
   beforeEach() {
-    this.schema = schemaHelper.setup();
-
-    let link = this.schema.wordSmiths.create({ firstName: 'Link' });
-    let blogPost = link.createBlogPost({ title: 'Lorem' });
-    blogPost.createFineComment({ text: 'pwned' });
-
-    link.createBlogPost({ title: 'Ipsum' });
-
-    this.schema.wordSmiths.create({ firstName: 'Zelda' });
-  },
-  afterEach() {
-    this.schema.db.emptyData();
+    this.schema = new Schema(new Db(), {
+      wordSmith: Model.extend({
+        blogPosts: hasMany()
+      }),
+      blogPost: Model.extend({
+        wordSmith: belongsTo(),
+        fineComments: hasMany()
+      }),
+      fineComment: Model.extend({
+        blogPost: belongsTo()
+      })
+    });
   }
+});
+
+test(`it includes all relationships for a collection, regardless of being included`, function(assert) {
+  let registry = new SerializerRegistry(this.schema, {
+    application: JSONAPISerializer
+  });
+  this.schema.wordSmiths.create({ firstName: 'Link', age: 123 });
+  this.schema.wordSmiths.create({ firstName: 'Zelda', age: 456 });
+
+  let collection = this.schema.wordSmiths.all();
+  let result = registry.serialize(collection);
+
+  assert.deepEqual(result, {
+    data: [{
+      type: 'word-smiths',
+      id: '1',
+      attributes: {
+        'first-name': 'Link',
+        age: 123
+      },
+      relationships: {
+        'blog-posts': {
+          data: []
+        }
+      }
+    }, {
+      type: 'word-smiths',
+      id: '2',
+      attributes: {
+        'first-name': 'Zelda',
+        age: 456
+      },
+      relationships: {
+        'blog-posts': {
+          data: []
+        }
+      }
+    }]
+  });
 });
 
 test(`it can serialize a collection with a has-many relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    application: JsonApiSerializer,
-    wordSmith: JsonApiSerializer.extend({
+    application: JSONAPISerializer,
+    wordSmith: JSONAPISerializer.extend({
       include: ['blogPosts']
     })
   });
+  let link = this.schema.wordSmiths.create({ firstName: 'Link' });
+  link.createBlogPost({ title: 'Lorem' });
+  link.createBlogPost({ title: 'Ipsum' });
+  this.schema.wordSmiths.create({ firstName: 'Zelda' });
 
-  let wordSmiths = this.schema.wordSmiths.all();
-  let result = registry.serialize(wordSmiths);
+  let collection = this.schema.wordSmiths.all();
+  let result = registry.serialize(collection);
 
   assert.deepEqual(result, {
     data: [
@@ -70,9 +114,7 @@ test(`it can serialize a collection with a has-many relationship`, function(asse
         },
         relationships: {
           'fine-comments': {
-            data: [
-              { type: 'fine-comments', id: '1' }
-            ]
+            data: []
           },
           'word-smith': {
             data: { type: 'word-smiths', id: '1' }
@@ -100,17 +142,23 @@ test(`it can serialize a collection with a has-many relationship`, function(asse
 
 test(`it can serialize a collection with a chain of has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    application: JsonApiSerializer,
-    wordSmith: JsonApiSerializer.extend({
+    application: JSONAPISerializer,
+    wordSmith: JSONAPISerializer.extend({
       include: ['blogPosts']
     }),
-    blogPost: JsonApiSerializer.extend({
+    blogPost: JSONAPISerializer.extend({
       include: ['fineComments']
     })
   });
 
-  let wordSmiths = this.schema.wordSmiths.all();
-  let result = registry.serialize(wordSmiths);
+  let link = this.schema.wordSmiths.create({ firstName: 'Link' });
+  let lorem = link.createBlogPost({ title: 'Lorem' });
+  lorem.createFineComment({ text: 'pwned' });
+  link.createBlogPost({ title: 'Ipsum' });
+  this.schema.wordSmiths.create({ firstName: 'Zelda' });
+
+  let collection = this.schema.wordSmiths.all();
+  let result = registry.serialize(collection);
 
   assert.deepEqual(result, {
     data: [
@@ -193,11 +241,17 @@ test(`it can serialize a collection with a chain of has-many relationships`, fun
 
 test(`it can serialize a collection with a belongs-to relationship`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    application: JsonApiSerializer,
-    blogPost: JsonApiSerializer.extend({
+    application: JSONAPISerializer,
+    blogPost: JSONAPISerializer.extend({
       include: ['wordSmith']
     })
   });
+
+  let link = this.schema.wordSmiths.create({ firstName: 'Link' });
+  let post = link.createBlogPost({ title: 'Lorem' });
+  post.createFineComment();
+  link.createBlogPost({ title: 'Ipsum' });
+  this.schema.wordSmiths.create({ firstName: 'Zelda' });
 
   let blogPosts = this.schema.blogPosts.all();
   let result = registry.serialize(blogPosts);
@@ -259,14 +313,20 @@ test(`it can serialize a collection with a belongs-to relationship`, function(as
 
 test(`it can serialize a collection with a chain of belongs-to relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    application: JsonApiSerializer,
-    fineComment: JsonApiSerializer.extend({
+    application: JSONAPISerializer,
+    fineComment: JSONAPISerializer.extend({
       include: ['blogPost']
     }),
-    blogPost: JsonApiSerializer.extend({
+    blogPost: JSONAPISerializer.extend({
       include: ['wordSmith']
     })
   });
+
+  let link = this.schema.wordSmiths.create({ firstName: 'Link' });
+  let post = link.createBlogPost({ title: 'Lorem' });
+  post.createFineComment({ text: 'pwned' });
+  link.createBlogPost({ title: 'Ipsum' });
+  this.schema.wordSmiths.create({ firstName: 'Zelda' });
 
   let fineComments = this.schema.fineComments.all();
   let result = registry.serialize(fineComments);
@@ -334,11 +394,17 @@ test(`it can serialize a collection with a chain of belongs-to relationships`, f
 
 test(`it can serialize a collection of models that have both belongs-to and has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
-    application: JsonApiSerializer,
-    blogPost: JsonApiSerializer.extend({
+    application: JSONAPISerializer,
+    blogPost: JSONAPISerializer.extend({
       include: ['wordSmith', 'fineComments']
     })
   });
+
+  let link = this.schema.wordSmiths.create({ firstName: 'Link' });
+  let post = link.createBlogPost({ title: 'Lorem' });
+  post.createFineComment({ text: 'pwned' });
+  link.createBlogPost({ title: 'Ipsum' });
+  this.schema.wordSmiths.create({ firstName: 'Zelda' });
 
   let blogPost = this.schema.blogPosts.find(1);
   let result = registry.serialize(blogPost);

@@ -1,6 +1,8 @@
 import Mirage from 'ember-cli-mirage';
 import Ember from 'ember';
 
+const { isBlank } = Ember;
+
 export default function() {
   // Contacts
   this.get('/contacts');
@@ -20,7 +22,7 @@ export default function() {
 
   this.post('/pets', function({ db }, req) {
     let { pet } = JSON.parse(req.requestBody);
-    if (Ember.isBlank(pet.name)) {
+    if (isBlank(pet.name)) {
       let body = { errors: { name: ["can't be blank"] } };
       return new Mirage.Response(422, { some: 'header' }, body);
     } else {

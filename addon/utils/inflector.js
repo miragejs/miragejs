@@ -1,4 +1,4 @@
-// jscs:disable disallowVar, requireObjectDestructuring
+// jscs:disable disallowVar, requireObjectDestructuring, disallowDirectPropertyAccess
 import Ember from 'ember';
 export { singularize, pluralize } from 'ember-inflector';
 

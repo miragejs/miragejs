@@ -14,7 +14,7 @@ export default function assert(bool, text) {
   }
 
   if (!bool) {
-    throw new MirageError(text || 'Assertion failed');
+    throw new MirageError(text.replace(/^ +/gm, '') || 'Assertion failed');
   }
 }
 

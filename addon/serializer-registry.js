@@ -20,6 +20,8 @@ export default class SerializerRegistry {
   }
 
   serialize(response, request) {
+    this.request = request;
+
     if (this._isModelOrCollection(response)) {
       let serializer = this.serializerFor(response.modelName);
 
@@ -29,9 +31,9 @@ export default class SerializerRegistry {
         let serializer = this.serializerFor(collection.modelName);
 
         if (serializer.embed) {
-          json[pluralize(collection.modelName)] = serializer._serializeModelOrCollection(collection, request);
+          json[pluralize(collection.modelName)] = serializer.serialize(collection, request);
         } else {
-          json = _assign(json, serializer._serializeSideloadedModelOrCollection(collection, request));
+          json = _assign(json, serializer.serialize(collection, request));
         }
 
         return json;
@@ -42,7 +44,7 @@ export default class SerializerRegistry {
     }
   }
 
-  serializerFor(type, { explicit = false, included = [], alreadySerialized = {} } = {}) {
+  serializerFor(type, { explicit = false } = {}) {
     let SerializerForResponse = this._serializerMap && (this._serializerMap[camelize(type)]);
 
     if (explicit) {
@@ -59,7 +61,7 @@ export default class SerializerRegistry {
       );
     }
 
-    return new SerializerForResponse(this, type, included, alreadySerialized);
+    return new SerializerForResponse(this, type, this.request);
   }
 
   _isModel(object) {

@@ -25,7 +25,12 @@ export default class BaseShorthandRouteHandler extends BaseRouteHandler {
     }
   }
 
-  handleStringShorthand() { }
-  handleArrayShorthand() { }
+  // handleStringShorthand() {
+  //
+  // }
+  //
+  // handleArrayShorthand() {
+  //
+  // }
 
 }

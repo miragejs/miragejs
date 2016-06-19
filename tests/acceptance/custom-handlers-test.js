@@ -2,6 +2,8 @@ import Ember from 'ember';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 import { test } from 'qunit';
 
+const { ajax } = Ember.$; // jscs:ignore disallowDirectPropertyAccess
+
 let appStore, rex, toby, sam, andy;
 
 moduleForAcceptance('Acceptance | Custom handlers', {
@@ -23,7 +25,7 @@ test('You can customize the response by passing a handler function that returns 
 
 test('You can customize the response code of a custom handler passing the code as 3rd argument', function(assert) {
   let done = assert.async();
-  let request = Ember.$.ajax({
+  let request = ajax({
     url: '/pets/${rex.id}',
     method: 'delete'
   });
@@ -36,7 +38,7 @@ test('You can customize the response code of a custom handler passing the code a
 
 test('You can can programatically returns a tailored response by returning a Mirage.Response', function(assert) {
   let done = assert.async();
-  let request = Ember.$.ajax({
+  let request = ajax({
     url: '/pets',
     method: 'post',
     data: JSON.stringify({ pet: { alive: true } })
@@ -52,7 +54,7 @@ test('You can can programatically returns a tailored response by returning a Mir
 
 test('returning a non-blank response from a custom handler whose default status is 204 changes the status to 200', function(assert) {
   let done = assert.async();
-  let request = Ember.$.ajax({
+  let request = ajax({
     url: '/pets/${rex.id}',
     method: 'put',
     data: JSON.stringify({ pet: { id: rex.id, name: 'The Rex', alive: true } })

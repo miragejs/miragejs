@@ -28,6 +28,7 @@ module('Integration | ORM | belongsTo #createAssociation', {
     assert.ok(ganon.id, 'the parent was persisted');
     assert.deepEqual(address.user, ganon);
     assert.equal(address.userId, ganon.id);
+    assert.equal(this.helper.schema.addresses.find(address.id).userId, ganon.id, 'the child was persisted');
   });
 
 });

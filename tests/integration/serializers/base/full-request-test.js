@@ -102,7 +102,8 @@ test('a response falls back to the application serializer, if it exists', functi
     assert.deepEqual(res, {
       id: '1',
       title: 'Lorem',
-      date: '20001010'
+      date: '20001010',
+      authorId: null
     });
     done();
   });

@@ -131,13 +131,13 @@ class BelongsTo extends Association {
 
     /*
       object.createParent
-        - creates an associated parent, persists directly to db,
-          and updates the owner's foreign key
+        - creates a new saved associated parent, and immediately persists both models
     */
     modelPrototype[`create${capitalize(key)}`] = function(attrs) {
       let parent = schema[toCollectionName(association.modelName)].create(attrs);
 
-      this[foreignKey] = parent.id;
+      this[key] = parent;
+      this.save();
 
       return parent;
     };
