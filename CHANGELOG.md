@@ -2,6 +2,18 @@
 
 In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
+## 0.2.1
+
+Update notes:
+
+  - None
+
+Changes:
+
+  - [ENHANCEMENT] Ensure mirage tree is linted @rwjblue
+  - [FEATURE] #762 adds `afterCreate` to factories @seanpdoyle, @samselikoff
+  - [BUGFIX] #769 ensure embedded collection keys are dynamic @arnodirlam
+
 ## 0.2.0
 
 Update notes:
