@@ -212,6 +212,57 @@ test('tracks the correct IDs being used', function(assert) {
   assert.equal(db.contacts.length, 2);
 });
 
+module('Unit | Db #findBy', {
+  beforeEach() {
+    db = new Db();
+    db.createCollection('contacts');
+    db.contacts.insert([
+      { name: 'Zelda' },
+      { name: 'Link' },
+      { name: 'Epona', race: 'Horse' },
+      { name: 'Epona', race: 'Centaur' },
+      { id: 'abc', name: 'Ganon' }
+    ]);
+  },
+  afterEach() {
+    db.emptyData();
+  }
+});
+
+test('returns a record that matches the given name', function(assert) {
+  let contact = db.contacts.findBy({ 'name': 'Link' });
+
+  assert.deepEqual(contact, { id: '2', name: 'Link' });
+});
+
+test('returns a copy not a reference', function(assert) {
+  let contact = db.contacts.findBy({ 'name': 'Link' });
+
+  contact.name = 'blah';
+
+  assert.deepEqual(db.contacts.find(2), { id: '2', name: 'Link' });
+});
+
+test('returns the first record matching the criteria', function(assert) {
+  let contact = db.contacts.findBy({ 'name': 'Epona' });
+
+  console.log(contact);
+  assert.deepEqual(contact, { id: '3', name: 'Epona', race: 'Horse' });
+});
+
+test('returns a record only matching multiple criteria', function(assert) {
+  let contact = db.contacts.findBy({ 'name': 'Epona', 'race': 'Centaur' });
+
+  console.log(contact);
+  assert.deepEqual(contact, { id: '4', name: 'Epona', race: 'Centaur' });
+});
+
+test('returns null when no record is found', function(assert) {
+  let contact = db.contacts.findBy({ 'name': 'Fi' });
+
+  assert.equal(contact, null);
+});
+
 module('Unit | Db #find', {
   beforeEach() {
     db = new Db();

@@ -86,6 +86,24 @@ class DbCollection {
   }
 
   /**
+   * Returns the first model from `collection` that matches the
+   * key-value pairs in the `query` object. Note that a string
+   * comparison is used. `query` is a POJO.
+   * @method find
+   * @param query
+   * @public
+   */
+  findBy(query) {
+    let record = this._findRecordBy(query);
+    if (!record) {
+      return null;
+    }
+
+    // Return a copy
+    return duplicate(record);
+  }
+
+  /**
    * Returns an array of models from `collection` that match the
    * key-value pairs in the `query` object. Note that a string
    * comparison is used. `query` is a POJO.
@@ -242,6 +260,15 @@ class DbCollection {
     let [ record ] = this._records.filter((obj) => obj.id === id);
 
     return record;
+  }
+
+  /**
+   * @method _findRecordBy
+   * @param query
+   * @private
+   */
+  _findRecordBy(query) {
+    return this._findRecordsWhere(query)[0];
   }
 
   /**
