@@ -64,7 +64,7 @@
     "configPath": "tests/dummy/config"
   },
   "dependencies": {
-    "broccoli-funnel": "^1.0.1",
+    "broccoli-funnel": "^1.0.2",
     "broccoli-merge-trees": "^1.1.0",
     "broccoli-unwatched-tree": "^0.1.1",
     "chalk": "^1.1.1",
