@@ -264,6 +264,9 @@ test(`it gracefully handles null belongs-to relationship`, function(assert) {
       relationships: {
         'fine-comments': {
           data: []
+        },
+        'word-smith': {
+          data: null
         }
       }
     }

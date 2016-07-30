@@ -253,6 +253,9 @@ test(`collection: it can include relationships specified by the include query pa
         id: '2',
         attributes: {},
         relationships: {
+          'word-smith': {
+            data: null
+          },
           'fine-comments': {
             data: []
           }
