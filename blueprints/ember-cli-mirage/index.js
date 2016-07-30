@@ -54,13 +54,5 @@ module.exports = {
         )
       );
     }
-
-    return this.addBowerPackagesToProject([{
-      name: 'pretender',
-      target: '~1.1.0'
-    }, {
-      name: 'Faker',
-      target: '~3.1.0'
-    }]);
   }
 };

@@ -17,9 +17,10 @@ describe('import files', function() {
     var addon = new EmberAddon();
 
     expect(_.values(addon._scriptOutputFiles)[0]).to.not.include.members([
-      addon.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js',
-      addon.bowerDirectory + '/route-recognizer/dist/route-recognizer.js',
-      addon.bowerDirectory + '/pretender/pretender.js',
+      'vendor/fake-xml-http-request/fake_xml_http_request.js',
+      'vendor/route-recognizer/dist/route-recognizer.js',
+      'vendor/pretender/pretender.js',
+      'vendor/faker/build/build/faker.js',
       'vendor/ember-cli-mirage/pretender-shim.js'
     ]);
   });
@@ -30,9 +31,10 @@ describe('import files', function() {
       var addon = new EmberAddon();
 
       expect(_.values(addon._scriptOutputFiles)[0]).to.include.members([
-        addon.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js',
-        addon.bowerDirectory + '/route-recognizer/dist/route-recognizer.js',
-        addon.bowerDirectory + '/pretender/pretender.js',
+        'vendor/fake-xml-http-request/fake_xml_http_request.js',
+        'vendor/route-recognizer/dist/route-recognizer.js',
+        'vendor/pretender/pretender.js',
+        'vendor/faker/build/build/faker.js',
         'vendor/ember-cli-mirage/pretender-shim.js'
       ]);
     });
@@ -43,9 +45,10 @@ describe('import files', function() {
     var addon = new EmberAddon({ configPath: 'tests/fixtures/config/environment-production-enabled' });
 
     expect(_.values(addon._scriptOutputFiles)[0]).to.include.members([
-      addon.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js',
-      addon.bowerDirectory + '/route-recognizer/dist/route-recognizer.js',
-      addon.bowerDirectory + '/pretender/pretender.js',
+      'vendor/fake-xml-http-request/fake_xml_http_request.js',
+      'vendor/route-recognizer/dist/route-recognizer.js',
+      'vendor/pretender/pretender.js',
+      'vendor/faker/build/build/faker.js',
       'vendor/ember-cli-mirage/pretender-shim.js'
     ]);
   });

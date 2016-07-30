@@ -8,9 +8,19 @@ var unwatchedTree = require('broccoli-unwatched-tree');
 module.exports = {
   name: 'ember-cli-mirage',
 
-  included: function included(app) {
-    this._super.included.apply(this, arguments);
+  options: {
+    nodeAssets: {
+      'route-recognizer': npmAsset({
+        path: 'dist/route-recognizer.js',
+        sourceMap: 'dist/route-recognizer.js.map'
+      }),
+      'fake-xml-http-request': npmAsset('fake_xml_http_request.js'),
+      'pretender': npmAsset('pretender.js'),
+      'faker': npmAsset('build/build/faker.js')
+    }
+  },
 
+  included: function included(app) {
     // see: https://github.com/ember-cli/ember-cli/issues/3718
     if (typeof app.import !== 'function' && app.app) {
       app = app.app;
@@ -19,6 +29,9 @@ module.exports = {
     this.app = app;
     this.addonConfig = this.app.project.config(app.env)['ember-cli-mirage'] || {};
     this.addonBuildConfig = this.app.options['ember-cli-mirage'] || {};
+
+    // Call super after initializing config so we can use _shouldIncludeFiles for the node assets
+    this._super.included.apply(this, arguments);
 
     if (this.addonBuildConfig['directory']) {
       this.mirageDirectory = this.addonBuildConfig['directory'];
@@ -31,14 +44,10 @@ module.exports = {
     }
 
     if (this._shouldIncludeFiles()) {
-      app.import(app.bowerDirectory + '/FakeXMLHttpRequest/fake_xml_http_request.js');
-      app.import(app.bowerDirectory + '/route-recognizer/dist/route-recognizer.js');
-      app.import(app.bowerDirectory + '/pretender/pretender.js');
       app.import('vendor/ember-cli-mirage/pretender-shim.js', {
         type: 'vendor',
         exports: { 'pretender': ['default'] }
       });
-      app.import(app.bowerDirectory + '/Faker/build/build/faker.js');
     }
   },
 
@@ -105,3 +114,12 @@ module.exports = {
     return enabledInProd || (this.app.env !== 'production' && explicitExcludeFiles !== true);
   }
 };
+
+function npmAsset(filePath) {
+  return function() {
+    return {
+      enabled: this._shouldIncludeFiles(),
+      import: [filePath]
+    };
+  };
+}
