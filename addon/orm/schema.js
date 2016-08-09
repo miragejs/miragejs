@@ -1,4 +1,5 @@
-import { singularize, pluralize, camelize, dasherize } from '../utils/inflector';
+import { pluralize, camelize, dasherize } from '../utils/inflector';
+import { toCollectionName, toModelName } from 'ember-cli-mirage/utils/normalize-name';
 import Association from './associations/association';
 import Collection from './collection';
 import _isArray from 'lodash/lang/isArray';
@@ -40,6 +41,7 @@ export default class Schema {
    */
   registerModel(type, ModelClass) {
     let camelizedModelName = camelize(type);
+    let modelName = dasherize(camelizedModelName);
 
     // Avoid mutating original class, because we may want to reuse it across many tests
     ModelClass = ModelClass.extend();
@@ -58,8 +60,8 @@ export default class Schema {
       if (ModelClass.prototype[associationProperty] instanceof Association) {
         let association = ModelClass.prototype[associationProperty];
         association.key = associationProperty;
-        association.modelName = association.modelName || dasherize(singularize(associationProperty));
-        association.ownerModelName = dasherize(camelizedModelName);
+        association.modelName = association.modelName || toModelName(associationProperty);
+        association.ownerModelName = modelName;
 
         // Update the registry with this association's foreign keys. This is
         // essentially our "db migration", since we must know about the fks.
@@ -73,13 +75,13 @@ export default class Schema {
     }
 
     // Create a db collection for this model, if doesn't exist
-    let collection = pluralize(camelizedModelName);
+    let collection = toCollectionName(modelName);
     if (!this.db[collection]) {
       this.db.createCollection(collection);
     }
 
     // Create the entity methods
-    this[pluralize(camelizedModelName)] = {
+    this[collection] = {
       camelizedModelName,
       new: (attrs) => this.new(camelizedModelName, attrs),
       create: (attrs) => this.create(camelizedModelName, attrs),
@@ -192,7 +194,7 @@ export default class Schema {
    * @private
    */
   _collectionForType(type) {
-    let collection = pluralize(type);
+    let collection = toCollectionName(type);
     assert(
       this.db[collection],
       `You\'re trying to find model(s) of type ${type} but this collection doesn\'t exist in the database.`

@@ -1,10 +1,8 @@
 import Model from './orm/model';
 import Collection from './orm/collection';
 import _assign from 'lodash/object/assign';
-import _compose from 'lodash/function/compose';
 import extend from './utils/extend';
 import { singularize, pluralize, camelize } from './utils/inflector';
-
 import _isFunction from 'lodash/lang/isFunction';
 
 class Serializer {
@@ -118,7 +116,7 @@ class Serializer {
    * @public
    */
   keyForRelationship(modelName) {
-    return _compose(camelize, pluralize)(modelName);
+    return camelize(pluralize(modelName));
   }
 
   /**
@@ -321,7 +319,8 @@ class Serializer {
     let key = this._keyForModelOrCollection(model);
 
     if (topLevelIsArray) {
-      key = root ? root : pluralize(key);
+      let serializer = this.serializerFor(model.modelName);
+      key = root ? root : serializer.keyForRelationship(key);
       allAttrs[key] = allAttrs[key] || [];
       allAttrs[key].push(modelAttrs);
     } else {

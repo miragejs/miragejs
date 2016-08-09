@@ -12,7 +12,7 @@ export default ActiveModelSerializer.extend({
   },
 
   keyForRelationship(type) {
-    return pluralize(camelize(type));
+    return camelize(pluralize(type));
   },
 
   keyForRelationshipIds(type) {

@@ -1,6 +1,7 @@
 import Association from './association';
 import _assign from 'lodash/object/assign';
-import { capitalize, camelize, pluralize } from 'ember-cli-mirage/utils/inflector';
+import { capitalize, camelize } from 'ember-cli-mirage/utils/inflector';
+import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import assert from 'ember-cli-mirage/assert';
 
 class BelongsTo extends Association {
@@ -43,7 +44,7 @@ class BelongsTo extends Association {
       */
       set(id) {
         assert(
-          !id || schema.db[pluralize(camelize(association.modelName))].find(id),
+          !id || schema.db[toCollectionName(association.modelName)].find(id),
           `Couldn\'t find ${association.modelName} with id = ${id}`
         );
 
@@ -61,7 +62,7 @@ class BelongsTo extends Association {
         let foreignKeyId = this[foreignKey];
         if (foreignKeyId != null) {
           association._tempParent = null;
-          return schema[pluralize(camelize(association.modelName))].find(foreignKeyId);
+          return schema[toCollectionName(association.modelName)].find(foreignKeyId);
 
         } else if (association._tempParent) {
           return association._tempParent;
@@ -93,7 +94,7 @@ class BelongsTo extends Association {
         - creates a new unsaved associated parent
     */
     modelPrototype[`new${capitalize(key)}`] = function(attrs) {
-      let parent = schema[pluralize(camelize(association.modelName))].new(attrs);
+      let parent = schema[toCollectionName(association.modelName)].new(attrs);
 
       this[key] = parent;
 
@@ -106,7 +107,7 @@ class BelongsTo extends Association {
           and updates the owner's foreign key
     */
     modelPrototype[`create${capitalize(key)}`] = function(attrs) {
-      let parent = schema[pluralize(camelize(association.modelName))].create(attrs);
+      let parent = schema[toCollectionName(association.modelName)].create(attrs);
 
       this[foreignKey] = parent.id;
 

@@ -1,6 +1,7 @@
 // jscs:disable requireParenthesesAroundArrowParam
 
 import { pluralize, camelize } from './utils/inflector';
+import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import Pretender from 'pretender';
 import Db from './db';
 import Schema from './orm/schema';
@@ -199,7 +200,7 @@ export default class Server {
 
     // Create a collection for each factory
     _keys(factoryMap).forEach(type => {
-      let collectionName = this.schema ? pluralize(camelize(type)) : pluralize(type);
+      let collectionName = toCollectionName(type);
       this.db.createCollection(collectionName);
     });
   }
@@ -247,8 +248,8 @@ export default class Server {
     let attrs = this.build(type, overrides);
     let modelOrRecord;
 
-    if (this.schema && this.schema[pluralize(camelize(type))]) {
-      let modelClass = this.schema[pluralize(camelize(type))];
+    if (this.schema && this.schema[toCollectionName(type)]) {
+      let modelClass = this.schema[toCollectionName(type)];
 
       modelOrRecord = modelClass.create(attrs);
 
@@ -258,7 +259,7 @@ export default class Server {
       if (collectionFromCreateList) {
         collection = collectionFromCreateList;
       } else {
-        collectionName = this.schema ? pluralize(camelize(type)) : pluralize(type);
+        collectionName = this.schema ? toCollectionName(type) : pluralize(type);
         collection = this.db[collectionName];
       }
 
@@ -276,7 +277,7 @@ export default class Server {
 
   createList(type, amount, overrides) {
     let list = [];
-    let collectionName = this.schema ? pluralize(camelize(type)) : pluralize(type);
+    let collectionName = this.schema ? toCollectionName(type) : pluralize(type);
     let collection = this.db[collectionName];
 
     for (let i = 0; i < amount; i++) {

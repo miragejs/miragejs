@@ -3,7 +3,8 @@ import Association from './association';
 import Collection from '../collection';
 import _assign from 'lodash/object/assign';
 import _compact from 'lodash/array/compact';
-import { capitalize, camelize, singularize, pluralize } from 'ember-cli-mirage/utils/inflector';
+import { capitalize, camelize, singularize } from 'ember-cli-mirage/utils/inflector';
+import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import assert from 'ember-cli-mirage/assert';
 
 class HasMany extends Association {
@@ -44,7 +45,7 @@ class HasMany extends Association {
 
         if (!this.isNew()) {
           let query = { [foreignKey]: this.id };
-          let savedChildren = schema[pluralize(camelize(association.modelName))].where(query);
+          let savedChildren = schema[toCollectionName(association.modelName)].where(query);
 
           children.mergeCollection(savedChildren);
         }
@@ -60,15 +61,15 @@ class HasMany extends Association {
         ids = ids || [];
 
         if (this.isNew()) {
-          association._cachedChildren = schema[pluralize(camelize(association.modelName))].find(ids);
+          association._cachedChildren = schema[toCollectionName(association.modelName)].find(ids);
 
         } else {
           // Set current children's fk to null
           let query = { [foreignKey]: this.id };
-          schema[pluralize(camelize(association.modelName))].where(query).update(foreignKey, null);
+          schema[toCollectionName(association.modelName)].where(query).update(foreignKey, null);
 
           // Associate the new childrens to this model
-          schema[pluralize(camelize(association.modelName))].find(ids).update(foreignKey, this.id);
+          schema[toCollectionName(association.modelName)].find(ids).update(foreignKey, this.id);
 
           // Clear out any old cached children
           association._cachedChildren = new Collection(association.modelName);
@@ -92,7 +93,7 @@ class HasMany extends Association {
 
         } else {
           let query = { [foreignKey]: this.id };
-          let savedChildren = schema[pluralize(camelize(association.modelName))].where(query);
+          let savedChildren = schema[toCollectionName(association.modelName)].where(query);
 
           return savedChildren.mergeCollection(temporaryChildren);
         }
@@ -114,14 +115,14 @@ class HasMany extends Association {
 
           // Set current children's fk to null
           let query = { [foreignKey]: this.id };
-          schema[pluralize(camelize(association.modelName))].where(query).update(foreignKey, null);
+          schema[toCollectionName(association.modelName)].where(query).update(foreignKey, null);
 
           // Save any children that are new
           models.filter(model => model.isNew())
             .forEach(model => model.save());
 
           // Associate the new children to this model
-          schema[pluralize(camelize(association.modelName))].find(models.map(m => m.id)).update(foreignKey, this.id);
+          schema[toCollectionName(association.modelName)].find(models.map(m => m.id)).update(foreignKey, this.id);
 
           // Clear out any old cached children
           association._cachedChildren = new Collection(association.modelName);
@@ -138,7 +139,7 @@ class HasMany extends Association {
         attrs = _assign(attrs, { [foreignKey]: this.id });
       }
 
-      let child = schema[pluralize(camelize(association.modelName))].new(attrs);
+      let child = schema[toCollectionName(association.modelName)].new(attrs);
 
       association._cachedChildren = association._cachedChildren || new Collection(association.modelName);
       association._cachedChildren.models.push(child);
@@ -156,7 +157,7 @@ class HasMany extends Association {
       assert(!this.isNew(), 'You cannot call create unless the parent is saved');
 
       let augmentedAttrs = _assign(attrs, { [foreignKey]: this.id });
-      let child = schema[pluralize(camelize(association.modelName))].create(augmentedAttrs);
+      let child = schema[toCollectionName(association.modelName)].create(augmentedAttrs);
 
       return child;
     };
