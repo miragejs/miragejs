@@ -361,13 +361,11 @@ export default class Server {
         fullPath += urlPrefix[urlPrefix.length - 1] === '/' ? urlPrefix : `${urlPrefix}/`;
       }
 
-      // if a namespace has been configured, add it before the path
-      if (!!namespace.length) {
-        fullPath += namespace ? `${namespace}/` : namespace;
-      }
+      // add the namespace to the path
+      fullPath += namespace;
 
-      // we're at the root, ensure a leading /
-      if (!urlPrefix.length && !namespace.length) {
+      // add a trailing slash to the path if it doesn't already contain one
+      if (fullPath[fullPath.length - 1] !== '/') {
         fullPath += '/';
       }
 

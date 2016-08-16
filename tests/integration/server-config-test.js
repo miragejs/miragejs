@@ -120,3 +120,84 @@ test('urlPrefix/namespace are ignored when fully qualified domain names are used
     done();
   });
 });
+
+test('blank urlPrefix and namespace ends up as /', function(assert) {
+  assert.expect(1);
+  let done = assert.async();
+
+  let contacts = [
+    { id: '1', name: 'Link' },
+    { id: '2', name: 'Zelda' }
+  ];
+  this.server.db.loadData({
+    contacts
+  });
+  this.server.namespace = '';
+  this.server.urlPrefix = '';
+  this.server.get('contacts');
+
+  $.getJSON('/contacts', function(data) {
+    assert.deepEqual(data, { contacts });
+    done();
+  });
+});
+
+test('namespace with no slash gets one', function(assert) {
+  assert.expect(1);
+  let done = assert.async();
+
+  let contacts = [
+    { id: '1', name: 'Link' },
+    { id: '2', name: 'Zelda' }
+  ];
+  this.server.db.loadData({
+    contacts
+  });
+  this.server.namespace = 'api';
+  this.server.get('contacts');
+
+  $.getJSON('/api/contacts', function(data) {
+    assert.deepEqual(data, { contacts });
+    done();
+  });
+});
+
+test('urlPrefix with no slash gets one', function(assert) {
+  assert.expect(1);
+  let done = assert.async();
+
+  let contacts = [
+    { id: '1', name: 'Link' },
+    { id: '2', name: 'Zelda' }
+  ];
+  this.server.db.loadData({
+    contacts
+  });
+  this.server.urlPrefix = 'pre';
+  this.server.get('contacts');
+
+  $.getJSON('/pre/contacts', function(data) {
+    assert.deepEqual(data, { contacts });
+    done();
+  });
+});
+
+test('namespace of / works', function(assert) {
+  assert.expect(1);
+  let done = assert.async();
+
+  let contacts = [
+    { id: '1', name: 'Link' },
+    { id: '2', name: 'Zelda' }
+  ];
+  this.server.db.loadData({
+    contacts
+  });
+  this.server.namespace = '/';
+  this.server.get('contacts');
+
+  $.getJSON('/contacts', function(data) {
+    assert.deepEqual(data, { contacts });
+    done();
+  });
+});
