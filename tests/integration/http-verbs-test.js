@@ -1,10 +1,14 @@
 import {module, test} from 'qunit';
 import Server from 'ember-cli-mirage/server';
+import { Model } from 'ember-cli-mirage';
 
 module('Integration | HTTP Verbs', {
   beforeEach() {
     this.server = new Server({
-      environment: 'development'
+      environment: 'development',
+      models: {
+        contact: Model
+      }
     });
     this.server.timing = 0;
     this.server.logging = false;
@@ -95,6 +99,20 @@ test('mirage responds to patch', function(assert) {
     url: '/contacts'
   }).done(function(res) {
     assert.equal(res, true);
+    done();
+  });
+});
+
+test('mirage responds to resource', function(assert) {
+  assert.expect(0);
+  let done = assert.async();
+
+  this.server.resource('contacts');
+
+  $.ajax({
+    method: 'GET',
+    url: '/contacts'
+  }).done(function() {
     done();
   });
 });
