@@ -39,3 +39,7 @@ Check out the [Docs](http://www.ember-cli-mirage.com/docs/v0.2.x/)!
 ## Support
 
 Having trouble? Open an issue!
+
+## Contributing
+
+Read our [roadmap](https://usecanvas.com/ec-mirage/mirage-roadmap/19kMeB5ceYCLmWrMZaRLez) and have a look at our [Contributing guidelines](./contributing).
