@@ -50,6 +50,19 @@ test('a collection can filter its models', function(assert) {
   assert.equal(newCollection.models.length, 2);
 });
 
+test('a collection can sort its models', function(assert) {
+  let collection = this.schema.users.all();
+  assert.deepEqual(collection.models.map(m => m.name), ['Link', 'Zelda', 'Ganon']);
+
+  let newCollection = collection.sort((a, b) => {
+    return a.name.localeCompare(b.name);
+  });
+
+  assert.ok(newCollection instanceof Collection);
+  assert.equal(newCollection.modelName, 'user', 'the sorted collection has the right type');
+  assert.deepEqual(newCollection.models.map(m => m.name), ['Ganon', 'Link', 'Zelda']);
+});
+
 test('a collection can merge with another collection', function(assert) {
   let goodGuys = this.schema.users.where(user => user.good);
   let badGuys = this.schema.users.where(user => !user.good);

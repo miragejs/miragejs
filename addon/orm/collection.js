@@ -82,6 +82,18 @@ export default class Collection {
   }
 
   /**
+   * @method sort
+   * @param f
+   * @return {Collection}
+   * @public
+   */
+  sort(f) {
+    let sortedModels = this.models.concat().sort(f);
+
+    return new Collection(this.modelName, sortedModels);
+  }
+
+  /**
    * @method mergeCollection
    * @param collection
    * @return this
