@@ -10,7 +10,7 @@ class BelongsTo extends Association {
     The belongsTo association adds a fk to the owner of the association
   */
   getForeignKeyArray() {
-    return [camelize(this.ownerModelName), `${camelize(this.key)}Id`];
+    return [camelize(this.ownerModelName), this.getForeignKey()];
   }
 
   getForeignKey() {
