@@ -7,19 +7,44 @@ import { capitalize, camelize, singularize } from 'ember-cli-mirage/utils/inflec
 import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import assert from 'ember-cli-mirage/assert';
 
+/**
+ * @class HasMany
+ * @extends Association
+ * @constructor
+ * @public
+ */
 class HasMany extends Association {
 
-  /*
-    The hasMany association adds a fk to the target model of the association
-  */
+  /**
+   * @method getForeignKeyArray
+   * @return {Array} Array of camelized model name of associated objects
+   * and foreign key for the object owning the association
+   * @public
+   */
   getForeignKeyArray() {
     return [camelize(this.modelName), this.getForeignKey()];
   }
 
+  /**
+   * @method getForeignKey
+   * @return {String} Foreign key for the object owning the association
+   * @public
+   */
   getForeignKey() {
     return `${this.opts.inverse || camelize(this.ownerModelName)}Id`;
   }
 
+  /**
+   * Registers has-many association defined by given key on given model,
+   * defines getters / setters for associated records and associated records' ids,
+   * adds methods for creating unsaved child records and creating saved ones
+   *
+   * @method addMethodsToModelClass
+   * @param {Function} ModelClass
+   * @param {String} key
+   * @param {Schema} schema
+   * @public
+   */
   addMethodsToModelClass(ModelClass, key, schema) {
     let modelPrototype = ModelClass.prototype;
     this._model = modelPrototype;
