@@ -24,7 +24,7 @@ function createPretender(server) {
 
     this.handledRequest = function(verb, path, request) {
       if (server.shouldLog()) {
-        console.log(`Successful request: ${verb.toUpperCase()} ${request.url}`);
+        console.log(`Mirage: [${request.status}] ${verb.toUpperCase()} ${request.url}`);
         let { responseText } = request;
         let loggedResponse;
 
