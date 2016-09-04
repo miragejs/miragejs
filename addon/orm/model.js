@@ -79,6 +79,7 @@ class Model {
     }
 
     Object.keys(attrs).forEach(function(attr) {
+      this._definePlainAttribute(attr);
       this[attr] = attrs[attr];
     }, this);
 
@@ -210,7 +211,10 @@ class Model {
    * @private
    */
   _definePlainAttribute(attr) {
-    if (this[attr] !== undefined) {
+
+    // Ensure the property hasn't already been defined
+    let existingProperty = Object.getOwnPropertyDescriptor(this, attr);
+    if (existingProperty && existingProperty.get) {
       return;
     }
 
