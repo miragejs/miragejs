@@ -9,15 +9,12 @@ import PutShorthandHandler from './route-handlers/shorthands/put';
 import DeleteShorthandHandler from './route-handlers/shorthands/delete';
 import HeadShorthandHandler from './route-handlers/shorthands/head';
 
-import _keys from 'lodash/object/keys';
-import _isArray from 'lodash/lang/isArray';
-
 const { isBlank, typeOf } = Ember;
 
 function isNotBlankResponse(response) {
   return response &&
-    !(typeOf(response) === 'object' && _keys(response).length === 0) &&
-    (_isArray(response) || !isBlank(response));
+    !(typeOf(response) === 'object' && Object.keys(response).length === 0) &&
+    (Array.isArray(response) || !isBlank(response));
 }
 
 const DEFAULT_CODES = { get: 200, put: 204, post: 201, 'delete': 204 };

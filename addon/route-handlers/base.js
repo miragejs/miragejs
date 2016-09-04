@@ -1,4 +1,3 @@
-import _isArray from 'lodash/lang/isArray';
 import assert from 'ember-cli-mirage/assert';
 import { camelize, singularize, dasherize } from 'ember-cli-mirage/utils/inflector';
 
@@ -59,7 +58,7 @@ export default class BaseRouteHandler {
       Object.keys(json.data.relationships).forEach((key) => {
         let relationship = json.data.relationships[key];
 
-        if (!_isArray(relationship.data)) {
+        if (!Array.isArray(relationship.data)) {
           attrs[`${camelize(key)}Id`] = relationship.data && relationship.data.id;
         }
       }, {});

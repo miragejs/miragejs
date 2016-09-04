@@ -10,8 +10,6 @@ import SerializerRegistry from './serializer-registry';
 import RouteHandler from './route-handler';
 import Ember from 'ember';
 
-import _isArray from 'lodash/lang/isArray';
-import _keys from 'lodash/object/keys';
 import _pick from 'lodash/object/pick';
 import _assign from 'lodash/object/assign';
 import _find from 'lodash/collection/find';
@@ -185,7 +183,7 @@ export default class Server {
     if (paths.length === 0) {
       // paths = ['http://localhost:7357'];
       paths = ['/**', '/'];
-    } else if (_isArray(lastArg)) {
+    } else if (Array.isArray(lastArg)) {
       verbs = paths.pop();
     }
 
@@ -210,13 +208,13 @@ export default class Server {
   /*
     Factory methods
   */
-  loadFactories(factoryMap) {
+  loadFactories(factoryMap = {}) {
     // Store a reference to the factories
     let currentFactoryMap = this._factoryMap || {};
     this._factoryMap = _assign(currentFactoryMap, factoryMap);
 
     // Create a collection for each factory
-    _keys(factoryMap).forEach(type => {
+    Object.keys(factoryMap).forEach(type => {
       let collectionName = toCollectionName(type);
       this.db.createCollection(collectionName);
     });
@@ -408,7 +406,7 @@ export default class Server {
 
   _hasModulesOfType(modules, type) {
     let modulesOfType = modules[type];
-    return modulesOfType ? _keys(modulesOfType).length > 0 : false;
+    return modulesOfType ? Object.keys(modulesOfType).length > 0 : false;
   }
 
   /*

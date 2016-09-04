@@ -7,7 +7,6 @@ import { pluralize, camelize } from './utils/inflector';
 import assert from './assert';
 
 import _assign from 'lodash/object/assign';
-import _isArray from 'lodash/lang/isArray';
 
 export default class SerializerRegistry {
 
@@ -25,7 +24,7 @@ export default class SerializerRegistry {
       let serializer = this.serializerFor(response.modelName);
 
       return serializer.serialize(response, request);
-    } else if (_isArray(response) && response.filter(this._isCollection).length) {
+    } else if (Array.isArray(response) && response.filter(this._isCollection).length) {
       return response.reduce((json, collection) => {
         let serializer = this.serializerFor(collection.modelName);
 

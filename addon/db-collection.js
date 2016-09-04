@@ -1,10 +1,9 @@
 import _assign from 'lodash/object/assign';
-import _isArray from 'lodash/lang/isArray';
 import _isEqual from 'lodash/lang/isEqual';
 import _sortBy from 'lodash/collection/sortBy';
 
 function duplicate(data) {
-  if (_isArray(data)) {
+  if (Array.isArray(data)) {
     return data.map(duplicate);
   } else {
     return _assign({}, data);
@@ -50,7 +49,7 @@ class DbCollection {
    * @public
    */
   insert(data) {
-    if (!_isArray(data)) {
+    if (!Array.isArray(data)) {
       return this._insertRecord(data);
     } else {
       // Need to sort in order to ensure IDs inserted in the correct order
@@ -68,7 +67,7 @@ class DbCollection {
    * @public
    */
   find(ids) {
-    if (_isArray(ids)) {
+    if (Array.isArray(ids)) {
       let records = this._findRecords(ids)
         .filter(Boolean)
         .map(duplicate); // Return a copy
@@ -180,7 +179,7 @@ class DbCollection {
 
       return record;
 
-    } else if (_isArray(target)) {
+    } else if (Array.isArray(target)) {
       let ids = target;
       records = this._findRecords(ids);
 
@@ -226,7 +225,7 @@ class DbCollection {
       let index = this._records.indexOf(record);
       this._records.splice(index, 1);
 
-    } else if (_isArray(target)) {
+    } else if (Array.isArray(target)) {
       records = this._findRecords(target);
       records.forEach((record) =>  {
         let index = this._records.indexOf(record);

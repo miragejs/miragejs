@@ -2,7 +2,6 @@ import { pluralize, camelize, dasherize } from '../utils/inflector';
 import { toCollectionName, toModelName } from 'ember-cli-mirage/utils/normalize-name';
 import Association from './associations/association';
 import Collection from './collection';
-import _isArray from 'lodash/lang/isArray';
 import _forIn from 'lodash/object/forIn';
 import _includes from 'lodash/collection/includes';
 import assert from '../assert';
@@ -136,7 +135,7 @@ export default class Schema {
     let collection = this._collectionForType(type);
     let records = collection.find(ids);
 
-    if (_isArray(ids)) {
+    if (Array.isArray(ids)) {
       assert(
         records.length === ids.length,
         `Couldn\'t find all ${pluralize(type)} with ids: (${ids.join(',')}) (found ${records.length} results, but was looking for ${ids.length})`
@@ -258,7 +257,7 @@ export default class Schema {
    * @private
    */
   _hydrate(records, modelName) {
-    if (_isArray(records)) {
+    if (Array.isArray(records)) {
       let models = records.map(function(record) {
         return this._instantiateModel(modelName, record);
       }, this);
