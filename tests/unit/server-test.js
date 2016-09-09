@@ -1,7 +1,7 @@
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers, disallowMultipleVarDecl
 import Server, { defaultPassthroughs } from 'ember-cli-mirage/server';
 import {module, test} from 'qunit';
-import { Model, Factory } from 'ember-cli-mirage';
+import { Model, Factory, trait } from 'ember-cli-mirage';
 
 module('Unit | Server');
 
@@ -226,6 +226,175 @@ test('create allows for arrays of attr overrides', function(assert) {
   assert.deepEqual(contact2, { id: '2', websites: ['http://example.com', 'http://placekitten.com/321/241'] });
 });
 
+test('create allows to extend factory with trait', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    })
+  });
+
+  let server = new Server({
+    environment: 'test',
+    factories: {
+      article: ArticleFactory
+    }
+  });
+
+  let article = server.create('article');
+  let publishedArticle = server.create('article', 'published');
+
+  assert.deepEqual(article, { id: '1', title: 'Lorem ipsum' });
+  assert.deepEqual(publishedArticle, { id: '2', title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2010-01-01 10:00:00' });
+});
+
+test('create allows to extend factory with multiple traits', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    }),
+
+    withContent: trait({
+      content: 'content'
+    })
+  });
+
+  let server = new Server({
+    environment: 'test',
+    factories: {
+      article: ArticleFactory
+    }
+  });
+
+  let article = server.create('article');
+  let publishedArticle = server.create('article', 'published');
+  let publishedArticleWithContent = server.create('article', 'published', 'withContent');
+
+  assert.deepEqual(article, { id: '1', title: 'Lorem ipsum' });
+  assert.deepEqual(publishedArticle, { id: '2', title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2010-01-01 10:00:00' });
+  assert.deepEqual(publishedArticleWithContent, { id: '3', title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2010-01-01 10:00:00', content: 'content' });
+});
+
+test('create allows to extend factory with traits containing afterCreate callbacks', function(assert) {
+  let CommentFactory = Factory.extend({
+    content: 'content'
+  });
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    withComments: trait({
+      afterCreate(article, server) {
+        server.createList('comment', 3, { article });
+      }
+    })
+  });
+
+  let server = new Server({
+    environment: 'test',
+    factories: {
+      article: ArticleFactory,
+      comment: CommentFactory
+    }
+  });
+
+  let articleWithComments = server.create('article', 'withComments');
+
+  assert.deepEqual(articleWithComments, { id: '1', title: 'Lorem ipsum' });
+  assert.equal(server.db.comments.length, 3);
+});
+
+test('create does not execute afterCreate callbacks from traits that are not applied', function(assert) {
+  let CommentFactory = Factory.extend({
+    content: 'content'
+  });
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    withComments: trait({
+      afterCreate(article, server) {
+        server.createList('comment', 3, { article });
+      }
+    })
+  });
+
+  let server = new Server({
+    environment: 'test',
+    factories: {
+      article: ArticleFactory,
+      comment: CommentFactory
+    }
+  });
+
+  let articleWithComments = server.create('article');
+
+  assert.deepEqual(articleWithComments, { id: '1', title: 'Lorem ipsum' });
+  assert.equal(server.db.comments.length, 0);
+});
+
+test('create allows to extend with multiple traits and to apply attr overrides', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    }),
+
+    withContent: trait({
+      content: 'content'
+    })
+  });
+
+  let server = new Server({
+    environment: 'test',
+    factories: {
+      article: ArticleFactory
+    }
+  });
+
+  let overrides = {
+    publishedAt: '2012-01-01 10:00:00'
+  };
+  let publishedArticleWithContent = server.create('article', 'published', 'withContent', overrides);
+
+  assert.deepEqual(publishedArticleWithContent, { id: '1', title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2012-01-01 10:00:00', content: 'content' });
+});
+
+test('create throws errors when using trait that is not defined and distinquishes between traits and non-traits', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    }),
+
+    private: {
+      someAttr: 'value'
+    }
+  });
+
+  let server = new Server({
+    environment: 'test',
+    factories: {
+      article: ArticleFactory
+    }
+  });
+
+  assert.throws(() => {
+    server.create('article', 'private');
+  }, /'private' trait is not registered in 'article' factory/);
+});
+
 module('Unit | Server #createList', {
   beforeEach() {
     this.server = new Server({ environment: 'test' });
@@ -288,6 +457,82 @@ test('createList respects attr overrides', function(assert) {
   assert.deepEqual(sams[1], { id: '2', name: 'Sam' });
   assert.deepEqual(links[0], { id: '3', name: 'Link' });
   assert.deepEqual(links[1], { id: '4', name: 'Link' });
+});
+
+test('createList respects traits', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    }),
+
+    withContent: trait({
+      content: 'content'
+    })
+  });
+
+  this.server.loadFactories({
+    article: ArticleFactory
+  });
+
+  let articles = this.server.createList('article', 2, 'published', 'withContent');
+
+  assert.deepEqual(articles[0], { id: '1', title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2010-01-01 10:00:00', content: 'content' });
+  assert.deepEqual(articles[1], { id: '2', title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2010-01-01 10:00:00', content: 'content' });
+});
+
+test('createList respects traits with attr overrides', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    }),
+
+    withContent: trait({
+      content: 'content'
+    })
+  });
+
+  this.server.loadFactories({
+    article: ArticleFactory
+  });
+
+  let overrides = { publishedAt: '2012-01-01 10:00:00' };
+  let articles = this.server.createList('article', 2, 'published', 'withContent', overrides);
+
+  assert.deepEqual(articles[0], { id: '1', title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2012-01-01 10:00:00', content: 'content' });
+  assert.deepEqual(articles[1], { id: '2', title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2012-01-01 10:00:00', content: 'content' });
+});
+
+test('createList throws errors when using trait that is not defined and distinquishes between traits and non-traits', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    }),
+
+    private: {
+      someAttr: 'value'
+    }
+  });
+
+  this.server.loadFactories({
+    article: ArticleFactory
+  });
+
+  assert.throws(() => {
+    this.server.createList('article', 2, 'private');
+  }, /'private' trait is not registered in 'article' factory/);
 });
 
 module('Unit | Server #build', {
@@ -403,6 +648,107 @@ test('build allows for arrays of attr overrides', function(assert) {
   assert.deepEqual(contact2, { websites: ['http://example.com', 'http://placekitten.com/321/241'] });
 });
 
+test('build allows to extend factory with trait', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    })
+  });
+
+  this.server.loadFactories({
+    article: ArticleFactory
+  });
+
+  let article = this.server.build('article');
+  let publishedArticle = this.server.build('article', 'published');
+
+  assert.deepEqual(article, { title: 'Lorem ipsum' });
+  assert.deepEqual(publishedArticle, { title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2010-01-01 10:00:00' });
+});
+
+test('build allows to extend factory with multiple traits', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    }),
+
+    withContent: trait({
+      content: 'content'
+    })
+  });
+
+  this.server.loadFactories({
+    article: ArticleFactory
+  });
+
+  let article = this.server.build('article');
+  let publishedArticle = this.server.build('article', 'published');
+  let publishedArticleWithContent = this.server.build('article', 'published', 'withContent');
+
+  assert.deepEqual(article, { title: 'Lorem ipsum' });
+  assert.deepEqual(publishedArticle, { title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2010-01-01 10:00:00' });
+  assert.deepEqual(publishedArticleWithContent, { title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2010-01-01 10:00:00', content: 'content' });
+});
+
+test('build allows to extend with multiple traits and to apply attr overrides', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    }),
+
+    withContent: trait({
+      content: 'content'
+    })
+  });
+
+  this.server.loadFactories({
+    article: ArticleFactory
+  });
+
+  let overrides = {
+    publishedAt: '2012-01-01 10:00:00'
+  };
+  let publishedArticleWithContent = this.server.build('article', 'published', 'withContent', overrides);
+
+  assert.deepEqual(publishedArticleWithContent, { title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2012-01-01 10:00:00', content: 'content' });
+});
+
+test('build throws errors when using trait that is not defined and distinquishes between traits and non-traits', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    }),
+
+    private: {
+      someAttr: 'value'
+    }
+  });
+
+  this.server.loadFactories({
+    article: ArticleFactory
+  });
+
+  assert.throws(() => {
+    this.server.build('article', 'private');
+  }, /'private' trait is not registered in 'article' factory/);
+});
+
 module('Unit | Server #buildList', {
   beforeEach() {
     this.server = new Server({ environment: 'test' });
@@ -462,6 +808,82 @@ test('buildList respects attr overrides', function(assert) {
   assert.deepEqual(sams[1], { name: 'Sam' });
   assert.deepEqual(links[0], { name: 'Link' });
   assert.deepEqual(links[1], { name: 'Link' });
+});
+
+test('buildList respects traits', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    }),
+
+    withContent: trait({
+      content: 'content'
+    })
+  });
+
+  this.server.loadFactories({
+    article: ArticleFactory
+  });
+
+  let articles = this.server.buildList('article', 2, 'published', 'withContent');
+
+  assert.deepEqual(articles[0], { title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2010-01-01 10:00:00', content: 'content' });
+  assert.deepEqual(articles[1], { title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2010-01-01 10:00:00', content: 'content' });
+});
+
+test('buildList respects traits with attr overrides', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    }),
+
+    withContent: trait({
+      content: 'content'
+    })
+  });
+
+  this.server.loadFactories({
+    article: ArticleFactory
+  });
+
+  let overrides = { publishedAt: '2012-01-01 10:00:00' };
+  let articles = this.server.buildList('article', 2, 'published', 'withContent', overrides);
+
+  assert.deepEqual(articles[0], { title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2012-01-01 10:00:00', content: 'content' });
+  assert.deepEqual(articles[1], { title: 'Lorem ipsum', isPublished: true,
+    publishedAt: '2012-01-01 10:00:00', content: 'content' });
+});
+
+test('buildList throws errors when using trait that is not defined and distinquishes between traits and non-traits', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    }),
+
+    private: {
+      someAttr: 'value'
+    }
+  });
+
+  this.server.loadFactories({
+    article: ArticleFactory
+  });
+
+  assert.throws(() => {
+    this.server.buildList('article', 2, 'private');
+  }, /'private' trait is not registered in 'article' factory/);
 });
 
 module('Unit | Server #defaultPassthroughs');

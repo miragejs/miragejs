@@ -1,4 +1,5 @@
 import Factory from './factory';
+import trait from './trait';
 import Response from './response';
 import faker from './faker';
 import Model from './orm/model';
@@ -19,6 +20,7 @@ function belongsTo(...args) {
 
 export {
   Factory,
+  trait,
   Response,
   faker,
   Model,

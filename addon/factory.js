@@ -11,6 +11,11 @@ let Factory = function() {
     let object = {};
     let topLevelAttrs = _assign({}, this.attrs);
     delete topLevelAttrs.afterCreate;
+    Object.keys(topLevelAttrs).forEach((attr) => {
+      if (Factory.isTrait.call(this, attr)) {
+        delete topLevelAttrs[attr];
+      }
+    });
     let keys = sortAttrs(topLevelAttrs, sequence);
 
     keys.forEach(function(key) {
@@ -57,11 +62,42 @@ Factory.extend = function(attrs) {
 
   // Copy extend
   Subclass.extend = Factory.extend;
+  Subclass.extractAfterCreateCallbacks = Factory.extractAfterCreateCallbacks;
+  Subclass.isTrait = Factory.isTrait;
 
   // Store a reference on the class for future subclasses
   Subclass.attrs = newAttrs;
 
   return Subclass;
+};
+
+Factory.extractAfterCreateCallbacks = function({ traits } = {}) {
+  let afterCreateCallbacks = [];
+  let attrs = this.attrs || {};
+  let traitCandidates;
+
+  if (Array.isArray(traits)) {
+    traitCandidates = traits;
+  } else {
+    traitCandidates = Object.keys(attrs);
+  }
+
+  traitCandidates.filter((attr) => {
+    return this.isTrait(attr) && attrs[attr].extension.afterCreate;
+  }).forEach((attr) => {
+    afterCreateCallbacks.push(attrs[attr].extension.afterCreate);
+  });
+
+  if (attrs.afterCreate) {
+    afterCreateCallbacks.push(attrs.afterCreate);
+  }
+
+  return afterCreateCallbacks;
+};
+
+Factory.isTrait = function(attrName) {
+  let { attrs } = this;
+  return _isPlainObject(attrs[attrName]) && attrs[attrName].__isTrait__ === true;
 };
 
 function sortAttrs(attrs, sequence) {
