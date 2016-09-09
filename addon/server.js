@@ -8,6 +8,7 @@ import Schema from './orm/schema';
 import assert from './assert';
 import SerializerRegistry from './serializer-registry';
 import RouteHandler from './route-handler';
+import Ember from 'ember';
 
 import _isArray from 'lodash/lang/isArray';
 import _keys from 'lodash/object/keys';
@@ -106,45 +107,58 @@ function extractRouteArguments(args) {
 export default class Server {
 
   constructor(options = {}) {
-    this.environment = options.environment || 'development';
-    this.options = options;
-    this.timing = 400;
-    this.namespace = '';
-    this.urlPrefix = '';
+    this.config(options);
+  }
+
+  config(config = {}) {
+    Ember.assert(!this.environment || this.environment === config.environment,
+    'you can not modify the environment of ember-cli-mirage once server is created');
+    this.environment = config.environment || 'development';
+
+    this.options = config;
+
+    this.timing = this.timing || config.timing || 400;
+    this.namespace = this.namespace || config.namespace || '';
+    this.urlPrefix = this.urlPrefix || config.urlPrefix || '';
 
     this._defineRouteHandlerHelpers();
 
-    this.db = new Db();
-    this.schema = new Schema(this.db, options.models);
-    this.serializerOrRegistry = new SerializerRegistry(this.schema, options.serializers);
+    this.db = this.db || new Db();
+    if (this.schema) {
+      this.schema.registerModels(config.models);
+      this.serializerOrRegistry.registerSerializers(config.serializers || {});
+    } else {
+      this.schema = new Schema(this.db, config.models);
+      this.serializerOrRegistry = new SerializerRegistry(this.schema, config.serializers);
+    }
 
-    let hasFactories = this._hasModulesOfType(options, 'factories');
-    let hasDefaultScenario = options.scenarios && options.scenarios.hasOwnProperty('default');
+    let hasFactories = this._hasModulesOfType(config, 'factories');
+    let hasDefaultScenario = config.scenarios && config.scenarios.hasOwnProperty('default');
 
-    this.pretender = createPretender(this);
+    this.pretender = this.pretender || createPretender(this);
 
-    if (options.baseConfig) {
-      this.loadConfig(options.baseConfig);
+    if (config.baseConfig) {
+      this.loadConfig(config.baseConfig);
     }
 
     if (this.isTest()) {
-      if (options.testConfig) {
-        this.loadConfig(options.testConfig);
+      if (config.testConfig) {
+        this.loadConfig(config.testConfig);
       }
 
       window.server = this; // TODO: Better way to inject server into test env
     }
 
     if (this.isTest() && hasFactories) {
-      this.loadFactories(options.factories);
+      this.loadFactories(config.factories);
     } else if (!this.isTest() && hasDefaultScenario) {
-      this.loadFactories(options.factories);
-      options.scenarios.default(this);
+      this.loadFactories(config.factories);
+      config.scenarios.default(this);
     } else {
       this.loadFixtures();
     }
 
-    if (options.useDefaultPassthroughs) {
+    if (config.useDefaultPassthroughs) {
       this._configureDefaultPassthroughs();
     }
   }
@@ -196,7 +210,8 @@ export default class Server {
   */
   loadFactories(factoryMap) {
     // Store a reference to the factories
-    this._factoryMap = factoryMap;
+    let currentFactoryMap = this._factoryMap || {};
+    this._factoryMap = _assign(currentFactoryMap, factoryMap);
 
     // Create a collection for each factory
     _keys(factoryMap).forEach(type => {

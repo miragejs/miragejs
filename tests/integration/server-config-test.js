@@ -1,13 +1,19 @@
 import {module, test} from 'qunit';
 import { Model } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
+import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
+import RestSerializer from 'ember-cli-mirage/serializers/rest-serializer';
 
 module('Integration | Server Config', {
   beforeEach() {
     this.server = new Server({
       environment: 'development',
       models: {
-        contact: Model
+        contact: Model,
+        post: Model
+      },
+      serializers: {
+        contact: ActiveModelSerializer
       }
     });
     this.server.timing = 0;
@@ -200,4 +206,37 @@ test('namespace of / works', function(assert) {
     assert.deepEqual(data, { contacts });
     done();
   });
+});
+
+test('redefining options using the config method works', function(assert) {
+  assert.expect(5);
+  let done = assert.async();
+  let { server } = this;
+
+  let contacts = [
+    { id: '1', name: 'Link' },
+    { id: '2', name: 'Zelda' }
+  ];
+  server.config({
+    namespace: 'api',
+    urlPrefix: 'http://localhost:3000',
+    timing: 1000,
+    serializers: {
+      post: RestSerializer
+    }
+  });
+  server.db.loadData({
+    contacts
+  });
+  server.get('contacts');
+
+  assert.equal(server.timing, 1000);
+  $.getJSON('http://localhost:3000/api/contacts', function(data) {
+    assert.deepEqual(data, { contacts });
+    done();
+  });
+  let serializerMap = server.serializerOrRegistry._serializerMap;
+  assert.equal(Object.keys(serializerMap).length, 2);
+  assert.equal(serializerMap.contact, ActiveModelSerializer);
+  assert.equal(serializerMap.post, RestSerializer);
 });

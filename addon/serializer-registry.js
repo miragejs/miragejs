@@ -75,4 +75,12 @@ export default class SerializerRegistry {
     return this._isModel(object) || this._isCollection(object);
   }
 
+  registerSerializers(newSerializerMaps) {
+    let currentSerializerMap = this._serializerMap || {};
+    this._serializerMap = _assign(
+      currentSerializerMap,
+      newSerializerMaps
+    );
+  }
+
 }
