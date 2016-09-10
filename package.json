@@ -75,7 +75,7 @@
     "exists-sync": "0.0.3",
     "fake-xml-http-request": "^1.4.0",
     "faker": "3.0.1",
-    "pretender": "^1.1.0",
+    "pretender": "^1.2.0",
     "route-recognizer": "^0.1.11"
   }
 }
