@@ -55,6 +55,7 @@ export default class Schema {
     ModelClass.prototype.associationKeys = [];       // ex: address.user, user.addresses
     ModelClass.prototype.associationIdKeys = [];     // ex: address.user_id, user.address_ids. may or may not be a fk.
 
+    let fksAddedFromThisModel = {};
     for (let associationProperty in ModelClass.prototype) {
       if (ModelClass.prototype[associationProperty] instanceof Association) {
         let association = ModelClass.prototype[associationProperty];
@@ -64,8 +65,17 @@ export default class Schema {
 
         // Update the registry with this association's foreign keys. This is
         // essentially our "db migration", since we must know about the fks.
-        let result = association.getForeignKeyArray();
-        let [ fkHolder, fk ] = result;
+        let [ fkHolder, fk ] = association.getForeignKeyArray();
+
+        fksAddedFromThisModel[fkHolder] = fksAddedFromThisModel[fkHolder] || [];
+        assert(
+          !_includes(fksAddedFromThisModel[fkHolder], fk),
+          `Your '${type}' model definition has multiple possible inverse relationships of type '${fkHolder}'.
+
+          Please read the associations guide and specify explicit inverses: http://www.ember-cli-mirage.com/docs/v0.2.x/models/#associations`
+        );
+        fksAddedFromThisModel[fkHolder].push(fk);
+
         this._addForeignKeyToRegistry(fkHolder, fk);
 
         // Augment the Model's class with any methods added by this association

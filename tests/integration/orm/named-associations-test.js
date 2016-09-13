@@ -25,20 +25,17 @@ test('schemas with a single hasMany have correct foreign keys', function(assert)
   assert.ok(project);
 });
 
-/*
+test('schemas with a single hasMany with a different property name defaults to a foreign key named by type', function(assert) {
+  let schema = new Schema(new Db(), {
+    user: Model.extend({
+      specialProjects: hasMany('project')
+    }),
+    project: Model
+  });
 
-What should the behavior be??
-
-// test('schemas with a single hasMany with a different property name have correct foreign keys', function(assert) {
-//   var schema = new Schema(new Db(), {
-//     user: Model.extend({
-//       specialProjects: hasMany('project'),
-//     }),
-//     project: Model
-//   });
-// });
-
-*/
+  assert.deepEqual(schema._registry.user.foreignKeys, []);
+  assert.deepEqual(schema._registry.project.foreignKeys, ['userId']);
+});
 
 test('schemas with a single belongsTo have correct foreign keys', function(assert) {
   let schema = new Schema(new Db(), {
@@ -210,21 +207,40 @@ test('a model can have multiple belongsTo associations of the same type', functi
   assert.equal(specialUser.modelName, 'user');
 });
 
-/*
+test('multiple hasMany associations of the same type with no explicit inverses throw an error', function(assert) {
+  assert.throws(() => {
+    new Schema(new Db(), {
+      user: Model.extend({
+        mainProjects: hasMany('project'),
+        specialProjects: hasMany('project')
+      }),
+      project: Model
+    });
+  }, /multiple possible inverse relationships/);
+});
 
-What should the behavior for this be???
+test('multiple hasMany associations with explicit inverses sets up the correct foreign keys', function(assert) {
+  let schema = new Schema(new Db(), {
+    user: Model.extend({
+      mainProjects: hasMany('project', { inverse: 'mainUser' }),
+      specialProjects: hasMany('project', { inverse: 'specialUser' })
+    }),
+    project: Model
+  });
 
-// test('a model can have multiple hasMany associations of the same type', function(assert) {
-//   var schema = new Schema(new Db(), {
-//     user: Model.extend({
-//       mainProjects: hasMany('project'),
-//       specialProjects: hasMany('project'),
-//     }),
-//     project: Model
-//   });
+  assert.deepEqual(schema._registry.user.foreignKeys, []);
+  assert.deepEqual(schema._registry.project.foreignKeys, ['mainUserId', 'specialUserId']);
+});
 
-//   assert.deepEqual(schema._registry.user.foreignKeys, []);
-//   assert.deepEqual(schema._registry.project.foreignKeys, ['adminId', 'specialUserId']);
-// });
+test('multiple hasMany associations with one explicit inverse sets up the correct foreign keys', function(assert) {
+  let schema = new Schema(new Db(), {
+    user: Model.extend({
+      projects: hasMany(),
+      specialProjects: hasMany('project', { inverse: 'specialUser' })
+    }),
+    project: Model
+  });
 
-*/
+  assert.deepEqual(schema._registry.user.foreignKeys, []);
+  assert.deepEqual(schema._registry.project.foreignKeys, ['userId', 'specialUserId']);
+});

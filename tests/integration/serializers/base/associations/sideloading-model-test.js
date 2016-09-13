@@ -1,3 +1,6 @@
+import Schema from 'ember-cli-mirage/orm/schema';
+import { Model, hasMany, belongsTo } from 'ember-cli-mirage';
+import Db from 'ember-cli-mirage/db';
 import Serializer from 'ember-cli-mirage/serializer';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import schemaHelper from '../../schema-helper';
@@ -60,6 +63,36 @@ test(`it can sideload a model with a has-many relationship`, function(assert) {
     blogPosts: [
       { id: '1', title: 'Lorem', wordSmithId: '1' },
       { id: '2', title: 'Ipsum', wordSmithId: '1' }
+    ]
+  });
+});
+
+test(`it can sideload a named has-many association`, function(assert) {
+  let schema = new Schema(new Db(), {
+    wordSmith: Model.extend({
+      posts: hasMany('blog-post')
+    }),
+    blogPost: Model
+  });
+  let link = schema.wordSmiths.create({ name: 'Link' });
+  link.createPost({ title: 'Lorem' });
+  let registry = new SerializerRegistry(schema, {
+    application: this.BaseSerializer,
+    wordSmith: this.BaseSerializer.extend({
+      include: ['posts']
+    })
+  });
+
+  let result = registry.serialize(link);
+
+  assert.deepEqual(result, {
+    wordSmith: {
+      id: '1',
+      name: 'Link',
+      postIds: ['1']
+    },
+    blogPosts: [
+      { id: '1', title: 'Lorem', wordSmithId: '1' }
     ]
   });
 });
@@ -135,6 +168,34 @@ test(`it can sideload a model with a belongs-to relationship`, function(assert) 
   assert.deepEqual(result, {
     blogPost: {
       id: '1', title: 'Lorem', wordSmithId: '1'
+    },
+    wordSmiths: [
+      { id: '1', name: 'Link' }
+    ]
+  });
+});
+
+test(`it can sideload a model with a named belongs-to relationship`, function(assert) {
+  let schema = new Schema(new Db(), {
+    wordSmith: Model,
+    blogPost: Model.extend({
+      author: belongsTo('word-smith')
+    })
+  });
+  let post = schema.blogPosts.create({ title: 'Lorem' });
+  post.createAuthor({ name: 'Link' });
+  let registry = new SerializerRegistry(schema, {
+    application: this.BaseSerializer,
+    blogPost: this.BaseSerializer.extend({
+      include: ['author']
+    })
+  });
+
+  let result = registry.serialize(post);
+
+  assert.deepEqual(result, {
+    blogPost: {
+      id: '1', title: 'Lorem', authorId: '1'
     },
     wordSmiths: [
       { id: '1', name: 'Link' }

@@ -1,4 +1,4 @@
- /*jshint -W079 */
+/* jshint -W079 */
 /* jshint node: true */
 /* jshint expr: true */
 // jscs:disable

@@ -8,7 +8,6 @@ import Schema from './orm/schema';
 import assert from './assert';
 import SerializerRegistry from './serializer-registry';
 import RouteHandler from './route-handler';
-import Ember from 'ember';
 
 import _pick from 'lodash/object/pick';
 import _assign from 'lodash/object/assign';
@@ -111,8 +110,9 @@ export default class Server {
   }
 
   config(config = {}) {
-    Ember.assert(!this.environment || this.environment === config.environment,
-    'you can not modify the environment of ember-cli-mirage once server is created');
+    let didOverrideConfig = (config.environment && (this.environment && (this.environment !== config.environment)));
+    assert(!didOverrideConfig,
+    'You cannot modify Mirage\'s environment once the server is created');
     this.environment = config.environment || 'development';
 
     this.options = config;

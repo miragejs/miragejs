@@ -240,3 +240,13 @@ test('redefining options using the config method works', function(assert) {
   assert.equal(serializerMap.contact, ActiveModelSerializer);
   assert.equal(serializerMap.post, RestSerializer);
 });
+
+test('changing the environment of the server throws an error', function(assert) {
+  let { server } = this;
+
+  assert.throws(function() {
+    server.config({
+      environment: 'test'
+    });
+  }, /You cannot modify Mirage's environment once the server is created/);
+});

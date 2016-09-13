@@ -1,4 +1,4 @@
- /*jshint -W079 */
+/* jshint -W079 */
 /* jshint node: true */
 // jscs:disable
 var expect = require('chai').expect;

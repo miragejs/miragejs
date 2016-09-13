@@ -1,8 +1,6 @@
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
-import { hasMany, belongsTo } from 'ember-cli-mirage';
+import { ActiveModelSerializer, Model, hasMany, belongsTo } from 'ember-cli-mirage';
 import Schema from 'ember-cli-mirage/orm/schema';
-import Model from 'ember-cli-mirage/orm/model';
 import Db from 'ember-cli-mirage/db';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import { module, test } from 'qunit';
@@ -46,7 +44,7 @@ module('Integration | Serializer | ActiveModelSerializer', {
       }),
       user: ActiveModelSerializer.extend({
         attrs: ['id', 'name'],
-        include: ['ContactInfos'],
+        include: ['contactInfos'],
         embed: true
       })
     });
