@@ -42,4 +42,4 @@ Having trouble? Open an issue!
 
 ## Contributing
 
-Read our [roadmap](https://usecanvas.com/ec-mirage/mirage-roadmap/19kMeB5ceYCLmWrMZaRLez) and have a look at our [Contributing guidelines](./contributing).
+Read our [roadmap](https://usecanvas.com/ec-mirage/mirage-roadmap/19kMeB5ceYCLmWrMZaRLez) and have a look at our [Contributing guidelines](./CONTRIBUTING.md).
