@@ -2,6 +2,26 @@
 
 In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
+## 0.2.2
+
+Update notes:
+
+  - None
+
+Changes:
+
+  - [FEATURE] Add sort to orm/collection @lukemelia
+  - [FEATURE] Add :resource helper @Azdaroth
+  - [FEATURE] Add traits @Azdaroth
+  - [FEATURE] Extract .config out of constructor @Leooo
+  - [FEATURE] #795 Adds findBy to db/schema @promisedlandt
+  - [ENHANCEMENT] #837 Allow namespace of / to be used @jrjohnson
+  - [ENHANCEMENT] #869 improve logging format @mariogintili
+  - [ENHANCEMENT] #781 rewrite serializers @samselikoff
+  - [BUGFIX] #821 JSONAPIAdapter fix @chrisdpeters
+  - [BUGFIX] #846 Allow new attributes to be defined in #update @Leooo
+  - General improvements @fotinakis, @jtrees, @dfreeman, @escobera, @Azdaroth, @Dhaulagiri
+
 ## 0.2.1
 
 Update notes:
