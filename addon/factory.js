@@ -74,6 +74,10 @@ Factory.extractAfterCreateCallbacks = function({ traits } = {}) {
   let attrs = this.attrs || {};
   let traitCandidates;
 
+  if (attrs.afterCreate) {
+    afterCreateCallbacks.push(attrs.afterCreate);
+  }
+
   if (Array.isArray(traits)) {
     traitCandidates = traits;
   } else {
@@ -85,10 +89,6 @@ Factory.extractAfterCreateCallbacks = function({ traits } = {}) {
   }).forEach((attr) => {
     afterCreateCallbacks.push(attrs[attr].extension.afterCreate);
   });
-
-  if (attrs.afterCreate) {
-    afterCreateCallbacks.push(attrs.afterCreate);
-  }
 
   return afterCreateCallbacks;
 };
