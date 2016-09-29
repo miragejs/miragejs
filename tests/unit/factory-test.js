@@ -223,7 +223,7 @@ test('throws meaningfull exception on circular reference', function(assert) {
       return this.foo;
     },
 
-    foo(i) {
+    foo() {
       return this.bar;
     }
   });
@@ -278,7 +278,7 @@ test('extractAfterCreateCallbacks returns all afterCreate callbacks from factory
 
   let callbacks = PostFactory.extractAfterCreateCallbacks();
   assert.equal(callbacks.length, 3);
-  assert.deepEqual(callbacks.map((cb) => cb()), ['from base','from published', 'from withComments']);
+  assert.deepEqual(callbacks.map((cb) => cb()), ['from base', 'from published', 'from withComments']);
 });
 
 test('extractAfterCreateCallbacks filters traits from which the afterCreate callbacks will be extracted from', function(assert) {

@@ -1,5 +1,5 @@
-// jscs:disable
-/* jshint node: true */
+/* eslint-env node */
+/* eslint no-empty: 0 */
 
 module.exports = function(environment) {
   var ENV = {

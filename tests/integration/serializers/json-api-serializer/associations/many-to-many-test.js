@@ -37,14 +37,14 @@ module('Integration | Serializers | JSON API Serializer | Associations | Many To
 skip(`it serializes manyToMany if properly configured to passthrough `, function(assert) {
   let contactSerializer = JSONAPISerializer.extend({
     addresses(model) {
-      let models = model.contactAddresses.models.map(ca => ca.address);
+      let models = model.contactAddresses.models.map((ca) => ca.address);
       return new Collection('address', models);
     }
   });
 
   let addressSerializer = JSONAPISerializer.extend({
     contacts(model) {
-      let models = model.contactAddresses.models.map(ca => ca.contact);
+      let models = model.contactAddresses.models.map((ca) => ca.contact);
       return new Collection('contact', models);
     }
   });
@@ -86,7 +86,7 @@ skip(`it sideloads manyToMany if properly configured to passthrough and include`
   let contactSerializer = JSONAPISerializer.extend({
     include: ['addresses'],
     addresses(model) {
-      let models = model.contactAddresses.models.map(ca => ca.address);
+      let models = model.contactAddresses.models.map((ca) => ca.address);
       return new Collection('address', models);
     }
   });
@@ -94,7 +94,7 @@ skip(`it sideloads manyToMany if properly configured to passthrough and include`
   let addressSerializer = JSONAPISerializer.extend({
     include: ['contacts'],
     contacts(model) {
-      let models = model.contactAddresses.models.map(ca => ca.contact);
+      let models = model.contactAddresses.models.map((ca) => ca.contact);
       return new Collection('contact', models);
     }
   });

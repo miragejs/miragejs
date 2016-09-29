@@ -1,4 +1,3 @@
-// jscs:disable requireParenthesesAroundArrowParam
 import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import extend from '../utils/extend';
 import assert from '../assert';
@@ -171,11 +170,11 @@ class Model {
   _setupAttrs(attrs) {
     // Verify no undefined associations are passed in
     Object.keys(attrs)
-      .filter(key => {
+      .filter((key) => {
         let value = attrs[key];
         return (value instanceof Model || value instanceof Collection);
       })
-      .forEach(key => {
+      .forEach((key) => {
         let modelOrCollection = attrs[key];
 
         assert(this.associationKeys.indexOf(key) > -1, `You're trying to create a ${this.modelName} model and you passed in a ${modelOrCollection.toString()} under the ${key} key, but you haven't defined that key as an association on your model.`);
@@ -229,7 +228,8 @@ class Model {
         return this.attrs[attr];
       },
       set(val) {
-        this.attrs[attr] = val; return this;
+        this.attrs[attr] = val;
+        return this;
       }
     });
   }
@@ -259,7 +259,7 @@ class Model {
    * @private
    */
   _saveAssociations() {
-    Object.keys(this.belongsToAssociations).forEach(key => {
+    Object.keys(this.belongsToAssociations).forEach((key) => {
       let association = this.belongsToAssociations[key];
       let parent = this[key];
       if (parent && parent.isNew()) {
@@ -269,7 +269,7 @@ class Model {
       }
     });
 
-    Object.keys(this.hasManyAssociations).forEach(key => {
+    Object.keys(this.hasManyAssociations).forEach((key) => {
       let association = this.hasManyAssociations[key];
       let children = this[key];
       children.update(association.getForeignKey(), this.id);

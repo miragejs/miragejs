@@ -246,14 +246,12 @@ test('returns a copy not a reference', function(assert) {
 test('returns the first record matching the criteria', function(assert) {
   let contact = db.contacts.findBy({ 'name': 'Epona' });
 
-  console.log(contact);
   assert.deepEqual(contact, { id: '3', name: 'Epona', race: 'Horse' });
 });
 
 test('returns a record only matching multiple criteria', function(assert) {
   let contact = db.contacts.findBy({ 'name': 'Epona', 'race': 'Centaur' });
 
-  console.log(contact);
   assert.deepEqual(contact, { id: '4', name: 'Epona', race: 'Centaur' });
 });
 
@@ -411,11 +409,11 @@ test('it can update the whole collection', function(assert) {
   let actualContacts = db.contacts;
 
   let expectedContacts = [
-      { id: '123-abc', name: 'Sam', evil: false },
-      { id: '1', name: 'Sam', evil: false },
-      { id: '2', name: 'Sam', evil: false },
-      { id: '3', name: 'Sam', evil: false }
-    ];
+    { id: '123-abc', name: 'Sam', evil: false },
+    { id: '1', name: 'Sam', evil: false },
+    { id: '2', name: 'Sam', evil: false },
+    { id: '3', name: 'Sam', evil: false }
+  ];
 
   assert.deepEqual(
     actualContacts, expectedContacts, [actualContacts.map(function(r) {

@@ -1,4 +1,4 @@
-// jscs:disable requireParenthesesAroundArrowParam
+/* eslint no-console: 0 */
 
 import { pluralize, camelize } from './utils/inflector';
 import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
@@ -251,8 +251,8 @@ export default class Server {
       verbs = paths.pop();
     }
 
-    verbs.forEach(verb => {
-      paths.forEach(path => {
+    verbs.forEach((verb) => {
+      paths.forEach((path) => {
         let fullPath = this._getFullPath(path);
         this.pretender[verb](fullPath, this.pretender.passthrough);
       });
@@ -293,7 +293,7 @@ export default class Server {
     this._factoryMap = _assign(currentFactoryMap, factoryMap);
 
     // Create a collection for each factory
-    Object.keys(factoryMap).forEach(type => {
+    Object.keys(factoryMap).forEach((type) => {
       let collectionName = toCollectionName(type);
       this.db.createCollection(collectionName);
     });
@@ -430,14 +430,14 @@ export default class Server {
     };
 
     let allActions = Object.keys(actionsMethodsAndsPathsMappings);
-    let actions = only.length > 0 && only ||
-                  except.length > 0 && allActions.filter(action => (except.indexOf(action) === -1)) ||
-                  allActions;
+    let actions = only.length > 0 && only
+                  || except.length > 0 && allActions.filter((action) => (except.indexOf(action) === -1))
+                  || allActions;
 
     actions.forEach((action) => {
       let methodsWithPath = actionsMethodsAndsPathsMappings[action];
 
-      methodsWithPath.methods.forEach(method => this[method](methodsWithPath.path));
+      methodsWithPath.methods.forEach((method) => this[method](methodsWithPath.path));
     });
   }
 
@@ -542,7 +542,7 @@ export default class Server {
    * @private
    */
   _configureDefaultPassthroughs() {
-    defaultPassthroughs.forEach(passthroughUrl => {
+    defaultPassthroughs.forEach((passthroughUrl) => {
       this.passthrough(passthroughUrl);
     });
   }

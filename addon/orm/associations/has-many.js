@@ -1,4 +1,3 @@
-// jscs:disable requireParenthesesAroundArrowParam
 import Association from './association';
 import Collection from '../collection';
 import _assign from 'lodash/assign';
@@ -75,7 +74,7 @@ class HasMany extends Association {
           children.mergeCollection(savedChildren);
         }
 
-        return children.models.map(model => model.id);
+        return children.models.map((model) => model.id);
       },
 
       /*
@@ -143,11 +142,11 @@ class HasMany extends Association {
           schema[toCollectionName(association.modelName)].where(query).update(foreignKey, null);
 
           // Save any children that are new
-          models.filter(model => model.isNew())
-            .forEach(model => model.save());
+          models.filter((model) => model.isNew())
+            .forEach((model) => model.save());
 
           // Associate the new children to this model
-          schema[toCollectionName(association.modelName)].find(models.map(m => m.id)).update(foreignKey, this.id);
+          schema[toCollectionName(association.modelName)].find(models.map((m) => m.id)).update(foreignKey, this.id);
 
           // Clear out any old cached children
           association._cachedChildren = new Collection(association.modelName);

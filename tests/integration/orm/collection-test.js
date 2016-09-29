@@ -1,4 +1,3 @@
-// jscs:disable disallowVar
 import Schema from 'ember-cli-mirage/orm/schema';
 import Model from 'ember-cli-mirage/orm/model';
 import Db from 'ember-cli-mirage/db';
@@ -43,7 +42,7 @@ test('a collection can filter its models', function(assert) {
   let collection = this.schema.users.all();
   assert.equal(collection.models.length, 3);
 
-  let newCollection = collection.filter(author => author.good);
+  let newCollection = collection.filter((author) => author.good);
 
   assert.ok(newCollection instanceof Collection);
   assert.equal(newCollection.modelName, 'user', 'the filtered collection has the right type');
@@ -52,7 +51,7 @@ test('a collection can filter its models', function(assert) {
 
 test('a collection can sort its models', function(assert) {
   let collection = this.schema.users.all();
-  assert.deepEqual(collection.models.map(m => m.name), ['Link', 'Zelda', 'Ganon']);
+  assert.deepEqual(collection.models.map((m) => m.name), ['Link', 'Zelda', 'Ganon']);
 
   let newCollection = collection.sort((a, b) => {
     return a.name.localeCompare(b.name);
@@ -60,7 +59,7 @@ test('a collection can sort its models', function(assert) {
 
   assert.ok(newCollection instanceof Collection);
   assert.equal(newCollection.modelName, 'user', 'the sorted collection has the right type');
-  assert.deepEqual(newCollection.models.map(m => m.name), ['Ganon', 'Link', 'Zelda']);
+  assert.deepEqual(newCollection.models.map((m) => m.name), ['Ganon', 'Link', 'Zelda']);
 });
 
 test('a collection can slice its models', function(assert) {
@@ -75,8 +74,8 @@ test('a collection can slice its models', function(assert) {
 });
 
 test('a collection can merge with another collection', function(assert) {
-  let goodGuys = this.schema.users.where(user => user.good);
-  let badGuys = this.schema.users.where(user => !user.good);
+  let goodGuys = this.schema.users.where((user) => user.good);
+  let badGuys = this.schema.users.where((user) => !user.good);
 
   assert.equal(goodGuys.models.length, 2);
   assert.equal(badGuys.models.length, 1);

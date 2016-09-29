@@ -65,7 +65,7 @@ export default class Schema {
 
         // Update the registry with this association's foreign keys. This is
         // essentially our "db migration", since we must know about the fks.
-        let [ fkHolder, fk ] = association.getForeignKeyArray();
+        let [fkHolder, fk] = association.getForeignKeyArray();
 
         fksAddedFromThisModel[fkHolder] = fksAddedFromThisModel[fkHolder] || [];
         assert(
@@ -197,7 +197,7 @@ export default class Schema {
    */
   first(type) {
     let collection = this._collectionForType(type);
-    let [ record ] = collection;
+    let [record] = collection;
 
     return this._hydrate(record, dasherize(type));
   }

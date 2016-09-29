@@ -1,4 +1,3 @@
-// jscs:disable requireArrayDestructuring, requireParenthesesAroundArrowParam
 import Serializer from '../serializer';
 import { underscore, pluralize, dasherize, singularize } from '../utils/inflector';
 
@@ -37,7 +36,7 @@ export default Serializer.extend({
     if (attrs.id) {
       jsonApiPayload.data.id = attrs.id;
     }
-    Object.keys(attrs).forEach(key => {
+    Object.keys(attrs).forEach((key) => {
       if (key !== 'id') {
         jsonApiPayload.data.attributes[dasherize(key)] = attrs[key];
       }

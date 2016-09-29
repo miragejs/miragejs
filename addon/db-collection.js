@@ -125,9 +125,9 @@ class DbCollection {
    * @param attributesForCreate
    * @public
    */
-  firstOrCreate(query, attributesForCreate={}) {
+  firstOrCreate(query, attributesForCreate = {}) {
     let queryResult = this.where(query);
-    let [ record ] = queryResult;
+    let [record] = queryResult;
 
     if (record) {
       return record;
@@ -258,7 +258,7 @@ class DbCollection {
   _findRecord(id) {
     id = id.toString();
 
-    let [ record ] = this._records.filter((obj) => obj.id === id);
+    let [record] = this._records.filter((obj) => obj.id === id);
 
     return record;
   }

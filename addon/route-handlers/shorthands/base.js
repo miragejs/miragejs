@@ -3,7 +3,7 @@ import BaseRouteHandler from '../base';
 
 export default class BaseShorthandRouteHandler extends BaseRouteHandler {
 
-  constructor(schema, serializerOrRegistry, shorthand, path, options={}) {
+  constructor(schema, serializerOrRegistry, shorthand, path, options = {}) {
     super();
     shorthand = shorthand || this.getModelClassFromPath(path);
     this.schema = schema;

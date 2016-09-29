@@ -136,6 +136,6 @@ export default class Collection {
    * @public
    */
   toString() {
-    return `collection:${this.modelName}(${this.models.map(m => m.id).join(',')})`;
+    return `collection:${this.modelName}(${this.models.map((m) => m.id).join(',')})`;
   }
 }

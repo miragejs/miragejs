@@ -1,4 +1,3 @@
-// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
 
 import {module, test} from 'qunit';
