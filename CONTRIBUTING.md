@@ -1,3 +1,9 @@
+# Opening an issue
+
+Stack Overflow is the best place for general questions on how to use the library. Use the `ember-cli-mirage` tag.
+
+It's best to ask a question with an attached Twiddle that demonstrates your bug/question. Use the [Mirage Boilerplate Twiddle](https://ember-twiddle.com/eedfd390d8394d54d5bfd0ed988a5d0f) to reproduce your issue.
+
 # Contributing to Ember CLI Mirage
 
 We use [Waffle.io](https://waffle.io/samselikoff/ember-cli-mirage) for issue triage. If there's an issue in the "Ready" column, it is ready to be worked on. If you'd like to claim it, drop a comment, then I'll move it to the "In progress" column.
