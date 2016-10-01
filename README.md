@@ -40,6 +40,8 @@ Check out the [Docs](http://www.ember-cli-mirage.com/docs/v0.2.x/)!
 
 Having trouble? Open an issue!
 
+You can use the [Mirage Boilerplate Twiddle](https://ember-twiddle.com/eedfd390d8394d54d5bfd0ed988a5d0f) to reproduce your issue.
+
 ## Contributing
 
 Read our [roadmap](https://usecanvas.com/ec-mirage/mirage-roadmap/19kMeB5ceYCLmWrMZaRLez) and have a look at our [Contributing guidelines](./CONTRIBUTING.md).
