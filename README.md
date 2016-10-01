@@ -1,6 +1,3 @@
-[![Stories in Ready](https://badge.waffle.io/samselikoff/ember-cli-mirage.png?label=ready&title=Ready)](https://waffle.io/samselikoff/ember-cli-mirage)
-
-
 [![Build Status](https://travis-ci.org/samselikoff/ember-cli-mirage.svg?branch=master)](https://travis-ci.org/samselikoff/ember-cli-mirage)
 [![npm version](https://badge.fury.io/js/ember-cli-mirage.svg)](http://badge.fury.io/js/ember-cli-mirage)
 [![Ember Observer Score](http://emberobserver.com/badges/ember-cli-mirage.svg)](http://emberobserver.com/addons/ember-cli-mirage)
@@ -44,4 +41,4 @@ You can use the [Mirage Boilerplate Twiddle](https://ember-twiddle.com/eedfd390d
 
 ## Contributing
 
-Read our [roadmap](https://usecanvas.com/ec-mirage/mirage-roadmap/19kMeB5ceYCLmWrMZaRLez) and have a look at our [Contributing guidelines](./CONTRIBUTING.md).
+Have a look at our [Contributing guidelines](./CONTRIBUTING.md).
