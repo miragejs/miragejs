@@ -6,8 +6,6 @@ It's best to ask a question with an attached Twiddle that demonstrates your bug/
 
 # Contributing to Ember CLI Mirage
 
-We use [Waffle.io](https://waffle.io/samselikoff/ember-cli-mirage) for issue triage. If there's an issue in the "Ready" column, it is ready to be worked on. If you'd like to claim it, drop a comment, then I'll move it to the "In progress" column.
-
 ## Docs development
 
 If you're just making a change to a single page in the docs, you can simply use GitHub's interface. Find the relevant doc and click "Edit".
