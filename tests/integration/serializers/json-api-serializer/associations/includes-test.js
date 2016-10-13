@@ -320,19 +320,19 @@ test('query param includes support dot-paths when serializing a model', function
 
   this.schema.db.loadData({
     wordSmiths: [
-      { id: 1, name: 'Sam' }
+      { id: 1, name: 'Sam', blogPostIds: [2] }
     ],
     blogPosts: [
-      { id: 2, wordSmithId: 1, title: 'Lorem Ipsum' }
+      { id: 2, wordSmithId: 1, fineCommentIds: [3], title: 'Lorem Ipsum' }
     ],
     fineComments: [
       { id: 3, text: 'Foo', blogPostId: 2, categoryId: 10 }
     ],
     categories: [
-      { id: 10, foo: 'bar' }
+      { id: 10, foo: 'bar', labelIds: [20] }
     ],
     labels: [
-      { id: 20, name: 'Economics', categoryId: 10 }
+      { id: 20, name: 'Economics' }
     ]
   });
   let request = {
@@ -422,20 +422,20 @@ test('query param includes support dot-paths when serializing a collection', fun
 
   this.schema.db.loadData({
     wordSmiths: [
-      { id: 1, name: 'Sam' }
+      { id: 1, name: 'Sam', blogPostIds: [2, 5] }
     ],
     blogPosts: [
-      { id: 2, wordSmithId: 1, title: 'Lorem Ipsum' },
+      { id: 2, wordSmithId: 1, fineCommentIds: [3], title: 'Lorem Ipsum' },
       { id: 5, wordSmithId: 1, title: 'Dolor' }
     ],
     fineComments: [
       { id: 3, text: 'Foo', blogPostId: 2, categoryId: 10 }
     ],
     categories: [
-      { id: 10, foo: 'bar' }
+      { id: 10, foo: 'bar', labelIds: [20] }
     ],
     labels: [
-      { id: 20, name: 'Economics', categoryId: 10 }
+      { id: 20, name: 'Economics' }
     ]
   });
   let request = {

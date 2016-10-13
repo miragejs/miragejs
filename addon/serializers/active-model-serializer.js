@@ -23,6 +23,10 @@ export default Serializer.extend({
     return `${underscore(singularize(type))}_ids`;
   },
 
+  keyForForeignKey(relationshipName) {
+    return `${underscore(relationshipName)}_id`;
+  },
+
   normalize(payload) {
     let type = Object.keys(payload)[0];
     let attrs = payload[type];

@@ -1,20 +1,33 @@
+import Schema from 'ember-cli-mirage/orm/schema';
+import { Model, hasMany, belongsTo } from 'ember-cli-mirage';
+import Db from 'ember-cli-mirage/db';
 import Serializer from 'ember-cli-mirage/serializer';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
-import schemaHelper from '../../schema-helper';
 import { module, test } from 'qunit';
 
 module('Integration | Serializers | Base | Associations | Sideloading Collections', {
   beforeEach() {
-    this.schema = schemaHelper.setup();
+    this.schema = new Schema(new Db(), {
+      wordSmith: Model.extend({
+        posts: hasMany('blog-post')
+      }),
+      blogPost: Model.extend({
+        author: belongsTo('word-smith'),
+        comments: hasMany('fine-comment')
+      }),
+      fineComment: Model.extend({
+        post: belongsTo('blog-post')
+      })
+    });
 
     let link = this.schema.wordSmiths.create({ name: 'Link' });
-    let blogPost = link.createBlogPost({ title: 'Lorem' });
-    link.createBlogPost({ title: 'Ipsum' });
+    let blogPost = link.createPost({ title: 'Lorem' });
+    link.createPost({ title: 'Ipsum' });
 
-    blogPost.createFineComment({ text: 'pwned' });
+    blogPost.createComment({ text: 'pwned' });
 
     let zelda = this.schema.wordSmiths.create({ name: 'Zelda' });
-    zelda.createBlogPost({ title: `Zeldas blogPost` });
+    zelda.createPost({ title: `Zeldas blogPost` });
 
     this.BaseSerializer = Serializer.extend({
       embed: false
@@ -30,7 +43,7 @@ test(`it throws an error if embed is false and root is false`, function(assert) 
   let registry = new SerializerRegistry(this.schema, {
     wordSmith: this.BaseSerializer.extend({
       root: false,
-      include: ['blogPosts']
+      include: ['posts']
     })
   });
 
@@ -46,7 +59,7 @@ test(`it can sideload an empty collection`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      include: ['blogPosts']
+      include: ['posts']
     })
   });
 
@@ -62,7 +75,7 @@ test(`it can sideload a collection with a has-many relationship`, function(asser
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
       embed: false,
-      include: ['blogPosts']
+      include: ['posts']
     })
   });
 
@@ -71,13 +84,13 @@ test(`it can sideload a collection with a has-many relationship`, function(asser
 
   assert.deepEqual(result, {
     wordSmiths: [
-      { id: '1', name: 'Link', blogPostIds: ['1', '2'] },
-      { id: '2', name: 'Zelda', blogPostIds: ['3'] }
+      { id: '1', name: 'Link', postIds: ['1', '2'] },
+      { id: '2', name: 'Zelda', postIds: ['3'] }
     ],
     blogPosts: [
-      { id: '1', title: 'Lorem', wordSmithId: '1' },
-      { id: '2', title: 'Ipsum', wordSmithId: '1' },
-      { id: '3', title: 'Zeldas blogPost', wordSmithId: '2' }
+      { id: '1', title: 'Lorem' },
+      { id: '2', title: 'Ipsum' },
+      { id: '3', title: 'Zeldas blogPost' }
     ]
   });
 });
@@ -87,10 +100,10 @@ test(`it can sideload a collection with a chain of has-many relationships`, func
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
       embed: false,
-      include: ['blogPosts']
+      include: ['posts']
     }),
     blogPost: this.BaseSerializer.extend({
-      include: ['fineComments']
+      include: ['comments']
     })
   });
 
@@ -99,16 +112,16 @@ test(`it can sideload a collection with a chain of has-many relationships`, func
 
   assert.deepEqual(result, {
     wordSmiths: [
-      { id: '1', name: 'Link', blogPostIds: ['1', '2'] },
-      { id: '2', name: 'Zelda', blogPostIds: ['3'] }
+      { id: '1', name: 'Link', postIds: ['1', '2'] },
+      { id: '2', name: 'Zelda', postIds: ['3'] }
     ],
     blogPosts: [
-      { id: '1', title: 'Lorem', wordSmithId: '1', fineCommentIds: ['1'] },
-      { id: '2', title: 'Ipsum', wordSmithId: '1', fineCommentIds: [] },
-      { id: '3', title: 'Zeldas blogPost', wordSmithId: '2', fineCommentIds: [] }
+      { id: '1', title: 'Lorem', commentIds: ['1'] },
+      { id: '2', title: 'Ipsum', commentIds: [] },
+      { id: '3', title: 'Zeldas blogPost', commentIds: [] }
     ],
     fineComments: [
-      { id: '1', text: 'pwned', blogPostId: '1' }
+      { id: '1', text: 'pwned' }
     ]
   });
 });
@@ -118,10 +131,10 @@ test(`it avoids circularity when serializing a collection`, function(assert) {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
       embed: false,
-      include: ['blogPosts']
+      include: ['posts']
     }),
     blogPost: this.BaseSerializer.extend({
-      include: ['wordSmith']
+      include: ['author']
     })
   });
 
@@ -130,13 +143,13 @@ test(`it avoids circularity when serializing a collection`, function(assert) {
 
   assert.deepEqual(result, {
     wordSmiths: [
-      { id: '1', name: 'Link', blogPostIds: ['1', '2'] },
-      { id: '2', name: 'Zelda', blogPostIds: ['3'] }
+      { id: '1', name: 'Link', postIds: ['1', '2'] },
+      { id: '2', name: 'Zelda', postIds: ['3'] }
     ],
     blogPosts: [
-      { id: '1', title: 'Lorem', wordSmithId: '1' },
-      { id: '2', title: 'Ipsum', wordSmithId: '1' },
-      { id: '3', title: 'Zeldas blogPost', wordSmithId: '2' }
+      { id: '1', title: 'Lorem', authorId: '1' },
+      { id: '2', title: 'Ipsum', authorId: '1' },
+      { id: '3', title: 'Zeldas blogPost', authorId: '2' }
     ]
   });
 });
@@ -146,7 +159,7 @@ test(`it can sideload a collection with a belongs-to relationship`, function(ass
     application: this.BaseSerializer,
     blogPost: this.BaseSerializer.extend({
       embed: false,
-      include: ['wordSmith']
+      include: ['author']
     })
   });
 
@@ -155,9 +168,9 @@ test(`it can sideload a collection with a belongs-to relationship`, function(ass
 
   assert.deepEqual(result, {
     blogPosts: [
-      { id: '1', title: 'Lorem', wordSmithId: '1' },
-      { id: '2', title: 'Ipsum', wordSmithId: '1' },
-      { id: '3', title: 'Zeldas blogPost', wordSmithId: '2' }
+      { id: '1', title: 'Lorem', authorId: '1' },
+      { id: '2', title: 'Ipsum', authorId: '1' },
+      { id: '3', title: 'Zeldas blogPost', authorId: '2' }
     ],
     wordSmiths: [
       { id: '1', name: 'Link' },
@@ -171,10 +184,10 @@ test(`it can sideload a collection with a chain of belongs-to relationships`, fu
     application: this.BaseSerializer,
     fineComment: this.BaseSerializer.extend({
       embed: false,
-      include: ['blogPost']
+      include: ['post']
     }),
     blogPost: this.BaseSerializer.extend({
-      include: ['wordSmith']
+      include: ['author']
     })
   });
 
@@ -183,30 +196,13 @@ test(`it can sideload a collection with a chain of belongs-to relationships`, fu
 
   assert.deepEqual(result, {
     fineComments: [
-      { id: '1', text: 'pwned', blogPostId: '1' }
+      { id: '1', text: 'pwned', postId: '1' }
     ],
     blogPosts: [
-      { id: '1', title: 'Lorem', wordSmithId: '1' }
+      { id: '1', title: 'Lorem', authorId: '1' }
     ],
     wordSmiths: [
       { id: '1', name: 'Link' }
     ]
-  });
-});
-
-test(`it skips an empty belongs-to relationship`, function(assert) {
-  let registry = new SerializerRegistry(this.schema, {
-    application: this.BaseSerializer,
-    foo: this.BaseSerializer.extend({
-      include: ['bar']
-    })
-  });
-
-  let foo1 = this.schema.foos.create({ name: 'test foo' });
-  let result = registry.serialize(foo1);
-
-  assert.deepEqual(result, {
-    foo:
-      { id: '1', name: 'test foo', barId: null }
   });
 });

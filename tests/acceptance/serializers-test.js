@@ -21,4 +21,3 @@ test('Serializers can provide default includes', function(assert) {
     assert.equal(blogPostsInStore.get('length'), 3);
   });
 });
-

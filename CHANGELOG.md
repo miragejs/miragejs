@@ -40,6 +40,15 @@ Changes:
   - [ENHANCEMENT] [#995](https://github.com/samselikoff/ember-cli-mirage/pull/995) Invoke _getAttrsForRequest with correct model name @bwbuchanan
   - General improvements @azdaroth
 
+- hasMany/belongsTo used to be autodefined, no longer
+  - explain why: sometimes one-way, sometimes ambiguous
+- new serializer hook: `keyForForeignKey`
+  - used for belongsTo relationships (keyForRelationshipIds)
+  - TODO: this is an awful name, change it
+- belongs to keys no longer automatically serialize
+  - need to explain why (one-sided relationships)
+  - change: either set `serializeIds` to `true`, or add missing relationships to `include: []` property on that model's serializer
+
 ## 0.2.5
 
 Update notes: None

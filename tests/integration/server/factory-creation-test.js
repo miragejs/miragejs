@@ -78,6 +78,7 @@ test('create sets up the db correctly when passing in fks', function(assert) {
   let post = this.server.create('post', {
     authorId: author.id
   });
+  author.reload();
 
   assert.equal(author.posts.models.length, 1);
   assert.deepEqual(post.author.attrs, author.attrs);

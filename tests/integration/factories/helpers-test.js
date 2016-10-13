@@ -43,41 +43,32 @@ module('Integration | Server | Factories | helpers', {
 });
 
 test('it creates associations with "association" helper combininig with traits', function(assert) {
-  this.server.create('post', 'withCategory');
+  let post = this.server.create('post', 'withCategory');
 
-  assert.equal(this.server.db.posts.length, 1);
-  assert.deepEqual(
-    this.server.db.posts[0],
-    { id: '1', title: 'Lorem ipsum', authorId: '1', kindId: '1' }
-  );
-  assert.deepEqual(
-    this.server.schema.posts.find(1).author.attrs,
-    { id: '1', name: 'Sam' }
-  );
-  assert.deepEqual(
-    this.server.schema.posts.find(1).kind.attrs,
-    { id: '1', name: 'awesome software' }
-  );
+  assert.ok(post.kind);
+  assert.ok(post.author);
 
-  assert.equal(this.server.db.authors.length, 1);
-  assert.deepEqual(
-    this.server.db.authors[0],
-    { id: '1', name: 'Sam' }
-  );
-  assert.equal(this.server.schema.authors.find(1).posts.models.length, 1);
-  assert.deepEqual(
-    this.server.schema.authors.find(1).posts.models[0].attrs,
-    { id: '1', title: 'Lorem ipsum', authorId: '1', kindId: '1' }
-  );
+  let { db } = this.server;
 
-  assert.equal(this.server.db.categories.length, 1);
-  assert.deepEqual(
-    this.server.db.categories[0],
-    { id: '1', name: 'awesome software' }
-  );
-  assert.equal(this.server.schema.categories.find(1).posts.models.length, 1);
-  assert.deepEqual(
-    this.server.schema.categories.find(1).posts.models[0].attrs,
-    { id: '1', title: 'Lorem ipsum', authorId: '1', kindId: '1' }
-  );
+  assert.equal(db.posts.length, 1);
+  assert.deepEqual(db.posts[0], {
+    id: '1',
+    title: 'Lorem ipsum',
+    authorId: '1',
+    kindId: '1'
+  });
+
+  assert.equal(db.authors.length, 1);
+  assert.deepEqual(db.authors[0], {
+    id: '1',
+    name: 'Sam',
+    postIds: ['1']
+  });
+
+  assert.equal(db.categories.length, 1);
+  assert.deepEqual(db.categories[0], {
+    id: '1',
+    name: 'awesome software',
+    postIds: ['1']
+  });
 });

@@ -6,9 +6,7 @@ import Db from 'ember-cli-mirage/db';
 export default {
 
   setup() {
-    let db = new Db();
-    this.schema = new Schema(db);
-    this.schema.registerModels({
+    return new Schema(new Db(), {
       wordSmith: Model.extend({
         blogPosts: Mirage.hasMany()
       }),
@@ -38,8 +36,6 @@ export default {
       }),
       lol: Model
     });
-
-    return this.schema;
   }
 
 };

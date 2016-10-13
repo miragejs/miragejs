@@ -46,16 +46,8 @@ test(`if serializeIds is 'include' it serializes ids of hasMany associations tha
       blogPostIds: ['1', '2']
     },
     blogPosts: [
-      {
-        id: '1',
-        specialAuthorId: null,
-        wordSmithId: '1'
-      },
-      {
-        id: '2',
-        specialAuthorId: null,
-        wordSmithId: '1'
-      }
+      { id: '1' },
+      { id: '2' }
     ]
   });
 });

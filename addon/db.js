@@ -28,6 +28,18 @@ class Db {
   }
 
   /**
+   * @method dump
+   * @public
+   */
+  dump() {
+    return this._collections.reduce((data, collection) => {
+      data[collection.name] = collection.all();
+
+      return data;
+    }, {});
+  }
+
+  /**
    * @method createCollection
    * @param name
    * @param initialData

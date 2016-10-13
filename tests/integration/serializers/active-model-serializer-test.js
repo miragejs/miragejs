@@ -41,6 +41,12 @@ module('Integration | Serializer | ActiveModelSerializer', {
         attrs: ['id', 'name'],
         include: ['blogPosts']
       }),
+      blogPost: ActiveModelSerializer.extend({
+        include: ['wordSmith']
+      }),
+      contactInfo: ActiveModelSerializer.extend({
+        include: ['user']
+      }),
       user: ActiveModelSerializer.extend({
         attrs: ['id', 'name'],
         include: ['contactInfos'],

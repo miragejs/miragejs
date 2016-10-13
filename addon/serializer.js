@@ -234,7 +234,7 @@ class Serializer {
    * @param model
    * @private
    */
-  _attrsForModel(model, removeForeignKeys = false) {
+  _attrsForModel(model) {
     let attrs = {};
 
     if (this.attrs) {
@@ -246,9 +246,8 @@ class Serializer {
       attrs = _assign(attrs, model.attrs);
     }
 
-    if (removeForeignKeys) {
-      model.fks.forEach((key) => delete attrs[key]);
-    }
+    // Remove fks
+    model.fks.forEach(key => delete attrs[key]);
 
     return this._formatAttributeKeys(attrs);
   }
@@ -268,6 +267,9 @@ class Serializer {
         if (this.isCollection(association)) {
           let formattedKey = this.keyForRelationshipIds(key);
           newHash[formattedKey] = model[key].models.map((m) => m.id);
+        } else if (association) {
+          let formattedKey = this.keyForForeignKey(key);
+          newHash[formattedKey] = model[key].id;
         }
       });
     } else if (this.serializeIds === 'included') {
@@ -276,6 +278,9 @@ class Serializer {
         if (this.isCollection(association)) {
           let formattedKey = this.keyForRelationshipIds(key);
           newHash[formattedKey] = model[key].models.map((m) => m.id);
+        } else if (association) {
+          let formattedKey = this.keyForForeignKey(key);
+          newHash[formattedKey] = model[key].id;
         }
       });
     }
@@ -354,6 +359,10 @@ class Serializer {
    */
   keyForRelationshipIds(relationshipName) {
     return `${singularize(camelize(relationshipName))}Ids`;
+  }
+
+  keyForForeignKey(relationshipName) {
+    return `${camelize(relationshipName)}Id`;
   }
 
   /**

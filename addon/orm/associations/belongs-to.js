@@ -5,16 +5,15 @@ import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import assert from 'ember-cli-mirage/assert';
 
 /**
+ * The belongsTo association adds a fk to the owner of the association
+ *
  * @class BelongsTo
  * @extends Association
  * @constructor
  * @public
  */
-class BelongsTo extends Association {
+export default class BelongsTo extends Association {
 
-  /*
-    The belongsTo association adds a fk to the owner of the association
-  */
   /**
    * @method getForeignKeyArray
    * @return {Array} Array of camelized name of the model owning the association
@@ -41,43 +40,62 @@ class BelongsTo extends Association {
    *
    * @method addMethodsToModelClass
    * @param {Function} ModelClass
-   * @param {String} key
-   * @param {Schema} schema
+   * @param {String} key the named key for the association
    * @public
    */
-  addMethodsToModelClass(ModelClass, key, schema) {
+  addMethodsToModelClass(ModelClass, key) {
     let modelPrototype = ModelClass.prototype;
     let association = this;
     let foreignKey = this.getForeignKey();
+    let associationHash = { [key]: this };
 
-    let associationHash = {};
-    associationHash[key] = this;
     modelPrototype.belongsToAssociations = _assign(modelPrototype.belongsToAssociations, associationHash);
+
+    // Add to target's dependent associations array
+    this.schema.addDependentAssociation(this, this.modelName);
+
+    // TODO: look how this is used. Are these necessary, seems like they could be gotten from the above?
+    // Or we could use a single data structure to store this information?
     modelPrototype.associationKeys.push(key);
     modelPrototype.associationIdKeys.push(foreignKey);
 
-    Object.defineProperty(modelPrototype, this.getForeignKey(), {
+    Object.defineProperty(modelPrototype, foreignKey, {
 
       /*
         object.parentId
           - returns the associated parent's id
       */
       get() {
-        return this.attrs[foreignKey];
+        this._tempAssociations = this._tempAssociations || {};
+        let tempParent = this._tempAssociations[key];
+        let id;
+
+        if (tempParent === null) {
+          id = null;
+        } else if (tempParent) {
+          id = tempParent.id;
+        } else {
+          id = this.attrs[foreignKey];
+        }
+
+        return id;
       },
 
       /*
         object.parentId = (parentId)
-          - sets the associated parent (via id)
+          - sets the associated parent via id
       */
       set(id) {
-        assert(
-          !id || schema.db[toCollectionName(association.modelName)].find(id),
-          `Couldn\'t find ${association.modelName} with id = ${id}`
-        );
+        let tempParent;
 
-        this.attrs[foreignKey] = id;
-        return this;
+        if (id === null) {
+          tempParent = null;
+        } else if (id !== undefined) {
+          tempParent = association.schema[toCollectionName(association.modelName)].find(id);
+          assert(tempParent, `Couldn\'t find ${association.modelName} with id = ${id}`);
+        }
+
+        this[key] = tempParent;
       }
     });
 
@@ -87,32 +105,35 @@ class BelongsTo extends Association {
           - returns the associated parent
       */
       get() {
-        let foreignKeyId = this[foreignKey];
-        if (foreignKeyId != null) {
-          association._tempParent = null;
-          return schema[toCollectionName(association.modelName)].find(foreignKeyId);
+        this._tempAssociations = this._tempAssociations || {};
 
-        } else if (association._tempParent) {
-          return association._tempParent;
-        } else {
-          return null;
+        let tempParent = this._tempAssociations[key];
+        let foreignKeyId = this[foreignKey];
+        let model = null;
+
+        if (tempParent) {
+          model = tempParent;
+        } else if (foreignKeyId !== null) {
+          model = association.schema[toCollectionName(association.modelName)].find(foreignKeyId);
         }
+
+        return model;
       },
 
       /*
         object.parent = (parentModel)
-          - sets the associated parent (via model)
+          - sets the associated parent via model
       */
-      set(newModel) {
-        if (newModel && newModel.isNew()) {
-          this[foreignKey] = null;
-          association._tempParent = newModel;
-        } else if (newModel) {
-          association._tempParent = null;
-          this[foreignKey] = newModel.id;
-        } else {
-          association._tempParent = null;
-          this[foreignKey] = null;
+      set(model) {
+        this._tempAssociations = this._tempAssociations || {};
+        this._tempAssociations[key] = model;
+
+        if (
+          model &&
+          association.inverse() &&
+          !association.inversesAlreadyAssociated(model, this) // check for an existing match, to avoid recursion
+        )  {
+          model.associate(this, association.inverse());
         }
       }
     });
@@ -122,7 +143,7 @@ class BelongsTo extends Association {
         - creates a new unsaved associated parent
     */
     modelPrototype[`new${capitalize(key)}`] = function(attrs) {
-      let parent = schema[toCollectionName(association.modelName)].new(attrs);
+      let parent = association.schema[toCollectionName(association.modelName)].new(attrs);
 
       this[key] = parent;
 
@@ -134,7 +155,7 @@ class BelongsTo extends Association {
         - creates a new saved associated parent, and immediately persists both models
     */
     modelPrototype[`create${capitalize(key)}`] = function(attrs) {
-      let parent = schema[toCollectionName(association.modelName)].create(attrs);
+      let parent = association.schema[toCollectionName(association.modelName)].create(attrs);
 
       this[key] = parent;
       this.save();
@@ -143,6 +164,19 @@ class BelongsTo extends Association {
     };
   }
 
-}
+  /**
+   *
+   *
+   * @public
+  */
+  disassociateAllDependentsFromTarget(model) {
+    let owner = this.ownerModelName;
+    let dependents = this.schema[toCollectionName(owner)]
+      .where({ [this.getForeignKey()]: model.id });
 
-export default BelongsTo;
+    dependents.models.forEach(dependent => {
+      dependent.disassociate(model, this);
+      dependent.save();
+    });
+  }
+}

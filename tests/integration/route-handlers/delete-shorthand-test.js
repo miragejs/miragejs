@@ -21,7 +21,7 @@ module('Integration | Route Handlers | DELETE shorthand', {
     this.server.logging = false;
 
     let wordSmiths = [
-      { id: 1, name: 'Ganon' }
+      { id: 1, name: 'Ganon', blogPostIds: [1] }
     ];
     let blogPosts = [
       { id: 1, title: 'Lorem', wordSmithId: '1' },
@@ -71,7 +71,7 @@ test('string shorthand deletes the record of the specified type', function(asser
 
 test('array shorthand deletes the record and all related records', function(assert) {
   let request = { url: '/word-smiths/1', params: { id: '1' } };
-  let handler = new DeleteShorthandRouteHandler(this.schema, this.serializer, ['word-smith', 'blog-post']);
+  let handler = new DeleteShorthandRouteHandler(this.schema, this.serializer, ['word-smith', 'blog-posts']);
 
   let response = handler.handle(request);
 

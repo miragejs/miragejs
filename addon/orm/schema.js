@@ -18,6 +18,7 @@ export default class Schema {
 
     this.db = db;
     this._registry = {};
+    this._dependentAssociations = {};
     this.registerModels(modelsMap);
   }
 
@@ -46,14 +47,19 @@ export default class Schema {
     ModelClass = ModelClass.extend();
 
     // Store model & fks in registry
+    // TODO: don't think this is needed anymore
     this._registry[camelizedModelName] = this._registry[camelizedModelName] || { class: null, foreignKeys: [] }; // we may have created this key before, if another model added fks to it
     this._registry[camelizedModelName].class = ModelClass;
 
+    // TODO: set here, remove from model#constructor
+    ModelClass.prototype._schema = this;
+    ModelClass.prototype.modelName = modelName;
     // Set up associations
     ModelClass.prototype.hasManyAssociations = {};   // a registry of the model's hasMany associations. Key is key from model definition, value is association instance itself
     ModelClass.prototype.belongsToAssociations = {}; // a registry of the model's belongsTo associations. Key is key from model definition, value is association instance itself
     ModelClass.prototype.associationKeys = [];       // ex: address.user, user.addresses
-    ModelClass.prototype.associationIdKeys = [];     // ex: address.user_id, user.address_ids. may or may not be a fk.
+    ModelClass.prototype.associationIdKeys = [];     // ex: address.user_id, user.address_ids
+    ModelClass.prototype.dependentAssociations = []; // a registry of associations that depend on this model, needed for deletion cleanup.
 
     let fksAddedFromThisModel = {};
     for (let associationProperty in ModelClass.prototype) {
@@ -62,6 +68,7 @@ export default class Schema {
         association.key = associationProperty;
         association.modelName = association.modelName || toModelName(associationProperty);
         association.ownerModelName = modelName;
+        association.setSchema(this);
 
         // Update the registry with this association's foreign keys. This is
         // essentially our "db migration", since we must know about the fks.
@@ -79,7 +86,7 @@ export default class Schema {
         this._addForeignKeyToRegistry(fkHolder, fk);
 
         // Augment the Model's class with any methods added by this association
-        association.addMethodsToModelClass(ModelClass, associationProperty, this);
+        association.addMethodsToModelClass(ModelClass, associationProperty);
       }
     }
 
@@ -120,6 +127,15 @@ export default class Schema {
    * @public
    */
   new(type, attrs) {
+
+    // let fk = foreignKeysHash[attr];
+    // debugger;
+    // assert(
+    //   !fk || this.schema.db[toCollectionName(association.modelName)].find(fk),
+    //   `Couldn\'t find ${association.modelName} with id = ${fk}`
+    // );
+
+    // this[attr] = fk;
     return this._instantiateModel(dasherize(type), attrs);
   }
 
@@ -157,7 +173,7 @@ export default class Schema {
     if (Array.isArray(ids)) {
       assert(
         records.length === ids.length,
-        `Couldn\'t find all ${pluralize(type)} with ids: (${ids.join(',')}) (found ${records.length} results, but was looking for ${ids.length})`
+        `Couldn't find all ${pluralize(type)} with ids: (${ids.join(',')}) (found ${records.length} results, but was looking for ${ids.length})`
       );
     }
 
@@ -202,6 +218,25 @@ export default class Schema {
     return this._hydrate(record, dasherize(type));
   }
 
+  modelClassFor(modelName) {
+    return this._registry[camelize(modelName)].class.prototype;
+  }
+
+  addDependentAssociation(association, modelName) {
+    this._dependentAssociations[modelName] = this._dependentAssociations[modelName] || [];
+    this._dependentAssociations[modelName].push(association);
+  }
+
+  dependentAssociationsFor(modelName) {
+    return this._dependentAssociations[modelName];
+  }
+
+  associationsFor(modelName) {
+    let modelClass = this.modelClassFor(modelName);
+
+    return Object.assign({}, modelClass.belongsToAssociations, modelClass.hasManyAssociations);
+  }
+
   /*
     Private methods
   */
@@ -215,7 +250,7 @@ export default class Schema {
     let collection = toCollectionName(type);
     assert(
       this.db[collection],
-      `You\'re trying to find model(s) of type ${type} but this collection doesn\'t exist in the database.`
+      `You're trying to find model(s) of type ${type} but this collection doesn't exist in the database.`
     );
 
     return this.db[collection];
@@ -270,6 +305,7 @@ export default class Schema {
   /**
    * Takes a record and returns a model, or an array of records
    * and returns a collection.
+   *
    * @method _hydrate
    * @param records
    * @param modelName
