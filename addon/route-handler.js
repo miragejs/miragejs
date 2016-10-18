@@ -9,7 +9,7 @@ import PutShorthandHandler from './route-handlers/shorthands/put';
 import DeleteShorthandHandler from './route-handlers/shorthands/delete';
 import HeadShorthandHandler from './route-handlers/shorthands/head';
 
-const { isBlank, typeOf } = Ember;
+const { RSVP: { Promise }, isBlank, typeOf } = Ember;
 
 function isNotBlankResponse(response) {
   return response &&
@@ -52,14 +52,17 @@ export default class RouteHandler {
   }
 
   handle(request) {
-    let mirageResponse = this._getMirageResponseForRequest(request);
-    let serializedMirageResponse = this.serialize(mirageResponse, request);
-
-    return serializedMirageResponse.toRackResponse();
+    return new Promise(resolve => {
+      this._getMirageResponseForRequest(request).then(mirageResponse => {
+        this.serialize(mirageResponse, request).then(serializedMirageResponse => {
+          resolve(serializedMirageResponse.toRackResponse());
+        });
+      });
+    });
   }
 
   _getMirageResponseForRequest(request) {
-    let response;
+    let result;
     try {
       /*
        We need to do this for the #serialize convenience method. Probably is
@@ -69,7 +72,7 @@ export default class RouteHandler {
         this.handler.setRequest(request);
       }
 
-      response = this.handler.handle(request);
+      result = this.handler.handle(request);
     } catch(e) {
       if (e instanceof MirageError) {
         throw e;
@@ -79,20 +82,24 @@ export default class RouteHandler {
       }
     }
 
-    return this._toMirageResponse(response);
+    return this._toMirageResponse(result);
   }
 
-  _toMirageResponse(response) {
+  _toMirageResponse(result) {
     let mirageResponse;
 
-    if (response instanceof Response) {
-      mirageResponse = response;
-    } else {
-      let code = this._getCodeForResponse(response);
-      mirageResponse = new Response(code, {}, response);
-    }
+    return new Promise(resolve => {
+      Promise.resolve(result).then(response => {
+        if (response instanceof Response) {
+          mirageResponse = result;
+        } else {
+          let code = this._getCodeForResponse(response);
+          mirageResponse = new Response(code, {}, response);
+        }
+        resolve(mirageResponse);
+      });
 
-    return mirageResponse;
+    });
   }
 
   _getCodeForResponse(response) {
@@ -108,8 +115,12 @@ export default class RouteHandler {
     return code;
   }
 
-  serialize(mirageResponse, request) {
-    mirageResponse.data = this.serializerOrRegistry.serialize(mirageResponse.data, request);
-    return mirageResponse;
+  serialize(mirageResponsePromise, request) {
+    return new Promise(resolve => {
+      Promise.resolve(mirageResponsePromise).then(mirageResponse => {
+        mirageResponse.data = this.serializerOrRegistry.serialize(mirageResponse.data, request);
+        resolve(mirageResponse);
+      });
+    });
   }
 }

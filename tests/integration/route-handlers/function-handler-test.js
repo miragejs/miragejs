@@ -1,9 +1,12 @@
 import { module, test } from 'qunit';
 import { Model, Collection, Serializer } from 'ember-cli-mirage';
+import Ember from 'ember';
 import Server from 'ember-cli-mirage/server';
 import Response from 'ember-cli-mirage/response';
 import FunctionRouteHandler from 'ember-cli-mirage/route-handlers/function';
 import _uniq from 'lodash/array/uniq';
+
+const { RSVP: { Promise } } = Ember;
 
 module('Integration | Route handlers | Function handler', {
   beforeEach() {
@@ -40,6 +43,40 @@ test('mirage response string is not serialized to string', function(assert) {
 
   $.ajax({ method: 'GET', url: '/users' }).done(function(res) {
     assert.equal(res, 'firstname,lastname\nbob,dylon');
+    done();
+  });
+});
+
+test('function can return a promise with non-serializable content', function(assert) {
+  assert.expect(1);
+  let done = assert.async();
+
+  this.server.get('/users', function() {
+    return new Promise(resolve => {
+      resolve(new Response(200, { 'Content-Type': 'text/csv' }, 'firstname,lastname\nbob,dylan'));
+    });
+  });
+
+  $.ajax({ method: 'GET', url: '/users' }).done(function(res) {
+    assert.equal(res, 'firstname,lastname\nbob,dylan');
+    done();
+  });
+});
+
+test('function can return a promise with serializable content', function(assert) {
+  assert.expect(1);
+  let done = assert.async();
+
+  let user = this.schema.users.create({ name: 'Sam' });
+
+  this.server.get('/users', function(schema) {
+    return new Promise(resolve => {
+      resolve(schema.users.all());
+    });
+  });
+
+  $.ajax({ method: 'GET', url: '/users' }).done(function(res) {
+    assert.deepEqual(res, { users: [ { id: user.id, name: 'Sam' } ] });
     done();
   });
 });

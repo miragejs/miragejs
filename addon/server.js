@@ -2,6 +2,7 @@
 
 import { pluralize, camelize } from './utils/inflector';
 import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
+import Ember from 'ember';
 import Pretender from 'pretender';
 import Db from './db';
 import Schema from './orm/schema';
@@ -13,6 +14,8 @@ import _pick from 'lodash/object/pick';
 import _assign from 'lodash/object/assign';
 import _find from 'lodash/collection/find';
 import _isPlainObject from 'lodash/lang/isPlainObject';
+
+const { RSVP: { Promise } } = Ember;
 
 function createPretender(server) {
   return new Pretender(function() {
@@ -397,8 +400,12 @@ export default class Server {
     this.pretender[verb](
       fullPath,
       (request) => {
-        let [ code, headers, response ] = routeHandler.handle(request);
-        return [ code, headers, this._serialize(response) ];
+        return new Promise(resolve => {
+          Promise.resolve(routeHandler.handle(request)).then(mirageResponse => {
+            let [ code, headers, response ] = mirageResponse;
+            resolve([ code, headers, this._serialize(response) ]);
+          });
+        });
       },
       timing
     );
