@@ -2,6 +2,28 @@
 
 In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
+## 0.2.3
+
+Update notes:
+
+  - Newer versions of Pretender will [show a warning](https://github.com/pretenderjs/pretender/pull/178)
+    if you forget to shut down a pretender server before starting another one.  Mirage does this
+    for you in acceptance tests, but if you are starting Mirage manually in other tests, remember
+    to shut down the server when you are done.
+    (see [#925](https://github.com/samselikoff/ember-cli-mirage/pull/925))
+
+Changes:
+
+  - [FEATURE] Add support for promises in route functions
+    ([#924](https://github.com/samselikoff/ember-cli-mirage/pull/924))
+    @dustinfarris
+  - [BUGFIX] Adjust afterCreate callbacks execution order
+    ([#893](https://github.com/samselikoff/ember-cli-mirage/pull/893))
+    @Azdaroth
+  - [INTERNAL] Shutdown pretender servers in unit tests
+    ([#917](https://github.com/samselikoff/ember-cli-mirage/pull/917))
+    @dustinfarris
+
 ## 0.2.2
 
 Update notes:
@@ -197,7 +219,7 @@ Update notes:
 
     In Mirage 0.2, all filenames should be dasherized, following the conventions of Ember CLI. If you ever encounter a situation where this doesn't work, please file an issue, as this is a bug.
 
-Changes:  
+Changes:
 
   - [ENHANCEMENT] Better blueprints
   - [BUGFIX] Ensure multiword dasherized serializers work #333
