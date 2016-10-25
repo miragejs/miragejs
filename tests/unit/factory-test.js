@@ -106,6 +106,22 @@ test('it can reuse dynamic properties', function(assert) {
   assert.deepEqual(baz2, { foo: 10, bar: 20 });
 });
 
+test('it can have dynamic properties that depend on another', function(assert) {
+  let BazFactory = Mirage.Factory.extend({
+    name() {
+      return 'foo';
+    },
+    bar() {
+      return this.name.substr(1);
+    }
+  });
+
+  let b = new BazFactory();
+  let baz1 = b.build(1);
+
+  assert.deepEqual(baz1, { name: 'foo', bar: 'oo' });
+});
+
 test('it can reference properties out of order', function(assert) {
   let BazFactory = Mirage.Factory.extend({
     bar() {

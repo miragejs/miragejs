@@ -241,6 +241,25 @@ test('create allows for nested attr overrides', function(assert) {
   server.shutdown();
 });
 
+test('factories can have dynamic properties that depend on attr overrides', function(assert) {
+  let server = new Server({
+    environment: 'test',
+    factories: {
+      baz: Factory.extend({
+        bar() {
+          return this.name.substr(1);
+        }
+      })
+    }
+  });
+
+  let baz1 = server.create('baz', { name: 'foo' });
+
+  assert.deepEqual(baz1, { id: '1', name: 'foo', bar: 'oo' });
+
+  server.shutdown();
+});
+
 test('create allows for arrays of attr overrides', function(assert) {
   let server = new Server({
     environment: 'test',

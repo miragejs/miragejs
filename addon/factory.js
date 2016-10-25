@@ -105,9 +105,14 @@ function sortAttrs(attrs, sequence) {
   let property;
 
   Object.keys(attrs).forEach(function(key) {
+    let value;
     Object.defineProperty(obj.constructor.prototype, key, {
       get() {
         refs.push([property, key]);
+        return value;
+      },
+      set(newValue) {
+        value = newValue;
       },
       enumerable: false,
       configurable: true
@@ -116,10 +121,17 @@ function sortAttrs(attrs, sequence) {
 
   Object.keys(attrs).forEach(function(key) {
     let value = attrs[key];
+    if (typeof value !== 'function') {
+      obj[key] = value;
+    }
+  });
+
+  Object.keys(attrs).forEach(function(key) {
+    let value = attrs[key];
     property = key;
 
     if (typeof value === 'function') {
-      value.call(obj, sequence);
+      obj[key] = value.call(obj, sequence);
     }
 
     refs.push([key]);
