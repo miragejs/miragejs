@@ -74,7 +74,7 @@
     "ember-lodash": "0.0.9",
     "exists-sync": "0.0.3",
     "fake-xml-http-request": "^1.4.0",
-    "faker": "3.0.1",
+    "faker": "^3.0.0",
     "pretender": "^1.4.1",
     "route-recognizer": "^0.1.11"
   }
