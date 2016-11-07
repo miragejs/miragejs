@@ -4,9 +4,14 @@ In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
 ## master
 
+## 0.2.4
+
 Update notes:
 
-  - To improve backwards compatibility concerns raised by the changes from [#863](https://github.com/samselikoff/ember-cli-mirage/pull/863), [#932](https://github.com/samselikoff/ember-cli-mirage/pull/932) allows the version of Faker.js used in ember-cli-mirage to float from `3.0.0`.  If you need to use a specific older `3.x` version in your project you can specify it in your project's package.json.
+  - [ENHANCEMENT] Let faker float from 3.0.0 @Dhaulagiri
+
+    To improve backwards compatibility concerns raised by the changes from [#863](https://github.com/samselikoff/ember-cli-mirage/pull/863), [#932](https://github.com/samselikoff/ember-cli-mirage/pull/932) allows the version of Faker.js used in ember-cli-mirage to float from `3.0.0`.  If you need to use a specific older `3.x` version in your project you can specify it in your project's package.json.
+  - General improvements @Gaurav0
 
 ## 0.2.3
 
