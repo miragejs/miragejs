@@ -31,7 +31,8 @@ export default Serializer.extend({
   },
 
   getHashForIncludedResource(resource) {
-    let hash = this.getHashForResource(resource);
+    let serializer = this.serializerFor(resource.modelName);
+    let hash = serializer.getHashForResource(resource);
     let hashWithRoot = { included: (this.isModel(resource) ? [ hash ] : hash) };
     let addToIncludes = [];
 

@@ -4,7 +4,7 @@ import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import { JSONAPISerializer, Model, hasMany, belongsTo } from 'ember-cli-mirage';
 import { module, test } from 'qunit';
 
-module('Integration | Serializers | JSON API Serializer | Associations | Query param includes', {
+module('Integration | Serializers | JSON API Serializer | Associations | Includes', {
   beforeEach() {
     this.schema = new Schema(new Db(), {
       wordSmith: Model.extend({
@@ -30,6 +30,58 @@ module('Integration | Serializers | JSON API Serializer | Associations | Query p
       })
     });
   }
+});
+
+test('includes get serialized with correct serializer', function(assert) {
+  let registry = new SerializerRegistry(this.schema, {
+    application: JSONAPISerializer,
+    blogPost: JSONAPISerializer.extend({
+      attrs: ['title'],
+      include: ['wordSmith']
+    }),
+    wordSmith: JSONAPISerializer.extend({
+      attrs: ['firstName']
+    })
+  });
+
+  let post = this.schema.blogPosts.create({ title: 'We love Mirage!' });
+  post.createWordSmith({ firstName: 'Sam' });
+
+  let result = registry.serialize(post);
+
+  assert.propEqual(result, {
+    data: {
+      type: 'blog-posts',
+      id: '1',
+      attributes: {
+        'title': 'We love Mirage!'
+      },
+      relationships: {
+        'fine-comments': {
+          'data': []
+        },
+        'word-smith': {
+          data: { type: 'word-smiths', id: '1' }
+        }
+      }
+    },
+    included: [
+      {
+        type: 'word-smiths',
+        id: '1',
+        attributes: {
+          'first-name': 'Sam'
+        },
+        relationships: {
+          'blog-posts': {
+            data: [
+              { type: 'blog-posts', id: '1' }
+            ]
+          }
+        }
+      }
+    ]
+  });
 });
 
 test('query param includes work when serializing a model', function(assert) {
