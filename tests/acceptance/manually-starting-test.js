@@ -4,6 +4,8 @@ import startApp from '../helpers/start-app';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 import ENV from 'dummy/config/environment';
 
+const { run } = Ember;
+
 let App;
 
 module('Acceptance: Manually starting Mirage', {
@@ -14,7 +16,7 @@ module('Acceptance: Manually starting Mirage', {
 
   afterEach() {
     server.shutdown();
-    Ember.run(App, 'destroy');
+    run(App, 'destroy');
     ENV['ember-cli-mirage'].enabled = undefined;
   }
 });

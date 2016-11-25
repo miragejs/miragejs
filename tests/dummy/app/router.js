@@ -1,7 +1,9 @@
 import Ember from 'ember';
 import config from './config/environment';
 
-const Router = Ember.Router.extend({
+const { Router } = Ember;
+
+export default Router.extend({
   location: config.locationType
 });
 
@@ -17,5 +19,3 @@ Router.map(function() {
 
   this.route('word-smith', { path: '/word-smiths/:word_smith_id' });
 });
-
-export default Router;

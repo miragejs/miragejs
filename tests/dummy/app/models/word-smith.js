@@ -1,9 +1,11 @@
 import DS from 'ember-data';
 
-export default DS.Model.extend({
+const { Model, attr, hasMany } = DS;
 
-  name: DS.attr(),
+export default Model.extend({
 
-  blogPosts: DS.hasMany()
+  name: attr(),
+
+  blogPosts: hasMany()
 
 });

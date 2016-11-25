@@ -1,7 +1,9 @@
 import DS from 'ember-data';
 
-export default DS.Model.extend({
-  street: DS.attr('string'),
+const { Model, attr, belongsTo } = DS;
 
-  contact: DS.belongsTo('contact')
+export default Model.extend({
+  street: attr('string'),
+
+  contact: belongsTo('contact')
 });

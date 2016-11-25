@@ -1,3 +1,5 @@
 import DS from 'ember-data';
 
-export default DS.JSONAPIAdapter;
+const { JSONAPIAdapter }  = DS;
+
+export default JSONAPIAdapter;

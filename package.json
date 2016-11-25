@@ -47,7 +47,7 @@
     "ember-load-initializers": "^0.5.1",
     "ember-resolver": "^2.0.3",
     "ember-sinon": "0.3.0",
-    "ember-suave": "2.0.1",
+    "ember-suave": "4.0.0",
     "ember-try": "~0.0.8",
     "loader.js": "^4.0.0",
     "lodash": "3.10.1",
