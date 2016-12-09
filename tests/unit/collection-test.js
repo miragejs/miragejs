@@ -35,6 +35,16 @@ test('#models returns the underlying array', function(assert) {
   assert.deepEqual(collection.models, models);
 });
 
+test('#length returns the number of elements', function(assert) {
+  let models = [{ id: 1 }, { id: 2 }];
+  let collection = new Collection('post', models);
+
+  assert.equal(collection.length, 2);
+
+  collection.models = [{ id: 1 }];
+  assert.equal(collection.length, 1);
+});
+
 // test('collection.filter returns collection instance', function(assert) {
 //   let collection = new Collection('plant');
 //   let filteredCollection = collection.filter(Boolean);

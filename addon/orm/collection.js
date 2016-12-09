@@ -20,6 +20,17 @@ export default class Collection {
   }
 
   /**
+   * Number of models in the collection.
+   *
+   * @property length
+   * @type Number
+   * @public
+   */
+  get length() {
+    return this.models.length;
+  }
+
+  /**
    * Updates each model in the collection (persisting immediately to the db).
    * @method update
    * @param key
