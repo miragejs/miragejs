@@ -105,6 +105,15 @@ export default class Schema {
   }
 
   /**
+   * @method modelFor
+   * @param type
+   * @public
+   */
+  modelFor(type) {
+    return this._registry[type];
+  }
+
+  /**
    * @method new
    * @param type
    * @param attrs

@@ -288,5 +288,8 @@ class Model {
 }
 
 Model.extend = extend;
+Model.findBelongsToAssociation = function(associationType) {
+  return this.prototype.belongsToAssociations[associationType];
+};
 
 export default Model;

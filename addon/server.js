@@ -3,6 +3,7 @@
 import { pluralize, camelize } from './utils/inflector';
 import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import Ember from 'ember';
+import isAssociation from 'ember-cli-mirage/utils/is-association';
 import Pretender from 'pretender';
 import Db from './db';
 import Schema from './orm/schema';
@@ -242,22 +243,11 @@ export default class Server {
 
     let OriginalFactory = this.factoryFor(type);
     if (OriginalFactory) {
-      let { attrs } = OriginalFactory;
-
-      traits.forEach((traitName) => {
-        if (!OriginalFactory.isTrait(traitName)) {
-          throw new Error(`'${traitName}' trait is not registered in '${type}' factory`);
-        }
-      });
-
-      let allExtensions = traits.map((traitName) => {
-        // throw error if not registered
-        return attrs[traitName].extension;
-      });
-      allExtensions.push(overrides || {});
-      let mergedExtensions = allExtensions.reduce((accum, extension) => {
-        return _assign(accum, extension);
-      }, {});
+      let attrs = OriginalFactory.attrs || {};
+      this._validateTraits(traits, OriginalFactory, type);
+      let mergedExtensions = this._mergeExtensions(attrs, traits, overrides);
+      this._mapAssociationsFromAttributes(type, attrs);
+      this._mapAssociationsFromAttributes(type, mergedExtensions);
 
       let Factory = OriginalFactory.extend(mergedExtensions);
       let factory = new Factory();
@@ -455,5 +445,48 @@ export default class Server {
     defaultPassthroughs.forEach(passthroughUrl => {
       this.passthrough(passthroughUrl);
     });
+  }
+
+  _validateTraits(traits, factory, type) {
+    traits.forEach((traitName) => {
+      if (!factory.isTrait(traitName)) {
+        throw new Error(`'${traitName}' trait is not registered in '${type}' factory`);
+      }
+    });
+  }
+
+  _mergeExtensions(attrs, traits, overrides) {
+    let allExtensions = traits.map((traitName) => {
+      return attrs[traitName].extension;
+    });
+    allExtensions.push(overrides || {});
+    return allExtensions.reduce((accum, extension) => {
+      return _assign(accum, extension);
+    }, {});
+  }
+
+  _mapAssociationsFromAttributes(modelType, attributes) {
+    Object.keys(attributes || {}).filter((attr) => {
+      return isAssociation(attributes[attr]);
+    }).forEach((attr) => {
+      let association = attributes[attr];
+      let associationName = this._fetchAssociationNameFromModel(modelType, attr);
+      let foreignKey = `${camelize(attr)}Id`;
+      attributes[foreignKey] = this.create(associationName, ...association.traitsAndOverrides).id;
+      delete attributes[attr];
+    });
+  }
+
+  _fetchAssociationNameFromModel(modelType, associationAttribute) {
+    let model = this.schema.modelFor(modelType);
+    if (!model) {
+      throw new Error(`Model not registered: ${modelType}`);
+    }
+
+    let association = model.class.findBelongsToAssociation(associationAttribute);
+    if (!association) {
+      throw new Error(`Association ${associationAttribute} not defined in model: ${modelType}`);
+    }
+    return camelize(association.modelName);
   }
 }
