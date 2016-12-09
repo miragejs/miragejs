@@ -60,7 +60,8 @@ const defaultRouteOptions = {
 };
 
 const defaultPassthroughs = [
-  'http://localhost:0/chromecheckurl'
+  'http://localhost:0/chromecheckurl', // mobile chrome
+  'http://localhost:30820/socket.io' // electron
 ];
 export { defaultPassthroughs };
 
