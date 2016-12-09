@@ -127,3 +127,19 @@ test('_getAttrsForRequest works with just relationships', function(assert) {
     'it normalizes data correctly.'
   );
 });
+
+test('_getAttrsForRequest works with just type', function(assert) {
+  let payload = {
+    'data': {
+      'type': 'github-account'
+    }
+  };
+
+  this.handler._getJsonApiDocForRequest = function(request, modelName) {
+    return payload;
+  };
+
+  let attrs = this.handler._getAttrsForRequest(this.request, 'user');
+
+  assert.deepEqual(attrs, {});
+});
