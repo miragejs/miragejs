@@ -43,7 +43,7 @@ test(`a POJA of models defaults to responding with an array of each model's attr
   });
 });
 
-test(`#normalizedRequestAttrs returns the an object with the primary resource's attrs and belongsTo keys camelized`, function(assert) {
+test(`#normalizedRequestAttrs returns an object with the primary resource's attrs and belongsTo keys camelized`, function(assert) {
   assert.expect(1);
   let done = assert.async();
   let { server } = this;
@@ -63,6 +63,7 @@ test(`#normalizedRequestAttrs returns the an object with the primary resource's 
   $.ajax({
     method: 'POST',
     url: '/contacts',
+    contentType: 'application/json',
     data: JSON.stringify({
       contact: {
         first_name: 'Sam',
@@ -70,6 +71,32 @@ test(`#normalizedRequestAttrs returns the an object with the primary resource's 
         team_id: 1
       }
     })
+  }).done(() => {
+    done();
+  });
+});
+
+test(`#normalizedRequestAttrs parses a x-www-form-urlencoded request and returns a POJO`, function(assert) {
+  assert.expect(1);
+  let done = assert.async();
+  let { server } = this;
+
+  server.post('/form-test', function() {
+    let attrs = this.normalizedRequestAttrs();
+
+    assert.deepEqual(attrs, {
+      name: 'Sam Selikoff',
+      company: 'TED',
+      email: 'sam.selikoff@gmail.com'
+    }, '#normalizedRequestAttrs successfully returned the parsed x-www-form-urlencoded request body');
+
+    return {};
+  });
+
+  $.ajax({
+    method: 'POST',
+    url: '/form-test',
+    data: 'name=Sam+Selikoff&company=TED&email=sam.selikoff@gmail.com'
   }).done(() => {
     done();
   });

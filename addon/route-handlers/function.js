@@ -30,9 +30,17 @@ export default class FunctionRouteHandler extends BaseRouteHandler {
   }
 
   normalizedRequestAttrs() {
-    let modelName = this.getModelClassFromPath(this.request.url);
+    let {
+      request,
+      request: { url, requestHeaders }
+    } = this;
 
-    return this._getAttrsForRequest(this.request, modelName);
+    let modelName = this.getModelClassFromPath(url);
+
+    if (/x-www-form-urlencoded/.test(requestHeaders['Content-Type'])) {
+      return this._getAttrsForFormRequest(request);
+    } else {
+      return this._getAttrsForRequest(request, modelName);
+    }
   }
-
 }
