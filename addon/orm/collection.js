@@ -94,6 +94,19 @@ export default class Collection {
   }
 
   /**
+   * @method slice
+   * @param {Integer} begin
+   * @param {Integer} end
+   * @return {Collection}
+   * @public
+   */
+  slice(...args) {
+    let slicedModels = this.models.slice(...args);
+
+    return new Collection(this.modelName, slicedModels);
+  }
+
+  /**
    * @method mergeCollection
    * @param collection
    * @return this

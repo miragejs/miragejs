@@ -63,6 +63,17 @@ test('a collection can sort its models', function(assert) {
   assert.deepEqual(newCollection.models.map(m => m.name), ['Ganon', 'Link', 'Zelda']);
 });
 
+test('a collection can slice its models', function(assert) {
+  let collection = this.schema.users.all();
+  assert.deepEqual(collection.models.map(m => m.name), ['Link', 'Zelda', 'Ganon'], 'Starts with 3');
+
+  let newCollection = collection.slice(-2);
+
+  assert.ok(newCollection instanceof Collection);
+  assert.equal(newCollection.modelName, 'user', 'the sliced collection has the right type');
+  assert.deepEqual(newCollection.models.map(m => m.name), ['Zelda', 'Ganon']);
+});
+
 test('a collection can merge with another collection', function(assert) {
   let goodGuys = this.schema.users.where(user => user.good);
   let badGuys = this.schema.users.where(user => !user.good);
