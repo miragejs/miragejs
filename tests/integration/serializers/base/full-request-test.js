@@ -81,6 +81,27 @@ test('the appropriate serializer is used', function(assert) {
   });
 });
 
+test('components decoded', function(assert) {
+  assert.expect(1);
+  let done = assert.async();
+
+  this.server.get('/authors/:id', function(schema, request) {
+    let { id } = request.params;
+
+    return { data: { id } };
+  });
+
+  $.ajax({
+    method: 'GET',
+    url: '/authors/%3A1'
+  }).done(function(res) {
+    assert.deepEqual(res, {
+      data: { id: ':1' }
+    });
+    done();
+  });
+});
+
 test('a response falls back to the application serializer, if it exists', function(assert) {
   assert.expect(1);
   let done = assert.async();
