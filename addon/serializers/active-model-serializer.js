@@ -16,6 +16,10 @@ export default Serializer.extend({
     return pluralize(underscore(type));
   },
 
+  keyForEmbeddedRelationship(attributeName) {
+    return underscore(attributeName);
+  },
+
   keyForRelationshipIds(type) {
     return `${underscore(singularize(type))}_ids`;
   },

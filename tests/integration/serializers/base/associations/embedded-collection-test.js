@@ -1,17 +1,30 @@
+import { Model, hasMany, belongsTo } from 'ember-cli-mirage';
+import Schema from 'ember-cli-mirage/orm/schema';
+import Db from 'ember-cli-mirage/db';
 import Serializer from 'ember-cli-mirage/serializer';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
-import schemaHelper from '../../schema-helper';
 import { module, test } from 'qunit';
 
 module('Integration | Serializers | Base | Associations | Embedded Collections', {
   beforeEach() {
-    this.schema = schemaHelper.setup();
+    this.schema = new Schema(new Db(), {
+      wordSmith: Model.extend({
+        posts: hasMany('blogPost', { inverse: 'author' })
+      }),
+      blogPost: Model.extend({
+        author: belongsTo('wordSmith', { inverse: 'posts' }),
+        comments: hasMany('fineComment', { inverse: 'post' })
+      }),
+      fineComment: Model.extend({
+        post: belongsTo('blogPost')
+      })
+    });
 
     let wordSmith = this.schema.wordSmiths.create({ name: 'Link' });
-    let blogPost = wordSmith.createBlogPost({ title: 'Lorem' });
-    blogPost.createFineComment({ text: 'pwned' });
+    let blogPost = wordSmith.createPost({ title: 'Lorem' });
+    blogPost.createComment({ text: 'pwned' });
 
-    wordSmith.createBlogPost({ title: 'Ipsum' });
+    wordSmith.createPost({ title: 'Ipsum' });
 
     this.schema.wordSmiths.create({ name: 'Zelda' });
 
@@ -29,7 +42,7 @@ test(`it can embed a collection with a has-many relationship`, function(assert) 
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      include: ['blogPosts']
+      include: ['posts']
     })
   });
 
@@ -41,7 +54,7 @@ test(`it can embed a collection with a has-many relationship`, function(assert) 
       {
         id: '1',
         name: 'Link',
-        blogPosts: [
+        posts: [
           { id: '1', title: 'Lorem' },
           { id: '2', title: 'Ipsum' }
         ]
@@ -49,7 +62,7 @@ test(`it can embed a collection with a has-many relationship`, function(assert) 
       {
         id: '2',
         name: 'Zelda',
-        blogPosts: []
+        posts: []
       }
     ]
   });
@@ -59,10 +72,10 @@ test(`it can embed a collection with a chain of has-many relationships`, functio
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      include: ['blogPosts']
+      include: ['posts']
     }),
     blogPost: this.BaseSerializer.extend({
-      include: ['fineComments']
+      include: ['comments']
     })
   });
 
@@ -74,25 +87,25 @@ test(`it can embed a collection with a chain of has-many relationships`, functio
       {
         id: '1',
         name: 'Link',
-        blogPosts: [
+        posts: [
           {
             id: '1',
             title: 'Lorem',
-            fineComments: [
+            comments: [
               { id: '1', text: 'pwned' }
             ]
           },
           {
             id: '2',
             title: 'Ipsum',
-            fineComments: []
+            comments: []
           }
         ]
       },
       {
         id: '2',
         name: 'Zelda',
-        blogPosts: []
+        posts: []
       }
     ]
   });
@@ -102,7 +115,7 @@ test(`it can embed a collection with a belongs-to relationship`, function(assert
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     blogPost: this.BaseSerializer.extend({
-      include: ['wordSmith']
+      include: ['author']
     })
   });
 
@@ -114,12 +127,12 @@ test(`it can embed a collection with a belongs-to relationship`, function(assert
       {
         id: '1',
         title: 'Lorem',
-        wordSmith: { id: '1', name: 'Link' }
+        author: { id: '1', name: 'Link' }
       },
       {
         id: '2',
         title: 'Ipsum',
-        wordSmith: { id: '1', name: 'Link' }
+        author: { id: '1', name: 'Link' }
       }
     ]
   });
@@ -129,10 +142,10 @@ test(`it can embed a collection with a chain of belongs-to relationships`, funct
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     fineComment: this.BaseSerializer.extend({
-      include: ['blogPost']
+      include: ['post']
     }),
     blogPost: this.BaseSerializer.extend({
-      include: ['wordSmith']
+      include: ['author']
     })
   });
 
@@ -144,10 +157,10 @@ test(`it can embed a collection with a chain of belongs-to relationships`, funct
       {
         id: '1',
         text: 'pwned',
-        blogPost: {
+        post: {
           id: '1',
           title: 'Lorem',
-          wordSmith: { id: '1', name: 'Link' }
+          author: { id: '1', name: 'Link' }
         }
       }
     ]

@@ -1,17 +1,30 @@
+import { Model, hasMany, belongsTo } from 'ember-cli-mirage';
+import Schema from 'ember-cli-mirage/orm/schema';
+import Db from 'ember-cli-mirage/db';
 import Serializer from 'ember-cli-mirage/serializer';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
-import schemaHelper from '../../schema-helper';
 import { module, test } from 'qunit';
 
 module('Integration | Serializers | Base | Associations | Embedded Models', {
   beforeEach() {
-    this.schema = schemaHelper.setup();
+    this.schema = new Schema(new Db(), {
+      wordSmith: Model.extend({
+        posts: hasMany('blogPost', { inverse: 'author' })
+      }),
+      blogPost: Model.extend({
+        author: belongsTo('wordSmith', { inverse: 'posts' }),
+        comments: hasMany('fineComment', { inverse: 'post' })
+      }),
+      fineComment: Model.extend({
+        post: belongsTo('blogPost')
+      })
+    });
 
     let wordSmith = this.schema.wordSmiths.create({ name: 'Link' });
-    let post = wordSmith.createBlogPost({ title: 'Lorem' });
-    post.createFineComment({ text: 'pwned' });
+    let post = wordSmith.createPost({ title: 'Lorem' });
+    post.createComment({ text: 'pwned' });
 
-    wordSmith.createBlogPost({ title: 'Ipsum' });
+    wordSmith.createPost({ title: 'Ipsum' });
 
     this.schema.wordSmiths.create({ name: 'Zelda' });
 
@@ -29,7 +42,7 @@ test(`it can embed has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      include: ['blogPosts']
+      include: ['posts']
     })
   });
 
@@ -40,7 +53,7 @@ test(`it can embed has-many relationships`, function(assert) {
     wordSmith: {
       id: '1',
       name: 'Link',
-      blogPosts: [
+      posts: [
         { id: '1', title: 'Lorem' },
         { id: '2', title: 'Ipsum' }
       ]
@@ -52,10 +65,10 @@ test(`it can embed a chain of has-many relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      include: ['blogPosts']
+      include: ['posts']
     }),
     blogPost: this.BaseSerializer.extend({
-      include: ['fineComments']
+      include: ['comments']
     })
   });
 
@@ -66,11 +79,11 @@ test(`it can embed a chain of has-many relationships`, function(assert) {
     wordSmith: {
       id: '1',
       name: 'Link',
-      blogPosts: [
-        { id: '1', title: 'Lorem', fineComments: [
+      posts: [
+        { id: '1', title: 'Lorem', comments: [
           { id: '1', text: 'pwned' }
         ] },
-        { id: '2', title: 'Ipsum', fineComments: [] }
+        { id: '2', title: 'Ipsum', comments: [] }
       ]
     }
   });
@@ -81,7 +94,7 @@ test(`it can embed a belongs-to relationship`, function(assert) {
     application: this.BaseSerializer,
     blogPost: this.BaseSerializer.extend({
       embed: true,
-      include: ['wordSmith']
+      include: ['author']
     })
   });
 
@@ -92,7 +105,7 @@ test(`it can embed a belongs-to relationship`, function(assert) {
     blogPost: {
       id: '1',
       title: 'Lorem',
-      wordSmith: { id: '1', name: 'Link' }
+      author: { id: '1', name: 'Link' }
     }
   });
 });
@@ -101,10 +114,10 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     fineComment: this.BaseSerializer.extend({
-      include: ['blogPost']
+      include: ['post']
     }),
     blogPost: this.BaseSerializer.extend({
-      include: ['wordSmith']
+      include: ['author']
     })
   });
 
@@ -115,10 +128,10 @@ test(`it can serialize a chain of belongs-to relationships`, function(assert) {
     fineComment: {
       id: '1',
       text: 'pwned',
-      blogPost: {
+      post: {
         id: '1',
         title: 'Lorem',
-        wordSmith: {
+        author: {
           id: '1', name: 'Link'
         }
       }
@@ -130,10 +143,10 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
   let registry = new SerializerRegistry(this.schema, {
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
-      include: ['blogPosts']
+      include: ['posts']
     }),
     blogPost: this.BaseSerializer.extend({
-      include: ['wordSmith']
+      include: ['author']
     })
   });
 
@@ -144,7 +157,7 @@ test(`it ignores relationships that refer to serialized ancestor resources`, fun
     wordSmith: {
       id: '1',
       name: 'Link',
-      blogPosts: [
+      posts: [
         { id: '1', title: 'Lorem' },
         { id: '2', title: 'Ipsum' }
       ]
@@ -157,13 +170,13 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
     application: this.BaseSerializer,
     wordSmith: this.BaseSerializer.extend({
       embed: true,
-      include: ['blogPosts']
+      include: ['posts']
     }),
     blogPost: this.BaseSerializer.extend({
-      include: ['wordSmith', 'fineComments']
+      include: ['author', 'comments']
     }),
     fineComment: this.BaseSerializer.extend({
-      include: ['blogPost']
+      include: ['post']
     })
   });
 
@@ -174,11 +187,11 @@ test(`it ignores relationships that refer to serialized ancestor resources, mult
     wordSmith: {
       id: '1',
       name: 'Link',
-      blogPosts: [
-        { id: '1', title: 'Lorem', fineComments: [
+      posts: [
+        { id: '1', title: 'Lorem', comments: [
           { id: '1', text: 'pwned' }
         ] },
-        { id: '2', title: 'Ipsum', fineComments: [] }
+        { id: '2', title: 'Ipsum', comments: [] }
       ]
     }
   });

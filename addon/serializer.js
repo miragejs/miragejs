@@ -213,11 +213,11 @@ class Serializer {
         let associatedResource = model[key];
         if (!_get(newDidSerialize, `${associatedResource.modelName}.${associatedResource.id}`)) {
           let [ associatedResourceHash ] = this.getHashForResource(associatedResource, true, newDidSerialize, true);
-          let formattedKey = this.keyForResource(associatedResource);
+          let formattedKey = this.keyForEmbeddedRelationship(key);
           attrs[formattedKey] = associatedResourceHash;
 
           if (this.isModel(associatedResource)) {
-            let fk = `${camelize(associatedResource.modelName)}Id`;
+            let fk = `${camelize(key)}Id`;
             delete attrs[fk];
           }
         }
@@ -317,6 +317,15 @@ class Serializer {
    */
   keyForRelationship(modelName) {
     return camelize(pluralize(modelName));
+  }
+
+  /**
+   * @method keyForEmbeddedRelationship
+   * @param attributeName
+   * @public
+   */
+  keyForEmbeddedRelationship(attributeName) {
+    return camelize(attributeName);
   }
 
   /**
