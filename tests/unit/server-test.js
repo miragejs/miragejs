@@ -1064,7 +1064,7 @@ test('build does not build objects and throws error if model for given associati
 
   assert.throws(() => {
     server.build('article', 'withCategory');
-  }, 'Association category not defined in model: article');
+  }, "belongsTo association 'category' not defined in model: article");
 });
 
 module('Unit | Server #buildList', {

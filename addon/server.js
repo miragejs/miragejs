@@ -486,7 +486,7 @@ export default class Server {
 
     let association = model.class.findBelongsToAssociation(associationAttribute);
     if (!association) {
-      throw new Error(`Association ${associationAttribute} not defined in model: ${modelType}`);
+      throw new Error(`belongsTo association '${associationAttribute}' not defined in model: ${modelType}`);
     }
     return camelize(association.modelName);
   }
