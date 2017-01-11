@@ -486,7 +486,7 @@ export default class Server {
 
     let association = model.class.findBelongsToAssociation(associationAttribute);
     if (!association) {
-      throw new Error(`belongsTo association '${associationAttribute}' not defined in model: ${modelType}`);
+      throw new Error(`You're using the \`association\` factory helper on the '${associationAttribute}' attribute of your ${modelType} factory, but that attribute is not a \`belongsTo\` association. Read the Factories docs for more information: http://www.ember-cli-mirage.com/docs/v0.2.x/factories/#factories-and-relationships`);
     }
     return camelize(association.modelName);
   }

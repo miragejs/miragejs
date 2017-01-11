@@ -1029,7 +1029,7 @@ test('build does not build objects and throws error if model is not registered a
 
   assert.throws(() => {
     server.build('article', 'withCategory');
-  }, 'Model not registered: article');
+  }, /Model not registered: article/);
 });
 
 test('build does not build objects and throws error if model for given association is not registered', function(assert) {
@@ -1056,15 +1056,13 @@ test('build does not build objects and throws error if model for given associati
       category: CategoryFactory
     },
     models: {
-      article: Model.extend({
-        category: belongsTo('association')
-      })
+      article: Model.extend()
     }
   });
 
   assert.throws(() => {
     server.build('article', 'withCategory');
-  }, "belongsTo association 'category' not defined in model: article");
+  }, /You're using the `association` factory helper on the 'category' attribute/);
 });
 
 module('Unit | Server #buildList', {
