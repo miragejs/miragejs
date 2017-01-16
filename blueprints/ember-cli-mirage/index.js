@@ -30,29 +30,29 @@ module.exports = {
   },
 
   afterInstall: function() {
-    this.insertIntoFile('.jshintrc', '    "server",', {
+    return this.insertIntoFile('.jshintrc', '    "server",', {
       after: '"predef": [\n'
-    });
-
-    this.insertIntoFile('tests/.jshintrc', '    "server",', {
-      after: '"predef": [\n'
-    });
-
-    if (existsSync('tests/helpers/destroy-app.js')) {
-      this.insertIntoFile('tests/helpers/destroy-app.js', '  server.shutdown();', {
-        after: "Ember.run(application, 'destroy');\n"
+    }).then(() => {
+      return this.insertIntoFile('tests/.jshintrc', '    "server",', {
+        after: '"predef": [\n'
+      }).then(() =>{
+        if (existsSync('tests/helpers/destroy-app.js')) {
+          return this.insertIntoFile('tests/helpers/destroy-app.js', '  server.shutdown();', {
+            after: "Ember.run(application, 'destroy');\n"
+          });
+        } else {
+          this.ui.writeLine(
+            EOL +
+            chalk.yellow(
+              '******************************************************' + EOL +
+              'destroy-app.js helper is not present. Please read this' + EOL +
+              'https://gist.github.com/blimmer/35d3efbb64563029505a' + EOL +
+              'to see how to fix the problem.' + EOL +
+              '******************************************************' + EOL
+            )
+          );
+        }
       });
-    } else {
-      this.ui.writeLine(
-        EOL +
-        chalk.yellow(
-          '******************************************************' + EOL +
-          'destroy-app.js helper is not present. Please read this' + EOL +
-          'https://gist.github.com/blimmer/35d3efbb64563029505a' + EOL +
-          'to see how to fix the problem.' + EOL +
-          '******************************************************' + EOL
-        )
-      );
-    }
+    });
   }
 };
