@@ -104,14 +104,15 @@ module.exports = {
 
   _shouldIncludeFiles: function() {
     if (process.env.EMBER_CLI_FASTBOOT) { return false; }
-    var enabledInProd = this.app.env === 'production' && this.addonConfig.enabled;
+    var environment = this.app.env;
+    var enabledInProd = environment === 'production' && this.addonConfig.enabled;
     var explicitExcludeFiles = this.addonConfig.excludeFilesFromBuild;
     if (enabledInProd && explicitExcludeFiles) {
       throw new Error('Mirage was explicitly enabled in production, but its files were excluded ' +
                       'from the build. Please, use only ENV[\'ember-cli-mirage\'].enabled in ' +
                       'production environment.');
     }
-    return enabledInProd || (this.app.env !== 'production' && explicitExcludeFiles !== true);
+    return enabledInProd || (environment && environment !== 'production' && explicitExcludeFiles !== true);
   }
 };
 
