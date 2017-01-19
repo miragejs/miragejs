@@ -18,6 +18,14 @@ import _isPlainObject from 'lodash/lang/isPlainObject';
 
 const { RSVP: { Promise } } = Ember;
 
+/**
+ * Creates a new Pretender instance.
+ *
+ * @method createPretender
+ * @param {Server} server
+ * @return {Object} A new Pretender instance.
+ * @public
+ */
 function createPretender(server) {
   return new Pretender(function() {
     this.passthroughRequest = function(verb, path, request) {
@@ -65,6 +73,14 @@ const defaultPassthroughs = [
 ];
 export { defaultPassthroughs };
 
+/**
+ * Determine if the object contains a valid option.
+ *
+ * @method isOption
+ * @param {Object} option An object with one option value pair.
+ * @return {Boolean} True if option is a valid option, false otherwise.
+ * @private
+ */
 function isOption(option) {
   if (!option || typeof option !== 'object') {
     return false;
@@ -81,17 +97,16 @@ function isOption(option) {
   return false;
 }
 
-/*
-  Args can be of the form
-    [options]
-    [object, code]
-    [function, code]
-    [shorthand, options]
-    [shorthand, code, options]
-    with all optional. This method returns an array of
-    [handler (i.e. the function, object or shorthand), code, options].
-*/
-
+/**
+ * Extract arguments for a route.
+ *
+ * @method extractRouteArguments
+ * @param {Array} args Of the form [options], [object, code], [function, code]
+ * [shorthand, options], [shorthand, code, options]
+ * @return {Array} [handler (i.e. the function, object or shorthand), code,
+ * options].
+ * @private
+ */
 function extractRouteArguments(args) {
   let [ lastArg ] = args.splice(-1);
   if (isOption(lastArg)) {
@@ -108,8 +123,20 @@ function extractRouteArguments(args) {
   return args;
 }
 
+/**
+ *
+ *
+ * @class Server
+ * @public
+ */
 export default class Server {
 
+  /**
+   * Build the new server object.
+   *
+   * @constructor
+   * @public
+   */
   constructor(options = {}) {
     this.config(options);
   }
@@ -168,19 +195,51 @@ export default class Server {
     }
   }
 
+  /**
+   * Determines if the current environment is the testing environment.
+   *
+   * @method isTest
+   * @return {Boolean} True if the environment is 'test', false otherwise.
+   * @public
+   */
   isTest() {
     return this.environment === 'test';
   }
 
+  /**
+   * Determines if the server should log.
+   *
+   * @method shouldLog
+   * @return The value of this.logging if defined, or false if in the testing environment,
+   * true otherwise.
+   * @public
+   */
   shouldLog() {
     return typeof this.logging !== 'undefined' ? this.logging : !this.isTest();
   }
 
+  /**
+   * Load the configuration given, setting timing to 0 if in the test
+   * environment.
+   *
+   * @method loadConfig
+   * @param {Object} config The configuration to load.
+   * @public
+   */
   loadConfig(config) {
     config.call(this);
     this.timing = this.isTest() ? 0 : (this.timing || 0);
   }
 
+  /**
+   * Whitelist requests to the specified paths and allow them to pass through
+   * your Mirage server to the actual network layer.
+   *
+   * @method passthrough
+   * @param {String} [...paths] Any numer of paths to whitelist
+   * @param {Array} options Unused
+   * @public
+   */
   passthrough(...paths) {
     let verbs = ['get', 'post', 'put', 'delete', 'patch'];
     let lastArg = paths[paths.length - 1];
@@ -200,6 +259,13 @@ export default class Server {
     });
   }
 
+  /**
+   * Load the all or only the specified fixtures into Mirage's database.
+   *
+   * @method loadFixtures
+   * @param {String} [...args] The name of the fixture to load.
+   * @public
+   */
   loadFixtures(...args) {
     let { fixtures } = this.options;
     if (args.length) {
@@ -213,6 +279,14 @@ export default class Server {
   /*
     Factory methods
   */
+
+  /**
+   * Load factories into Mirage's database.
+   *
+   * @method loadFactories
+   * @param {Object} factoryMap
+   * @public
+   */
   loadFactories(factoryMap = {}) {
     // Store a reference to the factories
     let currentFactoryMap = this._factoryMap || {};
@@ -225,6 +299,13 @@ export default class Server {
     });
   }
 
+  /**
+   * Get the factory for a given type.
+   *
+   * @method factoryFor
+   * @param {String} type
+   * @private
+   */
   factoryFor(type) {
     let camelizedType = camelize(type);
 
@@ -270,9 +351,9 @@ export default class Server {
     return list;
   }
 
-  // When there is a Model defined, we should return an instance
-  // of it instead of returning the bare attributes.
   create(type, ...options) {
+    // When there is a Model defined, we should return an instance
+    // of it instead of returning the bare attributes.
     let traits = options.filter((arg) => arg && typeof arg === 'string');
     let overrides = _find(options, (arg) => _isPlainObject(arg));
     let collectionFromCreateList = _find(options, (arg) => arg && Array.isArray(arg));
@@ -356,6 +437,10 @@ export default class Server {
     });
   }
 
+  /**
+   *
+   * @private
+   */
   _defineRouteHandlerHelpers() {
     [['get'], ['post'], ['put'], ['delete', 'del'], ['patch'], ['head']].forEach(([verb, alias]) => {
       this[verb] = (path, ...args) => {
@@ -402,15 +487,21 @@ export default class Server {
     );
   }
 
+  /**
+   *
+   * @private
+   */
   _hasModulesOfType(modules, type) {
     let modulesOfType = modules[type];
     return modulesOfType ? Object.keys(modulesOfType).length > 0 : false;
   }
 
-  /*
-    Builds a full path for Pretender to monitor based on the `path` and
-    configured options (`urlPrefix` and `namespace`).
-  */
+  /**
+   * Builds a full path for Pretender to monitor based on the `path` and
+   * configured options (`urlPrefix` and `namespace`).
+   *
+   * @private
+   */
   _getFullPath(path) {
     path = path[0] === '/' ? path.slice(1) : path;
     let fullPath = '';
@@ -442,12 +533,20 @@ export default class Server {
     return fullPath;
   }
 
+  /**
+   *
+   * @private
+   */
   _configureDefaultPassthroughs() {
     defaultPassthroughs.forEach(passthroughUrl => {
       this.passthrough(passthroughUrl);
     });
   }
 
+  /**
+   *
+   * @private
+   */
   _validateTraits(traits, factory, type) {
     traits.forEach((traitName) => {
       if (!factory.isTrait(traitName)) {
@@ -456,6 +555,10 @@ export default class Server {
     });
   }
 
+  /**
+   *
+   * @private
+   */
   _mergeExtensions(attrs, traits, overrides) {
     let allExtensions = traits.map((traitName) => {
       return attrs[traitName].extension;
@@ -466,6 +569,10 @@ export default class Server {
     }, {});
   }
 
+  /**
+   *
+   * @private
+   */
   _mapAssociationsFromAttributes(modelType, attributes) {
     Object.keys(attributes || {}).filter((attr) => {
       return isAssociation(attributes[attr]);
@@ -478,6 +585,10 @@ export default class Server {
     });
   }
 
+  /**
+   *
+   * @private
+   */
   _fetchAssociationNameFromModel(modelType, associationAttribute) {
     let model = this.schema.modelFor(modelType);
     if (!model) {
