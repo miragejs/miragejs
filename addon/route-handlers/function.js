@@ -2,11 +2,12 @@ import BaseRouteHandler from './base';
 
 export default class FunctionRouteHandler extends BaseRouteHandler {
 
-  constructor(schema, serializerOrRegistry, userFunction) {
+  constructor(schema, serializerOrRegistry, userFunction, path) {
     super();
     this.schema = schema;
     this.serializerOrRegistry = serializerOrRegistry;
     this.userFunction = userFunction;
+    this.path = path;
   }
 
   handle(request) {
@@ -31,11 +32,12 @@ export default class FunctionRouteHandler extends BaseRouteHandler {
 
   normalizedRequestAttrs() {
     let {
+      path,
       request,
-      request: { url, requestHeaders }
+      request: { requestHeaders }
     } = this;
 
-    let modelName = this.getModelClassFromPath(url);
+    let modelName = this.getModelClassFromPath(path);
 
     if (/x-www-form-urlencoded/.test(requestHeaders['Content-Type'])) {
       return this._getAttrsForFormRequest(request);
