@@ -4,9 +4,28 @@ In general, it's good to run `ember g ember-cli-mirage` after upgrading.
 
 ## master
 
+## 0.2.5
+
+Update notes: None
+
+Changes:
+
+  - [FEATURE] [#880](https://github.com/samselikoff/ember-cli-mirage/pull/880) Add association helper @azdaroth
+  - [FEATURE] [#948](https://github.com/samselikoff/ember-cli-mirage/pull/948) Add length to collections @mfazekas
+  - [FEATURE] [#957](https://github.com/samselikoff/ember-cli-mirage/pull/957) Add slice method to collections @alexparker
+  - [ENHANCEMENT] [#796](https://github.com/samselikoff/ember-cli-mirage/pull/796) improve `normalizedRequestAttrs` helper @jbailey4
+  - [ENHANCEMENT] [#928](https://github.com/samselikoff/ember-cli-mirage/pull/928) add a default passthrough @anulman
+  - [ENHANCEMENT] [#987](https://github.com/samselikoff/ember-cli-mirage/pull/987) Added falsy condition to exclude faker.js & pretender.js in production build @renpinto
+  - [BUGFIX] [#984](https://github.com/samselikoff/ember-cli-mirage/pull/984) Blueprint.prototype.insertIntoFile is async @stefanpennar
+  - [BUGFIX] [#905](https://github.com/samselikoff/ember-cli-mirage/pull/905) Serialize on key instead of modelName @jessedijkstra
+  - [BUGFIX] [#950](https://github.com/samselikoff/ember-cli-mirage/pull/950) fix JSON:API includes @deepflame
+  - General improvements @jessedijkstra @bantic @alecho @alexparker @mfazekas @azdaroth
+
 ## 0.2.4
 
-Update notes:
+Update notes: None
+
+Changes:
 
   - [ENHANCEMENT] Let faker float from 3.0.0 @Dhaulagiri
 
@@ -15,8 +34,9 @@ Update notes:
 
 ## 0.2.3
 
-Update notes:
+Update notes: None
 
+Changes:
   - Newer versions of Pretender will [show a warning](https://github.com/pretenderjs/pretender/pull/178)
     if you forget to shut down a pretender server before starting another one.  Mirage does this
     for you in acceptance tests, but if you are starting Mirage manually in other tests, remember
