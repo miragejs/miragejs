@@ -5,7 +5,7 @@
 'use strict';
 
 import Ember from 'ember';
-import _camelCase from 'lodash/string/camelCase';
+import _camelCase from 'lodash/camelCase';
 import { pluralize } from 'ember-cli-mirage/utils/inflector';
 
 const { assert } = Ember;

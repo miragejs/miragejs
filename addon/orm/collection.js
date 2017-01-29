@@ -1,4 +1,4 @@
-import _invoke from 'lodash/collection/invoke';
+import _invokeMap from 'lodash/invokeMap';
 import assert from '../assert';
 
 /**
@@ -39,7 +39,7 @@ export default class Collection {
    * @public
    */
   update(...args) {
-    _invoke(this.models, 'update', ...args);
+    _invokeMap(this.models, 'update', ...args);
 
     return this;
   }
@@ -51,7 +51,7 @@ export default class Collection {
    * @public
    */
   destroy() {
-    _invoke(this.models, 'destroy');
+    _invokeMap(this.models, 'destroy');
 
     return this;
   }
@@ -63,7 +63,7 @@ export default class Collection {
    * @public
    */
   save() {
-    _invoke(this.models, 'save');
+    _invokeMap(this.models, 'save');
 
     return this;
   }
@@ -75,7 +75,7 @@ export default class Collection {
    * @public
    */
   reload() {
-    _invoke(this.models, 'reload');
+    _invokeMap(this.models, 'reload');
 
     return this;
   }

@@ -131,7 +131,7 @@ Update notes:
 
     ```js
     let usersCollection = schema.users.all();
-    let uniqueUsers = _.uniq(usersCollection.models, u => u.firstName);
+    let uniqueUsers = _.uniqBy(usersCollection.models, 'firstName');
     ```
 
     - Collection no longer attempts to mimic an array. This turned out to be confusing, since you can't really subclass arrays in JavaScript, and it would sometimes be compatible with functions that operate on arrays, but sometimes not.

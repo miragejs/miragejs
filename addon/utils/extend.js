@@ -1,5 +1,5 @@
-import _assign from 'lodash/object/assign';
-import _has from 'lodash/object/has';
+import _assign from 'lodash/assign';
+import _has from 'lodash/has';
 
 export default function(protoProps, staticProps) {
   let parent = this;

@@ -3,12 +3,12 @@ import Collection from './orm/collection';
 import extend from './utils/extend';
 import { singularize, pluralize, camelize } from './utils/inflector';
 
-import _isFunction from 'lodash/lang/isFunction';
-import _isArray from 'lodash/lang/isArray';
-import _isEmpty from 'lodash/lang/isEmpty';
-import _includes from 'lodash/collection/includes';
-import _assign from 'lodash/object/assign';
-import _get from 'lodash/object/get';
+import _isFunction from 'lodash/isFunction';
+import _isArray from 'lodash/isArray';
+import _isEmpty from 'lodash/isEmpty';
+import _includes from 'lodash/includes';
+import _assign from 'lodash/assign';
+import _get from 'lodash/get';
 import _ from 'lodash';
 
 class Serializer {
@@ -116,7 +116,7 @@ class Serializer {
         })
         .flatten()
         .compact()
-        .uniq(m => m.toString())
+        .uniqBy(m => m.toString())
         .value();
 
       return [ hash, addToIncludes ];

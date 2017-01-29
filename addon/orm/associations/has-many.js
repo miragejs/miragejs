@@ -1,8 +1,8 @@
 // jscs:disable requireParenthesesAroundArrowParam
 import Association from './association';
 import Collection from '../collection';
-import _assign from 'lodash/object/assign';
-import _compact from 'lodash/array/compact';
+import _assign from 'lodash/assign';
+import _compact from 'lodash/compact';
 import { capitalize, camelize, singularize } from 'ember-cli-mirage/utils/inflector';
 import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import assert from 'ember-cli-mirage/assert';

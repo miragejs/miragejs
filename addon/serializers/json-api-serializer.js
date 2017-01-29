@@ -1,7 +1,7 @@
 import Serializer from '../serializer';
 import { dasherize, pluralize, camelize } from '../utils/inflector';
 
-import _get from 'lodash/object/get';
+import _get from 'lodash/get';
 import _ from 'lodash';
 
 export default Serializer.extend({
@@ -83,7 +83,7 @@ export default Serializer.extend({
     return _(includes)
       .flatten()
       .compact()
-      .uniq(m => m.toString())
+      .uniqBy(m => m.toString())
       .value();
   },
 

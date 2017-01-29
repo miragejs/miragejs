@@ -2,7 +2,7 @@ import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import schemaHelper from '../schema-helper';
 import { module, test } from 'qunit';
 
-import _uniq from 'lodash/array/uniq';
+import _uniqBy from 'lodash/uniqBy';
 
 module('Integration | Serializers | Base | Basic', {
   beforeEach() {
@@ -79,7 +79,7 @@ test('it returns POJAs of models unaffected', function(assert) {
   this.schema.wordSmiths.create({ name: 'Ganondorf' });
 
   let wordSmiths = this.schema.wordSmiths.all().models;
-  let uniqueNames = _uniq(wordSmiths, u => u.name);
+  let uniqueNames = _uniqBy(wordSmiths, 'name');
   let result = this.registry.serialize(uniqueNames);
 
   assert.deepEqual(result, uniqueNames);

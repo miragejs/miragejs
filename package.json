@@ -50,7 +50,6 @@
     "ember-suave": "4.0.0",
     "ember-try": "~0.0.8",
     "loader.js": "^4.0.0",
-    "lodash": "3.10.1",
     "mocha": "^2.1.0"
   },
   "keywords": [
@@ -71,7 +70,7 @@
     "ember-cli-babel": "^5.1.5",
     "ember-cli-node-assets": "^0.1.4",
     "ember-inflector": "^1.9.2",
-    "ember-lodash": "0.0.9",
+    "ember-lodash": "^4.0",
     "exists-sync": "0.0.3",
     "fake-xml-http-request": "^1.4.0",
     "faker": "^3.0.0",

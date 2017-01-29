@@ -11,10 +11,10 @@ import assert from './assert';
 import SerializerRegistry from './serializer-registry';
 import RouteHandler from './route-handler';
 
-import _pick from 'lodash/object/pick';
-import _assign from 'lodash/object/assign';
-import _find from 'lodash/collection/find';
-import _isPlainObject from 'lodash/lang/isPlainObject';
+import _pick from 'lodash/pick';
+import _assign from 'lodash/assign';
+import _find from 'lodash/find';
+import _isPlainObject from 'lodash/isPlainObject';
 
 const { RSVP: { Promise } } = Ember;
 
