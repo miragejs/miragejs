@@ -694,6 +694,25 @@ test('createList throws errors when using trait that is not defined and distinqu
   }, /'private' trait is not registered in 'article' factory/);
 });
 
+test('createList throws an error if the second argument is not an integer', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    })
+  });
+
+  this.server.loadFactories({
+    article: ArticleFactory
+  });
+
+  assert.throws(() => {
+    this.server.createList('article', 'published');
+  }, /second argument has to be an integer, you passed: string/);
+});
+
 module('Unit | Server #build', {
   beforeEach() {
     this.server = new Server({ environment: 'test' });
@@ -1203,6 +1222,25 @@ test('buildList throws errors when using trait that is not defined and distinqui
   assert.throws(() => {
     this.server.buildList('article', 2, 'private');
   }, /'private' trait is not registered in 'article' factory/);
+});
+
+test('buildList throws an error if the second argument is not an integer', function(assert) {
+  let ArticleFactory = Factory.extend({
+    title: 'Lorem ipsum',
+
+    published: trait({
+      isPublished: true,
+      publishedAt: '2010-01-01 10:00:00'
+    })
+  });
+
+  this.server.loadFactories({
+    article: ArticleFactory
+  });
+
+  assert.throws(() => {
+    this.server.buildList('article', 'published');
+  }, /second argument has to be an integer, you passed: string/);
 });
 
 module('Unit | Server #defaultPassthroughs');

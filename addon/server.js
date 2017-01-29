@@ -342,6 +342,8 @@ export default class Server {
   }
 
   buildList(type, amount, ...traitsAndOverrides) {
+    assert(Number.isInteger(amount), `second argument has to be an integer, you passed: ${typeof amount}`);
+
     let list = [];
 
     for (let i = 0; i < amount; i++) {
@@ -391,6 +393,8 @@ export default class Server {
   }
 
   createList(type, amount, ...traitsAndOverrides) {
+    assert(Number.isInteger(amount), `second argument has to be an integer, you passed: ${typeof amount}`);
+
     let list = [];
     let collectionName = this.schema ? toCollectionName(type) : pluralize(type);
     let collection = this.db[collectionName];
