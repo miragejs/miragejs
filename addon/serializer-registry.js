@@ -1,4 +1,3 @@
-// jscs:disable requireParenthesesAroundArrowParam
 import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
 import Serializer from 'ember-cli-mirage/serializer';
@@ -53,10 +52,10 @@ export default class SerializerRegistry {
       SerializerForResponse = SerializerForResponse || this._serializerMap.application || Serializer;
 
       assert(
-        !SerializerForResponse ||
-        (SerializerForResponse.prototype.embed) ||
-        (SerializerForResponse.prototype.root) ||
-        (new SerializerForResponse() instanceof JsonApiSerializer),
+        !SerializerForResponse
+        || (SerializerForResponse.prototype.embed)
+        || (SerializerForResponse.prototype.root)
+        || (new SerializerForResponse() instanceof JsonApiSerializer),
         'You cannot have a serializer that sideloads (embed: false) and disables the root (root: false).'
       );
     }

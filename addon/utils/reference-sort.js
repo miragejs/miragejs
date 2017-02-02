@@ -3,13 +3,13 @@ import _uniq from 'lodash/uniq';
 import _flatten from 'lodash/flatten';
 
 export default function(edges) {
-  var nodes = _uniq(_flatten(edges));
-  var cursor = nodes.length;
-  var sorted = new Array(cursor);
-  var visited = {};
-  var i = cursor;
+  let nodes = _uniq(_flatten(edges));
+  let cursor = nodes.length;
+  let sorted = new Array(cursor);
+  let visited = {};
+  let i = cursor;
 
-  var visit = function(node, i, predecessors) {
+  let visit = function(node, i, predecessors) {
 
     if (predecessors.indexOf(node) >= 0) {
       throw new Error(`Cyclic dependency in properties ${JSON.stringify(predecessors)}`);
@@ -21,15 +21,15 @@ export default function(edges) {
       visited[i] = true;
     }
 
-    var outgoing = edges.filter(function(edge) {
+    let outgoing = edges.filter(function(edge) {
       return edge && edge[0] === node;
     });
-
-    if (i = outgoing.length) {
-      var preds = predecessors.concat(node);
+    i = outgoing.length;
+    if (i) {
+      let preds = predecessors.concat(node);
       do {
-        var pair = outgoing[--i];
-        var child = pair[1];
+        let pair = outgoing[--i];
+        let child = pair[1];
         if (child) {
           visit(child, nodes.indexOf(child), preds);
         }

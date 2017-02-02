@@ -1,4 +1,3 @@
-// jscs:disable requireCamelCaseOrUpperCaseIdentifiers, disallowMultipleVarDecl
 import Server, { defaultPassthroughs } from 'ember-cli-mirage/server';
 import {module, test} from 'qunit';
 import { Model, Factory, belongsTo, hasMany, trait, association } from 'ember-cli-mirage';
@@ -19,7 +18,7 @@ test('it runs the default scenario in non-test environments', function(assert) {
   let server = new Server({
     environment: 'development',
     scenarios: {
-      default(server) {
+      default() {
         assert.ok(true);
       }
     }
@@ -1250,8 +1249,8 @@ test('server configures default passthroughs when useDefaultPassthroughs is true
 
   assert.expect(defaultPassthroughs.length);
   defaultPassthroughs.forEach((passthroughUrl) => {
-    let passthroughRequest = { method: 'GET', url: passthroughUrl },
-    isPassedThrough = server.pretender.checkPassthrough(passthroughRequest);
+    let passthroughRequest = { method: 'GET', url: passthroughUrl };
+    let isPassedThrough = server.pretender.checkPassthrough(passthroughRequest);
 
     assert.ok(isPassedThrough);
   });
@@ -1264,8 +1263,8 @@ test('server does not configure default passthroughs when useDefaultPassthroughs
 
   assert.expect(defaultPassthroughs.length);
   defaultPassthroughs.forEach((passthroughUrl) => {
-    let passthroughRequest = { method: 'GET', url: passthroughUrl },
-    isPassedThrough = server.pretender.checkPassthrough(passthroughRequest);
+    let passthroughRequest = { method: 'GET', url: passthroughUrl };
+    let isPassedThrough = server.pretender.checkPassthrough(passthroughRequest);
 
     assert.ok(!isPassedThrough);
   });

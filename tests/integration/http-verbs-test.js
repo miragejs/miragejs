@@ -73,7 +73,7 @@ test('mirage responds to delete', function(assert) {
   assert.expect(1);
   let done = assert.async();
 
-  this.server['delete']('/contacts', function() {
+  this.server.delete('/contacts', function() {
     return true;
   });
 
@@ -125,9 +125,10 @@ test('response code can be customized', function(assert) {
 
   $.ajax({
     method: 'GET',
-    url: '/contacts'
-  }).complete(function(res) {
-    assert.ok(res.status, 404);
-    done();
+    url: '/contacts',
+    complete: function(res) {
+      assert.ok(res.status, 404);
+      done();
+    }
   });
 });

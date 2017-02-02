@@ -2,17 +2,17 @@ import Ember from 'ember';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 import { test } from 'qunit';
 
-const { ajax } = Ember.$; // jscs:ignore disallowDirectPropertyAccess
+const { ajax } = Ember.$;
 
-let appStore, rex, toby, sam, andy;
+let appStore, rex;
 
 moduleForAcceptance('Acceptance | Custom handlers', {
   beforeEach() {
     appStore = this.application.__container__.lookup('service:store');
     rex  = server.create('pet', { name: 'Rex',  alive: true });
-    toby = server.create('pet', { name: 'Toby', alive: false });
-    sam  = server.create('pet', { name: 'Sam',  alive: false });
-    andy = server.create('pet', { name: 'Andy', alive: true });
+    server.create('pet', { name: 'Toby', alive: false });
+    server.create('pet', { name: 'Sam',  alive: false });
+    server.create('pet', { name: 'Andy', alive: true });
   }
 });
 

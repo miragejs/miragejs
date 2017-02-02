@@ -17,8 +17,7 @@ let Factory = function() {
     let keys = sortAttrs(topLevelAttrs, sequence);
 
     keys.forEach(function(key) {
-      let buildAttrs;
-      let buildSingleValue;
+      let buildAttrs, buildSingleValue;
 
       buildAttrs = function(attrs) {
         return _mapValues(attrs, buildSingleValue);

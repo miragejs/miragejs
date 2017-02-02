@@ -1,7 +1,5 @@
-/* jshint -W079 */
-/* jshint node: true */
-/* jshint expr: true */
-// jscs:disable
+/* eslint-env node */
+
 var expect = require('chai').expect;
 var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 var path = require('path');
@@ -18,8 +16,8 @@ function getMirageAddon(options) {
 
 function findMirage(app) {
   var addons = app.project.addons;
-  for(var i = 0; i < addons.length; i++) {
-    if(addons[i].name === 'ember-cli-mirage') {
+  for (var i = 0; i < addons.length; i++) {
+    if (addons[i].name === 'ember-cli-mirage') {
       return addons[i];
     }
   }

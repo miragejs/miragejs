@@ -1,4 +1,3 @@
-// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 import Schema from 'ember-cli-mirage/orm/schema';
 import Db from 'ember-cli-mirage/db';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';

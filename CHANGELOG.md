@@ -157,7 +157,7 @@ Update notes:
     import { Collection } from 'ember-cli-mirage';
 
     let authors = schema.authors.all().models;
-    let topPosts = authors.map(a => a.topPost);
+    let topPosts = authors.map((a) => a.topPost);
 
     return new Collection('post', topPosts);
     ```

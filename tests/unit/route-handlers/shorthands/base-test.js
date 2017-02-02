@@ -79,7 +79,7 @@ test('_getAttrsForRequest works with attributes and relationships', function(ass
     }
   };
 
-  this.handler._getJsonApiDocForRequest = function(request, modelName) {
+  this.handler._getJsonApiDocForRequest = function() {
     return payload;
   };
 
@@ -113,7 +113,7 @@ test('_getAttrsForRequest works with just relationships', function(assert) {
     }
   };
 
-  this.handler._getJsonApiDocForRequest = function(request, modelName) {
+  this.handler._getJsonApiDocForRequest = function() {
     return payload;
   };
 

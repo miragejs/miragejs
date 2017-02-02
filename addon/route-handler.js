@@ -12,16 +12,16 @@ import HeadShorthandHandler from './route-handlers/shorthands/head';
 const { RSVP: { Promise }, isBlank, typeOf } = Ember;
 
 function isNotBlankResponse(response) {
-  return response &&
-    !(typeOf(response) === 'object' && Object.keys(response).length === 0) &&
-    (Array.isArray(response) || !isBlank(response));
+  return response
+    && !(typeOf(response) === 'object' && Object.keys(response).length === 0)
+    && (Array.isArray(response) || !isBlank(response));
 }
 
 const DEFAULT_CODES = { get: 200, put: 204, post: 201, 'delete': 204 };
 
 function createHandler({ verb, schema, serializerOrRegistry, path, rawHandler, options }) {
   let handler;
-  let args = [ schema, serializerOrRegistry, rawHandler, path, options ];
+  let args = [schema, serializerOrRegistry, rawHandler, path, options];
   let type = typeOf(rawHandler);
 
   if (type === 'function') {

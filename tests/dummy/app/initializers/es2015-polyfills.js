@@ -24,9 +24,10 @@ export function initialize(/* container, application */) {
       };
 
       // The length property of the from method is 1.
-      return function from(arrayLike/*, mapFn, thisArg */) {
+      return function from(arrayLike/* , mapFn, thisArg */) {
         // 1. Let C be the this value.
         let C = this;
+        let T, kValue;
 
         // 2. Let items be ToObject(arrayLike).
         let items = Object(arrayLike);
@@ -38,7 +39,6 @@ export function initialize(/* container, application */) {
 
         // 4. If mapfn is undefined, then let mapping be false.
         let mapFn = arguments.length > 1 ? arguments[1] : void undefined;
-        let T;
         if (typeof mapFn !== 'undefined') {
           // 5. else
           // 5. a If IsCallable(mapfn) is false, throw a TypeError exception.
@@ -64,7 +64,6 @@ export function initialize(/* container, application */) {
         // 16. Let k be 0.
         let k = 0;
         // 17. Repeat, while k < len… (also steps a - h)
-        let kValue;
         while (k < len) {
           kValue = items[k];
           if (mapFn) {

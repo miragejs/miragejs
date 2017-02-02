@@ -1,3 +1,4 @@
+/* eslint no-console: 0 */
 let errorProps = [
   'description',
   'fileName',

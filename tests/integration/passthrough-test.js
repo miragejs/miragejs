@@ -207,7 +207,7 @@ test('passthrough without args allows index route on current domain to passthrou
   $.ajax({
     method: 'GET',
     url: '/',
-    error(reason) {
+    error() {
       done2(); // test will fail bc only 1 assertion, but we don't have to wait
     },
     success(html) {

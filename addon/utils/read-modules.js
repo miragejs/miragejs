@@ -1,7 +1,5 @@
-// jscs:disable
 /* global requirejs, require */
-/*jslint node: true */
-// jscs:enable
+/* eslint-env node */
 'use strict';
 
 import Ember from 'ember';
@@ -52,7 +50,7 @@ export default function(prefix) {
       throw new Error(`${moduleName} must export a ${moduleType}`);
     }
 
-    let data = module['default'];
+    let data = module.default;
 
     modulesMap[moduleType][_camelCase(moduleKey)] = data;
   });

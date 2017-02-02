@@ -27,14 +27,14 @@ module('Integration | Serializers | Base | Associations | Many To Many', {
       contact: Serializer.extend({
         include: ['addresses'],
         addresses(model) {
-          let models = model.contactAddresses.models.map(ca => ca.address);
+          let models = model.contactAddresses.models.map((ca) => ca.address);
           return new Collection('address', models);
         }
       }),
       address: Serializer.extend({
         include: ['contacts'],
         contacts(model) {
-          let models = model.contactAddresses.models.map(ca => ca.contact);
+          let models = model.contactAddresses.models.map((ca) => ca.contact);
           return new Collection('contact', models);
         }
       })

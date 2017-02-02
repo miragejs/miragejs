@@ -30,14 +30,14 @@ test(`a POJA of models defaults to responding with an array of each model's attr
   let { server } = this;
 
   server.createList('contact', 3);
-  server.get('/contacts', (schema, request) => {
+  server.get('/contacts', (schema) => {
     return schema.contacts.all().models;
   });
 
   $.ajax({
     method: 'GET',
     url: '/contacts'
-  }).done((res, status, xhr) => {
+  }).done((res) => {
     assert.deepEqual(res, [{ id: '1' }, { id: '2' }, { id: '3' }]);
     done();
   });
@@ -48,7 +48,7 @@ test(`#normalizedRequestAttrs returns an object with the primary resource's attr
   let done = assert.async();
   let { server } = this;
 
-  server.post('/contacts', function(schema, request) {
+  server.post('/contacts', function() {
     let attrs = this.normalizedRequestAttrs();
 
     assert.deepEqual(attrs, {
