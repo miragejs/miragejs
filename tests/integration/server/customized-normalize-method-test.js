@@ -67,3 +67,41 @@ test('custom model-specific normalize functions are used', function(assert) {
     done();
   });
 });
+
+test('custom model-specific normalize functions are used with custom function handlers', function(assert) {
+  let { server } = this;
+  let done = assert.async();
+
+  server.put('/contacts/:id', function(schema, request) {
+    let attrs = this.normalizedRequestAttrs();
+
+    assert.deepEqual(attrs, {
+      id: '1',
+      firstName: 'Zelda'
+    });
+
+    return {};
+  });
+
+  $.ajax({
+    method: 'PUT',
+    url: '/contacts/1',
+    contentType: 'application/json',
+    data: JSON.stringify({
+      some: {
+        random: [
+          {
+            format: true
+          },
+          {
+            attrs: {
+              first_name: 'Zelda'
+            }
+          }
+        ]
+      }
+    })
+  }).done(() => {
+    done();
+  });
+});
