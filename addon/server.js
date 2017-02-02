@@ -516,10 +516,9 @@ export default class Server {
     if (/^https?:\/\//.test(path)) {
       fullPath += path;
     } else {
-
       // otherwise, if there is a urlPrefix, use that as the beginning of the path
-      if (!!urlPrefix.length) {
-        fullPath += urlPrefix[urlPrefix.length - 1] === '/' ? urlPrefix : `${urlPrefix}/`;
+      if (urlPrefix.length) {
+        fullPath += (urlPrefix[urlPrefix.length - 1] === '/') ? urlPrefix : `${urlPrefix}/`;
       }
 
       // add the namespace to the path
@@ -532,6 +531,13 @@ export default class Server {
 
       // finally add the configured path
       fullPath += path;
+
+      // if we're making a same-origin request, ensure a / is prepended and
+      // dedup any double slashes
+      if (!/^https?:\/\//.test(fullPath)) {
+        fullPath = `/${fullPath}`;
+        fullPath = fullPath.replace(/\/+/g, '/');
+      }
     }
 
     return fullPath;

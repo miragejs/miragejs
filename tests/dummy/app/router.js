@@ -18,3 +18,5 @@ Router.map(function() {
 
   this.route('word-smith', { path: '/word-smiths/:word_smith_id' });
 });
+
+export default Router;

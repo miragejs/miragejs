@@ -19,7 +19,9 @@ module.exports = {
     'quotes': 0,
     'array-bracket-spacing': 0,
     'no-var': 0,
-    'object-shorthand': 0
+    'object-shorthand': 0,
+    'arrow-parens': 0,
+    'no-unused-vars': ['error', { 'args': 'none' }]
   },
   globals: {
     faker: true,
