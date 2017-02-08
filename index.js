@@ -3,7 +3,6 @@
 var path = require('path');
 var mergeTrees = require('broccoli-merge-trees');
 var Funnel = require('broccoli-funnel');
-var unwatchedTree = require('broccoli-unwatched-tree');
 
 module.exports = {
   name: 'ember-cli-mirage',
@@ -20,10 +19,20 @@ module.exports = {
     }
   },
 
-  included: function included(app) {
-    // see: https://github.com/ember-cli/ember-cli/issues/3718
-    if (typeof app.import !== 'function' && app.app) {
-      app = app.app;
+  included: function included() {
+    var app;
+
+    // If the addon has the _findHost() method (in ember-cli >= 2.7.0), we'll just
+    // use that.
+    if (typeof this._findHost === 'function') {
+      app = this._findHost();
+    } else {
+      // Otherwise, we'll use this implementation borrowed from the _findHost()
+      // method in ember-cli.
+      var current = this;
+      do {
+        app = current.app || app;
+      } while (current.parent.parent && (current = current.parent));
     }
 
     this.app = app;
@@ -33,10 +42,10 @@ module.exports = {
     // Call super after initializing config so we can use _shouldIncludeFiles for the node assets
     this._super.included.apply(this, arguments);
 
-    if (this.addonBuildConfig['directory']) {
-      this.mirageDirectory = this.addonBuildConfig['directory'];
-    } else if (this.addonConfig['directory']) {
-      this.mirageDirectory = this.addonConfig['directory'];
+    if (this.addonBuildConfig.directory) {
+      this.mirageDirectory = this.addonBuildConfig.directory;
+    } else if (this.addonConfig.directory) {
+      this.mirageDirectory = this.addonConfig.directory;
     } else if (app.project.pkg['ember-addon'] && !app.project.pkg['ember-addon'].paths) {
       this.mirageDirectory = path.resolve(app.project.root, path.join('tests', 'dummy', 'mirage'));
     } else {
@@ -103,14 +112,17 @@ module.exports = {
   },
 
   _shouldIncludeFiles: function() {
-    if (process.env.EMBER_CLI_FASTBOOT) { return false; }
+    if (process.env.EMBER_CLI_FASTBOOT) {
+      return false;
+    }
+
     var environment = this.app.env;
     var enabledInProd = environment === 'production' && this.addonConfig.enabled;
     var explicitExcludeFiles = this.addonConfig.excludeFilesFromBuild;
     if (enabledInProd && explicitExcludeFiles) {
-      throw new Error('Mirage was explicitly enabled in production, but its files were excluded ' +
-                      'from the build. Please, use only ENV[\'ember-cli-mirage\'].enabled in ' +
-                      'production environment.');
+      throw new Error('Mirage was explicitly enabled in production, but its files were excluded '
+                      + 'from the build. Please, use only ENV[\'ember-cli-mirage\'].enabled in '
+                      + 'production environment.');
     }
     return enabledInProd || (environment && environment !== 'production' && explicitExcludeFiles !== true);
   }
