@@ -1,8 +1,16 @@
 # Ember CLI Mirage Changelog
 
-In general, it's good to run `ember g ember-cli-mirage` after upgrading.
+## 0.2.6
 
-## master
+Update notes: None
+
+Changes:
+
+  - [ENHANCEMENT] [#1010](https://github.com/samselikoff/ember-cli-mirage/pull/1010) Better support for nested addons @samselikoff
+  - [ENHANCEMENT] [#998](https://github.com/samselikoff/ember-cli-mirage/pull/998) Adapting to use lodash 4 using latest ember-lodash @eturino
+  - [ENHANCEMENT] [#1008](https://github.com/samselikoff/ember-cli-mirage/pull/1008) Upgrade to Ember CLI 2.9 @cibernox
+  - [ENHANCEMENT] [#995](https://github.com/samselikoff/ember-cli-mirage/pull/995) Invoke _getAttrsForRequest with correct model name @bwbuchanan
+  - General improvements @azdaroth
 
 ## 0.2.5
 
