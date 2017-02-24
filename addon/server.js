@@ -15,6 +15,7 @@ import _pick from 'lodash/pick';
 import _assign from 'lodash/assign';
 import _find from 'lodash/find';
 import _isPlainObject from 'lodash/isPlainObject';
+import _isInteger from 'lodash/isInteger';
 
 const { RSVP: { Promise } } = Ember;
 
@@ -342,7 +343,7 @@ export default class Server {
   }
 
   buildList(type, amount, ...traitsAndOverrides) {
-    assert(Number.isInteger(amount), `second argument has to be an integer, you passed: ${typeof amount}`);
+    assert(_isInteger(amount), `second argument has to be an integer, you passed: ${typeof amount}`);
 
     let list = [];
 
@@ -393,7 +394,7 @@ export default class Server {
   }
 
   createList(type, amount, ...traitsAndOverrides) {
-    assert(Number.isInteger(amount), `second argument has to be an integer, you passed: ${typeof amount}`);
+    assert(_isInteger(amount), `second argument has to be an integer, you passed: ${typeof amount}`);
 
     let list = [];
     let collectionName = this.schema ? toCollectionName(type) : pluralize(type);
