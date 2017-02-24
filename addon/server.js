@@ -459,8 +459,10 @@ export default class Server {
   }
 
   _serialize(body) {
-    if (body) {
-      return typeof body !== 'string' ? JSON.stringify(body) : body;
+    if (typeof body === 'string') {
+      return body;
+    } else if (body) {
+      return JSON.stringify(body);
     } else {
       return '{"error": "not found"}';
     }

@@ -81,6 +81,22 @@ test('function can return a promise with serializable content', function(assert)
   });
 });
 
+test('function can return a promise with an empty string', function(assert) {
+  assert.expect(1);
+  let done = assert.async();
+
+  this.server.get('/users', function() {
+    return new Promise(resolve => {
+      resolve(new Response(200, { 'Content-Type': 'text/csv' }, ''));
+    });
+  });
+
+  $.ajax({ method: 'GET', url: '/users' }).done(function(res) {
+    assert.equal(res, '');
+    done();
+  });
+});
+
 test('#serialize uses the default serializer on a model', function(assert) {
   this.schema.users.create({ name: 'Sam' });
 
