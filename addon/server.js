@@ -326,6 +326,7 @@ export default class Server {
 
     let OriginalFactory = this.factoryFor(type);
     if (OriginalFactory) {
+      OriginalFactory = OriginalFactory.extend({});
       let attrs = OriginalFactory.attrs || {};
       this._validateTraits(traits, OriginalFactory, type);
       let mergedExtensions = this._mergeExtensions(attrs, traits, overrides);

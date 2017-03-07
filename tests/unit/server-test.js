@@ -506,6 +506,11 @@ test('create allows to create objects with associations', function(assert) {
   assert.deepEqual(article.attrs, { title: 'Lorem ipsum', id: '1', authorId: '1', awesomeCategoryId: '1' });
   assert.equal(server.db.authors.length, 1);
   assert.equal(server.db.categories.length, 1);
+
+  let anotherArticle = server.create('article', 'withCategory');
+  assert.deepEqual(anotherArticle.attrs, { title: 'Lorem ipsum', id: '2', authorId: '2', awesomeCategoryId: '2' });
+  assert.equal(server.db.authors.length, 2);
+  assert.equal(server.db.categories.length, 2);
 });
 
 test('create allows to create objects with associations with traits and overrides for associations', function(assert) {
