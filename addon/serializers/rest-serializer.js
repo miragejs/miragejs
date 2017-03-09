@@ -20,11 +20,11 @@ export default ActiveModelSerializer.extend({
   },
 
   keyForRelationshipIds(type) {
-    return `${camelize(singularize(type))}Ids`;
+    return camelize(pluralize(type));
   },
 
   keyForForeignKey(relationshipName) {
-    return `${camelize(relationshipName)}Id`;
+    return camelize(singularize(relationshipName));
   }
 
 });

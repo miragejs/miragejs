@@ -50,18 +50,18 @@ test('it sideloads associations and camel-cases relationships and attributes cor
     wordSmith: {
       id: '1',
       name: 'Link',
-      blogPostIds: ['1', '2']
+      blogPosts: ['1', '2']
     },
     blogPosts: [
       {
         id: '1',
         title: 'Lorem',
-        wordSmithId: '1'
+        wordSmith: '1'
       },
       {
         id: '2',
         title: 'Ipsum',
-        wordSmithId: '1'
+        wordSmith: '1'
       }
     ]
   });
