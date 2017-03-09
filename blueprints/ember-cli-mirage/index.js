@@ -37,7 +37,8 @@ module.exports = {
         after: '"predef": [\n'
       }).then(() =>{
         if (existsSync('tests/helpers/destroy-app.js')) {
-          return this.insertIntoFile('tests/helpers/destroy-app.js', '  server.shutdown();', {
+          var shutdownText = '  if(window.server) {\n    window.server.shutdown();\n  }';
+          return this.insertIntoFile('tests/helpers/destroy-app.js', shutdownText, {
             after: "Ember.run(application, 'destroy');\n"
           });
         } else {
