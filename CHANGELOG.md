@@ -1,5 +1,16 @@
 # Ember CLI Mirage Changelog
 
+## 0.2.7
+
+Update notes: 0.2.6 introduced a breaking change for PhantomJS users, so we've reverted a change and published 0.2.7. See [#1024](https://github.com/samselikoff/ember-cli-mirage/pull/1024) for details.
+
+Changes:
+
+  - [BUGFIX [#1025](https://github.com/samselikoff/ember-cli-mirage/pull/1025) Fix factory association feature @yratanov
+  - [BUGFIX [#1024](https://github.com/samselikoff/ember-cli-mirage/pull/1024) Replace Number.isInteger with lodash isInteger @ilucin
+  - [ENHANCEMENT [#1023](https://github.com/samselikoff/ember-cli-mirage/pull/1023) Allow route handlers to return empty string responses @bendemboski
+  - [ENHANCEMENT [#1030](https://github.com/samselikoff/ember-cli-mirage/pull/1030) Code Climate config with ESLint and duplication @larkinscott
+
 ## 0.2.6
 
 Update notes: None
