@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import _camelCase from 'lodash/camelCase';
 import { pluralize } from 'ember-cli-mirage/utils/inflector';
+import require from 'require';
 
 const { assert } = Ember;
 
