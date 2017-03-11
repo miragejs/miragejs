@@ -129,9 +129,9 @@ export default class BelongsTo extends Association {
         this._tempAssociations[key] = model;
 
         if (
-          model &&
-          association.inverse() &&
-          !association.inversesAlreadyAssociated(model, this) // check for an existing match, to avoid recursion
+          model
+          && association.inverse()
+          && !association.inversesAlreadyAssociated(model, this) // check for an existing match, to avoid recursion
         )  {
           model.associate(this, association.inverse());
         }

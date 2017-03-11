@@ -2,7 +2,7 @@ import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import extend from '../utils/extend';
 import assert from '../assert';
 import Collection from './collection';
-import _values from 'lodash/object/values';
+import _values from 'lodash/values';
 
 /*
   The Model class. Notes:

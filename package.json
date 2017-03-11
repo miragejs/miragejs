@@ -51,7 +51,6 @@
     "ember-sinon": "0.5.1",
     "eslint-plugin-ember-suave": "^1.0.0",
     "loader.js": "^4.0.10",
-    "lodash": "3.10.1",
     "mocha": "^2.1.0"
   },
   "keywords": [

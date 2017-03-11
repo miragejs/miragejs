@@ -1,6 +1,6 @@
-import _invokeMap from 'lodash/invokeMap';
 import assert from '../assert';
-import _isEqual from 'lodash/lang/isEqual';
+import _invokeMap from 'lodash/invokeMap';
+import _isEqual from 'lodash/isEqual';
 
 /**
  * An array of models, returned from one of the schema query
