@@ -194,8 +194,7 @@ class Model {
     let { key } = association;
 
     if (association.constructor.name === 'HasMany') {
-      let currentModels = this[key].models;
-      if (currentModels.indexOf(model) === -1) {
+      if (!this[key].includes(model)) {
         this[key].add(model);
       }
     } else {
