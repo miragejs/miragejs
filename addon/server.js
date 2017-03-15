@@ -514,7 +514,51 @@ export default class Server {
     path = path[0] === '/' ? path.slice(1) : path;
     let fullPath = '';
     let urlPrefix = this.urlPrefix ? this.urlPrefix.trim() : '';
-    let namespace = this.namespace ? this.namespace.trim() : '';
+    let namespace = '';
+
+    // if there is a urlPrefix and a namespace
+    if (this.urlPrefix && this.namespace) {
+      if (this.namespace[0] === '/' && this.namespace[this.namespace.length - 1] === '/') {
+        namespace = this.namespace.substring(0, this.namespace.length - 1).substring(1);
+      }
+
+      if (this.namespace[0] === '/' &&  this.namespace[this.namespace.length - 1] !== '/') {
+        namespace = this.namespace.substring(1);
+      }
+
+      if (this.namespace[0] !== '/' &&  this.namespace[this.namespace.length - 1] === '/') {
+        namespace = this.namespace.substring(0, this.namespace.length - 1);
+      }
+
+      if (this.namespace[0] !== '/' &&  this.namespace[this.namespace.length - 1] !== '/') {
+        namespace = this.namespace;
+      }
+    }
+
+    // if there is a namespace and no urlPrefix
+    if (this.namespace && !this.urlPrefix) {
+      if (this.namespace[0] === '/' && this.namespace[this.namespace.length - 1] === '/') {
+        namespace = this.namespace.substring(0, this.namespace.length - 1);
+      }
+
+      if (this.namespace[0] === '/' &&  this.namespace[this.namespace.length - 1] !== '/') {
+        namespace = this.namespace;
+      }
+
+      if (this.namespace[0] !== '/' &&  this.namespace[this.namespace.length - 1] === '/') {
+        let namespaceSub = this.namespace.substring(0, this.namespace.length - 1);
+        namespace = `/${namespaceSub}`;
+      }
+
+      if (this.namespace[0] !== '/' &&  this.namespace[this.namespace.length - 1] !== '/') {
+        namespace = `/${this.namespace}`;
+      }
+    }
+
+    // if no namespace
+    if (!this.namespace) {
+      namespace = '';
+    }
 
     // check to see if path is a FQDN. if so, ignore any urlPrefix/namespace that was set
     if (/^https?:\/\//.test(path)) {
