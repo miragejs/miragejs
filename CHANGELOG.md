@@ -1,5 +1,22 @@
 # Ember CLI Mirage Changelog
 
+## 0.2.9
+
+Update notes: none
+
+Changes:
+
+  - [ENHANCEMENT] [#1006](https://github.com/samselikoff/ember-cli-mirage/pull/1006) Make host/namespace support more robust @zinyando
+
+## 0.2.8
+
+Update notes: none
+
+Changes:
+
+  - [BUGFIX] [#1026](https://github.com/samselikoff/ember-cli-mirage/pull/1040) Import `require` to avoid issue in babel@6 @rwjblue
+  - [BUGFIX] [#1026](https://github.com/samselikoff/ember-cli-mirage/pull/1026) Fixes generated code for destroy app helper @NLincoln
+
 ## 0.2.7
 
 Update notes: 0.2.6 introduced a breaking change for PhantomJS users, so we've reverted a change and published 0.2.7. See [#1024](https://github.com/samselikoff/ember-cli-mirage/pull/1024) for details.
