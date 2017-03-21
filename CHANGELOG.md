@@ -1,5 +1,13 @@
 # Ember CLI Mirage Changelog
 
+## 0.3.0
+
+Update notes: View the [Upgrade guide](http://www.ember-cli-mirage.com/docs/v0.3.x/upgrading/#02x--03-upgrade-guide) on the 0.3.x docs page
+
+Changes:
+
+  - [FEATURE] [#965](https://github.com/samselikoff/ember-cli-mirage/pull/965) One-way associations @samselikoff, @HeroicEric, @xomaczar
+
 ## 0.2.9
 
 Update notes: none
