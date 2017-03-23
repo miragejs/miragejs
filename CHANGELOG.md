@@ -1,5 +1,14 @@
 # Ember CLI Mirage Changelog
 
+## 0.3.1
+
+Update notes: none
+
+Changes:
+
+  - [BUGFIX] [1054](https://github.com/samselikoff/ember-cli-mirage/pull/1054) Remove bad reflexive inverse logic @samselikoff
+  - General enhancements @Serabe, @cs3b
+
 ## 0.3.0
 
 Update notes: View the [Upgrade guide](http://www.ember-cli-mirage.com/docs/v0.3.x/upgrading/#02x--03-upgrade-guide) on the 0.3.x docs page
