@@ -1,6 +1,6 @@
 If possible, please use the Mirage Boilerplate Twiddle to demonstrate your issue or bug:
 
-- Open the [Mirage Boilerplate Twiddle](https://ember-twiddle.com/14e543224d3349ec30cab38fc77b6e09)
+- Open the [Mirage Boilerplate Twiddle](https://ember-twiddle.com/072de99410f21ff42db8264bd9665ca3)
 - Click File > Copy Twiddle
 - Reproduce your issue
 - Click File > Save to Github Gist
