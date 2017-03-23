@@ -45,9 +45,6 @@ export default class Association {
     if (this.opts.inverse === null) {
       inverse = null;
 
-    } else if (this.isReflexive()) {
-      inverse = this;
-
     } else {
       let associationsMap = this.schema.associationsFor(this.modelName);
       let explicitInverse = this.opts.inverse;

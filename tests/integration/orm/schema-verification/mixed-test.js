@@ -67,3 +67,20 @@ test('multiple has-many associations of the same type', function(assert) {
   assert.equal(messages.ownerModelName, 'user');
   assert.deepEqual(messages.inverse(), messenger);
 });
+
+test('one-to-many reflexive association is correct', function(assert) {
+  let schema = new Schema(new Db(), {
+    user: Model.extend({
+      parent: belongsTo('user', { inverse: 'children' }),
+      children: hasMany('user', { inverse: 'parent' })
+    })
+  });
+
+  let association = schema.associationsFor('user').parent;
+  let inverse = schema.associationsFor('user').children;
+
+  assert.equal(association.key, 'parent');
+  assert.equal(association.modelName, 'user');
+  assert.equal(association.ownerModelName, 'user');
+  assert.deepEqual(association.inverse(), inverse);
+});
