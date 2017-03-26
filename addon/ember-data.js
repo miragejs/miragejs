@@ -1,5 +1,4 @@
 /* global requirejs */
-'use strict';
 
 import require from 'require';
 import config from 'ember-get-config';

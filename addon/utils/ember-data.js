@@ -1,5 +1,4 @@
 /* global requirejs */
-'use strict';
 
 import _find from 'lodash/find';
 
