@@ -53,5 +53,11 @@ test(`Auto generated models can be extended via modelFor`, function(assert) {
   assert.ok(modelFor('address'), 'Ember data model Address is found');
   assert.equal(typeof modelFor('address').extend, 'function', 'Ember data model Address can be extended');
 
-  assert.throws(modelFor('friend'), () => true, 'Pre defined mirage models cannot be found via modelFor');
+  assert.notOk(modelFor('friend').__isCustom__, 'Friend address is not the pre defined one');
+  assert.throws(() => modelFor('foo'), () => true, 'Pre defined mirage models cannot be found via modelFor');
+});
+
+test(`modelFor is only for auto generated models`, function(assert) {
+  assert.notOk(modelFor('friend').__isCustom__, 'Friend model is not the pre defined one');
+  assert.throws(() => modelFor('foo'), () => true, 'Pre defined mirage models cannot be found via modelFor');
 });
