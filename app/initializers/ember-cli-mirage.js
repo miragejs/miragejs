@@ -25,9 +25,9 @@ export default {
 
 export function startMirage(env = ENV) {
   let environment = env.environment;
-  let autoGenerateEmberDataModels = getWithDefault(env['ember-cli-mirage'] || {}, 'autoGenerateEmberDataModels', false);
+  let discoverEmberDataModels = getWithDefault(env['ember-cli-mirage'] || {}, 'discoverEmberDataModels', false);
   let modules = readModules(env.modulePrefix);
-  let options = _assign(modules, {environment, baseConfig, testConfig, autoGenerateEmberDataModels});
+  let options = _assign(modules, {environment, baseConfig, testConfig, discoverEmberDataModels});
 
   return new Server(options);
 }

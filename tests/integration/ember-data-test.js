@@ -9,7 +9,7 @@ module('Integration | Ember Data', {
   beforeEach() {
     this.server = new Server({
       environment: 'development',
-      autoGenerateEmberDataModels: true,
+      discoverEmberDataModels: true,
       scenarios: {
         default() {}
       },
