@@ -1,6 +1,7 @@
-import {module, test} from 'qunit';
+import { module, test } from 'qunit';
 import Server from 'ember-cli-mirage/server';
-import { Model, modelFor } from 'ember-cli-mirage';
+import { Model } from 'ember-cli-mirage';
+import { modelFor } from 'ember-cli-mirage/ember-data';
 
 const CustomFriend = Model.extend();
 CustomFriend.__isCustom__ = true;

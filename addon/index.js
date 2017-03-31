@@ -1,4 +1,3 @@
-import assert from './assert';
 import Factory from './factory';
 import trait from './trait';
 import association from './association';
@@ -12,19 +11,12 @@ import JSONAPISerializer from './serializers/json-api-serializer';
 import RestSerializer from './serializers/rest-serializer';
 import HasMany from './orm/associations/has-many';
 import BelongsTo from './orm/associations/belongs-to';
-import { getModels } from './ember-data';
 
 function hasMany(...args) {
   return new HasMany(...args);
 }
 function belongsTo(...args) {
   return new BelongsTo(...args);
-}
-
-function modelFor(name) {
-  let models = getModels();
-  assert(!!models[name], `Model of type '${name}' does not exist.`);
-  return models[name];
 }
 
 export {
@@ -40,8 +32,7 @@ export {
   JSONAPISerializer,
   RestSerializer,
   hasMany,
-  belongsTo,
-  modelFor
+  belongsTo
 };
 
 export default {
