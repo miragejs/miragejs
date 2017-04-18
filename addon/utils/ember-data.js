@@ -10,7 +10,5 @@ function _hasEmberData() {
 export const hasEmberData = _hasEmberData();
 
 export function isDsModel(m) {
-  return m
-         && m.isModel
-         && typeof m.eachRelationship === 'function';
+  return m && typeof m.eachRelationship === 'function';
 }
