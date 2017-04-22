@@ -424,7 +424,14 @@ export default class Server {
     }
   }
 
-  resource(resourceName, { only, except } = {}) {
+  resource(resourceName, routePath, { only, except } = {}) {
+    if (typeof routePath === 'object') {
+      only = routePath.only;
+      except = routePath.except;
+      routePath = resourceName;
+    }
+
+    routePath = routePath || resourceName;
     only = only || [];
     except = except || [];
 
@@ -433,11 +440,11 @@ export default class Server {
     }
 
     let actionsMethodsAndsPathsMappings = {
-      index: { methods: ['get'], path: `/${resourceName}` },
-      show: { methods: ['get'], path: `/${resourceName}/:id` },
-      create: { methods: ['post'], path: `/${resourceName}` },
-      update: { methods: ['put', 'patch'], path: `/${resourceName}/:id` },
-      delete: { methods: ['del'], path: `/${resourceName}/:id` }
+      index: { methods: ['get'], path: `/${routePath}` },
+      show: { methods: ['get'], path: `/${routePath}/:id` },
+      create: { methods: ['post'], path: `/${routePath}` },
+      update: { methods: ['put', 'patch'], path: `/${routePath}/:id` },
+      delete: { methods: ['del'], path: `/${routePath}/:id` }
     };
 
     let allActions = Object.keys(actionsMethodsAndsPathsMappings);
@@ -448,7 +455,11 @@ export default class Server {
     actions.forEach((action) => {
       let methodsWithPath = actionsMethodsAndsPathsMappings[action];
 
-      methodsWithPath.methods.forEach((method) => this[method](methodsWithPath.path));
+      methodsWithPath.methods.forEach((method) => {
+        return routePath === resourceName
+          ? this[method](methodsWithPath.path)
+          : this[method](methodsWithPath.path, resourceName);
+      });
     });
   }
 
