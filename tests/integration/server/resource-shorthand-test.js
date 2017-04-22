@@ -7,7 +7,8 @@ module('Integration | Server | Resource shorthand', {
     this.server = new Server({
       environment: 'test',
       models: {
-        contact: Model
+        contact: Model,
+        blogPost: Model
       },
       serializers: {
         application: ActiveModelSerializer
@@ -22,17 +23,22 @@ module('Integration | Server | Resource shorthand', {
 });
 
 test('resource generates get shorthand for index action', function(assert) {
-  assert.expect(2);
-  let done = assert.async();
+  assert.expect(3);
+  let done = assert.async(2);
 
   this.server.db.loadData({
     contacts: [
       { id: 1, name: 'Link' },
       { id: 2, name: 'Zelda' }
+    ],
+    blogPosts: [
+      { id: 1, title: 'Post 1' },
+      { id: 2, title: 'Post 2' }
     ]
   });
 
   this.server.resource('contacts');
+  this.server.resource('blog-posts', 'posts');
 
   $.ajax({
     method: 'GET',
@@ -42,20 +48,36 @@ test('resource generates get shorthand for index action', function(assert) {
     assert.deepEqual(res, { contacts: [{ id: '1', name: 'Link' }, { id: '2', name: 'Zelda' }] });
     done();
   });
+
+  $.ajax({
+    method: 'GET',
+    url: '/posts'
+  }).fail((xhr, textStatus, error) => {
+    assert.ok(false, 'failed to find custom path');
+    done();
+  }).done(function(res, status, xhr) {
+    assert.ok(true);
+    done();
+  });
 });
 
 test('resource generates get shorthand for show action', function(assert) {
-  assert.expect(2);
-  let done = assert.async();
+  assert.expect(3);
+  let done = assert.async(2);
 
   this.server.db.loadData({
     contacts: [
       { id: 1, name: 'Link' },
       { id: 2, name: 'Zelda' }
+    ],
+    blogPosts: [
+      { id: 1, title: 'Post 1' },
+      { id: 2, title: 'Post 2' }
     ]
   });
 
   this.server.resource('contacts');
+  this.server.resource('blog-posts', 'posts');
 
   $.ajax({
     method: 'GET',
@@ -65,14 +87,26 @@ test('resource generates get shorthand for show action', function(assert) {
     assert.deepEqual(res, { contact: { id: '2', name: 'Zelda' } });
     done();
   });
+
+  $.ajax({
+    method: 'GET',
+    url: '/posts/2'
+  }).fail((xhr, textStatus, error) => {
+    assert.ok(false, 'failed to find custom path');
+    done();
+  }).done(function(res, status, xhr) {
+    assert.ok(true);
+    done();
+  });
 });
 
 test('resource generates post shorthand', function(assert) {
   let { server } = this;
-  assert.expect(2);
-  let done = assert.async();
+  assert.expect(3);
+  let done = assert.async(2);
 
   server.resource('contacts');
+  server.resource('blog-posts', 'posts');
 
   $.ajax({
     method: 'POST',
@@ -87,20 +121,40 @@ test('resource generates post shorthand', function(assert) {
     assert.equal(server.db.contacts.length, 1);
     done();
   });
+
+  $.ajax({
+    method: 'POST',
+    url: '/posts',
+    data: JSON.stringify({
+      blog_post: {
+        name: 'Post 1'
+      }
+    })
+  }).fail((xhr, textStatus, error) => {
+    assert.ok(false, 'failed to find custom path');
+    done()
+  }).done((res, status, xhr) => {
+    assert.ok(true);
+    done();
+  });
 });
 
 test('resource generates put shorthand', function(assert) {
   let { server } = this;
-  assert.expect(2);
-  let done = assert.async();
+  assert.expect(3);
+  let done = assert.async(2);
 
   this.server.db.loadData({
     contacts: [
       { id: 1, name: 'Link' }
+    ],
+    blogPosts: [
+      { id: 1, title: 'Post 1' }
     ]
   });
 
   server.resource('contacts');
+  server.resource('blog-posts', 'posts');
 
   $.ajax({
     method: 'PUT',
@@ -115,20 +169,40 @@ test('resource generates put shorthand', function(assert) {
     assert.equal(server.db.contacts[0].name, 'Zelda');
     done();
   });
+
+  $.ajax({
+    method: 'PUT',
+    url: '/posts/1',
+    data: JSON.stringify({
+      blog_post: {
+        name: 'Post 2'
+      }
+    })
+  }).fail((xhr, textStatus, error) => {
+    assert.ok(false, 'failed to find custom path');
+    done();
+  }).done((res, status, xhr) => {
+    assert.ok(true);
+    done();
+  });
 });
 
 test('resource generates patch shorthand', function(assert) {
   let { server } = this;
-  assert.expect(2);
-  let done = assert.async();
+  assert.expect(3);
+  let done = assert.async(2);
 
   this.server.db.loadData({
     contacts: [
       { id: 1, name: 'Link' }
+    ],
+    blogPosts: [
+      { id: 1, title: 'Post 1' }
     ]
   });
 
   server.resource('contacts');
+  server.resource('blog-posts', 'posts');
 
   $.ajax({
     method: 'PATCH',
@@ -143,20 +217,40 @@ test('resource generates patch shorthand', function(assert) {
     assert.equal(server.db.contacts[0].name, 'Zelda');
     done();
   });
+
+  $.ajax({
+    method: 'PATCH',
+    url: '/posts/1',
+    data: JSON.stringify({
+      blog_post: {
+        name: 'Post 2'
+      }
+    })
+  }).fail((xhr, textStatus, error) => {
+    assert.ok(false, 'failed to find custom path');
+    done();
+  }).done((res, status, xhr) => {
+    assert.ok(true);
+    done();
+  });
 });
 
 test('resource generates delete shorthand works', function(assert) {
   let { server } = this;
-  assert.expect(2);
-  let done = assert.async();
+  assert.expect(3);
+  let done = assert.async(2);
 
   this.server.db.loadData({
     contacts: [
       { id: 1, name: 'Link' }
+    ],
+    blogPosts: [
+      { id: 1, title: 'Post 1' }
     ]
   });
 
   server.resource('contacts');
+  server.resource('blog-posts', 'posts');
 
   $.ajax({
     method: 'DELETE',
@@ -164,6 +258,17 @@ test('resource generates delete shorthand works', function(assert) {
   }).done((res, status, xhr) => {
     assert.equal(xhr.status, 204);
     assert.equal(server.db.contacts.length, 0);
+    done();
+  });
+
+  $.ajax({
+    method: 'DELETE',
+    url: '/posts/1'
+  }).fail((xhr, textStatus, error) => {
+    assert.ok(false, 'failed to find custom path');
+    done();
+  }).done((res, status, xhr) => {
+    assert.ok(true);
     done();
   });
 });
@@ -178,8 +283,8 @@ test('resource does not accept both :all and :except options', function(assert) 
 
 test('resource generates shorthands which are whitelisted by :only option', function(assert) {
   let { server } = this;
-  assert.expect(1);
-  let done = assert.async();
+  assert.expect(2);
+  let done = assert.async(2);
 
   server.db.loadData({
     contacts: [
@@ -189,10 +294,22 @@ test('resource generates shorthands which are whitelisted by :only option', func
   });
 
   server.resource('contacts', { only: ['index'] });
+  server.resource('blog-posts', 'posts', { only: ['index'] });
 
   $.ajax({
     method: 'GET',
     url: '/contacts'
+  }).done((res, status, xhr) => {
+    assert.equal(xhr.status, 200);
+    done();
+  });
+
+  $.ajax({
+    method: 'GET',
+    url: '/posts'
+  }).fail(function() {
+    assert.ok(false, 'failed to find custom path');
+    done();
   }).done((res, status, xhr) => {
     assert.equal(xhr.status, 200);
     done();
