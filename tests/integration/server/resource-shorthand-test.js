@@ -132,7 +132,7 @@ test('resource generates post shorthand', function(assert) {
     })
   }).fail((xhr, textStatus, error) => {
     assert.ok(false, 'failed to find custom path');
-    done()
+    done();
   }).done((res, status, xhr) => {
     assert.ok(true);
     done();
