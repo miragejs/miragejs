@@ -38,7 +38,7 @@ test('resource generates get shorthand for index action', function(assert) {
   });
 
   this.server.resource('contacts');
-  this.server.resource('blog-posts', { rootPath: '/posts' });
+  this.server.resource('blog-posts', { path: '/posts' });
 
   $.ajax({
     method: 'GET',
@@ -77,7 +77,7 @@ test('resource generates get shorthand for show action', function(assert) {
   });
 
   this.server.resource('contacts');
-  this.server.resource('blog-posts', { rootPath: '/posts' });
+  this.server.resource('blog-posts', { path: '/posts' });
 
   $.ajax({
     method: 'GET',
@@ -106,7 +106,7 @@ test('resource generates post shorthand', function(assert) {
   let done = assert.async(2);
 
   server.resource('contacts');
-  server.resource('blog-posts', { rootPath: 'posts' });
+  server.resource('blog-posts', { path: 'posts' });
 
   $.ajax({
     method: 'POST',
@@ -154,7 +154,7 @@ test('resource generates put shorthand', function(assert) {
   });
 
   server.resource('contacts');
-  server.resource('blog-posts', { rootPath: 'posts' });
+  server.resource('blog-posts', { path: 'posts' });
 
   $.ajax({
     method: 'PUT',
@@ -202,7 +202,7 @@ test('resource generates patch shorthand', function(assert) {
   });
 
   server.resource('contacts');
-  server.resource('blog-posts', { rootPath: 'posts' });
+  server.resource('blog-posts', { path: 'posts' });
 
   $.ajax({
     method: 'PATCH',
@@ -250,7 +250,7 @@ test('resource generates delete shorthand works', function(assert) {
   });
 
   server.resource('contacts');
-  server.resource('blog-posts', { rootPath: 'posts' });
+  server.resource('blog-posts', { path: 'posts' });
 
   $.ajax({
     method: 'DELETE',
@@ -294,7 +294,7 @@ test('resource generates shorthands which are whitelisted by :only option', func
   });
 
   server.resource('contacts', { only: ['index'] });
-  server.resource('blog-posts', { rootPath: 'posts',  only: ['index'] });
+  server.resource('blog-posts', { path: 'posts',  only: ['index'] });
 
   $.ajax({
     method: 'GET',
