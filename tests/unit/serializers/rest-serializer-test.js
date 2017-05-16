@@ -29,3 +29,8 @@ test('it hyphenates camelized words', function(assert) {
     }
   });
 });
+
+test('serializeIds defaults to "always"', function(assert) {
+  let defaultState = new RestSerializer;
+  assert.equal(defaultState.serializeIds, 'always');
+});
