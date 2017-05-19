@@ -62,6 +62,21 @@ test('_getAttrsForRequest works with attributes and relationships', function(ass
             'type': 'companies'
           }
         },
+        'employees': {
+          'data': [{
+            'id': '1',
+            'type': 'employees'
+          }, {
+            'id': '2',
+            'type': 'employees'
+          }, {
+            'id': '3',
+            'type': 'employees'
+          }]
+        },
+        'nothings': {
+          'data': []
+        },
         'github-account': {
           'data': {
             'id': '1',
@@ -70,9 +85,6 @@ test('_getAttrsForRequest works with attributes and relationships', function(ass
         },
         'something': {
           'data': null
-        },
-        'many-things': {
-          'data': []
         }
       },
       'type': 'github-account'
@@ -91,6 +103,8 @@ test('_getAttrsForRequest works with attributes and relationships', function(ass
       name: 'Sam',
       doesMirage: true,
       companyId: '1',
+      employeeIds: ['1', '2', '3'],
+      nothingIds: [],
       githubAccountId: '1',
       somethingId: null
     },
