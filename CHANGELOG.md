@@ -1,5 +1,18 @@
 # Ember CLI Mirage Changelog
 
+## 0.3.2
+
+Update notes: none
+
+Changes:
+
+  - [FEATURE][#1056](https://github.com/samselikoff/ember-cli-mirage/pull/1056) Auto generate models from Ember Data models @offirgolan
+  - [ENHANCEMENT][#1068](https://github.com/samselikoff/ember-cli-mirage/pull/1068) Add Resource helper custom path parameter @rjschie
+  - [ENHANCEMENT][#1077](https://github.com/samselikoff/ember-cli-mirage/pull/1077) Upgrade ember-inflector to 2.0 @john-griffin
+  - [ENHANCEMENT][#1088](https://github.com/samselikoff/ember-cli-mirage/pull/1088) Upgrade ember-lodash @john-griffin
+  - [ENHANCEMENT][#1086](https://github.com/samselikoff/ember-cli-mirage/pull/1086) Normalize hasMany relationships @npafundi
+  - General improvements: @kishiamy, @aheuermann, @marpo60,
+
 ## 0.3.1
 
 Update notes: none
