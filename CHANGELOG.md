@@ -1,5 +1,13 @@
 # Ember CLI Mirage Changelog
 
+## 0.3.3
+
+Update notes: none
+
+Changes:
+
+  - [FEATURE][#1080](https://github.com/samselikoff/ember-cli-mirage/pull/1080) Polymorphic association support @samselikoff
+
 ## 0.3.2
 
 Update notes: none
