@@ -27,6 +27,14 @@ export default Serializer.extend({
     return `${underscore(relationshipName)}_id`;
   },
 
+  keyForPolymorphicForeignKeyId(relationshipName) {
+    return `${underscore(relationshipName)}_id`;
+  },
+
+  keyForPolymorphicForeignKeyType(relationshipName) {
+    return `${underscore(relationshipName)}_type`;
+  },
+
   normalize(payload) {
     let type = Object.keys(payload)[0];
     let attrs = payload[type];

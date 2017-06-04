@@ -1,5 +1,6 @@
 import Association from './association';
 import Collection from '../collection';
+import PolymorphicCollection from '../polymorphic-collection';
 import _assign from 'lodash/assign';
 import _compact from 'lodash/compact';
 import { capitalize, camelize, singularize } from 'ember-cli-mirage/utils/inflector';
@@ -71,7 +72,11 @@ export default class HasMany extends Association {
         let ids = [];
 
         if (tempChildren) {
-          ids = tempChildren.models.map(model => model.id);
+          if (association.isPolymorphic) {
+            ids = tempChildren.models.map(model => ({ type: model.modelName, id: model.id }));
+          } else {
+            ids = tempChildren.models.map(model => model.id);
+          }
         } else {
           ids = this.attrs[foreignKey] || [];
         }
@@ -90,7 +95,22 @@ export default class HasMany extends Association {
           tempChildren = [];
         } else if (ids !== undefined) {
           assert(Array.isArray(ids), `You must pass an array in when seting ${foreignKey} on ${this}`);
-          tempChildren = association.schema[toCollectionName(association.modelName)].find(ids);
+
+          if (association.isPolymorphic) {
+            assert(ids.every((el) => {
+              return ((typeof el === 'object')
+                && (typeof el.type !== undefined)
+                && (typeof el.id !== undefined)
+              );
+            }), `You must pass in an array of polymorphic identifiers (objects of shape { type, id }) when seting ${foreignKey} on ${this}`);
+
+            let models = ids.map(({ type, id }) => {
+              return association.schema[toCollectionName(type)].find(id);
+            });
+            tempChildren = new PolymorphicCollection(models);
+          } else {
+            tempChildren = association.schema[toCollectionName(association.modelName)].find(ids);
+          }
         }
 
         this[key] = tempChildren;
@@ -110,10 +130,23 @@ export default class HasMany extends Association {
         if (this._tempAssociations[key]) {
           collection = this._tempAssociations[key];
         } else {
-          if (this[foreignKey]) {
-            collection = association.schema[toCollectionName(association.modelName)].find(this[foreignKey]);
+          if (association.isPolymorphic) {
+            if (this[foreignKey]) {
+              let polymorphicIds = this[foreignKey];
+              let models = polymorphicIds.map(({ type, id }) => {
+                return association.schema[toCollectionName(type)].find(id);
+              });
+
+              collection = new PolymorphicCollection(models);
+            } else {
+              collection = new PolymorphicCollection(association.modelName);
+            }
           } else {
-            collection = new Collection(association.modelName);
+            if (this[foreignKey]) {
+              collection = association.schema[toCollectionName(association.modelName)].find(this[foreignKey]);
+            } else {
+              collection = new Collection(association.modelName);
+            }
           }
 
           this._tempAssociations[key] = collection;
@@ -127,20 +160,28 @@ export default class HasMany extends Association {
           - sets the associated children (via array of models or Collection)
       */
       set(models) {
-        if (models instanceof Collection) {
+        if (models instanceof Collection || models instanceof PolymorphicCollection) {
           models = models.models;
         }
 
         models = models ? _compact(models) : [];
         this._tempAssociations = this._tempAssociations || {};
 
-        this._tempAssociations[key] = new Collection(association.modelName, models);
-
-        if (association.inverse())  {
-          models.forEach(model => {
-            model.associate(this, association.inverse());
-          });
+        let collection;
+        if (association.isPolymorphic) {
+          collection = new PolymorphicCollection(models);
+        } else {
+          collection = new Collection(association.modelName, models);
         }
+        this._tempAssociations[key] = collection;
+
+        models.forEach(model => {
+          if (model.hasInverseFor(association)) {
+            let inverse = model.inverseFor(association);
+
+            model.associate(this, inverse);
+          }
+        });
       }
     });
 
@@ -148,10 +189,19 @@ export default class HasMany extends Association {
       object.newChild
         - creates a new unsaved associated child
     */
-    modelPrototype[`new${capitalize(camelize(singularize(association.key)))}`] = function(attrs = {}) {
-      let child = association.schema[toCollectionName(association.modelName)].new(attrs);
+    modelPrototype[`new${capitalize(camelize(singularize(association.key)))}`] = function(...args) {
+      let modelName, attrs;
+      if (association.isPolymorphic) {
+        modelName = args[0];
+        attrs = args[1];
+      } else {
+        modelName = association.modelName;
+        attrs = args[0];
+      }
 
+      let child = association.schema[toCollectionName(modelName)].new(attrs);
       let children = this[key].models;
+
       children.push(child);
       this[key] = children;
 
@@ -161,12 +211,24 @@ export default class HasMany extends Association {
     /*
       object.createChild
         - creates a new saved associated child, and immediately persists both models
-    */
-    modelPrototype[`create${capitalize(camelize(singularize(association.key)))}`] = function(attrs = {}) {
-      let child = association.schema[toCollectionName(association.modelName)].create(attrs);
 
-      // this[key].add(child);
+      TODO: forgot why this[key].add(child) doesn't work, most likely
+      because these external APIs trigger saving cascades. Should probably
+      have an internal method like this[key]._add.
+    */
+    modelPrototype[`create${capitalize(camelize(singularize(association.key)))}`] = function(...args) {
+      let modelName, attrs;
+      if (association.isPolymorphic) {
+        modelName = args[0];
+        attrs = args[1];
+      } else {
+        modelName = association.modelName;
+        attrs = args[0];
+      }
+
+      let child = association.schema[toCollectionName(modelName)].create(attrs);
       let children = this[key].models;
+
       children.push(child);
       this[key] = children;
 
@@ -183,12 +245,26 @@ export default class HasMany extends Association {
   */
   disassociateAllDependentsFromTarget(model) {
     let owner = this.ownerModelName;
+    let fk;
+
+    if (this.isPolymorphic) {
+      fk = { type: model.modelName, id: model.id };
+    } else {
+      fk = model.id;
+    }
+
     let dependents = this.schema[toCollectionName(owner)]
       .where((potentialOwner) => {
         let currentIds = potentialOwner[this.getForeignKey()];
 
         // Need this check because currentIds could be null
-        return currentIds && currentIds.includes(model.id);
+        return currentIds && currentIds.find((id) => {
+          if (typeof id === 'object') {
+            return id.type === fk.type && id.id === fk.id;
+          } else {
+            return id === fk;
+          }
+        });
       });
 
     dependents.models.forEach(dependent => {

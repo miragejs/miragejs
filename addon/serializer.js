@@ -1,5 +1,6 @@
 import Model from './orm/model';
 import Collection from './orm/collection';
+import PolymorphicCollection from './orm/polymorphic-collection';
 import extend from './utils/extend';
 import { singularize, pluralize, camelize } from './utils/inflector';
 
@@ -82,14 +83,23 @@ class Serializer {
   }
 
   getHashForIncludedResource(resource) {
-    let serializer = this.serializerFor(resource.modelName);
-    let [hash, addToIncludes] = serializer.getHashForResource(resource);
+    let hashWithRoot, addToIncludes;
 
-    // Included resources always have a root, and are always pushed to an array.
-    let rootKey = serializer.keyForRelationship(resource.modelName);
-    let hashWithRoot = _isArray(hash) ? { [rootKey]: hash } : { [rootKey]: [hash] };
+    if (resource instanceof PolymorphicCollection) {
+      hashWithRoot = {};
+      addToIncludes = resource.models;
 
-    return [hashWithRoot, addToIncludes];
+    } else {
+      let serializer = this.serializerFor(resource.modelName);
+      let [ hash, newModels ] = serializer.getHashForResource(resource);
+
+      // Included resources always have a root, and are always pushed to an array.
+      let rootKey = serializer.keyForRelationship(resource.modelName);
+      hashWithRoot = _isArray(hash) ? { [rootKey]: hash } : { [rootKey]: [hash] };
+      addToIncludes = newModels;
+    }
+
+    return [ hashWithRoot, addToIncludes ];
   }
 
   getHashForResource(resource, removeForeignKeys = false, didSerialize = {}, lookupSerializer = false) {
@@ -269,18 +279,39 @@ class Serializer {
           newHash[formattedKey] = model[key].models.map((m) => m.id);
         } else if (association) {
           let formattedKey = this.keyForForeignKey(key);
-          newHash[formattedKey] = model[key].id;
+          newHash[formattedKey] = model[`${key}Id`];
         }
       });
     } else if (this.serializeIds === 'included') {
       this.getKeysForIncluded().forEach((key) => {
         let association = model[key];
-        if (this.isCollection(association)) {
-          let formattedKey = this.keyForRelationshipIds(key);
-          newHash[formattedKey] = model[key].models.map((m) => m.id);
-        } else if (association) {
-          let formattedKey = this.keyForForeignKey(key);
-          newHash[formattedKey] = model[key].id;
+
+        if (model.associationFor(key).isPolymorphic) {
+          if (association instanceof PolymorphicCollection) {
+            let formattedKey = this.keyForRelationship(key);
+
+            newHash[formattedKey] = model[`${singularize(key)}Ids`];
+          } else if (association instanceof Collection) {
+            let formattedKey = this.keyForRelationshipIds(key);
+
+            newHash[formattedKey] = model[key].models.map((m) => m.id);
+          } else {
+            let formattedTypeKey = this.keyForPolymorphicForeignKeyType(key);
+            let formattedIdKey = this.keyForPolymorphicForeignKeyId(key);
+
+            newHash[formattedTypeKey] = model[`${key}Id`].type;
+            newHash[formattedIdKey] = model[`${key}Id`].id;
+          }
+        } else {
+          if (this.isCollection(association)) {
+            let formattedKey = this.keyForRelationshipIds(key);
+
+            newHash[formattedKey] = model[key].models.map((m) => m.id);
+          } else if (association) {
+            let formattedKey = this.keyForForeignKey(key);
+
+            newHash[formattedKey] = model[`${key}Id`];
+          }
         }
       });
     }
@@ -365,6 +396,14 @@ class Serializer {
     return `${camelize(relationshipName)}Id`;
   }
 
+  keyForPolymorphicForeignKeyId(relationshipName) {
+    return `${camelize(relationshipName)}Id`;
+  }
+
+  keyForPolymorphicForeignKeyType(relationshipName) {
+    return `${camelize(relationshipName)}Type`;
+  }
+
   /**
    * This method is used by the POST and PUT shorthands. These shorthands
    * expect a valid JSON:API document as part of the request, so that
@@ -401,7 +440,7 @@ class Serializer {
    * @public
    */
   isCollection(object) {
-    return object instanceof Collection;
+    return (object instanceof Collection) || (object instanceof PolymorphicCollection);
   }
 
   /**

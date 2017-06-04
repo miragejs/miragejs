@@ -6,7 +6,14 @@ import { module, test } from 'qunit';
 module('Integration | ORM | Schema Verification | Mixed');
 
 test('unnamed one-to-many associations are correct', function(assert) {
-  let schema = new Schema(new Db(), {
+  let schema = new Schema(new Db({
+    wordSmiths: [
+      { id: 1, name: 'Frodo' }
+    ],
+    blogPosts: [
+      { id: 1, title: 'Lorem' }
+    ]
+  }), {
     wordSmith: Model.extend({
       blogPosts: hasMany()
     }),
@@ -15,17 +22,27 @@ test('unnamed one-to-many associations are correct', function(assert) {
     })
   });
 
-  let association = schema.associationsFor('word-smith').blogPosts;
-  let inverse = schema.associationsFor('blog-post').wordSmith;
+  let frodo = schema.wordSmiths.find(1);
+  let association = frodo.associationFor('blogPosts');
 
   assert.equal(association.key, 'blogPosts');
   assert.equal(association.modelName, 'blog-post');
   assert.equal(association.ownerModelName, 'word-smith');
-  assert.deepEqual(association.inverse(), inverse);
+
+  let post = schema.blogPosts.find(1);
+
+  assert.deepEqual(post.inverseFor(association), post.associationFor('wordSmith'));
 });
 
 test('a named one-to-many association is correct', function(assert) {
-  let schema = new Schema(new Db(), {
+  let schema = new Schema(new Db({
+    wordSmiths: [
+      { id: 1, name: 'Frodo' }
+    ],
+    blogPosts: [
+      { id: 1, title: 'Lorem' }
+    ]
+  }), {
     wordSmith: Model.extend({
       posts: hasMany('blog-post')
     }),
@@ -34,17 +51,27 @@ test('a named one-to-many association is correct', function(assert) {
     })
   });
 
-  let association = schema.associationsFor('word-smith').posts;
-  let inverse = schema.associationsFor('blog-post').author;
+  let frodo = schema.wordSmiths.find(1);
+  let association = frodo.associationFor('posts');
 
   assert.equal(association.key, 'posts');
   assert.equal(association.modelName, 'blog-post');
   assert.equal(association.ownerModelName, 'word-smith');
-  assert.deepEqual(association.inverse(), inverse);
+
+  let post = schema.blogPosts.find(1);
+
+  assert.deepEqual(post.inverseFor(association), post.associationFor('author'));
 });
 
 test('multiple has-many associations of the same type', function(assert) {
-  let schema = new Schema(new Db(), {
+  let schema = new Schema(new Db({
+    users: [
+      { id: 1, name: 'Frodo' }
+    ],
+    posts: [
+      { id: 1, title: 'Lorem' }
+    ]
+  }), {
     user: Model.extend({
       notes: hasMany('post', { inverse: 'author' }),
       messages: hasMany('post', { inverse: 'messenger' })
@@ -55,32 +82,44 @@ test('multiple has-many associations of the same type', function(assert) {
     })
   });
 
-  let { notes, messages } = schema.associationsFor('user');
-  let { author, messenger } = schema.associationsFor('post');
+  let frodo = schema.users.find(1);
+  let notesAssociation = frodo.associationFor('notes');
 
-  assert.equal(notes.key, 'notes');
-  assert.equal(notes.modelName, 'post');
-  assert.equal(notes.ownerModelName, 'user');
-  assert.deepEqual(notes.inverse(), author);
-  assert.equal(messages.key, 'messages');
-  assert.equal(messages.modelName, 'post');
-  assert.equal(messages.ownerModelName, 'user');
-  assert.deepEqual(messages.inverse(), messenger);
+  assert.equal(notesAssociation.key, 'notes');
+  assert.equal(notesAssociation.modelName, 'post');
+  assert.equal(notesAssociation.ownerModelName, 'user');
+
+  let post = schema.posts.find(1);
+
+  assert.deepEqual(post.inverseFor(notesAssociation), post.associationFor('author'));
+
+  let messagesAssociation = frodo.associationFor('messages');
+
+  assert.equal(messagesAssociation.key, 'messages');
+  assert.equal(messagesAssociation.modelName, 'post');
+  assert.equal(messagesAssociation.ownerModelName, 'user');
+
+  assert.deepEqual(post.inverseFor(messagesAssociation), post.associationFor('messenger'));
 });
 
 test('one-to-many reflexive association is correct', function(assert) {
-  let schema = new Schema(new Db(), {
+  let schema = new Schema(new Db({
+    users: [
+      { id: 1, name: 'Frodo' }
+    ]
+  }), {
     user: Model.extend({
       parent: belongsTo('user', { inverse: 'children' }),
       children: hasMany('user', { inverse: 'parent' })
     })
   });
 
-  let association = schema.associationsFor('user').parent;
-  let inverse = schema.associationsFor('user').children;
+  let frodo = schema.users.find(1);
+  let parentAssociation = frodo.associationFor('parent');
 
-  assert.equal(association.key, 'parent');
-  assert.equal(association.modelName, 'user');
-  assert.equal(association.ownerModelName, 'user');
-  assert.deepEqual(association.inverse(), inverse);
+  assert.equal(parentAssociation.key, 'parent');
+  assert.equal(parentAssociation.modelName, 'user');
+  assert.equal(parentAssociation.ownerModelName, 'user');
+
+  assert.deepEqual(frodo.inverseFor(parentAssociation), frodo.associationFor('children'));
 });

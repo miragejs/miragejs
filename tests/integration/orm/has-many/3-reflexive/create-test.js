@@ -22,8 +22,8 @@ test('it sets up associations correctly when passing in the foreign key', functi
   assert.deepEqual(tagB.tagIds, [ tagA.id ], 'the inverse was set');
   assert.deepEqual(tagA.attrs.tagIds, [ tagB.id ], 'the ids were persisted');
   assert.deepEqual(tagB.attrs.tagIds, [ tagA.id ], 'the inverse ids were persisted');
-  assert.deepEqual(tagA.tags.models[0].attrs, tagB.attrs);
-  assert.deepEqual(tagB.tags.models[0].attrs, tagA.attrs, 'the inverse was set');
+  assert.ok(tagA.tags.includes(tagB));
+  assert.ok(tagB.tags.includes(tagA), 'the inverse was set');
   assert.equal(this.helper.db.tags.length, 2);
   assert.deepEqual(this.helper.db.tags[0], { id: '1', tagIds: [ '2' ] });
   assert.deepEqual(this.helper.db.tags[1], { id: '2', tagIds: [ '1' ] });

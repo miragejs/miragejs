@@ -19,7 +19,7 @@ export default class Schema {
 
     this.db = db;
     this._registry = {};
-    this._dependentAssociations = {};
+    this._dependentAssociations = { polymorphic: [] };
     this.registerModels(modelsMap);
   }
 
@@ -128,15 +128,6 @@ export default class Schema {
    * @public
    */
   new(type, attrs) {
-
-    // let fk = foreignKeysHash[attr];
-    // debugger;
-    // assert(
-    //   !fk || this.schema.db[toCollectionName(association.modelName)].find(fk),
-    //   `Couldn\'t find ${association.modelName} with id = ${fk}`
-    // );
-
-    // this[attr] = fk;
     return this._instantiateModel(dasherize(type), attrs);
   }
 
@@ -223,13 +214,44 @@ export default class Schema {
     return this._registry[camelize(modelName)].class.prototype;
   }
 
+  /*
+    This method updates the dependentAssociations registry, which is used to
+    keep track of which models depend on a given association. It's used when
+    deleting models - their dependents need to be looked up and foreign keys
+    updated.
+
+    For example,
+
+        schema = {
+          post: Model.extend(),
+          comment: Model.extend({
+            post: belongsTo()
+          })
+        };
+
+        comment1.post = post1;
+        ...
+        post1.destroy()
+
+    Deleting this post should clear out comment1's foreign key.
+
+    Polymorphic associations can have _any_ other model as a dependent, so we
+    handle them separately.
+  */
   addDependentAssociation(association, modelName) {
-    this._dependentAssociations[modelName] = this._dependentAssociations[modelName] || [];
-    this._dependentAssociations[modelName].push(association);
+    if (association.isPolymorphic) {
+      this._dependentAssociations.polymorphic.push(association);
+    } else {
+      this._dependentAssociations[modelName] = this._dependentAssociations[modelName] || [];
+      this._dependentAssociations[modelName].push(association);
+    }
   }
 
   dependentAssociationsFor(modelName) {
-    return this._dependentAssociations[modelName];
+    let directDependents = this._dependentAssociations[modelName] || [];
+    let polymorphicAssociations = this._dependentAssociations.polymorphic || [];
+
+    return directDependents.concat(polymorphicAssociations);
   }
 
   associationsFor(modelName) {

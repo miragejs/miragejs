@@ -42,7 +42,7 @@
     "ember-cli-sri": "^2.1.0",
     "ember-cli-test-loader": "^1.1.0",
     "ember-cli-uglify": "^1.2.0",
-    "ember-data": "^2.10.0",
+    "ember-data": "2.10.x",
     "ember-disable-prototype-extensions": "^1.1.0",
     "ember-disable-proxy-controllers": "^1.0.1",
     "ember-export-application-global": "^1.0.5",

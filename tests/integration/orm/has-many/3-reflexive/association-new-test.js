@@ -24,6 +24,7 @@ states.forEach((state) => {
     assert.equal(blueTag.tags.models.length, 1, 'the inverse was set');
 
     blueTag.save();
+    tag.reload();
 
     assert.deepEqual(blueTag.attrs, { id: blueTag.id, name: 'Blue', tagIds: [ tag.id ] }, 'the child was persisted');
     assert.equal(tag.tags.models.length, initialCount + 1, 'the collection size was increased');

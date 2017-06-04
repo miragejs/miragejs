@@ -6,114 +6,164 @@ import { module, test } from 'qunit';
 module('Integration | ORM | Schema Verification | Belongs To');
 
 test('a one-way belongsTo association is correct', function(assert) {
-  let schema = new Schema(new Db(), {
+  let schema = new Schema(new Db({
+    authors: [
+      { id: 1, name: 'Frodo' }
+    ],
+    posts: [
+      { id: 1, title: 'Lorem ipsum' }
+    ]
+  }), {
     author: Model.extend(),
     post: Model.extend({
       author: belongsTo()
     })
   });
 
-  let association = schema.modelClassFor('post').associationFor('author');
+  let post = schema.posts.find(1);
+  let association = post.associationFor('author');
+  let frodo = schema.authors.find(1);
 
   assert.equal(association.key, 'author');
   assert.equal(association.modelName, 'author');
   assert.equal(association.ownerModelName, 'post');
-  assert.ok(association.inverse() === null, 'there is no inverse');
+  assert.ok(frodo.inverseFor(association) === null, 'there is no inverse');
 });
 
 test('a one-way named belongsTo association is correct', function(assert) {
-  let schema = new Schema(new Db(), {
+  let schema = new Schema(new Db({
+    users: [
+      { id: 1, name: 'Frodo' }
+    ],
+    posts: [
+      { id: 1, title: 'Lorem ipsum' }
+    ]
+  }), {
     user: Model.extend(),
     post: Model.extend({
       author: belongsTo('user')
     })
   });
 
-  let association = schema.modelClassFor('post').associationFor('author');
+  let post = schema.posts.find(1);
+  let association = post.associationFor('author');
+  let frodo = schema.users.find(1);
 
   assert.equal(association.key, 'author');
   assert.equal(association.modelName, 'user');
   assert.equal(association.ownerModelName, 'post');
-  assert.ok(association.inverse() === null, 'there is no inverse');
+  assert.ok(frodo.inverseFor(association) === null, 'there is no inverse');
 });
 
 test('a reflexive belongsTo association is correct and has an implicit inverse', function(assert) {
-  let schema = new Schema(new Db(), {
+  let schema = new Schema(new Db({
+    users: [
+      { id: 1, name: 'Frodo' }
+    ]
+  }), {
     user: Model.extend({
       user: belongsTo()
     })
   });
 
-  let association = schema.modelClassFor('user').associationFor('user');
+  let frodo = schema.users.find(1);
+  let association = frodo.associationFor('user');
 
   assert.equal(association.key, 'user');
   assert.equal(association.modelName, 'user');
   assert.equal(association.ownerModelName, 'user');
-  assert.ok(association.inverse() === association, 'the implicit inverse was found');
+  assert.ok(frodo.inverseFor(association) === association, 'the implicit inverse was found');
 });
 
 test('a named reflexive belongsTo association with an implicit inverse is correct', function(assert) {
-  let schema = new Schema(new Db(), {
+  let schema = new Schema(new Db({
+    users: [
+      { id: 1, name: 'Frodo' }
+    ]
+  }), {
     user: Model.extend({
       bestFriend: belongsTo('user')
     })
   });
 
-  let association = schema.modelClassFor('user').associationFor('bestFriend');
+  let frodo = schema.users.find(1);
+  let association = frodo.associationFor('bestFriend');
 
   assert.equal(association.key, 'bestFriend');
   assert.equal(association.modelName, 'user');
   assert.equal(association.ownerModelName, 'user');
-  assert.ok(association.inverse() === association, 'the implicit inverse was found');
+  assert.ok(frodo.inverseFor(association) === association, 'the implicit inverse was found');
 });
 
 test('a named reflexive belongsTo association with an explicit inverse is correct', function(assert) {
-  let schema = new Schema(new Db(), {
+  let schema = new Schema(new Db({
+    users: [
+      { id: 1, name: 'Frodo' }
+    ]
+  }), {
     user: Model.extend({
       bestFriend: belongsTo('user', { inverse: 'bestFriend' })
     })
   });
 
-  let association = schema.modelClassFor('user').associationFor('bestFriend');
+  let frodo = schema.users.find(1);
+  let association = frodo.associationFor('bestFriend');
 
   assert.equal(association.key, 'bestFriend');
   assert.equal(association.modelName, 'user');
   assert.equal(association.ownerModelName, 'user');
-  assert.ok(association.inverse() === association, 'the implicit inverse was found');
+  assert.ok(frodo.inverseFor(association) === association, 'the explicit inverse was found');
 });
 
-test('a one way reflexive belongsTo association with a null inverse is correct', function(assert) {
-  let schema = new Schema(new Db(), {
+test('a one-way reflexive belongsTo association with a null inverse is correct', function(assert) {
+  let schema = new Schema(new Db({
+    users: [
+      { id: 1, name: 'Frodo' }
+    ]
+  }), {
     user: Model.extend({
       user: belongsTo('user', { inverse: null })
     })
   });
 
-  let association = schema.modelClassFor('user').associationFor('user');
+  let frodo = schema.users.find(1);
+  let association = frodo.associationFor('user');
 
   assert.equal(association.key, 'user');
   assert.equal(association.modelName, 'user');
   assert.equal(association.ownerModelName, 'user');
-  assert.ok(association.inverse() === null, 'there is no inverse');
+  assert.ok(frodo.inverseFor(association) === null, 'there is no inverse');
 });
 
-test('a named way reflexive belongsTo association with a null inverse is correct', function(assert) {
-  let schema = new Schema(new Db(), {
+test('a named one-way way reflexive belongsTo association with a null inverse is correct', function(assert) {
+  let schema = new Schema(new Db({
+    users: [
+      { id: 1, name: 'Frodo' }
+    ]
+  }), {
     user: Model.extend({
       parent: belongsTo('user', { inverse: null })
     })
   });
 
-  let association = schema.modelClassFor('user').associationFor('parent');
+  let frodo = schema.users.find(1);
+  let association = frodo.associationFor('parent');
 
   assert.equal(association.key, 'parent');
   assert.equal(association.modelName, 'user');
   assert.equal(association.ownerModelName, 'user');
-  assert.ok(association.inverse() === null, 'there is no inverse');
+  assert.ok(frodo.inverseFor(association) === null, 'there is no inverse');
 });
 
-test('a one to one belongsTo association with an implicit inverse is correct', function(assert) {
-  let schema = new Schema(new Db(), {
+test('a one-to-one belongsTo association with an implicit inverse is correct', function(assert) {
+  let schema = new Schema(new Db({
+    users: [
+      { id: 1, name: 'Frodo' }
+    ],
+    profiles: [
+      { id: 1, type: 'Admin' }
+    ]
+  }), {
     user: Model.extend({
       profile: belongsTo()
     }),
@@ -122,13 +172,15 @@ test('a one to one belongsTo association with an implicit inverse is correct', f
     })
   });
 
-  let association = schema.modelClassFor('profile').associationFor('user');
+  let admin = schema.profiles.find(1);
+  let association = admin.associationFor('user');
 
   assert.equal(association.key, 'user');
   assert.equal(association.modelName, 'user');
   assert.equal(association.ownerModelName, 'profile');
 
-  let inverse = association.inverse();
+  let frodo = schema.users.find(1);
+  let inverse = frodo.inverseFor(association);
 
   assert.equal(inverse.key, 'profile');
   assert.equal(inverse.modelName, 'profile');
