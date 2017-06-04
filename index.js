@@ -1,8 +1,9 @@
 /* eslint-env node */
 'use strict';
-var path = require('path');
-var mergeTrees = require('broccoli-merge-trees');
-var Funnel = require('broccoli-funnel');
+const path = require('path');
+const mergeTrees = require('broccoli-merge-trees');
+const Funnel = require('broccoli-funnel');
+const map = require('broccoli-stew').map;
 
 module.exports = {
   name: 'ember-cli-mirage',
@@ -19,8 +20,8 @@ module.exports = {
     }
   },
 
-  included: function included() {
-    var app;
+  included() {
+    let app;
 
     // If the addon has the _findHost() method (in ember-cli >= 2.7.0), we'll just
     // use that.
@@ -29,7 +30,7 @@ module.exports = {
     } else {
       // Otherwise, we'll use this implementation borrowed from the _findHost()
       // method in ember-cli.
-      var current = this;
+      let current = this;
       do {
         app = current.app || app;
       } while (current.parent.parent && (current = current.parent));
@@ -60,11 +61,11 @@ module.exports = {
     }
   },
 
-  blueprintsPath: function() {
+  blueprintsPath() {
     return path.join(__dirname, 'blueprints');
   },
 
-  treeFor: function(name) {
+  treeFor(name) {
     if (!this._shouldIncludeFiles()) {
       return;
     }
@@ -72,8 +73,8 @@ module.exports = {
     return this._super.treeFor.apply(this, arguments);
   },
 
-  _lintMirageTree: function(mirageTree) {
-    var lintedMirageTrees;
+  _lintMirageTree(mirageTree) {
+    let lintedMirageTrees;
     // _eachProjectAddonInvoke was added in ember-cli@2.5.0
     // this conditional can be removed when we no longer support
     // versions older than 2.5.0
@@ -87,7 +88,7 @@ module.exports = {
       }).filter(Boolean);
     }
 
-    var lintedMirage = mergeTrees(lintedMirageTrees, {
+    let lintedMirage = mergeTrees(lintedMirageTrees, {
       overwrite: true,
       annotation: 'TreeMerger (mirage-lint)'
     });
@@ -97,9 +98,9 @@ module.exports = {
     });
   },
 
-  treeForApp: function(appTree) {
-    var trees = [ appTree ];
-    var mirageFilesTree = new Funnel(this.mirageDirectory, {
+  treeForApp(appTree) {
+    let trees = [ appTree ];
+    let mirageFilesTree = new Funnel(this.mirageDirectory, {
       destDir: 'mirage'
     });
     trees.push(mirageFilesTree);
@@ -111,14 +112,14 @@ module.exports = {
     return mergeTrees(trees);
   },
 
-  _shouldIncludeFiles: function() {
+  _shouldIncludeFiles() {
     if (process.env.EMBER_CLI_FASTBOOT) {
       return false;
     }
 
-    var environment = this.app.env;
-    var enabledInProd = environment === 'production' && this.addonConfig.enabled;
-    var explicitExcludeFiles = this.addonConfig.excludeFilesFromBuild;
+    let environment = this.app.env;
+    let enabledInProd = environment === 'production' && this.addonConfig.enabled;
+    let explicitExcludeFiles = this.addonConfig.excludeFilesFromBuild;
     if (enabledInProd && explicitExcludeFiles) {
       throw new Error('Mirage was explicitly enabled in production, but its files were excluded '
                       + 'from the build. Please, use only ENV[\'ember-cli-mirage\'].enabled in '
@@ -132,7 +133,11 @@ function npmAsset(filePath) {
   return function() {
     return {
       enabled: this._shouldIncludeFiles(),
-      import: [filePath]
+      import: [filePath],
+      // guard against usage in FastBoot 1.0, where process.env.EMBER_CLI_FASTBOOT is not available
+      _processTree(input) {
+        return map(input, content => `if (typeof FastBoot !== 'undefined') { ${content} }`)
+      }
     };
   };
 }

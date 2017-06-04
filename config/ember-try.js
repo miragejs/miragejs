@@ -55,6 +55,13 @@ module.exports = {
           'ember': 'canary'
         }
       }
+    },
+    {
+      name: 'fastboot-tests',
+      command: 'ember fastboot:test',
+      npm: {
+        devDependencies: {}
+      }
     }
   ]
 };

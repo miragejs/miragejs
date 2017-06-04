@@ -33,6 +33,9 @@ export function startMirage(env = ENV) {
 }
 
 function _shouldUseMirage(env, addonConfig) {
+  if (typeof FastBoot !== 'undefined') {
+    return false;
+  }
   let userDeclaredEnabled = typeof addonConfig.enabled !== 'undefined';
   let defaultEnabled = _defaultEnabled(env, addonConfig);
 
