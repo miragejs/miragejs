@@ -35,6 +35,7 @@ test(`Ember data models were generated and loaded`, function(assert) {
   assert.ok(registry.foo, 'Pre defined model Foo has been registered');
   assert.ok(registry.address, 'Ember data model Address has been registered');
   assert.ok(registry.contact, 'Ember data model Contact has been registered');
+  assert.ok(registry.user, 'Ember data model User has been registered');
   assert.equal(registry.address.foreignKeys.length, 1, 'Ember data model Address has the correct relationships');
 });
 

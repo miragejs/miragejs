@@ -7,7 +7,8 @@ import { hasEmberData, isDsModel } from 'ember-cli-mirage/utils/ember-data';
 import { Model, belongsTo, hasMany } from 'ember-cli-mirage';
 
 const {
-  modulePrefix
+  modulePrefix,
+  podModulePrefix
 } = config;
 
 // Caches
@@ -26,7 +27,7 @@ export function getDsModels() {
   }
 
   let moduleMap = requirejs.entries;
-  let modelMatchRegex = new RegExp(`^${modulePrefix}/models`, 'i');
+  let modelMatchRegex = new RegExp(`^(${modulePrefix}/models|${podModulePrefix}/.*/model$)`, 'i');
 
   DsModels = {};
 
@@ -40,6 +41,10 @@ export function getDsModels() {
       let paths = path.split('/');
       let modelName = paths[paths.length - 1];
       let model = require(path, null, null, true).default;
+
+      if (modelName === 'model') {
+        modelName = paths[paths.length - 2];
+      }
 
       if (isDsModel(model)) {
         DsModels[modelName] = model;
