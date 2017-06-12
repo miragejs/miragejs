@@ -137,33 +137,32 @@ export default Serializer.extend({
     model.associationKeys.forEach((key) => {
       let relationship = model[key];
       let relationshipKey = this.keyForRelationship(key);
-      let relationshipHash;
+      let relationshipHash = {};
       hash.relationships = hash.relationships || {};
 
       if (this.hasLinksForRelationship(model, key)) {
         let serializer = this.serializerFor(model.modelName);
         let links = serializer.links(model);
-        relationshipHash = { links: links[key] };
-
-      } else {
-        let data = null;
-
-        if (this.isModel(relationship)) {
-          data = {
-            type: this.typeKeyForModel(relationship),
-            id: relationship.id
-          };
-        } else if (this.isCollection(relationship)) {
-          data = relationship.models.map((model) => {
-            return {
-              type: this.typeKeyForModel(model),
-              id: model.id
-            };
-          });
-        }
-
-        relationshipHash = { data };
+        relationshipHash.links = links[key];
       }
+
+      let data = null;
+
+      if (this.isModel(relationship)) {
+        data = {
+          type: this.typeKeyForModel(relationship),
+          id: relationship.id
+        };
+      } else if (this.isCollection(relationship)) {
+        data = relationship.models.map((model) => {
+          return {
+            type: this.typeKeyForModel(model),
+            id: model.id
+          };
+        });
+      }
+
+      relationshipHash.data = data;
 
       hash.relationships[relationshipKey] = relationshipHash;
     });

@@ -24,7 +24,7 @@ module('Integration | Serializers | JSON API Serializer | Associations | Links',
   }
 });
 
-test(`it can link to relationships, omitting 'data'`, function(assert) {
+test(`it can link to relationships, including data'`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JSONAPISerializer,
     blogPost: JSONAPISerializer.extend({
@@ -57,12 +57,17 @@ test(`it can link to relationships, omitting 'data'`, function(assert) {
       },
       relationships: {
         'word-smith': {
+          data: {
+            id: "3",
+            type: "word-smiths"
+          },
           links: {
             related: `/api/word_smiths/${link.id}`,
             self: `/api/blog_posts/${blogPost.id}/relationships/word_smith`
           }
         },
         'fine-comments': {
+          data: [],
           links: {
             related: `/api/fine_comments?blog_post_id=${blogPost.id}`,
             self: `/api/blog_posts/${blogPost.id}/relationships/fine_comments`
