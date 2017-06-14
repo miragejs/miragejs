@@ -76,9 +76,12 @@ export default class RouteHandler {
     } catch(e) {
       if (e instanceof MirageError) {
         throw e;
+
       } else {
         let message = (typeOf(e) === 'string') ? e : e.message;
-        throw new MirageError(`Your handler for the url ${request.url} threw an error: ${message}`);
+        let error = new MirageError(`Your ${request.method} handler for the url ${request.url} threw an error: ${message}`);
+
+        result = new Response(500, {}, error.message);
       }
     }
 

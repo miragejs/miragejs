@@ -33,6 +33,20 @@ module('Integration | Route handlers | Function handler', {
   }
 });
 
+test('a meaningful error is thrown if a custom route handler throws an error', function(assert) {
+  assert.expect(1);
+  let done = assert.async();
+
+  this.server.get('/users', function() {
+    throw 'I goofed';
+  });
+
+  $.ajax({ method: 'GET', url: '/users' }).error(({ responseText }) => {
+    assert.equal(responseText, 'Mirage: Your GET handler for the url /users threw an error: I goofed');
+    done();
+  });
+});
+
 test('mirage response string is not serialized to string', function(assert) {
   assert.expect(1);
   let done = assert.async();
