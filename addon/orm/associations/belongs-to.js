@@ -232,7 +232,19 @@ export default class BelongsTo extends Association {
     }
 
     let dependents = this.schema[toCollectionName(owner)]
-      .where({ [this.getForeignKey()]: fk });
+      .where((potentialOwner) => {
+        let id = potentialOwner[this.getForeignKey()];
+
+        if (!id) {
+          return false;
+        }
+
+        if (typeof id === 'object') {
+          return id.type === fk.type && id.id === fk.id;
+        } else {
+          return id === fk;
+        }
+      });
 
     dependents.models.forEach(dependent => {
       dependent.disassociate(model, this);
