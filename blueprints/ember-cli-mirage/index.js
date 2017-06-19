@@ -30,19 +30,16 @@ module.exports = {
   },
 
   insertServerIntoESLintrc: function() {
-    // Insert server to globals declaration in eslintrc files.
+    // Insert server to globals declaration in eslintrc file.
     // If globals declaration is not present insert it.
-    var text, after;
-    text = '    server: true,';
-    after ='globals: {\n';
+    var text = '    server: true,';
+    var after = 'globals: {\n';
+
     return this.insertIntoFile('.eslintrc.js', text, { after: after }).then(() => {
-      return this.insertIntoFile('tests/.eslintrc.js', text, { after: after }).then(() => {
-        text = '  globals: {\n    server: true,\n  },';
-        after = 'module.exports = {\n';
-        return this.insertIntoFile('.eslintrc.js', text, { after: after }).then(() => {
-          return this.insertIntoFile('tests/.eslintrc.js', text, { after: after });
-        });
-      });
+      text = '  globals: {\n    server: true,\n  },';
+      after = 'module.exports = {\n';
+
+      return this.insertIntoFile('.eslintrc.js', text, { after: after });
     });
   },
 
@@ -50,9 +47,7 @@ module.exports = {
     var text = '    "server",';
     var after = '"predef": [\n';
 
-    return this.insertIntoFile('.jshintrc', text, { after: after }).then(() => {
-      return this.insertIntoFile('tests/.jshintrc', text, { after: after });
-    });
+    return this.insertIntoFile('.jshintrc', text, { after: after });
   },
 
   insertShutdownIntoDestroyApp: function() {
