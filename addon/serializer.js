@@ -466,6 +466,10 @@ class Serializer {
     return _isFunction(this.include) ? this.include(this.request) : this.include;
   }
 
+  get schema() {
+    return this.registry.schema;
+  }
+
   /**
    * @method _formatAttributeKeys
    * @param attrs
