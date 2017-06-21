@@ -10,7 +10,7 @@ moduleForAcceptance('Acceptance | Contact', {
 });
 
 test('I can view a contact', function(assert) {
-  visit('/1');
+  visit(`${contact.id}`);
 
   andThen(function() {
     assert.equal(currentRouteName(), 'contact');
@@ -19,7 +19,7 @@ test('I can view a contact', function(assert) {
 });
 
 test('I can delete a contact', function(assert) {
-  visit('/1');
+  visit(`${contact.id}`);
   click('button:contains(Delete)');
 
   andThen(function() {

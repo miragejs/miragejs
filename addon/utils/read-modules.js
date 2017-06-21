@@ -15,10 +15,10 @@ const { assert } = Ember;
   a hash containing the names of the files as keys and the data as values.
 */
 export default function(prefix) {
-  let modules = ['factories', 'fixtures', 'scenarios', 'models', 'serializers'];
+  let modules = ['factories', 'fixtures', 'scenarios', 'models', 'serializers', 'identity-managers'];
   let mirageModuleRegExp = new RegExp(`^${prefix}/mirage/(${modules.join('|')})`);
   let modulesMap = modules.reduce((memo, name) => {
-    memo[name] = {};
+    memo[_camelCase(name)] = {};
     return memo;
   }, {});
 
@@ -29,7 +29,7 @@ export default function(prefix) {
       return;
     }
     let moduleParts = moduleName.split('/');
-    let moduleType = moduleParts[moduleParts.length - 2];
+    let moduleType = _camelCase(moduleParts[moduleParts.length - 2]);
     let moduleKey = moduleParts[moduleParts.length - 1];
     assert(`Subdirectories under ${moduleType} are not supported`,
                  moduleParts[moduleParts.length - 3] === 'mirage');

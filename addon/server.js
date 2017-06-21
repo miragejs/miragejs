@@ -165,7 +165,12 @@ export default class Server {
       config.models = models;
     }
 
-    this.db = this.db || new Db();
+    if (this.db) {
+      this.db.registerIdentityManagers(config.identityManagers);
+    } else {
+      this.db = new Db(undefined, config.identityManagers);
+    }
+
     if (this.schema) {
       this.schema.registerModels(config.models);
       this.serializerOrRegistry.registerSerializers(config.serializers || {});

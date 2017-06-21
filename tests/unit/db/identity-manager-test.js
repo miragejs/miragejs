@@ -1,8 +1,8 @@
-import { IdentityManager } from 'ember-cli-mirage/db-collection';
+import IdentityManager from 'ember-cli-mirage/identity-manager';
 
 import {module, test} from 'qunit';
 
-module('Unit | DB | IdentityManager');
+module('Unit | Db | IdentityManager');
 
 test('it can be instantiated', function(assert) {
   let manager = new IdentityManager();

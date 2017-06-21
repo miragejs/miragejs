@@ -4,9 +4,9 @@ import moduleForAcceptance from '../helpers/module-for-acceptance';
 moduleForAcceptance('Acceptance | Edit');
 
 test('I can edit a contact', function(assert) {
-  server.create('contact');
+  let contact = server.create('contact');
 
-  visit('/1');
+  visit(`/${contact.id}`);
   click('button:contains(Edit)');
   fillIn('input', 'Shiek');
   click('button:contains(Save)');
@@ -16,4 +16,3 @@ test('I can edit a contact', function(assert) {
     assert.equal(find('p:first').text(), 'The contact is Shiek');
   });
 });
-

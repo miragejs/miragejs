@@ -8,7 +8,8 @@ import {
   ActiveModelSerializer,
   JSONAPISerializer,
   hasMany,
-  belongsTo
+  belongsTo,
+  IdentityManager
 } from 'ember-cli-mirage';
 
 test('Factory is present in named exports from ember-cli-mirage', function(assert) {
@@ -36,4 +37,8 @@ test('serializers are present in named exports from ember-cli-mirage', function(
 test('relationship helpers are present in named exports from ember-cli-mirage', function(assert) {
   assert.ok(hasMany);
   assert.ok(belongsTo);
+});
+
+test('IdentityManager ist present in named exports from ember-cli-mirage', function(assert) {
+  assert.ok(IdentityManager);
 });

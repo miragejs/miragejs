@@ -11,10 +11,6 @@ function duplicate(data) {
   }
 }
 
-function isNumber(n) {
-  return (+n).toString() === n.toString();
-}
-
 /**
  *  A collection of db records i.e. a database table.
  *  @class DbCollection
@@ -23,7 +19,7 @@ function isNumber(n) {
  */
 class DbCollection {
 
-  constructor(name, initialData) {
+  constructor(name, initialData, IdentityManager) {
     this.name = name;
     this._records = [];
     this.identityManager = new IdentityManager();
@@ -311,7 +307,7 @@ class DbCollection {
     let attrs = duplicate(data);
 
     if (attrs && (attrs.id === undefined || attrs.id === null)) {
-      attrs.id = this.identityManager.fetch();
+      attrs.id = this.identityManager.fetch(attrs);
     } else {
       attrs.id = attrs.id.toString();
 
@@ -347,52 +343,4 @@ class DbCollection {
   }
 }
 
-class IdentityManager {
-  constructor() {
-    this._nextId = 1;
-    this._ids = {};
-  }
-
-  get() {
-    return this._nextId;
-  }
-
-  set(n) {
-    if (this._ids[n]) {
-      throw new Error(`Attempting to use the ID ${n}, but it's already been used`);
-    }
-
-    if (isNumber(n) && +n >= this._nextId) {
-      this._nextId = +n + 1;
-    }
-
-    this._ids[n] = true;
-  }
-
-  inc() {
-    let nextValue = this.get() + 1;
-
-    this._nextId = nextValue;
-
-    return nextValue;
-  }
-
-  fetch() {
-    let id = this.get();
-
-    this._ids[id] = true;
-
-    this.inc();
-
-    return id.toString();
-  }
-
-  reset() {
-    this._nextId = 1;
-    this._ids = {};
-  }
-}
-
 export default DbCollection;
-
-export { IdentityManager };
