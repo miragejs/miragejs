@@ -1,3 +1,5 @@
 import ActiveModelAdapter from 'active-model-adapter';
 
-export default ActiveModelAdapter;
+export default ActiveModelAdapter.extend({
+  namespace: 'api'
+});
