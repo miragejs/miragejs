@@ -26,7 +26,7 @@ test('You can customize the response by passing a handler function that returns 
 test('You can customize the response code of a custom handler passing the code as 3rd argument', function(assert) {
   let done = assert.async();
   let request = ajax({
-    url: '/pets/${rex.id}',
+    url: `/pets/${rex.id}`,
     method: 'delete'
   });
 
@@ -55,7 +55,7 @@ test('You can can programatically returns a tailored response by returning a Mir
 test('returning a non-blank response from a custom handler whose default status is 204 changes the status to 200', function(assert) {
   let done = assert.async();
   let request = ajax({
-    url: '/pets/${rex.id}',
+    url: `/pets/${rex.id}`,
     method: 'put',
     data: JSON.stringify({ pet: { id: rex.id, name: 'The Rex', alive: true } })
   });
