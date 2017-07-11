@@ -4,6 +4,8 @@ import Ember from 'ember';
 const { isBlank } = Ember;
 
 export default function() {
+  this.namespace = '/api';
+
   // Contacts
   this.get('/contacts');
   // this.get('/contacts', ['contacts', 'addresses']);
