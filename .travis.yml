@@ -9,8 +9,8 @@ sudo: required
 dist: trusty
 
 cache:
+  yarn: true
   directories:
-    - $HOME/.npm
     - $HOME/.cache # includes bower's cache
 
 env:
@@ -28,6 +28,8 @@ matrix:
     - env: EMBER_TRY_SCENARIO=ember-canary
 
 before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH=$HOME/.yarn/bin:$PATH
   - export CHROME_BIN=/usr/bin/google-chrome
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
@@ -36,14 +38,13 @@ before_install:
   - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
   - sudo dpkg -i google-chrome*.deb
   - if [[ $(npm -v | cut -d '.' -f 1) -lt 3 ]]; then npm i -g npm@^3; fi
-  - npm config set spin false
-  - npm install -g bower phantomjs-prebuilt
+  - yarn global add bower phantomjs-prebuilt
 
 install:
-  - npm install
+  - yarn install --no-lockfile --non-interactive
   - bower install
 
 script:
   # Usually, it's ok to finish the test scenario without reverting
   #  to the addon's original dependency state, skipping "cleanup".
-  - ember try:one $EMBER_TRY_SCENARIO test --skip-cleanup
+  - node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO test --skip-cleanup
