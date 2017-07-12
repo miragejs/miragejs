@@ -27,7 +27,7 @@ ember install ember-cli-mirage  # install:addon for Ember CLI < 0.2.3
 
 ## Updating
 
-This project is new and the API is subject to change. When updating your project to a newer version of Ember CLI Mirage, please consult [the changelog](/CHANGELOG.md) for any update notes.
+When updating your project to a newer version of Ember CLI Mirage, please consult [the changelog](/CHANGELOG.md) for any update notes.
 
 ## Getting started
 
