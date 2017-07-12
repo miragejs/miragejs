@@ -2,28 +2,48 @@
   "name": "ember-cli-mirage",
   "version": "0.3.4",
   "description": "A client-side HTTP server to develop, test and demo your Ember app",
+  "keywords": [
+    "ember-addon",
+    "pretender",
+    "prototype",
+    "server",
+    "testing"
+  ],
+  "homepage": "https://github.com/samselikoff/ember-cli-mirage",
+  "bugs": {
+    "url": "https://github.com/samselikoff/ember-cli-mirage/issues"
+  },
+  "license": "MIT",
+  "author": "Sam Selikoff",
   "directories": {
     "doc": "doc",
     "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samselikoff/ember-cli-mirage.git"
   },
   "scripts": {
     "build": "ember build",
     "start": "ember server",
     "test": "ember try:each && mocha tests/**/*-test-node.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/samselikoff/ember-cli-mirage.git"
+  "dependencies": {
+    "broccoli-funnel": "^1.0.2",
+    "broccoli-merge-trees": "^1.1.0",
+    "broccoli-stew": "^1.5.0",
+    "chalk": "^1.1.1",
+    "ember-cli-babel": "^5.1.7",
+    "ember-cli-node-assets": "^0.1.4",
+    "ember-get-config": "0.2.1",
+    "ember-inflector": "^2.0.0",
+    "ember-lodash": "^4.17.3",
+    "exists-sync": "0.0.3",
+    "fake-xml-http-request": "^1.4.0",
+    "faker": "^3.0.0",
+    "pretender": "^1.4.2",
+    "route-recognizer": "^0.2.3"
   },
-  "bugs": {
-    "url": "https://github.com/samselikoff/ember-cli-mirage/issues"
-  },
-  "homepage": "https://github.com/samselikoff/ember-cli-mirage",
-  "engines": {
-    "node": "^4.5 || 6.* || >= 7.*"
-  },
-  "author": "Sam Selikoff",
-  "license": "MIT",
   "devDependencies": {
     "active-model-adapter": "^2.0.3",
     "broccoli-asset-rev": "^2.4.5",
@@ -54,30 +74,10 @@
     "loader.js": "^4.0.10",
     "mocha": "^2.1.0"
   },
-  "keywords": [
-    "ember-addon",
-    "pretender",
-    "testing",
-    "prototype",
-    "server"
-  ],
+  "engines": {
+    "node": "^4.5 || 6.* || >= 7.*"
+  },
   "ember-addon": {
     "configPath": "tests/dummy/config"
-  },
-  "dependencies": {
-    "broccoli-funnel": "^1.0.2",
-    "broccoli-merge-trees": "^1.1.0",
-    "broccoli-stew": "^1.5.0",
-    "chalk": "^1.1.1",
-    "ember-cli-babel": "^5.1.7",
-    "ember-cli-node-assets": "^0.1.4",
-    "ember-get-config": "0.2.1",
-    "ember-inflector": "^2.0.0",
-    "ember-lodash": "^4.17.3",
-    "exists-sync": "0.0.3",
-    "fake-xml-http-request": "^1.4.0",
-    "faker": "^3.0.0",
-    "pretender": "^1.4.2",
-    "route-recognizer": "^0.2.3"
   }
 }
