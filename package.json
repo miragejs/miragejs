@@ -26,7 +26,10 @@
   "scripts": {
     "build": "ember build",
     "start": "ember server",
-    "test": "ember try:each && mocha node-tests/**/*-test.js"
+    "test": "ember test",
+    "test:all": "ember try:each",
+    "test:fastboot": "ember fastboot:test",
+    "test:node": "mocha node-tests/**/*-test.js"
   },
   "dependencies": {
     "broccoli-funnel": "^1.0.2",
