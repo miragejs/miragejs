@@ -35,7 +35,7 @@
     "chalk": "^1.1.1",
     "ember-cli-babel": "^5.1.7",
     "ember-cli-node-assets": "^0.1.4",
-    "ember-get-config": "0.2.1",
+    "ember-get-config": "^0.2.2",
     "ember-inflector": "^2.0.0",
     "ember-lodash": "^4.17.3",
     "exists-sync": "0.0.3",

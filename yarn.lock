@@ -2471,9 +2471,9 @@ ember-fastboot-addon-tests@^0.4.0:
     request "^2.74.0"
     rsvp "^3.3.1"
 
-ember-get-config@0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/ember-get-config/-/ember-get-config-0.2.1.tgz#a1325cceefcb4534c78fc6ccb2be87a3feda6817"
+ember-get-config@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/ember-get-config/-/ember-get-config-0.2.2.tgz#54d96fae87bcd75a3dd710113ed1db3afbe4fe9d"
   dependencies:
     broccoli-file-creator "^1.1.1"
     ember-cli-babel "^5.1.6"
