@@ -62,7 +62,7 @@ function createPretender(server) {
          mirage/config.js file. Did you forget to add your namespace?`
       );
     };
-  });
+  }, { trackRequests: false });
 }
 
 const defaultRouteOptions = {
