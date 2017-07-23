@@ -2078,7 +2078,7 @@ ember-cli-babel@6.1.0:
     clone "^2.0.0"
     ember-cli-version-checker "^1.2.0"
 
-ember-cli-babel@^5.0.0, ember-cli-babel@^5.1.10, ember-cli-babel@^5.1.3, ember-cli-babel@^5.1.5, ember-cli-babel@^5.1.6, ember-cli-babel@^5.1.7, ember-cli-babel@^5.2.1:
+ember-cli-babel@^5.0.0, ember-cli-babel@^5.1.10, ember-cli-babel@^5.1.3, ember-cli-babel@^5.1.5, ember-cli-babel@^5.1.6, ember-cli-babel@^5.1.7:
   version "5.2.4"
   resolved "https://registry.yarnpkg.com/ember-cli-babel/-/ember-cli-babel-5.2.4.tgz#5ce4f46b08ed6f6d21e878619fb689719d6e8e13"
   dependencies:
@@ -2088,7 +2088,7 @@ ember-cli-babel@^5.0.0, ember-cli-babel@^5.1.10, ember-cli-babel@^5.1.3, ember-c
     ember-cli-version-checker "^1.0.2"
     resolve "^1.1.2"
 
-ember-cli-babel@^6.0.0:
+ember-cli-babel@^6.0.0, ember-cli-babel@^6.0.0-beta.7:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/ember-cli-babel/-/ember-cli-babel-6.6.0.tgz#a8362bc44841bfdf89b389f3197f104d7ba526da"
   dependencies:
@@ -2237,17 +2237,16 @@ ember-cli-preprocess-registry@^3.1.0:
     process-relative-require "^1.0.0"
     silent-error "^1.0.0"
 
-ember-cli-qunit@^3.0.1:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/ember-cli-qunit/-/ember-cli-qunit-3.1.2.tgz#f47063ad6af0c69cd76661ccfefd453a10d7a93b"
+ember-cli-qunit@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/ember-cli-qunit/-/ember-cli-qunit-4.0.0.tgz#1f0022469a5bd64f627b8102880a25e94e533a3b"
   dependencies:
-    broccoli-babel-transpiler "^5.5.0"
     broccoli-funnel "^1.0.1"
-    broccoli-merge-trees "^1.1.0"
-    ember-cli-babel "^5.1.5"
-    ember-cli-test-loader "^1.1.1"
+    broccoli-merge-trees "^2.0.0"
+    ember-cli-babel "^6.0.0-beta.7"
+    ember-cli-test-loader "^2.0.0"
     ember-cli-version-checker "^1.1.4"
-    ember-qunit "^2.0.0-beta.1"
+    ember-qunit "^2.1.3"
     qunit-notifications "^0.1.1"
     qunitjs "^2.0.1"
     resolve "^1.1.6"
@@ -2283,11 +2282,11 @@ ember-cli-test-info@^1.0.0:
   dependencies:
     ember-cli-string-utils "^1.0.0"
 
-ember-cli-test-loader@^1.1.0, ember-cli-test-loader@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/ember-cli-test-loader/-/ember-cli-test-loader-1.1.1.tgz#333311209b18185d0e0e95f918349da10cacf0b1"
+ember-cli-test-loader@^2.0.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/ember-cli-test-loader/-/ember-cli-test-loader-2.1.0.tgz#16163bae0ac32cad1af13c4ed94c6c698b54d431"
   dependencies:
-    ember-cli-babel "^5.2.1"
+    ember-cli-babel "^6.0.0-beta.7"
 
 ember-cli-uglify@^1.2.0:
   version "1.2.0"
@@ -2314,7 +2313,7 @@ ember-cli-version-checker@^2.0.0:
     resolve "^1.3.3"
     semver "^5.3.0"
 
-ember-cli@^2.9.1:
+ember-cli@^2.14.0:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/ember-cli/-/ember-cli-2.14.0.tgz#9aff1414168883183e8677fa32626d1e3228ccbc"
   dependencies:
@@ -2501,7 +2500,7 @@ ember-lodash@^4.17.3:
     ember-cli-babel "6.1.0"
     lodash-es "^4.17.4"
 
-ember-qunit@^2.0.0-beta.1:
+ember-qunit@^2.1.3:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/ember-qunit/-/ember-qunit-2.1.4.tgz#5732794e668f753d8fe1a353692ffeda73742d29"
   dependencies:
