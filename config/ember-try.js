@@ -57,6 +57,13 @@ module.exports = {
       }
     },
     {
+      name: 'node-tests',
+      command: 'yarn run test:node',
+      npm: {
+        devDependencies: {}
+      }
+    },
+    {
       name: 'fastboot-tests',
       command: 'ember fastboot:test',
       npm: {
