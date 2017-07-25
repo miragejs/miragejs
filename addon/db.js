@@ -1,6 +1,7 @@
 import DbCollection from './db-collection';
 import IdentityManager from './identity-manager';
 import { singularize } from './utils/inflector';
+import _cloneDeep from 'lodash/cloneDeep';
 
 /**
  * The db, an identity map.
@@ -27,7 +28,7 @@ class Db {
    */
   loadData(data) {
     for (let key in data) {
-      this.createCollection(key, data[key]);
+      this.createCollection(key, _cloneDeep(data[key]));
     }
   }
 

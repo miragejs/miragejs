@@ -75,6 +75,19 @@ test('it can load an object of data', function(assert) {
   assert.deepEqual(db.addresses, data.addresses);
 });
 
+test("it clones all data so nothing is passed by reference", function(assert) {
+  let data = {
+    contacts: [{ id: '1', someArray: ['foo', 'bar'] }]
+  };
+  db.loadData(data);
+
+  let contactRecord = db.contacts.find(1);
+  contactRecord.someArray.push('baz');
+
+  assert.equal(contactRecord.someArray.length, 3);
+  assert.equal(data.contacts[0].someArray.length, 2);
+});
+
 module('Unit | Db #all', {
   beforeEach() {
     this.data = {
