@@ -2,12 +2,10 @@
 /* eslint-env node */
 'use strict';
 
-import Ember from 'ember';
+import { assert } from '@ember/debug';
 import _camelCase from 'lodash/camelCase';
 import { pluralize } from 'ember-cli-mirage/utils/inflector';
 import require from 'require';
-
-const { assert } = Ember;
 
 /*
   This function looks through all files that have been loaded by Ember CLI and

@@ -1,7 +1,6 @@
-import Mirage from 'ember-cli-mirage';
-import Ember from 'ember';
+import { isBlank } from '@ember/utils';
 
-const { isBlank } = Ember;
+import Mirage from 'ember-cli-mirage';
 
 export default function() {
   this.namespace = '/api';

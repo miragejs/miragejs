@@ -1,12 +1,11 @@
 import { module, test } from 'qunit';
+import { Promise } from 'rsvp';
+
 import { Model, Collection, Serializer } from 'ember-cli-mirage';
-import Ember from 'ember';
 import Server from 'ember-cli-mirage/server';
 import Response from 'ember-cli-mirage/response';
 import FunctionRouteHandler from 'ember-cli-mirage/route-handlers/function';
 import _uniqBy from 'lodash/uniqBy';
-
-const { RSVP: { Promise } } = Ember;
 
 module('Integration | Route handlers | Function handler', {
   beforeEach() {

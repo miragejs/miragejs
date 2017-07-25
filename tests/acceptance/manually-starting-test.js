@@ -1,10 +1,8 @@
-import Ember from 'ember';
+import { run } from '@ember/runloop';
 import {module, test} from 'qunit';
 import startApp from '../helpers/start-app';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 import ENV from 'dummy/config/environment';
-
-const { run } = Ember;
 
 let App;
 
