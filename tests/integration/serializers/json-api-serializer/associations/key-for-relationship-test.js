@@ -17,11 +17,15 @@ module('Integration | Serializers | JSON API Serializer | Key for relationship',
 });
 
 test(`keyForRelationship works`, function(assert) {
+  let ApplicationSerializer = JSONAPISerializer.extend({
+    keyForRelationship(key) {
+      return underscore(key);
+    }
+  });
   let registry = new SerializerRegistry(this.schema, {
-    application: JSONAPISerializer.extend({
-      keyForRelationship(key) {
-        return underscore(key);
-      }
+    application: ApplicationSerializer,
+    wordSmith: ApplicationSerializer.extend({
+      include: ['blogPosts']
     })
   });
   let wordSmith = this.schema.wordSmiths.create({
@@ -50,6 +54,15 @@ test(`keyForRelationship works`, function(assert) {
           ]
         }
       }
-    }
+    },
+    included: [
+      {
+        attributes: {
+          title: "Lorem ipsum"
+        },
+        id: "1",
+        type: "blog-posts"
+      }
+    ]
   });
 });

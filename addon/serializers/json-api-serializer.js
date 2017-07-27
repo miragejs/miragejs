@@ -4,7 +4,7 @@ import { dasherize, pluralize, camelize } from '../utils/inflector';
 import _get from 'lodash/get';
 import _ from 'lodash';
 
-export default Serializer.extend({
+const JSONAPISerializer = Serializer.extend({
 
   keyForModel(modelName) {
     return dasherize(modelName);
@@ -134,11 +134,14 @@ export default Serializer.extend({
       attributes: attrs
     };
 
-    model.associationKeys.forEach((key) => {
+    return this._maybeAddRelationshipsToResourceObjectForModel(hash, model);
+  },
+
+  _maybeAddRelationshipsToResourceObjectForModel(hash, model) {
+    let relationships = model.associationKeys.reduce((relationships, key) => {
       let relationship = model[key];
       let relationshipKey = this.keyForRelationship(key);
       let relationshipHash = {};
-      hash.relationships = hash.relationships || {};
 
       if (this.hasLinksForRelationship(model, key)) {
         let serializer = this.serializerFor(model.modelName);
@@ -146,26 +149,34 @@ export default Serializer.extend({
         relationshipHash.links = links[key];
       }
 
-      let data = null;
-
-      if (this.isModel(relationship)) {
-        data = {
-          type: this.typeKeyForModel(relationship),
-          id: relationship.id
-        };
-      } else if (this.isCollection(relationship)) {
-        data = relationship.models.map((model) => {
-          return {
-            type: this.typeKeyForModel(model),
-            id: model.id
+      if (this.alwaysIncludeLinkageData || this._relationshipIsIncluded(key)) {
+        let data = null;
+        if (this.isModel(relationship)) {
+          data = {
+            type: this.typeKeyForModel(relationship),
+            id: relationship.id
           };
-        });
+        } else if (this.isCollection(relationship)) {
+          data = relationship.models.map((model) => {
+            return {
+              type: this.typeKeyForModel(model),
+              id: model.id
+            };
+          });
+        }
+        relationshipHash.data = data;
       }
 
-      relationshipHash.data = data;
+      if (!_.isEmpty(relationshipHash)) {
+        relationships[relationshipKey] = relationshipHash;
+      }
 
-      hash.relationships[relationshipKey] = relationshipHash;
-    });
+      return relationships;
+    }, {});
+
+    if (!_.isEmpty(relationships)) {
+      hash.relationships = relationships;
+    }
 
     return hash;
   },
@@ -177,6 +188,19 @@ export default Serializer.extend({
       links = serializer.links(model);
 
       return links[relationshipKey] != null;
+    }
+  },
+
+  _relationshipIsIncluded(relationshipKey) {
+    if (this.request && this.request.queryParams && this.request.queryParams.include) {
+      let relationshipKeyAsString = this.keyForRelationship(relationshipKey);
+
+      return this.request.queryParams
+        .include
+        .split(',')
+        .some(str => str.indexOf(relationshipKeyAsString) > -1);
+    } else {
+      return this.include.includes(relationshipKey);
     }
   },
 
@@ -193,3 +217,7 @@ export default Serializer.extend({
   }
 
 });
+
+JSONAPISerializer.prototype.alwaysIncludeLinkageData = false;
+
+export default JSONAPISerializer;

@@ -21,9 +21,33 @@ module('Integration | Serializers | JSON API Serializer | Associations | Model',
   }
 });
 
-test(`it contains resource identifier objects for all a model's relationships, regardless of includes`, function(assert) {
+test(`by default, it doesn't include a model's relationships if those relationships are not included in the document and no links are defined`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JSONAPISerializer
+  });
+  let link = this.schema.wordSmiths.create({
+    firstName: 'Link',
+    age: 123
+  });
+  let post = link.createBlogPost({ title: 'Lorem ipsum' });
+
+  let result = registry.serialize(post);
+  assert.deepEqual(result, {
+    data: {
+      type: 'blog-posts',
+      id: '1',
+      attributes: {
+        'title': 'Lorem ipsum'
+      }
+    }
+  });
+});
+
+test(`when alwaysIncludeLinkageData is true, it contains linkage data for all a model's relationships, regardless of includes`, function(assert) {
+  let registry = new SerializerRegistry(this.schema, {
+    application: JSONAPISerializer.extend({
+      alwaysIncludeLinkageData: true
+    })
   });
   let link = this.schema.wordSmiths.create({
     firstName: 'Link',
@@ -54,7 +78,7 @@ test(`it contains resource identifier objects for all a model's relationships, r
   });
 });
 
-test(`it can include a has-many relationship`, function(assert) {
+test(`it includes linkage data for a has-many relationship that's being included`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JSONAPISerializer,
     wordSmith: JSONAPISerializer.extend({
@@ -90,17 +114,6 @@ test(`it can include a has-many relationship`, function(assert) {
         id: '1',
         attributes: {
           title: 'Lorem'
-        },
-        relationships: {
-          'fine-comments': {
-            data: []
-          },
-          'word-smith': {
-            data: {
-              id: '1',
-              type: 'word-smiths'
-            }
-          }
         }
       },
       {
@@ -108,17 +121,6 @@ test(`it can include a has-many relationship`, function(assert) {
         id: '2',
         attributes: {
           title: 'Ipsum'
-        },
-        relationships: {
-          'fine-comments': {
-            data: []
-          },
-          'word-smith': {
-            data: {
-              id: '1',
-              type: 'word-smiths'
-            }
-          }
         }
       }
     ]
@@ -171,12 +173,6 @@ test(`it can include a chain of has-many relationships`, function(assert) {
             data: [
               { type: 'fine-comments', id: '1' }
             ]
-          },
-          'word-smith': {
-            data: {
-              id: '1',
-              type: 'word-smiths'
-            }
           }
         }
       },
@@ -185,14 +181,6 @@ test(`it can include a chain of has-many relationships`, function(assert) {
         id: '1',
         attributes: {
           text: 'pwned'
-        },
-        relationships: {
-          'blog-post': {
-            data: {
-              id: '1',
-              type: 'blog-posts'
-            }
-          }
         }
       },
       {
@@ -204,12 +192,6 @@ test(`it can include a chain of has-many relationships`, function(assert) {
         relationships: {
           'fine-comments': {
             data: []
-          },
-          'word-smith': {
-            data: {
-              id: '1',
-              type: 'word-smiths'
-            }
           }
         }
       }
@@ -239,14 +221,6 @@ test(`it can include a belongs-to relationship`, function(assert) {
         title: 'Lorem'
       },
       relationships: {
-        'fine-comments': {
-          data: [
-            {
-              id: '1',
-              type: 'fine-comments'
-            }
-          ]
-        },
         'word-smith': {
           data: {
             id: '1',
@@ -261,17 +235,7 @@ test(`it can include a belongs-to relationship`, function(assert) {
           'first-name': 'Link'
         },
         id: '1',
-        type: 'word-smiths',
-        relationships: {
-          'blog-posts': {
-            data: [
-              {
-                id: '1',
-                type: 'blog-posts'
-              }
-            ]
-          }
-        }
+        type: 'word-smiths'
       }
     ]
   });
@@ -298,9 +262,6 @@ test(`it gracefully handles null belongs-to relationship`, function(assert) {
       relationships: {
         'word-smith': {
           data: null
-        },
-        'fine-comments': {
-          data: []
         }
       }
     }
@@ -348,14 +309,6 @@ test(`it can include a chain of belongs-to relationships`, function(assert) {
           title: 'Lorem'
         },
         relationships: {
-          'fine-comments': {
-            data: [
-              {
-                id: '1',
-                type: 'fine-comments'
-              }
-            ]
-          },
           'word-smith': {
             data: {
               type: 'word-smiths',
@@ -369,23 +322,13 @@ test(`it can include a chain of belongs-to relationships`, function(assert) {
         id: '1',
         attributes: {
           'first-name': 'Link'
-        },
-        relationships: {
-          'blog-posts': {
-            data: [
-              {
-                id: '1',
-                type: 'blog-posts'
-              }
-            ]
-          }
         }
       }
     ]
   });
 });
 
-test(`it ignores relationships that refer to serialized ancestor resources`, function(assert) {
+test(`it properly serializes complex relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JSONAPISerializer,
     wordSmith: JSONAPISerializer.extend({

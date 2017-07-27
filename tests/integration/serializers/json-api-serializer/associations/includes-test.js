@@ -57,9 +57,6 @@ test('includes get serialized with correct serializer', function(assert) {
         'title': 'We love Mirage!'
       },
       relationships: {
-        'fine-comments': {
-          'data': []
-        },
         'word-smith': {
           data: { type: 'word-smiths', id: '1' }
         }
@@ -71,13 +68,6 @@ test('includes get serialized with correct serializer', function(assert) {
         id: '1',
         attributes: {
           'first-name': 'Sam'
-        },
-        relationships: {
-          'blog-posts': {
-            data: [
-              { type: 'blog-posts', id: '1' }
-            ]
-          }
         }
       }
     ]
@@ -123,36 +113,17 @@ test('query param includes work when serializing a model', function(assert) {
       {
         type: 'word-smiths',
         id: '1',
-        attributes: {},
-        relationships: {
-          'blog-posts': {
-            data: [
-              { type: 'blog-posts', id: '1' }
-            ]
-          }
-        }
+        attributes: {}
       },
       {
         type: 'fine-comments',
         id: '1',
-        attributes: {},
-        relationships: {
-          'blog-post': {
-            data: { type: 'blog-posts', id: '1' }
-          },
-          category: { data: null }
-        }
+        attributes: {}
       },
       {
         type: 'fine-comments',
         id: '2',
-        attributes: {},
-        relationships: {
-          'blog-post': {
-            data: { type: 'blog-posts', id: '1' }
-          },
-          category: { data: null }
-        }
+        attributes: {}
       }
     ]
   });
@@ -213,36 +184,17 @@ test('query param includes work when serializing a collection', function(assert)
       {
         type: 'word-smiths',
         id: '1',
-        attributes: {},
-        relationships: {
-          'blog-posts': {
-            data: [
-              { type: 'blog-posts', id: '1' }
-            ]
-          }
-        }
+        attributes: {}
       },
       {
         type: 'fine-comments',
         id: '1',
-        attributes: {},
-        relationships: {
-          'blog-post': {
-            data: { type: 'blog-posts', id: '1' }
-          },
-          category: { data: null }
-        }
+        attributes: {}
       },
       {
         type: 'fine-comments',
         id: '2',
-        attributes: {},
-        relationships: {
-          'blog-post': {
-            data: { type: 'blog-posts', id: '1' }
-          },
-          category: { data: null }
-        }
+        attributes: {}
       }
     ]
   });
@@ -275,9 +227,6 @@ test('query param includes take precedence over default server includes', functi
       id: '1',
       attributes: {},
       relationships: {
-        'word-smith': {
-          data: { type: 'word-smiths', id: '1' }
-        },
         'fine-comments': {
           data: [
             { type: 'fine-comments', id: '1' },
@@ -290,24 +239,12 @@ test('query param includes take precedence over default server includes', functi
       {
         type: 'fine-comments',
         id: '1',
-        attributes: {},
-        relationships: {
-          'blog-post': {
-            data: { type: 'blog-posts', id: '1' }
-          },
-          category: { data: null }
-        }
+        attributes: {}
       },
       {
         type: 'fine-comments',
         id: '2',
-        attributes: {},
-        relationships: {
-          'blog-post': {
-            data: { type: 'blog-posts', id: '1' }
-          },
-          category: { data: null }
-        }
+        attributes: {}
       }
     ]
   });
@@ -337,7 +274,7 @@ test('query param includes support dot-paths when serializing a model', function
   });
   let request = {
     queryParams: {
-      include: 'wordSmith,fineComments.category.labels'
+      include: 'word-smith,fine-comments.category.labels'
     }
   };
   let result = registry.serialize(this.schema.blogPosts.first(), request);
@@ -366,13 +303,6 @@ test('query param includes support dot-paths when serializing a model', function
         id: '1',
         attributes: {
           name: 'Sam'
-        },
-        relationships: {
-          'blog-posts': {
-            data: [
-              { type: 'blog-posts', id: '2' }
-            ]
-          }
         }
       },
       {
@@ -382,9 +312,6 @@ test('query param includes support dot-paths when serializing a model', function
           text: 'Foo'
         },
         relationships: {
-          'blog-post': {
-            data: { type: 'blog-posts', id: '2' }
-          },
           'category': {
             data: { type: 'categories', id: '10' }
           }
@@ -440,7 +367,7 @@ test('query param includes support dot-paths when serializing a collection', fun
   });
   let request = {
     queryParams: {
-      include: 'wordSmith,fineComments.category.labels'
+      include: 'word-smith,fine-comments.category.labels'
     }
   };
   let result = registry.serialize(this.schema.blogPosts.all(), request);
@@ -475,8 +402,7 @@ test('query param includes support dot-paths when serializing a collection', fun
             data: { type: 'word-smiths', id: '1' }
           },
           'fine-comments': {
-            data: [
-            ]
+            data: []
           }
         }
       }
@@ -487,14 +413,6 @@ test('query param includes support dot-paths when serializing a collection', fun
         id: '1',
         attributes: {
           name: 'Sam'
-        },
-        relationships: {
-          'blog-posts': {
-            data: [
-              { type: 'blog-posts', id: '2' },
-              { type: 'blog-posts', id: '5' }
-            ]
-          }
         }
       },
       {
@@ -504,9 +422,6 @@ test('query param includes support dot-paths when serializing a collection', fun
           text: 'Foo'
         },
         relationships: {
-          'blog-post': {
-            data: { type: 'blog-posts', id: '2' }
-          },
           'category': {
             data: { type: 'categories', id: '10' }
           }

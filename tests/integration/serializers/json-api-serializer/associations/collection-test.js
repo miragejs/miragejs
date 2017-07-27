@@ -21,9 +21,40 @@ module('Integration | Serializers | JSON API Serializer | Associations | Collect
   }
 });
 
-test(`it includes all relationships for a collection, regardless of being included`, function(assert) {
+test(`by default, it doesn't include a collection's relationships if those relationships are not included in the document and no links are defined`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JSONAPISerializer
+  });
+  this.schema.wordSmiths.create({ firstName: 'Link', age: 123 });
+  this.schema.wordSmiths.create({ firstName: 'Zelda', age: 456 });
+
+  let collection = this.schema.wordSmiths.all();
+  let result = registry.serialize(collection);
+
+  assert.deepEqual(result, {
+    data: [{
+      type: 'word-smiths',
+      id: '1',
+      attributes: {
+        'first-name': 'Link',
+        age: 123
+      }
+    }, {
+      type: 'word-smiths',
+      id: '2',
+      attributes: {
+        'first-name': 'Zelda',
+        age: 456
+      }
+    }]
+  });
+});
+
+test(`when alwaysIncludeLinkageData is true, it contains linkage data for all a collection's relationships, regardless of includes`, function(assert) {
+  let registry = new SerializerRegistry(this.schema, {
+    application: JSONAPISerializer.extend({
+      alwaysIncludeLinkageData: true
+    })
   });
   this.schema.wordSmiths.create({ firstName: 'Link', age: 123 });
   this.schema.wordSmiths.create({ firstName: 'Zelda', age: 456 });
@@ -60,7 +91,7 @@ test(`it includes all relationships for a collection, regardless of being includ
   });
 });
 
-test(`it can serialize a collection with a has-many relationship`, function(assert) {
+test(`it includes linkage data for a has-many relationship that's being included`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JSONAPISerializer,
     wordSmith: JSONAPISerializer.extend({
@@ -111,14 +142,6 @@ test(`it can serialize a collection with a has-many relationship`, function(asse
         id: '1',
         attributes: {
           title: 'Lorem'
-        },
-        relationships: {
-          'comments': {
-            data: []
-          },
-          'author': {
-            data: { type: 'word-smiths', id: '1' }
-          }
         }
       },
       {
@@ -126,14 +149,6 @@ test(`it can serialize a collection with a has-many relationship`, function(asse
         id: '2',
         attributes: {
           title: 'Ipsum'
-        },
-        relationships: {
-          'comments': {
-            data: []
-          },
-          'author': {
-            data: { type: 'word-smiths', id: '1' }
-          }
         }
       }
     ]
@@ -202,9 +217,6 @@ test(`it can serialize a collection with a chain of has-many relationships`, fun
             data: [
               { type: 'fine-comments', id: '1' }
             ]
-          },
-          'author': {
-            data: { type: 'word-smiths', id: '1' }
           }
         }
       },
@@ -213,11 +225,6 @@ test(`it can serialize a collection with a chain of has-many relationships`, fun
         id: '1',
         attributes: {
           text: 'pwned'
-        },
-        relationships: {
-          'post': {
-            data: { type: 'blog-posts', id: '1' }
-          }
         }
       },
       {
@@ -229,9 +236,6 @@ test(`it can serialize a collection with a chain of has-many relationships`, fun
         relationships: {
           'comments': {
             data: []
-          },
-          'author': {
-            data: { type: 'word-smiths', id: '1' }
           }
         }
       }
@@ -265,11 +269,6 @@ test(`it can serialize a collection with a belongs-to relationship`, function(as
           title: 'Lorem'
         },
         relationships: {
-          'comments': {
-            data: [
-              { type: 'fine-comments', id: '1' }
-            ]
-          },
           'author': {
             data: { type: 'word-smiths', id: '1' }
           }
@@ -282,9 +281,6 @@ test(`it can serialize a collection with a belongs-to relationship`, function(as
           title: 'Ipsum'
         },
         relationships: {
-          'comments': {
-            data: []
-          },
           'author': {
             data: { type: 'word-smiths', id: '1' }
           }
@@ -297,14 +293,6 @@ test(`it can serialize a collection with a belongs-to relationship`, function(as
         id: '1',
         attributes: {
           'first-name': 'Link'
-        },
-        relationships: {
-          'posts': {
-            data: [
-              { type: 'blog-posts', id: '1' },
-              { type: 'blog-posts', id: '2' }
-            ]
-          }
         }
       }
     ]
@@ -354,14 +342,6 @@ test(`it can serialize a collection with a chain of belongs-to relationships`, f
           title: 'Lorem'
         },
         relationships: {
-          'comments': {
-            data: [
-              {
-                id: '1',
-                type: 'fine-comments'
-              }
-            ]
-          },
           'author': {
             data: { type: 'word-smiths', id: '1' }
           }
@@ -372,31 +352,23 @@ test(`it can serialize a collection with a chain of belongs-to relationships`, f
         id: '1',
         attributes: {
           'first-name': 'Link'
-        },
-        relationships: {
-          'posts': {
-            data: [
-              {
-                id: '1',
-                type: 'blog-posts'
-              },
-              {
-                id: '2',
-                type: 'blog-posts'
-              }
-            ]
-          }
         }
       }
     ]
   });
 });
 
-test(`it can serialize a collection of models that have both belongs-to and has-many relationships`, function(assert) {
+test(`it propertly serializes complex relationships`, function(assert) {
   let registry = new SerializerRegistry(this.schema, {
     application: JSONAPISerializer,
     blogPost: JSONAPISerializer.extend({
       include: ['author', 'comments']
+    }),
+    wordSmith: JSONAPISerializer.extend({
+      include: ['posts']
+    }),
+    fineComment: JSONAPISerializer.extend({
+      include: ['post']
     })
   });
 
@@ -444,6 +416,21 @@ test(`it can serialize a collection of models that have both belongs-to and has-
                 type: 'blog-posts'
               }
             ]
+          }
+        }
+      },
+      {
+        type: 'blog-posts',
+        id: '2',
+        attributes: {
+          'title': 'Ipsum'
+        },
+        relationships: {
+          author: {
+            data: { type: 'word-smiths', id: '1' }
+          },
+          comments: {
+            data: []
           }
         }
       },
