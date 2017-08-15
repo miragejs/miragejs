@@ -81,7 +81,9 @@ class Model {
     }
 
     Object.keys(attrs).forEach(function(attr) {
-      this._definePlainAttribute(attr);
+      if (this.associationKeys.indexOf(attr) === -1 && this.associationIdKeys.indexOf(attr) === -1) {
+        this._definePlainAttribute(attr);
+      }
       this[attr] = attrs[attr];
     }, this);
 
