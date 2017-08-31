@@ -666,7 +666,8 @@ export default class Server {
    * @private
    */
   _fetchAssociationNameFromModel(modelType, associationAttribute) {
-    let model = this.schema.modelFor(modelType);
+    let camelizedModelType = camelize(modelType);
+    let model = this.schema.modelFor(camelizedModelType);
     if (!model) {
       throw new Error(`Model not registered: ${modelType}`);
     }
