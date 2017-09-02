@@ -40,9 +40,13 @@ test('a meaningful error is thrown if a custom route handler throws an error', f
     throw 'I goofed';
   });
 
-  $.ajax({ method: 'GET', url: '/users' }).error(({ responseText }) => {
-    assert.equal(responseText, 'Mirage: Your GET handler for the url /users threw an error: I goofed');
-    done();
+  $.ajax({
+    method: 'GET',
+    url: '/users',
+    error: ({ responseText }) => {
+      assert.equal(responseText, 'Mirage: Your GET handler for the url /users threw an error: I goofed');
+      done();
+    }
   });
 });
 
