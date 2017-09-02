@@ -1,3 +1,5 @@
+import BelongsTo from './associations/belongs-to';
+import HasMany from './associations/has-many';
 import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import extend from '../utils/extend';
 import assert from '../assert';
@@ -293,7 +295,7 @@ class Model {
 
     let { key } = association;
 
-    if (association.constructor.name === 'HasMany') {
+    if (association instanceof HasMany) {
       if (!this[key].includes(model)) {
         this[key].add(model);
       }
@@ -305,7 +307,7 @@ class Model {
   disassociate(model, association) {
     let fk = association.getForeignKey();
 
-    if (association.constructor.name === 'HasMany') {
+    if (association instanceof HasMany) {
       let i;
       if (association.isPolymorphic) {
         let found = this[fk].find(({ type, id }) => (type === model.modelName && id === model.id));
@@ -510,9 +512,9 @@ class Model {
   }
 
   _disassociateFromOldInverses(association) {
-    if (association.constructor.name === 'HasMany') {
+    if (association instanceof HasMany) {
       this._disassociateFromHasManyInverses(association);
-    } else if (association.constructor.name === 'BelongsTo') {
+    } else if (association instanceof BelongsTo) {
       this._disassociateFromBelongsToInverse(association);
     }
   }
@@ -686,7 +688,7 @@ class Model {
       let inverse = model.inverseFor(association);
       let inverseFk = inverse.getForeignKey();
 
-      if (inverse.constructor.name === 'BelongsTo') {
+      if (inverse instanceof BelongsTo) {
         this._schema.db[toCollectionName(model.modelName)]
           .update(model.id, { [inverseFk]: this.id });
 
