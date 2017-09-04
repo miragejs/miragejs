@@ -7,6 +7,7 @@ import Collection from './collection';
 import PolymorphicCollection from './polymorphic-collection';
 import _values from 'lodash/values';
 import _compact from 'lodash/compact';
+import _assign from 'lodash/assign';
 
 /*
   The Model class. Notes:
@@ -696,7 +697,7 @@ class Model {
         let ownerId = this.id;
         let inverseCollection = this._schema.db[toCollectionName(model.modelName)];
         let currentIdsForInverse = inverseCollection.find(model.id)[inverse.getForeignKey()] || [];
-        let newIdsForInverse = currentIdsForInverse;
+        let newIdsForInverse = _assign([], currentIdsForInverse);
 
         if (newIdsForInverse.indexOf(ownerId) === -1) {
           newIdsForInverse.push(ownerId);
