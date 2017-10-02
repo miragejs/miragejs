@@ -80,7 +80,7 @@ export default class Schema {
           !_includes(fksAddedFromThisModel[fkHolder], fk),
           `Your '${type}' model definition has multiple possible inverse relationships of type '${fkHolder}'.
 
-          Please read the associations guide and specify explicit inverses: http://www.ember-cli-mirage.com/docs/v0.2.x/models/#associations`
+          Please read the associations guide and specify explicit inverses: http://www.ember-cli-mirage.com/docs/v0.3.x/models/#associations`
         );
         fksAddedFromThisModel[fkHolder].push(fk);
 
