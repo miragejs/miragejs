@@ -1,44 +1,29 @@
 import _assign from 'lodash/assign';
 import _has from 'lodash/has';
 
-export default function(protoProps, staticProps) {
-  let parent = this;
-  let child;
+export default function extend(protoProps, staticProps) {
+  let Parent = this;
 
-  // The constructor function for the new subclass is either defined by you
-  // (the "constructor" property in your `extend` definition), or defaulted
-  // by us to simply call the parent's constructor.
-  if (protoProps && _has(protoProps, 'constructor')) {
-    child = protoProps.constructor;
-  } else {
-    child = function() {
-      return parent.apply(this, arguments);
-    };
+  class Child extends Parent {
+    constructor(...args) {
+      super(...args);
+      // The constructor function for the new subclass is optionally defined by you
+      // in your `extend` definition
+      if (protoProps && _has(protoProps, 'constructor')) {
+        protoProps.constructor.call(this, ...args);
+      }
+    }
   }
 
   // Add static properties to the constructor function, if supplied.
 
-  _assign(child, parent, staticProps);
-
-  // Set the prototype chain to inherit from `parent`, without calling
-  // `parent`'s constructor function.
-  let Surrogate = function() {
-    this.constructor = child;
-  };
-
-  Surrogate.prototype = parent.prototype;
-  child.prototype = new Surrogate();
+  _assign(Child, Parent, staticProps);
 
   // Add prototype properties (instance properties) to the subclass,
   // if supplied.
   if (protoProps) {
-    _assign(child.prototype, protoProps);
+    _assign(Child.prototype, protoProps);
   }
-  // if (protoProps) { _assign(child.prototype, protoProps); }
 
-  // Set a convenience property in case the parent's prototype is needed
-  // later.
-  child.__super__ = parent.prototype;
-
-  return child;
+  return Child;
 }
