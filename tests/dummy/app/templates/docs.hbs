@@ -1,0 +1,28 @@
+{{#docs-viewer as |viewer|}}
+
+  {{#viewer.nav as |nav|}}
+    {{nav.section 'Getting started'}}
+    {{nav.item 'Overview' 'docs.getting-started'}}
+    {{nav.item 'Installation' 'docs.getting-started.installation'}}
+    {{nav.item 'Quickstart' 'docs.getting-started.quickstart'}}
+    {{nav.item 'Upgrading' 'docs.getting-started.upgrading'}}
+
+    {{nav.section 'Writing your server'}}
+    {{nav.item 'Defining routes' 'docs.writing-your-server.defining-routes'}}
+    {{nav.item 'Seeding your database' 'docs.writing-your-server.seeding-your-database'}}
+    {{nav.item 'Acceptance testing' 'docs.writing-your-server.acceptance-testing'}}
+
+    {{nav.section 'Examples'}}
+    {{nav.item '1: Belongs to (no inverse)' 'docs.examples.1-belongs-to'}}
+    {{nav.item '2: Has many (no inverse)' 'docs.examples.2-has-many'}}
+  {{/viewer.nav}}
+
+  {{#viewer.main}}
+    <div class="docs-container docs__center">
+      <div class="docs-section">
+        {{outlet}}
+      </div>
+    </div>
+  {{/viewer.main}}
+
+{{/docs-viewer}}

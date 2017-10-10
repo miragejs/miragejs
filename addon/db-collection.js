@@ -12,10 +12,22 @@ function duplicate(data) {
 }
 
 /**
- *  A collection of db records i.e. a database table.
- *  @class DbCollection
- *  @constructor
- *  @public
+  The collection attached to the database object.
+
+  For example if you had the following data file named `mirage/fixtures/contacts.js`
+
+  ```
+  export default [
+    {id: 1, name: 'Zelda'},
+    {id: 2, name: 'Link'}
+  ];
+  ```
+
+  then `db.contacts` would return this array.
+
+  @class DbCollection
+  @constructor
+  @public
  */
 class DbCollection {
 
@@ -39,11 +51,27 @@ class DbCollection {
   }
 
   /**
-   * Inserts `data` into the collection. `data` can be a single object
-   * or an array of objects. Returns the inserted record.
-   * @method insert
-   * @param data
-   * @public
+    Inserts `data` into the collection. `data` can be a single object
+    or an array of objects. Returns the inserted record.
+
+    ```js
+    // Insert a single record
+    let link = db.users.insert({name: 'Link', age: 173});
+
+    link;  // {id: 1, name: 'Link', age: 137}
+
+    // Insert an array
+    let users = db.users.insert([
+      {name: 'Zelda', age: 142},
+      {name: 'Epona', age: 58},
+    ]);
+
+    users;  // [{id: 2, name: 'Zelda', age: 142}, {id: 3, name: 'Epona', age: 58}]
+    ```
+
+    @method insert
+    @param data
+    @public
    */
   insert(data) {
     if (!Array.isArray(data)) {

@@ -4,7 +4,8 @@ function isNumber(n) {
 
 /**
  * IdentityManager for a DbCollection
- * @class
+ *
+ * @class IdentityManager
  * @constructor
  * @public
  */

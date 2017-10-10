@@ -138,11 +138,13 @@ function extractRouteArguments(args) {
 }
 
 /**
- *
- *
- * @class Server
- * @public
- */
+  The Mirage server.
+
+  Note that `this` within your config function in `mirage/config.js` refers to the server instance, which is the same instance that `server` refers to in your tests.
+
+  @class Server
+  @public
+*/
 export default class Server {
 
   /**
@@ -155,6 +157,45 @@ export default class Server {
     this.config(options);
   }
 
+  /**
+    Set the base namespace used for all routes defined with `get`, `post`, `put` or `del`.
+
+    For example,
+
+    ```js
+    // app/mirage/config.js
+    export default function() {
+
+      this.namespace = '/api';
+
+      // this route will handle the URL '/api/contacts'
+      this.get('/contacts', 'contacts');
+    };
+    ```
+
+    Note that only routes defined after `this.namespace` are affected. This is useful if you have a few one-off routes that you don't want under your namespace:
+
+    ```js
+    // app/mirage/config.js
+    export default function() {
+
+      // this route handles /auth
+      this.get('/auth', function() { ...});
+
+      this.namespace = '/api';
+      // this route will handle the URL '/api/contacts'
+      this.get('/contacts', 'contacts');
+    };
+    ```
+
+    If your Ember app is loaded from the filesystem vs. a server (e.g. via Cordova or Electron vs. `ember s` or `https://yourhost.com/`), you will need to explicitly define a namespace. Likely values are `/` (if requests are made with relative paths) or `https://yourhost.com/api/...` (if requests are made to a defined server).
+
+    For a sample implementation leveraging a configured API host & namespace, check out [this issue comment](https://github.com/samselikoff/ember-cli-mirage/issues/497#issuecomment-183458721)
+
+    @property namespace
+    @type String
+    @public
+  */
   config(config = {}) {
     let didOverrideConfig = (config.environment && (this.environment && (this.environment !== config.environment)));
     assert(!didOverrideConfig,
@@ -197,7 +238,7 @@ export default class Server {
     let didOverridePretenderConfig = (config.trackRequests !== undefined) && this.pretender;
     assert(!didOverridePretenderConfig,
       'You cannot modify Pretender\'s request tracking once the server is created');
-    this.pretender = this.pretender || createPretender(this);
+    this.pretender = this.pretender || config.pretender || createPretender(this);
 
     if (config.baseConfig) {
       this.loadConfig(config.baseConfig);
