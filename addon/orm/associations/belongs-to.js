@@ -108,7 +108,7 @@ export default class BelongsTo extends Association {
             tempParent = association.schema[toCollectionName(id.type)].find(id.id);
           } else {
             tempParent = association.schema[toCollectionName(association.modelName)].find(id);
-            assert(tempParent, `Couldn\'t find ${association.modelName} with id = ${id}`);
+            assert(tempParent, `Couldn't find ${association.modelName} with id = ${id}`);
           }
         }
 

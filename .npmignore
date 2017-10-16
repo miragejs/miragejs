@@ -1,8 +1,6 @@
-/.sass-cache
 /bower_components
 /config/ember-try.js
 /dist
-/jekyll-tmp
 /tests
 /tmp
 **/.gitkeep
@@ -16,4 +14,6 @@
 bower.json
 ember-cli-build.js
 testem.js
+/.sass-cache
+/jekyll-tmp
 *.md
