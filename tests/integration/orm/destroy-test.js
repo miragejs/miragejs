@@ -4,8 +4,9 @@ import Db from 'ember-cli-mirage/db';
 import {module, test} from 'qunit';
 
 let db;
-module('Integration | ORM | destroy', {
-  beforeEach() {
+
+module('Integration | ORM | destroy', function(hooks) {
+  hooks.beforeEach(function() {
     db = new Db({
       users: [
         { id: 1, name: 'Link', evil: false },
@@ -17,24 +18,24 @@ module('Integration | ORM | destroy', {
     this.schema = new Schema(db, {
       user: Model
     });
-  }
-});
+  });
 
-test('destroying a model removes the associated record from the db', function(assert) {
-  assert.deepEqual(db.users.length, 3);
+  test('destroying a model removes the associated record from the db', function(assert) {
+    assert.deepEqual(db.users.length, 3);
 
-  let link = this.schema.users.find(1);
-  link.destroy();
+    let link = this.schema.users.find(1);
+    link.destroy();
 
-  assert.deepEqual(db.users.find(1), null);
-  assert.deepEqual(db.users.length, 2);
-});
+    assert.deepEqual(db.users.find(1), null);
+    assert.deepEqual(db.users.length, 2);
+  });
 
-test('destroying a collection removes the associated records from the db', function(assert) {
-  assert.deepEqual(db.users.length, 3);
+  test('destroying a collection removes the associated records from the db', function(assert) {
+    assert.deepEqual(db.users.length, 3);
 
-  let users = this.schema.users.all();
-  users.destroy();
+    let users = this.schema.users.all();
+    users.destroy();
 
-  assert.deepEqual(db.users, []);
+    assert.deepEqual(db.users, []);
+  });
 });

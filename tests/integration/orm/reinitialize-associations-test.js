@@ -10,8 +10,8 @@ var User = Model.extend({
 });
 var Address = Model.extend();
 
-module('Integration | ORM | reinitialize associations', {
-  beforeEach() {
+module('Integration | ORM | reinitialize associations', function(hooks) {
+  hooks.beforeEach(function() {
     this.schema = new Schema(new Db(), {
       address: Address,
       user: User
@@ -19,14 +19,14 @@ module('Integration | ORM | reinitialize associations', {
 
     this.schema.addresses.create({ id: 1, country: 'Hyrule' });
     this.schema.users.create({ id: 1, name: 'Link', addressIds: [ 1 ] });
-  }
-});
+  });
 
-// By running two tests, we force the statically-defined classes to be
-// registered twice.
-test('safely initializes associations', function(assert) {
-  assert.equal(this.schema.users.find(1).addresses.models[0].country, 'Hyrule');
-});
-test('safely initializes associations again', function(assert) {
-  assert.equal(this.schema.users.find(1).addresses.models[0].country, 'Hyrule');
+  // By running two tests, we force the statically-defined classes to be
+  // registered twice.
+  test('safely initializes associations', function(assert) {
+    assert.equal(this.schema.users.find(1).addresses.models[0].country, 'Hyrule');
+  });
+  test('safely initializes associations again', function(assert) {
+    assert.equal(this.schema.users.find(1).addresses.models[0].country, 'Hyrule');
+  });
 });

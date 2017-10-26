@@ -2,8 +2,8 @@ import {module, test} from 'qunit';
 import { Model, ActiveModelSerializer } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
 
-module('Integration | Server | Shorthand sanity check', {
-  beforeEach() {
+module('Integration | Server | Shorthand sanity check', function(hooks) {
+  hooks.beforeEach(function() {
     this.server = new Server({
       environment: 'test',
       models: {
@@ -15,131 +15,132 @@ module('Integration | Server | Shorthand sanity check', {
     });
     this.server.timing = 0;
     this.server.logging = false;
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     this.server.shutdown();
-  }
-});
-
-test('a get shorthand works', function(assert) {
-  assert.expect(2);
-  let done = assert.async();
-
-  this.server.db.loadData({
-    contacts: [
-      { id: 1, name: 'Link' }
-    ]
   });
 
-  this.server.get('/contacts');
+  test('a get shorthand works', function(assert) {
+    assert.expect(2);
+    let done = assert.async();
 
-  $.ajax({
-    method: 'GET',
-    url: '/contacts'
-  }).done(function(res, status, xhr) {
-    assert.equal(xhr.status, 200);
-    assert.deepEqual(res, { contacts: [{ id: '1', name: 'Link' }] });
-    done();
-  });
-});
+    this.server.db.loadData({
+      contacts: [
+        { id: 1, name: 'Link' }
+      ]
+    });
 
-test('a post shorthand works', function(assert) {
-  let { server } = this;
-  assert.expect(2);
-  let done = assert.async();
+    this.server.get('/contacts');
 
-  server.post('/contacts');
-
-  $.ajax({
-    method: 'POST',
-    url: '/contacts',
-    data: JSON.stringify({
-      contact: {
-        name: 'Zelda'
-      }
-    })
-  }).done((res, status, xhr) => {
-    assert.equal(xhr.status, 201);
-    assert.equal(server.db.contacts.length, 1);
-    done();
-  });
-});
-
-test('a put shorthand works', function(assert) {
-  let { server } = this;
-  assert.expect(2);
-  let done = assert.async();
-
-  this.server.db.loadData({
-    contacts: [
-      { id: 1, name: 'Link' }
-    ]
+    $.ajax({
+      method: 'GET',
+      url: '/contacts'
+    }).done(function(res, status, xhr) {
+      assert.equal(xhr.status, 200);
+      assert.deepEqual(res, { contacts: [{ id: '1', name: 'Link' }] });
+      done();
+    });
   });
 
-  server.put('/contacts/:id');
+  test('a post shorthand works', function(assert) {
+    let { server } = this;
+    assert.expect(2);
+    let done = assert.async();
 
-  $.ajax({
-    method: 'PUT',
-    url: '/contacts/1',
-    data: JSON.stringify({
-      contact: {
-        name: 'Zelda'
-      }
-    })
-  }).done((res, status, xhr) => {
-    assert.equal(xhr.status, 200);
-    assert.equal(server.db.contacts[0].name, 'Zelda');
-    done();
-  });
-});
+    server.post('/contacts');
 
-test('a patch shorthand works', function(assert) {
-  let { server } = this;
-  assert.expect(2);
-  let done = assert.async();
-
-  this.server.db.loadData({
-    contacts: [
-      { id: 1, name: 'Link' }
-    ]
+    $.ajax({
+      method: 'POST',
+      url: '/contacts',
+      data: JSON.stringify({
+        contact: {
+          name: 'Zelda'
+        }
+      })
+    }).done((res, status, xhr) => {
+      assert.equal(xhr.status, 201);
+      assert.equal(server.db.contacts.length, 1);
+      done();
+    });
   });
 
-  server.patch('/contacts/:id');
+  test('a put shorthand works', function(assert) {
+    let { server } = this;
+    assert.expect(2);
+    let done = assert.async();
 
-  $.ajax({
-    method: 'PATCH',
-    url: '/contacts/1',
-    data: JSON.stringify({
-      contact: {
-        name: 'Zelda'
-      }
-    })
-  }).done((res, status, xhr) => {
-    assert.equal(xhr.status, 200);
-    assert.equal(server.db.contacts[0].name, 'Zelda');
-    done();
+    this.server.db.loadData({
+      contacts: [
+        { id: 1, name: 'Link' }
+      ]
+    });
+
+    server.put('/contacts/:id');
+
+    $.ajax({
+      method: 'PUT',
+      url: '/contacts/1',
+      data: JSON.stringify({
+        contact: {
+          name: 'Zelda'
+        }
+      })
+    }).done((res, status, xhr) => {
+      assert.equal(xhr.status, 200);
+      assert.equal(server.db.contacts[0].name, 'Zelda');
+      done();
+    });
   });
-});
 
-test('a delete shorthand works', function(assert) {
-  let { server } = this;
-  assert.expect(2);
-  let done = assert.async();
+  test('a patch shorthand works', function(assert) {
+    let { server } = this;
+    assert.expect(2);
+    let done = assert.async();
 
-  this.server.db.loadData({
-    contacts: [
-      { id: 1, name: 'Link' }
-    ]
+    this.server.db.loadData({
+      contacts: [
+        { id: 1, name: 'Link' }
+      ]
+    });
+
+    server.patch('/contacts/:id');
+
+    $.ajax({
+      method: 'PATCH',
+      url: '/contacts/1',
+      data: JSON.stringify({
+        contact: {
+          name: 'Zelda'
+        }
+      })
+    }).done((res, status, xhr) => {
+      assert.equal(xhr.status, 200);
+      assert.equal(server.db.contacts[0].name, 'Zelda');
+      done();
+    });
   });
 
-  server.del('/contacts/:id');
+  test('a delete shorthand works', function(assert) {
+    let { server } = this;
+    assert.expect(2);
+    let done = assert.async();
 
-  $.ajax({
-    method: 'DELETE',
-    url: '/contacts/1'
-  }).done((res, status, xhr) => {
-    assert.equal(xhr.status, 204);
-    assert.equal(server.db.contacts.length, 0);
-    done();
+    this.server.db.loadData({
+      contacts: [
+        { id: 1, name: 'Link' }
+      ]
+    });
+
+    server.del('/contacts/:id');
+
+    $.ajax({
+      method: 'DELETE',
+      url: '/contacts/1'
+    }).done((res, status, xhr) => {
+      assert.equal(xhr.status, 204);
+      assert.equal(server.db.contacts.length, 0);
+      done();
+    });
   });
 });

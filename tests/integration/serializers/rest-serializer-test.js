@@ -6,8 +6,8 @@ import Db from 'ember-cli-mirage/db';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import { module, test } from 'qunit';
 
-module('Integration | Serializer | RestSerializer', {
-  beforeEach() {
+module('Integration | Serializer | RestSerializer', function(hooks) {
+  hooks.beforeEach(function() {
     let db = new Db();
     this.schema = new Schema(db);
     this.schema.registerModels({
@@ -35,34 +35,34 @@ module('Integration | Serializer | RestSerializer', {
         include: ['wordSmith']
       })
     });
-  },
+  });
 
-  afterEach() {
+  hooks.afterEach(function() {
     this.schema.db.emptyData();
-  }
-});
+  });
 
-test('it sideloads associations and camel-cases relationships and attributes correctly for a model', function(assert) {
-  let link = this.schema.wordSmiths.find(1);
-  let result = this.registry.serialize(link);
+  test('it sideloads associations and camel-cases relationships and attributes correctly for a model', function(assert) {
+    let link = this.schema.wordSmiths.find(1);
+    let result = this.registry.serialize(link);
 
-  assert.deepEqual(result, {
-    wordSmith: {
-      id: '1',
-      name: 'Link',
-      blogPosts: ['1', '2']
-    },
-    blogPosts: [
-      {
+    assert.deepEqual(result, {
+      wordSmith: {
         id: '1',
-        title: 'Lorem',
-        wordSmith: '1'
+        name: 'Link',
+        blogPosts: ['1', '2']
       },
-      {
-        id: '2',
-        title: 'Ipsum',
-        wordSmith: '1'
-      }
-    ]
+      blogPosts: [
+        {
+          id: '1',
+          title: 'Lorem',
+          wordSmith: '1'
+        },
+        {
+          id: '2',
+          title: 'Ipsum',
+          wordSmith: '1'
+        }
+      ]
+    });
   });
 });
