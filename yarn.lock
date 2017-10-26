@@ -1348,7 +1348,7 @@ broccoli-funnel@^1.0.0, broccoli-funnel@^1.0.1, broccoli-funnel@^1.0.2, broccoli
     symlink-or-copy "^1.0.0"
     walk-sync "^0.3.1"
 
-broccoli-funnel@^2.0.0:
+broccoli-funnel@^2.0.0, broccoli-funnel@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/broccoli-funnel/-/broccoli-funnel-2.0.1.tgz#6823c73b675ef78fffa7ab800f083e768b51d449"
   dependencies:
@@ -1794,6 +1794,12 @@ commander@2.9.0:
 commander@^2.5.0, commander@^2.6.0, commander@~2.11.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
+
+common-tags@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/common-tags/-/common-tags-1.4.0.tgz#1187be4f3d4cf0c0427d43f74eef1f73501614c0"
+  dependencies:
+    babel-runtime "^6.18.0"
 
 commoner@~0.10.3:
   version "0.10.8"
@@ -2343,20 +2349,12 @@ ember-cli-preprocess-registry@^3.1.0:
     process-relative-require "^1.0.0"
     silent-error "^1.0.0"
 
-ember-cli-qunit@^4.0.0:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/ember-cli-qunit/-/ember-cli-qunit-4.0.1.tgz#905aa07620ae9fdb417c7e48d45bd2277b62f864"
+ember-cli-qunit@^4.1.0-beta.2:
+  version "4.1.0-beta.2"
+  resolved "https://registry.yarnpkg.com/ember-cli-qunit/-/ember-cli-qunit-4.1.0-beta.2.tgz#712b91b3f494cc9641486bb5ee7211d87357e6af"
   dependencies:
-    broccoli-funnel "^2.0.0"
-    broccoli-merge-trees "^2.0.0"
     ember-cli-babel "^6.8.1"
-    ember-cli-test-loader "^2.2.0"
-    ember-cli-version-checker "^2.0.0"
-    ember-qunit "^2.2.0"
-    qunit-notifications "^0.1.1"
-    qunitjs "^2.4.0"
-    resolve "^1.4.0"
-    silent-error "^1.1.0"
+    ember-qunit "^3.0.0-beta.2"
 
 ember-cli-release@^0.2.9:
   version "0.2.9"
@@ -2602,11 +2600,17 @@ ember-lodash@^4.17.3:
     ember-cli-babel "^6.4.1"
     lodash-es "^4.17.4"
 
-ember-qunit@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/ember-qunit/-/ember-qunit-2.2.0.tgz#3cdf400031c93a38de781a7304819738753b7f99"
+ember-qunit@^3.0.0-beta.2:
+  version "3.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/ember-qunit/-/ember-qunit-3.0.0-beta.4.tgz#ae1b1b11e444f6c6155853410384e738ae904464"
   dependencies:
-    ember-test-helpers "^0.6.3"
+    broccoli-funnel "^2.0.1"
+    broccoli-merge-trees "^2.0.0"
+    common-tags "^1.4.0"
+    ember-cli-babel "^6.3.0"
+    ember-cli-test-loader "^2.2.0"
+    ember-test-helpers "^0.7.0-beta.7"
+    qunitjs "^2.4.0"
 
 ember-resolver@^4.0.0:
   version "4.5.0"
@@ -2671,9 +2675,12 @@ ember-source@~2.16.0:
     simple-dom "^0.3.0"
     simple-html-tokenizer "^0.4.1"
 
-ember-test-helpers@^0.6.3:
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/ember-test-helpers/-/ember-test-helpers-0.6.3.tgz#f864cdf6f4e75f3f8768d6537785b5ab6e82d907"
+ember-test-helpers@^0.7.0-beta.7:
+  version "0.7.0-beta.8"
+  resolved "https://registry.yarnpkg.com/ember-test-helpers/-/ember-test-helpers-0.7.0-beta.8.tgz#9b5935a2fa667ac2d9191dd576a2435fcd0f6e10"
+  dependencies:
+    broccoli-funnel "^2.0.1"
+    ember-cli-babel "^6.8.1"
 
 ember-try-config@^2.0.1:
   version "2.1.0"
@@ -5118,10 +5125,6 @@ quick-temp@^0.1.0, quick-temp@^0.1.2, quick-temp@^0.1.3, quick-temp@^0.1.5, quic
     mktemp "~0.4.0"
     rimraf "^2.5.4"
     underscore.string "~3.3.4"
-
-qunit-notifications@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/qunit-notifications/-/qunit-notifications-0.1.1.tgz#3001afc6a6a77dfbd962ccbcddde12dec5286c09"
 
 qunitjs@^2.4.0:
   version "2.4.0"
