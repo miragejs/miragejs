@@ -55,7 +55,7 @@
     "ember-cli": "~2.16.2",
     "ember-cli-app-version": "^2.0.0",
     "ember-cli-dependency-checker": "^2.0.0",
-    "ember-cli-eslint": "^4.0.0",
+    "ember-cli-eslint": "^4.2.1",
     "ember-cli-htmlbars": "^2.0.1",
     "ember-cli-htmlbars-inline-precompile": "^1.0.0",
     "ember-cli-inject-live-reload": "^1.4.1",
@@ -70,8 +70,8 @@
     "ember-fastboot-addon-tests": "^0.4.0",
     "ember-load-initializers": "^1.0.0",
     "ember-resolver": "^4.0.0",
-    "ember-source": "~2.16.0",
     "ember-sinon": "0.5.1",
+    "ember-source": "~2.16.0",
     "eslint-plugin-ember-suave": "^1.0.0",
     "loader.js": "^4.2.3",
     "mocha": "^3.4.2"

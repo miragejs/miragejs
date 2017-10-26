@@ -2235,7 +2235,7 @@ ember-cli-dependency-checker@^2.0.0:
     is-git-url "^1.0.0"
     semver "^5.3.0"
 
-ember-cli-eslint@^4.0.0:
+ember-cli-eslint@^4.2.1:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/ember-cli-eslint/-/ember-cli-eslint-4.2.1.tgz#1718875632b3c10fa0da2f665d294c08f24b8ca3"
   dependencies:
