@@ -1,5 +1,26 @@
 # Ember CLI Mirage Changelog
 
+## 0.4.0
+
+Update notes:
+
+We bumped our "major" to 0.4.x because support for Node 0.12 has been explicitly dropped from some of our dependencies. There's no Mirage-specific changes you need to make for this upgrade.
+
+_Special thanks to @turbo87 and @kellyselden for all their work on this release._
+
+Changes:
+
+  - [ENHANCEMENT][#1150](https://github.com/samselikoff/ember-cli-mirage/pull/1150) Change default JSONAPI data linkage behavior (reference #1146) @samselikoff
+  - [BUGFIX][#1148](https://github.com/samselikoff/ember-cli-mirage/pull/1148) Foreign key ids were being muted by collection creation @lukemelia
+  - [BUGFIX][#1078](https://github.com/samselikoff/ember-cli-mirage/pull/1078) Ensure #update works on associations @ivanvanderbyl
+  - [BUGFIX][#1112](https://github.com/samselikoff/ember-cli-mirage/pull/1112) Fix query in disassociateAllDepentsFromTarget @omghax
+  - [BUGFIX][#0176](https://github.com/samselikoff/ember-cli-mirage/pull/0176) Fix using `association` helper in a dasherized factory @ignatius-j
+  - [ENHANCEMENT][#1138](https://github.com/samselikoff/ember-cli-mirage/pull/1138) Unlock and upgrade ember-get-config @dfreeman
+  - [ENHANCEMENT][b997176f1d46aaad4c8f82fb7920e7baa8db9e68](https://github.com/samselikoff/ember-cli-mirage/pullb997176f1d46aaad4c8f82fb7920e7baa8db9e68) Serializer blueprint should extend the application serializer @ChrisBarthol
+  - [ENHANCEMENT][#187](https://github.com/samselikoff/ember-cli-mirage/pull/187) Use native ES class syntax for base Class.extend @cowboyd
+  - [ENHANCEMENT][#1137](https://github.com/samselikoff/ember-cli-mirage/pull/1137) Bump pretender and disable request tracking in pretender @bekzod
+  - General enhancements @heroiceric, @turbo87, @kellyselden, @bekzod, @timhaines, @wismer, @mixonic, @rwjblue
+
 ## 0.3.4
 
 Update notes: none
