@@ -618,43 +618,40 @@ module('Unit | Db #firstOrCreate', function(hooks) {
   });
 });
 
-module(
-  'Unit | Db #registerIdentityManagers and #identityManagerFor',
-  function() {
-    test('identityManagerFor returns ember-cli-mirage default IdentityManager if there aren\'t any custom ones', function(assert) {
-      let db = new Db();
-      assert.equal(db.identityManagerFor('foo'), DefaultIdentityManager);
+module('Unit | Db #registerIdentityManagers and #identityManagerFor', function() {
+  test('identityManagerFor returns ember-cli-mirage default IdentityManager if there aren\'t any custom ones', function(assert) {
+    let db = new Db();
+    assert.equal(db.identityManagerFor('foo'), DefaultIdentityManager);
+  });
+
+  test('it can register identity managers per db collection and for application', function(assert) {
+    let FooIdentityManager = class {};
+    let ApplicationIdentityManager = class {};
+
+    let db = new Db();
+    db.registerIdentityManagers({
+      foo: FooIdentityManager,
+      application: ApplicationIdentityManager
     });
 
-    test('it can register identity managers per db collection and for application', function(assert) {
-      let FooIdentityManager = class {};
-      let ApplicationIdentityManager = class {};
+    assert.equal(
+      db.identityManagerFor('foo'),
+      FooIdentityManager,
+      'it allows to declare an identity manager per db collection'
+    );
+    assert.equal(
+      db.identityManagerFor('bar'),
+      ApplicationIdentityManager,
+      'it falls back to application idenitity manager if there isn\'t one for a specific db collection'
+    );
+  });
 
-      let db = new Db();
-      db.registerIdentityManagers({
-        foo: FooIdentityManager,
-        application: ApplicationIdentityManager
-      });
-
-      assert.equal(
-        db.identityManagerFor('foo'),
-        FooIdentityManager,
-        'it allows to declare an identity manager per db collection'
-      );
-      assert.equal(
-        db.identityManagerFor('bar'),
-        ApplicationIdentityManager,
-        'it falls back to application idenitity manager if there isn\'t one for a specific db collection'
-      );
+  test('it can register idenitity managers on instantiation', function(assert) {
+    let CustomIdentityManager = class {};
+    let db = new Db(undefined, {
+      foo: CustomIdentityManager
     });
-
-    test('it can register idenitity managers on instantiation', function(assert) {
-      let CustomIdentityManager = class {};
-      let db = new Db(undefined, {
-        foo: CustomIdentityManager
-      });
-      assert.equal(db.identityManagerFor('foo'), CustomIdentityManager);
-      assert.equal(db.identityManagerFor('bar'), DefaultIdentityManager);
-    });
-  }
-);
+    assert.equal(db.identityManagerFor('foo'), CustomIdentityManager);
+    assert.equal(db.identityManagerFor('bar'), DefaultIdentityManager);
+  });
+});
