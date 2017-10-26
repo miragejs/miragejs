@@ -16,7 +16,7 @@ Changes:
   - [BUGFIX][#1112](https://github.com/samselikoff/ember-cli-mirage/pull/1112) Fix query in disassociateAllDepentsFromTarget @omghax
   - [BUGFIX][#0176](https://github.com/samselikoff/ember-cli-mirage/pull/0176) Fix using `association` helper in a dasherized factory @ignatius-j
   - [ENHANCEMENT][#1138](https://github.com/samselikoff/ember-cli-mirage/pull/1138) Unlock and upgrade ember-get-config @dfreeman
-  - [ENHANCEMENT][b997176f1d46aaad4c8f82fb7920e7baa8db9e68](https://github.com/samselikoff/ember-cli-mirage/pullb997176f1d46aaad4c8f82fb7920e7baa8db9e68) Serializer blueprint should extend the application serializer @ChrisBarthol
+  - [ENHANCEMENT] [#b99717](https://github.com/samselikoff/ember-cli-mirage/commit/b997176f1d46aaad4c8f82fb7920e7baa8db9e68) Serializer blueprint should extend the application serializer @ChrisBarthol
   - [ENHANCEMENT][#187](https://github.com/samselikoff/ember-cli-mirage/pull/187) Use native ES class syntax for base Class.extend @cowboyd
   - [ENHANCEMENT][#1137](https://github.com/samselikoff/ember-cli-mirage/pull/1137) Bump pretender and disable request tracking in pretender @bekzod
   - General enhancements @heroiceric, @turbo87, @kellyselden, @bekzod, @timhaines, @wismer, @mixonic, @rwjblue
