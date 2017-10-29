@@ -429,6 +429,7 @@ export default class Server {
   }
 
   resource(resourceName, { only, except, path } = {}) {
+    resourceName = pluralize(resourceName);
     path = path || `/${resourceName}`;
     only = only || [];
     except = except || [];

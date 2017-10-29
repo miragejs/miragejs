@@ -273,6 +273,45 @@ module('Integration | Server | Resource shorthand', function(hooks) {
     });
   });
 
+  test('resource accepts singular name', function(assert) {
+    assert.expect(3);
+    let done = assert.async(2);
+
+    this.server.db.loadData({
+      contacts: [
+        { id: 1, name: 'Link' },
+        { id: 2, name: 'Zelda' }
+      ],
+      blogPosts: [
+        { id: 1, title: 'Post 1' },
+        { id: 2, title: 'Post 2' }
+      ]
+    });
+
+    this.server.resource('contact');
+    this.server.resource('blog-post', { path: '/posts' });
+
+    $.ajax({
+      method: 'GET',
+      url: '/contacts'
+    }).done(function(res, status, xhr) {
+      assert.equal(xhr.status, 200);
+      assert.deepEqual(res, { contacts: [{ id: '1', name: 'Link' }, { id: '2', name: 'Zelda' }] });
+      done();
+    });
+
+    $.ajax({
+      method: 'GET',
+      url: '/posts'
+    }).fail((xhr, textStatus, error) => {
+      assert.ok(false, 'failed to find custom path');
+      done();
+    }).done(function(res, status, xhr) {
+      assert.ok(true);
+      done();
+    });
+  });
+
   test('resource does not accept both :all and :except options', function(assert) {
     let { server } = this;
 
