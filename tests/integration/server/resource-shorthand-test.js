@@ -23,8 +23,8 @@ module('Integration | Server | Resource shorthand', function(hooks) {
   });
 
   test('resource generates get shorthand for index action', function(assert) {
-    assert.expect(3);
-    let done = assert.async(2);
+    assert.expect(2);
+    let done = assert.async(1);
 
     this.server.db.loadData({
       contacts: [
@@ -38,7 +38,6 @@ module('Integration | Server | Resource shorthand', function(hooks) {
     });
 
     this.server.resource('contacts');
-    this.server.resource('blog-posts', { path: '/posts' });
 
     $.ajax({
       method: 'GET',
@@ -48,22 +47,11 @@ module('Integration | Server | Resource shorthand', function(hooks) {
       assert.deepEqual(res, { contacts: [{ id: '1', name: 'Link' }, { id: '2', name: 'Zelda' }] });
       done();
     });
-
-    $.ajax({
-      method: 'GET',
-      url: '/posts'
-    }).fail((xhr, textStatus, error) => {
-      assert.ok(false, 'failed to find custom path');
-      done();
-    }).done(function(res, status, xhr) {
-      assert.ok(true);
-      done();
-    });
   });
 
   test('resource generates get shorthand for show action', function(assert) {
-    assert.expect(3);
-    let done = assert.async(2);
+    assert.expect(2);
+    let done = assert.async(1);
 
     this.server.db.loadData({
       contacts: [
@@ -87,26 +75,14 @@ module('Integration | Server | Resource shorthand', function(hooks) {
       assert.deepEqual(res, { contact: { id: '2', name: 'Zelda' } });
       done();
     });
-
-    $.ajax({
-      method: 'GET',
-      url: '/posts/2'
-    }).fail((xhr, textStatus, error) => {
-      assert.ok(false, 'failed to find custom path');
-      done();
-    }).done(function(res, status, xhr) {
-      assert.ok(true);
-      done();
-    });
   });
 
   test('resource generates post shorthand', function(assert) {
     let { server } = this;
-    assert.expect(3);
-    let done = assert.async(2);
+    assert.expect(2);
+    let done = assert.async(1);
 
     server.resource('contacts');
-    server.resource('blog-posts', { path: '/posts' });
 
     $.ajax({
       method: 'POST',
@@ -119,6 +95,130 @@ module('Integration | Server | Resource shorthand', function(hooks) {
     }).done((res, status, xhr) => {
       assert.equal(xhr.status, 201);
       assert.equal(server.db.contacts.length, 1);
+      done();
+    });
+  });
+
+  test('resource generates put shorthand', function(assert) {
+    let { server } = this;
+    assert.expect(2);
+    let done = assert.async(1);
+
+    this.server.db.loadData({
+      contacts: [
+        { id: 1, name: 'Link' }
+      ],
+      blogPosts: [
+        { id: 1, title: 'Post 1' }
+      ]
+    });
+
+    server.resource('contacts');
+
+    $.ajax({
+      method: 'PUT',
+      url: '/contacts/1',
+      data: JSON.stringify({
+        contact: {
+          name: 'Zelda'
+        }
+      })
+    }).done((res, status, xhr) => {
+      assert.equal(xhr.status, 200);
+      assert.equal(server.db.contacts[0].name, 'Zelda');
+      done();
+    });
+  });
+
+  test('resource generates patch shorthand', function(assert) {
+    let { server } = this;
+    assert.expect(2);
+    let done = assert.async(1);
+
+    this.server.db.loadData({
+      contacts: [
+        { id: 1, name: 'Link' }
+      ],
+      blogPosts: [
+        { id: 1, title: 'Post 1' }
+      ]
+    });
+
+    server.resource('contacts');
+
+    $.ajax({
+      method: 'PATCH',
+      url: '/contacts/1',
+      data: JSON.stringify({
+        contact: {
+          name: 'Zelda'
+        }
+      })
+    }).done((res, status, xhr) => {
+      assert.equal(xhr.status, 200);
+      assert.equal(server.db.contacts[0].name, 'Zelda');
+      done();
+    });
+  });
+
+  test('resource generates delete shorthand works', function(assert) {
+    let { server } = this;
+    assert.expect(2);
+    let done = assert.async(1);
+
+    this.server.db.loadData({
+      contacts: [
+        { id: 1, name: 'Link' }
+      ],
+      blogPosts: [
+        { id: 1, title: 'Post 1' }
+      ]
+    });
+
+    server.resource('contacts');
+
+    $.ajax({
+      method: 'DELETE',
+      url: '/contacts/1'
+    }).done((res, status, xhr) => {
+      assert.equal(xhr.status, 204);
+      assert.equal(server.db.contacts.length, 0);
+      done();
+    });
+  });
+
+  test('resource accepts a custom path for a resource', function(assert) {
+    assert.expect(6);
+    let done = assert.async(6);
+
+    this.server.db.loadData({
+      blogPosts: [
+        { id: 1, title: 'Post 1' },
+        { id: 2, title: 'Post 2' }
+      ]
+    });
+
+    this.server.resource('blog-posts', { path: '/posts' });
+
+    $.ajax({
+      method: 'GET',
+      url: '/posts'
+    }).fail((xhr, textStatus, error) => {
+      assert.ok(false, 'failed to find custom path');
+      done();
+    }).done(function(res, status, xhr) {
+      assert.ok(true);
+      done();
+    });
+
+    $.ajax({
+      method: 'GET',
+      url: '/posts/2'
+    }).fail((xhr, textStatus, error) => {
+      assert.ok(false, 'failed to find custom path');
+      done();
+    }).done(function(res, status, xhr) {
+      assert.ok(true);
       done();
     });
 
@@ -137,38 +237,6 @@ module('Integration | Server | Resource shorthand', function(hooks) {
       assert.ok(true);
       done();
     });
-  });
-
-  test('resource generates put shorthand', function(assert) {
-    let { server } = this;
-    assert.expect(3);
-    let done = assert.async(2);
-
-    this.server.db.loadData({
-      contacts: [
-        { id: 1, name: 'Link' }
-      ],
-      blogPosts: [
-        { id: 1, title: 'Post 1' }
-      ]
-    });
-
-    server.resource('contacts');
-    server.resource('blog-posts', { path: '/posts' });
-
-    $.ajax({
-      method: 'PUT',
-      url: '/contacts/1',
-      data: JSON.stringify({
-        contact: {
-          name: 'Zelda'
-        }
-      })
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 200);
-      assert.equal(server.db.contacts[0].name, 'Zelda');
-      done();
-    });
 
     $.ajax({
       method: 'PUT',
@@ -185,38 +253,6 @@ module('Integration | Server | Resource shorthand', function(hooks) {
       assert.ok(true);
       done();
     });
-  });
-
-  test('resource generates patch shorthand', function(assert) {
-    let { server } = this;
-    assert.expect(3);
-    let done = assert.async(2);
-
-    this.server.db.loadData({
-      contacts: [
-        { id: 1, name: 'Link' }
-      ],
-      blogPosts: [
-        { id: 1, title: 'Post 1' }
-      ]
-    });
-
-    server.resource('contacts');
-    server.resource('blog-posts', { path: '/posts' });
-
-    $.ajax({
-      method: 'PATCH',
-      url: '/contacts/1',
-      data: JSON.stringify({
-        contact: {
-          name: 'Zelda'
-        }
-      })
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 200);
-      assert.equal(server.db.contacts[0].name, 'Zelda');
-      done();
-    });
 
     $.ajax({
       method: 'PATCH',
@@ -231,33 +267,6 @@ module('Integration | Server | Resource shorthand', function(hooks) {
       done();
     }).done((res, status, xhr) => {
       assert.ok(true);
-      done();
-    });
-  });
-
-  test('resource generates delete shorthand works', function(assert) {
-    let { server } = this;
-    assert.expect(3);
-    let done = assert.async(2);
-
-    this.server.db.loadData({
-      contacts: [
-        { id: 1, name: 'Link' }
-      ],
-      blogPosts: [
-        { id: 1, title: 'Post 1' }
-      ]
-    });
-
-    server.resource('contacts');
-    server.resource('blog-posts', { path: '/posts' });
-
-    $.ajax({
-      method: 'DELETE',
-      url: '/contacts/1'
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 204);
-      assert.equal(server.db.contacts.length, 0);
       done();
     });
 
@@ -322,8 +331,8 @@ module('Integration | Server | Resource shorthand', function(hooks) {
 
   test('resource generates shorthands which are whitelisted by :only option', function(assert) {
     let { server } = this;
-    assert.expect(2);
-    let done = assert.async(2);
+    assert.expect(1);
+    let done = assert.async(1);
 
     server.db.loadData({
       contacts: [
@@ -333,22 +342,10 @@ module('Integration | Server | Resource shorthand', function(hooks) {
     });
 
     server.resource('contacts', { only: ['index'] });
-    server.resource('blog-posts', { path: '/posts',  only: ['index'] });
 
     $.ajax({
       method: 'GET',
       url: '/contacts'
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 200);
-      done();
-    });
-
-    $.ajax({
-      method: 'GET',
-      url: '/posts'
-    }).fail(function() {
-      assert.ok(false, 'failed to find custom path');
-      done();
     }).done((res, status, xhr) => {
       assert.equal(xhr.status, 200);
       done();
