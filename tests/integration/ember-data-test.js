@@ -36,7 +36,9 @@ module('Integration | Ember Data', function(hooks) {
     assert.ok(registry.address, 'Ember data model Address has been registered');
     assert.ok(registry.contact, 'Ember data model Contact has been registered');
     assert.ok(registry.user, 'Ember data model User has been registered');
-    assert.equal(registry.address.foreignKeys.length, 1, 'Ember data model Address has the correct relationships');
+    assert.equal(registry.address.foreignKeys.length, 2, 'Ember data model Address has the correct relationships');
+    assert.equal(registry.address.foreignKeys[0], 'contactId', 'Ember data model Address has the correct relationships');
+    assert.equal(registry.address.foreignKeys[1], 'primaryContactId', 'Ember data model Address has the correct relationships');
   });
 
   test(`It works with nested models`, function(assert) {
