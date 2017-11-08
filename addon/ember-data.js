@@ -64,11 +64,11 @@ export function getModels() {
     return Models;
   }
 
-  let models = getDsModels();
+  let emberDataModels = getDsModels();
   Models = {};
 
-  Object.keys(models).forEach(modelName => {
-    let model = models[modelName];
+  Object.keys(emberDataModels).forEach(modelName => {
+    let model = emberDataModels[modelName];
     let attrs = {};
 
     model.eachRelationship((name, r) => {
