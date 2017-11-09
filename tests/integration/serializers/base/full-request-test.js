@@ -3,6 +3,7 @@ import Server from 'ember-cli-mirage/server';
 import Model from 'ember-cli-mirage/orm/model';
 import Serializer from 'ember-cli-mirage/serializer';
 import {module, test} from 'qunit';
+import promiseAjax from '../../../helpers/promise-ajax';
 
 module('Integration | Serializers | Base | Full Request', function(hooks) {
   hooks.beforeEach(function() {
@@ -63,11 +64,11 @@ module('Integration | Serializers | Base | Full Request', function(hooks) {
       return schema.authors.find(id);
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/authors/1'
-    }).done(function(res) {
-      assert.deepEqual(res, {
+    }).then((response) => {
+      assert.deepEqual(response.data, {
         author: {
           id: '1',
           first: 'Link',
@@ -90,11 +91,11 @@ module('Integration | Serializers | Base | Full Request', function(hooks) {
       return { data: { id } };
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/authors/%3A1'
-    }).done(function(res) {
-      assert.deepEqual(res, {
+    }).then((response) => {
+      assert.deepEqual(response.data, {
         data: { id: ':1' }
       });
       done();
@@ -115,11 +116,11 @@ module('Integration | Serializers | Base | Full Request', function(hooks) {
       return schema.posts.find(id);
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/posts/1'
-    }).done(function(res) {
-      assert.deepEqual(res, {
+    }).then((response) => {
+      assert.deepEqual(response.data, {
         id: '1',
         title: 'Lorem',
         date: '20001010'
@@ -144,11 +145,11 @@ module('Integration | Serializers | Base | Full Request', function(hooks) {
       return schema.comments.find(id);
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/comments/1?include_post=true'
-    }).done(function(res) {
-      assert.deepEqual(res, {
+    }).then((response) => {
+      assert.deepEqual(response.data, {
         id: '1',
         description: 'Lorem is the best',
         post: {

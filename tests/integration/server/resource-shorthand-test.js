@@ -1,6 +1,7 @@
 import {module, test} from 'qunit';
 import { Model, ActiveModelSerializer } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
+import promiseAjax from '../../helpers/promise-ajax';
 
 module('Integration | Server | Resource shorthand', function(hooks) {
   hooks.beforeEach(function() {
@@ -39,12 +40,12 @@ module('Integration | Server | Resource shorthand', function(hooks) {
 
     this.server.resource('contacts');
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/contacts'
-    }).done(function(res, status, xhr) {
-      assert.equal(xhr.status, 200);
-      assert.deepEqual(res, { contacts: [{ id: '1', name: 'Link' }, { id: '2', name: 'Zelda' }] });
+    }).then((response) => {
+      assert.equal(response.xhr.status, 200);
+      assert.deepEqual(response.data, { contacts: [{ id: '1', name: 'Link' }, { id: '2', name: 'Zelda' }] });
       done();
     });
   });
@@ -67,12 +68,12 @@ module('Integration | Server | Resource shorthand', function(hooks) {
     this.server.resource('contacts');
     this.server.resource('blog-posts', { path: '/posts' });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/contacts/2'
-    }).done(function(res, status, xhr) {
-      assert.equal(xhr.status, 200);
-      assert.deepEqual(res, { contact: { id: '2', name: 'Zelda' } });
+    }).then((response) => {
+      assert.equal(response.xhr.status, 200);
+      assert.deepEqual(response.data, { contact: { id: '2', name: 'Zelda' } });
       done();
     });
   });
@@ -84,7 +85,7 @@ module('Integration | Server | Resource shorthand', function(hooks) {
 
     server.resource('contacts');
 
-    $.ajax({
+    promiseAjax({
       method: 'POST',
       url: '/contacts',
       data: JSON.stringify({
@@ -92,8 +93,8 @@ module('Integration | Server | Resource shorthand', function(hooks) {
           name: 'Zelda'
         }
       })
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 201);
+    }).then((response) => {
+      assert.equal(response.xhr.status, 201);
       assert.equal(server.db.contacts.length, 1);
       done();
     });
@@ -115,7 +116,7 @@ module('Integration | Server | Resource shorthand', function(hooks) {
 
     server.resource('contacts');
 
-    $.ajax({
+    promiseAjax({
       method: 'PUT',
       url: '/contacts/1',
       data: JSON.stringify({
@@ -123,8 +124,8 @@ module('Integration | Server | Resource shorthand', function(hooks) {
           name: 'Zelda'
         }
       })
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 200);
+    }).then((response) => {
+      assert.equal(response.xhr.status, 200);
       assert.equal(server.db.contacts[0].name, 'Zelda');
       done();
     });
@@ -146,7 +147,7 @@ module('Integration | Server | Resource shorthand', function(hooks) {
 
     server.resource('contacts');
 
-    $.ajax({
+    promiseAjax({
       method: 'PATCH',
       url: '/contacts/1',
       data: JSON.stringify({
@@ -154,8 +155,8 @@ module('Integration | Server | Resource shorthand', function(hooks) {
           name: 'Zelda'
         }
       })
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 200);
+    }).then((response) => {
+      assert.equal(response.xhr.status, 200);
       assert.equal(server.db.contacts[0].name, 'Zelda');
       done();
     });
@@ -177,11 +178,11 @@ module('Integration | Server | Resource shorthand', function(hooks) {
 
     server.resource('contacts');
 
-    $.ajax({
+    promiseAjax({
       method: 'DELETE',
       url: '/contacts/1'
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 204);
+    }).then((response) => {
+      assert.equal(response.xhr.status, 204);
       assert.equal(server.db.contacts.length, 0);
       done();
     });
@@ -200,29 +201,29 @@ module('Integration | Server | Resource shorthand', function(hooks) {
 
     this.server.resource('blog-posts', { path: '/posts' });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/posts'
-    }).fail((xhr, textStatus, error) => {
+    }).catch((errors) => {
       assert.ok(false, 'failed to find custom path');
       done();
-    }).done(function(res, status, xhr) {
+    }).then((response) => {
       assert.ok(true);
       done();
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/posts/2'
-    }).fail((xhr, textStatus, error) => {
+    }).catch((errors) => {
       assert.ok(false, 'failed to find custom path');
       done();
-    }).done(function(res, status, xhr) {
+    }).then((response) => {
       assert.ok(true);
       done();
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'POST',
       url: '/posts',
       data: JSON.stringify({
@@ -230,15 +231,15 @@ module('Integration | Server | Resource shorthand', function(hooks) {
           name: 'Post 1'
         }
       })
-    }).fail((xhr, textStatus, error) => {
+    }).catch((errors) => {
       assert.ok(false, 'failed to find custom path');
       done();
-    }).done((res, status, xhr) => {
+    }).then((response) => {
       assert.ok(true);
       done();
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'PUT',
       url: '/posts/1',
       data: JSON.stringify({
@@ -246,15 +247,15 @@ module('Integration | Server | Resource shorthand', function(hooks) {
           name: 'Post 2'
         }
       })
-    }).fail((xhr, textStatus, error) => {
+    }).catch((errors) => {
       assert.ok(false, 'failed to find custom path');
       done();
-    }).done((res, status, xhr) => {
+    }).then((response) => {
       assert.ok(true);
       done();
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'PATCH',
       url: '/posts/1',
       data: JSON.stringify({
@@ -262,21 +263,21 @@ module('Integration | Server | Resource shorthand', function(hooks) {
           name: 'Post 2'
         }
       })
-    }).fail((xhr, textStatus, error) => {
+    }).catch((errors) => {
       assert.ok(false, 'failed to find custom path');
       done();
-    }).done((res, status, xhr) => {
+    }).then((response) => {
       assert.ok(true);
       done();
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'DELETE',
       url: '/posts/1'
-    }).fail((xhr, textStatus, error) => {
+    }).catch((errors) => {
       assert.ok(false, 'failed to find custom path');
       done();
-    }).done((res, status, xhr) => {
+    }).then((response) => {
       assert.ok(true);
       done();
     });
@@ -300,22 +301,22 @@ module('Integration | Server | Resource shorthand', function(hooks) {
     this.server.resource('contact');
     this.server.resource('blog-post', { path: '/posts' });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/contacts'
-    }).done(function(res, status, xhr) {
-      assert.equal(xhr.status, 200);
-      assert.deepEqual(res, { contacts: [{ id: '1', name: 'Link' }, { id: '2', name: 'Zelda' }] });
+    }).then((response) => {
+      assert.equal(response.xhr.status, 200);
+      assert.deepEqual(response.data, { contacts: [{ id: '1', name: 'Link' }, { id: '2', name: 'Zelda' }] });
       done();
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/posts'
-    }).fail((xhr, textStatus, error) => {
+    }).catch((errors) => {
       assert.ok(false, 'failed to find custom path');
       done();
-    }).done(function(res, status, xhr) {
+    }).then((response) => {
       assert.ok(true);
       done();
     });
@@ -343,11 +344,11 @@ module('Integration | Server | Resource shorthand', function(hooks) {
 
     server.resource('contacts', { only: ['index'] });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/contacts'
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 200);
+    }).then((response) => {
+      assert.equal(response.xhr.status, 200);
       done();
     });
   });
@@ -366,17 +367,17 @@ module('Integration | Server | Resource shorthand', function(hooks) {
 
     let doneForShow = assert.async();
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/contacts/1'
-    }).fail((xhr, textStatus, error) => {
-      assert.ok(error.message.indexOf("Mirage: Your Ember app tried to GET '/contacts/1'") !== -1);
+    }).catch((errors) => {
+      assert.ok(errors.error.message.indexOf("Mirage: Your Ember app tried to GET '/contacts/1'") !== -1);
       doneForShow();
     });
 
     let doneForCreate = assert.async();
 
-    $.ajax({
+    promiseAjax({
       method: 'POST',
       url: '/contacts',
       data: JSON.stringify({
@@ -384,14 +385,14 @@ module('Integration | Server | Resource shorthand', function(hooks) {
           name: 'Zelda'
         }
       })
-    }).fail((xhr, textStatus, error) => {
-      assert.ok(error.message.indexOf("Mirage: Your Ember app tried to POST '/contacts'") !== -1);
+    }).catch((errors) => {
+      assert.ok(errors.error.message.indexOf("Mirage: Your Ember app tried to POST '/contacts'") !== -1);
       doneForCreate();
     });
 
     let doneForPut = assert.async();
 
-    $.ajax({
+    promiseAjax({
       method: 'PUT',
       url: '/contacts/1',
       data: JSON.stringify({
@@ -399,14 +400,14 @@ module('Integration | Server | Resource shorthand', function(hooks) {
           name: 'Zelda'
         }
       })
-    }).fail((xhr, textStatus, error) => {
-      assert.ok(error.message.indexOf("Mirage: Your Ember app tried to PUT '/contacts/1'") !== -1);
+    }).catch((errors) => {
+      assert.ok(errors.error.message.indexOf("Mirage: Your Ember app tried to PUT '/contacts/1'") !== -1);
       doneForPut();
     });
 
     let doneForPatch = assert.async();
 
-    $.ajax({
+    promiseAjax({
       method: 'PATCH',
       url: '/contacts/1',
       data: JSON.stringify({
@@ -414,18 +415,18 @@ module('Integration | Server | Resource shorthand', function(hooks) {
           name: 'Zelda'
         }
       })
-    }).fail((xhr, textStatus, error) => {
-      assert.ok(error.message.indexOf("Mirage: Your Ember app tried to PATCH '/contacts/1'") !== -1);
+    }).catch((errors) => {
+      assert.ok(errors.error.message.indexOf("Mirage: Your Ember app tried to PATCH '/contacts/1'") !== -1);
       doneForPatch();
     });
 
     let doneForDelete = assert.async();
 
-    $.ajax({
+    promiseAjax({
       method: 'DELETE',
       url: '/contacts/1'
-    }).fail((xhr, textStatus, error) => {
-      assert.ok(error.message.indexOf("Mirage: Your Ember app tried to DELETE '/contacts/1'") !== -1);
+    }).catch((errors) => {
+      assert.ok(errors.error.message.indexOf("Mirage: Your Ember app tried to DELETE '/contacts/1'") !== -1);
       doneForDelete();
     });
   });
@@ -444,21 +445,21 @@ module('Integration | Server | Resource shorthand', function(hooks) {
 
     let doneForIndex = assert.async();
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/contacts'
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 200);
+    }).then((response) => {
+      assert.equal(response.xhr.status, 200);
       doneForIndex();
     });
 
     let doneForShow = assert.async();
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/contacts'
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 200);
+    }).then((response) => {
+      assert.equal(response.xhr.status, 200);
       doneForShow();
     });
   });
@@ -477,7 +478,7 @@ module('Integration | Server | Resource shorthand', function(hooks) {
 
     let doneForCreate = assert.async();
 
-    $.ajax({
+    promiseAjax({
       method: 'POST',
       url: '/contacts',
       data: JSON.stringify({
@@ -485,14 +486,14 @@ module('Integration | Server | Resource shorthand', function(hooks) {
           name: 'Zelda'
         }
       })
-    }).fail((xhr, textStatus, error) => {
-      assert.ok(error.message.indexOf("Mirage: Your Ember app tried to POST '/contacts'") !== -1);
+    }).catch((errors) => {
+      assert.ok(errors.error.message.indexOf("Mirage: Your Ember app tried to POST '/contacts'") !== -1);
       doneForCreate();
     });
 
     let doneForPut = assert.async();
 
-    $.ajax({
+    promiseAjax({
       method: 'PUT',
       url: '/contacts/1',
       data: JSON.stringify({
@@ -500,14 +501,14 @@ module('Integration | Server | Resource shorthand', function(hooks) {
           name: 'Zelda'
         }
       })
-    }).fail((xhr, textStatus, error) => {
-      assert.ok(error.message.indexOf("Mirage: Your Ember app tried to PUT '/contacts/1'") !== -1);
+    }).catch((errors) => {
+      assert.ok(errors.error.message.indexOf("Mirage: Your Ember app tried to PUT '/contacts/1'") !== -1);
       doneForPut();
     });
 
     let doneForPatch = assert.async();
 
-    $.ajax({
+    promiseAjax({
       method: 'PATCH',
       url: '/contacts/1',
       data: JSON.stringify({
@@ -515,18 +516,18 @@ module('Integration | Server | Resource shorthand', function(hooks) {
           name: 'Zelda'
         }
       })
-    }).fail((xhr, textStatus, error) => {
-      assert.ok(error.message.indexOf("Mirage: Your Ember app tried to PATCH '/contacts/1'") !== -1);
+    }).catch((errors) => {
+      assert.ok(errors.error.message.indexOf("Mirage: Your Ember app tried to PATCH '/contacts/1'") !== -1);
       doneForPatch();
     });
 
     let doneForDelete = assert.async();
 
-    $.ajax({
+    promiseAjax({
       method: 'DELETE',
       url: '/contacts/1'
-    }).fail((xhr, textStatus, error) => {
-      assert.ok(error.message.indexOf("Mirage: Your Ember app tried to DELETE '/contacts/1'") !== -1);
+    }).catch((errors) => {
+      assert.ok(errors.error.message.indexOf("Mirage: Your Ember app tried to DELETE '/contacts/1'") !== -1);
       doneForDelete();
     });
   });

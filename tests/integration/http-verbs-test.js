@@ -1,6 +1,7 @@
 import {module, test} from 'qunit';
 import Server from 'ember-cli-mirage/server';
 import { Model } from 'ember-cli-mirage';
+import promiseAjax from '../helpers/promise-ajax';
 
 module('Integration | HTTP Verbs', function(hooks) {
   hooks.beforeEach(function() {
@@ -26,11 +27,11 @@ module('Integration | HTTP Verbs', function(hooks) {
       return true;
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/contacts'
-    }).done(function(res) {
-      assert.equal(res, true);
+    }).then((response) => {
+      assert.equal(response.data, true);
       done();
     });
   });
@@ -43,11 +44,11 @@ module('Integration | HTTP Verbs', function(hooks) {
       return true;
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'POST',
       url: '/contacts'
-    }).done(function(res) {
-      assert.equal(res, true);
+    }).then((response) => {
+      assert.equal(response.data, true);
       done();
     });
   });
@@ -60,11 +61,11 @@ module('Integration | HTTP Verbs', function(hooks) {
       return true;
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'PUT',
       url: '/contacts'
-    }).done(function(res) {
-      assert.equal(res, true);
+    }).then((response) => {
+      assert.equal(response.data, true);
       done();
     });
   });
@@ -77,11 +78,11 @@ module('Integration | HTTP Verbs', function(hooks) {
       return true;
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'DELETE',
       url: '/contacts'
-    }).done(function(res) {
-      assert.equal(res, true);
+    }).then((response) => {
+      assert.equal(response.data, true);
       done();
     });
   });
@@ -94,11 +95,11 @@ module('Integration | HTTP Verbs', function(hooks) {
       return true;
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'PATCH',
       url: '/contacts'
-    }).done(function(res) {
-      assert.equal(res, true);
+    }).then((response) => {
+      assert.equal(response.data, true);
       done();
     });
   });
@@ -109,10 +110,10 @@ module('Integration | HTTP Verbs', function(hooks) {
 
     this.server.resource('contacts');
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/contacts'
-    }).done(function() {
+    }).then(function() {
       done();
     });
   });
@@ -123,13 +124,12 @@ module('Integration | HTTP Verbs', function(hooks) {
 
     this.server.get('/contacts', {}, 404);
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
-      url: '/contacts',
-      complete: function(res) {
-        assert.ok(res.status, 404);
-        done();
-      }
+      url: '/contacts'
+    }).catch(function(error) {
+      assert.ok(error.xhr.status, 404);
+      done();
     });
   });
 });

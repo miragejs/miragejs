@@ -2,6 +2,7 @@ import {module, test} from 'qunit';
 import { Model, ActiveModelSerializer } from 'ember-cli-mirage';
 import { camelize } from 'ember-cli-mirage/utils/inflector';
 import Server from 'ember-cli-mirage/server';
+import promiseAjax from '../../helpers/promise-ajax';
 
 module('Integration | Server | Customized normalize method', function(hooks) {
   hooks.beforeEach(function() {
@@ -43,7 +44,7 @@ module('Integration | Server | Customized normalize method', function(hooks) {
 
     server.post('/contacts');
 
-    $.ajax({
+    promiseAjax({
       method: 'POST',
       url: '/contacts',
       data: JSON.stringify({
@@ -60,8 +61,8 @@ module('Integration | Server | Customized normalize method', function(hooks) {
           ]
         }
       })
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 201);
+    }).then((response) => {
+      assert.equal(response.xhr.status, 201);
       assert.equal(server.db.contacts.length, 1);
       assert.equal(server.db.contacts[0].firstName, 'Zelda');
       done();
@@ -83,7 +84,7 @@ module('Integration | Server | Customized normalize method', function(hooks) {
       return {};
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'PUT',
       url: '/contacts/1',
       contentType: 'application/json',
@@ -101,7 +102,7 @@ module('Integration | Server | Customized normalize method', function(hooks) {
           ]
         }
       })
-    }).done(() => {
+    }).then(() => {
       done();
     });
   });
