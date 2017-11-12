@@ -1,6 +1,7 @@
 import {module, test} from 'qunit';
 import { Model, ActiveModelSerializer } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
+import promiseAjax from '../../helpers/promise-ajax';
 
 module('Integration | Server | Shorthand sanity check', function(hooks) {
   hooks.beforeEach(function() {
@@ -33,12 +34,12 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
 
     this.server.get('/contacts');
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/contacts'
-    }).done(function(res, status, xhr) {
-      assert.equal(xhr.status, 200);
-      assert.deepEqual(res, { contacts: [{ id: '1', name: 'Link' }] });
+    }).then((response) => {
+      assert.equal(response.xhr.status, 200);
+      assert.deepEqual(response.data, { contacts: [{ id: '1', name: 'Link' }] });
       done();
     });
   });
@@ -50,7 +51,7 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
 
     server.post('/contacts');
 
-    $.ajax({
+    promiseAjax({
       method: 'POST',
       url: '/contacts',
       data: JSON.stringify({
@@ -58,8 +59,8 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
           name: 'Zelda'
         }
       })
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 201);
+    }).then((response) => {
+      assert.equal(response.xhr.status, 201);
       assert.equal(server.db.contacts.length, 1);
       done();
     });
@@ -78,7 +79,7 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
 
     server.put('/contacts/:id');
 
-    $.ajax({
+    promiseAjax({
       method: 'PUT',
       url: '/contacts/1',
       data: JSON.stringify({
@@ -86,8 +87,8 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
           name: 'Zelda'
         }
       })
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 200);
+    }).then((response) => {
+      assert.equal(response.xhr.status, 200);
       assert.equal(server.db.contacts[0].name, 'Zelda');
       done();
     });
@@ -106,7 +107,7 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
 
     server.patch('/contacts/:id');
 
-    $.ajax({
+    promiseAjax({
       method: 'PATCH',
       url: '/contacts/1',
       data: JSON.stringify({
@@ -114,8 +115,8 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
           name: 'Zelda'
         }
       })
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 200);
+    }).then((response) => {
+      assert.equal(response.xhr.status, 200);
       assert.equal(server.db.contacts[0].name, 'Zelda');
       done();
     });
@@ -134,11 +135,11 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
 
     server.del('/contacts/:id');
 
-    $.ajax({
+    promiseAjax({
       method: 'DELETE',
       url: '/contacts/1'
-    }).done((res, status, xhr) => {
-      assert.equal(xhr.status, 204);
+    }).then((response) => {
+      assert.equal(response.xhr.status, 204);
       assert.equal(server.db.contacts.length, 0);
       done();
     });

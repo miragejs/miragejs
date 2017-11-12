@@ -6,6 +6,7 @@ import Server from 'ember-cli-mirage/server';
 import Response from 'ember-cli-mirage/response';
 import FunctionRouteHandler from 'ember-cli-mirage/route-handlers/function';
 import _uniqBy from 'lodash/uniqBy';
+import promiseAjax from '../../helpers/promise-ajax';
 
 module('Integration | Route handlers | Function handler', function(hooks) {
   hooks.beforeEach(function() {
@@ -40,13 +41,12 @@ module('Integration | Route handlers | Function handler', function(hooks) {
       throw 'I goofed';
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
-      url: '/users',
-      error: ({ responseText }) => {
-        assert.equal(responseText, 'Mirage: Your GET handler for the url /users threw an error: I goofed');
-        done();
-      }
+      url: '/users'
+    }).catch((error) => {
+      assert.equal(error.xhr.responseText, 'Mirage: Your GET handler for the url /users threw an error: I goofed');
+      done();
     });
   });
 
@@ -58,8 +58,8 @@ module('Integration | Route handlers | Function handler', function(hooks) {
       return new Response(200, { 'Content-Type': 'text/csv' }, 'firstname,lastname\nbob,dylon');
     });
 
-    $.ajax({ method: 'GET', url: '/users' }).done(function(res) {
-      assert.equal(res, 'firstname,lastname\nbob,dylon');
+    promiseAjax({ method: 'GET', url: '/users' }).then((response) => {
+      assert.equal(response.data, 'firstname,lastname\nbob,dylon');
       done();
     });
   });
@@ -74,8 +74,8 @@ module('Integration | Route handlers | Function handler', function(hooks) {
       });
     });
 
-    $.ajax({ method: 'GET', url: '/users' }).done(function(res) {
-      assert.equal(res, 'firstname,lastname\nbob,dylan');
+    promiseAjax({ method: 'GET', url: '/users' }).then((response) => {
+      assert.equal(response.data, 'firstname,lastname\nbob,dylan');
       done();
     });
   });
@@ -92,8 +92,8 @@ module('Integration | Route handlers | Function handler', function(hooks) {
       });
     });
 
-    $.ajax({ method: 'GET', url: '/users' }).done(function(res) {
-      assert.deepEqual(res, { users: [ { id: user.id, name: 'Sam' } ] });
+    promiseAjax({ method: 'GET', url: '/users' }).then((response) => {
+      assert.deepEqual(response.data, { users: [ { id: user.id, name: 'Sam' } ] });
       done();
     });
   });
@@ -108,8 +108,8 @@ module('Integration | Route handlers | Function handler', function(hooks) {
       });
     });
 
-    $.ajax({ method: 'GET', url: '/users' }).done(function(res) {
-      assert.equal(res, '');
+    promiseAjax({ method: 'GET', url: '/users' }).then((response) => {
+      assert.equal(response.data, '');
       done();
     });
   });

@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { Model, Factory, ActiveModelSerializer } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
+import promiseAjax from '../../helpers/promise-ajax';
 
 module('Integration | Server | Custom function handler', function(hooks) {
   hooks.beforeEach(function() {
@@ -34,11 +35,11 @@ module('Integration | Server | Custom function handler', function(hooks) {
       return schema.contacts.all().models;
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/contacts'
-    }).done((res) => {
-      assert.deepEqual(res, [{ id: '1' }, { id: '2' }, { id: '3' }]);
+    }).then((response) => {
+      assert.deepEqual(response.data, [{ id: '1' }, { id: '2' }, { id: '3' }]);
       done();
     });
   });
@@ -60,7 +61,7 @@ module('Integration | Server | Custom function handler', function(hooks) {
       return {};
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'POST',
       url: '/contacts',
       contentType: 'application/json',
@@ -71,7 +72,7 @@ module('Integration | Server | Custom function handler', function(hooks) {
           team_id: 1
         }
       })
-    }).done(() => {
+    }).then(() => {
       done();
     });
   });
@@ -93,11 +94,11 @@ module('Integration | Server | Custom function handler', function(hooks) {
       return {};
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'POST',
       url: '/form-test',
       data: 'name=Sam+Selikoff&company=TED&email=sam.selikoff@gmail.com'
-    }).done(() => {
+    }).then(() => {
       done();
     });
   });

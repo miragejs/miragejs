@@ -1,5 +1,6 @@
 import {module, test} from 'qunit';
 import Server from 'ember-cli-mirage/server';
+import promiseAjax from '../helpers/promise-ajax';
 
 module('Integration | Passthrough', function(hooks) {
   hooks.beforeEach(function() {
@@ -27,22 +28,20 @@ module('Integration | Passthrough', function(hooks) {
       this.passthrough('/addresses');
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
-      url: '/contacts',
-      success(data) {
-        assert.equal(data, 123);
-        done1();
-      }
+      url: '/contacts'
+    }).then((response) => {
+      assert.equal(response.data, 123);
+      done1();
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
-      url: '/addresses',
-      error(reason) {
-        assert.equal(reason.status, 404);
-        done2();
-      }
+      url: '/addresses'
+    }).catch((error) => {
+      assert.equal(error.xhr.status, 404);
+      done2();
     });
   });
 
@@ -64,27 +63,25 @@ module('Integration | Passthrough', function(hooks) {
       done2();
     };
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
-      url: '/contacts',
-      success(data) {
-        assert.equal(data, 123);
-        done1();
-      }
+      url: '/contacts'
+    }).then((response) => {
+      assert.equal(response.data, 123);
+      done1();
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
       url: '/addresses'
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'POST',
-      url: '/addresses',
-      error(reason) {
-        assert.equal(reason.status, 404);
-        done3();
-      }
+      url: '/addresses'
+    }).catch((error) => {
+      assert.equal(error.xhr.status, 404);
+      done3();
     });
   });
 
@@ -101,22 +98,20 @@ module('Integration | Passthrough', function(hooks) {
       this.passthrough('/contacts', '/addresses');
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
-      url: '/contacts',
-      error(reason) {
-        assert.equal(reason.status, 404);
-        done1();
-      }
+      url: '/contacts'
+    }).catch((error) => {
+      assert.equal(error.xhr.status, 404);
+      done1();
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'POST',
-      url: '/addresses',
-      error(reason) {
-        assert.equal(reason.status, 404);
-        done2();
-      }
+      url: '/addresses'
+    }).catch((error) => {
+      assert.equal(error.xhr.status, 404);
+      done2();
     });
   });
 
@@ -131,22 +126,20 @@ module('Integration | Passthrough', function(hooks) {
       this.passthrough('/addresses', ['post']);
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
-      url: '/contacts',
-      error(reason) {
-        assert.equal(reason.status, 404);
-        done1();
-      }
+      url: '/contacts'
+    }).catch((error) => {
+      assert.equal(error.xhr.status, 404);
+      done1();
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'POST',
-      url: '/addresses',
-      error(reason) {
-        assert.equal(reason.status, 404);
-        done2();
-      }
+      url: '/addresses'
+    }).catch((error) => {
+      assert.equal(error.xhr.status, 404);
+      done2();
     });
   });
 
@@ -163,22 +156,20 @@ module('Integration | Passthrough', function(hooks) {
       this.passthrough();
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
-      url: '/contacts',
-      success(data) {
-        assert.equal(data, 123);
-        done1();
-      }
+      url: '/contacts'
+    }).then((response) => {
+      assert.equal(response.data, 123);
+      done1();
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
-      url: '/addresses',
-      error(reason) {
-        assert.equal(reason.status, 404);
-        done2();
-      }
+      url: '/addresses'
+    }).catch((error) => {
+      assert.equal(error.xhr.status, 404);
+      done2();
     });
   });
 
@@ -195,27 +186,24 @@ module('Integration | Passthrough', function(hooks) {
       this.passthrough();
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
-      url: '/contacts',
-      success(data) {
-        assert.equal(data, 123, 'contacts is intercepted');
-        done1();
-      }
+      url: '/contacts'
+    }).then((response) => {
+      assert.equal(response.data, 123, 'contacts is intercepted');
+      done1(); // test will fail bc only 1 assertion, but we don't have to wait
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
-      url: '/',
-      error() {
-        done2(); // test will fail bc only 1 assertion, but we don't have to wait
-      },
-      success(html) {
-        // a passthrough request to index on the current domain
-        // actually succeeds here, since that's where the test runner is served
-        assert.ok(html, '/ is passed through');
-        done2(); // test will fail bc only 1 assertion, but we don't have to wait
-      }
+      url: '/'
+    }).then((response) => {
+      // a passthrough request to index on the current domain
+      // actually succeeds here, since that's where the test runner is served
+      assert.ok(response.data, '/ is passed through');
+      done2();
+    }).catch(() => {
+      done2(); // test will fail bc only 1 assertion, but we don't have to wait
     });
   });
 
@@ -228,13 +216,12 @@ module('Integration | Passthrough', function(hooks) {
       this.passthrough('http://api.foo.bar/**');
     });
 
-    $.ajax({
+    promiseAjax({
       method: 'GET',
-      url: 'http://api.foo.bar/contacts',
-      error() {
-        assert.ok(true);
-        done1();
-      }
+      url: '/addresses'
+    }).catch((error) => {
+      assert.ok(true);
+      done1();
     });
   });
 });
