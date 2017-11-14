@@ -61,7 +61,7 @@ function createPretender(server) {
          mirage/config.js file. Did you forget to add your namespace?`
       );
     };
-  }, { trackRequests: false });
+  }, { trackRequests: server.shouldTrackRequests() });
 }
 
 const defaultRouteOptions = {
@@ -154,6 +154,7 @@ export default class Server {
     this.timing = this.timing || config.timing || 400;
     this.namespace = this.namespace || config.namespace || '';
     this.urlPrefix = this.urlPrefix || config.urlPrefix || '';
+    this.trackRequests = config.trackRequests;
 
     this._defineRouteHandlerHelpers();
 
@@ -181,6 +182,9 @@ export default class Server {
     let hasFactories = this._hasModulesOfType(config, 'factories');
     let hasDefaultScenario = config.scenarios && config.scenarios.hasOwnProperty('default');
 
+    let didOverridePretenderConfig = (config.trackRequests !== undefined) && this.pretender;
+    assert(!didOverridePretenderConfig,
+      'You cannot modify Pretender\'s request tracking once the server is created');
     this.pretender = this.pretender || createPretender(this);
 
     if (config.baseConfig) {
@@ -230,6 +234,17 @@ export default class Server {
    */
   shouldLog() {
     return typeof this.logging !== 'undefined' ? this.logging : !this.isTest();
+  }
+
+  /**
+   * Determines if the server should track requests.
+   *
+   * @method shouldTrackRequests
+   * @return The value of this.trackRequests if defined, false otherwise.
+   * @public
+   */
+  shouldTrackRequests() {
+    return typeof this.trackRequests !== 'undefined' ? this.trackRequests : false;
   }
 
   /**
