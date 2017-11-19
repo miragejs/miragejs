@@ -37,14 +37,13 @@ module('Integration | Server | Customized normalize method', function(hooks) {
     this.server.shutdown();
   });
 
-  test('custom model-specific normalize functions are used', function(assert) {
+  test('custom model-specific normalize functions are used', async function(assert) {
     let { server } = this;
     assert.expect(3);
-    let done = assert.async();
 
     server.post('/contacts');
 
-    promiseAjax({
+    let { xhr } = await promiseAjax({
       method: 'POST',
       url: '/contacts',
       data: JSON.stringify({
@@ -61,17 +60,15 @@ module('Integration | Server | Customized normalize method', function(hooks) {
           ]
         }
       })
-    }).then((response) => {
-      assert.equal(response.xhr.status, 201);
-      assert.equal(server.db.contacts.length, 1);
-      assert.equal(server.db.contacts[0].firstName, 'Zelda');
-      done();
     });
+
+    assert.equal(xhr.status, 201);
+    assert.equal(server.db.contacts.length, 1);
+    assert.equal(server.db.contacts[0].firstName, 'Zelda');
   });
 
-  test('custom model-specific normalize functions are used with custom function handlers', function(assert) {
+  test('custom model-specific normalize functions are used with custom function handlers', async function(assert) {
     let { server } = this;
-    let done = assert.async();
 
     server.put('/contacts/:id', function(schema, request) {
       let attrs = this.normalizedRequestAttrs();
@@ -84,7 +81,7 @@ module('Integration | Server | Customized normalize method', function(hooks) {
       return {};
     });
 
-    promiseAjax({
+    await promiseAjax({
       method: 'PUT',
       url: '/contacts/1',
       contentType: 'application/json',
@@ -102,8 +99,6 @@ module('Integration | Server | Customized normalize method', function(hooks) {
           ]
         }
       })
-    }).then(() => {
-      done();
     });
   });
 });

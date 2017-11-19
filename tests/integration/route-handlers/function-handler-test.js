@@ -33,40 +33,39 @@ module('Integration | Route handlers | Function handler', function(hooks) {
     this.server.shutdown();
   });
 
-  test('a meaningful error is thrown if a custom route handler throws an error', function(assert) {
+  test('a meaningful error is thrown if a custom route handler throws an error', async function(assert) {
     assert.expect(1);
-    let done = assert.async();
 
     this.server.get('/users', function() {
       throw 'I goofed';
     });
 
-    promiseAjax({
-      method: 'GET',
-      url: '/users'
-    }).catch((error) => {
-      assert.equal(error.xhr.responseText, 'Mirage: Your GET handler for the url /users threw an error: I goofed');
-      done();
-    });
+    try {
+      await promiseAjax({
+        method: 'GET',
+        url: '/users'
+      });
+    } catch(e) {
+      assert.equal(
+        e.xhr.responseText,
+        'Mirage: Your GET handler for the url /users threw an error: I goofed'
+      );
+    }
   });
 
-  test('mirage response string is not serialized to string', function(assert) {
+  test('mirage response string is not serialized to string', async function(assert) {
     assert.expect(1);
-    let done = assert.async();
 
     this.server.get('/users', function() {
       return new Response(200, { 'Content-Type': 'text/csv' }, 'firstname,lastname\nbob,dylon');
     });
 
-    promiseAjax({ method: 'GET', url: '/users' }).then((response) => {
-      assert.equal(response.data, 'firstname,lastname\nbob,dylon');
-      done();
-    });
+    let { data } = await promiseAjax({ method: 'GET', url: '/users' });
+    assert.equal(data, 'firstname,lastname\nbob,dylon');
   });
 
-  test('function can return a promise with non-serializable content', function(assert) {
+  test('function can return a promise with non-serializable content', async function(assert) {
     assert.expect(1);
-    let done = assert.async();
 
     this.server.get('/users', function() {
       return new Promise(resolve => {
@@ -74,15 +73,12 @@ module('Integration | Route handlers | Function handler', function(hooks) {
       });
     });
 
-    promiseAjax({ method: 'GET', url: '/users' }).then((response) => {
-      assert.equal(response.data, 'firstname,lastname\nbob,dylan');
-      done();
-    });
+    let { data } = await promiseAjax({ method: 'GET', url: '/users' });
+    assert.equal(data, 'firstname,lastname\nbob,dylan');
   });
 
-  test('function can return a promise with serializable content', function(assert) {
+  test('function can return a promise with serializable content', async function(assert) {
     assert.expect(1);
-    let done = assert.async();
 
     let user = this.schema.users.create({ name: 'Sam' });
 
@@ -92,15 +88,12 @@ module('Integration | Route handlers | Function handler', function(hooks) {
       });
     });
 
-    promiseAjax({ method: 'GET', url: '/users' }).then((response) => {
-      assert.deepEqual(response.data, { users: [ { id: user.id, name: 'Sam' } ] });
-      done();
-    });
+    let { data } = await promiseAjax({ method: 'GET', url: '/users' });
+    assert.deepEqual(data, { users: [ { id: user.id, name: 'Sam' } ] });
   });
 
-  test('function can return a promise with an empty string', function(assert) {
+  test('function can return a promise with an empty string', async function(assert) {
     assert.expect(1);
-    let done = assert.async();
 
     this.server.get('/users', function() {
       return new Promise(resolve => {
@@ -108,10 +101,8 @@ module('Integration | Route handlers | Function handler', function(hooks) {
       });
     });
 
-    promiseAjax({ method: 'GET', url: '/users' }).then((response) => {
-      assert.equal(response.data, '');
-      done();
-    });
+    let { data } = await promiseAjax({ method: 'GET', url: '/users' });
+    assert.equal(data, '');
   });
 
   test('#serialize uses the default serializer on a model', function(assert) {
