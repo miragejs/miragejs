@@ -22,9 +22,8 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
     this.server.shutdown();
   });
 
-  test('a get shorthand works', function(assert) {
+  test('a get shorthand works', async function(assert) {
     assert.expect(2);
-    let done = assert.async();
 
     this.server.db.loadData({
       contacts: [
@@ -34,24 +33,22 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
 
     this.server.get('/contacts');
 
-    promiseAjax({
+    let { xhr, data } = await promiseAjax({
       method: 'GET',
       url: '/contacts'
-    }).then((response) => {
-      assert.equal(response.xhr.status, 200);
-      assert.deepEqual(response.data, { contacts: [{ id: '1', name: 'Link' }] });
-      done();
     });
+
+    assert.equal(xhr.status, 200);
+    assert.deepEqual(data, { contacts: [{ id: '1', name: 'Link' }] });
   });
 
-  test('a post shorthand works', function(assert) {
+  test('a post shorthand works', async function(assert) {
     let { server } = this;
     assert.expect(2);
-    let done = assert.async();
 
     server.post('/contacts');
 
-    promiseAjax({
+    let { xhr } = await promiseAjax({
       method: 'POST',
       url: '/contacts',
       data: JSON.stringify({
@@ -59,17 +56,15 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
           name: 'Zelda'
         }
       })
-    }).then((response) => {
-      assert.equal(response.xhr.status, 201);
-      assert.equal(server.db.contacts.length, 1);
-      done();
     });
+
+    assert.equal(xhr.status, 201);
+    assert.equal(server.db.contacts.length, 1);
   });
 
-  test('a put shorthand works', function(assert) {
+  test('a put shorthand works', async function(assert) {
     let { server } = this;
     assert.expect(2);
-    let done = assert.async();
 
     this.server.db.loadData({
       contacts: [
@@ -79,7 +74,7 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
 
     server.put('/contacts/:id');
 
-    promiseAjax({
+    let { xhr } = await promiseAjax({
       method: 'PUT',
       url: '/contacts/1',
       data: JSON.stringify({
@@ -87,17 +82,15 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
           name: 'Zelda'
         }
       })
-    }).then((response) => {
-      assert.equal(response.xhr.status, 200);
-      assert.equal(server.db.contacts[0].name, 'Zelda');
-      done();
     });
+
+    assert.equal(xhr.status, 200);
+    assert.equal(server.db.contacts[0].name, 'Zelda');
   });
 
-  test('a patch shorthand works', function(assert) {
+  test('a patch shorthand works', async function(assert) {
     let { server } = this;
     assert.expect(2);
-    let done = assert.async();
 
     this.server.db.loadData({
       contacts: [
@@ -107,7 +100,7 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
 
     server.patch('/contacts/:id');
 
-    promiseAjax({
+    let { xhr } = await promiseAjax({
       method: 'PATCH',
       url: '/contacts/1',
       data: JSON.stringify({
@@ -115,17 +108,15 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
           name: 'Zelda'
         }
       })
-    }).then((response) => {
-      assert.equal(response.xhr.status, 200);
-      assert.equal(server.db.contacts[0].name, 'Zelda');
-      done();
     });
+
+    assert.equal(xhr.status, 200);
+    assert.equal(server.db.contacts[0].name, 'Zelda');
   });
 
-  test('a delete shorthand works', function(assert) {
+  test('a delete shorthand works', async function(assert) {
     let { server } = this;
     assert.expect(2);
-    let done = assert.async();
 
     this.server.db.loadData({
       contacts: [
@@ -135,13 +126,12 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
 
     server.del('/contacts/:id');
 
-    promiseAjax({
+    let { xhr } = await promiseAjax({
       method: 'DELETE',
       url: '/contacts/1'
-    }).then((response) => {
-      assert.equal(response.xhr.status, 204);
-      assert.equal(server.db.contacts.length, 0);
-      done();
     });
+
+    assert.equal(xhr.status, 204);
+    assert.equal(server.db.contacts.length, 0);
   });
 });

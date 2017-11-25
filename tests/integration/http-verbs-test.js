@@ -19,89 +19,79 @@ module('Integration | HTTP Verbs', function(hooks) {
     this.server.shutdown();
   });
 
-  test('mirage responds to get', function(assert) {
+  test('mirage responds to get', async function(assert) {
     assert.expect(1);
-    let done = assert.async();
 
     this.server.get('/contacts', function() {
       return true;
     });
 
-    promiseAjax({
+    let { data } = await promiseAjax({
       method: 'GET',
       url: '/contacts'
-    }).then((response) => {
-      assert.equal(response.data, true);
-      done();
     });
+
+    assert.equal(data, true);
   });
 
-  test('mirage responds to post', function(assert) {
+  test('mirage responds to post', async function(assert) {
     assert.expect(1);
-    let done = assert.async();
 
     this.server.post('/contacts', function() {
       return true;
     });
 
-    promiseAjax({
+    let { data } = await promiseAjax({
       method: 'POST',
       url: '/contacts'
-    }).then((response) => {
-      assert.equal(response.data, true);
-      done();
     });
+
+    assert.equal(data, true);
   });
 
-  test('mirage responds to put', function(assert) {
+  test('mirage responds to put', async function(assert) {
     assert.expect(1);
-    let done = assert.async();
 
     this.server.put('/contacts', function() {
       return true;
     });
 
-    promiseAjax({
+    let { data } = await promiseAjax({
       method: 'PUT',
       url: '/contacts'
-    }).then((response) => {
-      assert.equal(response.data, true);
-      done();
     });
+
+    assert.equal(data, true);
   });
 
-  test('mirage responds to delete', function(assert) {
+  test('mirage responds to delete', async function(assert) {
     assert.expect(1);
-    let done = assert.async();
 
     this.server.delete('/contacts', function() {
       return true;
     });
 
-    promiseAjax({
+    let { data } = await promiseAjax({
       method: 'DELETE',
       url: '/contacts'
-    }).then((response) => {
-      assert.equal(response.data, true);
-      done();
     });
+
+    assert.equal(data, true);
   });
 
-  test('mirage responds to patch', function(assert) {
+  test('mirage responds to patch', async function(assert) {
     assert.expect(1);
-    let done = assert.async();
 
     this.server.patch('/contacts', function() {
       return true;
     });
 
-    promiseAjax({
+    let { data } = await promiseAjax({
       method: 'PATCH',
       url: '/contacts'
-    }).then((response) => {
-      assert.equal(response.data, true);
-      done();
     });
+
+    assert.equal(data, true);
   });
 
   test('mirage responds to resource', function(assert) {
@@ -118,18 +108,18 @@ module('Integration | HTTP Verbs', function(hooks) {
     });
   });
 
-  test('response code can be customized', function(assert) {
+  test('response code can be customized', async function(assert) {
     assert.expect(1);
-    let done = assert.async();
 
     this.server.get('/contacts', {}, 404);
 
-    promiseAjax({
-      method: 'GET',
-      url: '/contacts'
-    }).catch(function(error) {
-      assert.ok(error.xhr.status, 404);
-      done();
-    });
+    try {
+      await promiseAjax({
+        method: 'GET',
+        url: '/contacts'
+      });
+    } catch(e) {
+      assert.ok(e.xhr.status, 404);
+    }
   });
 });

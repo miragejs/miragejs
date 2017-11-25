@@ -25,9 +25,8 @@ module('Integration | Server | Custom function handler', function(hooks) {
     this.server.shutdown();
   });
 
-  test(`a POJA of models defaults to responding with an array of each model's attrs`, function(assert) {
+  test(`a POJA of models defaults to responding with an array of each model's attrs`, async function(assert) {
     assert.expect(1);
-    let done = assert.async();
     let { server } = this;
 
     server.createList('contact', 3);
@@ -35,18 +34,16 @@ module('Integration | Server | Custom function handler', function(hooks) {
       return schema.contacts.all().models;
     });
 
-    promiseAjax({
+    let { data } = await promiseAjax({
       method: 'GET',
       url: '/contacts'
-    }).then((response) => {
-      assert.deepEqual(response.data, [{ id: '1' }, { id: '2' }, { id: '3' }]);
-      done();
     });
+
+    assert.deepEqual(data, [{ id: '1' }, { id: '2' }, { id: '3' }]);
   });
 
-  test(`#normalizedRequestAttrs returns an object with the primary resource's attrs and belongsTo keys camelized`, function(assert) {
+  test(`#normalizedRequestAttrs returns an object with the primary resource's attrs and belongsTo keys camelized`, async function(assert) {
     assert.expect(1);
-    let done = assert.async();
     let { server } = this;
 
     server.post('/contacts', function() {
@@ -61,7 +58,7 @@ module('Integration | Server | Custom function handler', function(hooks) {
       return {};
     });
 
-    promiseAjax({
+    await promiseAjax({
       method: 'POST',
       url: '/contacts',
       contentType: 'application/json',
@@ -72,14 +69,11 @@ module('Integration | Server | Custom function handler', function(hooks) {
           team_id: 1
         }
       })
-    }).then(() => {
-      done();
     });
   });
 
-  test(`#normalizedRequestAttrs parses a x-www-form-urlencoded request and returns a POJO`, function(assert) {
+  test(`#normalizedRequestAttrs parses a x-www-form-urlencoded request and returns a POJO`, async function(assert) {
     assert.expect(1);
-    let done = assert.async();
     let { server } = this;
 
     server.post('/form-test', function() {
@@ -94,12 +88,10 @@ module('Integration | Server | Custom function handler', function(hooks) {
       return {};
     });
 
-    promiseAjax({
+    await promiseAjax({
       method: 'POST',
       url: '/form-test',
       data: 'name=Sam+Selikoff&company=TED&email=sam.selikoff@gmail.com'
-    }).then(() => {
-      done();
     });
   });
 });

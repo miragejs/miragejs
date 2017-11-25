@@ -48,9 +48,9 @@ module('Integration | Serializers | Base | Full Request', function(hooks) {
     this.server.shutdown();
   });
 
-  test('the appropriate serializer is used', function(assert) {
+  test('the appropriate serializer is used', async function(assert) {
     assert.expect(1);
-    let done = assert.async();
+
     let author = this.server.schema.authors.create({
       first: 'Link',
       last: 'of Hyrule',
@@ -64,26 +64,24 @@ module('Integration | Serializers | Base | Full Request', function(hooks) {
       return schema.authors.find(id);
     });
 
-    promiseAjax({
+    let { data } = await promiseAjax({
       method: 'GET',
       url: '/authors/1'
-    }).then((response) => {
-      assert.deepEqual(response.data, {
-        author: {
-          id: '1',
-          first: 'Link',
-          posts: [
-            { id: '1', title: 'Lorem ipsum' }
-          ]
-        }
-      });
-      done();
+    });
+
+    assert.deepEqual(data, {
+      author: {
+        id: '1',
+        first: 'Link',
+        posts: [
+          { id: '1', title: 'Lorem ipsum' }
+        ]
+      }
     });
   });
 
-  test('components decoded', function(assert) {
+  test('components decoded', async function(assert) {
     assert.expect(1);
-    let done = assert.async();
 
     this.server.get('/authors/:id', function(schema, request) {
       let { id } = request.params;
@@ -91,20 +89,16 @@ module('Integration | Serializers | Base | Full Request', function(hooks) {
       return { data: { id } };
     });
 
-    promiseAjax({
+    let { data } = await promiseAjax({
       method: 'GET',
       url: '/authors/%3A1'
-    }).then((response) => {
-      assert.deepEqual(response.data, {
-        data: { id: ':1' }
-      });
-      done();
     });
+
+    assert.deepEqual(data, { data: { id: ':1' } });
   });
 
-  test('a response falls back to the application serializer, if it exists', function(assert) {
+  test('a response falls back to the application serializer, if it exists', async function(assert) {
     assert.expect(1);
-    let done = assert.async();
     this.server.schema.posts.create({
       title: 'Lorem',
       date: '20001010'
@@ -116,22 +110,20 @@ module('Integration | Serializers | Base | Full Request', function(hooks) {
       return schema.posts.find(id);
     });
 
-    promiseAjax({
+    let { data } = await promiseAjax({
       method: 'GET',
       url: '/posts/1'
-    }).then((response) => {
-      assert.deepEqual(response.data, {
-        id: '1',
-        title: 'Lorem',
-        date: '20001010'
-      });
-      done();
+    });
+
+    assert.deepEqual(data, {
+      id: '1',
+      title: 'Lorem',
+      date: '20001010'
     });
   });
 
-  test('serializer.include is invoked when it is a function', function(assert) {
+  test('serializer.include is invoked when it is a function', async function(assert) {
     assert.expect(1);
-    let done = assert.async();
     let post = this.server.schema.posts.create({
       title: 'Lorem',
       date: '20001010'
@@ -145,20 +137,19 @@ module('Integration | Serializers | Base | Full Request', function(hooks) {
       return schema.comments.find(id);
     });
 
-    promiseAjax({
+    let { data } = await promiseAjax({
       method: 'GET',
       url: '/comments/1?include_post=true'
-    }).then((response) => {
-      assert.deepEqual(response.data, {
+    });
+
+    assert.deepEqual(data, {
+      id: '1',
+      description: 'Lorem is the best',
+      post: {
         id: '1',
-        description: 'Lorem is the best',
-        post: {
-          id: '1',
-          title: 'Lorem',
-          date: '20001010'
-        }
-      });
-      done();
+        title: 'Lorem',
+        date: '20001010'
+      }
     });
   });
 });
