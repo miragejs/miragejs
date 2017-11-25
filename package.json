@@ -44,7 +44,7 @@
     "exists-sync": "0.0.3",
     "fake-xml-http-request": "^1.4.0",
     "faker": "^3.0.0",
-    "pretender": "^1.5.1",
+    "pretender": "^1.6.1",
     "route-recognizer": "^0.2.3"
   },
   "devDependencies": {
