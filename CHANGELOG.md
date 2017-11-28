@@ -1,5 +1,17 @@
 # Ember CLI Mirage Changelog
 
+# Ember CLI Mirage Changelog
+
+## 0.4.1
+
+Update notes: none
+
+Changes:
+
+  - [BUGFIX][#1217](https://github.com/samselikoff/ember-cli-mirage/pull/1217) Make tracking pretender requests configurable after it was hardcoded false #1137. @patrickjholloway
+  - General upgrade to use async/await in tests @geekygrappler
+  - [ENHANCEMENT][#1203](https://github.com/samselikoff/ember-cli-mirage/pull/1203) pass singular model name to resource helper @geekygrappler
+  - [ENHANCEMENT][#1199](https://github.com/samselikoff/ember-cli-mirage/pull/1199) upgrade to new QUnit testing API @turbo87
 ## 0.4.0
 
 Update notes:
