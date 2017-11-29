@@ -1,7 +1,5 @@
 # Ember CLI Mirage Changelog
 
-# Ember CLI Mirage Changelog
-
 ## 0.4.1
 
 Update notes: none
