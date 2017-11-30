@@ -22,8 +22,8 @@ export function startMirage(env = ENV) {
   let environment = env.environment;
   let discoverEmberDataModels = getWithDefault(env['ember-cli-mirage'] || {}, 'discoverEmberDataModels', true);
   let modules = readModules(env.modulePrefix);
-  let trackRequests = env['ember-cli-mirage'];
-  let options = _assign(modules, {environment, baseConfig, testConfig, discoverEmberDataModels, trackRequests});
+  let options = _assign(modules, {environment, baseConfig, testConfig, discoverEmberDataModels});
+  options.trackRequests = env['ember-cli-mirage'].trackRequests;
 
   return new Server(options);
 }

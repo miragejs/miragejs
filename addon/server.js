@@ -244,7 +244,7 @@ export default class Server {
    * @public
    */
   shouldTrackRequests() {
-    return typeof this.trackRequests !== 'undefined' ? this.trackRequests : false;
+    return Boolean(this.trackRequests);
   }
 
   /**
