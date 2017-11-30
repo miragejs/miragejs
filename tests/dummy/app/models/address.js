@@ -6,5 +6,5 @@ export default Model.extend({
   street: attr('string'),
 
   contact: belongsTo('contact'),
-  primaryContact: belongsTo('contact')
+  province: belongsTo('state')
 });
