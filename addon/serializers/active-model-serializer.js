@@ -55,6 +55,10 @@ export default Serializer.extend({
     });
 
     return jsonApiPayload;
+  },
+
+  getCoalescedIds(request) {
+    return request.queryParams && request.queryParams.ids;
   }
 
 });

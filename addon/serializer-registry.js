@@ -83,4 +83,8 @@ export default class SerializerRegistry {
     );
   }
 
+  getCoalescedIds(request, modelName) {
+    return this.serializerFor(modelName).getCoalescedIds(request);
+  }
+
 }

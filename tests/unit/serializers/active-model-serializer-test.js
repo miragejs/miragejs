@@ -66,5 +66,15 @@ module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
       }
     });
   });
+
+  test('it returns coalesce Ids if present', function(assert) {
+    let request = { url: '/authors', queryParams: { ids: ['1', '3'] } };
+    assert.deepEqual(this.serializer.getCoalescedIds(request), ['1', '3']);
+  });
+
+  test('it returns undefined coalesce Ids if not present', function(assert) {
+    let request = { url: '/authors', queryParams: {} };
+    assert.strictEqual(this.serializer.getCoalescedIds(request), undefined);
+  });
 });
 

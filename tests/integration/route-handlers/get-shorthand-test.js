@@ -4,6 +4,7 @@ import {
   hasMany,
   belongsTo,
   JSONAPISerializer,
+  RestSerializer,
   Response
 } from 'ember-cli-mirage';
 import Collection from 'ember-cli-mirage/orm/collection';
@@ -117,10 +118,21 @@ module('Integration | Route Handlers | GET shorthand', function(hooks) {
     assert.equal(author.name, 'Zelda');
   });
 
-  test('undefined shorthand with coalesce true returns the appropriate models', function(assert) {
-    let request = { url: '/authors?ids[]=1&ids[]=3', queryParams: { ids: [1, 3] } };
+  test('undefined shorthand with coalesce true returns the appropriate models [JSONAPI]', function(assert) {
+    let request = { url: '/authors?filter[id]=1,3', queryParams: { 'filter[id]': '1,3' } };
     let options = { coalesce: true };
     let handler = new GetShorthandRouteHandler(this.schema, this.serializer, undefined, '/authors', options);
+
+    let authors = handler.handle(request);
+
+    assert.equal(authors.models.length, 2);
+    assert.deepEqual(authors.models.map((author) => author.name), ['Link', 'Epona']);
+  });
+
+  test('undefined shorthand with coalesce true returns the appropriate models [REST]', function(assert) {
+    let request = { url: '/authors?ids[]=1&ids[]=3', queryParams: { ids: [1, 3] } };
+    let options = { coalesce: true };
+    let handler = new GetShorthandRouteHandler(this.schema, new RestSerializer(), undefined, '/authors', options);
 
     let authors = handler.handle(request);
 
@@ -160,10 +172,21 @@ module('Integration | Route Handlers | GET shorthand', function(hooks) {
     assert.equal(author.code, 404);
   });
 
-  test('string shorthand with coalesce returns the correct models', function(assert) {
-    let request = { url: '/people?ids[]=1&ids[]=3', queryParams: { ids: [1, 3] } };
+  test('string shorthand with coalesce returns the correct models [JSONAPI]', function(assert) {
+    let request = { url: '/authors?filter[id]=1,3', queryParams: { 'filter[id]': '1,3' } };
     let options = { coalesce: true };
     let handler = new GetShorthandRouteHandler(this.schema, this.serializer, 'author', '/people', options);
+
+    let authors = handler.handle(request);
+
+    assert.equal(authors.models.length, 2);
+    assert.deepEqual(authors.models.map((author) => author.name), ['Link', 'Epona']);
+  });
+
+  test('string shorthand with coalesce returns the correct models [REST]', function(assert) {
+    let request = { url: '/people?ids[]=1&ids[]=3', queryParams: { ids: [1, 3] } };
+    let options = { coalesce: true };
+    let handler = new GetShorthandRouteHandler(this.schema, new RestSerializer(), 'author', '/people', options);
 
     let authors = handler.handle(request);
 
