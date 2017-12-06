@@ -6,6 +6,7 @@ module.exports = {
     'Chrome'
   ],
   launch_in_dev: [
+    'Chrome'
   ],
   browser_args: {
     Chrome: {
@@ -16,6 +17,6 @@ module.exports = {
         '--remote-debugging-port=9222',
         '--window-size=1440,900'
       ]
-    },
+    }
   }
 };
