@@ -1,6 +1,6 @@
 import BelongsTo from './associations/belongs-to';
 import HasMany from './associations/has-many';
-import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
+import { toCollectionName, toInternalCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import extend from '../utils/extend';
 import assert from '../assert';
 import Collection from './collection';
@@ -45,7 +45,7 @@ class Model {
    * @public
    */
   save() {
-    let collection = toCollectionName(this.modelName);
+    let collection = toInternalCollectionName(this.modelName);
 
     if (this.isNew()) {
       // Update the attrs with the db response
@@ -106,7 +106,7 @@ class Model {
     if (this.isSaved()) {
       this._disassociateFromDependents();
 
-      let collection = toCollectionName(this.modelName);
+      let collection = toInternalCollectionName(this.modelName);
       this.schema.db[collection].remove(this.attrs.id);
     }
   }
@@ -127,7 +127,7 @@ class Model {
     let hasId = this.attrs.id !== undefined && this.attrs.id !== null;
 
     if (hasId) {
-      let collectionName = toCollectionName(this.modelName);
+      let collectionName = toInternalCollectionName(this.modelName);
       let record = this.schema.db[collectionName].find(this.attrs.id);
       if (record) {
         hasDbRecord = true;
@@ -155,7 +155,7 @@ class Model {
    */
   reload() {
     if (this.id) {
-      let collection = toCollectionName(this.modelName);
+      let collection = toInternalCollectionName(this.modelName);
       let attrs = this.schema.db[collection].find(this.id);
 
       Object.keys(attrs)
@@ -464,11 +464,11 @@ class Model {
       let found;
       if (association.isPolymorphic) {
         found = foreignKeys.map(({ type, id }) => {
-          return this.schema.db[toCollectionName(type)].find(id);
+          return this.schema.db[toInternalCollectionName(type)].find(id);
         });
         found = _compact(found);
       } else {
-        found = this.schema.db[toCollectionName(association.modelName)].find(foreignKeys);
+        found = this.schema.db[toInternalCollectionName(association.modelName)].find(foreignKeys);
       }
 
       let foreignKeyLabel = association.isPolymorphic ? foreignKeys.map(fk => `${fk.type}:${fk.id}`).join(',') : foreignKeys;
@@ -481,9 +481,9 @@ class Model {
 
       let found;
       if (association.isPolymorphic) {
-        found = this.schema.db[toCollectionName(foreignKeys.type)].find(foreignKeys.id);
+        found = this.schema.db[toInternalCollectionName(foreignKeys.type)].find(foreignKeys.id);
       } else {
-        found = this.schema.db[toCollectionName(association.modelName)].find(foreignKeys);
+        found = this.schema.db[toInternalCollectionName(association.modelName)].find(foreignKeys);
       }
 
       let foreignKeyLabel = association.isPolymorphic ? `${foreignKeys.type}:${foreignKeys.id}` : foreignKeys;
@@ -702,12 +702,12 @@ class Model {
       let inverseFk = inverse.getForeignKey();
 
       if (inverse instanceof BelongsTo) {
-        this.schema.db[toCollectionName(model.modelName)]
+        this.schema.db[toInternalCollectionName(model.modelName)]
           .update(model.id, { [inverseFk]: this.id });
 
       } else {
         let ownerId = this.id;
-        let inverseCollection = this.schema.db[toCollectionName(model.modelName)];
+        let inverseCollection = this.schema.db[toInternalCollectionName(model.modelName)];
         let currentIdsForInverse = inverseCollection.find(model.id)[inverse.getForeignKey()] || [];
         let newIdsForInverse = _assign([], currentIdsForInverse);
 
@@ -723,7 +723,7 @@ class Model {
   // Used to update data directly, since #save and #update can retrigger saves,
   // which can cause cycles with associations.
   _updateInDb(attrs) {
-    this.attrs = this.schema.db[toCollectionName(this.modelName)].update(this.attrs.id, attrs);
+    this.attrs = this.schema.db[toInternalCollectionName(this.modelName)].update(this.attrs.id, attrs);
   }
 
   /**

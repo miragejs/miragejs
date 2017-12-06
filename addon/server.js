@@ -3,7 +3,7 @@
 import { Promise } from 'rsvp';
 
 import { pluralize, camelize } from './utils/inflector';
-import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
+import { toCollectionName, toInternalCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import { getModels } from './ember-data';
 import { hasEmberData } from './utils/ember-data';
 import isAssociation from 'ember-cli-mirage/utils/is-association';
@@ -404,7 +404,7 @@ export default class Server {
       if (collectionFromCreateList) {
         collection = collectionFromCreateList;
       } else {
-        collectionName = this.schema ? toCollectionName(type) : pluralize(type);
+        collectionName = this.schema ? toInternalCollectionName(type) : `_${pluralize(type)}`;
         collection = this.db[collectionName];
       }
 
@@ -426,7 +426,7 @@ export default class Server {
     assert(_isInteger(amount), `second argument has to be an integer, you passed: ${typeof amount}`);
 
     let list = [];
-    let collectionName = this.schema ? toCollectionName(type) : pluralize(type);
+    let collectionName = this.schema ? toInternalCollectionName(type) : `_${pluralize(type)}`;
     let collection = this.db[collectionName];
 
     for (let i = 0; i < amount; i++) {
