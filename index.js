@@ -69,7 +69,7 @@ module.exports = {
 
   treeFor(name) {
     if (!this._shouldIncludeFiles()) {
-      if(name === 'app') {
+      if(name === 'app' || name === 'addon') {
         // include a noop initializer even when mirage is excluded from the build
         let initializerFileName = 'initializers/ember-cli-mirage.js';
         let tree = rm(this._super.treeFor.apply(this, arguments), (path) => path !== initializerFileName);
