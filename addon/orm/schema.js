@@ -21,6 +21,7 @@ export default class Schema {
     this._registry = {};
     this._dependentAssociations = { polymorphic: [] };
     this.registerModels(modelsMap);
+    this.isSaving = {}; // a hash of models that are being saved, used to avoid cycles
   }
 
   /**
@@ -53,7 +54,7 @@ export default class Schema {
     this._registry[camelizedModelName].class = ModelClass;
 
     // TODO: set here, remove from model#constructor
-    ModelClass.prototype._schema = this;
+    ModelClass.prototype.schema = this;
     ModelClass.prototype.modelName = modelName;
     // Set up associations
     ModelClass.prototype.hasManyAssociations = {};   // a registry of the model's hasMany associations. Key is key from model definition, value is association instance itself

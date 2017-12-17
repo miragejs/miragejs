@@ -27,7 +27,7 @@ class Model {
     assert(schema, 'A model requires a schema');
     assert(modelName, 'A model requires a modelName');
 
-    this._schema = schema;
+    this.schema = schema;
     this.modelName = modelName;
     this.fks = fks || [];
     attrs = attrs || {};
@@ -49,17 +49,19 @@ class Model {
 
     if (this.isNew()) {
       // Update the attrs with the db response
-      this.attrs = this._schema.db[collection].insert(this.attrs);
+      this.attrs = this.schema.db[collection].insert(this.attrs);
 
       // Ensure the id getter/setter is set
       this._definePlainAttribute('id');
 
     } else {
-      this._schema.db[collection].update(this.attrs.id, this.attrs);
+      this.schema.isSaving[this.toString()] = true;
+      this.schema.db[collection].update(this.attrs.id, this.attrs);
     }
 
     this._saveAssociations();
 
+    this.schema.isSaving[this.toString()] = false;
     return this;
   }
 
@@ -105,7 +107,7 @@ class Model {
       this._disassociateFromDependents();
 
       let collection = toCollectionName(this.modelName);
-      this._schema.db[collection].remove(this.attrs.id);
+      this.schema.db[collection].remove(this.attrs.id);
     }
   }
 
@@ -126,7 +128,7 @@ class Model {
 
     if (hasId) {
       let collectionName = toCollectionName(this.modelName);
-      let record = this._schema.db[collectionName].find(this.attrs.id);
+      let record = this.schema.db[collectionName].find(this.attrs.id);
       if (record) {
         hasDbRecord = true;
       }
@@ -154,7 +156,7 @@ class Model {
   reload() {
     if (this.id) {
       let collection = toCollectionName(this.modelName);
-      let attrs = this._schema.db[collection].find(this.id);
+      let attrs = this.schema.db[collection].find(this.id);
 
       Object.keys(attrs)
         .filter(function(attr) {
@@ -183,7 +185,7 @@ class Model {
    * @public
    */
   associationFor(key) {
-    return this._schema.associationsFor(this.modelName)[key];
+    return this.schema.associationsFor(this.modelName)[key];
   }
 
   /**
@@ -228,7 +230,7 @@ class Model {
    * @public
    */
   inverseFor(association) {
-    let associations = this._schema.associationsFor(this.modelName);
+    let associations = this.schema.associationsFor(this.modelName);
     let modelName = association.ownerModelName;
 
     let theInverse = _values(associations)
@@ -323,6 +325,10 @@ class Model {
     } else {
       this.attrs[fk] = null;
     }
+  }
+
+  get isSaving() {
+    return this.schema.isSaving[this.toString()];
   }
 
   // Private
@@ -458,11 +464,11 @@ class Model {
       let found;
       if (association.isPolymorphic) {
         found = foreignKeys.map(({ type, id }) => {
-          return this._schema.db[toCollectionName(type)].find(id);
+          return this.schema.db[toCollectionName(type)].find(id);
         });
         found = _compact(found);
       } else {
-        found = this._schema.db[toCollectionName(association.modelName)].find(foreignKeys);
+        found = this.schema.db[toCollectionName(association.modelName)].find(foreignKeys);
       }
 
       let foreignKeyLabel = association.isPolymorphic ? foreignKeys.map(fk => `${fk.type}:${fk.id}`).join(',') : foreignKeys;
@@ -475,9 +481,9 @@ class Model {
 
       let found;
       if (association.isPolymorphic) {
-        found = this._schema.db[toCollectionName(foreignKeys.type)].find(foreignKeys.id);
+        found = this.schema.db[toCollectionName(foreignKeys.type)].find(foreignKeys.id);
       } else {
-        found = this._schema.db[toCollectionName(association.modelName)].find(foreignKeys);
+        found = this.schema.db[toCollectionName(association.modelName)].find(foreignKeys);
       }
 
       let foreignKeyLabel = association.isPolymorphic ? `${foreignKeys.type}:${foreignKeys.id}` : foreignKeys;
@@ -531,16 +537,17 @@ class Model {
       let models;
       if (association.isPolymorphic) {
         models = associateIds.map(({ type, id }) => {
-          return this._schema[toCollectionName(type)].find(id);
+          return this.schema[toCollectionName(type)].find(id);
         });
       } else {
         // TODO: prob should initialize hasMany fks with []
-        models = this._schema[toCollectionName(association.modelName)]
+        models = this.schema[toCollectionName(association.modelName)]
           .find(associateIds || [])
           .models;
       }
 
       models
+        .filter(associate => !associate.isSaving) // filter out models that are already being saved
         .filter(associate => !tempAssociation.includes(associate)) // filter out models that will still be associated
         .forEach(associate => {
           if (associate.hasInverseFor(association)) {
@@ -579,10 +586,10 @@ class Model {
     if ((tempAssociation !== undefined) && associateId) {
       let associate;
       if (association.isPolymorphic) {
-        associate = this._schema[toCollectionName(associateId.type)]
+        associate = this.schema[toCollectionName(associateId.type)]
           .find(associateId.id);
       } else {
-        associate = this._schema[toCollectionName(association.modelName)]
+        associate = this.schema[toCollectionName(association.modelName)]
           .find(associateId);
       }
 
@@ -597,7 +604,7 @@ class Model {
 
   // Find all other models that depend on me and update their foreign keys
   _disassociateFromDependents() {
-    this._schema.dependentAssociationsFor(this.modelName)
+    this.schema.dependentAssociationsFor(this.modelName)
       .forEach(association => {
         association.disassociateAllDependentsFromTarget(this);
       });
@@ -613,15 +620,20 @@ class Model {
       delete this._tempAssociations[key];
 
       if (tempAssociate instanceof Collection) {
-        tempAssociate.models.forEach(child => {
-          child.save();
-        });
+        tempAssociate.models
+          .filter(model => !model.isSaving)
+          .forEach(child => {
+            child.save();
+          });
 
         this._updateInDb({ [fk]: tempAssociate.models.map(child => child.id) });
+
       } else if (tempAssociate instanceof PolymorphicCollection) {
-        tempAssociate.models.forEach(child => {
-          child.save();
-        });
+        tempAssociate.models
+          .filter(model => !model.isSaving)
+          .forEach(child => {
+            child.save();
+          });
 
         this._updateInDb({
           [fk]: tempAssociate.models.map(child => {
@@ -633,7 +645,7 @@ class Model {
 
         if (tempAssociate === null) {
           this._updateInDb({ [fk]: null });
-        } else {
+        } else if (!tempAssociate.isSaving) {
           tempAssociate.save();
 
           let fkValue;
@@ -690,12 +702,12 @@ class Model {
       let inverseFk = inverse.getForeignKey();
 
       if (inverse instanceof BelongsTo) {
-        this._schema.db[toCollectionName(model.modelName)]
+        this.schema.db[toCollectionName(model.modelName)]
           .update(model.id, { [inverseFk]: this.id });
 
       } else {
         let ownerId = this.id;
-        let inverseCollection = this._schema.db[toCollectionName(model.modelName)];
+        let inverseCollection = this.schema.db[toCollectionName(model.modelName)];
         let currentIdsForInverse = inverseCollection.find(model.id)[inverse.getForeignKey()] || [];
         let newIdsForInverse = _assign([], currentIdsForInverse);
 
@@ -711,7 +723,7 @@ class Model {
   // Used to update data directly, since #save and #update can retrigger saves,
   // which can cause cycles with associations.
   _updateInDb(attrs) {
-    this.attrs = this._schema.db[toCollectionName(this.modelName)].update(this.attrs.id, attrs);
+    this.attrs = this.schema.db[toCollectionName(this.modelName)].update(this.attrs.id, attrs);
   }
 
   /**

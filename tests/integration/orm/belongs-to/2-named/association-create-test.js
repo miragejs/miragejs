@@ -17,7 +17,7 @@ module('Integration | ORM | Belongs To | Named | association #create', function(
       let ganon = post.createAuthor({ name: 'Ganon' });
 
       assert.ok(ganon.id, 'the parent was persisted');
-      assert.deepEqual(post.author, ganon);
+      assert.deepEqual(post.author.attrs, ganon.attrs);
       assert.equal(post.authorId, ganon.id);
       assert.equal(this.helper.schema.posts.find(post.id).authorId, ganon.id, 'the child was persisted');
     });

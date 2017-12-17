@@ -212,7 +212,7 @@ export default class BelongsTo extends Association {
       this[key] = parent;
       this.save();
 
-      return parent;
+      return parent.reload();
     };
   }
 
