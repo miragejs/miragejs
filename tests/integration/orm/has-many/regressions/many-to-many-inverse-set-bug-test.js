@@ -20,23 +20,19 @@ module('Integration | ORM | Has Many | Regressions | Many to many inverse set bu
   test(`it works`, function(assert) {
     this.db.loadData({
       posts: [
-        { id: '1', tagIds: [ '15', '16' ] }
+        { id: '1', tagIds: [ '15', '16' ] },
+        { id: '2', tagIds: [ '16' ] }
       ],
       tags: [
         { id: '15', postIds: [ '1' ] },
-        { id: '16', postIds: [ '1' ] }
+        { id: '16', postIds: [ '1', '2' ] }
       ]
     });
 
-    let post = this.schema.posts.find(1);
-    let tagA = this.schema.tags.find(15);
-    let tagB = this.schema.tags.find(16);
+    this.schema.posts.find(1).update({ tagIds: [ '15' ] });
 
-    post.update('tagIds', [ '15' ]);
-
-    assert.equal(post.tags.length, 1);
-    assert.deepEqual(post.reload().tagIds, [ '15' ]);
-    assert.deepEqual(tagA.reload().postIds, [ '1' ]);
-    assert.deepEqual(tagB.reload().postIds, [ ]);
+    assert.deepEqual(this.db.posts.find(1).tagIds, [ '15' ]);
+    assert.deepEqual(this.db.tags.find(15).postIds, [ '1' ]);
+    assert.deepEqual(this.db.tags.find(16).postIds, [ '2' ]);
   });
 });
