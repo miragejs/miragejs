@@ -129,6 +129,7 @@ class Model {
     if (hasId) {
       let collectionName = toInternalCollectionName(this.modelName);
       let record = this.schema.db[collectionName].find(this.attrs.id);
+
       if (record) {
         hasDbRecord = true;
       }
