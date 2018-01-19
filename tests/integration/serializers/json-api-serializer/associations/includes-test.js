@@ -73,6 +73,50 @@ module('Integration | Serializers | JSON API Serializer | Associations | Include
     });
   });
 
+  test('includes can be a function', function(assert) {
+    let registry = new SerializerRegistry(this.schema, {
+      application: JSONAPISerializer,
+      blogPost: JSONAPISerializer.extend({
+        attrs: ['title'],
+        include() {
+          return [ 'wordSmith' ];
+        }
+      }),
+      wordSmith: JSONAPISerializer.extend({
+        attrs: ['firstName']
+      })
+    });
+
+    let post = this.schema.blogPosts.create({ title: 'We love Mirage!' });
+    post.createWordSmith({ firstName: 'Sam' });
+
+    let result = registry.serialize(post);
+
+    assert.propEqual(result, {
+      data: {
+        type: 'blog-posts',
+        id: '1',
+        attributes: {
+          'title': 'We love Mirage!'
+        },
+        relationships: {
+          'word-smith': {
+            data: { type: 'word-smiths', id: '1' }
+          }
+        }
+      },
+      included: [
+        {
+          type: 'word-smiths',
+          id: '1',
+          attributes: {
+            'first-name': 'Sam'
+          }
+        }
+      ]
+    });
+  });
+
   test('query param includes work when serializing a model', function(assert) {
     let registry = new SerializerRegistry(this.schema, {
       application: JSONAPISerializer
