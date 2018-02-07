@@ -1,6 +1,0 @@
-{
-  "name": "ember-cli-mirage",
-  "dependencies": {
-    "sinonjs": "~1.17.1"
-  }
-}

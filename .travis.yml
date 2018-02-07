@@ -43,11 +43,9 @@ before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash
   - export PATH=$HOME/.yarn/bin:$PATH
   - if [[ $(npm -v | cut -d '.' -f 1) -lt 3 ]]; then npm i -g npm@^3; fi
-  - yarn global add bower
 
 install:
   - yarn install --no-lockfile --non-interactive
-  - bower install
 
 script:
   # Usually, it's ok to finish the test scenario without reverting
