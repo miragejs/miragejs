@@ -27,5 +27,60 @@ module.exports = {
     faker: true,
     server: true,
     $: true
-  }
+  },
+  overrides: [
+    // node files
+    {
+      files: [
+        'index.js',
+        'testem.js',
+        'ember-cli-build.js',
+        'config/**/*.js',
+        'tests/dummy/config/**/*.js'
+      ],
+      excludedFiles: [
+        'app/**',
+        'addon/**',
+        'tests/dummy/app/**'
+      ],
+      parserOptions: {
+        sourceType: 'script',
+        ecmaVersion: 2015
+      },
+      env: {
+        browser: false,
+        node: true
+      },
+      plugins: ['node'],
+      rules: Object.assign({}, require('eslint-plugin-node').configs.recommended.rules, {
+        // add your custom rules and overrides for node files here
+      })
+    },
+
+    // test files
+    {
+      files: ['tests/**/*.js'],
+      excludedFiles: ['tests/dummy/**/*.js'],
+      env: {
+        embertest: true
+      }
+    },
+
+    // node test files
+    {
+      files: [
+        'fastboot-tests/**/*.js',
+        'node-tests/**/*.js'
+      ],
+      rules: {
+        'prefer-template': 0
+      },
+      globals: {
+        require: true,
+        describe: true,
+        afterEach: true,
+        it: true
+      }
+    }
+  ]
 };
