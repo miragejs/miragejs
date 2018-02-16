@@ -11,12 +11,7 @@ const {
 
 export default {
   name: 'ember-cli-mirage',
-  initialize: function(application) {
-    if (arguments.length > 1) { // Ember < 2.1
-      var container = arguments[0],
-          application = arguments[1];
-    }
-
+  initialize() {
     if (_shouldUseMirage(ENV.environment, ENV['ember-cli-mirage'])) {
       startMirage(ENV);
     }
@@ -28,6 +23,7 @@ export function startMirage(env = ENV) {
   let discoverEmberDataModels = getWithDefault(env['ember-cli-mirage'] || {}, 'discoverEmberDataModels', true);
   let modules = readModules(env.modulePrefix);
   let options = _assign(modules, {environment, baseConfig, testConfig, discoverEmberDataModels});
+  options.trackRequests = env['ember-cli-mirage'].trackRequests;
 
   return new Server(options);
 }

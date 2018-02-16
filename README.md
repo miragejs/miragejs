@@ -1,44 +1,34 @@
+# Ember CLI Mirage
+
 [![Build Status](https://travis-ci.org/samselikoff/ember-cli-mirage.svg?branch=master)](https://travis-ci.org/samselikoff/ember-cli-mirage)
 [![npm version](https://badge.fury.io/js/ember-cli-mirage.svg)](http://badge.fury.io/js/ember-cli-mirage)
 [![Ember Observer Score](http://emberobserver.com/badges/ember-cli-mirage.svg)](http://emberobserver.com/addons/ember-cli-mirage)
 
-# Ember CLI Mirage
-
-
 A client-side server to develop, test and prototype your Ember CLI app.
 
-<http://www.ember-cli-mirage.com/>
+[View the docs here.](http://www.ember-cli-mirage.com/)
 
 ----
-
-Are you tired of
-
-- Writing one set of fixtures for your tests, and another for development?
-- Wiring up tests for each of your apps manually, from scratch?
-- Changing lots of files/tests when your API changes?
-
-Ember CLI Mirage may be for you! It lets you create a client-side server using [Pretender](https://github.com/trek/pretender) to help you develop and test your app. By default, it only runs if you're not in production and if you're not proxying to an explicit API server via `ember serve --proxy`.
 
 ## Installation
 
 ```sh
-ember install ember-cli-mirage  # install:addon for Ember CLI < 0.2.3
+ember install ember-cli-mirage
 ```
-
-## Updating
-
-When updating your project to a newer version of Ember CLI Mirage, please consult [the changelog](/CHANGELOG.md) for any update notes.
-
-## Getting started
-
-Check out the [Docs](http://www.ember-cli-mirage.com/docs/v0.3.x/)!
 
 ## Support
 
-Having trouble? Open an issue!
+Having trouble?
 
-You can use the [Mirage Boilerplate Twiddle](https://ember-twiddle.com/eedfd390d8394d54d5bfd0ed988a5d0f) to reproduce your issue.
+- **Join #ec-mirage** on the Ember Community Slack
+- **Open an issue**, and if possible reproduce it using the [Mirage Boilerplate Twiddle](https://ember-twiddle.com/ec3a4c625c43e7a38f3c6c0c1b8232ec?openFiles=twiddle.json%2C).
 
 ## Contributing
 
 Have a look at our [Contributing guidelines](./CONTRIBUTING.md).
+
+## About
+
+This library is developed and maintained by [EmberMap](https://embermap.com/). We have a [Mirage tips and tricks](https://embermap.com/topics/mirage-tips-and-tricks) video series if you're looking to learn how to get the most out of Mirage.
+
+Thanks to all our amazing [contributors](https://github.com/samselikoff/ember-cli-mirage/graphs/contributors)!

@@ -21,6 +21,7 @@ export default class Schema {
     this._registry = {};
     this._dependentAssociations = { polymorphic: [] };
     this.registerModels(modelsMap);
+    this.isSaving = {}; // a hash of models that are being saved, used to avoid cycles
   }
 
   /**
@@ -53,7 +54,7 @@ export default class Schema {
     this._registry[camelizedModelName].class = ModelClass;
 
     // TODO: set here, remove from model#constructor
-    ModelClass.prototype._schema = this;
+    ModelClass.prototype.schema = this;
     ModelClass.prototype.modelName = modelName;
     // Set up associations
     ModelClass.prototype.hasManyAssociations = {};   // a registry of the model's hasMany associations. Key is key from model definition, value is association instance itself
@@ -80,7 +81,7 @@ export default class Schema {
           !_includes(fksAddedFromThisModel[fkHolder], fk),
           `Your '${type}' model definition has multiple possible inverse relationships of type '${fkHolder}'.
 
-          Please read the associations guide and specify explicit inverses: http://www.ember-cli-mirage.com/docs/v0.2.x/models/#associations`
+          Please read the associations guide and specify explicit inverses: http://www.ember-cli-mirage.com/docs/v0.3.x/models/#associations`
         );
         fksAddedFromThisModel[fkHolder].push(fk);
 

@@ -485,6 +485,9 @@ class Serializer {
 
     return formattedAttrs;
   }
+
+  getCoalescedIds(/* request */) {
+  }
 }
 
 // Defaults

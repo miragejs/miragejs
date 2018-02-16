@@ -1,9 +1,10 @@
 import {module, test} from 'qunit';
 import Server from 'ember-cli-mirage/server';
 import { Model } from 'ember-cli-mirage';
+import promiseAjax from '../helpers/promise-ajax';
 
-module('Integration | HTTP Verbs', {
-  beforeEach() {
+module('Integration | HTTP Verbs', function(hooks) {
+  hooks.beforeEach(function() {
     this.server = new Server({
       environment: 'development',
       models: {
@@ -12,123 +13,113 @@ module('Integration | HTTP Verbs', {
     });
     this.server.timing = 0;
     this.server.logging = false;
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     this.server.shutdown();
-  }
-});
-
-test('mirage responds to get', function(assert) {
-  assert.expect(1);
-  let done = assert.async();
-
-  this.server.get('/contacts', function() {
-    return true;
   });
 
-  $.ajax({
-    method: 'GET',
-    url: '/contacts'
-  }).done(function(res) {
-    assert.equal(res, true);
-    done();
-  });
-});
+  test('mirage responds to get', async function(assert) {
+    assert.expect(1);
 
-test('mirage responds to post', function(assert) {
-  assert.expect(1);
-  let done = assert.async();
+    this.server.get('/contacts', function() {
+      return true;
+    });
 
-  this.server.post('/contacts', function() {
-    return true;
+    let { data } = await promiseAjax({
+      method: 'GET',
+      url: '/contacts'
+    });
+
+    assert.equal(data, true);
   });
 
-  $.ajax({
-    method: 'POST',
-    url: '/contacts'
-  }).done(function(res) {
-    assert.equal(res, true);
-    done();
-  });
-});
+  test('mirage responds to post', async function(assert) {
+    assert.expect(1);
 
-test('mirage responds to put', function(assert) {
-  assert.expect(1);
-  let done = assert.async();
+    this.server.post('/contacts', function() {
+      return true;
+    });
 
-  this.server.put('/contacts', function() {
-    return true;
+    let { data } = await promiseAjax({
+      method: 'POST',
+      url: '/contacts'
+    });
+
+    assert.equal(data, true);
   });
 
-  $.ajax({
-    method: 'PUT',
-    url: '/contacts'
-  }).done(function(res) {
-    assert.equal(res, true);
-    done();
-  });
-});
+  test('mirage responds to put', async function(assert) {
+    assert.expect(1);
 
-test('mirage responds to delete', function(assert) {
-  assert.expect(1);
-  let done = assert.async();
+    this.server.put('/contacts', function() {
+      return true;
+    });
 
-  this.server.delete('/contacts', function() {
-    return true;
+    let { data } = await promiseAjax({
+      method: 'PUT',
+      url: '/contacts'
+    });
+
+    assert.equal(data, true);
   });
 
-  $.ajax({
-    method: 'DELETE',
-    url: '/contacts'
-  }).done(function(res) {
-    assert.equal(res, true);
-    done();
-  });
-});
+  test('mirage responds to delete', async function(assert) {
+    assert.expect(1);
 
-test('mirage responds to patch', function(assert) {
-  assert.expect(1);
-  let done = assert.async();
+    this.server.delete('/contacts', function() {
+      return true;
+    });
 
-  this.server.patch('/contacts', function() {
-    return true;
+    let { data } = await promiseAjax({
+      method: 'DELETE',
+      url: '/contacts'
+    });
+
+    assert.equal(data, true);
   });
 
-  $.ajax({
-    method: 'PATCH',
-    url: '/contacts'
-  }).done(function(res) {
-    assert.equal(res, true);
-    done();
+  test('mirage responds to patch', async function(assert) {
+    assert.expect(1);
+
+    this.server.patch('/contacts', function() {
+      return true;
+    });
+
+    let { data } = await promiseAjax({
+      method: 'PATCH',
+      url: '/contacts'
+    });
+
+    assert.equal(data, true);
   });
-});
 
-test('mirage responds to resource', function(assert) {
-  assert.expect(0);
-  let done = assert.async();
+  test('mirage responds to resource', function(assert) {
+    assert.expect(0);
+    let done = assert.async();
 
-  this.server.resource('contacts');
+    this.server.resource('contacts');
 
-  $.ajax({
-    method: 'GET',
-    url: '/contacts'
-  }).done(function() {
-    done();
-  });
-});
-
-test('response code can be customized', function(assert) {
-  assert.expect(1);
-  let done = assert.async();
-
-  this.server.get('/contacts', {}, 404);
-
-  $.ajax({
-    method: 'GET',
-    url: '/contacts',
-    complete: function(res) {
-      assert.ok(res.status, 404);
+    promiseAjax({
+      method: 'GET',
+      url: '/contacts'
+    }).then(function() {
       done();
+    });
+  });
+
+  test('response code can be customized', async function(assert) {
+    assert.expect(1);
+
+    this.server.get('/contacts', {}, 404);
+
+    try {
+      await promiseAjax({
+        method: 'GET',
+        url: '/contacts'
+      });
+    } catch(e) {
+      assert.ok(e.xhr.status, 404);
     }
   });
 });

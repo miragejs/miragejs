@@ -3,8 +3,8 @@ import Serializer from 'ember-cli-mirage/serializer';
 import schemaHelper from '../schema-helper';
 import {module, test} from 'qunit';
 
-module('Integration | Serializers | Base | Assorted Collections', {
-  beforeEach() {
+module('Integration | Serializers | Base | Assorted Collections', function(hooks) {
+  hooks.beforeEach(function() {
     this.schema = schemaHelper.setup();
     this.registry = new SerializerRegistry(this.schema, {
       greatPhoto: Serializer.extend({
@@ -24,20 +24,21 @@ module('Integration | Serializers | Base | Assorted Collections', {
       wordSmiths: this.wordSmiths,
       greatPhotos: this.greatPhotos
     });
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     this.schema.db.emptyData();
-  }
-});
+  });
 
-test(`an array of assorted collections can be serialized`, function(assert) {
-  let result = this.registry.serialize([this.schema.wordSmiths.all(), this.schema.greatPhotos.all()]);
+  test(`an array of assorted collections can be serialized`, function(assert) {
+    let result = this.registry.serialize([this.schema.wordSmiths.all(), this.schema.greatPhotos.all()]);
 
-  assert.deepEqual(result, {
-    wordSmiths: this.wordSmiths,
-    greatPhotos: this.greatPhotos.map((attrs) => {
-      delete attrs.location;
-      return attrs;
-    })
+    assert.deepEqual(result, {
+      wordSmiths: this.wordSmiths,
+      greatPhotos: this.greatPhotos.map((attrs) => {
+        delete attrs.location;
+        return attrs;
+      })
+    });
   });
 });

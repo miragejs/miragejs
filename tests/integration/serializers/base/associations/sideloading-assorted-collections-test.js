@@ -5,8 +5,8 @@ import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import Serializer from 'ember-cli-mirage/serializer';
 import { module, test } from 'qunit';
 
-module('Integration | Serializers | Base | Associations | Sideloading Assorted Collections', {
-  beforeEach() {
+module('Integration | Serializers | Base | Associations | Sideloading Assorted Collections', function(hooks) {
+  hooks.beforeEach(function() {
     this.schema = new Schema(new Db(), {
       wordSmith: Model.extend({
         blogPosts: hasMany()
@@ -45,24 +45,25 @@ module('Integration | Serializers | Base | Associations | Sideloading Assorted C
       blogPosts: this.blogPosts,
       greatPhotos: this.greatPhotos
     });
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     this.schema.db.emptyData();
-  }
-});
+  });
 
-/*
-  This is a strange response from a route handler, but it's used in the array get shorthand. Deprecate that shorthand?
-*/
-test(`it can sideload an array of assorted collections that have relationships`, function(assert) {
-  let result = this.registry.serialize([this.schema.wordSmiths.all(), this.schema.greatPhotos.all()]);
+  /*
+    This is a strange response from a route handler, but it's used in the array get shorthand. Deprecate that shorthand?
+  */
+  test(`it can sideload an array of assorted collections that have relationships`, function(assert) {
+    let result = this.registry.serialize([this.schema.wordSmiths.all(), this.schema.greatPhotos.all()]);
 
-  assert.deepEqual(result, {
-    wordSmiths: this.wordSmiths,
-    blogPosts: this.blogPosts,
-    greatPhotos: this.greatPhotos.map((attrs) => {
-      delete attrs.location;
-      return attrs;
-    })
+    assert.deepEqual(result, {
+      wordSmiths: this.wordSmiths,
+      blogPosts: this.blogPosts,
+      greatPhotos: this.greatPhotos.map((attrs) => {
+        delete attrs.location;
+        return attrs;
+      })
+    });
   });
 });

@@ -30,11 +30,11 @@ export default function(prefix) {
     let moduleType = _camelCase(moduleParts[moduleParts.length - 2]);
     let moduleKey = moduleParts[moduleParts.length - 1];
     assert(`Subdirectories under ${moduleType} are not supported`,
-                 moduleParts[moduleParts.length - 3] === 'mirage');
+      moduleParts[moduleParts.length - 3] === 'mirage');
 
     if (moduleType === 'scenario') {
       assert('Only scenario/default.js is supported at this time.',
-                   moduleKey !== 'default');
+        moduleKey !== 'default');
     }
 
     /*

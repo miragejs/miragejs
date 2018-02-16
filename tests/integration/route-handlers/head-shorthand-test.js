@@ -7,8 +7,8 @@ import {
 import Server from 'ember-cli-mirage/server';
 import HeadShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthands/head';
 
-module('Integration | Route Handlers | HEAD shorthand', {
-  beforeEach() {
+module('Integration | Route Handlers | HEAD shorthand', function(hooks) {
+  hooks.beforeEach(function() {
     this.server = new Server({
       environment: 'development',
       models: {
@@ -35,90 +35,91 @@ module('Integration | Route Handlers | HEAD shorthand', {
 
     this.schema = this.server.schema;
     this.serializer = new JSONAPISerializer();
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     this.server.shutdown();
-  }
-});
+  });
 
-test('undefined shorthand with an ID that is not in the DB will return a 404 Response', function(assert) {
-  let request = { url: '/authors', params: { id: 101 } };
-  let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, undefined, '/authors');
+  test('undefined shorthand with an ID that is not in the DB will return a 404 Response', function(assert) {
+    let request = { url: '/authors', params: { id: 101 } };
+    let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, undefined, '/authors');
 
-  let response = handler.handle(request);
+    let response = handler.handle(request);
 
-  assert.ok(response instanceof Response);
-  assert.equal(response.code, 404);
-});
+    assert.ok(response instanceof Response);
+    assert.equal(response.code, 404);
+  });
 
-test('undefined shorthand with an ID that is in the DB will return a 204 Response', function(assert) {
-  let request = { url: '/authors', params: { id: 1 } };
-  let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, undefined, '/authors');
+  test('undefined shorthand with an ID that is in the DB will return a 204 Response', function(assert) {
+    let request = { url: '/authors', params: { id: 1 } };
+    let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, undefined, '/authors');
 
-  let response = handler.handle(request);
+    let response = handler.handle(request);
 
-  assert.ok(response instanceof Response);
-  assert.equal(response.code, 204);
-});
+    assert.ok(response instanceof Response);
+    assert.equal(response.code, 204);
+  });
 
-test('undefined shorthand with coalesce true will return a 204 response if one of the IDs are found', function(assert) {
-  let request = { url: '/authors?ids[]=1&ids[]=3', queryParams: { ids: [1, 3] } };
-  let options = { coalesce: true };
-  let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, undefined, '/authors', options);
+  test('undefined shorthand with coalesce true will return a 204 response if one of the IDs are found', function(assert) {
+    let request = { url: '/authors?ids[]=1&ids[]=3', queryParams: { ids: [1, 3] } };
+    let options = { coalesce: true };
+    let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, undefined, '/authors', options);
 
-  let response = handler.handle(request);
+    let response = handler.handle(request);
 
-  assert.ok(response instanceof Response);
-  assert.equal(response.code, 204);
-});
+    assert.ok(response instanceof Response);
+    assert.equal(response.code, 204);
+  });
 
-test('undefined shorthand string (no id) shorthand returns a 204 (regardless of the length of the collection)', function(assert) {
-  let request = { url: '/authors' };
-  let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, undefined, '/authors');
+  test('undefined shorthand string (no id) shorthand returns a 204 (regardless of the length of the collection)', function(assert) {
+    let request = { url: '/authors' };
+    let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, undefined, '/authors');
 
-  let response = handler.handle(request);
+    let response = handler.handle(request);
 
-  assert.ok(response instanceof Response);
-  assert.equal(response.code, 204);
-});
+    assert.ok(response instanceof Response);
+    assert.equal(response.code, 204);
+  });
 
-test('string shorthand with an ID that is not in the DB will return a 404 Response', function(assert) {
-  let request = { url: '/authors', params: { id: 101 } };
-  let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, 'author');
+  test('string shorthand with an ID that is not in the DB will return a 404 Response', function(assert) {
+    let request = { url: '/authors', params: { id: 101 } };
+    let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, 'author');
 
-  let response = handler.handle(request);
+    let response = handler.handle(request);
 
-  assert.ok(response instanceof Response);
-  assert.equal(response.code, 404);
-});
+    assert.ok(response instanceof Response);
+    assert.equal(response.code, 404);
+  });
 
-test('string shorthand with an ID that is in the DB will return a 204 Response', function(assert) {
-  let request = { url: '/authors', params: { id: 1 } };
-  let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, 'author');
+  test('string shorthand with an ID that is in the DB will return a 204 Response', function(assert) {
+    let request = { url: '/authors', params: { id: 1 } };
+    let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, 'author');
 
-  let response = handler.handle(request);
+    let response = handler.handle(request);
 
-  assert.ok(response instanceof Response);
-  assert.equal(response.code, 204);
-});
+    assert.ok(response instanceof Response);
+    assert.equal(response.code, 204);
+  });
 
-test('string shorthand with coalesce true will return a 204 response if one of the IDs are found', function(assert) {
-  let request = { url: '/authors?ids[]=1&ids[]=3', queryParams: { ids: [1, 3] } };
-  let options = { coalesce: true };
-  let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, 'author', '/people', options);
+  test('string shorthand with coalesce true will return a 204 response if one of the IDs are found', function(assert) {
+    let request = { url: '/authors?ids[]=1&ids[]=3', queryParams: { ids: [1, 3] } };
+    let options = { coalesce: true };
+    let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, 'author', '/people', options);
 
-  let response = handler.handle(request);
+    let response = handler.handle(request);
 
-  assert.ok(response instanceof Response);
-  assert.equal(response.code, 204);
-});
+    assert.ok(response instanceof Response);
+    assert.equal(response.code, 204);
+  });
 
-test('string shorthand string (no id) shorthand returns a 204 (regardless of the length of the collection)', function(assert) {
-  let request = { url: '/authors' };
-  let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, 'author');
+  test('string shorthand string (no id) shorthand returns a 204 (regardless of the length of the collection)', function(assert) {
+    let request = { url: '/authors' };
+    let handler = new HeadShorthandRouteHandler(this.schema, this.serializer, 'author');
 
-  let response = handler.handle(request);
+    let response = handler.handle(request);
 
-  assert.ok(response instanceof Response);
-  assert.equal(response.code, 204);
+    assert.ok(response instanceof Response);
+    assert.equal(response.code, 204);
+  });
 });

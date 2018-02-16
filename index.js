@@ -4,6 +4,8 @@ const path = require('path');
 const mergeTrees = require('broccoli-merge-trees');
 const Funnel = require('broccoli-funnel');
 const map = require('broccoli-stew').map;
+const rm = require('broccoli-stew').rm;
+const replace = require('broccoli-replace');
 
 module.exports = {
   name: 'ember-cli-mirage',
@@ -67,6 +69,20 @@ module.exports = {
 
   treeFor(name) {
     if (!this._shouldIncludeFiles()) {
+      if(name === 'app' || name === 'addon') {
+        // include a noop initializer even when mirage is excluded from the build
+        let initializerFileName = 'initializers/ember-cli-mirage.js';
+        let tree = rm(this._super.treeFor.apply(this, arguments), (path) => path !== initializerFileName);
+
+        return replace(tree, {
+          files: [initializerFileName],
+          patterns: [{
+            match: /[\S\s]*/m,
+            replacement: 'export default {name: \'ember-cli-mirage\',initialize() {}};'
+          }]
+        }) ;
+      }
+
       return;
     }
 

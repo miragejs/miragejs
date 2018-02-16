@@ -61,7 +61,7 @@ const JSONAPISerializer = Serializer.extend({
   getAddToIncludesForResource(resource) {
     let relationshipPaths;
 
-    if (_get(this, 'request.queryParams.include')) {
+    if (this.hasQueryParamIncludes()) {
       relationshipPaths = this.request.queryParams.include.split(',');
     } else {
       let serializer = this.serializerFor(resource.modelName);
@@ -192,7 +192,7 @@ const JSONAPISerializer = Serializer.extend({
   },
 
   _relationshipIsIncluded(relationshipKey) {
-    if (this.request && this.request.queryParams && this.request.queryParams.include) {
+    if (this.hasQueryParamIncludes()) {
       let relationshipKeyAsString = this.keyForRelationship(relationshipKey);
 
       return this.request.queryParams
@@ -200,7 +200,9 @@ const JSONAPISerializer = Serializer.extend({
         .split(',')
         .some(str => str.indexOf(relationshipKeyAsString) > -1);
     } else {
-      return this.include.includes(relationshipKey);
+      let relationshipPaths = this.getKeysForIncluded();
+
+      return relationshipPaths.includes(relationshipKey);
     }
   },
 
@@ -214,8 +216,15 @@ const JSONAPISerializer = Serializer.extend({
 
   typeKeyForModel(model) {
     return dasherize(pluralize(model.modelName));
-  }
+  },
 
+  getCoalescedIds(request) {
+    let ids = request.queryParams && request.queryParams['filter[id]'];
+    if (typeof ids === 'string') {
+      return ids.split(',');
+    }
+    return ids;
+  }
 });
 
 JSONAPISerializer.prototype.alwaysIncludeLinkageData = false;

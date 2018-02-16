@@ -1,9 +1,0 @@
-{
-  "name": "ember-cli-mirage",
-  "dependencies": {
-    "jquery": "2.1.4",
-    "ember": "2.10.0",
-    "ember-cli-shims": "0.1.3",
-    "sinonjs": "~1.17.1"
-  }
-}

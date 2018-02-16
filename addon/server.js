@@ -3,7 +3,7 @@
 import { Promise } from 'rsvp';
 
 import { pluralize, camelize } from './utils/inflector';
-import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
+import { toCollectionName, toInternalCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import { getModels } from './ember-data';
 import { hasEmberData } from './utils/ember-data';
 import isAssociation from 'ember-cli-mirage/utils/is-association';
@@ -61,7 +61,7 @@ function createPretender(server) {
          mirage/config.js file. Did you forget to add your namespace?`
       );
     };
-  }, { trackRequests: false });
+  }, { trackRequests: server.shouldTrackRequests() });
 }
 
 const defaultRouteOptions = {
@@ -146,7 +146,7 @@ export default class Server {
   config(config = {}) {
     let didOverrideConfig = (config.environment && (this.environment && (this.environment !== config.environment)));
     assert(!didOverrideConfig,
-    'You cannot modify Mirage\'s environment once the server is created');
+      'You cannot modify Mirage\'s environment once the server is created');
     this.environment = config.environment || 'development';
 
     this.options = config;
@@ -154,6 +154,7 @@ export default class Server {
     this.timing = this.timing || config.timing || 400;
     this.namespace = this.namespace || config.namespace || '';
     this.urlPrefix = this.urlPrefix || config.urlPrefix || '';
+    this.trackRequests = config.trackRequests;
 
     this._defineRouteHandlerHelpers();
 
@@ -181,6 +182,9 @@ export default class Server {
     let hasFactories = this._hasModulesOfType(config, 'factories');
     let hasDefaultScenario = config.scenarios && config.scenarios.hasOwnProperty('default');
 
+    let didOverridePretenderConfig = (config.trackRequests !== undefined) && this.pretender;
+    assert(!didOverridePretenderConfig,
+      'You cannot modify Pretender\'s request tracking once the server is created');
     this.pretender = this.pretender || createPretender(this);
 
     if (config.baseConfig) {
@@ -230,6 +234,17 @@ export default class Server {
    */
   shouldLog() {
     return typeof this.logging !== 'undefined' ? this.logging : !this.isTest();
+  }
+
+  /**
+   * Determines if the server should track requests.
+   *
+   * @method shouldTrackRequests
+   * @return The value of this.trackRequests if defined, false otherwise.
+   * @public
+   */
+  shouldTrackRequests() {
+    return Boolean(this.trackRequests);
   }
 
   /**
@@ -389,7 +404,7 @@ export default class Server {
       if (collectionFromCreateList) {
         collection = collectionFromCreateList;
       } else {
-        collectionName = this.schema ? toCollectionName(type) : pluralize(type);
+        collectionName = this.schema ? toInternalCollectionName(type) : `_${pluralize(type)}`;
         collection = this.db[collectionName];
       }
 
@@ -411,7 +426,7 @@ export default class Server {
     assert(_isInteger(amount), `second argument has to be an integer, you passed: ${typeof amount}`);
 
     let list = [];
-    let collectionName = this.schema ? toCollectionName(type) : pluralize(type);
+    let collectionName = this.schema ? toInternalCollectionName(type) : `_${pluralize(type)}`;
     let collection = this.db[collectionName];
 
     for (let i = 0; i < amount; i++) {
@@ -429,6 +444,7 @@ export default class Server {
   }
 
   resource(resourceName, { only, except, path } = {}) {
+    resourceName = pluralize(resourceName);
     path = path || `/${resourceName}`;
     only = only || [];
     except = except || [];
@@ -666,14 +682,15 @@ export default class Server {
    * @private
    */
   _fetchAssociationNameFromModel(modelType, associationAttribute) {
-    let model = this.schema.modelFor(modelType);
+    let camelizedModelType = camelize(modelType);
+    let model = this.schema.modelFor(camelizedModelType);
     if (!model) {
       throw new Error(`Model not registered: ${modelType}`);
     }
 
     let association = model.class.findBelongsToAssociation(associationAttribute);
     if (!association) {
-      throw new Error(`You're using the \`association\` factory helper on the '${associationAttribute}' attribute of your ${modelType} factory, but that attribute is not a \`belongsTo\` association. Read the Factories docs for more information: http://www.ember-cli-mirage.com/docs/v0.2.x/factories/#factories-and-relationships`);
+      throw new Error(`You're using the \`association\` factory helper on the '${associationAttribute}' attribute of your ${modelType} factory, but that attribute is not a \`belongsTo\` association. Read the Factories docs for more information: http://www.ember-cli-mirage.com/docs/v0.3.x/factories/#factories-and-relationships`);
     }
     return camelize(association.modelName);
   }

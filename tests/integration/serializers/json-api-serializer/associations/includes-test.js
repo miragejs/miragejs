@@ -4,8 +4,8 @@ import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import { JSONAPISerializer, Model, hasMany, belongsTo } from 'ember-cli-mirage';
 import { module, test } from 'qunit';
 
-module('Integration | Serializers | JSON API Serializer | Associations | Includes', {
-  beforeEach() {
+module('Integration | Serializers | JSON API Serializer | Associations | Includes', function(hooks) {
+  hooks.beforeEach(function() {
     this.schema = new Schema(new Db(), {
       wordSmith: Model.extend({
         blogPosts: hasMany()
@@ -29,128 +29,114 @@ module('Integration | Serializers | JSON API Serializer | Associations | Include
 
       })
     });
-  }
-});
-
-test('includes get serialized with correct serializer', function(assert) {
-  let registry = new SerializerRegistry(this.schema, {
-    application: JSONAPISerializer,
-    blogPost: JSONAPISerializer.extend({
-      attrs: ['title'],
-      include: ['wordSmith']
-    }),
-    wordSmith: JSONAPISerializer.extend({
-      attrs: ['firstName']
-    })
   });
 
-  let post = this.schema.blogPosts.create({ title: 'We love Mirage!' });
-  post.createWordSmith({ firstName: 'Sam' });
+  test('includes get serialized with correct serializer', function(assert) {
+    let registry = new SerializerRegistry(this.schema, {
+      application: JSONAPISerializer,
+      blogPost: JSONAPISerializer.extend({
+        attrs: ['title'],
+        include: ['wordSmith']
+      }),
+      wordSmith: JSONAPISerializer.extend({
+        attrs: ['firstName']
+      })
+    });
 
-  let result = registry.serialize(post);
+    let post = this.schema.blogPosts.create({ title: 'We love Mirage!' });
+    post.createWordSmith({ firstName: 'Sam' });
 
-  assert.propEqual(result, {
-    data: {
-      type: 'blog-posts',
-      id: '1',
-      attributes: {
-        'title': 'We love Mirage!'
-      },
-      relationships: {
-        'word-smith': {
-          data: { type: 'word-smiths', id: '1' }
-        }
-      }
-    },
-    included: [
-      {
-        type: 'word-smiths',
+    let result = registry.serialize(post);
+
+    assert.propEqual(result, {
+      data: {
+        type: 'blog-posts',
         id: '1',
         attributes: {
-          'first-name': 'Sam'
-        }
-      }
-    ]
-  });
-});
-
-test('query param includes work when serializing a model', function(assert) {
-  let registry = new SerializerRegistry(this.schema, {
-    application: JSONAPISerializer
-  });
-
-  let post = this.schema.blogPosts.create();
-  post.createWordSmith();
-  post.createFineComment();
-  post.createFineComment();
-
-  let request = {
-    queryParams: {
-      include: 'word-smith,fine-comments'
-    }
-  };
-
-  let result = registry.serialize(post, request);
-
-  assert.propEqual(result, {
-    data: {
-      type: 'blog-posts',
-      id: '1',
-      attributes: {},
-      relationships: {
-        'word-smith': {
-          data: { type: 'word-smiths', id: '1' }
+          'title': 'We love Mirage!'
         },
-        'fine-comments': {
-          data: [
-            { type: 'fine-comments', id: '1' },
-            { type: 'fine-comments', id: '2' }
-          ]
+        relationships: {
+          'word-smith': {
+            data: { type: 'word-smiths', id: '1' }
+          }
         }
-      }
-    },
-    included: [
-      {
-        type: 'word-smiths',
-        id: '1',
-        attributes: {}
       },
-      {
-        type: 'fine-comments',
-        id: '1',
-        attributes: {}
-      },
-      {
-        type: 'fine-comments',
-        id: '2',
-        attributes: {}
-      }
-    ]
-  });
-});
-
-test('query param includes work when serializing a collection', function(assert) {
-  let registry = new SerializerRegistry(this.schema, {
-    application: JSONAPISerializer
+      included: [
+        {
+          type: 'word-smiths',
+          id: '1',
+          attributes: {
+            'first-name': 'Sam'
+          }
+        }
+      ]
+    });
   });
 
-  let post1 = this.schema.blogPosts.create();
-  post1.createWordSmith();
-  post1.createFineComment();
-  post1.createFineComment();
-  this.schema.blogPosts.create();
+  test('includes can be a function', function(assert) {
+    let registry = new SerializerRegistry(this.schema, {
+      application: JSONAPISerializer,
+      blogPost: JSONAPISerializer.extend({
+        attrs: ['title'],
+        include() {
+          return [ 'wordSmith' ];
+        }
+      }),
+      wordSmith: JSONAPISerializer.extend({
+        attrs: ['firstName']
+      })
+    });
 
-  let request = {
-    queryParams: {
-      include: 'word-smith,fine-comments'
-    }
-  };
+    let post = this.schema.blogPosts.create({ title: 'We love Mirage!' });
+    post.createWordSmith({ firstName: 'Sam' });
 
-  let result = registry.serialize(this.schema.blogPosts.all(), request);
+    let result = registry.serialize(post);
 
-  assert.propEqual(result, {
-    data: [
-      {
+    assert.propEqual(result, {
+      data: {
+        type: 'blog-posts',
+        id: '1',
+        attributes: {
+          'title': 'We love Mirage!'
+        },
+        relationships: {
+          'word-smith': {
+            data: { type: 'word-smiths', id: '1' }
+          }
+        }
+      },
+      included: [
+        {
+          type: 'word-smiths',
+          id: '1',
+          attributes: {
+            'first-name': 'Sam'
+          }
+        }
+      ]
+    });
+  });
+
+  test('query param includes work when serializing a model', function(assert) {
+    let registry = new SerializerRegistry(this.schema, {
+      application: JSONAPISerializer
+    });
+
+    let post = this.schema.blogPosts.create();
+    post.createWordSmith();
+    post.createFineComment();
+    post.createFineComment();
+
+    let request = {
+      queryParams: {
+        include: 'word-smith,fine-comments'
+      }
+    };
+
+    let result = registry.serialize(post, request);
+
+    assert.propEqual(result, {
+      data: {
         type: 'blog-posts',
         id: '1',
         attributes: {},
@@ -166,215 +152,178 @@ test('query param includes work when serializing a collection', function(assert)
           }
         }
       },
-      {
+      included: [
+        {
+          type: 'word-smiths',
+          id: '1',
+          attributes: {}
+        },
+        {
+          type: 'fine-comments',
+          id: '1',
+          attributes: {}
+        },
+        {
+          type: 'fine-comments',
+          id: '2',
+          attributes: {}
+        }
+      ]
+    });
+  });
+
+  test('query param includes work when serializing a collection', function(assert) {
+    let registry = new SerializerRegistry(this.schema, {
+      application: JSONAPISerializer
+    });
+
+    let post1 = this.schema.blogPosts.create();
+    post1.createWordSmith();
+    post1.createFineComment();
+    post1.createFineComment();
+    this.schema.blogPosts.create();
+
+    let request = {
+      queryParams: {
+        include: 'word-smith,fine-comments'
+      }
+    };
+
+    let result = registry.serialize(this.schema.blogPosts.all(), request);
+
+    assert.propEqual(result, {
+      data: [
+        {
+          type: 'blog-posts',
+          id: '1',
+          attributes: {},
+          relationships: {
+            'word-smith': {
+              data: { type: 'word-smiths', id: '1' }
+            },
+            'fine-comments': {
+              data: [
+                { type: 'fine-comments', id: '1' },
+                { type: 'fine-comments', id: '2' }
+              ]
+            }
+          }
+        },
+        {
+          type: 'blog-posts',
+          id: '2',
+          attributes: {},
+          relationships: {
+            'word-smith': {
+              data: null
+            },
+            'fine-comments': {
+              data: []
+            }
+          }
+        }
+      ],
+      included: [
+        {
+          type: 'word-smiths',
+          id: '1',
+          attributes: {}
+        },
+        {
+          type: 'fine-comments',
+          id: '1',
+          attributes: {}
+        },
+        {
+          type: 'fine-comments',
+          id: '2',
+          attributes: {}
+        }
+      ]
+    });
+  });
+
+  test('query param includes take precedence over default server includes', function(assert) {
+    let registry = new SerializerRegistry(this.schema, {
+      application: JSONAPISerializer,
+      blogPost: JSONAPISerializer.extend({
+        include: ['wordSmith']
+      })
+    });
+
+    let post = this.schema.blogPosts.create();
+    post.createWordSmith();
+    post.createFineComment();
+    post.createFineComment();
+
+    let request = {
+      queryParams: {
+        include: 'fine-comments'
+      }
+    };
+
+    let result = registry.serialize(post, request);
+
+    assert.propEqual(result, {
+      data: {
         type: 'blog-posts',
-        id: '2',
+        id: '1',
         attributes: {},
         relationships: {
-          'word-smith': {
-            data: null
-          },
           'fine-comments': {
-            data: []
-          }
-        }
-      }
-    ],
-    included: [
-      {
-        type: 'word-smiths',
-        id: '1',
-        attributes: {}
-      },
-      {
-        type: 'fine-comments',
-        id: '1',
-        attributes: {}
-      },
-      {
-        type: 'fine-comments',
-        id: '2',
-        attributes: {}
-      }
-    ]
-  });
-});
-
-test('query param includes take precedence over default server includes', function(assert) {
-  let registry = new SerializerRegistry(this.schema, {
-    application: JSONAPISerializer,
-    blogPost: JSONAPISerializer.extend({
-      include: ['wordSmith']
-    })
-  });
-
-  let post = this.schema.blogPosts.create();
-  post.createWordSmith();
-  post.createFineComment();
-  post.createFineComment();
-
-  let request = {
-    queryParams: {
-      include: 'fine-comments'
-    }
-  };
-
-  let result = registry.serialize(post, request);
-
-  assert.propEqual(result, {
-    data: {
-      type: 'blog-posts',
-      id: '1',
-      attributes: {},
-      relationships: {
-        'fine-comments': {
-          data: [
-            { type: 'fine-comments', id: '1' },
-            { type: 'fine-comments', id: '2' }
-          ]
-        }
-      }
-    },
-    included: [
-      {
-        type: 'fine-comments',
-        id: '1',
-        attributes: {}
-      },
-      {
-        type: 'fine-comments',
-        id: '2',
-        attributes: {}
-      }
-    ]
-  });
-});
-
-test('query param includes support dot-paths when serializing a model', function(assert) {
-  let registry = new SerializerRegistry(this.schema, {
-    application: JSONAPISerializer
-  });
-
-  this.schema.db.loadData({
-    wordSmiths: [
-      { id: 1, name: 'Sam', blogPostIds: [2] }
-    ],
-    blogPosts: [
-      { id: 2, wordSmithId: 1, fineCommentIds: [3], title: 'Lorem Ipsum' }
-    ],
-    fineComments: [
-      { id: 3, text: 'Foo', blogPostId: 2, categoryId: 10 }
-    ],
-    categories: [
-      { id: 10, foo: 'bar', labelIds: [20] }
-    ],
-    labels: [
-      { id: 20, name: 'Economics' }
-    ]
-  });
-  let request = {
-    queryParams: {
-      include: 'word-smith,fine-comments.category.labels'
-    }
-  };
-  let result = registry.serialize(this.schema.blogPosts.first(), request);
-
-  assert.propEqual(result, {
-    data: {
-      type: 'blog-posts',
-      id: '2',
-      attributes: {
-        title: 'Lorem Ipsum'
-      },
-      relationships: {
-        'word-smith': {
-          data: { type: 'word-smiths', id: '1' }
-        },
-        'fine-comments': {
-          data: [
-            { type: 'fine-comments', id: '3' }
-          ]
-        }
-      }
-    },
-    included: [
-      {
-        type: 'word-smiths',
-        id: '1',
-        attributes: {
-          name: 'Sam'
-        }
-      },
-      {
-        type: 'fine-comments',
-        id: '3',
-        attributes: {
-          text: 'Foo'
-        },
-        relationships: {
-          'category': {
-            data: { type: 'categories', id: '10' }
-          }
-        }
-      },
-      {
-        type: 'categories',
-        id: '10',
-        attributes: {
-          foo: 'bar'
-        },
-        relationships: {
-          'labels': {
             data: [
-              { type: 'labels', id: '20' }
+              { type: 'fine-comments', id: '1' },
+              { type: 'fine-comments', id: '2' }
             ]
           }
         }
       },
-      {
-        type: 'labels',
-        id: '20',
-        attributes: {
-          name: 'Economics'
+      included: [
+        {
+          type: 'fine-comments',
+          id: '1',
+          attributes: {}
+        },
+        {
+          type: 'fine-comments',
+          id: '2',
+          attributes: {}
         }
+      ]
+    });
+  });
+
+  test('query param includes support dot-paths when serializing a model', function(assert) {
+    let registry = new SerializerRegistry(this.schema, {
+      application: JSONAPISerializer
+    });
+
+    this.schema.db.loadData({
+      wordSmiths: [
+        { id: 1, name: 'Sam', blogPostIds: [2] }
+      ],
+      blogPosts: [
+        { id: 2, wordSmithId: 1, fineCommentIds: [3], title: 'Lorem Ipsum' }
+      ],
+      fineComments: [
+        { id: 3, text: 'Foo', blogPostId: 2, categoryId: 10 }
+      ],
+      categories: [
+        { id: 10, foo: 'bar', labelIds: [20] }
+      ],
+      labels: [
+        { id: 20, name: 'Economics' }
+      ]
+    });
+    let request = {
+      queryParams: {
+        include: 'word-smith,fine-comments.category.labels'
       }
-    ]
-  });
-});
+    };
+    let result = registry.serialize(this.schema.blogPosts.first(), request);
 
-test('query param includes support dot-paths when serializing a collection', function(assert) {
-  let registry = new SerializerRegistry(this.schema, {
-    application: JSONAPISerializer
-  });
-
-  this.schema.db.loadData({
-    wordSmiths: [
-      { id: 1, name: 'Sam', blogPostIds: [2, 5] }
-    ],
-    blogPosts: [
-      { id: 2, wordSmithId: 1, fineCommentIds: [3], title: 'Lorem Ipsum' },
-      { id: 5, wordSmithId: 1, title: 'Dolor' }
-    ],
-    fineComments: [
-      { id: 3, text: 'Foo', blogPostId: 2, categoryId: 10 }
-    ],
-    categories: [
-      { id: 10, foo: 'bar', labelIds: [20] }
-    ],
-    labels: [
-      { id: 20, name: 'Economics' }
-    ]
-  });
-  let request = {
-    queryParams: {
-      include: 'word-smith,fine-comments.category.labels'
-    }
-  };
-  let result = registry.serialize(this.schema.blogPosts.all(), request);
-
-  assert.propEqual(result, {
-    data: [
-      {
+    assert.propEqual(result, {
+      data: {
         type: 'blog-posts',
         id: '2',
         attributes: {
@@ -391,63 +340,158 @@ test('query param includes support dot-paths when serializing a collection', fun
           }
         }
       },
-      {
-        type: 'blog-posts',
-        id: '5',
-        attributes: {
-          title: 'Dolor'
+      included: [
+        {
+          type: 'word-smiths',
+          id: '1',
+          attributes: {
+            name: 'Sam'
+          }
         },
-        relationships: {
-          'word-smith': {
-            data: { type: 'word-smiths', id: '1' }
+        {
+          type: 'fine-comments',
+          id: '3',
+          attributes: {
+            text: 'Foo'
           },
-          'fine-comments': {
-            data: []
+          relationships: {
+            'category': {
+              data: { type: 'categories', id: '10' }
+            }
           }
-        }
-      }
-    ],
-    included: [
-      {
-        type: 'word-smiths',
-        id: '1',
-        attributes: {
-          name: 'Sam'
-        }
-      },
-      {
-        type: 'fine-comments',
-        id: '3',
-        attributes: {
-          text: 'Foo'
         },
-        relationships: {
-          'category': {
-            data: { type: 'categories', id: '10' }
+        {
+          type: 'categories',
+          id: '10',
+          attributes: {
+            foo: 'bar'
+          },
+          relationships: {
+            'labels': {
+              data: [
+                { type: 'labels', id: '20' }
+              ]
+            }
           }
-        }
-      },
-      {
-        type: 'categories',
-        id: '10',
-        attributes: {
-          foo: 'bar'
         },
-        relationships: {
-          'labels': {
-            data: [
-              { type: 'labels', id: '20' }
-            ]
+        {
+          type: 'labels',
+          id: '20',
+          attributes: {
+            name: 'Economics'
           }
         }
-      },
-      {
-        type: 'labels',
-        id: '20',
-        attributes: {
-          name: 'Economics'
-        }
+      ]
+    });
+  });
+
+  test('query param includes support dot-paths when serializing a collection', function(assert) {
+    let registry = new SerializerRegistry(this.schema, {
+      application: JSONAPISerializer
+    });
+
+    this.schema.db.loadData({
+      wordSmiths: [
+        { id: 1, name: 'Sam', blogPostIds: [2, 5] }
+      ],
+      blogPosts: [
+        { id: 2, wordSmithId: 1, fineCommentIds: [3], title: 'Lorem Ipsum' },
+        { id: 5, wordSmithId: 1, title: 'Dolor' }
+      ],
+      fineComments: [
+        { id: 3, text: 'Foo', blogPostId: 2, categoryId: 10 }
+      ],
+      categories: [
+        { id: 10, foo: 'bar', labelIds: [20] }
+      ],
+      labels: [
+        { id: 20, name: 'Economics' }
+      ]
+    });
+    let request = {
+      queryParams: {
+        include: 'word-smith,fine-comments.category.labels'
       }
-    ]
+    };
+    let result = registry.serialize(this.schema.blogPosts.all(), request);
+
+    assert.propEqual(result, {
+      data: [
+        {
+          type: 'blog-posts',
+          id: '2',
+          attributes: {
+            title: 'Lorem Ipsum'
+          },
+          relationships: {
+            'word-smith': {
+              data: { type: 'word-smiths', id: '1' }
+            },
+            'fine-comments': {
+              data: [
+                { type: 'fine-comments', id: '3' }
+              ]
+            }
+          }
+        },
+        {
+          type: 'blog-posts',
+          id: '5',
+          attributes: {
+            title: 'Dolor'
+          },
+          relationships: {
+            'word-smith': {
+              data: { type: 'word-smiths', id: '1' }
+            },
+            'fine-comments': {
+              data: []
+            }
+          }
+        }
+      ],
+      included: [
+        {
+          type: 'word-smiths',
+          id: '1',
+          attributes: {
+            name: 'Sam'
+          }
+        },
+        {
+          type: 'fine-comments',
+          id: '3',
+          attributes: {
+            text: 'Foo'
+          },
+          relationships: {
+            'category': {
+              data: { type: 'categories', id: '10' }
+            }
+          }
+        },
+        {
+          type: 'categories',
+          id: '10',
+          attributes: {
+            foo: 'bar'
+          },
+          relationships: {
+            'labels': {
+              data: [
+                { type: 'labels', id: '20' }
+              ]
+            }
+          }
+        },
+        {
+          type: 'labels',
+          id: '20',
+          attributes: {
+            name: 'Economics'
+          }
+        }
+      ]
+    });
   });
 });

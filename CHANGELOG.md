@@ -1,5 +1,103 @@
 # Ember CLI Mirage Changelog
 
+## 0.4.1
+
+Upgrade notes: none
+
+Changes:
+
+  - [BUGFIX][#1217](https://github.com/samselikoff/ember-cli-mirage/pull/1217) Make tracking pretender requests configurable after it was hardcoded false #1137. @patrickjholloway
+  - General upgrade to use async/await in tests @geekygrappler
+  - [ENHANCEMENT][#1203](https://github.com/samselikoff/ember-cli-mirage/pull/1203) pass singular model name to resource helper @geekygrappler
+  - [ENHANCEMENT][#1199](https://github.com/samselikoff/ember-cli-mirage/pull/1199) upgrade to new QUnit testing API @turbo87
+
+## 0.4.0
+
+Upgrade notes:
+
+- There is one primary change that could break your app. In 0.3.x, Mirage's JSONAPISerializer included all related foreign keys whenever serializing a model or collection, even if those relationships were not `?included` in the payload.
+
+  This actually goes against JSON:API's design. Foreign keys in the payload are known as [Resource Linkage](http://jsonapi.org/format/#document-resource-object-linkage) and are intended to be used by API clients to link together all resources in the JSON:API compound document. In fact, most server-side JSON:API libraries do not behave in this way, and only return linkage data for related resources when they are being included in a single document.
+  
+  By including linkage data for every relationship in 0.3, it was easy to develop Ember apps that would work with Mirage but would behave differently when hooked up to a standard JSON:API server. Since Mirage always included linkage data, an Ember app might automatically be able to fetch related resources using the ids from that linkage data plus its knowledge about the API. For example, if a `post` came back like this:
+  
+  ```js
+  // GET /posts/1
+  {
+    data: {
+      type: 'posts',
+      id: '1',
+      attributes: { ... },
+      relationships: {
+        author: {
+          data: {
+            type: 'users',
+            id: '1'
+          }
+        }
+      }
+    }
+  }
+  ```
+  
+  and you forgot to `?include=author` in your GET request, Ember Data would potentially use the `user:1` foreign key and lazily fetch the `author` by making a request to `GET /authors/1`. This is problematic because
+  
+  1. This is not how foreign keys are intended to be used
+  2. It'd be better to see no data and, to fix the problem, go back up to where you're loading the post and add `?include=author`, or
+  3. If you do want your interface to lazily load the author, use `links` instead of the linkage data:
+  
+  ```js
+  // GET /posts/1
+  {
+    data: {
+      type: 'posts',
+      id: '1',
+      attributes: { ... },
+      relationships: {
+        author: {
+          links: {
+            related: '/api/users/1'
+          }
+        }
+      }
+    }
+  }
+  ```
+  
+  Resource links can be defined on Mirage serializers using the [links](http://www.ember-cli-mirage.com/docs/v0.3.x/serializers/#linksmodel) method (though `including` is likely the far more simpler and common approach to fetching related data).
+  
+  So, Mirage 0.4 changed this behavior and by default, the JSONAPISerializer only includes linkage data for relationships that are being included in the current payload (i.e. within the same compound document).
+  
+  This behavior is configurable via the `alwaysIncludeLinkageData` key on your JSONAPISerializers. It is set to `false` by default, but if you want to opt-in to 0.3 behavior and always include linkage data, set it to `true`:
+  
+  ```js
+  // mirage/serializers/application.js
+  import { JSONAPISerializer } from 'ember-cli-mirage';
+
+  export default JSONAPISerializer.extend({
+    alwaysIncludeLinkageData: true
+  });
+  ```
+  
+  If you do this, I would recommend looking closely at how your real server behaves when serializing resources' relationships and whether it uses resource `links` or resource linkage `data`, and to update your Mirage code accordingly to give you the most faithful representation of your server.
+
+- Support for Node 0.12 has been explicitly dropped from some of our dependencies
+
+_Special thanks to @turbo87 and @kellyselden for all their work on this release._
+
+Changes:
+
+  - [BREAKING CHANGE][#1150](https://github.com/samselikoff/ember-cli-mirage/pull/1150) Change default JSONAPI data linkage behavior (reference #1146) @samselikoff
+  - [BUGFIX][#1148](https://github.com/samselikoff/ember-cli-mirage/pull/1148) Foreign key ids were being muted by collection creation @lukemelia
+  - [BUGFIX][#1078](https://github.com/samselikoff/ember-cli-mirage/pull/1078) Ensure #update works on associations @ivanvanderbyl
+  - [BUGFIX][#1112](https://github.com/samselikoff/ember-cli-mirage/pull/1112) Fix query in disassociateAllDepentsFromTarget @omghax
+  - [BUGFIX][#0176](https://github.com/samselikoff/ember-cli-mirage/pull/1170) Fix using `association` helper in a dasherized factory @ignatius-j
+  - [ENHANCEMENT][#1138](https://github.com/samselikoff/ember-cli-mirage/pull/1138) Unlock and upgrade ember-get-config @dfreeman
+  - [ENHANCEMENT] [#b99717](https://github.com/samselikoff/ember-cli-mirage/commit/b997176f1d46aaad4c8f82fb7920e7baa8db9e68) Serializer blueprint should extend the application serializer @ChrisBarthol
+  - [ENHANCEMENT][#187](https://github.com/samselikoff/ember-cli-mirage/pull/187) Use native ES class syntax for base Class.extend @cowboyd
+  - [ENHANCEMENT][#1137](https://github.com/samselikoff/ember-cli-mirage/pull/1137) Bump pretender and disable request tracking in pretender @bekzod
+  - General enhancements @heroiceric, @turbo87, @kellyselden, @bekzod, @timhaines, @wismer, @mixonic, @rwjblue
+
 ## 0.3.4
 
 Update notes: none

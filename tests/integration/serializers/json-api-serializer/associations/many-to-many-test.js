@@ -4,8 +4,8 @@ import Db from 'ember-cli-mirage/db';
 import Schema from 'ember-cli-mirage/orm/schema';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 
-module('Integration | Serializers | JSON API Serializer | Associations | Many To Many', {
-  beforeEach() {
+module('Integration | Serializers | JSON API Serializer | Associations | Many To Many', function(hooks) {
+  hooks.beforeEach(function() {
     let db = new Db();
 
     let schema = new Schema(db, {
@@ -31,34 +31,84 @@ module('Integration | Serializers | JSON API Serializer | Associations | Many To
     schema.contactAddresses.create({ contact: mario, address: mushroomKingdom });
 
     this.schema = schema;
-  }
-});
-
-skip(`it serializes manyToMany if properly configured to passthrough `, function(assert) {
-  let contactSerializer = JSONAPISerializer.extend({
-    addresses(model) {
-      let models = model.contactAddresses.models.map((ca) => ca.address);
-      return new Collection('address', models);
-    }
   });
 
-  let addressSerializer = JSONAPISerializer.extend({
-    contacts(model) {
-      let models = model.contactAddresses.models.map((ca) => ca.contact);
-      return new Collection('contact', models);
-    }
+  skip(`it serializes manyToMany if properly configured to passthrough `, function(assert) {
+    let contactSerializer = JSONAPISerializer.extend({
+      addresses(model) {
+        let models = model.contactAddresses.models.map((ca) => ca.address);
+        return new Collection('address', models);
+      }
+    });
+
+    let addressSerializer = JSONAPISerializer.extend({
+      contacts(model) {
+        let models = model.contactAddresses.models.map((ca) => ca.contact);
+        return new Collection('contact', models);
+      }
+    });
+
+    let registry = new SerializerRegistry(this.schema, {
+      address: addressSerializer,
+      contact: contactSerializer
+    });
+
+    let contact = this.schema.contacts.find(1);
+    let result = registry.serialize(contact);
+
+    assert.deepEqual(result, {
+      data: {
+        id: '1',
+        type: 'contacts',
+        attributes: {
+          name: 'Mario'
+        },
+        relationships: {
+          addresses: {
+            data: [
+              { id: '1', type: 'addresses' },
+              { id: '2', type: 'addresses' }
+            ]
+          },
+          'contact-addresses': {
+            data: [
+              { id: '1', type: 'contact-addresses' },
+              { id: '2', type: 'contact-addresses' }
+            ]
+          }
+        }
+      }
+    });
   });
 
-  let registry = new SerializerRegistry(this.schema, {
-    address: addressSerializer,
-    contact: contactSerializer
-  });
+  skip(`it sideloads manyToMany if properly configured to passthrough and include`, function(assert) {
+    let contactSerializer = JSONAPISerializer.extend({
+      include: ['addresses'],
+      addresses(model) {
+        let models = model.contactAddresses.models.map((ca) => ca.address);
+        return new Collection('address', models);
+      }
+    });
 
-  let contact = this.schema.contacts.find(1);
-  let result = registry.serialize(contact);
+    let addressSerializer = JSONAPISerializer.extend({
+      include: ['contacts'],
+      contacts(model) {
+        let models = model.contactAddresses.models.map((ca) => ca.contact);
+        return new Collection('contact', models);
+      }
+    });
 
-  assert.deepEqual(result, {
-    data: {
+    let registry = new SerializerRegistry(this.schema, {
+      address: addressSerializer,
+      contact: contactSerializer
+    });
+
+    let contact = this.schema.contacts.find(1);
+    let result = registry.serialize(contact);
+
+    let { data, included } = result;
+
+    assert.deepEqual(data, {
       id: '1',
       type: 'contacts',
       attributes: {
@@ -78,78 +128,28 @@ skip(`it serializes manyToMany if properly configured to passthrough `, function
           ]
         }
       }
-    }
-  });
-});
+    });
 
-skip(`it sideloads manyToMany if properly configured to passthrough and include`, function(assert) {
-  let contactSerializer = JSONAPISerializer.extend({
-    include: ['addresses'],
-    addresses(model) {
-      let models = model.contactAddresses.models.map((ca) => ca.address);
-      return new Collection('address', models);
-    }
-  });
-
-  let addressSerializer = JSONAPISerializer.extend({
-    include: ['contacts'],
-    contacts(model) {
-      let models = model.contactAddresses.models.map((ca) => ca.contact);
-      return new Collection('contact', models);
-    }
-  });
-
-  let registry = new SerializerRegistry(this.schema, {
-    address: addressSerializer,
-    contact: contactSerializer
-  });
-
-  let contact = this.schema.contacts.find(1);
-  let result = registry.serialize(contact);
-
-  let { data, included } = result;
-
-  assert.deepEqual(data, {
-    id: '1',
-    type: 'contacts',
-    attributes: {
-      name: 'Mario'
-    },
-    relationships: {
-      addresses: {
-        data: [
-          { id: '1', type: 'addresses' },
-          { id: '2', type: 'addresses' }
-        ]
+    assert.deepEqual(included, [{
+      id: '1',
+      type: 'addresses',
+      attributes: {
+        street: 'Some New York Street'
       },
-      'contact-addresses': {
-        data: [
-          { id: '1', type: 'contact-addresses' },
-          { id: '2', type: 'contact-addresses' }
-        ]
+      relationships: {
+        contacts: { data: [{ id: '1', type: 'contacts' }] },
+        'contact-addresses': { data: [{ id: '1', type: 'contact-addresses' }] }
       }
-    }
+    }, {
+      id: '2',
+      type: 'addresses',
+      attributes: {
+        street: 'Some Mushroom Kingdom Street'
+      },
+      relationships: {
+        contacts: { data: [{ id: '1', type: 'contacts' }] },
+        'contact-addresses': { data: [{ id: '2', type: 'contact-addresses' }] }
+      }
+    }]);
   });
-
-  assert.deepEqual(included, [{
-    id: '1',
-    type: 'addresses',
-    attributes: {
-      street: 'Some New York Street'
-    },
-    relationships: {
-      contacts: { data: [{ id: '1', type: 'contacts' }] },
-      'contact-addresses': { data: [{ id: '1', type: 'contact-addresses' }] }
-    }
-  }, {
-    id: '2',
-    type: 'addresses',
-    attributes: {
-      street: 'Some Mushroom Kingdom Street'
-    },
-    relationships: {
-      contacts: { data: [{ id: '1', type: 'contacts' }] },
-      'contact-addresses': { data: [{ id: '2', type: 'contact-addresses' }] }
-    }
-  }]);
 });
