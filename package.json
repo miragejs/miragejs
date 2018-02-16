@@ -77,7 +77,8 @@
     "eslint-plugin-ember-suave": "^1.0.0",
     "eslint-plugin-node": "^5.2.1",
     "loader.js": "^4.2.3",
-    "mocha": "^3.4.2"
+    "mocha": "^3.4.2",
+    "qunit-dom": "^0.5.0"
   },
   "engines": {
     "node": "^4.5 || 6.* || >= 7.*"
