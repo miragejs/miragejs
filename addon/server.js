@@ -149,7 +149,7 @@ export default class Server {
       'You cannot modify Mirage\'s environment once the server is created');
     this.environment = config.environment || 'development';
 
-    this._options = config;
+    this._config = config;
 
     this.timing = this.timing || config.timing || 400;
     this.namespace = this.namespace || config.namespace || '';
@@ -296,7 +296,7 @@ export default class Server {
    * @public
    */
   loadFixtures(...args) {
-    let { fixtures } = this._options;
+    let { fixtures } = this._config;
     if (args.length) {
       let camelizedArgs = args.map(camelize);
       fixtures = _pick(fixtures, ...camelizedArgs);
