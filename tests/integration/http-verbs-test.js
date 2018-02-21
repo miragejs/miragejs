@@ -122,4 +122,19 @@ module('Integration | HTTP Verbs', function(hooks) {
       assert.ok(e.xhr.status, 404);
     }
   });
+
+  test('mirage responds to options', async function(assert) {
+    assert.expect(1);
+
+    this.server.options('/contacts', function() {
+      return true;
+    });
+
+    let { data } = await promiseAjax({
+      method: 'OPTIONS',
+      url: '/contacts'
+    });
+
+    assert.equal(data, true);
+  });
 });
