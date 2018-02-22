@@ -54,7 +54,7 @@ module.exports = {
     if (existsSync('tests/helpers/destroy-app.js')) {
       var shutdownText = '  if (window.server) {\n    window.server.shutdown();\n  }';
       return this.insertIntoFile('tests/helpers/destroy-app.js', shutdownText, {
-        after: "Ember.run(application, 'destroy');\n"
+        after: "run(application, 'destroy');\n"
       });
     } else {
       this.ui.writeLine(
