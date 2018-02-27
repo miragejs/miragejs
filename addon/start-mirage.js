@@ -1,15 +1,11 @@
-import Ember from 'ember';
+import { getWithDefault } from '@ember/object';
 import readModules from 'ember-cli-mirage/utils/read-modules';
 import Server from 'ember-cli-mirage/server';
 import _assign from 'lodash/assign';
 
-const {
-  getWithDefault
-} = Ember;
-
 //
 // Helper to start mirage. This should not be called directly. In rfc232/rfc268
-// tests, use `setupMirageTest()` or the `autoboot` option in the addon config
+// tests, use `setupMirage()` or the `autoboot` option in the addon config
 // in the environment. In legacy tests that call `startMirage` directly, this
 // should be called via the `startMirage` method exported from
 // `<app>/initializers/ember-cli-mirage`.

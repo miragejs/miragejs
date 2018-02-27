@@ -6,12 +6,14 @@ import startMirage from 'ember-cli-mirage/start-mirage';
 // `this.server` to point to it, and shuts the server down when the test
 // finishes.
 //
-export default function setupMirageTest(hooks) {
+// NOTE: the `hooks = self` is for mocha support
+//
+export default function setupMirage(hooks = self) {
   hooks.beforeEach(function() {
     if (!this.owner) {
       throw new Error('You must call one of the ember-qunit setupTest(),'
         + ' setupRenderingTest() or setupApplicationTest() methods before'
-        + ' calling setupMirageTest()');
+        + ' calling setupMirage()');
     }
 
     this.server = startMirage(this.owner);

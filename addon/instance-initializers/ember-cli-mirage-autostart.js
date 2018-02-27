@@ -2,6 +2,18 @@ import EmberObject from '@ember/object';
 import getRfc232TestContext from 'ember-cli-mirage/get-rfc232-test-context';
 import startMirage from 'ember-cli-mirage/start-mirage';
 
+// An object we can register with the container to ensure that mirage is shut
+// down when the application is destroyed
+const MirageShutdown = EmberObject.extend({
+  testContext: null,
+
+  willDestroy() {
+    let testContext = this.get('testContext');
+    testContext.server.shutdown();
+    delete testContext.server;
+  }
+});
+
 //
 // If we are running an rfc232/rfc268 test then we want to support the
 // `autostart` configuration option, which auto-starts mirage before the test
@@ -34,13 +46,3 @@ export function initialize(appInstance) {
 export default {
   initialize
 };
-
-const MirageShutdown = EmberObject.extend({
-  testContext: null,
-
-  willDestroy() {
-    let testContext = this.get('testContext');
-    testContext.server.shutdown();
-    delete testContext.server;
-  }
-});

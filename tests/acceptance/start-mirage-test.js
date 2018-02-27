@@ -3,7 +3,7 @@ import {module as qunitModule, test} from 'qunit';
 import {setupTest} from 'ember-qunit';
 import {visit, currentRouteName} from '@ember/test-helpers';
 import startMirage from 'ember-cli-mirage/start-mirage';
-import setupMirageTest from 'ember-cli-mirage/test-support/setup-mirage-test';
+import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import ENV from 'dummy/config/environment';
 
 let module;
@@ -52,8 +52,8 @@ module('Acceptance: Starting mirage', function(hooks) {
       assert.dom('p').hasText(`The contact is ${contact.name}`, 'The manually started server works');
     });
 
-    module('setupMirageTest()', function(hooks) {
-      setupMirageTest(hooks);
+    module('setupMirage()', function(hooks) {
+      setupMirage(hooks);
 
       test('it works', async function(assert) {
         assert.ok(this.server, 'There is a server');
