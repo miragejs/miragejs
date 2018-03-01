@@ -1,5 +1,28 @@
 # Ember CLI Mirage Changelog
 
+## 0.4.2
+
+- Adds support for new style (RFC232/RFC268) tests
+- Parts of Mirage's factory layer that create data are faster
+- Serializers support coalesced IDs
+- Ensure JSONAPISerializer supports `include` as function
+- Add support for `options` mocking
+
+### How it works in different types of tests
+
+* **Old-style non-acceptance tests**: mirage will not automatically start, and can still be manually started using the `startMirage()` import from `<app>/initializers/ember-cli-mirage`.
+* **Old-style acceptance tests**: mirage will still be started before each test by `<app>/initializers/ember-cli-mirage` and shut down by the code that `ember-cli-mirage`'s blueprint adds to `destroyApp()`.
+* **RFC232 and RFC268 tests**: `<app>/initializers/ember-cli-mirage` will detect that it's an RFC232/RFC268 test and not start the mirage server automatically in the way that is problematic for the new tests, and since the new tests don't use `destroyApp()`, it's not at play either. So there are two options:
+  - In each test that needs it, the user can call `setupMirageTest()`, which will register `beforeEach`/`afterEach` hooks to set up and shut down the mirage server and make it accessible via `this.server` (and also the `server` global).
+  - The user can set `autostart: true` in their `ember-cli-mirage` config object in `config/environment` which will cause an instance initializer that runs before each test (**every** RFC232/RFC268 test, not just "acceptance" (application) tests) to start mirage and set it as `this.server` on the test context (and also the `server` global), and also register and create a singleton that, when destroyed during app shutdown, will shut down the mirage server.
+
+### Upgrade path
+
+This is **not** a breaking change -- existing tests will run just as they are once this PR is merged and released. Furthermore, new and old tests can live side by side and work properly with mirage if the right setup is done, so users are not forced to migrate their whole suite all at once. As they migrate tests, they have two options:
+
+* As non-acceptance tests are migrated, delete the manual starting/stopping of mirage in `beforeEach`/`afterEach` and replace it with a call to `setupMirageTest()` and continue using `this.server`. As acceptance tests are migrated, add a call to `setupMirageTest()` and optionally switch from using the `server` global to using `this.server`.
+* Set `autostart: true` in `config/environment`, and then as non-acceptance tests are migrated, just delete the manual starting/stopping of the mirage server and continue using `this.server`. As acceptance tests are migrated, no changes are necessary, but users can optionally switch from using the `server` global to using `this.server`.
+
 ## 0.4.1
 
 Upgrade notes: none
@@ -18,9 +41,9 @@ Upgrade notes:
 - There is one primary change that could break your app. In 0.3.x, Mirage's JSONAPISerializer included all related foreign keys whenever serializing a model or collection, even if those relationships were not `?included` in the payload.
 
   This actually goes against JSON:API's design. Foreign keys in the payload are known as [Resource Linkage](http://jsonapi.org/format/#document-resource-object-linkage) and are intended to be used by API clients to link together all resources in the JSON:API compound document. In fact, most server-side JSON:API libraries do not behave in this way, and only return linkage data for related resources when they are being included in a single document.
-  
+
   By including linkage data for every relationship in 0.3, it was easy to develop Ember apps that would work with Mirage but would behave differently when hooked up to a standard JSON:API server. Since Mirage always included linkage data, an Ember app might automatically be able to fetch related resources using the ids from that linkage data plus its knowledge about the API. For example, if a `post` came back like this:
-  
+
   ```js
   // GET /posts/1
   {
@@ -39,13 +62,13 @@ Upgrade notes:
     }
   }
   ```
-  
+
   and you forgot to `?include=author` in your GET request, Ember Data would potentially use the `user:1` foreign key and lazily fetch the `author` by making a request to `GET /authors/1`. This is problematic because
-  
+
   1. This is not how foreign keys are intended to be used
   2. It'd be better to see no data and, to fix the problem, go back up to where you're loading the post and add `?include=author`, or
   3. If you do want your interface to lazily load the author, use `links` instead of the linkage data:
-  
+
   ```js
   // GET /posts/1
   {
@@ -63,13 +86,13 @@ Upgrade notes:
     }
   }
   ```
-  
+
   Resource links can be defined on Mirage serializers using the [links](http://www.ember-cli-mirage.com/docs/v0.3.x/serializers/#linksmodel) method (though `including` is likely the far more simpler and common approach to fetching related data).
-  
+
   So, Mirage 0.4 changed this behavior and by default, the JSONAPISerializer only includes linkage data for relationships that are being included in the current payload (i.e. within the same compound document).
-  
+
   This behavior is configurable via the `alwaysIncludeLinkageData` key on your JSONAPISerializers. It is set to `false` by default, but if you want to opt-in to 0.3 behavior and always include linkage data, set it to `true`:
-  
+
   ```js
   // mirage/serializers/application.js
   import { JSONAPISerializer } from 'ember-cli-mirage';
@@ -78,7 +101,7 @@ Upgrade notes:
     alwaysIncludeLinkageData: true
   });
   ```
-  
+
   If you do this, I would recommend looking closely at how your real server behaves when serializing resources' relationships and whether it uses resource `links` or resource linkage `data`, and to update your Mirage code accordingly to give you the most faithful representation of your server.
 
 - Support for Node 0.12 has been explicitly dropped from some of our dependencies
