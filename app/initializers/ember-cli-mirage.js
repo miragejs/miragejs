@@ -1,17 +1,28 @@
-import Ember from 'ember';
-import readModules from 'ember-cli-mirage/utils/read-modules';
 import ENV from '../config/environment';
 import baseConfig, { testConfig } from '../mirage/config';
-import Server from 'ember-cli-mirage/server';
-import _assign from 'lodash/assign';
+import getRfc232TestContext from 'ember-cli-mirage/get-rfc232-test-context';
+import startMirageImpl from 'ember-cli-mirage/start-mirage';
 
-const {
-  getWithDefault
-} = Ember;
-
+//
+// This initializer does two things:
+//
+// 1. Pulls the mirage config objects from the application's config and
+//    registers them in the container so `ember-cli-mirage/start-mirage` can
+//    find them (since it doesn't have access to the app's namespace).
+// 2. Provides legacy support for auto-starting mirage in pre-rfc268 acceptance
+//    tests.
+//
 export default {
-  name: 'ember-cli-mirage',
-  initialize() {
+  name: 'ember-cli-mirage-config',
+  initialize(application) {
+    if (baseConfig) {
+      application.register('mirage:base-config', baseConfig, { instantiate: false });
+    }
+    if (testConfig) {
+      application.register('mirage:test-config', testConfig, { instantiate: false });
+    }
+
+    ENV['ember-cli-mirage'] = ENV['ember-cli-mirage'] || {};
     if (_shouldUseMirage(ENV.environment, ENV['ember-cli-mirage'])) {
       startMirage(ENV);
     }
@@ -19,17 +30,14 @@ export default {
 };
 
 export function startMirage(env = ENV) {
-  let environment = env.environment;
-  let discoverEmberDataModels = getWithDefault(env['ember-cli-mirage'] || {}, 'discoverEmberDataModels', true);
-  let modules = readModules(env.modulePrefix);
-  let options = _assign(modules, {environment, baseConfig, testConfig, discoverEmberDataModels});
-  options.trackRequests = env['ember-cli-mirage'].trackRequests;
-
-  return new Server(options);
+  return startMirageImpl(null, { env, baseConfig, testConfig });
 }
 
 function _shouldUseMirage(env, addonConfig) {
   if (typeof FastBoot !== 'undefined') {
+    return false;
+  }
+  if (getRfc232TestContext()) {
     return false;
   }
   let userDeclaredEnabled = typeof addonConfig.enabled !== 'undefined';
