@@ -16,6 +16,12 @@ A client-side server to develop, test and prototype your Ember CLI app.
 ember install ember-cli-mirage
 ```
 
+## Feature requests
+
+I want to use Canny for feature requests, and keep GitHub issues to actionable items: bugs, and features that are currently being implemented.
+
+For feature requests, visit our [Canny board](https://ember-cli-mirage.canny.io/admin/board/feature-requests).
+
 ## Support
 
 Having trouble?
