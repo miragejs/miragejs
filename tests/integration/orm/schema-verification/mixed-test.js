@@ -122,4 +122,42 @@ module('Integration | ORM | Schema Verification | Mixed', function() {
 
     assert.deepEqual(frodo.inverseFor(parentAssociation), frodo.associationFor('children'));
   });
+
+  test('one-to-many polymorphic association is correct', function(assert) {
+    let schema = new Schema(new Db({
+      authors: [
+        { id: 1, name: 'Peter' }
+      ],
+      posts: [
+        { id: 1, title: 'Lorem' }
+      ],
+      articles: [
+        { id: 1, title: 'Ipsum' }
+      ]
+    }), {
+      author: Model.extend({
+        writings: hasMany({ polymorphic: true })
+      }),
+      post: Model.extend({
+        author: belongsTo('author', { inverse: 'writings' })
+      }),
+      article: Model.extend({
+        author: belongsTo('author', { inverse: 'writings' })
+      })
+    });
+
+    let author = schema.authors.find(1);
+    let writingsAssociation = author.associationFor('writings');
+
+    let post = schema.posts.find(1);
+    let postAuthorAssociation = post.associationFor('author');
+
+    let article = schema.articles.find(1);
+    let articleAuthorAssociation = article.associationFor('author');
+
+    assert.deepEqual(post.inverseFor(writingsAssociation), postAuthorAssociation);
+    assert.deepEqual(article.inverseFor(writingsAssociation), articleAuthorAssociation);
+    assert.deepEqual(author.inverseFor(postAuthorAssociation), writingsAssociation);
+    assert.deepEqual(author.inverseFor(postAuthorAssociation), writingsAssociation);
+  });
 });

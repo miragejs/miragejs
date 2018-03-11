@@ -231,28 +231,59 @@ class Model {
    * @public
    */
   inverseFor(association) {
+    return this._explicitInverseFor(association) || this._implicitInverseFor(association);
+  }
+
+  /**
+   * Finds the inverse for an association that explicity defines it's inverse
+   *
+   * @private
+  */
+  _explicitInverseFor(association) {
+    let associations = this.schema.associationsFor(this.modelName);
+    let inverse = association.opts.inverse;
+    let candidate = inverse ? associations[inverse] : null;
+    let matchingPolymorphic = candidate && candidate.isPolymorphic;
+    let matchingInverse = candidate && candidate.modelName === association.ownerModelName;
+    let candidateInverse = candidate && candidate.opts.inverse;
+
+    if (candidateInverse && candidate.opts.inverse !== association.key) {
+      assert(
+        false,
+        `You specified an inverse of ${inverse} for ${association.key}, but it does not match ${candidate.modelName} ${candidate.key}'s inverse`
+      );
+    }
+
+    return matchingPolymorphic || matchingInverse ? candidate : null;
+  }
+
+  /**
+   * Finds if there is an inverse for an association that does not
+   * explicitly define one.
+   *
+   * @private
+  */
+  _implicitInverseFor(association) {
     let associations = this.schema.associationsFor(this.modelName);
     let modelName = association.ownerModelName;
 
-    let theInverse = _values(associations)
+    return _values(associations)
       .filter(candidate => candidate.modelName === modelName)
       .reduce((inverse, candidate) => {
         let candidateInverse = candidate.opts.inverse;
         let candidateIsImplicitInverse = candidateInverse === undefined;
-        let candidateIsExplicitInverse = (candidateInverse === association.key);
+        let candidateIsExplicitInverse = candidateInverse === association.key;
+
         let candidateMatches = candidateIsImplicitInverse || candidateIsExplicitInverse;
 
         if (candidateMatches) {
           // Need to move this check to compile-time init
           assert(!inverse, `The ${this.modelName} model has multiple possible inverse associations for the ${association.key} association on the ${association.ownerModelName} model.`);
-
           inverse = candidate;
         }
 
         return inverse;
       }, null);
-
-    return theInverse;
   }
 
   /**
