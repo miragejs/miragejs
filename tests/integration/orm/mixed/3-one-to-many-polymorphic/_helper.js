@@ -23,7 +23,7 @@ export default class Helper {
         things: hasMany({ polymorphic: true })
       }),
       post: Model.extend({
-        user: belongsTo()
+        user: belongsTo({ inverse: 'things' })
       })
     });
   }
