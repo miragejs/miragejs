@@ -205,4 +205,5 @@ module('Integration | Serializers | Base | Associations | Sideloading Collection
       ]
     });
   });
+
 });

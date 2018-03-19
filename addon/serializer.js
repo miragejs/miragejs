@@ -113,7 +113,7 @@ class Serializer {
     }
 
     if (this.embed) {
-      return [hash];
+      return [hash, []];
 
     } else {
       let addToIncludes = _(serializer.getKeysForIncluded())
