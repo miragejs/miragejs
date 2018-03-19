@@ -125,35 +125,6 @@ module('Integration | Serializers | Base | Associations | Sideloading Collection
     });
   });
 
-  test(`it can sideload a collection with a has-many relationship containing embedded models`, function(assert) {
-    let registry = new SerializerRegistry(this.schema, {
-      application: this.BaseSerializer,
-      wordSmith: this.BaseSerializer.extend({
-        embed: false,
-        include: ["posts"]
-      }),
-      blogPost: this.BaseSerializer.extend({
-        embed: true,
-        include: ["comments"]
-      })
-    });
-
-    let wordSmiths = this.schema.wordSmiths.all();
-    let result = registry.serialize(wordSmiths);
-
-    assert.deepEqual(result, {
-      wordSmiths: [
-        { id: "1", name: "Link", postIds: ["1", "2"] },
-        { id: "2", name: "Zelda", postIds: ["3"] }
-      ],
-      blogPosts: [
-        { id: "1", title: "Lorem", comments: [{ id: "1", text: "pwned" }] },
-        { id: "2", title: "Ipsum", comments: [] },
-        { id: "3", title: "Zeldas blogPost", comments: [] }
-      ]
-    });
-  });
-
   test(`it avoids circularity when serializing a collection`, function(assert) {
     let registry = new SerializerRegistry(this.schema, {
       application: this.BaseSerializer,
@@ -235,31 +206,4 @@ module('Integration | Serializers | Base | Associations | Sideloading Collection
     });
   });
 
-  test(`it can sideload a collection with a belongs-to relationship containing embedded models`, function(assert) {
-    let registry = new SerializerRegistry(this.schema, {
-      application: this.BaseSerializer,
-      fineComment: this.BaseSerializer.extend({
-        embed: false,
-        include: ["post"]
-      }),
-      blogPost: this.BaseSerializer.extend({
-        embed: true,
-        include: ["author"]
-      })
-    });
-
-    let fineComments = this.schema.fineComments.all();
-    let result = registry.serialize(fineComments);
-
-    assert.deepEqual(result, {
-      fineComments: [{ id: "1", text: "pwned", postId: "1" }],
-      blogPosts: [
-        {
-          id: "1",
-          title: "Lorem",
-          author: { id: "1", name: "Link" }
-        }
-      ]
-    });
-  });
 });
