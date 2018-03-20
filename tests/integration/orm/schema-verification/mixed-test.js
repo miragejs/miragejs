@@ -160,88 +160,88 @@ module('Integration | ORM | Schema Verification | Mixed', function() {
     assert.deepEqual(author.inverseFor(postAuthorAssociation), writingsAssociation);
     assert.deepEqual(author.inverseFor(postAuthorAssociation), writingsAssociation);
   });
-});
 
-test('multiple implicit inverse associations with the same key throws an error', function(assert) {
-  let schema = new Schema(new Db({
-    users: [
-      { id: 1, name: 'Frodo' }
-    ],
-    posts: [
-      { id: 1, title: 'Lorem' }
-    ]
-  }), {
-    user: Model.extend({
-      posts: hasMany('post')
-    }),
-    post: Model.extend({
-      editor: belongsTo('user'),
-      authors: hasMany('user')
-    })
+  test('multiple implicit inverse associations with the same key throws an error', function(assert) {
+    let schema = new Schema(new Db({
+      users: [
+        { id: 1, name: 'Frodo' }
+      ],
+      posts: [
+        { id: 1, title: 'Lorem' }
+      ]
+    }), {
+      user: Model.extend({
+        posts: hasMany('post')
+      }),
+      post: Model.extend({
+        editor: belongsTo('user'),
+        authors: hasMany('user')
+      })
+    });
+
+    let frodo = schema.users.find(1);
+    let userPostsAssociation = frodo.associationFor('posts');
+    let post = schema.posts.find(1);
+
+    assert.throws(function() {
+      post.inverseFor(userPostsAssociation);
+    }, /The post model has multiple possible inverse associations for the user.posts association./);
   });
 
-  let frodo = schema.users.find(1);
-  let userPostsAssociation = frodo.associationFor('posts');
-  let post = schema.posts.find(1);
+  test('multiple explicit inverse associations with the same key throws an error', function(assert) {
+    let schema = new Schema(new Db({
+      users: [
+        { id: 1, name: 'Frodo' }
+      ],
+      posts: [
+        { id: 1, title: 'Lorem' }
+      ]
+    }), {
+      user: Model.extend({
+        posts: hasMany('post', { inverse: 'authors' })
+      }),
+      post: Model.extend({
+        editor: belongsTo('user', { inverse: 'posts' }),
+        authors: hasMany('user', { inverse: 'posts' })
+      })
+    });
 
-  assert.throws(function() {
-    post.inverseFor(userPostsAssociation);
-  }, /The post model has multiple possible inverse associations for the user.posts association./);
-});
+    let frodo = schema.users.find(1);
+    let userPostsAssociation = frodo.associationFor('posts');
+    let post = schema.posts.find(1);
 
-test('multiple explicit inverse associations with the same key throws an error', function(assert) {
-  let schema = new Schema(new Db({
-    users: [
-      { id: 1, name: 'Frodo' }
-    ],
-    posts: [
-      { id: 1, title: 'Lorem' }
-    ]
-  }), {
-    user: Model.extend({
-      posts: hasMany('post', { inverse: 'authors' })
-    }),
-    post: Model.extend({
-      editor: belongsTo('user', { inverse: 'posts' }),
-      authors: hasMany('user', { inverse: 'posts' })
-    })
+    assert.throws(function() {
+      post.inverseFor(userPostsAssociation);
+    }, /The post model has defined multiple explicit inverse associations for the user.posts association./);
   });
 
-  let frodo = schema.users.find(1);
-  let userPostsAssociation = frodo.associationFor('posts');
-  let post = schema.posts.find(1);
+  test('explicit inverse is chosen over implicit inverses', function(assert) {
+    let schema = new Schema(new Db({
+      users: [
+        { id: 1, name: 'Frodo' }
+      ],
+      posts: [
+        { id: 1, title: 'Lorem' }
+      ]
+    }), {
+      user: Model.extend({
+        posts: hasMany('post', { inverse: 'authors' })
+      }),
+      post: Model.extend({
+        editor: belongsTo('user'),
+        authors: hasMany('user', { inverse: 'posts' })
+      })
+    });
 
-  assert.throws(function() {
-    post.inverseFor(userPostsAssociation);
-  }, /The post model has defined multiple explicit inverse associations for the user.posts association./);
-});
+    let frodo = schema.users.find(1);
+    let userPostsAssociation = frodo.associationFor('posts');
 
-test('explicit inverse is chosen over implicit inverses', function(assert) {
-  let schema = new Schema(new Db({
-    users: [
-      { id: 1, name: 'Frodo' }
-    ],
-    posts: [
-      { id: 1, title: 'Lorem' }
-    ]
-  }), {
-    user: Model.extend({
-      posts: hasMany('post', { inverse: 'authors' })
-    }),
-    post: Model.extend({
-      editor: belongsTo('user'),
-      authors: hasMany('user', { inverse: 'posts' })
-    })
+    assert.equal(userPostsAssociation.key, 'posts');
+    assert.equal(userPostsAssociation.modelName, 'post');
+    assert.equal(userPostsAssociation.ownerModelName, 'user');
+
+    let post = schema.posts.find(1);
+
+    assert.deepEqual(post.inverseFor(userPostsAssociation), post.associationFor('authors'));
   });
-
-  let frodo = schema.users.find(1);
-  let userPostsAssociation = frodo.associationFor('posts');
-
-  assert.equal(userPostsAssociation.key, 'posts');
-  assert.equal(userPostsAssociation.modelName, 'post');
-  assert.equal(userPostsAssociation.ownerModelName, 'user');
-
-  let post = schema.posts.find(1);
-
-  assert.deepEqual(post.inverseFor(userPostsAssociation), post.associationFor('authors'));
 });
