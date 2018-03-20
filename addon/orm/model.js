@@ -240,6 +240,8 @@ class Model {
    * @private
   */
   _explicitInverseFor(association) {
+    this._checkForMultipleExplicitInverses(association);
+
     let associations = this.schema.associationsFor(this.modelName);
     let inverse = association.opts.inverse;
     let candidate = inverse ? associations[inverse] : null;
@@ -255,6 +257,29 @@ class Model {
     }
 
     return matchingPolymorphic || matchingInverse ? candidate : null;
+  }
+
+  /**
+   * Ensures multiple explicit inverses don't exist on the current model
+   * for the given association.
+   *
+   * TODO: move this to compile-time check
+   *
+   * @private
+  */
+  _checkForMultipleExplicitInverses(association) {
+    let associations = this.schema.associationsFor(this.modelName);
+    let matchingExplicitInverses = Object.keys(associations).filter(key => {
+      let candidate = associations[key];
+      let modelMatches = association.modelName === candidate.ownerModelName;
+      let inverseKeyMatches = association.key === candidate.opts.inverse;
+
+      return modelMatches && inverseKeyMatches;
+    });
+    assert(
+      matchingExplicitInverses.length <= 1,
+      `The ${this.modelName} model has defined multiple explicit inverse associations for the ${association.ownerModelName}.${association.key} association.`
+    );
   }
 
   /**
@@ -278,7 +303,7 @@ class Model {
 
         if (candidateMatches) {
           // Need to move this check to compile-time init
-          assert(!inverse, `The ${this.modelName} model has multiple possible inverse associations for the ${association.key} association on the ${association.ownerModelName} model.`);
+          assert(!inverse, `The ${this.modelName} model has multiple possible inverse associations for the ${association.ownerModelName}.${association.key} association.`);
           inverse = candidate;
         }
 
