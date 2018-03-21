@@ -1,5 +1,11 @@
 # Ember CLI Mirage Changelog
 
+## 0.4.3
+
+- Improve detection of model inverses
+- Fix a bug related to serializing responsese that are both sideloaded and embedded
+
+
 ## 0.4.2
 
 - Adds support for new style (RFC232/RFC268) tests
