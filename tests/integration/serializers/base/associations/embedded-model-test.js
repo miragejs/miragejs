@@ -138,6 +138,27 @@ module('Integration | Serializers | Base | Associations | Embedded Models', func
     });
   });
 
+  test(`it can have a null value on a belongs-to relationship`, function(assert) {
+    let registry = new SerializerRegistry(this.schema, {
+      application: this.BaseSerializer,
+      blogPost: this.BaseSerializer.extend({
+        embed: true,
+        include: ['author']
+      })
+    });
+
+    let blogPost = this.schema.blogPosts.find(1);
+    blogPost.update('author', null);
+    let result = registry.serialize(blogPost);
+
+    assert.deepEqual(result, {
+      blogPost: {
+        id: '1',
+        title: 'Lorem'
+      }
+    });
+  });
+
   test(`it ignores relationships that refer to serialized ancestor resources`, function(assert) {
     let registry = new SerializerRegistry(this.schema, {
       application: this.BaseSerializer,

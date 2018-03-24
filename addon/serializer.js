@@ -221,7 +221,7 @@ class Serializer {
 
       this.getKeysForIncluded().forEach((key) => {
         let associatedResource = model[key];
-        if (!_get(newDidSerialize, `${associatedResource.modelName}.${associatedResource.id}`)) {
+        if (associatedResource && !_get(newDidSerialize, `${associatedResource.modelName}.${associatedResource.id}`)) {
           let [ associatedResourceHash ] = this.getHashForResource(associatedResource, true, newDidSerialize, true);
           let formattedKey = this.keyForEmbeddedRelationship(key);
           attrs[formattedKey] = associatedResourceHash;
