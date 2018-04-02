@@ -13,7 +13,7 @@ import startMirageImpl from 'ember-cli-mirage/start-mirage';
 //    tests.
 //
 export default {
-  name: 'ember-cli-mirage-config',
+  name: 'ember-cli-mirage',
   initialize(application) {
     if (baseConfig) {
       application.register('mirage:base-config', baseConfig, { instantiate: false });
