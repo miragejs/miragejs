@@ -85,6 +85,28 @@ module('Integration | Passthrough', function(hooks) {
     });
   });
 
+  test('it can passthrough all verbs by default', function(assert) {
+    let verbs = ['GET', 'HEAD', 'PUT', 'POST', 'PATCH', 'DELETE', 'OPTIONS'];
+    assert.expect(verbs.length);
+
+    let done = verbs.map(() => assert.async());
+    let { server } = this;
+
+    server.loadConfig(function() {
+      this.passthrough('/addresses');
+    });
+
+    verbs.forEach((verb, index) => {
+      promiseAjax({
+        method: verb,
+        url: '/addresses'
+      }).catch(error => {
+        assert.equal(error.xhr.status, 404);
+        done[index]();
+      });
+    });
+  });
+
   test('it can passthrough multiple paths in a single call', function(assert) {
     assert.expect(2);
     let done1 = assert.async();
