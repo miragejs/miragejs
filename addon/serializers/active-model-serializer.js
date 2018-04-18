@@ -1,8 +1,8 @@
 import Serializer from '../serializer';
-import { underscore, pluralize, dasherize, singularize } from '../utils/inflector';
+import { underscore, pluralize, dasherize, singularize, camelize } from '../utils/inflector';
 
 export default Serializer.extend({
-
+  normalizeIds: false,
   keyForModel(type) {
     return underscore(type);
   },
@@ -38,6 +38,11 @@ export default Serializer.extend({
   normalize(payload) {
     let type = Object.keys(payload)[0];
     let attrs = payload[type];
+    let modelName = camelize(type);
+    let modelClass = this.schema.modelClassFor(modelName);
+    let { belongsToAssociations, hasManyAssociations } = modelClass;
+    let belongsToKeys = Object.keys(belongsToAssociations);
+    let hasManyKeys = Object.keys(hasManyAssociations);
 
     let jsonApiPayload = {
       data: {
@@ -48,11 +53,42 @@ export default Serializer.extend({
     if (attrs.id) {
       jsonApiPayload.data.id = attrs.id;
     }
+
+    let relationships = {};
+
     Object.keys(attrs).forEach((key) => {
       if (key !== 'id') {
-        jsonApiPayload.data.attributes[dasherize(key)] = attrs[key];
+        if (this.normalizeIds) {
+          if (belongsToKeys.includes(key)) {
+            let association = belongsToAssociations[key];
+            let associationModel = association.modelName;
+            relationships[dasherize(key)] = {
+              data: {
+                type: associationModel,
+                id: attrs[key]
+              }
+            };
+          } else if (hasManyKeys.includes(key)) {
+            let association = hasManyAssociations[key];
+            let associationModel = association.modelName;
+            let data = attrs[key].map(id => {
+              return {
+                type: associationModel,
+                id
+              };
+            });
+            relationships[dasherize(key)] = { data };
+          } else {
+            jsonApiPayload.data.attributes[dasherize(key)] = attrs[key];
+          }
+        } else {
+          jsonApiPayload.data.attributes[dasherize(key)] = attrs[key];
+        }
       }
     });
+    if (Object.keys(relationships).length) {
+      jsonApiPayload.data.relationships = relationships;
+    }
 
     return jsonApiPayload;
   },

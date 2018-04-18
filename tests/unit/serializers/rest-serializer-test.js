@@ -1,10 +1,18 @@
 import RestSerializer from 'ember-cli-mirage/serializers/rest-serializer';
 
 import { module, test } from 'qunit';
+import { Model } from 'ember-cli-mirage';
+import Schema from 'ember-cli-mirage/orm/schema';
+import Db from 'ember-cli-mirage/db';
 
 module('Unit | Serializers | RestSerializer', function(hooks) {
   hooks.beforeEach(function() {
-    this.serializer = new RestSerializer();
+    let schema = new Schema(new Db(), {
+      person: Model
+    });
+    this.serializer = new RestSerializer({
+      schema
+    });
   });
 
   test('it hyphenates camelized words', function(assert) {
