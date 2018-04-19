@@ -270,7 +270,7 @@ export default class Server {
    * @public
    */
   passthrough(...paths) {
-    let verbs = ['get', 'post', 'put', 'delete', 'patch', 'options'];
+    let verbs = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head'];
     let lastArg = paths[paths.length - 1];
 
     if (paths.length === 0) {
