@@ -244,4 +244,42 @@ module('Integration | ORM | Schema Verification | Mixed', function() {
 
     assert.deepEqual(post.inverseFor(userPostsAssociation), post.associationFor('authors'));
   });
+
+  test('multiple explicit inverse associations with the same key but different models does not throw an error', function(assert) {
+    let schema = new Schema(new Db({
+      users: [
+        { id: 1, name: 'Frodo' }
+      ],
+      posts: [
+        { id: 1, title: 'Lorem' }
+      ],
+      books: [
+        { id: 1, title: 'Ipsum' }
+      ]
+    }), {
+      user: Model.extend({
+        authoredPosts: hasMany('post', { inverse: 'authors' }),
+        authoredBooks: hasMany('book', { inverse: 'authors' })
+      }),
+      post: Model.extend({
+        authors: hasMany('user', { inverse: 'authoredPosts' })
+      }),
+      book: Model.extend({
+        authors: hasMany('user', { inverse: 'authoredBooks' })
+      })
+    });
+
+    let frodo = schema.users.find(1);
+    let post = schema.posts.find(1);
+    let book = schema.books.find(1);
+
+    let userAuthoredPostsAssociation = frodo.associationFor('authoredPosts');
+    let userAuthoredBooksAssociation = frodo.associationFor('authoredBooks');
+    let postsAuthorsAssociation = post.associationFor('authors');
+    let bookAuthorsAssociation = book.associationFor('authors');
+    assert.deepEqual(post.inverseFor(userAuthoredPostsAssociation), post.associationFor('authors'));
+    assert.deepEqual(book.inverseFor(userAuthoredBooksAssociation), book.associationFor('authors'));
+    assert.deepEqual(frodo.inverseFor(postsAuthorsAssociation), frodo.associationFor('authoredPosts'));
+    assert.deepEqual(frodo.inverseFor(bookAuthorsAssociation), frodo.associationFor('authoredBooks'));
+  });
 });

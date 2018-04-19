@@ -271,7 +271,7 @@ class Model {
     let associations = this.schema.associationsFor(this.modelName);
     let matchingExplicitInverses = Object.keys(associations).filter(key => {
       let candidate = associations[key];
-      let modelMatches = association.modelName === candidate.ownerModelName;
+      let modelMatches = association.ownerModelName === candidate.modelName;
       let inverseKeyMatches = association.key === candidate.opts.inverse;
 
       return modelMatches && inverseKeyMatches;
