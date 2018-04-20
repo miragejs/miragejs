@@ -1,10 +1,23 @@
+import { Model, belongsTo } from 'ember-cli-mirage';
+import Schema from 'ember-cli-mirage/orm/schema';
+import Db from 'ember-cli-mirage/db';
 import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
 
 import {module, test} from 'qunit';
 
 module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
   hooks.beforeEach(function() {
-    this.serializer = new ActiveModelSerializer();
+    let schema = new Schema(new Db(), {
+      contact: Model.extend({
+        address: belongsTo()
+      }),
+      address: Model.extend({
+        contact: belongsTo()
+      })
+    });
+    this.serializer = new ActiveModelSerializer({
+      schema
+    });
   });
 
   test('normalize works', function(assert) {
@@ -76,5 +89,34 @@ module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
     let request = { url: '/authors', queryParams: {} };
     assert.strictEqual(this.serializer.getCoalescedIds(request), undefined);
   });
-});
 
+  test('normalize works with normalizeIds set to true', function(assert) {
+    this.serializer.normalizeIds = true;
+    let payload = {
+      contact: {
+        id: 1,
+        name: 'Link',
+        address: 1
+      }
+    };
+    let jsonApiDoc = this.serializer.normalize(payload);
+
+    assert.deepEqual(jsonApiDoc, {
+      data: {
+        type: 'contacts',
+        id: 1,
+        attributes: {
+          name: 'Link'
+        },
+        relationships: {
+          address: {
+            data: {
+              type: 'address',
+              id: 1
+            }
+          }
+        }
+      }
+    });
+  });
+});
