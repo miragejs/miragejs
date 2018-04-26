@@ -11,7 +11,7 @@ module('Unit | Server', function() {
     server.shutdown();
   });
 
-  test('it can be instantiated', function(assert) {
+  test('routes return pretender handler', function(assert) {
     let server = new Server({ environment: 'test' });
 
     let handler = server.post('foo');
