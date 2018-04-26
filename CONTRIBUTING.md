@@ -22,7 +22,7 @@ To make more substantial changes, you'll want to be able to write locally. The d
 2. Checkout the `gh-pages` branch:
 
     ```
-    git co gh-pages
+    git checkout gh-pages
     ```
     
 3. Start the Jekyll build:
