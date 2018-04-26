@@ -485,7 +485,7 @@ export default class Server {
     [['get'], ['post'], ['put'], ['delete', 'del'], ['patch'], ['head'], ['options']].forEach(([verb, alias]) => {
       this[verb] = (path, ...args) => {
         let [ rawHandler, customizedCode, options ] = extractRouteArguments(args);
-        this._registerRouteHandler(verb, path, rawHandler, customizedCode, options);
+        return this._registerRouteHandler(verb, path, rawHandler, customizedCode, options);
       };
 
       if (alias) {
@@ -515,7 +515,7 @@ export default class Server {
     let fullPath = this._getFullPath(path);
     let timing = options.timing !== undefined ? options.timing : (() => this.timing);
 
-    this.pretender[verb](
+    return this.pretender[verb](
       fullPath,
       (request) => {
         return new Promise(resolve => {

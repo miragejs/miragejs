@@ -11,6 +11,16 @@ module('Unit | Server', function() {
     server.shutdown();
   });
 
+  test('it can be instantiated', function(assert) {
+    let server = new Server({ environment: 'test' });
+
+    let handler = server.post('foo');
+
+    assert.strictEqual(handler.numberOfCalls, 0);
+
+    server.shutdown();
+  });
+
   test('it runs the default scenario in non-test environments', function(assert) {
     assert.expect(1);
 
