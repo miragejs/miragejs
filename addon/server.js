@@ -42,12 +42,11 @@ function createPretender(server) {
           `Mirage: [${request.status}] ${verb.toUpperCase()} ${request.url}`
         );
         let { requestBody, responseText } = request;
-        let loggedRequest;
-        let loggedResponse;
+        let loggedRequest, loggedResponse;
 
         try {
           loggedRequest = JSON.parse(requestBody);
-        } catch (e) {
+        } catch(e) {
           loggedRequest = requestBody;
         }
 
