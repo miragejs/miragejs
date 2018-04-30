@@ -51,3 +51,29 @@ module('Integration | Serializers | Base | Associations | Polymorphic Has Many',
     });
   });
 });
+
+test(`it can serialize an embedded polymorphic has-many relationship`, function(assert) {
+  let registry = new SerializerRegistry(this.schema, {
+    application: this.BaseSerializer,
+    user: this.BaseSerializer.extend({
+      include: ['things'],
+      embed: true
+    })
+  });
+
+  let user = this.schema.users.find(1);
+  let result = registry.serialize(user);
+
+  assert.deepEqual(result, {
+    user: {
+      id: '1',
+      name: 'Ned',
+      things: [
+        {
+          id: '1',
+          title: 'Lorem ipsum'
+        }
+      ]
+    }
+  });
+});

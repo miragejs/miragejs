@@ -103,13 +103,32 @@ class Serializer {
   }
 
   getHashForResource(resource, removeForeignKeys = false, didSerialize = {}, lookupSerializer = false) {
-    let hash;
-    let serializer = lookupSerializer ? this.serializerFor(resource.modelName) : this; // this is used for embedded responses
+    let hash,
+      serializer;
+
+    if (!lookupSerializer) {
+      serializer = this; // this is used for embedded responses
+    }
+
+    // PolymorphicCollection lacks a modelName, but is dealt with in the map
+    // by looking up the serializer on a per-model basis
+    if (lookupSerializer && resource.modelName) {
+      serializer = this.serializerFor(resource.modelName);
+    }
 
     if (this.isModel(resource)) {
       hash = serializer._hashForModel(resource, removeForeignKeys, didSerialize);
     } else {
-      hash = resource.models.map((m) => serializer._hashForModel(m, removeForeignKeys, didSerialize));
+      hash = resource.models.map((m) => {
+        let modelSerializer = serializer;
+
+        if (!modelSerializer) {
+          // Can't get here if lookupSerializer is false, so look it up
+          modelSerializer = this.serializerFor(m.modelName);
+        }
+
+        return modelSerializer._hashForModel(m, removeForeignKeys, didSerialize);
+      });
     }
 
     if (this.embed) {
