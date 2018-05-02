@@ -758,12 +758,16 @@ class Model {
       let inverse = model.inverseFor(association);
       let inverseFk = inverse.getForeignKey();
 
+      let ownerId = this.id;
       if (inverse instanceof BelongsTo) {
-        this.schema.db[toInternalCollectionName(model.modelName)]
-          .update(model.id, { [inverseFk]: this.id });
-
+        let newId;
+        if (inverse.isPolymorphic) {
+          newId = { type: this.modelName, id: ownerId };
+        } else {
+          newId = ownerId;
+        }
+        this.schema.db[toInternalCollectionName(model.modelName)].update(model.id, { [inverseFk]: newId });
       } else {
-        let ownerId = this.id;
         let inverseCollection = this.schema.db[toInternalCollectionName(model.modelName)];
         let currentIdsForInverse = inverseCollection.find(model.id)[inverse.getForeignKey()] || [];
         let newIdsForInverse = _assign([], currentIdsForInverse);
