@@ -563,6 +563,37 @@ module('Unit | Server #create', function() {
       { name: 'splendid software', id: '1', isPublished: true, publishedAt: '2016-01-01 12:00:00' }
     );
   });
+
+  test('create does not create (extra) models on associations when they are passed in as overrides', function(assert) {
+    let MotherFactory = Factory.extend({
+      name: 'Should not create'
+    });
+    let ChildFactory = Factory.extend({
+      mother: association()
+    });
+
+    let server = new Server({
+      environment: 'test',
+      factories: {
+        mother: MotherFactory,
+        child: ChildFactory
+      },
+      models: {
+        mother: Model.extend({
+          children: hasMany('child')
+        }),
+        child: Model.extend({
+          mother: belongsTo('mother')
+        })
+      }
+    });
+
+    let mother = server.create('mother', { name: 'Lynda' });
+    server.create('child', { name: 'Don', mother });
+    server.create('child', { name: 'Dan', mother });
+
+    assert.equal(server.db.mothers.length, 1);
+  });
 });
 
 module('Unit | Server #createList', function(hooks) {
