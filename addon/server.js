@@ -358,7 +358,7 @@ export default class Server {
       let attrs = OriginalFactory.attrs || {};
       this._validateTraits(traits, OriginalFactory, type);
       let mergedExtensions = this._mergeExtensions(attrs, traits, overrides);
-      this._mapAssociationsFromAttributes(type, attrs);
+      this._mapAssociationsFromAttributes(type, attrs, overrides);
       this._mapAssociationsFromAttributes(type, mergedExtensions);
 
       let Factory = OriginalFactory.extend(mergedExtensions);
@@ -665,14 +665,16 @@ export default class Server {
    *
    * @private
    */
-  _mapAssociationsFromAttributes(modelType, attributes) {
+  _mapAssociationsFromAttributes(modelType, attributes, overrides = {}) {
     Object.keys(attributes || {}).filter((attr) => {
       return isAssociation(attributes[attr]);
     }).forEach((attr) => {
       let association = attributes[attr];
       let associationName = this._fetchAssociationNameFromModel(modelType, attr);
       let foreignKey = `${camelize(attr)}Id`;
-      attributes[foreignKey] = this.create(associationName, ...association.traitsAndOverrides).id;
+      if (!overrides[attr]) {
+        attributes[foreignKey] = this.create(associationName, ...association.traitsAndOverrides).id;
+      }
       delete attributes[attr];
     });
   }
