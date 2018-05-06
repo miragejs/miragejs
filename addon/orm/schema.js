@@ -107,6 +107,7 @@ export default class Schema {
       find: (attrs) => this.find(camelizedModelName, attrs),
       findBy: (attrs) => this.findBy(camelizedModelName, attrs),
       where: (attrs) => this.where(camelizedModelName, attrs),
+      none: (attrs) => this.none(camelizedModelName, attrs),
       first: (attrs) => this.first(camelizedModelName, attrs)
     };
 
@@ -151,6 +152,15 @@ export default class Schema {
     let collection = this._collectionForType(type);
 
     return this._hydrate(collection, dasherize(type));
+  }
+
+  /**
+   * @method none
+   * @param type
+   * @public
+   */
+  none(type) {
+    return this._hydrate([], dasherize(type));
   }
 
   /**
