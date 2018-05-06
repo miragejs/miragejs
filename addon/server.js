@@ -38,9 +38,17 @@ function createPretender(server) {
 
     this.handledRequest = function(verb, path, request) {
       if (server.shouldLog()) {
-        console.log(`Mirage: [${request.status}] ${verb.toUpperCase()} ${request.url}`);
-        let { responseText } = request;
-        let loggedResponse;
+        console.groupCollapsed(
+          `Mirage: [${request.status}] ${verb.toUpperCase()} ${request.url}`
+        );
+        let { requestBody, responseText } = request;
+        let loggedRequest, loggedResponse;
+
+        try {
+          loggedRequest = JSON.parse(requestBody);
+        } catch(e) {
+          loggedRequest = requestBody;
+        }
 
         try {
           loggedResponse = JSON.parse(responseText);
@@ -48,7 +56,12 @@ function createPretender(server) {
           loggedResponse = responseText;
         }
 
-        console.log(loggedResponse);
+        console.log({
+          request: loggedRequest,
+          response: loggedResponse,
+          raw: request
+        });
+        console.groupEnd();
       }
     };
 
