@@ -14,7 +14,7 @@ import _ from 'lodash';
 
 class Serializer {
 
-  constructor(registry, type, request) {
+  constructor(registry, type, request = {}) {
     this.registry = registry;
     this.type = type;
     this.request = request;
