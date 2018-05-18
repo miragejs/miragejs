@@ -1,9 +1,10 @@
-/* eslint-env node */
 'use strict';
 const path = require('path');
 const mergeTrees = require('broccoli-merge-trees');
 const Funnel = require('broccoli-funnel');
 const map = require('broccoli-stew').map;
+const rm = require('broccoli-stew').rm;
+const replace = require('broccoli-replace');
 
 module.exports = {
   name: 'ember-cli-mirage',
@@ -47,7 +48,7 @@ module.exports = {
       this.mirageDirectory = this.addonBuildConfig.directory;
     } else if (this.addonConfig.directory) {
       this.mirageDirectory = this.addonConfig.directory;
-    } else if (app.project.pkg['ember-addon'] && !app.project.pkg['ember-addon'].paths) {
+    } else if (app.project.pkg['ember-addon'] && app.project.pkg['ember-addon'].configPath) {
       this.mirageDirectory = path.resolve(app.project.root, path.join('tests', 'dummy', 'mirage'));
     } else {
       this.mirageDirectory = path.join(this.app.project.root, '/mirage');
@@ -67,6 +68,20 @@ module.exports = {
 
   treeFor(name) {
     if (!this._shouldIncludeFiles()) {
+      if (name === 'app' || name === 'addon') {
+        // include a noop initializer even when mirage is excluded from the build
+        let initializerFileName = 'initializers/ember-cli-mirage.js';
+        let tree = rm(this._super.treeFor.apply(this, arguments), (path) => path !== initializerFileName);
+
+        return replace(tree, {
+          files: [initializerFileName],
+          patterns: [{
+            match: /[\S\s]*/m,
+            replacement: 'export default {name: \'ember-cli-mirage\',initialize() {}};'
+          }]
+        });
+      }
+
       return;
     }
 
@@ -136,7 +151,7 @@ function npmAsset(filePath) {
       import: [filePath],
       // guard against usage in FastBoot 1.0, where process.env.EMBER_CLI_FASTBOOT is not available
       _processTree(input) {
-        return map(input, content => `if (typeof FastBoot !== 'undefined') { ${content} }`)
+        return map(input, content => `if (typeof FastBoot !== 'undefined') { ${content} }`);
       }
     };
   };

@@ -3,9 +3,10 @@ import Server from 'ember-cli-mirage/server';
 import Model from 'ember-cli-mirage/orm/model';
 import Serializer from 'ember-cli-mirage/serializer';
 import {module, test} from 'qunit';
+import promiseAjax from '../../../helpers/promise-ajax';
 
-module('Integration | Serializers | Base | Full Request', {
-  beforeEach() {
+module('Integration | Serializers | Base | Full Request', function(hooks) {
+  hooks.beforeEach(function() {
     this.server = new Server({
       environment: 'development',
       models: {
@@ -41,33 +42,34 @@ module('Integration | Serializers | Base | Full Request', {
     });
     this.server.timing = 0;
     this.server.logging = false;
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     this.server.shutdown();
-  }
-});
-
-test('the appropriate serializer is used', function(assert) {
-  assert.expect(1);
-  let done = assert.async();
-  let author = this.server.schema.authors.create({
-    first: 'Link',
-    last: 'of Hyrule',
-    age: 323
-  });
-  author.createPost({ title: 'Lorem ipsum' });
-
-  this.server.get('/authors/:id', function(schema, request) {
-    let { id } = request.params;
-
-    return schema.authors.find(id);
   });
 
-  $.ajax({
-    method: 'GET',
-    url: '/authors/1'
-  }).done(function(res) {
-    assert.deepEqual(res, {
+  test('the appropriate serializer is used', async function(assert) {
+    assert.expect(1);
+
+    let author = this.server.schema.authors.create({
+      first: 'Link',
+      last: 'of Hyrule',
+      age: 323
+    });
+    author.createPost({ title: 'Lorem ipsum' });
+
+    this.server.get('/authors/:id', function(schema, request) {
+      let { id } = request.params;
+
+      return schema.authors.find(id);
+    });
+
+    let { data } = await promiseAjax({
+      method: 'GET',
+      url: '/authors/1'
+    });
+
+    assert.deepEqual(data, {
       author: {
         id: '1',
         first: 'Link',
@@ -76,79 +78,71 @@ test('the appropriate serializer is used', function(assert) {
         ]
       }
     });
-    done();
-  });
-});
-
-test('components decoded', function(assert) {
-  assert.expect(1);
-  let done = assert.async();
-
-  this.server.get('/authors/:id', function(schema, request) {
-    let { id } = request.params;
-
-    return { data: { id } };
   });
 
-  $.ajax({
-    method: 'GET',
-    url: '/authors/%3A1'
-  }).done(function(res) {
-    assert.deepEqual(res, {
-      data: { id: ':1' }
+  test('components decoded', async function(assert) {
+    assert.expect(1);
+
+    this.server.get('/authors/:id', function(schema, request) {
+      let { id } = request.params;
+
+      return { data: { id } };
     });
-    done();
-  });
-});
 
-test('a response falls back to the application serializer, if it exists', function(assert) {
-  assert.expect(1);
-  let done = assert.async();
-  this.server.schema.posts.create({
-    title: 'Lorem',
-    date: '20001010'
+    let { data } = await promiseAjax({
+      method: 'GET',
+      url: '/authors/%3A1'
+    });
+
+    assert.deepEqual(data, { data: { id: ':1' } });
   });
 
-  this.server.get('/posts/:id', function(schema, request) {
-    let { id } = request.params;
+  test('a response falls back to the application serializer, if it exists', async function(assert) {
+    assert.expect(1);
+    this.server.schema.posts.create({
+      title: 'Lorem',
+      date: '20001010'
+    });
 
-    return schema.posts.find(id);
-  });
+    this.server.get('/posts/:id', function(schema, request) {
+      let { id } = request.params;
 
-  $.ajax({
-    method: 'GET',
-    url: '/posts/1'
-  }).done(function(res) {
-    assert.deepEqual(res, {
+      return schema.posts.find(id);
+    });
+
+    let { data } = await promiseAjax({
+      method: 'GET',
+      url: '/posts/1'
+    });
+
+    assert.deepEqual(data, {
       id: '1',
       title: 'Lorem',
       date: '20001010'
     });
-    done();
-  });
-});
-
-test('serializer.include is invoked when it is a function', function(assert) {
-  assert.expect(1);
-  let done = assert.async();
-  let post = this.server.schema.posts.create({
-    title: 'Lorem',
-    date: '20001010'
-  });
-  post.createComment({
-    description: 'Lorem is the best'
   });
 
-  this.server.get('/comments/:id', function(schema, request) {
-    let { id } = request.params;
-    return schema.comments.find(id);
-  });
+  test('serializer.include is invoked when it is a function', async function(assert) {
+    assert.expect(1);
+    let post = this.server.schema.posts.create({
+      title: 'Lorem',
+      date: '20001010'
+    });
+    post.createComment({
+      description: 'Lorem is the best'
+    });
 
-  $.ajax({
-    method: 'GET',
-    url: '/comments/1?include_post=true'
-  }).done(function(res) {
-    assert.deepEqual(res, {
+    this.server.get('/comments/:id', function(schema, request) {
+      let { id } = request.params;
+      return schema.comments.find(id);
+    });
+
+    let { data } = await promiseAjax({
+      method: 'GET',
+      url: '/comments/1?include_post=true'
+    });
+
+    assert.deepEqual(data, {
       id: '1',
       description: 'Lorem is the best',
       post: {
@@ -157,6 +151,5 @@ test('serializer.include is invoked when it is a function', function(assert) {
         date: '20001010'
       }
     });
-    done();
   });
 });

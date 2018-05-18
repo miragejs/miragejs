@@ -10,6 +10,10 @@ export function toCollectionName(type) {
   return camelize(pluralize(modelName));
 }
 
+export function toInternalCollectionName(type) {
+  return `_${toCollectionName(type)}`;
+}
+
 export function toModelName(type) {
   let modelName = dasherize(type);
   return singularize(modelName);

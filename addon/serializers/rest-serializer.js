@@ -26,6 +26,10 @@ export default ActiveModelSerializer.extend({
 
   keyForForeignKey(relationshipName) {
     return camelize(singularize(relationshipName));
+  },
+
+  getCoalescedIds(request) {
+    return request.queryParams && request.queryParams.ids;
   }
 
 });

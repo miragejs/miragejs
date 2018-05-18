@@ -94,7 +94,7 @@ export default class HasMany extends Association {
         if (ids === null) {
           tempChildren = [];
         } else if (ids !== undefined) {
-          assert(Array.isArray(ids), `You must pass an array in when seting ${foreignKey} on ${this}`);
+          assert(Array.isArray(ids), `You must pass an array in when setting ${foreignKey} on ${this}`);
 
           if (association.isPolymorphic) {
             assert(ids.every((el) => {
@@ -102,7 +102,7 @@ export default class HasMany extends Association {
                 && (typeof el.type !== undefined)
                 && (typeof el.id !== undefined)
               );
-            }), `You must pass in an array of polymorphic identifiers (objects of shape { type, id }) when seting ${foreignKey} on ${this}`);
+            }), `You must pass in an array of polymorphic identifiers (objects of shape { type, id }) when setting ${foreignKey} on ${this}`);
 
             let models = ids.map(({ type, id }) => {
               return association.schema[toCollectionName(type)].find(id);

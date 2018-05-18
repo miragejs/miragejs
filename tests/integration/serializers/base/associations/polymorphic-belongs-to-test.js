@@ -5,8 +5,8 @@ import Serializer from 'ember-cli-mirage/serializer';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import { module, test } from 'qunit';
 
-module('Integration | Serializers | Base | Associations | Polymorphic Belongs To', {
-  beforeEach() {
+module('Integration | Serializers | Base | Associations | Polymorphic Belongs To', function(hooks) {
+  hooks.beforeEach(function() {
     this.schema = new Schema(new Db(), {
       post: Model.extend(),
       comment: Model.extend({
@@ -20,33 +20,33 @@ module('Integration | Serializers | Base | Associations | Polymorphic Belongs To
     this.BaseSerializer = Serializer.extend({
       embed: false
     });
-  },
-
-  afterEach() {
-    this.schema.db.emptyData();
-  }
-});
-
-test(`it can serialize a polymorphic belongs-to relationship`, function(assert) {
-  let registry = new SerializerRegistry(this.schema, {
-    application: this.BaseSerializer,
-    comment: this.BaseSerializer.extend({
-      include: ['commentable']
-    })
   });
 
-  let comment = this.schema.comments.find(1);
-  let result = registry.serialize(comment);
+  hooks.afterEach(function() {
+    this.schema.db.emptyData();
+  });
 
-  assert.deepEqual(result, {
-    comment: {
-      id: '1',
-      text: 'Foo',
-      commentableType: 'post',
-      commentableId: '1'
-    },
-    posts: [
-      { id: '1', title: 'Lorem ipsum' }
-    ]
+  test(`it can serialize a polymorphic belongs-to relationship`, function(assert) {
+    let registry = new SerializerRegistry(this.schema, {
+      application: this.BaseSerializer,
+      comment: this.BaseSerializer.extend({
+        include: ['commentable']
+      })
+    });
+
+    let comment = this.schema.comments.find(1);
+    let result = registry.serialize(comment);
+
+    assert.deepEqual(result, {
+      comment: {
+        id: '1',
+        text: 'Foo',
+        commentableType: 'post',
+        commentableId: '1'
+      },
+      posts: [
+        { id: '1', title: 'Lorem ipsum' }
+      ]
+    });
   });
 });

@@ -1,8 +1,8 @@
 import {module, test} from 'qunit';
 import Server from 'ember-cli-mirage/server';
 
-module('Integration | Server #loadFixtures', {
-  beforeEach() {
+module('Integration | Server #loadFixtures', function(hooks) {
+  hooks.beforeEach(function() {
     this.server = new Server({
       environment: 'development',
       scenarios: {
@@ -27,32 +27,33 @@ module('Integration | Server #loadFixtures', {
         ]
       }
     });
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     this.server.shutdown();
-  }
-});
+  });
 
-test('it can load all fixtures in the map', function(assert) {
-  this.server.loadFixtures();
+  test('it can load all fixtures in the map', function(assert) {
+    this.server.loadFixtures();
 
-  assert.equal(this.server.db.authors.length, 2);
-  assert.equal(this.server.db.posts.length, 2);
-  assert.equal(this.server.db.comments.length, 1);
-});
+    assert.equal(this.server.db.authors.length, 2);
+    assert.equal(this.server.db.posts.length, 2);
+    assert.equal(this.server.db.comments.length, 1);
+  });
 
-test('it can load a single named fixture file', function(assert) {
-  this.server.loadFixtures('authors');
+  test('it can load a single named fixture file', function(assert) {
+    this.server.loadFixtures('authors');
 
-  assert.equal(this.server.db.authors.length, 2);
-  assert.equal(this.server.db.posts.length, 0);
-  assert.equal(this.server.db.comments.length, 0);
-});
+    assert.equal(this.server.db.authors.length, 2);
+    assert.equal(this.server.db.posts.length, 0);
+    assert.equal(this.server.db.comments.length, 0);
+  });
 
-test('it can load several named single fixtures', function(assert) {
-  this.server.loadFixtures('authors', 'posts');
+  test('it can load several named single fixtures', function(assert) {
+    this.server.loadFixtures('authors', 'posts');
 
-  assert.equal(this.server.db.authors.length, 2);
-  assert.equal(this.server.db.posts.length, 2);
-  assert.equal(this.server.db.comments.length, 0);
+    assert.equal(this.server.db.authors.length, 2);
+    assert.equal(this.server.db.posts.length, 2);
+    assert.equal(this.server.db.comments.length, 0);
+  });
 });

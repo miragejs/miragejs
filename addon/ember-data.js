@@ -27,7 +27,8 @@ export function getDsModels() {
   }
 
   let moduleMap = requirejs.entries;
-  let modelMatchRegex = new RegExp(`^(${modulePrefix}/models|${podModulePrefix}/.*/model$)`, 'i');
+  let classicModelMatchRegex = new RegExp(`^${modulePrefix}/models/(.*)$`, 'i');
+  let podModelMatchRegex = new RegExp(`^${podModulePrefix}/(.*)/model$`, 'i');
 
   DsModels = {};
 
@@ -36,18 +37,15 @@ export function getDsModels() {
   }
 
   Object.keys(moduleMap)
-    .filter((module) => !!module.match(modelMatchRegex))
     .forEach((path) => {
-      let paths = path.split('/');
-      let modelName = paths[paths.length - 1];
-      let model = require(path, null, null, true).default;
+      let matches = path.match(classicModelMatchRegex) || path.match(podModelMatchRegex);
+      if (matches && matches[1]) {
+        let modelName = matches[1];
 
-      if (modelName === 'model') {
-        modelName = paths[paths.length - 2];
-      }
-
-      if (isDsModel(model)) {
-        DsModels[modelName] = model;
+        let model = require(path, null, null, true).default;
+        if (isDsModel(model)) {
+          DsModels[modelName] = model;
+        }
       }
     });
 
@@ -66,11 +64,11 @@ export function getModels() {
     return Models;
   }
 
-  let models = getDsModels();
+  let emberDataModels = getDsModels();
   Models = {};
 
-  Object.keys(models).forEach(modelName => {
-    let model = models[modelName];
+  Object.keys(emberDataModels).forEach(modelName => {
+    let model = emberDataModels[modelName];
     let attrs = {};
 
     model.eachRelationship((name, r) => {

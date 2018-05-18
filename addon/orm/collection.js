@@ -1,6 +1,5 @@
 import assert from '../assert';
 import _invokeMap from 'lodash/invokeMap';
-import _isEqual from 'lodash/isEqual';
 
 /**
  * An array of models, returned from one of the schema query
@@ -102,7 +101,7 @@ export default class Collection {
    * @public
    */
   remove(model) {
-    let [ match ] = this.models.filter(m => _isEqual(m.attrs, model.attrs));
+    let [ match ] = this.models.filter(m => m.toString() === model.toString());
     if (match) {
       let i = this.models.indexOf(match);
       this.models.splice(i, 1);
@@ -119,7 +118,7 @@ export default class Collection {
    * @public
    */
   includes(model) {
-    return this.models.filter(m => _isEqual(m.attrs, model.attrs)).length > 0;
+    return this.models.filter(m => m.toString() === model.toString()).length > 0;
   }
 
   /**

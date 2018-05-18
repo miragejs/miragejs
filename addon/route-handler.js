@@ -1,4 +1,6 @@
-import Ember from 'ember';
+import { isBlank, typeOf } from '@ember/utils';
+import { Promise } from 'rsvp';
+
 import { MirageError } from 'ember-cli-mirage/assert';
 import Response from './response';
 import FunctionHandler from './route-handlers/function';
@@ -8,8 +10,6 @@ import PostShorthandHandler from './route-handlers/shorthands/post';
 import PutShorthandHandler from './route-handlers/shorthands/put';
 import DeleteShorthandHandler from './route-handlers/shorthands/delete';
 import HeadShorthandHandler from './route-handlers/shorthands/head';
-
-const { RSVP: { Promise }, isBlank, typeOf } = Ember;
 
 function isNotBlankResponse(response) {
   return response

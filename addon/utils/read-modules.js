@@ -2,12 +2,10 @@
 /* eslint-env node */
 'use strict';
 
-import Ember from 'ember';
+import { assert } from '@ember/debug';
 import _camelCase from 'lodash/camelCase';
 import { pluralize } from 'ember-cli-mirage/utils/inflector';
 import require from 'require';
-
-const { assert } = Ember;
 
 /*
   This function looks through all files that have been loaded by Ember CLI and
@@ -32,11 +30,11 @@ export default function(prefix) {
     let moduleType = _camelCase(moduleParts[moduleParts.length - 2]);
     let moduleKey = moduleParts[moduleParts.length - 1];
     assert(`Subdirectories under ${moduleType} are not supported`,
-                 moduleParts[moduleParts.length - 3] === 'mirage');
+      moduleParts[moduleParts.length - 3] === 'mirage');
 
     if (moduleType === 'scenario') {
       assert('Only scenario/default.js is supported at this time.',
-                   moduleKey !== 'default');
+        moduleKey !== 'default');
     }
 
     /*

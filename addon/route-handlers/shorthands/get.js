@@ -29,11 +29,13 @@ export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler 
       } else {
         return model;
       }
-    } else if (this.options.coalesce && request.queryParams && request.queryParams.ids) {
-      return modelClass.find(request.queryParams.ids);
-    } else {
-      return modelClass.all();
+    } else if (this.options.coalesce) {
+      let ids = this.serializerOrRegistry.getCoalescedIds(request, camelizedModelName);
+      if (ids) {
+        return modelClass.find(ids);
+      }
     }
+    return modelClass.all();
   }
 
   /*

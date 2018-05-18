@@ -1,10 +1,13 @@
-import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
+import BelongsTo from './associations/belongs-to';
+import HasMany from './associations/has-many';
+import { toCollectionName, toInternalCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import extend from '../utils/extend';
 import assert from '../assert';
 import Collection from './collection';
 import PolymorphicCollection from './polymorphic-collection';
 import _values from 'lodash/values';
 import _compact from 'lodash/compact';
+import _assign from 'lodash/assign';
 
 /*
   The Model class. Notes:
@@ -24,7 +27,7 @@ class Model {
     assert(schema, 'A model requires a schema');
     assert(modelName, 'A model requires a modelName');
 
-    this._schema = schema;
+    this.schema = schema;
     this.modelName = modelName;
     this.fks = fks || [];
     attrs = attrs || {};
@@ -42,21 +45,23 @@ class Model {
    * @public
    */
   save() {
-    let collection = toCollectionName(this.modelName);
+    let collection = toInternalCollectionName(this.modelName);
 
     if (this.isNew()) {
       // Update the attrs with the db response
-      this.attrs = this._schema.db[collection].insert(this.attrs);
+      this.attrs = this.schema.db[collection].insert(this.attrs);
 
       // Ensure the id getter/setter is set
       this._definePlainAttribute('id');
 
     } else {
-      this._schema.db[collection].update(this.attrs.id, this.attrs);
+      this.schema.isSaving[this.toString()] = true;
+      this.schema.db[collection].update(this.attrs.id, this.attrs);
     }
 
     this._saveAssociations();
 
+    this.schema.isSaving[this.toString()] = false;
     return this;
   }
 
@@ -81,7 +86,9 @@ class Model {
     }
 
     Object.keys(attrs).forEach(function(attr) {
-      this._definePlainAttribute(attr);
+      if (this.associationKeys.indexOf(attr) === -1 && this.associationIdKeys.indexOf(attr) === -1) {
+        this._definePlainAttribute(attr);
+      }
       this[attr] = attrs[attr];
     }, this);
 
@@ -99,8 +106,8 @@ class Model {
     if (this.isSaved()) {
       this._disassociateFromDependents();
 
-      let collection = toCollectionName(this.modelName);
-      this._schema.db[collection].remove(this.attrs.id);
+      let collection = toInternalCollectionName(this.modelName);
+      this.schema.db[collection].remove(this.attrs.id);
     }
   }
 
@@ -120,8 +127,9 @@ class Model {
     let hasId = this.attrs.id !== undefined && this.attrs.id !== null;
 
     if (hasId) {
-      let collectionName = toCollectionName(this.modelName);
-      let record = this._schema.db[collectionName].find(this.attrs.id);
+      let collectionName = toInternalCollectionName(this.modelName);
+      let record = this.schema.db[collectionName].find(this.attrs.id);
+
       if (record) {
         hasDbRecord = true;
       }
@@ -148,8 +156,8 @@ class Model {
    */
   reload() {
     if (this.id) {
-      let collection = toCollectionName(this.modelName);
-      let attrs = this._schema.db[collection].find(this.id);
+      let collection = toInternalCollectionName(this.modelName);
+      let attrs = this.schema.db[collection].find(this.id);
 
       Object.keys(attrs)
         .filter(function(attr) {
@@ -178,7 +186,7 @@ class Model {
    * @public
    */
   associationFor(key) {
-    return this._schema.associationsFor(this.modelName)[key];
+    return this.schema.associationsFor(this.modelName)[key];
   }
 
   /**
@@ -223,28 +231,84 @@ class Model {
    * @public
    */
   inverseFor(association) {
-    let associations = this._schema.associationsFor(this.modelName);
+    return this._explicitInverseFor(association) || this._implicitInverseFor(association);
+  }
+
+  /**
+   * Finds the inverse for an association that explicity defines it's inverse
+   *
+   * @private
+  */
+  _explicitInverseFor(association) {
+    this._checkForMultipleExplicitInverses(association);
+
+    let associations = this.schema.associationsFor(this.modelName);
+    let inverse = association.opts.inverse;
+    let candidate = inverse ? associations[inverse] : null;
+    let matchingPolymorphic = candidate && candidate.isPolymorphic;
+    let matchingInverse = candidate && candidate.modelName === association.ownerModelName;
+    let candidateInverse = candidate && candidate.opts.inverse;
+
+    if (candidateInverse && candidate.opts.inverse !== association.key) {
+      assert(
+        false,
+        `You specified an inverse of ${inverse} for ${association.key}, but it does not match ${candidate.modelName} ${candidate.key}'s inverse`
+      );
+    }
+
+    return matchingPolymorphic || matchingInverse ? candidate : null;
+  }
+
+  /**
+   * Ensures multiple explicit inverses don't exist on the current model
+   * for the given association.
+   *
+   * TODO: move this to compile-time check
+   *
+   * @private
+  */
+  _checkForMultipleExplicitInverses(association) {
+    let associations = this.schema.associationsFor(this.modelName);
+    let matchingExplicitInverses = Object.keys(associations).filter(key => {
+      let candidate = associations[key];
+      let modelMatches = association.ownerModelName === candidate.modelName;
+      let inverseKeyMatches = association.key === candidate.opts.inverse;
+
+      return modelMatches && inverseKeyMatches;
+    });
+    assert(
+      matchingExplicitInverses.length <= 1,
+      `The ${this.modelName} model has defined multiple explicit inverse associations for the ${association.ownerModelName}.${association.key} association.`
+    );
+  }
+
+  /**
+   * Finds if there is an inverse for an association that does not
+   * explicitly define one.
+   *
+   * @private
+  */
+  _implicitInverseFor(association) {
+    let associations = this.schema.associationsFor(this.modelName);
     let modelName = association.ownerModelName;
 
-    let theInverse = _values(associations)
+    return _values(associations)
       .filter(candidate => candidate.modelName === modelName)
       .reduce((inverse, candidate) => {
         let candidateInverse = candidate.opts.inverse;
         let candidateIsImplicitInverse = candidateInverse === undefined;
-        let candidateIsExplicitInverse = (candidateInverse === association.key);
+        let candidateIsExplicitInverse = candidateInverse === association.key;
+
         let candidateMatches = candidateIsImplicitInverse || candidateIsExplicitInverse;
 
         if (candidateMatches) {
           // Need to move this check to compile-time init
-          assert(!inverse, `The ${this.modelName} model has multiple possible inverse associations for the ${association.key} association on the ${association.ownerModelName} model.`);
-
+          assert(!inverse, `The ${this.modelName} model has multiple possible inverse associations for the ${association.ownerModelName}.${association.key} association.`);
           inverse = candidate;
         }
 
         return inverse;
       }, null);
-
-    return theInverse;
   }
 
   /**
@@ -291,7 +355,7 @@ class Model {
 
     let { key } = association;
 
-    if (association.constructor.name === 'HasMany') {
+    if (association instanceof HasMany) {
       if (!this[key].includes(model)) {
         this[key].add(model);
       }
@@ -303,7 +367,7 @@ class Model {
   disassociate(model, association) {
     let fk = association.getForeignKey();
 
-    if (association.constructor.name === 'HasMany') {
+    if (association instanceof HasMany) {
       let i;
       if (association.isPolymorphic) {
         let found = this[fk].find(({ type, id }) => (type === model.modelName && id === model.id));
@@ -318,6 +382,10 @@ class Model {
     } else {
       this.attrs[fk] = null;
     }
+  }
+
+  get isSaving() {
+    return this.schema.isSaving[this.toString()];
   }
 
   // Private
@@ -453,11 +521,11 @@ class Model {
       let found;
       if (association.isPolymorphic) {
         found = foreignKeys.map(({ type, id }) => {
-          return this._schema.db[toCollectionName(type)].find(id);
+          return this.schema.db[toInternalCollectionName(type)].find(id);
         });
         found = _compact(found);
       } else {
-        found = this._schema.db[toCollectionName(association.modelName)].find(foreignKeys);
+        found = this.schema.db[toInternalCollectionName(association.modelName)].find(foreignKeys);
       }
 
       let foreignKeyLabel = association.isPolymorphic ? foreignKeys.map(fk => `${fk.type}:${fk.id}`).join(',') : foreignKeys;
@@ -470,9 +538,9 @@ class Model {
 
       let found;
       if (association.isPolymorphic) {
-        found = this._schema.db[toCollectionName(foreignKeys.type)].find(foreignKeys.id);
+        found = this.schema.db[toInternalCollectionName(foreignKeys.type)].find(foreignKeys.id);
       } else {
-        found = this._schema.db[toCollectionName(association.modelName)].find(foreignKeys);
+        found = this.schema.db[toInternalCollectionName(association.modelName)].find(foreignKeys);
       }
 
       let foreignKeyLabel = association.isPolymorphic ? `${foreignKeys.type}:${foreignKeys.id}` : foreignKeys;
@@ -508,9 +576,9 @@ class Model {
   }
 
   _disassociateFromOldInverses(association) {
-    if (association.constructor.name === 'HasMany') {
+    if (association instanceof HasMany) {
       this._disassociateFromHasManyInverses(association);
-    } else if (association.constructor.name === 'BelongsTo') {
+    } else if (association instanceof BelongsTo) {
       this._disassociateFromBelongsToInverse(association);
     }
   }
@@ -526,16 +594,17 @@ class Model {
       let models;
       if (association.isPolymorphic) {
         models = associateIds.map(({ type, id }) => {
-          return this._schema[toCollectionName(type)].find(id);
+          return this.schema[toCollectionName(type)].find(id);
         });
       } else {
         // TODO: prob should initialize hasMany fks with []
-        models = this._schema[toCollectionName(association.modelName)]
+        models = this.schema[toCollectionName(association.modelName)]
           .find(associateIds || [])
           .models;
       }
 
       models
+        .filter(associate => !associate.isSaving) // filter out models that are already being saved
         .filter(associate => !tempAssociation.includes(associate)) // filter out models that will still be associated
         .forEach(associate => {
           if (associate.hasInverseFor(association)) {
@@ -574,10 +643,10 @@ class Model {
     if ((tempAssociation !== undefined) && associateId) {
       let associate;
       if (association.isPolymorphic) {
-        associate = this._schema[toCollectionName(associateId.type)]
+        associate = this.schema[toCollectionName(associateId.type)]
           .find(associateId.id);
       } else {
-        associate = this._schema[toCollectionName(association.modelName)]
+        associate = this.schema[toCollectionName(association.modelName)]
           .find(associateId);
       }
 
@@ -592,7 +661,7 @@ class Model {
 
   // Find all other models that depend on me and update their foreign keys
   _disassociateFromDependents() {
-    this._schema.dependentAssociationsFor(this.modelName)
+    this.schema.dependentAssociationsFor(this.modelName)
       .forEach(association => {
         association.disassociateAllDependentsFromTarget(this);
       });
@@ -608,15 +677,20 @@ class Model {
       delete this._tempAssociations[key];
 
       if (tempAssociate instanceof Collection) {
-        tempAssociate.models.forEach(child => {
-          child.save();
-        });
+        tempAssociate.models
+          .filter(model => !model.isSaving)
+          .forEach(child => {
+            child.save();
+          });
 
         this._updateInDb({ [fk]: tempAssociate.models.map(child => child.id) });
+
       } else if (tempAssociate instanceof PolymorphicCollection) {
-        tempAssociate.models.forEach(child => {
-          child.save();
-        });
+        tempAssociate.models
+          .filter(model => !model.isSaving)
+          .forEach(child => {
+            child.save();
+          });
 
         this._updateInDb({
           [fk]: tempAssociate.models.map(child => {
@@ -628,7 +702,7 @@ class Model {
 
         if (tempAssociate === null) {
           this._updateInDb({ [fk]: null });
-        } else {
+        } else if (!tempAssociate.isSaving) {
           tempAssociate.save();
 
           let fkValue;
@@ -684,18 +758,31 @@ class Model {
       let inverse = model.inverseFor(association);
       let inverseFk = inverse.getForeignKey();
 
-      if (inverse.constructor.name === 'BelongsTo') {
-        this._schema.db[toCollectionName(model.modelName)]
-          .update(model.id, { [inverseFk]: this.id });
-
+      let ownerId = this.id;
+      if (inverse instanceof BelongsTo) {
+        let newId;
+        if (inverse.isPolymorphic) {
+          newId = { type: this.modelName, id: ownerId };
+        } else {
+          newId = ownerId;
+        }
+        this.schema.db[toInternalCollectionName(model.modelName)].update(model.id, { [inverseFk]: newId });
       } else {
-        let ownerId = this.id;
-        let inverseCollection = this._schema.db[toCollectionName(model.modelName)];
+        let inverseCollection = this.schema.db[toInternalCollectionName(model.modelName)];
         let currentIdsForInverse = inverseCollection.find(model.id)[inverse.getForeignKey()] || [];
-        let newIdsForInverse = currentIdsForInverse;
+        let newIdsForInverse = _assign([], currentIdsForInverse);
+        let newId, alreadyAssociatedWith;
 
-        if (newIdsForInverse.indexOf(ownerId) === -1) {
-          newIdsForInverse.push(ownerId);
+        if (inverse.isPolymorphic) {
+          newId = { type: this.modelName, id: ownerId };
+          alreadyAssociatedWith = newIdsForInverse.some(key => (key.type == this.modelName && key.id == ownerId));
+        } else {
+          newId = ownerId;
+          alreadyAssociatedWith = newIdsForInverse.indexOf(ownerId) !== -1;
+        }
+
+        if (!alreadyAssociatedWith) {
+          newIdsForInverse.push(newId);
         }
 
         inverseCollection.update(model.id, { [inverseFk]: newIdsForInverse });
@@ -706,7 +793,7 @@ class Model {
   // Used to update data directly, since #save and #update can retrigger saves,
   // which can cause cycles with associations.
   _updateInDb(attrs) {
-    this.attrs = this._schema.db[toCollectionName(this.modelName)].update(this.attrs.id, attrs);
+    this.attrs = this.schema.db[toInternalCollectionName(this.modelName)].update(this.attrs.id, attrs);
   }
 
   /**

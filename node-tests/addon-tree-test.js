@@ -31,11 +31,12 @@ describe('Addon', function() {
   });
 
   var treeForTests = function(name) {
-    it('returns an empty tree in production environment by default', function() {
+    it('returns a tree with only the initializer in production environment by default', function() {
       process.env.EMBER_ENV = 'production';
       var addonTree = getMirageAddon().treeFor(name);
 
-      expect(addonTree).to.be.undefined;
+      expect(addonTree.files.length).to.equal(1);
+      expect(addonTree.files[0]).to.equal('initializers/ember-cli-mirage.js');
     });
 
     ['development', 'test'].forEach(function(environment) {

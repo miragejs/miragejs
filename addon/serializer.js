@@ -14,7 +14,7 @@ import _ from 'lodash';
 
 class Serializer {
 
-  constructor(registry, type, request) {
+  constructor(registry, type, request = {}) {
     this.registry = registry;
     this.type = type;
     this.request = request;
@@ -103,17 +103,36 @@ class Serializer {
   }
 
   getHashForResource(resource, removeForeignKeys = false, didSerialize = {}, lookupSerializer = false) {
-    let hash;
-    let serializer = lookupSerializer ? this.serializerFor(resource.modelName) : this; // this is used for embedded responses
+    let hash,
+      serializer;
+
+    if (!lookupSerializer) {
+      serializer = this; // this is used for embedded responses
+    }
+
+    // PolymorphicCollection lacks a modelName, but is dealt with in the map
+    // by looking up the serializer on a per-model basis
+    if (lookupSerializer && resource.modelName) {
+      serializer = this.serializerFor(resource.modelName);
+    }
 
     if (this.isModel(resource)) {
       hash = serializer._hashForModel(resource, removeForeignKeys, didSerialize);
     } else {
-      hash = resource.models.map((m) => serializer._hashForModel(m, removeForeignKeys, didSerialize));
+      hash = resource.models.map((m) => {
+        let modelSerializer = serializer;
+
+        if (!modelSerializer) {
+          // Can't get here if lookupSerializer is false, so look it up
+          modelSerializer = this.serializerFor(m.modelName);
+        }
+
+        return modelSerializer._hashForModel(m, removeForeignKeys, didSerialize);
+      });
     }
 
     if (this.embed) {
-      return [hash];
+      return [hash, []];
 
     } else {
       let addToIncludes = _(serializer.getKeysForIncluded())
@@ -221,7 +240,7 @@ class Serializer {
 
       this.getKeysForIncluded().forEach((key) => {
         let associatedResource = model[key];
-        if (!_get(newDidSerialize, `${associatedResource.modelName}.${associatedResource.id}`)) {
+        if (associatedResource && !_get(newDidSerialize, `${associatedResource.modelName}.${associatedResource.id}`)) {
           let [ associatedResourceHash ] = this.getHashForResource(associatedResource, true, newDidSerialize, true);
           let formattedKey = this.keyForEmbeddedRelationship(key);
           attrs[formattedKey] = associatedResourceHash;
@@ -484,6 +503,9 @@ class Serializer {
     }
 
     return formattedAttrs;
+  }
+
+  getCoalescedIds(/* request */) {
   }
 }
 

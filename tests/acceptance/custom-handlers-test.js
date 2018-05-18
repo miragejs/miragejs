@@ -1,8 +1,8 @@
-import Ember from 'ember';
+import $ from 'jquery';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 import { test } from 'qunit';
 
-const { ajax } = Ember.$;
+const { ajax } = $;
 
 let appStore, rex;
 

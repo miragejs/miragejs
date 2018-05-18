@@ -2,8 +2,8 @@ import {module, test} from 'qunit';
 import Server from 'ember-cli-mirage/server';
 import { Model, Factory } from 'ember-cli-mirage';
 
-module('Integration | Database', {
-  beforeEach() {
+module('Integration | Database', function(hooks) {
+  hooks.beforeEach(function() {
     this.server = new Server({
       environment: 'development',
       scenarios: {
@@ -21,19 +21,20 @@ module('Integration | Database', {
         ]
       }
     });
-  },
-  afterEach() {
+  });
+
+  hooks.afterEach(function() {
     this.server.shutdown();
-  }
-});
+  });
 
-test(`[regression] When loaded, fixture files correctly update the database's autoincrement id`, function(assert) {
-  this.server.loadFixtures();
+  test(`[regression] When loaded, fixture files correctly update the database's autoincrement id`, function(assert) {
+    this.server.loadFixtures();
 
-  this.server.schema.authors.create({});
+    this.server.schema.authors.create({});
 
-  let { authors } = this.server.db;
-  assert.equal(authors.length, 2);
-  assert.deepEqual(authors.map((a) => a.id), ['1', '2']);
+    let { authors } = this.server.db;
+    assert.equal(authors.length, 2);
+    assert.deepEqual(authors.map((a) => a.id), ['1', '2']);
+  });
 });
 
