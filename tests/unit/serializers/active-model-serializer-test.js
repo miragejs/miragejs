@@ -119,4 +119,9 @@ module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
       }
     });
   });
+
+  test('serializeIds defaults to "always"', function(assert) {
+    let defaultState = new ActiveModelSerializer;
+    assert.equal(defaultState.serializeIds, 'always');
+  });
 });

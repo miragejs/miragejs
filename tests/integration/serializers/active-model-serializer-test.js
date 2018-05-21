@@ -43,19 +43,24 @@ module('Integration | Serializer | ActiveModelSerializer', function(hooks) {
     this.registry = new SerializerRegistry(this.schema, {
       application: ActiveModelSerializer,
       wordSmith: ActiveModelSerializer.extend({
+        serializeIds: 'included',
         attrs: ['id', 'name'],
         include: ['blogPosts']
       }),
       blogPost: ActiveModelSerializer.extend({
+        serializeIds: 'included',
         include: ['wordSmith', 'comments']
       }),
       comment: ActiveModelSerializer.extend({
+        serializeIds: 'included',
         include: ['commentable']
       }),
       contactInfo: ActiveModelSerializer.extend({
+        serializeIds: 'included',
         include: ['user']
       }),
       user: ActiveModelSerializer.extend({
+        serializeIds: 'included',
         attrs: ['id', 'name'],
         include: ['contactInfos'],
         embed: true

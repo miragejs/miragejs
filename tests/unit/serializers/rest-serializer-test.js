@@ -47,3 +47,8 @@ module('Unit | Serializers | RestSerializer', function(hooks) {
     assert.strictEqual(this.serializer.getCoalescedIds(request), undefined);
   });
 });
+
+test('serializeIds defaults to "always"', function(assert) {
+  let defaultState = new RestSerializer;
+  assert.equal(defaultState.serializeIds, 'always');
+});

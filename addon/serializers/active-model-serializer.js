@@ -2,7 +2,9 @@ import Serializer from '../serializer';
 import { underscore, pluralize, dasherize, singularize, camelize } from '../utils/inflector';
 
 export default Serializer.extend({
+  serializeIds: 'always',
   normalizeIds: false,
+
   keyForModel(type) {
     return underscore(type);
   },
