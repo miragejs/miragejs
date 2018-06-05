@@ -266,6 +266,7 @@ const JSONAPISerializer = Serializer.extend({
           graph.data[graphKey].relationships = graph.data[graphKey].relationships || {};
           let relationshipKeys = includesPath.split('.');
           let relationshipKey = relationshipKeys[0];
+          let graphRelationshipKey = dasherize(relationshipKey);
           let relationship = model[camelize(relationshipKey)];
           let relationshipData;
 
@@ -277,7 +278,7 @@ const JSONAPISerializer = Serializer.extend({
             relationshipData = null;
           }
 
-          graph.data[graphKey].relationships[relationshipKey] = relationshipData;
+          graph.data[graphKey].relationships[graphRelationshipKey] = relationshipData;
 
           if (relationship) {
             this._addResourceToRequestedIncludesGraph(graph, relationship, relationshipKeys.slice(1));
