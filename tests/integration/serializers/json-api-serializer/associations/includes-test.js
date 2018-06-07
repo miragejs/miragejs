@@ -494,4 +494,25 @@ module('Integration | Serializers | JSON API Serializer | Associations | Include
       ]
     });
   });
+
+  test('queryParamIncludes throws if including something that is not an association', function(assert) {
+    let registry = new SerializerRegistry(this.schema, {
+      application: JSONAPISerializer
+    });
+
+    this.schema.db.loadData({
+      blogPosts: [
+        { id: 2, title: 'Lorem Ipsum' }
+      ]
+    });
+    let request = {
+      queryParams: {
+        include: 'title'
+      }
+    };
+
+    assert.throws(() => {
+      registry.serialize(this.schema.blogPosts.first(), request);
+    }, /You tried to include "title".*but no association named "title" is defined/);
+  });
 });
