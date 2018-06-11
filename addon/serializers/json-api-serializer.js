@@ -270,9 +270,9 @@ const JSONAPISerializer = Serializer.extend({
           let graphRelationshipKey = dasherize(relationshipKey);
           let normalizedRelationshipKey = camelize(relationshipKey);
           let hasAssociation = model.associationKeys.includes(normalizedRelationshipKey);
-        
+
           assert(hasAssociation, `You tried to include "${relationshipKey}" with ${model} but no association named "${normalizedRelationshipKey}" is defined on the model.`);
-          
+
           let relationship = model[normalizedRelationshipKey];
           let relationshipData;
 
