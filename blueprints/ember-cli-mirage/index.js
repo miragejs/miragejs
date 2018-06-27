@@ -3,7 +3,7 @@
 'use strict';
 
 var path = require('path');
-var existsSync = require('exists-sync');
+var fs = require('fs');
 var chalk = require('chalk');
 var EOL = require('os').EOL;
 
@@ -51,7 +51,7 @@ module.exports = {
   },
 
   insertShutdownIntoDestroyApp: function() {
-    if (existsSync('tests/helpers/destroy-app.js')) {
+    if (fs.existsSync('tests/helpers/destroy-app.js')) {
       var shutdownText = '  if (window.server) {\n    window.server.shutdown();\n  }';
       return this.insertIntoFile('tests/helpers/destroy-app.js', shutdownText, {
         after: "run(application, 'destroy');\n"
