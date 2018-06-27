@@ -43,7 +43,6 @@
     "ember-get-config": "^0.2.2",
     "ember-inflector": "^2.0.0",
     "ember-lodash": "^4.17.3",
-    "exists-sync": "0.0.3",
     "fake-xml-http-request": "^1.4.0",
     "faker": "^3.0.0",
     "pretender": "^1.6.1",
