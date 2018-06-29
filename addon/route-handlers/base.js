@@ -1,6 +1,8 @@
 import assert from 'ember-cli-mirage/assert';
 import { camelize, singularize, dasherize } from 'ember-cli-mirage/utils/inflector';
 
+const PATH_VAR_REGEXP = /^:/;
+
 export default class BaseRouteHandler {
 
   getModelClassFromPath(fullPath) {
@@ -11,7 +13,7 @@ export default class BaseRouteHandler {
     let lastPath;
     while (path.length > 0) {
       lastPath = path.splice(-1)[0];
-      if (lastPath && lastPath !== ':id') {
+      if (lastPath && !PATH_VAR_REGEXP.test(lastPath)) {
         break;
       }
     }

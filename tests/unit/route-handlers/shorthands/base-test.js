@@ -28,12 +28,24 @@ module('Unit | Route handlers | Shorthands | BaseShorthandRouteHandler', functio
     assert.equal(this.handler._getIdForRequest(this.request), 'someID', 'it returns a number');
   });
 
-  test('getModelClassFromPath works', function(assert) {
+  test('getModelClassFromPath works with various named route path variable', function(assert) {
     let urlWithSlash = '/api/fancy-users';
     let urlWithIdAndSlash = '/api/fancy-users/:id';
 
     assert.equal(this.handler.getModelClassFromPath(urlWithSlash), 'fancy-user', 'it returns a singular model name');
     assert.equal(this.handler.getModelClassFromPath(urlWithIdAndSlash, true), 'fancy-user', 'it returns a singular model name');
+
+    urlWithSlash = '/api/exquisite-users';
+    urlWithIdAndSlash = '/api/exquisite-users/:objectId';
+
+    assert.equal(this.handler.getModelClassFromPath(urlWithSlash), 'exquisite-user', 'it returns a singular model name');
+    assert.equal(this.handler.getModelClassFromPath(urlWithIdAndSlash, true), 'exquisite-user', 'it returns a singular model name');
+
+    urlWithSlash = '/api/elegant-users';
+    urlWithIdAndSlash = '/api/elegant-users/:firstName/:lastName';
+
+    assert.equal(this.handler.getModelClassFromPath(urlWithSlash), 'elegant-user', 'it returns a singular model name');
+    assert.equal(this.handler.getModelClassFromPath(urlWithIdAndSlash, true), 'elegant-user', 'it returns a singular model name');
   });
 
   test('it can read the id from the url', function(assert) {
