@@ -1,4 +1,4 @@
-import { dasherize } from 'ember-cli-mirage/utils/inflector';
+import { camelize, singularize, dasherize } from 'ember-cli-mirage/utils/inflector';
 
 export default class Association {
 
@@ -47,5 +47,17 @@ export default class Association {
 
   get isPolymorphic() {
     return this.opts.polymorphic;
+  }
+
+  get isHasMany() {
+    return this.constructor.name === 'HasMany';
+  }
+
+  get isBelongsTo() {
+    return this.constructor.name === 'BelongsTo';
+  }
+
+  get identifier() {
+    return this.isHasMany ? `${camelize(singularize(this.key))}Ids` : `${camelize(this.key)}Id`;
   }
 }

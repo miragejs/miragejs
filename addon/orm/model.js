@@ -807,6 +807,18 @@ class Model {
 
     return `model:${this.modelName}${idLabel}`;
   }
+
+  /**
+   * Checks the equality of this model and the passed-in model
+   *
+   * @method equals
+   * @return boolean
+   * @public
+   */
+  equals(model) {
+    return this.toString() === model.toString();
+  }
+
 }
 
 Model.extend = extend;
