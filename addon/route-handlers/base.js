@@ -55,14 +55,23 @@ export default class BaseRouteHandler {
     }
 
     if (json.data.relationships) {
-      Object.keys(json.data.relationships).forEach((key) => {
-        let relationship = json.data.relationships[key];
+      Object.keys(json.data.relationships).forEach((relationshipName) => {
+        let relationship = json.data.relationships[relationshipName];
+        let modelClass = this.schema.modelClassFor(modelName);
+        let association = modelClass.associationFor(relationshipName);
+        let valueForRelationship;
 
-        if (Array.isArray(relationship.data)) {
-          attrs[`${camelize(singularize(key))}Ids`] = relationship.data.map(rel => rel.id);
+        if (association.isPolymorphic) {
+          valueForRelationship = relationship.data;
+
+        } else if (association.isHasMany) {
+          valueForRelationship = relationship.data && relationship.data.map(rel => rel.id);
+
         } else {
-          attrs[`${camelize(key)}Id`] = relationship.data && relationship.data.id;
+          valueForRelationship = relationship.data && relationship.data.id;
         }
+
+        attrs[association.identifier] = valueForRelationship;
       }, {});
     }
 
