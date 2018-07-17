@@ -56,17 +56,6 @@ module.exports = {
       return this.insertIntoFile('tests/helpers/destroy-app.js', shutdownText, {
         after: "run(application, 'destroy');\n"
       });
-    } else {
-      this.ui.writeLine(
-        EOL +
-        chalk.yellow(
-          '******************************************************' + EOL +
-          'destroy-app.js helper is not present. Please read this' + EOL +
-          'https://gist.github.com/blimmer/35d3efbb64563029505a' + EOL +
-          'to see how to fix the problem.' + EOL +
-          '******************************************************' + EOL
-        )
-      );
     }
   },
 
