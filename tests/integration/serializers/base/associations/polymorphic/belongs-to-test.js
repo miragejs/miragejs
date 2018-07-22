@@ -5,7 +5,7 @@ import Serializer from 'ember-cli-mirage/serializer';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import { module, test } from 'qunit';
 
-module('Integration | Serializers | Base | Associations | Polymorphic Belongs To', function(hooks) {
+module('Integration | Serializers | Base | Associations | Polymorphic | Belongs To', function(hooks) {
   hooks.beforeEach(function() {
     this.schema = new Schema(new Db(), {
       post: Model.extend(),
