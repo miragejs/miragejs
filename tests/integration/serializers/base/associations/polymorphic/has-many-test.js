@@ -5,7 +5,7 @@ import Serializer from 'ember-cli-mirage/serializer';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import { module, test } from 'qunit';
 
-module('Integration | Serializers | Base | Associations | Polymorphic Has Many', function(hooks) {
+module('Integration | Serializers | Base | Associations | Polymorphic | Has Many', function(hooks) {
   hooks.beforeEach(function() {
     this.schema = new Schema(new Db(), {
       user: Model.extend({
@@ -16,20 +16,21 @@ module('Integration | Serializers | Base | Associations | Polymorphic Has Many',
 
     let post = this.schema.pictures.create({ title: 'Lorem ipsum' });
     this.schema.users.create({ things: [ post ], name: 'Ned' });
-
-    this.BaseSerializer = Serializer.extend({
-      embed: false
-    });
   });
 
   hooks.afterEach(function() {
     this.schema.db.emptyData();
   });
 
-  test(`it can serialize a polymorphic has-many relationship`, function(assert) {
+  test(`it can serialize a polymorphic has-many relationship when serializeIds is set to included`, function(assert) {
+    let BaseSerializer = Serializer.extend({
+      embed: false,
+      serializeIds: 'included'
+    });
     let registry = new SerializerRegistry(this.schema, {
-      application: this.BaseSerializer,
-      user: this.BaseSerializer.extend({
+      application: BaseSerializer,
+      user: BaseSerializer.extend({
+        serializeIds: 'included',
         include: ['things']
       })
     });
@@ -41,7 +42,7 @@ module('Integration | Serializers | Base | Associations | Polymorphic Has Many',
       user: {
         id: '1',
         name: 'Ned',
-        things: [
+        thingIds: [
           { id: '1', type: 'picture' }
         ]
       },
@@ -51,12 +52,39 @@ module('Integration | Serializers | Base | Associations | Polymorphic Has Many',
     });
   });
 
-  test(`it can serialize an embedded polymorphic has-many relationship`, function(assert) {
+  test(`it can serialize a polymorphic has-many relationship when serializeIds is set to always`, function(assert) {
+    let BaseSerializer = Serializer.extend({
+      embed: false,
+      serializeIds: 'always'
+    });
     let registry = new SerializerRegistry(this.schema, {
-      application: this.BaseSerializer,
-      user: this.BaseSerializer.extend({
-        include: ['things'],
-        embed: true
+      application: BaseSerializer,
+      user: BaseSerializer
+    });
+
+    let user = this.schema.users.find(1);
+    let result = registry.serialize(user);
+
+    assert.deepEqual(result, {
+      user: {
+        id: '1',
+        name: 'Ned',
+        thingIds: [
+          { id: '1', type: 'picture' }
+        ]
+      }
+    });
+  });
+
+  test(`it can serialize an embedded polymorphic has-many relationship`, function(assert) {
+    let BaseSerializer = Serializer.extend({
+      embed: true,
+      serializeIds: 'included'
+    });
+    let registry = new SerializerRegistry(this.schema, {
+      application: BaseSerializer,
+      user: BaseSerializer.extend({
+        include: ['things']
       })
     });
 

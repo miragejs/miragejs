@@ -292,45 +292,39 @@ class Serializer {
 
     if (this.serializeIds === 'always') {
       model.associationKeys.forEach((key) => {
-        let association = model[key];
-        if (this.isCollection(association)) {
+        let resource = model[key];
+
+        if (this.isCollection(resource)) {
           let formattedKey = this.keyForRelationshipIds(key);
-          newHash[formattedKey] = model[key].models.map((m) => m.id);
-        } else if (association) {
+          newHash[formattedKey] = model[`${singularize(key)}Ids`];
+
+        } else if (resource) {
           let formattedKey = this.keyForForeignKey(key);
           newHash[formattedKey] = model[`${key}Id`];
         }
       });
+
     } else if (this.serializeIds === 'included') {
       this.getKeysForIncluded().forEach((key) => {
-        let association = model[key];
+        let resource = model[key];
+        let association = model.associationFor(key);
 
-        if (model.associationFor(key).isPolymorphic) {
-          if (association instanceof PolymorphicCollection) {
-            let formattedKey = this.keyForRelationship(key);
+        if (this.isCollection(resource)) {
+          let formattedKey = this.keyForRelationshipIds(key);
 
-            newHash[formattedKey] = model[`${singularize(key)}Ids`];
-          } else if (association instanceof Collection) {
-            let formattedKey = this.keyForRelationshipIds(key);
+          newHash[formattedKey] = model[`${singularize(key)}Ids`];
 
-            newHash[formattedKey] = model[key].models.map((m) => m.id);
-          } else {
-            let formattedTypeKey = this.keyForPolymorphicForeignKeyType(key);
-            let formattedIdKey = this.keyForPolymorphicForeignKeyId(key);
+        } else if (this.isModel(resource) && association.isPolymorphic) {
+          let formattedTypeKey = this.keyForPolymorphicForeignKeyType(key);
+          let formattedIdKey = this.keyForPolymorphicForeignKeyId(key);
 
-            newHash[formattedTypeKey] = model[`${key}Id`].type;
-            newHash[formattedIdKey] = model[`${key}Id`].id;
-          }
-        } else {
-          if (this.isCollection(association)) {
-            let formattedKey = this.keyForRelationshipIds(key);
+          newHash[formattedTypeKey] = model[`${key}Id`].type;
+          newHash[formattedIdKey] = model[`${key}Id`].id;
 
-            newHash[formattedKey] = model[key].models.map((m) => m.id);
-          } else if (association) {
-            let formattedKey = this.keyForForeignKey(key);
+        } else if (this.isModel(resource)) {
+          let formattedKey = this.keyForForeignKey(key);
 
-            newHash[formattedKey] = model[`${key}Id`];
-          }
+          newHash[formattedKey] = model[`${key}Id`];
         }
       });
     }
