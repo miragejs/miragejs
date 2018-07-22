@@ -1,4 +1,5 @@
 import startMirage from 'ember-cli-mirage/start-mirage';
+import { settled } from '@ember/test-helpers';
 
 //
 // Used to set up mirage for a test. Must be called after one of the
@@ -20,7 +21,9 @@ export default function setupMirage(hooks = self) {
   });
 
   hooks.afterEach(function() {
-    this.server.shutdown();
-    delete this.server;
+    return settled().then(() => {
+      this.server.shutdown();
+      delete this.server;
+    });
   });
 }
