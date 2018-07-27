@@ -1127,7 +1127,7 @@ module('Unit | Server #build', function(hooks) {
 
     assert.throws(() => {
       server.build('article', 'withCategory');
-    }, /You're using the `association` factory helper on the 'category' attribute/);
+    }, /You're using the `association` factory helper on the 'category' attribute of your article factory/);
   });
 });
 

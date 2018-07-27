@@ -107,4 +107,25 @@ module('Integration | Server | Factories | helpers', function(hooks) {
       postIds: ['1']
     });
   });
+
+  test('it throws if using the association helper on a self-referential belongsTo relationship', function(assert) {
+    this.server = new Server({
+      environment: 'test',
+      models: {
+        page: Model.extend({
+          parentPage: belongsTo('page', { inverse: 'childPages' }),
+          childPages: hasMany('page', { inverse: 'parentPage' })
+        })
+      },
+      factories: {
+        page: Factory.extend({
+          parentPage: association()
+        })
+      }
+    });
+
+    assert.throws(() => {
+      this.server.create('page');
+    }, /You're using the association\(\) helper on your page factory for parentPage, which is a belongsTo self-referential relationship. You can't do this as it will lead to infinite recursion. You can move the helper inside of a trait and use it selectively./);
+  });
 });
