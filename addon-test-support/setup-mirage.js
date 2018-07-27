@@ -22,8 +22,10 @@ export default function setupMirage(hooks = self) {
 
   hooks.afterEach(function() {
     return settled().then(() => {
-      this.server.shutdown();
-      delete this.server;
+      if (this.server) {
+        this.server.shutdown();
+        delete this.server;
+      }
     });
   });
 }
