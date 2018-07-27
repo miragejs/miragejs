@@ -60,7 +60,7 @@ export default class BaseRouteHandler {
       Object.keys(json.data.relationships).forEach((relationshipName) => {
         let relationship = json.data.relationships[relationshipName];
         let modelClass = this.schema.modelClassFor(modelName);
-        let association = modelClass.associationFor(relationshipName);
+        let association = modelClass.associationFor(camelize(relationshipName));
         let valueForRelationship;
 
         if (association.isPolymorphic) {
