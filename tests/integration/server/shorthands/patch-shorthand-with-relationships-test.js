@@ -145,4 +145,43 @@ module('Integration | Server | Shorthands | Patch with relationships', function(
     assert.equal(user.collectibles.length, 0);
   });
 
+  test('it camelizes relationship names', async function(assert) {
+    let server = this.newServerWithSchema({
+      postAuthor: Model.extend({
+        posts: hasMany()
+      }),
+      post: Model.extend({
+        postAuthor: belongsTo()
+      })
+    });
+
+    server.loadConfig(function() {
+      this.patch('/posts/:id');
+    });
+
+    let postAuthor = server.create('post-author');
+    let post = server.create('post');
+
+    await promiseAjax({
+      method: 'PATCH',
+      url: `/posts/${post.id}`,
+      data: JSON.stringify({
+        data: {
+          attributes: {
+          },
+          relationships: {
+            'post-author': {
+              data: {
+                id: postAuthor.id,
+                type: 'post-authors'
+              }
+            }
+          }
+        }
+      })
+    });
+
+    post.reload();
+    assert.equal(post.postAuthorId, postAuthor.id, 'relationship gets updated successfully');
+  });
 });
