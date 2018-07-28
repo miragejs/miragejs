@@ -222,7 +222,11 @@ export default class Schema {
   }
 
   modelClassFor(modelName) {
-    return this._registry[camelize(modelName)].class.prototype;
+    let model = this._registry[camelize(modelName)];
+
+    assert(model, `Model not registered: ${modelName}`);
+
+    return model.class.prototype;
   }
 
   /*

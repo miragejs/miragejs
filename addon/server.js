@@ -678,35 +678,27 @@ export default class Server {
    *
    * @private
    */
-  _mapAssociationsFromAttributes(modelType, attributes, overrides = {}) {
+  _mapAssociationsFromAttributes(modelName, attributes, overrides = {}) {
     Object.keys(attributes || {}).filter((attr) => {
       return isAssociation(attributes[attr]);
     }).forEach((attr) => {
-      let association = attributes[attr];
-      let associationName = this._fetchAssociationNameFromModel(modelType, attr);
+      let modelClass = this.schema.modelClassFor(modelName);
+      let association = modelClass.associationFor(attr);
+
+      assert(association && association.isBelongsTo,
+        `You're using the \`association\` factory helper on the '${attr}' attribute of your ${modelName} factory, but that attribute is not a \`belongsTo\` association. Read the Factories docs for more information: http://www.ember-cli-mirage.com/docs/v0.3.x/factories/#factories-and-relationships`
+      );
+
+      let isSelfReferentialBelongsTo = association && association.isBelongsTo && association.modelName === modelName;
+
+      assert(!isSelfReferentialBelongsTo, `You're using the association() helper on your ${modelName} factory for ${attr}, which is a belongsTo self-referential relationship. You can't do this as it will lead to infinite recursion. You can move the helper inside of a trait and use it selectively.`);
+
+      let factoryAssociation = attributes[attr];
       let foreignKey = `${camelize(attr)}Id`;
       if (!overrides[attr]) {
-        attributes[foreignKey] = this.create(associationName, ...association.traitsAndOverrides).id;
+        attributes[foreignKey] = this.create(association.modelName, ...factoryAssociation.traitsAndOverrides).id;
       }
       delete attributes[attr];
     });
-  }
-
-  /**
-   *
-   * @private
-   */
-  _fetchAssociationNameFromModel(modelType, associationAttribute) {
-    let camelizedModelType = camelize(modelType);
-    let model = this.schema.modelFor(camelizedModelType);
-    if (!model) {
-      throw new Error(`Model not registered: ${modelType}`);
-    }
-
-    let association = model.class.findBelongsToAssociation(associationAttribute);
-    if (!association) {
-      throw new Error(`You're using the \`association\` factory helper on the '${associationAttribute}' attribute of your ${modelType} factory, but that attribute is not a \`belongsTo\` association. Read the Factories docs for more information: http://www.ember-cli-mirage.com/docs/v0.3.x/factories/#factories-and-relationships`);
-    }
-    return camelize(association.modelName);
   }
 }
