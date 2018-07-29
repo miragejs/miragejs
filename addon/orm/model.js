@@ -397,20 +397,7 @@ class Model {
    * @private
    */
   _setupAttrs(attrs) {
-    // Verify no undefined associations are passed in
-    Object.keys(attrs)
-      .filter((key) => {
-        let value = attrs[key];
-        let isModelOrCollection = (value instanceof Model || value instanceof Collection || value instanceof PolymorphicCollection);
-        let isArrayOfModels = Array.isArray(value) && value.length && value.every(item => item instanceof Model);
-
-        return isModelOrCollection || isArrayOfModels;
-      })
-      .forEach((key) => {
-        let modelOrCollection = attrs[key];
-
-        assert(this.associationKeys.indexOf(key) > -1, `You're trying to create a ${this.modelName} model and you passed in a ${modelOrCollection.toString()} under the ${key} key, but you haven't defined that key as an association on your model.`);
-      });
+    this._validateAttrs(attrs);
 
     // Filter out association keys
     let hash = Object.keys(attrs).reduce((memo, key) => {
@@ -502,6 +489,59 @@ class Model {
     Object.keys(associationKeysHash).forEach(function(attr) {
       this[attr] = associationKeysHash[attr];
     }, this);
+  }
+
+  /**
+   * @method _validateAttrs
+   * @private
+   */
+  _validateAttrs(attrs) {
+    // Verify attrs passed in for associations are actually associations
+    Object.keys(attrs)
+      .filter(key => this.associationKeys.includes(key))
+      .forEach(key => {
+        let value = attrs[key];
+        let association = this.associationFor(key);
+        let isNull = value === null;
+
+        if (association.isHasMany) {
+          let isCollection = value instanceof Collection || value instanceof PolymorphicCollection;
+          let isArrayOfModels = Array.isArray(value) && value.length && value.every(item => item instanceof Model);
+
+          assert(isCollection || isArrayOfModels || isNull, `You're trying to create a ${this.modelName} model and you passed in "${value}" under the ${key} key, but that key is a HasMany relationship. You must pass in a Collection, PolymorphicCollection, array of Models, or null.`);
+
+        } else if (association.isBelongsTo) {
+          assert(value instanceof Model || isNull, `You're trying to create a ${this.modelName} model and you passed in "${value}" under the ${key} key, but that key is a BelongsTo relationship. You must pass in a Model or null.`);
+        }
+      });
+
+    // Verify attrs passed in for association foreign keys are actually fks
+    Object.keys(attrs)
+      .filter(key => this.associationIdKeys.includes(key))
+      .forEach(key => {
+        let value = attrs[key];
+
+        if (key.match(/Ids$/)) {
+          let isArray = Array.isArray(value);
+          let isNull = value === null;
+          assert(isArray || isNull, `You're trying to create a ${this.modelName} model and you passed in "${value}" under the ${key} key, but that key is a foreign key for a HasMany relationship. You must pass in an array of ids or null.`);
+        }
+      });
+
+    // Verify no undefined associations are passed in
+    Object.keys(attrs)
+      .filter(key => {
+        let value = attrs[key];
+        let isModelOrCollection = (value instanceof Model || value instanceof Collection || value instanceof PolymorphicCollection);
+        let isArrayOfModels = Array.isArray(value) && value.length && value.every(item => item instanceof Model);
+
+        return isModelOrCollection || isArrayOfModels;
+      })
+      .forEach(key => {
+        let modelOrCollection = attrs[key];
+
+        assert(this.associationKeys.indexOf(key) > -1, `You're trying to create a ${this.modelName} model and you passed in a ${modelOrCollection.toString()} under the ${key} key, but you haven't defined that key as an association on your model.`);
+      });
   }
 
   /**
