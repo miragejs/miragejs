@@ -4,7 +4,7 @@ const mergeTrees = require('broccoli-merge-trees');
 const Funnel = require('broccoli-funnel');
 const map = require('broccoli-stew').map;
 const rm = require('broccoli-stew').rm;
-const replace = require('broccoli-replace');
+const replace = require('broccoli-string-replace');
 
 module.exports = {
   name: 'ember-cli-mirage',
