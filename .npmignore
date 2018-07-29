@@ -23,3 +23,5 @@ package.json.ember-try
 /.sass-cache
 /jekyll-tmp
 *.md
+
+/test-apps

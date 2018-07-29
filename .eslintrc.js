@@ -1,9 +1,13 @@
 module.exports = {
   root: true,
+  parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 2017,
     sourceType: 'module'
   },
+  plugins: [
+    'ember'
+  ],
   extends: [
     'eslint:recommended',
     'plugin:ember-suave/recommended'
@@ -36,7 +40,8 @@ module.exports = {
         'testem.js',
         'ember-cli-build.js',
         'config/**/*.js',
-        'tests/dummy/config/**/*.js'
+        'tests/dummy/config/**/*.js',
+        'fastboot-tests/**/*.js'
       ],
       excludedFiles: [
         'app/**',
@@ -45,7 +50,7 @@ module.exports = {
       ],
       parserOptions: {
         sourceType: 'script',
-        ecmaVersion: 2015
+        ecmaVersion: 2018
       },
       env: {
         browser: false,
@@ -65,22 +70,5 @@ module.exports = {
         embertest: true
       }
     },
-
-    // node test files
-    {
-      files: [
-        'fastboot-tests/**/*.js',
-        'node-tests/**/*.js'
-      ],
-      rules: {
-        'prefer-template': 0
-      },
-      globals: {
-        require: true,
-        describe: true,
-        afterEach: true,
-        it: true
-      }
-    }
   ]
 };

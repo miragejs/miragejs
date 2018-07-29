@@ -1,9 +1,7 @@
 ---
 language: node_js
 node_js:
-  # we recommend testing addons with the same minimum supported node version as Ember CLI
-  # so that your addon works for all apps
-  - "4"
+  - "8"
 
 sudo: false
 dist: trusty
@@ -18,36 +16,58 @@ env:
   global:
     # See https://git.io/vdao3 for details.
     - JOBS=1
-  matrix:
-    # we recommend new addons test the current and previous LTS
-    # as well as latest stable release (bonus points to beta/canary)
-    - EMBER_TRY_SCENARIO=ember-1.13
-    - EMBER_TRY_SCENARIO=ember-lts-2.4
-    - EMBER_TRY_SCENARIO=ember-lts-2.8
-    - EMBER_TRY_SCENARIO=ember-lts-2.12
-    - EMBER_TRY_SCENARIO=ember-lts-2.16
-    - EMBER_TRY_SCENARIO=ember-release
-    - EMBER_TRY_SCENARIO=ember-beta
-    - EMBER_TRY_SCENARIO=ember-canary
-    - EMBER_TRY_SCENARIO=ember-default
-    - EMBER_TRY_SCENARIO=fastboot-tests
-    - EMBER_TRY_SCENARIO=node-tests
-
-matrix:
-  fast_finish: true
-  allow_failures:
-    - env: EMBER_TRY_SCENARIO=ember-canary
-
-before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash
-  - export PATH=$HOME/.yarn/bin:$PATH
-  - if [[ $(npm -v | cut -d '.' -f 1) -lt 3 ]]; then npm i -g npm@^3; fi
 
 install:
   - yarn install --no-lockfile --non-interactive
 
 script:
-  - npm run lint:js
+  - yarn lint:js
   # Usually, it's ok to finish the test scenario without reverting
   #  to the addon's original dependency state, skipping "cleanup".
   - node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
+
+notifications:
+  email: false
+
+stages:
+  - locked dependencies
+
+jobs:
+  fail_fast: true
+
+  include:
+    - stage: locked dependencies
+      env: NAME=browser tests
+      install: yarn install
+      script: yarn test:browser
+    - env: NAME=node tests
+      install: yarn install
+      script: yarn test:node
+
+    - stage: floating dependencies
+      env: NAME=browser tests
+      script: yarn test:browser
+    - env: NAME=node tests
+      script: yarn test:node
+
+    - stage: versioned tests
+      env: EMBER_TRY_SCENARIO=ember-lts-2.4
+      script: yarn test:browser
+    - env: EMBER_TRY_SCENARIO=ember-lts-2.8
+      script: yarn test:browser
+    - env: EMBER_TRY_SCENARIO=ember-lts-2.12
+      script: yarn test:browser
+    - env: EMBER_TRY_SCENARIO=ember-lts-2.16
+      script: yarn test:browser
+    - env: EMBER_TRY_SCENARIO=ember-release
+      script: yarn test:browser
+    - env: EMBER_TRY_SCENARIO=ember-beta
+      script: yarn test:browser
+    - env: EMBER_TRY_SCENARIO=ember-canary
+      script: yarn test:browser
+    - env: EMBER_TRY_SCENARIO=ember-default
+      script: yarn test:browser
+
+  allow_failures:
+    - env: EMBER_TRY_SCENARIO=ember-beta
+    - env: EMBER_TRY_SCENARIO=ember-canary
