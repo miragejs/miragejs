@@ -3,7 +3,7 @@ import Collection from './orm/collection';
 import PolymorphicCollection from './orm/polymorphic-collection';
 import extend from './utils/extend';
 import { singularize, pluralize, camelize } from './utils/inflector';
-
+import assert from './assert';
 import _isFunction from 'lodash/isFunction';
 import _isArray from 'lodash/isArray';
 import _isEmpty from 'lodash/isEmpty';
@@ -72,6 +72,11 @@ class Serializer {
     let hashWithRoot;
 
     if (this.root) {
+      assert(
+        !(resource instanceof PolymorphicCollection),
+        `The base Serializer class cannot serialize a top-level PolymorphicCollection when root is true, since PolymorphicCollections have no type.`
+      );
+
       let serializer = this.serializerFor(resource.modelName);
       let rootKey = serializer.keyForResource(resource);
       hashWithRoot = { [rootKey]: hash };
