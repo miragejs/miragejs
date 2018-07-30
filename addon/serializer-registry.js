@@ -1,5 +1,6 @@
 import Model from 'ember-cli-mirage/orm/model';
 import Collection from 'ember-cli-mirage/orm/collection';
+import PolymorphicCollection from 'ember-cli-mirage/orm/polymorphic-collection';
 import Serializer from 'ember-cli-mirage/serializer';
 import JsonApiSerializer from 'ember-cli-mirage/serializers/json-api-serializer';
 import { pluralize, camelize } from './utils/inflector';
@@ -25,6 +26,7 @@ export default class SerializerRegistry {
       let serializer = this.serializerFor(response.modelName);
 
       return serializer.serialize(response, request);
+
     } else if (Array.isArray(response) && response.filter(this._isCollection).length) {
       return response.reduce((json, collection) => {
         let serializer = this.serializerFor(collection.modelName);
@@ -44,7 +46,7 @@ export default class SerializerRegistry {
   }
 
   serializerFor(type, { explicit = false } = {}) {
-    let SerializerForResponse = this._serializerMap && (this._serializerMap[camelize(type)]);
+    let SerializerForResponse = type && this._serializerMap && (this._serializerMap[camelize(type)]);
 
     if (explicit) {
       assert(!!SerializerForResponse, `You passed in ${type} as an explicit serializer type but that serializer doesn't exist. Try running \`ember g mirage-serializer ${type}\`.`);
@@ -68,7 +70,7 @@ export default class SerializerRegistry {
   }
 
   _isCollection(object) {
-    return object instanceof Collection;
+    return object instanceof Collection || object instanceof PolymorphicCollection;
   }
 
   _isModelOrCollection(object) {
