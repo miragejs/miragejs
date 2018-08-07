@@ -1,17 +1,24 @@
-import {module, test} from 'qunit';
-import { Model, ActiveModelSerializer } from 'ember-cli-mirage';
+import { module, test } from 'qunit';
+import { Model, hasMany, belongsTo, RestSerializer } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
-import promiseAjax from '../../helpers/promise-ajax';
+import promiseAjax from '../../../helpers/promise-ajax';
 
-module('Integration | Server | Shorthand sanity check', function(hooks) {
+module('Integration | Server | Shorthands | REST Serializer Sanity check', function(hooks) {
   hooks.beforeEach(function() {
     this.server = new Server({
       environment: 'test',
       models: {
-        contact: Model
+        contact: Model.extend({
+          addresses: hasMany()
+        }),
+        address: Model.extend({
+          contact: belongsTo()
+        })
       },
       serializers: {
-        application: ActiveModelSerializer
+        application: RestSerializer.extend({
+          normalizeIds: true
+        })
       }
     });
     this.server.timing = 0;
@@ -39,27 +46,35 @@ module('Integration | Server | Shorthand sanity check', function(hooks) {
     });
 
     assert.equal(xhr.status, 200);
-    assert.deepEqual(data, { contacts: [{ id: '1', name: 'Link' }] });
+    assert.deepEqual(data, { contacts: [{ id: '1', name: 'Link', addresses: [] }] });
   });
 
   test('a post shorthand works', async function(assert) {
     let { server } = this;
-    assert.expect(2);
+    assert.expect(3);
 
-    server.post('/contacts');
+    this.server.db.loadData({
+      contacts: [
+        { id: 1, name: 'Link' }
+      ]
+    });
+
+    server.post('/addresses');
 
     let { xhr } = await promiseAjax({
       method: 'POST',
-      url: '/contacts',
+      url: '/addresses',
       data: JSON.stringify({
-        contact: {
-          name: 'Zelda'
+        address: {
+          street: '5th ave',
+          contact: 1
         }
       })
     });
 
     assert.equal(xhr.status, 201);
-    assert.equal(server.db.contacts.length, 1);
+    assert.equal(server.db.addresses.length, 1);
+    assert.equal(server.db.addresses[0].contactId, 1);
   });
 
   test('a put shorthand works', async function(assert) {
