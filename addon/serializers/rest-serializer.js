@@ -31,5 +31,4 @@ export default ActiveModelSerializer.extend({
   getCoalescedIds(request) {
     return request.queryParams && request.queryParams.ids;
   }
-
 });
