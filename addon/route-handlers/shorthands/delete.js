@@ -19,7 +19,7 @@ export default class DeleteShorthandRouteHandler extends BaseShorthandRouteHandl
     );
 
     let id = this._getIdForRequest(request);
-    return modelClass.find(id).destroy();
+    modelClass.find(id).destroy();
   }
 
   /*

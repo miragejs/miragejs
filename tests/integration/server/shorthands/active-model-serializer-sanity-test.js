@@ -116,7 +116,7 @@ module('Integration | Server | Shorthands | Active Model Serializer Sanity check
 
   test('a delete shorthand works', async function(assert) {
     let { server } = this;
-    assert.expect(2);
+    assert.expect(3);
 
     this.server.db.loadData({
       contacts: [
@@ -131,6 +131,7 @@ module('Integration | Server | Shorthands | Active Model Serializer Sanity check
       url: '/contacts/1'
     });
 
+    assert.equal(xhr.responseText, "");
     assert.equal(xhr.status, 204);
     assert.equal(server.db.contacts.length, 0);
   });
