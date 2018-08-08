@@ -29,9 +29,6 @@ script:
 notifications:
   email: false
 
-stages:
-  - locked dependencies
-
 jobs:
   fail_fast: true
 
@@ -68,15 +65,16 @@ jobs:
     - env: EMBER_TRY_SCENARIO=ember-default
       script: yarn test:browser
 
+    - stage: npm release
+      deploy:
+        provider: npm
+        email: sam.selikoff@gmail.com
+        api_key:
+          secure: O6cP0nTiCbA+MuD6hRKdyyd6DWTFR/dc9klB10zXTnrwajjzLmenvvshPUv+F6lHCpb2SfrWW6cpFjZ61BPwKaaalF9u8encNkGlDYGtO77sWJu6LuJFeWPZnAC9rdAw4hPjz+gqTL+leeDMHzjB32VRqy2cpwFzet3e+W2eUuk=
+        on:
+          tags: true
+          repo: samselikoff/ember-cli-mirage
+
   allow_failures:
     - env: EMBER_TRY_SCENARIO=ember-beta
     - env: EMBER_TRY_SCENARIO=ember-canary
-
-deploy:
-  provider: npm
-  email: sam.selikoff@gmail.com
-  api_key:
-    secure: O6cP0nTiCbA+MuD6hRKdyyd6DWTFR/dc9klB10zXTnrwajjzLmenvvshPUv+F6lHCpb2SfrWW6cpFjZ61BPwKaaalF9u8encNkGlDYGtO77sWJu6LuJFeWPZnAC9rdAw4hPjz+gqTL+leeDMHzjB32VRqy2cpwFzet3e+W2eUuk=
-  on:
-    tags: true
-    repo: samselikoff/ember-cli-mirage
