@@ -20,12 +20,6 @@ env:
 install:
   - yarn install --no-lockfile --non-interactive
 
-script:
-  - yarn lint:js
-  # Usually, it's ok to finish the test scenario without reverting
-  #  to the addon's original dependency state, skipping "cleanup".
-  - node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
-
 notifications:
   email: false
 
@@ -49,21 +43,21 @@ jobs:
 
     - stage: versioned tests
       env: EMBER_TRY_SCENARIO=ember-lts-2.4
-      script: yarn test:browser
+      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
     - env: EMBER_TRY_SCENARIO=ember-lts-2.8
-      script: yarn test:browser
+      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
     - env: EMBER_TRY_SCENARIO=ember-lts-2.12
-      script: yarn test:browser
+      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
     - env: EMBER_TRY_SCENARIO=ember-lts-2.16
-      script: yarn test:browser
+      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
     - env: EMBER_TRY_SCENARIO=ember-release
-      script: yarn test:browser
+      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
     - env: EMBER_TRY_SCENARIO=ember-beta
-      script: yarn test:browser
+      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
     - env: EMBER_TRY_SCENARIO=ember-canary
-      script: yarn test:browser
+      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
     - env: EMBER_TRY_SCENARIO=ember-default
-      script: yarn test:browser
+      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
 
     - stage: npm release
       deploy:
