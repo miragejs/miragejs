@@ -60,6 +60,7 @@ jobs:
       script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
 
     - stage: npm release
+      script: skip
       deploy:
         provider: npm
         email: sam.selikoff@gmail.com
