@@ -30,6 +30,14 @@ module('Integration | ORM | assertions', function(hooks) {
     }, /You're trying to create a user model and you passed in "1" under the posts key, but that key is a HasMany relationship./);
   });
 
+  test(`it doesn't error when passing in an empty array`, function(assert) {
+    this.server.schema.users.create({
+      name: 'Sam',
+      posts: []
+    });
+    assert.ok(true);
+  });
+
   test('it errors when passing in the wrong type for a HasMany association foreign key', function(assert) {
     assert.throws(() => {
       this.server.schema.users.create({
