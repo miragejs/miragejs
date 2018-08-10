@@ -141,6 +141,67 @@ module('Integration | Serializers | JSON API Serializer | Associations | Polymor
     server.shutdown();
   });
 
+  test('it works for has many polymorphic relationships included via query params', function(assert) {
+    let server = new Server({
+      models: {
+        user: Model.extend({
+          things: hasMany({ polymorphic: true })
+        }),
+        car: Model.extend(),
+        watch: Model.extend()
+      },
+      serializers: {
+        application: JSONAPISerializer
+      }
+    });
+
+    let schema = server.schema;
+    let car = schema.cars.create({ make: 'Infiniti' });
+    let watch = schema.watches.create({ make: 'Citizen' });
+    let user = schema.users.create({
+      name: 'Sam',
+      things: [ car, watch ]
+    });
+
+    let json = server.serializerOrRegistry.serialize(user, { queryParams: { include: 'things' } });
+
+    assert.deepEqual(json, {
+      data: {
+        "attributes": {
+          "name": "Sam"
+        },
+        "id": "1",
+        "relationships": {
+          "things": {
+            "data": [
+              { id: '1', type: 'cars' },
+              { id: '1', type: 'watches' }
+            ]
+          }
+        },
+        "type": "users"
+      },
+      "included": [
+        {
+          "attributes": {
+            "make": "Infiniti"
+          },
+          "id": "1",
+          "type": "cars"
+        },
+        {
+          "attributes": {
+            "make": "Citizen"
+          },
+          "id": "1",
+          "type": "watches"
+        }
+      ]
+    });
+
+    server.shutdown();
+  });
+
   test('it works for a top-level polymorphic collection', function(assert) {
     let server = new Server({
       models: {

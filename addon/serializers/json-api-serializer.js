@@ -257,14 +257,14 @@ const JSONAPISerializer = Serializer.extend({
   },
 
   _addPrimaryModelToRequestedIncludesGraph(graph, model) {
-    let graphKey = this._graphKeyForModel(model);
-
     if (this.hasQueryParamIncludes()) {
+      let graphKey = this._graphKeyForModel(model);
       let queryParamIncludes = this.getQueryParamIncludes();
+
       queryParamIncludes.split(',')
-        // includesPath is post.comments
-        .forEach(includesPath => {
+        .forEach(includesPath => { // includesPath is post.comments, for example
           graph.data[graphKey].relationships = graph.data[graphKey].relationships || {};
+
           let relationshipKeys = includesPath.split('.');
           let relationshipKey = relationshipKeys[0];
           let graphRelationshipKey = dasherize(relationshipKey);
@@ -294,12 +294,14 @@ const JSONAPISerializer = Serializer.extend({
   },
 
   _addResourceToRequestedIncludesGraph(graph, resource, relationshipNames) {
-    let collectionName = dasherize(pluralize(resource.modelName));
     graph.included = graph.included || {};
-    graph.included[collectionName] = graph.included[collectionName] || {};
 
     let models = this.isCollection(resource) ? resource.models : [ resource ];
+
     models.forEach(model => {
+      let collectionName = dasherize(pluralize(model.modelName));
+      graph.included[collectionName] = graph.included[collectionName] || {};
+
       this._addModelToRequestedIncludesGraph(graph, model, relationshipNames);
     });
   },
