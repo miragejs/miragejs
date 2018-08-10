@@ -506,7 +506,7 @@ class Model {
 
         if (association.isHasMany) {
           let isCollection = value instanceof Collection || value instanceof PolymorphicCollection;
-          let isArrayOfModels = Array.isArray(value) && value.length && value.every(item => item instanceof Model);
+          let isArrayOfModels = Array.isArray(value) && value.every(item => item instanceof Model);
 
           assert(isCollection || isArrayOfModels || isNull, `You're trying to create a ${this.modelName} model and you passed in "${value}" under the ${key} key, but that key is a HasMany relationship. You must pass in a Collection, PolymorphicCollection, array of Models, or null.`);
 
