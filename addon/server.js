@@ -1,8 +1,7 @@
 /* eslint no-console: 0 */
 
 import { Promise } from 'rsvp';
-
-import { pluralize, camelize } from './utils/inflector';
+import { singularize, pluralize, camelize } from './utils/inflector';
 import { toCollectionName, toInternalCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import { getModels } from './ember-data';
 import { hasEmberData } from './utils/ember-data';
@@ -397,6 +396,11 @@ export default class Server {
   }
 
   create(type, ...options) {
+    assert(
+      this._validateCreateType(type),
+      `You called server.create('${type}') but no model or factory was found. Make sure you're using the singularized version of your model.`
+    );
+
     // When there is a Model defined, we should return an instance
     // of it instead of returning the bare attributes.
     let traits = options.filter((arg) => arg && typeof arg === 'string');
@@ -406,7 +410,7 @@ export default class Server {
     let attrs = this.build(type, ...traits, overrides);
     let modelOrRecord;
 
-    if (this.schema && this.schema[toCollectionName(type)]) {
+    if (this.schema && this.schema.modelFor(camelize(type))) {
       let modelClass = this.schema[toCollectionName(type)];
 
       modelOrRecord = modelClass.create(attrs);
@@ -421,7 +425,7 @@ export default class Server {
         collection = this.db[collectionName];
       }
 
-      assert(collection, `You called server.create(${type}) but no model or factory was found. Try \`ember g mirage-model ${type}\`.`);
+      assert(collection, `You called server.create('${type}') but no model or factory was found. Make sure you're using the singularized version of your model.`);
       modelOrRecord = collection.insert(attrs);
     }
 
@@ -436,6 +440,10 @@ export default class Server {
   }
 
   createList(type, amount, ...traitsAndOverrides) {
+    assert(
+      this._validateCreateType(type),
+      `You called server.createList('${type}') but no model or factory was found. Make sure you're using the singularized version of your model.`
+    );
     assert(_isInteger(amount), `second argument has to be an integer, you passed: ${typeof amount}`);
 
     let list = [];
@@ -644,6 +652,18 @@ export default class Server {
     defaultPassthroughs.forEach((passthroughUrl) => {
       this.passthrough(passthroughUrl);
     });
+  }
+
+  /**
+   *
+   * @private
+   */
+  _validateCreateType(type) {
+    let modelExists = (this.schema && this.schema.modelFor(camelize(type)));
+    let dbCollectionExists = this.db[toInternalCollectionName(type)];
+    let isSingular = type === singularize(type);
+
+    return isSingular && (modelExists || dbCollectionExists);
   }
 
   /**
