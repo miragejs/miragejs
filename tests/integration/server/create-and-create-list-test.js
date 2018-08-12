@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { Model, Factory, hasMany, belongsTo } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
 
-module('Integration | Server | Factory creation', function(hooks) {
+module('Integration | Server | create and createList', function(hooks) {
   hooks.beforeEach(function() {
     this.Contact = Model.extend();
     this.AmazingContact = Model.extend();
@@ -34,10 +34,34 @@ module('Integration | Server | Factory creation', function(hooks) {
     this.server.shutdown();
   });
 
+  test('create throws when passing in an undefined model', function(assert) {
+    assert.throws(() => {
+      this.server.create('foo');
+    }, /You called server.create\('foo'\) but no model or factory was found\. Make sure you're using the singularized version of your model\./);
+  });
+
+  test('create throws when passing in a pluralized version of a model', function(assert) {
+    assert.throws(() => {
+      this.server.create('contacts');
+    }, /You called server.create\('contacts'\) but no model or factory was found\. Make sure you're using the singularized version of your model\./);
+  });
+
   test('create returns a Model if one is defined', function(assert) {
     let contact = this.server.create('contact');
 
     assert.ok(contact instanceof this.Contact, 'expected a Contact');
+  });
+
+  test('createList throws when passing in an undefined model', function(assert) {
+    assert.throws(() => {
+      this.server.createList('foo', 1);
+    }, /You called server.createList\('foo'\) but no model or factory was found\. Make sure you're using the singularized version of your model\./);
+  });
+
+  test('createList throws when passing in a pluralized version of a model', function(assert) {
+    assert.throws(() => {
+      this.server.createList('contacts', 1);
+    }, /You called server.createList\('contacts'\) but no model or factory was found\. Make sure you're using the singularized version of your model\./);
   });
 
   test('createList returns Models if one is defined', function(assert) {
