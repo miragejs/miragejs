@@ -63,6 +63,11 @@ export default class BaseRouteHandler {
         let association = modelClass.associationFor(camelize(relationshipName));
         let valueForRelationship;
 
+        assert(
+          association,
+          `You're passing the relationship '${relationshipName}' to the '${modelName}' model via a ${request.method} to '${request.url}', but you did not define the '${relationshipName}' association on the '${modelName}' model. http://www.ember-cli-mirage.com/docs/v0.4.x/models/#associations`
+        );
+
         if (association.isPolymorphic) {
           valueForRelationship = relationship.data;
 
