@@ -26,7 +26,7 @@ For feature requests, visit our [Canny board](https://ember-cli-mirage.canny.io/
 
 Having trouble?
 
-- **Join #ec-mirage** on the Ember Community Slack
+- **Join #ec-mirage** on the [Ember Community Discord server](https://discord.gg/zT3asNS)
 - **Open an issue**, and if possible reproduce it using the [Mirage Boilerplate Twiddle](https://ember-twiddle.com/ec3a4c625c43e7a38f3c6c0c1b8232ec?openFiles=twiddle.json%2C).
 
 ## Contributing
