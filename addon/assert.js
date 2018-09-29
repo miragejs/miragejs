@@ -9,6 +9,9 @@ let errorProps = [
   'stack'
 ];
 
+/**
+  @hide
+*/
 export default function assert(bool, text) {
   if (typeof bool === 'string' && !text) {
     throw new MirageError(bool);
@@ -21,6 +24,7 @@ export default function assert(bool, text) {
 
 /**
   @public
+  @hide
   Copied from ember-metal/error
 */
 export function MirageError() {

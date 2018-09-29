@@ -25,8 +25,10 @@ class Db {
   }
 
   /**
+   * Foo, bar baz.
+   *
    * @method loadData
-   * @param data
+   * @param {Object} data - Data to load
    * @public
    */
   loadData(data) {
