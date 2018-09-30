@@ -21,6 +21,11 @@ Router.map(function() {
       this.route('acceptance-testing');
     });
 
+    this.route('cookbook', function() {
+      this.route('manually-starting-mirage');
+      this.route('simulating-cookie-responses');
+    });
+
     this.route('examples', function() {
       this.route('1-belongs-to');
       this.route('2-has-many');
