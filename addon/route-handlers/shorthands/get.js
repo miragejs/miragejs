@@ -3,6 +3,9 @@ import BaseShorthandRouteHandler from './base';
 import { Response } from 'ember-cli-mirage';
 import { singularize, camelize } from 'ember-cli-mirage/utils/inflector';
 
+/**
+ * @hide
+ */
 export default class GetShorthandRouteHandler extends BaseShorthandRouteHandler {
 
   /*

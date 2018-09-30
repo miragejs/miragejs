@@ -7,10 +7,12 @@ import _camelCase from 'lodash/camelCase';
 import { pluralize } from 'ember-cli-mirage/utils/inflector';
 import require from 'require';
 
-/*
+/**
   This function looks through all files that have been loaded by Ember CLI and
   finds the ones under /mirage/[factories, fixtures, scenarios, models]/, and exports
   a hash containing the names of the files as keys and the data as values.
+
+  @hide
 */
 export default function(prefix) {
   let modules = ['factories', 'fixtures', 'scenarios', 'models', 'serializers', 'identity-managers'];

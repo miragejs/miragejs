@@ -3,6 +3,9 @@ import { camelize, singularize, dasherize } from 'ember-cli-mirage/utils/inflect
 
 const PATH_VAR_REGEXP = /^:/;
 
+/**
+  @hide
+*/
 export default class BaseRouteHandler {
 
   getModelClassFromPath(fullPath) {

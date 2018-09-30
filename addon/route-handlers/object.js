@@ -1,3 +1,6 @@
+/**
+ * @hide
+ */
 export default class ObjectRouteHandler {
 
   constructor(schema, serializerOrRegistry, object) {

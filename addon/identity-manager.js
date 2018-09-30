@@ -8,6 +8,7 @@ function isNumber(n) {
  * @class IdentityManager
  * @constructor
  * @public
+ * @hide
  */
 class IdentityManager {
 

@@ -19,6 +19,7 @@ let DsModels, Models;
  *
  * @method getDsModels
  * @private
+ * @hide
  * @return {Object} models
  */
 export function getDsModels() {
@@ -57,6 +58,7 @@ export function getDsModels() {
  *
  * @method getModels
  * @private
+ * @hide
  * @return {Object} models
  */
 export function getModels() {
@@ -92,6 +94,7 @@ export function getModels() {
  * @private
  * @param  {String} name
  * @return {Model}
+ * @hide
  */
 export function modelFor(name) {
   let models = getModels();

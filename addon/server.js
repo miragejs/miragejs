@@ -81,10 +81,17 @@ const defaultRouteOptions = {
   timing: undefined
 };
 
+/**
+  @hide
+*/
 const defaultPassthroughs = [
   'http://localhost:0/chromecheckurl', // mobile chrome
   'http://localhost:30820/socket.io' // electron
 ];
+
+/**
+  @hide
+*/
 export { defaultPassthroughs };
 
 /**
@@ -144,6 +151,7 @@ function extractRouteArguments(args) {
 
   @class Server
   @public
+  @hide
 */
 export default class Server {
 

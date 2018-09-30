@@ -1,5 +1,8 @@
 import BaseRouteHandler from './base';
 
+/**
+ * @hide
+ */
 export default class FunctionRouteHandler extends BaseRouteHandler {
 
   constructor(schema, serializerOrRegistry, userFunction, path) {

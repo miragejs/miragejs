@@ -2,6 +2,9 @@ import assert from 'ember-cli-mirage/assert';
 import BaseShorthandRouteHandler from './base';
 import { camelize } from 'ember-cli-mirage/utils/inflector';
 
+/**
+ * @hide
+ */
 export default class PostShorthandRouteHandler extends BaseShorthandRouteHandler {
 
   /*

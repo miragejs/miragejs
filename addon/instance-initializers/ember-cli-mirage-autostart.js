@@ -14,14 +14,16 @@ const MirageShutdown = EmberObject.extend({
   }
 });
 
-//
-// If we are running an rfc232/rfc268 test then we want to support the
-// `autostart` configuration option, which auto-starts mirage before the test
-// runs and shuts it down afterwards, and also sets `this.server` on the test
-// context so the tests don't need to use the global `server`. We do this in an
-// instance initializer because initializers only run once per test run, not
-// before and after each test.
-//
+/**
+  If we are running an rfc232/rfc268 test then we want to support the
+  `autostart` configuration option, which auto-starts mirage before the test
+  runs and shuts it down afterwards, and also sets `this.server` on the test
+  context so the tests don't need to use the global `server`. We do this in an
+  instance initializer because initializers only run once per test run, not
+  before and after each test.
+
+  @hide
+*/
 export function initialize(appInstance) {
   let testContext = getRfc232TestContext();
   if (testContext) {

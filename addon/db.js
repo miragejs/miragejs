@@ -11,6 +11,7 @@ import _cloneDeep from 'lodash/cloneDeep';
   @class Db
   @constructor
   @public
+  @hide
  */
 class Db {
 

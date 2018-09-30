@@ -1,6 +1,9 @@
 import { toCollectionName } from 'ember-cli-mirage/utils/normalize-name';
 import BaseRouteHandler from '../base';
 
+/**
+  @hide
+*/
 export default class BaseShorthandRouteHandler extends BaseRouteHandler {
 
   constructor(schema, serializerOrRegistry, shorthand, path, options = {}) {
