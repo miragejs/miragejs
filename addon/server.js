@@ -151,59 +151,13 @@ function extractRouteArguments(args) {
 
   @class Server
   @public
-  @hide
 */
 export default class Server {
 
-  /**
-   * Build the new server object.
-   *
-   * @constructor
-   * @public
-   */
   constructor(options = {}) {
     this.config(options);
   }
 
-  /**
-    Set the base namespace used for all routes defined with `get`, `post`, `put` or `del`.
-
-    For example,
-
-    ```js
-    // app/mirage/config.js
-    export default function() {
-
-      this.namespace = '/api';
-
-      // this route will handle the URL '/api/contacts'
-      this.get('/contacts', 'contacts');
-    };
-    ```
-
-    Note that only routes defined after `this.namespace` are affected. This is useful if you have a few one-off routes that you don't want under your namespace:
-
-    ```js
-    // app/mirage/config.js
-    export default function() {
-
-      // this route handles /auth
-      this.get('/auth', function() { ...});
-
-      this.namespace = '/api';
-      // this route will handle the URL '/api/contacts'
-      this.get('/contacts', 'contacts');
-    };
-    ```
-
-    If your Ember app is loaded from the filesystem vs. a server (e.g. via Cordova or Electron vs. `ember s` or `https://yourhost.com/`), you will need to explicitly define a namespace. Likely values are `/` (if requests are made with relative paths) or `https://yourhost.com/api/...` (if requests are made to a defined server).
-
-    For a sample implementation leveraging a configured API host & namespace, check out [this issue comment](https://github.com/samselikoff/ember-cli-mirage/issues/497#issuecomment-183458721)
-
-    @property namespace
-    @type String
-    @public
-  */
   config(config = {}) {
     let didOverrideConfig = (config.environment && (this.environment && (this.environment !== config.environment)));
     assert(!didOverrideConfig,
@@ -212,7 +166,64 @@ export default class Server {
 
     this._config = config;
 
+    /**
+      Set the number of milliseconds for the the Server's response time.
+
+      By default there's a 400ms delay during development, and 0 delay in testing (so your tests run fast).
+
+      ```js
+      // app/mirage/config.js
+      export default function() {
+        this.timing = 400; // default
+      };
+      ```
+
+      To set the timing for individual routes, see the `timing` option for route handlers.
+
+      @property timing
+      @type Number
+      @public
+    */
     this.timing = this.timing || config.timing || 400;
+
+    /**
+      Set the base namespace used for all routes defined with `get`, `post`, `put` or `del`.
+
+      For example,
+
+      ```js
+      // app/mirage/config.js
+      export default function() {
+        this.namespace = '/api';
+
+        // this route will handle the URL '/api/contacts'
+        this.get('/contacts', 'contacts');
+      };
+      ```
+
+      Note that only routes defined after `this.namespace` are affected. This is useful if you have a few one-off routes that you don't want under your namespace:
+
+      ```js
+      // app/mirage/config.js
+      export default function() {
+
+        // this route handles /auth
+        this.get('/auth', function() { ...});
+
+        this.namespace = '/api';
+        // this route will handle the URL '/api/contacts'
+        this.get('/contacts', 'contacts');
+      };
+      ```
+
+      If your Ember app is loaded from the filesystem vs. a server (e.g. via Cordova or Electron vs. `ember s` or `https://yourhost.com/`), you will need to explicitly define a namespace. Likely values are `/` (if requests are made with relative paths) or `https://yourhost.com/api/...` (if requests are made to a defined server).
+
+      For a sample implementation leveraging a configured API host & namespace, check out [this issue comment](https://github.com/samselikoff/ember-cli-mirage/issues/497#issuecomment-183458721).
+
+      @property namespace
+      @type String
+      @public
+    */
     this.namespace = this.namespace || config.namespace || '';
     this.urlPrefix = this.urlPrefix || config.urlPrefix || '';
     this.trackRequests = config.trackRequests;
@@ -286,14 +297,51 @@ export default class Server {
   }
 
   /**
-   * Determines if the server should log.
-   *
-   * @method shouldLog
-   * @return The value of this.logging if defined, or false if in the testing environment,
-   * true otherwise.
-   * @public
-   */
+    Determines if the server should log.
+
+    @method shouldLog
+    @return The value of this.logging if defined, or false if in the testing environment,
+    true otherwise.
+    @public
+    @hide
+  */
   shouldLog() {
+
+    /**
+      Set to `true` or `false` to explicitly specify logging behavior.
+
+      By default, server responses are logged in non-testing environments. Logging is disabled by default in testing, so as not to clutter CI test runner output.
+
+      For example, to enable logging in tests, write the following:
+
+      ```js
+      test('I can view all users', function() {
+        server.logging = true;
+        server.create('user');
+
+        visit('/users');
+        // ...
+      });
+      ```
+
+      You can also write a custom log message, using the [Pretender server's](#pretender) `handledRequest` hook. See [Mirage's default implementation](https://github.com/samselikoff/ember-cli-mirage/blob/2c31ad15a46e90b357a83b6896c6774fa42c6488/addon/server.js#L25) for an example.
+
+      To override,
+
+      ```js
+      // mirage/config.js
+      export default function() {
+        this.pretender.handledRequest = function(verb, path, request) {
+          let { responseText } = request;
+          // log request and response data
+        }
+      }
+      ```
+
+      @property logging
+      @return {Boolean}
+      @public
+    */
     return typeof this.logging !== 'undefined' ? this.logging : !this.isTest();
   }
 
@@ -395,6 +443,7 @@ export default class Server {
    * @method factoryFor
    * @param {String} type
    * @private
+   * @hide
    */
   factoryFor(type) {
     let camelizedType = camelize(type);
@@ -550,6 +599,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _defineRouteHandlerHelpers() {
     [['get'], ['post'], ['put'], ['delete', 'del'], ['patch'], ['head'], ['options']].forEach(([verb, alias]) => {
@@ -600,6 +650,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _hasModulesOfType(modules, type) {
     let modulesOfType = modules[type];
@@ -611,6 +662,7 @@ export default class Server {
    * configured options (`urlPrefix` and `namespace`).
    *
    * @private
+   * @hide
    */
   _getFullPath(path) {
     path = path[0] === '/' ? path.slice(1) : path;
@@ -696,6 +748,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _configureDefaultPassthroughs() {
     defaultPassthroughs.forEach((passthroughUrl) => {
@@ -706,6 +759,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _validateCreateType(type) {
     let modelExists = (this.schema && this.schema.modelFor(camelize(type)));
@@ -718,6 +772,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _validateTraits(traits, factory, type) {
     traits.forEach((traitName) => {
@@ -730,6 +785,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _mergeExtensions(attrs, traits, overrides) {
     let allExtensions = traits.map((traitName) => {
@@ -744,6 +800,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _mapAssociationsFromAttributes(modelName, attributes, overrides = {}) {
     Object.keys(attributes || {}).filter((attr) => {
