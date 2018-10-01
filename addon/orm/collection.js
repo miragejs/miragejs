@@ -22,53 +22,61 @@ export default class Collection {
       'You must pass a `modelName` into a Collection'
     );
 
+    /**
+      The dasherized model name this Collection represents.
+
+      ```js
+      let posts = user.blogPosts;
+
+      posts.modelName; // "blog-post"
+      ```
+
+      The model name is separate from the actual models, since Collections can be empty.
+
+      @property modelName
+      @type {String}
+      @public
+    */
     this.modelName = modelName;
+
+    /**
+      The underlying plain JavaScript array of Models in this Collection.
+
+      ```js
+      posts.models // [ post:1, post:2, ... ]
+      ```
+
+      While Collections have many array-ish methods like `filter` and `sort`, it
+      can be useful to work with the plain array if you want to work with methods
+      like `map`, or use the `[]` accessor.
+
+      For example, in testing you might want to assert against a model from the
+      collection:
+
+      ```js
+      let newPost = user.posts.models[0].title;
+
+      assert.equal(newPost, "My first post");
+      ```
+
+      @property models
+      @type {Array}
+      @public
+    */
     this.models = models;
   }
 
   /**
-    The dasherized model name of models in this collection.
-
-    ```
-    let posts = author.blogPosts.all();
-
-    posts.modelName; // "blog-post"
-    ```
-    @property modelName
-    @public
-  */
-  // get modelName() {
-  //   return this.modelName;
-  // }
-
-  /**
-    The underlying plain JavaScript array of models in this Collection. Often
-    used in assertions during testing.
+    The number of models in the collection.
 
     ```js
-    let newPost = user.posts.models[0].title;
-
-    assert.equal(newPost, "My first post");
+    user.posts.length; // 2
     ```
 
-    @property models
+    @property length
+    @type {Integer}
     @public
   */
-  // get models() {
-  //   return this.models;
-  // }
-
-  /**
-     The number of models in the collection.
-
-     ```js
-     user.posts.length; // 2
-     ```
-
-     @property length
-     @type Number
-     @public
-   */
   get length() {
     return this.models.length;
   }
@@ -77,7 +85,7 @@ export default class Collection {
      Updates each model in the collection, and immediately persists all changes to the db.
 
      ```js
-     let posts = author.blogPosts.all();
+     let posts = user.blogPosts;
 
      posts.update('published', true); // the db was updated for all posts
      ```
@@ -95,29 +103,10 @@ export default class Collection {
   }
 
   /**
-     Destroys the db record for all models in the collection.
-
-     ```js
-     let posts = author.blogPosts.all();
-
-     posts.destroy(); // all posts removed from db
-     ```
-
-     @method destroy
-     @return this
-     @public
-   */
-  destroy() {
-    _invokeMap(this.models, 'destroy');
-
-    return this;
-  }
-
-  /**
      Saves all models in the collection.
 
      ```js
-     let posts = author.blogPosts.all();
+     let posts = user.blogPosts;
 
      posts.models[0].published = true;
 
@@ -135,12 +124,20 @@ export default class Collection {
   }
 
   /**
-     Reloads each model in the collection.
+    Reloads each model in the collection.
 
-     @method reload
-     @return this
-     @public
-   */
+    ```js
+    let posts = author.blogPosts;
+
+    // ...
+
+    posts.reload(); // reloads data for each post from the db
+    ```
+
+    @method reload
+    @return this
+    @public
+  */
   reload() {
     _invokeMap(this.models, 'reload');
 
@@ -148,17 +145,40 @@ export default class Collection {
   }
 
   /**
-     Adds a model to this collection.
+    Destroys the db record for all models in the collection.
 
-     ```js
-     user.posts.add(newPost);
-     ```
+    ```js
+    let posts = user.blogPosts;
 
-     @method add
-     @param model
-     @return this
-     @public
-   */
+    posts.destroy(); // all posts removed from db
+    ```
+
+    @method destroy
+    @return this
+    @public
+  */
+  destroy() {
+    _invokeMap(this.models, 'destroy');
+
+    return this;
+  }
+
+  /**
+    Adds a model to this collection.
+
+    ```js
+    posts.length; // 1
+
+    posts.add(newPost);
+
+    posts.length; // 2
+    ```
+
+    @method add
+    @param {Model} model
+    @return this
+    @public
+  */
   add(model) {
     this.models.push(model);
 
@@ -166,12 +186,23 @@ export default class Collection {
   }
 
   /**
-     Removes a model to this collection
+    Removes a model from this collection.
 
-     @method remove
-     @return this
-     @public
-   */
+    ```js
+    posts.length; // 5
+
+    let firstPost = posts.models[0];
+    posts.remove(firstPost);
+    posts.save();
+
+    posts.length; // 4
+    ```
+
+    @method remove
+    @param {Model} model
+    @return this
+    @public
+  */
   remove(model) {
     let [ match ] = this.models.filter(m => m.toString() === model.toString());
     if (match) {
@@ -183,22 +214,46 @@ export default class Collection {
   }
 
   /**
-     Checks if the collection includes the model
+    Checks if the Collection includes the given model.
 
-     @method includes
-     @return boolean
-     @public
-   */
+    ```js
+    posts.includes(newPost);
+    ```
+
+    Works by checking if the given model name and id exists in the Collection,
+    making it a bit more flexible than strict object equality.
+
+    ```js
+    let post = server.create('post');
+    let programming = server.create('tag', { text: 'Programming' });
+
+    visit(`/posts/${post.id}`);
+    click('.tag-selector');
+    click('.tag:contains(Programming)');
+
+    post.reload();
+    assert.ok(post.tags.includes(programming));
+    ```
+
+    @method includes
+    @return {Boolean}
+    @public
+  */
   includes(model) {
     return this.models.filter(m => m.toString() === model.toString()).length > 0;
   }
 
   /**
-     @method filter
-     @param f
-     @return {Collection}
-     @public
-   */
+    Returns a new Collection with its models filtered according to the provided [callback function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter).
+
+    ```js
+    let publishedPosts = user.posts.filter(post => post.isPublished);
+    ```
+    @method filter
+    @param {Function} f
+    @return {Collection}
+    @public
+  */
   filter(f) {
     let filteredModels = this.models.filter(f);
 
@@ -209,15 +264,13 @@ export default class Collection {
      Returns a new Collection with its models sorted according to the provided [compare function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Parameters).
 
      ```js
-     let posts = author.blogPosts.all();
-
-     let postsByTitleAsc = posts.sort((a, b) => {
+     let postsByTitleAsc = user.posts.sort((a, b) => {
        return b.title < a.title;
      });
      ```
 
      @method sort
-     @param f
+     @param {Function} f
      @return {Collection}
      @public
    */
@@ -228,12 +281,18 @@ export default class Collection {
   }
 
   /**
-     @method slice
-     @param {Integer} begin
-     @param {Integer} end
-     @return {Collection}
-     @public
-   */
+    Returns a new Collection with a subset of its models selected from `begin` to `end`.
+
+    ```js
+    let firstThreePosts = user.posts.slice(0, 3);
+    ```
+
+    @method slice
+    @param {Integer} begin
+    @param {Integer} end
+    @return {Collection}
+    @public
+  */
   slice(...args) {
     let slicedModels = this.models.slice(...args);
 
@@ -241,10 +300,17 @@ export default class Collection {
   }
 
   /**
-     @method mergeCollection
-     @param collection
-     @return this
-     @public
+    Modifies the Collection by merging the models from another collection.
+
+    ```js
+    user.posts.mergeCollection(newPosts);
+    user.posts.save();
+    ```
+
+    @method mergeCollection
+    @param {Collection} collection
+    @return this
+    @public
    */
   mergeCollection(collection) {
     this.models = this.models.concat(collection.models);
@@ -254,6 +320,10 @@ export default class Collection {
 
   /**
      Simple string representation of the collection and id.
+
+     ```js
+     user.posts.toString(); // collection:post(post:1,post:4)
+     ```
 
      @method toString
      @return {String}

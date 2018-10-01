@@ -26,6 +26,10 @@ Router.map(function() {
       this.route('simulating-cookie-responses');
     });
 
+    this.route('advanced', function() {
+      this.route('environment-options');
+    });
+
     this.route('examples', function() {
       this.route('1-belongs-to');
       this.route('2-has-many');
