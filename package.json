@@ -34,21 +34,22 @@
     "prepare": "./scripts/link.sh"
   },
   "dependencies": {
+    "@xg-wang/whatwg-fetch": "^3.0.0",
     "broccoli-funnel": "^1.0.2",
     "broccoli-merge-trees": "^1.1.0",
-    "broccoli-string-replace": "^0.1.2",
     "broccoli-stew": "^1.5.0",
+    "broccoli-string-replace": "^0.1.2",
     "chalk": "^1.1.1",
     "ember-cli-babel": "^6.8.2",
-    "ember-cli-node-assets": "^0.1.4",
+    "ember-cli-node-assets": "^0.2.2",
     "ember-get-config": "^0.2.2",
     "ember-inflector": "^2.0.0",
     "ember-lodash": "^4.17.3",
-    "fake-xml-http-request": "^1.4.0",
+    "fake-xml-http-request": "^2.0.0",
     "faker": "^3.0.0",
     "jsdom": "^11.12.0",
-    "pretender": "^1.6.1",
-    "route-recognizer": "^0.2.3"
+    "pretender": "2.1.0",
+    "route-recognizer": "^0.3.4"
   },
   "devDependencies": {
     "active-model-adapter": "^2.0.3",
