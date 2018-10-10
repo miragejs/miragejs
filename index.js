@@ -11,13 +11,23 @@ module.exports = {
 
   options: {
     nodeAssets: {
-      'route-recognizer': npmAsset({
-        path: 'dist/route-recognizer.js',
-        sourceMap: 'dist/route-recognizer.js.map'
+      '@xg-wang/whatwg-fetch': npmAsset({
+        import: ['dist/fetch.umd.js']
       }),
-      'fake-xml-http-request': npmAsset('fake_xml_http_request.js'),
-      'pretender': npmAsset('pretender.js'),
-      'faker': npmAsset('build/build/faker.js')
+      'route-recognizer': npmAsset({
+        srcDir: 'dist',
+        import: ['route-recognizer.js'],
+        vendor: ['route-recognizer.js.map']
+      }),
+      'fake-xml-http-request': npmAsset({
+        import: ['fake_xml_http_request.js']
+      }),
+      'pretender': npmAsset({
+        import: ['pretender.js']
+      }),
+      'faker': npmAsset({
+        import: ['build/build/faker.js']
+      })
     }
   },
 
@@ -144,15 +154,24 @@ module.exports = {
   }
 };
 
-function npmAsset(filePath) {
+function npmAsset(options = {}) {
+  let defaultOptions = {
+    // guard against usage in FastBoot 1.0, where process.env.EMBER_CLI_FASTBOOT is not available
+    _processTree(input) {
+      return map(input, content => `if (typeof FastBoot !== 'undefined') { ${content} }`);
+    }
+  };
+
+  let assetOptions = Object.assign(defaultOptions, options);
+
   return function() {
-    return {
-      enabled: this._shouldIncludeFiles(),
-      import: [filePath],
-      // guard against usage in FastBoot 1.0, where process.env.EMBER_CLI_FASTBOOT is not available
-      _processTree(input) {
-        return map(input, content => `if (typeof FastBoot !== 'undefined') { ${content} }`);
+    let finalOptions = Object.assign(
+      assetOptions,
+      {
+        enabled: this._shouldIncludeFiles()
       }
-    };
+    );
+
+    return finalOptions;
   };
 }
