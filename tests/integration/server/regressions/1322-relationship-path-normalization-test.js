@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { Model, hasMany, belongsTo, JSONAPISerializer } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
 import promiseAjax from 'dummy/tests/helpers/promise-ajax';
+import { underscore } from 'ember-cli-mirage/utils/inflector';
 
 module('Integration | Server | Regressions | 1322 Relationship Path Normalization Test', function(hooks) {
   hooks.beforeEach(function() {
@@ -9,20 +10,20 @@ module('Integration | Server | Regressions | 1322 Relationship Path Normalizatio
       environment: 'test',
       models: {
         happyUser: Model.extend({
-          happyLicenses: hasMany()
+          happyLicenses: hasMany(),
+          happyAvatar: belongsTo()
         }),
         happyLicense: Model.extend({
+          happyUser: belongsTo()
+        }),
+        happyAvatar: Model.extend({
           happyUser: belongsTo()
         })
       },
       serializers: {
         application: JSONAPISerializer.extend({
           keyForRelationship(relationshipName) {
-            if (relationshipName === 'happyUser') {
-              return 'happy_user';
-            } else {
-              return JSONAPISerializer.prototype.keyForRelationship.apply(this, arguments);
-            }
+            return underscore(relationshipName);
           }
         })
       },
@@ -37,14 +38,15 @@ module('Integration | Server | Regressions | 1322 Relationship Path Normalizatio
   });
 
   test('it works', async function(assert) {
-    let user1 = this.server.create('happy-user');
+    let avatar1 = this.server.create('happy-avatar');
+    let user1 = this.server.create('happy-user', { happyAvatar: avatar1 });
     this.server.create('happy-license', { happyUser: user1 });
 
     assert.expect(2);
 
     let response = await promiseAjax({
       method: 'GET',
-      url: '/happy-licenses/1?include=happy_user'
+      url: '/happy-licenses/1?include=happy_user.happy_avatar'
     });
     let json = response.data;
 
@@ -65,6 +67,19 @@ module('Integration | Server | Regressions | 1322 Relationship Path Normalizatio
       {
         id: user1.id,
         type: 'happy-users',
+        attributes: {},
+        relationships: {
+          'happy_avatar': {
+            data: {
+              id: avatar1.id,
+              type: 'happy-avatars'
+            }
+          }
+        }
+      },
+      {
+        id: avatar1.id,
+        type: 'happy-avatars',
         attributes: {}
       }
     ]);
