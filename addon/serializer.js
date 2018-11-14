@@ -206,7 +206,7 @@ class Serializer {
       @property include
       @public
     */
-    this.include = undefined;
+    this.include = [];
 
     /**
       Set whether your JSON response should have a root key in it.

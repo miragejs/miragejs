@@ -163,7 +163,7 @@ export default class Server {
       @property db
       @return Db
     */
-    this.db = undefined;
+    this.db = this.db || undefined;
 
     /**
       Returns the Mirage Schema (ORM) instance.
@@ -171,7 +171,7 @@ export default class Server {
       @property schema
       @return Schema
     */
-    this.schema = undefined;
+    this.schema = this.schema || undefined;
   }
 
   config(config = {}) {
@@ -291,7 +291,7 @@ export default class Server {
       @return {Boolean}
       @public
     */
-    this.logging = undefined;
+    this.logging = this.logging || undefined;
 
     /**
       Export a named `testConfig` function to define routes that only apply in your test environment:
@@ -309,7 +309,7 @@ export default class Server {
 
       This could be useful if you'd like to use Mirage in testing, but generally proxy to an actual API during development. As you develop, your frontend may be ahead of your API, in which case you'd work with the routes in the default config, and write your tests. Then, once your API implements the new endpoints, you can move the routes to your testConfig, so your tests still run, but Mirage doesn't interfere during development.
     */
-    this.testConfig = undefined;
+    this.testConfig = this.testConfig || undefined;
 
     this.trackRequests = config.trackRequests;
 
