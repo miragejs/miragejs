@@ -8,15 +8,40 @@ import _includes from 'lodash/includes';
 import assert from '../assert';
 
 /**
- * @class Schema
- * @constructor
- * @public
+  The primary use of the `Schema` class is to use it to find Models and Collectiosn via the `Model` class methods.
+
+  The `Schema` is most often accessed via the first parameter to a route handler:
+
+  ```js
+  this.get('posts', schema => {
+    return schema.posts.where({ isAdmin: false });
+  });
+  ```
+
+  It is also available from the `.schema` property of a `server` instance:
+
+  ```js
+  server.schema.users.create({ name: 'Yehuda' });
+  ```
+
+  To work with the Model or Collection returned from one of the methods below, refer to the instance methods in the API docs for the `Model` and `Collection` classes.
+
+  @class Schema
+  @constructor
+  @public
  */
 export default class Schema {
 
   constructor(db, modelsMap = {}) {
     assert(db, 'A schema requires a db');
 
+    /**
+      Returns Mirage's database. See the `Db` docs for the db's API.
+
+      @property db
+      @type {Object}
+      @public
+    */
     this.db = db;
     this._registry = {};
     this._dependentAssociations = { polymorphic: [] };
@@ -25,9 +50,10 @@ export default class Schema {
   }
 
   /**
-   * @method registerModels
-   * @param hash
-   * @public
+    @method registerModels
+    @param hash
+    @public
+    @hide
    */
   registerModels(hash = {}) {
     _forIn(hash, (model, key) => {
@@ -36,10 +62,11 @@ export default class Schema {
   }
 
   /**
-   * @method registerModel
-   * @param type
-   * @param ModelClass
-   * @public
+    @method registerModel
+    @param type
+    @param ModelClass
+    @public
+    @hide
    */
   registerModel(type, ModelClass) {
     let camelizedModelName = camelize(type);
@@ -115,38 +142,64 @@ export default class Schema {
   }
 
   /**
-   * @method modelFor
-   * @param type
-   * @public
+    @method modelFor
+    @param type
+    @public
+    @hide
    */
   modelFor(type) {
     return this._registry[type];
   }
 
   /**
-   * @method new
-   * @param type
-   * @param attrs
-   * @public
+    Create a new unsaved model instance with attributes *attrs*.
+
+    ```js
+    let post = blogPosts.new({ title: 'Lorem ipsum' });
+    post.title;   // Lorem ipsum
+    post.id;      // null
+    post.isNew(); // true
+    ```
+
+    @method new
+    @param type
+    @param attrs
+    @public
    */
   new(type, attrs) {
     return this._instantiateModel(dasherize(type), attrs);
   }
 
   /**
-   * @method create
-   * @param type
-   * @param attrs
-   * @public
+    Create a new model instance with attributes *attrs*, and insert it into the database.
+
+    ```js
+    let post = blogPosts.create({title: 'Lorem ipsum'});
+    post.title;   // Lorem ipsum
+    post.id;      // 1
+    post.isNew(); // false
+    ```
+
+    @method create
+    @param type
+    @param attrs
+    @public
    */
   create(type, attrs) {
     return this.new(type, attrs).save();
   }
 
   /**
-   * @method all
-   * @param type
-   * @public
+    Return all models in the database.
+
+    ```js
+    let posts = blogPosts.all();
+    // [post:1, post:2, ...]
+    ```
+
+    @method all
+    @param type
+    @public
    */
   all(type) {
     let collection = this._collectionForType(type);
@@ -155,19 +208,28 @@ export default class Schema {
   }
 
   /**
-   * @method none
-   * @param type
-   * @public
+    Return an empty collection of type `type`.
+
+    @method none
+    @param type
+    @public
    */
   none(type) {
     return this._hydrate([], dasherize(type));
   }
 
   /**
-   * @method find
-   * @param type
-   * @param ids
-   * @public
+    Return one or many models in the database by id.
+
+    ```js
+    let post = blogPosts.find(1);
+    let posts = blogPosts.find([1, 3, 4]);
+    ```
+
+    @method find
+    @param type
+    @param ids
+    @public
    */
   find(type, ids) {
     let collection = this._collectionForType(type);
@@ -184,10 +246,16 @@ export default class Schema {
   }
 
   /**
-   * @method findBy
-   * @param type
-   * @param attributeName
-   * @public
+    Returns the first model in the database that matches the key-value pairs in the `query` object. Note that a string comparison is used.
+
+    ```js
+    let post = blogPosts.findBy({ published: true });
+    ```
+
+    @method findBy
+    @param type
+    @param attributeName
+    @public
    */
   findBy(type, query) {
     let collection = this._collectionForType(type);
@@ -197,10 +265,16 @@ export default class Schema {
   }
 
   /**
-   * @method where
-   * @param type
-   * @param query
-   * @public
+    Return an array of models in the database matching the key-value pairs in *query*. Note that a string comparison is used.
+
+    ```js
+    let posts = blogPosts.where({ published: true });
+    ```
+
+    @method where
+    @param type
+    @param query
+    @public
    */
   where(type, query) {
     let collection = this._collectionForType(type);
@@ -210,9 +284,15 @@ export default class Schema {
   }
 
   /**
-   * @method first
-   * @param type
-   * @public
+    Returns the first model in the database.
+
+    ```js
+    let post = blogPosts.first();
+    ```
+
+    @method first
+    @param type
+    @public
    */
   first(type) {
     let collection = this._collectionForType(type);
@@ -221,6 +301,12 @@ export default class Schema {
     return this._hydrate(record, dasherize(type));
   }
 
+  /**
+    @method modelClassFor
+    @param modelName
+    @public
+    @hide
+   */
   modelClassFor(modelName) {
     let model = this._registry[camelize(modelName)];
 
@@ -280,9 +366,10 @@ export default class Schema {
   */
 
   /**
-   * @method _collectionForType
-   * @param type
-   * @private
+    @method _collectionForType
+    @param type
+    @private
+    @hide
    */
   _collectionForType(type) {
     let collection = toCollectionName(type);
@@ -295,10 +382,11 @@ export default class Schema {
   }
 
   /**
-   * @method _addForeignKeyToRegistry
-   * @param type
-   * @param fk
-   * @private
+    @method _addForeignKeyToRegistry
+    @param type
+    @param fk
+    @private
+    @hide
    */
   _addForeignKeyToRegistry(type, fk) {
     this._registry[type] = this._registry[type] || { class: null, foreignKeys: [] };
@@ -310,10 +398,11 @@ export default class Schema {
   }
 
   /**
-   * @method _instantiateModel
-   * @param modelName
-   * @param attrs
-   * @private
+    @method _instantiateModel
+    @param modelName
+    @param attrs
+    @private
+    @hide
    */
   _instantiateModel(modelName, attrs) {
     let ModelClass = this._modelFor(modelName);
@@ -323,31 +412,34 @@ export default class Schema {
   }
 
   /**
-   * @method _modelFor
-   * @param modelName
-   * @private
+    @method _modelFor
+    @param modelName
+    @private
+    @hide
    */
   _modelFor(modelName) {
     return this._registry[camelize(modelName)].class;
   }
 
   /**
-   * @method _foreignKeysFor
-   * @param modelName
-   * @private
+    @method _foreignKeysFor
+    @param modelName
+    @private
+    @hide
    */
   _foreignKeysFor(modelName) {
     return this._registry[camelize(modelName)].foreignKeys;
   }
 
   /**
-   * Takes a record and returns a model, or an array of records
-   * and returns a collection.
+    Takes a record and returns a model, or an array of records
+    and returns a collection.
    *
-   * @method _hydrate
-   * @param records
-   * @param modelName
-   * @private
+    @method _hydrate
+    @param records
+    @param modelName
+    @private
+    @hide
    */
   _hydrate(records, modelName) {
     if (Array.isArray(records)) {
