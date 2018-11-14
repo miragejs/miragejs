@@ -12,32 +12,350 @@ import _assign from 'lodash/assign';
 import _get from 'lodash/get';
 import _ from 'lodash';
 
+/**
+  Serializers are responsible for formatting your route handler's response.
+
+  The application serializer (`/mirage/serializers/application.js`) will apply to every response. To make specific customizations, define per-model serializers (e.g. `/mirage/serializers/blog-post.js`).
+
+  Any Model or Collection returned from a route handler will pass through the serializer layer. Highest priority will be given to a model-specific serializer, then the application serializer, then the default serializer.
+
+  Mirage ships with three named serializers:
+
+  - **JSONAPISerializer**, to simulate JSON:API compliant servers:
+
+    ```js
+    // mirage/serializers/application.js
+    import { JSONAPISerializer } from 'ember-cli-mirage';
+
+    export default JSONAPISerializer;
+    ```
+
+  - **ActiveModelSerializer**, to fake Rails backends that use AMS-style responses:
+
+    ```js
+    // mirage/serializers/application.js
+    import { ActiveModelSerializer } from 'ember-cli-mirage';
+
+    export default ActiveModelSerializer;
+    ```
+
+  - **RestSerializer**, to fake backends that match Ember Data's RestSerializer expected response format:
+
+    ```js
+    // mirage/serializers/application.js
+    import { RestSerializer } from 'ember-cli-mirage';
+
+    export default RestSerializer;
+    ```
+
+  Additionally, Mirage has a basic Serializer class which you can customize using the hooks documented below:
+
+  ```js
+  // mirage/serializers/application.js
+  import { Serializer } from 'ember-cli-mirage';
+
+  export default Serializer;
+  ```
+
+  When writing model-specific serializers, remember to extend from your application serializer:
+
+  ```js
+  // mirage/serializers/blog-post.js
+  import ApplicationSerializer from './application';
+
+  export default ApplicationSerializer.extend({
+    include: ['comments']
+  });
+  ```
+
+  @class Serializer
+  @constructor
+  @public
+*/
 class Serializer {
 
   constructor(registry, type, request = {}) {
     this.registry = registry;
     this.type = type;
     this.request = request;
+
+    /**
+      Use this property on a model serializer to whitelist attributes that will be used in your JSON payload.
+
+      For example, if you had a `blog-post` model in your database that looked like
+
+      ```
+      {
+        id: 1,
+        title: 'Lorem ipsum',
+        createdAt: '2014-01-01 10:00:00',
+        updatedAt: '2014-01-03 11:42:12'
+      }
+      ```
+
+      and you just wanted `id` and `title`, you could write
+
+      ```js
+      // mirage/serializers/blog-post.js
+
+      export default Serializer.extend({
+        attrs: ['id', 'title']
+      });
+      ```
+
+      and the payload would look like
+
+      ```
+      {
+        id: 1,
+        title: 'Lorem ipsum'
+      }
+      ```
+
+      @property attrs
+      @public
+    */
+    this.attrs = undefined;
+
+    /**
+      Use this property on a model serializer to specify related models you'd like to include in your JSON payload. (These can be considered default server-side includes.)
+
+      For example, if you had an `author` with many `blog-post`s:
+
+      ```js
+      // mirage/models/author.js
+      export default Model.extend({
+        blogPosts: hasMany()
+      });
+      ```
+
+      and you wanted to sideload these, specify so in the `include` key:
+
+      ```js
+      // mirage/serializers/author.js
+      export default Serializer.extend({
+        include: ['blogPosts']
+      });
+      ```
+
+      Now a response to a request for an author would look like this:
+
+      ```
+      GET /authors/1
+
+      {
+        author: {
+          id: 1,
+          name: 'Link',
+          blogPostIds: [1, 2]
+        },
+        blogPosts: [
+          {id: 1, authorId: 1, title: 'Lorem'},
+          {id: 2, authorId: 1, title: 'Ipsum'}
+        ]
+      }
+      ```
+
+      You can also define `include` as a function so it can be determined dynamically:
+
+      ```js
+      // mirage/serializers/author.js
+      export default Serializer.extend({
+        include: function(request) {
+          if (request.queryParams.posts) {
+            return ['blogPosts'];
+          } else {
+            return [];
+          }
+        }
+      });
+      ```
+
+      **Query param includes for JSONAPISerializer**
+
+      The JSONAPISerializer supports the use of `include` query parameter to return compound documents out of the box.
+
+      For versions of Ember Data before 2.5, you'll need to add `'ds-finder-include': true` to your app FEATURES object:
+
+      ```js
+      // config/environment.js
+      var ENV = {
+        EmberENV: {
+          FEATURES: {
+            'ds-finder-include': true
+          }
+        }
+      };
+      ```
+
+      To tell Mirage to sideload blogPosts when we find all authors we can do the following:
+
+      ```js
+      // routes/authors.js
+      export default Ember.Route.extend({
+        model() {
+          return this.store.findAll('author', { include: 'blogPosts' });
+        }
+      }
+      ```
+
+      The above will make a GET request to `/api/authors?include=blogPosts`, and then the appropriate Mirage route handler will be invoked. When it comes time to serialize the response, the JSONAPISerializer will inspect the query params of the request, see that the blogPosts relationship is present, and then proceed as if this relationship was specified directly in the include: [] array on the serializer itself.
+
+      Note that, in accordance with the spec, Mirage gives precedence to an ?include query param over a default include: [] array that you might have specified directly on the serializer. Default includes will still be in effect, however, if a request does not have an ?include query param.
+
+      @property include
+      @public
+    */
+    this.include = undefined;
+
+    /**
+      Set whether your JSON response should have a root key in it.
+
+      *Doesn't apply to JSONAPISerializer.*
+
+      Defaults to true, so a request for an author looks like:
+
+      ```
+      GET /authors/1
+
+      {
+        author: {
+          id: 1,
+          name: 'Link'
+        }
+      }
+      ```
+
+      Setting `root` to false disables this:
+
+      ```js
+      // mirage/serializers/application.js
+      export default Serializer.extend({
+        root: false
+      });
+      ```
+
+      Now the response looks like:
+
+      ```
+      GET /authors/1
+
+      {
+        id: 1,
+        name: 'Link'
+      }
+      ```
+
+      @property root
+      @public
+    */
+    this.root = undefined;
+
+    /**
+      Set whether related models should be embedded or sideloaded.
+
+      *Doesn't apply to JSONAPISerializer.*
+
+      By default this false, so relationships are sideloaded:
+
+      ```
+      GET /authors/1
+
+      {
+        author: {
+          id: 1,
+          name: 'Link',
+          blogPostIds: [1, 2]
+        },
+        blogPosts: [
+          { id: 1, authorId: 1, title: 'Lorem' },
+          { id: 2, authorId: 1, title: 'Ipsum' }
+        ]
+      }
+      ```
+
+      Setting `embed` to true will embed related records:
+
+      ```js
+      // mirage/serializers/application.js
+      export default Serializer.extend({
+        embed: true
+      });
+      ```
+
+      Now the response looks like:
+
+      ```
+      GET /authors/1
+
+      {
+        author: {
+          id: 1,
+          name: 'Link',
+          blogPosts: [
+            { id: 1, authorId: 1, title: 'Lorem' },
+            { id: 2, authorId: 1, title: 'Ipsum' }
+          ]
+        }
+      }
+      ```
+    */
+    this.embed = undefined;
+
+    /**
+      Use this to define how your serializer handles serializing relationship keys. It can take one of three values:
+
+      - `included`, which is the default, will serialize the ids of a relationship if that relationship is included (sideloaded) along with the model or collection in the response
+      - `always` will always serialize the ids of all relationships for the model or collection in the response
+      - `never` will never serialize the ids of relationships for the model or collection in the response
+
+      _Note: this feature was added in 0.2.2._
+
+      @property serializeIds
+      @public
+    */
+    this.serializeIds = undefined;
   }
 
   /**
-   * Override this method to implement your own custom
-   * serialize function. `primaryResource` is whatever was returned
-   * from your route handler, and request is the Pretender
-   * request object. Returns a plain JavaScript object or
-   * array, which Mirage uses as the response data to your
-   * Ember app’s XHR request. You can also override this method,
-   * call super, and manipulate the data before Mirage responds
-   * with it. This is a great place to add metadata, or for
-   * one-off operations that don’t fit neatly into any of
-   * Mirage’s other abstractions.
-   * @method serialize
-   * @param response
-   * @param request
-   * @public
+    Override this method to implement your own custom serialize function. *response* is whatever was returned from your route handler, and *request* is the Pretender request object.
+
+    Returns a plain JavaScript object or array, which Mirage uses as the response data to your Ember app's XHR request.
+
+    You can also override this method, call super, and manipulate the data before Mirage responds with it. This is a great place to add metadata, or for one-off operations that don't fit neatly into any of Mirage's other abstractions:
+
+    ```js
+    serialize(object, request) {
+      // This is how to call super, as Mirage borrows [Backbone's implementation of extend](http://backbonejs.org/#Model-extend)
+      let json = Serializer.prototype.serialize.apply(this, arguments);
+
+      // Add metadata, sort parts of the response, etc.
+
+      return json;
+    }
+    ```
+
+    @param primaryResource
+    @param request
+    @return { Object } the json response
    */
   serialize(primaryResource /* , request */) {
     return this.buildPayload(primaryResource);
+  }
+
+  /**
+    This method is used by the POST and PUT shorthands. These shorthands expect a valid JSON:API document as part of the request, so that they know how to create or update the appropriate resouce. The *normalize* method allows you to transform your request body into a JSON:API document, which lets you take advantage of the shorthands when you otherwise may not be able to.
+
+    Note that this method is a noop if you're using JSON:API already, since request payloads sent along with POST and PUT requests will already be in the correct format.
+
+    Take a look at the included [ActiveModelSerializer's normalize method](https://github.com/samselikoff/ember-cli-mirage/blob/master/addon/serializers/active-model-serializer.js#L22) for an example.
+
+    @method normalize
+    @param json
+    @public
+   */
+  normalize(json) {
+    return json;
   }
 
   buildPayload(primaryResource, toInclude, didSerialize, json) {
@@ -207,23 +525,98 @@ class Serializer {
   }
 
   /**
-   * Used to define a custom key when serializing a
-   * primary model of modelName `modelName`.
-   * @method keyForModel
-   * @param modelName
-   * @public
+    Used to define a custom key when serializing a primary model of modelName *modelName*. For example, the default Serializer will return something like the following:
+
+    ```
+    GET /blogPosts/1
+
+    {
+      blogPost: {
+        id: 1,
+        title: 'Lorem ipsum'
+      }
+    }
+    ```
+
+    If your API uses hyphenated keys, you could overwrite `keyForModel`:
+
+    ```js
+    // serializers/application.js
+    export default Serializer.extend({
+      keyForModel(modelName) {
+        return Ember.String.dasherize(modelName);
+      }
+    });
+    ```
+
+    Now the response will look like
+
+    ```
+    {
+      'blog-post': {
+        id: 1,
+        title: 'Lorem ipsum'
+      }
+    }
+    ```
+
+    @method keyForModel
+    @param modelName
+    @public
    */
   keyForModel(modelName) {
     return camelize(modelName);
   }
 
   /**
-   * Used to customize the key when serializing a primary
-   * collection. By default this pluralizes the return
-   * value of `keyForModel`.
-   * @method keyForCollection
-   * @param modelName
-   * @public
+    Used to customize the key when serializing a primary collection. By default this pluralizes the return value of `keyForModel`.
+
+    For example, by default the following request may look like:
+
+    ```
+    GET /blogPosts
+
+    {
+      blogPosts: [
+        {
+          id: 1,
+          title: 'Lorem ipsum'
+        },
+        ...
+      ]
+    }
+    ```
+
+    If your API hyphenates keys, you could overwrite `keyForCollection`:
+
+    ```js
+    // serializers/application.js
+    const { dasherize, pluralize } = Ember.String;
+
+    export default Serializer.extend({
+      keyForCollection(modelName) {
+        return pluralize(dasherize(modelName));
+      }
+    });
+    ```
+
+    Now the response would look like:
+
+    ```
+    {
+      'blog-posts': [
+        {
+          id: 1,
+          title: 'Lorem ipsum'
+        },
+        ...
+      ]
+    }
+    ```
+
+    @method keyForCollection
+    @param modelName
+    @public
    */
   keyForCollection(modelName) {
     return pluralize(this.keyForModel(modelName));
@@ -264,9 +657,10 @@ class Serializer {
   }
 
   /**
-   * @method _attrsForModel
-   * @param model
-   * @private
+    @method _attrsForModel
+    @param model
+    @private
+    @hide
    */
   _attrsForModel(model) {
     let attrs = {};
@@ -287,10 +681,11 @@ class Serializer {
   }
 
   /**
-   * @method _maybeAddAssociationIds
-   * @param model
-   * @param attrs
-   * @private
+    @method _maybeAddAssociationIds
+    @param model
+    @param attrs
+    @private
+    @hide
    */
   _maybeAddAssociationIds(model, attrs) {
     let newHash = _assign({}, attrs);
@@ -338,73 +733,152 @@ class Serializer {
   }
 
   /**
-   * Used to customize how a model’s attribute is
-   * formatted in your JSON payload.
-   * @method keyForAttribute
-   * @param attr
-   * @public
+    Used to customize how a model's attribute is formatted in your JSON payload.
+
+    By default, model attributes are camelCase:
+
+    ```
+    GET /authors/1
+
+    {
+      author: {
+        firstName: 'Link',
+        lastName: 'The WoodElf'
+      }
+    }
+    ```
+
+    If your API expects snake case, you could write the following:
+
+    ```js
+    // serializers/application.js
+    const { underscore } = Ember.String;
+
+    export default Serializer.extend({
+      keyForAttribute(attr) {
+        return underscore(attr);
+      }
+    });
+    ```
+
+    Now the response would look like:
+
+    ```
+    {
+      author: {
+        first_name: 'Link',
+        last_name: 'The WoodElf'
+      }
+    }
+    ```
+
+    @method keyForAttribute
+    @param attr
+    @public
    */
   keyForAttribute(attr) {
     return attr;
   }
 
   /**
-   * Use this hook to format the key for collections
-   * related to this model.
-   *
-   * For example, if you're serializing an author that
-   * side loads many `blogPosts`, you would get `blogPost`
-   * as an argument, and whatever you return would
-   * end up as the collection key in your JSON:
-   *
-   * keyForRelationship(type) {
-   *   return dasherize(type);
-   * }
-   *
-   * {
-   *   author: {...},
-   *   'blog-posts': [...]
-   * }
-   * @method keyForRelationship
-   * @param modelName
-   * @public
+    Use this hook to format the key for collections related to this model. *modelName* is the named parameter for the relationship.
+
+    For example, if you're serializing an `author` that
+    sideloads many `blogPosts`, the default response will look like:
+
+    ```
+    {
+      author: {...},
+      blogPosts: [...]
+    }
+    ```
+
+    Overwrite `keyForRelationship` to format this key:
+
+    ```js
+    // serializers/application.js
+    const { underscore } = Ember.String;
+
+    export default Serializer.extend({
+      keyForRelationship(modelName) {
+        return underscore(modelName);
+      }
+    });
+    ```
+
+    Now the response will look like this:
+
+    ```
+    {
+      author: {...},
+      blog_posts: [...]
+    }
+    ```
+
+    @method keyForRelationship
+    @param modelName
+    @public
    */
   keyForRelationship(modelName) {
     return camelize(pluralize(modelName));
   }
 
   /**
-   * @method keyForEmbeddedRelationship
-   * @param attributeName
-   * @public
+    Like `keyForRelationship`, but for embedded relationships.
+
+    @method keyForEmbeddedRelationship
+    @param attributeName
+    @public
    */
   keyForEmbeddedRelationship(attributeName) {
     return camelize(attributeName);
   }
 
   /**
-   * Use this hook to format the key for relationship ids
-   * in this model's JSON representation.
-   *
-   * For example, if you're serializing an author that
-   * side loads many `blogPosts`, you would get `blogPost`
-   * as an argument, and whatever you return would
-   * end up as part of the `author` JSON:
-   *
-   * keyForRelationshipIds(type) {
-   *   return dasherize(type) + '-ids';
-   * }
-   *
-   * {
-   *   author: {
-   *     ...,
-   *     'blog-post-ids': [1, 2, 3]
-   *   },
-   *   'blog-posts': [...]
-   * }
-   * @method keyForRelationshipIds
-   * @param modelName
-   * @public
+    Use this hook to format the key for relationship ids
+    in this model's JSON representation.
+
+    For example, if you're serializing an `author` that
+    sideloads many `blogPosts`, your `author` JSON would include a `blogPostIds` key:
+
+    ```
+    {
+      author: {
+        id: 1,
+        blogPostIds: [1, 2, 3]
+      },
+      blogPosts: [...]
+    }
+    ```
+
+    Overwrite `keyForRelationshipIds` to format this key:
+
+    ```js
+    // serializers/application.js
+    const { underscore } = Ember.String;
+
+    export default Serializer.extend({
+      keyForRelationshipIds(relationship) {
+        return underscore(relationship) + '_ids';
+      }
+    });
+    ```
+
+    Now the response will look like:
+
+    ```
+    {
+      author: {
+        id: 1,
+        blog_post_ids: [1, 2, 3]
+      },
+      blogPosts: [...]
+    }
+    ```
+
+    @method keyForRelationshipIds
+    @param modelName
+    @public
    */
   keyForRelationshipIds(relationshipName) {
     return `${singularize(camelize(relationshipName))}Ids`;
@@ -423,58 +897,92 @@ class Serializer {
   }
 
   /**
-   * This method is used by the POST and PUT shorthands. These shorthands
-   * expect a valid JSON:API document as part of the request, so that
-   * they know how to create or update the appropriate resouce. The normalize
-   * method allows you to transform your request body into a JSON:API
-   * document, which lets you take advantage of the shorthands when you
-   * otherwise may not be able to.
-   *
-   * Note that this method is a noop if you’re using JSON:API already,
-   * since request payloads sent along with POST and PUT requests will
-   * already be in the correct format.
-   * @method normalize
-   * @param json
-   * @public
-   */
-  normalize(json) {
-    return json;
+    This hook is only available on the JSONAPISerializer.
+
+    Use this hook to override the generated `type` for the JSON:API resource object. By default, `type` will be the plural and dasherized form of the model name.
+
+    For example, if you wanted singularized types:
+
+    ```js
+    export default JSONAPISerializer.extend({
+      typeKeyForModel(model) {
+        return dasherize(singularize(model.modelName));
+      }
+    });
+    ```
+
+    @method typeKeyForModel
+    @param model
+  */
+  typeKeyForModel(model) {
   }
 
   /**
-   * @method isModel
-   * @param object
-   * @return {Boolean}
-   * @public
+    This hook is only available on the JSONAPISerializer.
+
+    Use this hook to add top-level `links` data to JSON:API resource objects. The argument is the model being serialized.
+
+    ```js
+    // serializers/author.js
+    import { JSONAPISerializer } from 'ember-cli-mirage';
+
+    export default JSONAPISerializer.extend({
+
+      links(author) {
+        return {
+          'posts': {
+            related: `/api/authors/${author.id}/posts`
+          }
+        };
+      }
+
+    });
+    ```
+
+    @method links
+    @param model
+  */
+  links(model) {
+  }
+
+  /**
+    @method isModel
+    @param object
+    @return {Boolean}
+    @public
+    @hide
    */
   isModel(object) {
     return object instanceof Model;
   }
 
   /**
-   * @method isCollection
-   * @param object
-   * @return {Boolean}
-   * @public
+    @method isCollection
+    @param object
+    @return {Boolean}
+    @public
+    @hide
    */
   isCollection(object) {
     return (object instanceof Collection) || (object instanceof PolymorphicCollection);
   }
 
   /**
-   * @method isModelOrCollection
-   * @param object
-   * @return {Boolean}
-   * @public
+    @method isModelOrCollection
+    @param object
+    @return {Boolean}
+    @public
+    @hide
    */
   isModelOrCollection(object) {
     return this.isModel(object) || this.isCollection(object);
   }
 
   /**
-   * @method serializerFor
-   * @param type
-   * @public
+    @method serializerFor
+    @param type
+    @public
+    @hide
    */
   serializerFor(type) {
     return this.registry.serializerFor(type);
@@ -484,14 +992,22 @@ class Serializer {
     return _isFunction(this.include) ? this.include(this.request) : this.include;
   }
 
+  /**
+    Foo bar.
+
+    @property schema
+    @public
+    @hide
+  */
   get schema() {
     return this.registry.schema;
   }
 
   /**
-   * @method _formatAttributeKeys
-   * @param attrs
-   * @private
+    @method _formatAttributeKeys
+    @param attrs
+    @private
+    @hide
    */
   _formatAttributeKeys(attrs) {
     let formattedAttrs = {};
