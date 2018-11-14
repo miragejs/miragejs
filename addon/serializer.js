@@ -115,7 +115,7 @@ class Serializer {
       @property attrs
       @public
     */
-    this.attrs = undefined;
+    this.attrs = this.attrs || undefined;  // this is just here so I can add the doc comment. Better way?
 
     /**
       Use this property on a model serializer to specify related models you'd like to include in your JSON payload. (These can be considered default server-side includes.)
@@ -206,7 +206,7 @@ class Serializer {
       @property include
       @public
     */
-    this.include = [];
+    this.include = this.include || []; // this is just here so I can add the doc comment. Better way?
 
     /**
       Set whether your JSON response should have a root key in it.
@@ -249,7 +249,7 @@ class Serializer {
       @property root
       @public
     */
-    this.root = undefined;
+    this.root = this.root || undefined; // this is just here so I can add the doc comment. Better way?
 
     /**
       Set whether related models should be embedded or sideloaded.
@@ -300,7 +300,7 @@ class Serializer {
       }
       ```
     */
-    this.embed = undefined;
+    this.embed = this.embed || undefined; // this is just here so I can add the doc comment. Better way?
 
     /**
       Use this to define how your serializer handles serializing relationship keys. It can take one of three values:
@@ -314,7 +314,7 @@ class Serializer {
       @property serializeIds
       @public
     */
-    this.serializeIds = undefined;
+    this.serializeIds = this.serializeIds || undefined; // this is just here so I can add the doc comment. Better way?
   }
 
   /**
@@ -943,6 +943,7 @@ class Serializer {
     @param model
   */
   links(model) {
+    return {};
   }
 
   /**
