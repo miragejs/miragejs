@@ -156,6 +156,22 @@ export default class Server {
 
   constructor(options = {}) {
     this.config(options);
+
+    /**
+      Returns the Mirage Db instance.
+
+      @property db
+      @return Db
+    */
+    this.db = undefined;
+
+    /**
+      Returns the Mirage Schema (ORM) instance.
+
+      @property schema
+      @return Schema
+    */
+    this.schema = undefined;
   }
 
   config(config = {}) {
@@ -622,7 +638,51 @@ export default class Server {
     return list;
   }
 
-  create(type, ...options) {
+  /**
+    Generates a single model of type *type*, inserts it into the database (giving it an id), and returns the data that was
+    added.
+
+    ```js
+    test("I can view a contact's details", function() {
+      var contact = server.create('contact');
+
+      visit('/contacts/' + contact.id);
+
+      andThen(() => {
+        equal( find('h1').text(), 'The contact is Link');
+      });
+    });
+    ```
+
+    You can override the attributes from the factory definition with a
+    hash passed in as the second parameter. For example, if we had this factory
+
+    ```js
+    export default Factory.extend({
+      name: 'Link'
+    });
+    ```
+
+    we could override the name like this:
+
+    ```js
+    test("I can view the contacts", function() {
+      server.create('contact', {name: 'Zelda'});
+
+      visit('/');
+
+      andThen(() => {
+        equal( find('p').text(), 'Zelda' );
+      });
+    });
+    ```
+
+    @method create
+    @param type
+    @param traitsAndOverrides
+    @public
+  */
+  create(type, ...traitsAndOverrides) {
     assert(
       this._validateCreateType(type),
       `You called server.create('${type}') but no model or factory was found. Make sure you're using the singularized version of your model.`
@@ -630,9 +690,9 @@ export default class Server {
 
     // When there is a Model defined, we should return an instance
     // of it instead of returning the bare attributes.
-    let traits = options.filter((arg) => arg && typeof arg === 'string');
-    let overrides = _find(options, (arg) => _isPlainObject(arg));
-    let collectionFromCreateList = _find(options, (arg) => arg && Array.isArray(arg));
+    let traits = traitsAndOverrides.filter((arg) => arg && typeof arg === 'string');
+    let overrides = _find(traitsAndOverrides, (arg) => _isPlainObject(arg));
+    let collectionFromCreateList = _find(traitsAndOverrides, (arg) => arg && Array.isArray(arg));
 
     let attrs = this.build(type, ...traits, overrides);
     let modelOrRecord;
@@ -666,6 +726,43 @@ export default class Server {
     return modelOrRecord;
   }
 
+  /**
+    Creates *amount* models of type *type*, optionally overriding the attributes from the factory with *attrs*.
+
+    Returns the array of records that were added to the database.
+
+    Here's an example from a test:
+
+    ```js
+    test("I can view the contacts", function() {
+      server.createList('contact', 5);
+      var youngContacts = server.createList('contact', 5, {age: 15});
+
+      visit('/');
+
+      andThen(function() {
+        equal(currentRouteName(), 'index');
+        equal( find('p').length, 10 );
+      });
+    });
+    ```
+
+    And one from setting up your development database:
+
+    ```js
+    // mirage/scenarios/default.js
+    export default function(server) {
+      var contact = server.create('contact');
+      server.createList('address', 5, {contactId: contact.id});
+    }
+    ```
+
+    @method createList
+    @param type
+    @param amount
+    @param traitsAndOverrides
+    @public
+  */
   createList(type, amount, ...traitsAndOverrides) {
     assert(
       this._validateCreateType(type),

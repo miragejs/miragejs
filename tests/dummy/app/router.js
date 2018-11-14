@@ -28,9 +28,11 @@ Router.map(function() {
 
     this.route('advanced', function() {
       this.route('route-handlers');
+      this.route('defining-relationships');
       this.route('factories');
       this.route('fixtures');
       this.route('environment-options');
+      this.route('shorthands');
     });
 
     this.route('examples', function() {

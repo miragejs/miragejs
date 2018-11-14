@@ -11,6 +11,8 @@ import _invokeMap from 'lodash/invokeMap';
   let posts = schema.blogPosts.where({ published: true });
   ```
 
+  Note that there is also a `PolymorphicCollection` class that is identical to `Collection`, except it can contain a heterogeneous array of models. Thus, it has no `modelName` property. This lets serializers and other parts of the system interact with it differently.
+
   @class Collection
   @constructor
   @public

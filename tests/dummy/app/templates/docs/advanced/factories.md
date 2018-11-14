@@ -110,7 +110,7 @@ export default Factory.extend({
 
 You should define the attributes of your factory as the "base case" for your objects, and override them within your tests. We'll discuss how do to this in the Creating Objects section.
 
-## Factories and relationships
+## Working with relationships
 
 When building objects using factories, you may want to create related objects automatically. To build related objects for `belongsTo` relationships, you can use `association` helper.
 
