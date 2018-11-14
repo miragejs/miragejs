@@ -4,7 +4,7 @@ import {setupTest} from 'ember-qunit';
 import {visit, currentRouteName} from '@ember/test-helpers';
 import startMirage from 'ember-cli-mirage/start-mirage';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
-import ENV from 'dummy/config/environment';
+import ENV from 'basic-app/config/environment';
 
 let module;
 if (Ember.VERSION === '1.13.13') {
@@ -13,7 +13,7 @@ if (Ember.VERSION === '1.13.13') {
   module = qunitModule;
 }
 
-module('Acceptance: Starting mirage', function(hooks) {
+module('Acceptance | Starting mirage', function(hooks) {
   let oldEnv, addonConfig, dynamicAfterEach;
 
   hooks.beforeEach(function() {
@@ -45,11 +45,11 @@ module('Acceptance: Starting mirage', function(hooks) {
       assert.ok(window.server, 'There is a global server after starting');
       dynamicAfterEach = () => server.shutdown();
 
-      let contact = server.create('contact');
-      await visit('/1');
+      server.create('user');
+      await visit('/crud-demo');
 
-      assert.equal(currentRouteName(), 'contact');
-      assert.dom('p').hasText(`The contact is ${contact.name}`, 'The manually started server works');
+      assert.equal(currentRouteName(), 'crud-demo');
+      assert.dom('[data-test-id="user"]').exists();
     });
 
     module('setupMirage()', function(hooks) {
@@ -63,11 +63,11 @@ module('Acceptance: Starting mirage', function(hooks) {
           assert.notOk(window.server, 'The global server is gone');
         };
 
-        let contact = this.server.create('contact');
-        await visit('/1');
+        server.create('user');
+        await visit('/crud-demo');
 
-        assert.equal(currentRouteName(), 'contact');
-        assert.dom('p').hasText(`The contact is ${contact.name}`, 'The manually started server works');
+        assert.equal(currentRouteName(), 'crud-demo');
+        assert.dom('[data-test-id="user"]').exists();
       });
     });
   });
@@ -87,11 +87,11 @@ module('Acceptance: Starting mirage', function(hooks) {
         assert.notOk(window.server, 'The global server is gone');
       };
 
-      let contact = this.server.create('contact');
-      await visit('/1');
+      server.create('user');
+      await visit('/crud-demo');
 
-      assert.equal(currentRouteName(), 'contact');
-      assert.dom('p').hasText(`The contact is ${contact.name}`, 'The manually started server works');
+      assert.equal(currentRouteName(), 'crud-demo');
+      assert.dom('[data-test-id="user"]').exists();
     });
   });
 });
