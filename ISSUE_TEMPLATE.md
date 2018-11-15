@@ -4,7 +4,7 @@ If possible, please use the Mirage Boilerplate Twiddle to demonstrate your issue
 
 1. Open the Mirage Boilerplate Twiddle:
 
-https://ember-twiddle.com/eedfd390d8394d54d5bfd0ed988a5d0f?openFiles=twiddle.json%2C
+    https://ember-twiddle.com/eedfd390d8394d54d5bfd0ed988a5d0f?openFiles=twiddle.json%2C
 
 2. Click File > Copy Twiddle
 
