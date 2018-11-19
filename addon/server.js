@@ -12,6 +12,7 @@ import Schema from './orm/schema';
 import assert from './assert';
 import SerializerRegistry from './serializer-registry';
 import RouteHandler from './route-handler';
+import BelongsTo from './orm/associations/belongs-to';
 
 import _pick from 'lodash/pick';
 import _assign from 'lodash/assign';
@@ -703,11 +704,11 @@ export default class Server {
       let modelClass = this.schema.modelClassFor(modelName);
       let association = modelClass.associationFor(attr);
 
-      assert(association && association.isBelongsTo,
+      assert(association && association instanceof BelongsTo,
         `You're using the \`association\` factory helper on the '${attr}' attribute of your ${modelName} factory, but that attribute is not a \`belongsTo\` association. Read the Factories docs for more information: http://www.ember-cli-mirage.com/docs/v0.3.x/factories/#factories-and-relationships`
       );
 
-      let isSelfReferentialBelongsTo = association && association.isBelongsTo && association.modelName === modelName;
+      let isSelfReferentialBelongsTo = association && association instanceof BelongsTo && association.modelName === modelName;
 
       assert(!isSelfReferentialBelongsTo, `You're using the association() helper on your ${modelName} factory for ${attr}, which is a belongsTo self-referential relationship. You can't do this as it will lead to infinite recursion. You can move the helper inside of a trait and use it selectively.`);
 

@@ -504,13 +504,13 @@ class Model {
         let association = this.associationFor(key);
         let isNull = value === null;
 
-        if (association.isHasMany) {
+        if (association instanceof HasMany) {
           let isCollection = value instanceof Collection || value instanceof PolymorphicCollection;
           let isArrayOfModels = Array.isArray(value) && value.every(item => item instanceof Model);
 
           assert(isCollection || isArrayOfModels || isNull, `You're trying to create a ${this.modelName} model and you passed in "${value}" under the ${key} key, but that key is a HasMany relationship. You must pass in a Collection, PolymorphicCollection, array of Models, or null.`);
 
-        } else if (association.isBelongsTo) {
+        } else if (association instanceof BelongsTo) {
           assert(value instanceof Model || isNull, `You're trying to create a ${this.modelName} model and you passed in "${value}" under the ${key} key, but that key is a BelongsTo relationship. You must pass in a Model or null.`);
         }
       });

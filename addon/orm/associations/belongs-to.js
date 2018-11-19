@@ -14,6 +14,10 @@ import assert from 'ember-cli-mirage/assert';
  */
 export default class BelongsTo extends Association {
 
+  get identifier() {
+    return `${camelize(this.key)}Id`;
+  }
+
   /**
    * @method getForeignKeyArray
    * @return {Array} Array of camelized name of the model owning the association

@@ -15,6 +15,10 @@ import assert from 'ember-cli-mirage/assert';
  */
 export default class HasMany extends Association {
 
+  get identifier() {
+    return `${camelize(singularize(this.key))}Ids`;
+  }
+
   /**
    * @method getForeignKeyArray
    * @return {Array} Array of camelized model name of associated objects
