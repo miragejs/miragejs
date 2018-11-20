@@ -1,15 +1,13 @@
 > Is this a feature request? If so, please visit our [Canny board](https://ember-cli-mirage.canny.io/admin/board/feature-requests).
 
-If possible, please use the Mirage Boilerplate Twiddle to demonstrate your issue or bug:
+If possible, please use the Mirage Boilerplate CodeSandbox to demonstrate your issue or bug:
 
-1. Open the Mirage Boilerplate Twiddle:
+1. Open the Mirage Boilerplate CodeSandbox:
 
-    https://ember-twiddle.com/eedfd390d8394d54d5bfd0ed988a5d0f?openFiles=twiddle.json%2C
+    https://codesandbox.io/s/003o6pq34n
 
-2. Click File > Copy Twiddle
+2. Click Fork
 
-3. Reproduce your issue
+3. Reproduce your issue and save
 
-4.Click File > Save to Github Gist
-
-5. Include the URL to your Twiddle in your issue
+4. Include the URL to your Sandbox in your issue
