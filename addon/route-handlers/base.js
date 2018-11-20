@@ -19,6 +19,7 @@ export default class BaseRouteHandler {
       }
     }
     let modelName = dasherize(camelize(singularize(lastPath)));
+
     return modelName;
   }
 

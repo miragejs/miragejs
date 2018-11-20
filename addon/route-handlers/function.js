@@ -1,4 +1,5 @@
 import BaseRouteHandler from './base';
+import assert from 'ember-cli-mirage/assert';
 
 export default class FunctionRouteHandler extends BaseRouteHandler {
 
@@ -30,19 +31,27 @@ export default class FunctionRouteHandler extends BaseRouteHandler {
     return serializer.serialize(response, this.request);
   }
 
-  normalizedRequestAttrs() {
+  normalizedRequestAttrs(modelName = null) {
     let {
       path,
       request,
       request: { requestHeaders }
     } = this;
-
-    let modelName = this.getModelClassFromPath(path);
+    let attrs;
 
     if (/x-www-form-urlencoded/.test(requestHeaders['Content-Type'])) {
-      return this._getAttrsForFormRequest(request);
+      attrs = this._getAttrsForFormRequest(request);
     } else {
-      return this._getAttrsForRequest(request, modelName);
+      modelName = modelName || this.getModelClassFromPath(path);
+
+      assert(
+        this.schema.modelFor(modelName),
+        `You're using a shorthand or the #normalizedRequestAttrs helper but the detected model of '${modelName}' does not exist. You might need to pass in the correct modelName as the first argument to #normalizedRequestAttrs.`
+      );
+
+      attrs = this._getAttrsForRequest(request, modelName);
     }
+
+    return attrs;
   }
 }
