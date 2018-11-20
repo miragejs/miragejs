@@ -14,7 +14,7 @@ module('Integration | ORM | Has Many | One-Way Reflexive | new', function(hooks)
     });
 
     assert.deepEqual(tagB.tagIds, [ tagA.id ]);
-    assert.deepEqual(tagB.tags.models[0], tagA);
+    assert.ok(tagB.tags.includes(tagA));
   });
 
   test('the parent errors if the children ids don\'t exist', function(assert) {

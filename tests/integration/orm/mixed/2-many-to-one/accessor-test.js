@@ -14,7 +14,12 @@ module('Integration | ORM | Mixed | Many To One | accessor', function(hooks) {
     test(`the references of a ${state} are correct`, function(assert) {
       let [ post, user ] = this.helper[state]();
 
-      assert.deepEqual(post.user, user);
+      if (post.user) {
+        assert.ok(post.user.equals(user));
+      } else {
+        assert.equal(post.user, null);
+        assert.equal(user, null);
+      }
       assert.equal(post.userId, user ? user.id : null);
 
       post.save();

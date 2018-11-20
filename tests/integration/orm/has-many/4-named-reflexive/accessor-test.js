@@ -14,8 +14,8 @@ module('Integration | ORM | Has Many | Named Reflexive | accessor', function(hoo
       assert.equal(tag.labels.models.length, tags.length, 'the parent has the correct number of children');
       assert.equal(tag.labelIds.length, tags.length, 'the parent has the correct number of children ids');
 
-      tags.forEach((t, i) => {
-        assert.deepEqual(tag.labels.models[i], t, 'each child is in parent.children array');
+      tags.forEach(t => {
+        assert.ok(tag.labels.includes(t));
 
         if (t.isSaved()) {
           assert.ok(tag.labelIds.indexOf(t.id) > -1, 'each saved child id is in parent.childrenIds array');
