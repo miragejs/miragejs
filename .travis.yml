@@ -33,13 +33,13 @@ jobs:
       script: yarn test:browser
     - env: NAME=node tests
       install: yarn install
-      script: yarn test:node
+      script: yarn test:test-projects
 
     - stage: floating dependencies
       env: NAME=browser tests
       script: yarn test:browser
     - env: NAME=node tests
-      script: yarn test:node
+      script: yarn test:test-projects
 
     - stage: versioned tests
       env: EMBER_TRY_SCENARIO=ember-lts-2.4

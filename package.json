@@ -30,15 +30,15 @@
     "test": "./scripts/test.sh",
     "test:all": "ember try:each",
     "test:browser": "ember test --test-port=0",
-    "test:node": "cd test-apps/basic-app && yarn test:fastboot",
+    "test:test-projects": "./scripts/test.sh",
     "prepare": "./scripts/link.sh"
   },
   "dependencies": {
     "@xg-wang/whatwg-fetch": "^3.0.0",
+    "broccoli-file-creator": "^2.1.1",
     "broccoli-funnel": "^1.0.2",
     "broccoli-merge-trees": "^1.1.0",
     "broccoli-stew": "^1.5.0",
-    "broccoli-string-replace": "^0.1.2",
     "chalk": "^1.1.1",
     "ember-cli-babel": "^6.8.2",
     "ember-cli-node-assets": "^0.2.2",
