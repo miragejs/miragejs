@@ -39,7 +39,11 @@ export default class FunctionRouteHandler extends BaseRouteHandler {
     } = this;
     let attrs;
 
-    if (/x-www-form-urlencoded/.test(requestHeaders['Content-Type'])) {
+    let lowerCaseHeaders = {};
+    for (let header in requestHeaders) {
+      lowerCaseHeaders[header.toLowerCase()] = requestHeaders[header];
+    }
+    if (/x-www-form-urlencoded/.test(lowerCaseHeaders['content-type'])) {
       attrs = this._getAttrsForFormRequest(request);
     } else {
       modelName = modelName || this.getModelClassFromPath(path);

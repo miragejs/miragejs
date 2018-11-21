@@ -322,17 +322,22 @@ module('Integration | Route handlers | Function handler', function(hooks) {
     });
   });
 
-  test(`#normalizedRequestAttrs parses a x-www-form-urlencoded request and returns a POJO`, async function(assert) {
+  test(`#normalizedRequestAttrs works with a form encoded request that has a lower-case content-type (issue 1398)`, async function(assert) {
     assert.expect(1);
 
     this.server.post('/form-test', function() {
-      let attrs = this.normalizedRequestAttrs();
+      // Easiest way I could figure out to change the capitalization of the Content-Type header. Tried
+      // to do this from the Ajax side but jquery kept capitalizing the header.
+      this.request.requestHeaders['content-type'] = this.request.requestHeaders['Content-Type'];
+      delete this.request.requestHeaders['Content-Type'];
+
+      let attrs = this.normalizedRequestAttrs('user');
 
       assert.deepEqual(attrs, {
         name: 'Sam Selikoff',
         company: 'TED',
         email: 'sam.selikoff@gmail.com'
-      }, '#normalizedRequestAttrs successfully returned the parsed x-www-form-urlencoded request body');
+      });
 
       return {};
     });
