@@ -1,7 +1,5 @@
 # Mirage 0.2.0 released
 
-permalink: /blog/2016/05/31/0-2-0-released/
-
 Mirage v0.2.0 has been released! Check out [the release notes](https://github.com/samselikoff/ember-cli-mirage/releases/tag/v0.2.0-beta.9) for the breaking changes and enhancements from 0.2.0-beta.9. Also see [Adolfo's script](https://blog.abuiles.com/blog/2016/05/27/upgrading-to-mirage-v0-dot-2-0-beta-dot-9-with-jscodeshift/) to help with some of the breaking changes from `beta.7` to `beta.9`.
 
 If you're upgrading an app from 0.1.x to 0.2, be sure to read through [the 0.2.x docs](http://www.ember-cli-mirage.com/docs/v0.2.x/). When you're ready to upgrade, consult [the upgrade guide](http://www.ember-cli-mirage.com/docs/v0.2.x/upgrading/), and open an issue if the guide left something out.

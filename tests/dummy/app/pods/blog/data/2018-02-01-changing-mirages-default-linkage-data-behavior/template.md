@@ -1,7 +1,5 @@
 # Changing Mirage's default linkage data behavior in 0.4 to better conform to JSON:API's semantics
 
-permalink: /blog/2018/02/01/changing-mirages-default-linkage-data-behavior/
-
 I wanted to write a quick post detailing a change that happened in Mirage's 0.4.0 release that I originally didn't signal as a breaking change, but that affected more apps than I realized.
 
 I have since added the following note about it to the [0.3 -> 0.4 upgrade guide]({{ site.baseurl }}{% link docs/v0.4.x/upgrading.md %})

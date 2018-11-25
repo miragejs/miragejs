@@ -1,7 +1,5 @@
 # Mirage 0.2.0-beta.9 released
 
-permalink: /blog/2016/01/03/0-2-0-beta.9-released/
-
 Mirage v0.2.0-beta.9 has been released. Check out [the release notes](https://github.com/samselikoff/ember-cli-mirage/releases/tag/v0.2.0-beta.9) for the breaking changes and enhancements.
 
 ## Update on a 0.2 stable release

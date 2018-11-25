@@ -1,7 +1,5 @@
 # Refactoring Server, adding a Route Handler object
 
-permalink: /blog/2015/09/15/router-handler/
-
 Updating the shorthands to work with the serializer layer proved harder than I thought. Serializers made it clear that the shorthands were making assumptions about the shape of the JSON payload. Now that users will be able to use serializers to transform how their data looks going out, I'll also need a way for them to specify how the data looks coming in. This is similar to Ember Data's `normalize` function.
 
 If a user is using a PUT or POST shorthand, I'll need to first deserialize the payload into a standard format, so the shorthands know what to do with it. I'll use the JSON:API format for the standard; that way, if you're using JSON:API, `normalize` will be a no-op, and AMS-style responses will simply convert to JSON:API.

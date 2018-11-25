@@ -1,7 +1,5 @@
 # Mirage 0.3.0 beta series
 
-permalink: /blog/2017/01/09/0-3-0-beta-series/
-
 I've started the beta series of Mirage v0.3.0. You can install the latest release (0.3.0-beta.4 as of this writing) with
 
 ```sh

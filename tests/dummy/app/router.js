@@ -46,6 +46,14 @@ Router.map(function() {
   });
 
   this.route('blog', function() {
+    // this.route('old-post-year', { path: '/:post_year' }, function() {
+    //   this.route('old-post-month', { path: '/:post_month' }, function() {
+    //     this.route('old-post-day', { path: '/:post_day' }, function() {
+    //       this.route('old-post-slug', { path: '/:post_slug' });
+    //     });
+    //   });
+    // });
+
     this.route('post', { path: '/:post_slug' });
   });
 

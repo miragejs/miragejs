@@ -1,7 +1,5 @@
 # Polymorphic associations and auto-discovery of Ember Data models
 
-permalink: /blog/2017/06/05/polymorphic-associations-and-auto-discovery-of-ember-data-models/
-
 _Thanks to [Precision Nutrition](http://www.precisionnutrition.com/) for sponsoring some of Mirage's recent work!_
 
 In the last few weeks there's been two important releases of Ember CLI Mirage. Version [0.3.2](https://github.com/samselikoff/ember-cli-mirage/releases/tag/v0.3.2) bought along auto-discovery of Ember Data models, and version [0.3.3](https://github.com/samselikoff/ember-cli-mirage/releases/tag/v0.3.3) (which I released over the weekend) added support for Polymorphic associations.

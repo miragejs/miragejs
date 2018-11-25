@@ -1,7 +1,5 @@
 # Video: Inside Ember CLI Mirage
 
-permalink: /blog/2015/11/03/inside-ember-cli-mirage/
-
 On October 10 I spoke at the Global Ember Meetup about why I built Mirage, and what's planned for the next version. Here's the video:
 
 <div class="fixed-ratio fixed-ratio-video">

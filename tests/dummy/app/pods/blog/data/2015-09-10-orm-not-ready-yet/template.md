@@ -1,7 +1,5 @@
 # The ORM is not ready, yet
 
-permalink: /blog/2015/09/10/orm-not-ready-yet/
-
 I wanted to quickly note that, although [the models PR](https://github.com/samselikoff/ember-cli-mirage/pull/82) has been merged into master, it is not quite ready for use. To be really effective, Mirage also needs a serializer layer (in progress), and an update to the factory layer (to support associations and traits).
 
 My plan is to document all three of these features (models, serializers and updated factories) at once, since they all rely on the orm, and will all require you to write simple model definitions to take advantage of.

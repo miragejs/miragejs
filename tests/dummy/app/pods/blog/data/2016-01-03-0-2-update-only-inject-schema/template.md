@@ -1,7 +1,5 @@
 # Mirage 0.2 update
 
-permalink: /blog/2016/01/03/0-2-update-only-inject-schema/
-
 Here's a quick update on Mirage 0.2.
 
 When I started working on the ORM/Serializer layer, I knew we were going to need to bump Mirage to 0.2. However, I thought it was worth keeping the library completely backwards compatible. I wanted users to be able to update to 0.2 without breaking any of their existing route handlers.

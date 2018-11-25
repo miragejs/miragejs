@@ -1,7 +1,5 @@
 # Serializers are ready for testing
 
-permalink: /blog/2015/10/19/serializers-ready/
-
 Yesterday I merged in the [JSON:API Serializer](https://github.com/samselikoff/ember-cli-mirage/commit/9927a7f7a2232ddf8df15e01991e538eefadee9c), which is the last piece of planned work I have for the serializer layer. That means it's ready to test! I'm sure there's plenty I haven't thought of yet, but I think it's time to get some people kicking the tires.
 
 For the brave, I'll be writing documentation this week about how to take advantage of the ORM and Serializer layer in your route handlers. Migration will be at your own pace: you should be able to switch over, keep old custom route handlers that access the db directly, and switch them over one at a time to use the new <code>schema</code> object - the ORM. Using a schema in your route handler lets you respond with a model or collection, which is the basis for your serializers knowing how to transform your response into an appropriately-formatted JSON payload.

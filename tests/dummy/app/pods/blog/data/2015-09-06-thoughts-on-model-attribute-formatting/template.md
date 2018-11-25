@@ -1,7 +1,5 @@
 # Thoughts on model attribute formatting
 
-permalink: /blog/2015/09/06/thoughts-on-model-attribute-formatting/
-
 I ran into an interesting problem while working on the serializer layer. I was just wrapping up AMS-style responses and was going to start working on the JSON:API version, when a wrinkle came up: the formatting of attribute names, both on Mirage's model layer instances, and on the field names of Mirage's database.
 
 Currently, Mirage's database simply takes whatever POJO of attrs you give it, and sticks that in its db. So if you write
