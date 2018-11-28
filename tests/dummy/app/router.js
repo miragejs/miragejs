@@ -33,6 +33,7 @@ Router.map(function() {
       this.route('fixtures');
       this.route('environment-options');
       this.route('shorthands');
+      this.route('identity-managers');
     });
 
     this.route('examples', function() {
