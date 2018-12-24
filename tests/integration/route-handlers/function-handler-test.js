@@ -89,7 +89,7 @@ module('Integration | Route handlers | Function handler', function(hooks) {
   });
 
   test('it can return a promise with an empty string', async function(assert) {
-    assert.expect(1);
+    assert.expect(4);
 
     this.server.get('/users', function() {
       return new Promise(resolve => {
@@ -97,8 +97,12 @@ module('Integration | Route handlers | Function handler', function(hooks) {
       });
     });
 
-    let { data } = await promiseAjax({ method: 'GET', url: '/users' });
-    assert.equal(data, '');
+    let { data, xhr } = await promiseAjax({ method: 'GET', url: '/users' });
+
+    assert.deepEqual(data, '');
+    assert.equal(xhr.responseText, "");
+    assert.equal(xhr.status, 200);
+    assert.equal(xhr.getAllResponseHeaders().trim(), "Content-Type: text/csv");
   });
 
   test(`it can serialize a POJA of models`, async function(assert) {

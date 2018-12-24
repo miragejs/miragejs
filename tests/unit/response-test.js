@@ -1,6 +1,6 @@
 import Response from 'ember-cli-mirage/response';
 
-import {module, test} from 'qunit';
+import { module, test } from 'qunit';
 
 module('Unit | Response', function() {
   test('it can be instantiated and return a rack response', function(assert) {
