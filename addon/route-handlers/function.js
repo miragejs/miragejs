@@ -1,5 +1,6 @@
 import BaseRouteHandler from './base';
 import assert from 'ember-cli-mirage/assert';
+import { dasherize, camelize } from 'ember-cli-mirage/utils/inflector';
 
 export default class FunctionRouteHandler extends BaseRouteHandler {
 
@@ -46,10 +47,18 @@ export default class FunctionRouteHandler extends BaseRouteHandler {
     if (/x-www-form-urlencoded/.test(lowerCaseHeaders['content-type'])) {
       attrs = this._getAttrsForFormRequest(request);
     } else {
-      modelName = modelName || this.getModelClassFromPath(path);
+      if (modelName) {
+        if (dasherize(modelName) !== modelName) {
+          // eslint-disable-next-line no-console
+          console.warn(`Mirage [deprecation]: You called normalizedRequestAttrs('${modelName}'), but normalizedRequestAttrs was intended to be used with the dasherized version of the model type. Please change this to normalizedRequestAttrs('${dasherize(modelName)}'). This behavior will be removed in 1.0.`);
+          modelName = camelize(modelName);
+        }
+      } else {
+        modelName = this.getModelClassFromPath(path);
+      }
 
       assert(
-        this.schema.modelFor(modelName),
+        this.schema.hasModelForModelName(modelName),
         `You're using a shorthand or the #normalizedRequestAttrs helper but the detected model of '${modelName}' does not exist. You might need to pass in the correct modelName as the first argument to #normalizedRequestAttrs.`
       );
 

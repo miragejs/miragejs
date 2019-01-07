@@ -275,6 +275,10 @@ export default class Schema {
     return _assign({}, modelClass.belongsToAssociations, modelClass.hasManyAssociations);
   }
 
+  hasModelForModelName(modelName) {
+    return this.modelFor(camelize(modelName));
+  }
+
   /*
     Private methods
   */
