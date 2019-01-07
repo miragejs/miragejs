@@ -1,4 +1,4 @@
-import { isBlank, typeOf } from '@ember/utils';
+import { typeOf } from '@ember/utils';
 import { Promise } from 'rsvp';
 
 import { MirageError } from 'ember-cli-mirage/assert';
@@ -10,12 +10,6 @@ import PostShorthandHandler from './route-handlers/shorthands/post';
 import PutShorthandHandler from './route-handlers/shorthands/put';
 import DeleteShorthandHandler from './route-handlers/shorthands/delete';
 import HeadShorthandHandler from './route-handlers/shorthands/head';
-
-function isNotBlankResponse(response) {
-  return response
-    && !(typeOf(response) === 'object' && Object.keys(response).length === 0)
-    && (Array.isArray(response) || !isBlank(response));
-}
 
 const DEFAULT_CODES = { get: 200, put: 204, post: 201, 'delete': 204 };
 
@@ -111,7 +105,8 @@ export default class RouteHandler {
       code = this.customizedCode;
     } else {
       code = DEFAULT_CODES[this.verb];
-      if (code === 204 && isNotBlankResponse(response)) {
+      // Returning any data for a 204 is invalid
+      if (code === 204 && response !== undefined && response !== '') {
         code = 200;
       }
     }

@@ -62,4 +62,20 @@ module('Integration | Server | Falsy responses', function(hooks) {
     assert.equal(xhr.status, 200);
     assert.equal(xhr.getAllResponseHeaders().trim(), "Content-Type: application/json");
   });
+
+  test('empty object PUT response returns an empty object', async function(assert) {
+    this.server.put('/example', function() {
+      return {};
+    });
+
+    let { data, xhr } = await promiseAjax({
+      method: 'PUT',
+      url: '/example'
+    });
+
+    assert.deepEqual(data, {});
+    assert.equal(xhr.responseText, "{}");
+    assert.equal(xhr.status, 200);
+    assert.equal(xhr.getAllResponseHeaders().trim(), "Content-Type: application/json");
+  });
 });
