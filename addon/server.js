@@ -397,10 +397,11 @@ export default class Server {
   }
 
   create(type, ...options) {
-    assert(
-      this._validateCreateType(type),
-      `You called server.create('${type}') but no model or factory was found. Make sure you're using the singularized version of your model.`
-    );
+    if (this._typeIsPluralForModel(type)) {
+      console.warn(`Mirage [deprecation]: You called server.create('${type}'), but server.create was intended to be used with the singularized version of the model. Please change this to server.create('${singularize(type)}'). This behavior will be removed in 1.0.`);
+
+      type = singularize(type);
+    }
 
     // When there is a Model defined, we should return an instance
     // of it instead of returning the bare attributes.
@@ -411,7 +412,7 @@ export default class Server {
     let attrs = this.build(type, ...traits, overrides);
     let modelOrRecord;
 
-    if (this.schema && this.schema.modelFor(camelize(type))) {
+    if (this.schema && this.schema[toCollectionName(type)]) {
       let modelClass = this.schema[toCollectionName(type)];
 
       modelOrRecord = modelClass.create(attrs);
@@ -426,7 +427,7 @@ export default class Server {
         collection = this.db[collectionName];
       }
 
-      assert(collection, `You called server.create('${type}') but no model or factory was found. Make sure you're using the singularized version of your model.`);
+      assert(collection, `You called server.create('${type}') but no model or factory was found.`);
       modelOrRecord = collection.insert(attrs);
     }
 
@@ -442,9 +443,15 @@ export default class Server {
 
   createList(type, amount, ...traitsAndOverrides) {
     assert(
-      this._validateCreateType(type),
-      `You called server.createList('${type}') but no model or factory was found. Make sure you're using the singularized version of your model.`
+      this._modelOrFactoryExistsForTypeOrCollectionName(type),
+      `You called server.createList('${type}') but no model or factory was found.`
     );
+
+    if (this._typeIsPluralForModel(type)) {
+      console.warn(`Mirage [deprecation]: You called server.createList('${type}'), but server.createList was intended to be used with the singularized version of the model. Please change this to server.createList('${singularize(type)}'). This behavior will be removed in 1.0.`);
+
+      type = singularize(type);
+    }
     assert(_isInteger(amount), `second argument has to be an integer, you passed: ${typeof amount}`);
 
     let list = [];
@@ -659,12 +666,26 @@ export default class Server {
    *
    * @private
    */
-  _validateCreateType(type) {
+  _typeIsPluralForModel(typeOrCollectionName) {
+    let modelOrFactoryExists = this._modelOrFactoryExistsForTypeOrCollectionName(typeOrCollectionName);
+    let isPlural = typeOrCollectionName === pluralize(typeOrCollectionName);
+    let isUncountable = singularize(typeOrCollectionName) === pluralize(typeOrCollectionName);
+
+    return isPlural && !isUncountable && modelOrFactoryExists;
+  }
+
+  /**
+   *
+   * @private
+   */
+  _modelOrFactoryExistsForTypeOrCollectionName(typeOrCollectionName) {
+    // Need this, since singular or plural can be passed in. Can assume singular (type) in 1.0.
+    let type = singularize(typeOrCollectionName);
+
     let modelExists = (this.schema && this.schema.modelFor(camelize(type)));
     let dbCollectionExists = this.db[toInternalCollectionName(type)];
-    let isSingular = type === singularize(type);
 
-    return isSingular && (modelExists || dbCollectionExists);
+    return modelExists || dbCollectionExists;
   }
 
   /**
