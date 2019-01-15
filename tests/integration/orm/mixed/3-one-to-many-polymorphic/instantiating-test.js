@@ -14,7 +14,7 @@ module('Integration | ORM | Mixed | One To Many Polymorphic | instantiating', fu
     });
 
     assert.deepEqual(user.thingIds, [ { type: 'post', id: post.id } ]);
-    assert.deepEqual(user.things.models[0], post);
+    assert.ok(user.things.includes(post));
   });
 
   test('the parent errors if the children ids don\'t exist', function(assert) {

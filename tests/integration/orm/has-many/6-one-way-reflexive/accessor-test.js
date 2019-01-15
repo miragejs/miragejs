@@ -14,8 +14,8 @@ module('Integration | ORM | Has Many | One-Way Reflexive | accessor', function(h
       assert.equal(tag.tags.models.length, tags.length, 'the parent has the correct number of children');
       assert.equal(tag.tagIds.length, tags.length, 'the parent has the correct number of children ids');
 
-      tags.forEach((t, i) => {
-        assert.deepEqual(tag.tags.models[i], t, 'each child is in parent.children array');
+      tags.forEach(t => {
+        assert.ok(tag.tags.includes(t));
 
         if (t.isSaved()) {
           assert.ok(tag.tagIds.indexOf(t.id) > -1, 'each saved child id is in parent.childrenIds array');

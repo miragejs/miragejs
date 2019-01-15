@@ -14,7 +14,7 @@ module('Integration | ORM | Mixed | One To Many | instantiating', function(hooks
     });
 
     assert.deepEqual(user.postIds, [ post.id ]);
-    assert.deepEqual(user.posts.models[0], post);
+    assert.ok(user.posts.includes(post));
   });
 
   test('the parent errors if the children ids don\'t exist', function(assert) {

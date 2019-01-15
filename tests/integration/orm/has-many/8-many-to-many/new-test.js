@@ -14,7 +14,7 @@ module('Integration | ORM | Has Many | Many to Many | new', function(hooks) {
     });
 
     assert.deepEqual(order.productIds, [ product.id ]);
-    assert.deepEqual(order.products.models[0], product);
+    assert.ok(order.products.includes(product));
   });
 
   test('the parent errors if the children ids don\'t exist', function(assert) {

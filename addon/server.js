@@ -12,6 +12,7 @@ import Schema from './orm/schema';
 import assert from './assert';
 import SerializerRegistry from './serializer-registry';
 import RouteHandler from './route-handler';
+import BelongsTo from './orm/associations/belongs-to';
 
 import _pick from 'lodash/pick';
 import _assign from 'lodash/assign';
@@ -682,11 +683,12 @@ export default class Server {
     @param traitsAndOverrides
     @public
   */
-  create(type, ...traitsAndOverrides) {
-    assert(
-      this._validateCreateType(type),
-      `You called server.create('${type}') but no model or factory was found. Make sure you're using the singularized version of your model.`
-    );
+  create(type, ...options) {
+    if (this._typeIsPluralForModel(type)) {
+      console.warn(`Mirage [deprecation]: You called server.create('${type}'), but server.create was intended to be used with the singularized version of the model. Please change this to server.create('${singularize(type)}'). This behavior will be removed in 1.0.`);
+
+      type = singularize(type);
+    }
 
     // When there is a Model defined, we should return an instance
     // of it instead of returning the bare attributes.
@@ -697,7 +699,7 @@ export default class Server {
     let attrs = this.build(type, ...traits, overrides);
     let modelOrRecord;
 
-    if (this.schema && this.schema.modelFor(camelize(type))) {
+    if (this.schema && this.schema[toCollectionName(type)]) {
       let modelClass = this.schema[toCollectionName(type)];
 
       modelOrRecord = modelClass.create(attrs);
@@ -712,7 +714,7 @@ export default class Server {
         collection = this.db[collectionName];
       }
 
-      assert(collection, `You called server.create('${type}') but no model or factory was found. Make sure you're using the singularized version of your model.`);
+      assert(collection, `You called server.create('${type}') but no model or factory was found.`);
       modelOrRecord = collection.insert(attrs);
     }
 
@@ -765,9 +767,15 @@ export default class Server {
   */
   createList(type, amount, ...traitsAndOverrides) {
     assert(
-      this._validateCreateType(type),
-      `You called server.createList('${type}') but no model or factory was found. Make sure you're using the singularized version of your model.`
+      this._modelOrFactoryExistsForTypeOrCollectionName(type),
+      `You called server.createList('${type}') but no model or factory was found.`
     );
+
+    if (this._typeIsPluralForModel(type)) {
+      console.warn(`Mirage [deprecation]: You called server.createList('${type}'), but server.createList was intended to be used with the singularized version of the model. Please change this to server.createList('${singularize(type)}'). This behavior will be removed in 1.0.`);
+
+      type = singularize(type);
+    }
     assert(_isInteger(amount), `second argument has to be an integer, you passed: ${typeof amount}`);
 
     let list = [];
@@ -987,12 +995,26 @@ export default class Server {
    * @private
    * @hide
    */
-  _validateCreateType(type) {
+  _typeIsPluralForModel(typeOrCollectionName) {
+    let modelOrFactoryExists = this._modelOrFactoryExistsForTypeOrCollectionName(typeOrCollectionName);
+    let isPlural = typeOrCollectionName === pluralize(typeOrCollectionName);
+    let isUncountable = singularize(typeOrCollectionName) === pluralize(typeOrCollectionName);
+
+    return isPlural && !isUncountable && modelOrFactoryExists;
+  }
+
+  /**
+   *
+   * @private
+   */
+  _modelOrFactoryExistsForTypeOrCollectionName(typeOrCollectionName) {
+    // Need this, since singular or plural can be passed in. Can assume singular (type) in 1.0.
+    let type = singularize(typeOrCollectionName);
+
     let modelExists = (this.schema && this.schema.modelFor(camelize(type)));
     let dbCollectionExists = this.db[toInternalCollectionName(type)];
-    let isSingular = type === singularize(type);
 
-    return isSingular && (modelExists || dbCollectionExists);
+    return modelExists || dbCollectionExists;
   }
 
   /**
@@ -1035,11 +1057,11 @@ export default class Server {
       let modelClass = this.schema.modelClassFor(modelName);
       let association = modelClass.associationFor(attr);
 
-      assert(association && association.isBelongsTo,
+      assert(association && association instanceof BelongsTo,
         `You're using the \`association\` factory helper on the '${attr}' attribute of your ${modelName} factory, but that attribute is not a \`belongsTo\` association. Read the Factories docs for more information: http://www.ember-cli-mirage.com/docs/v0.3.x/factories/#factories-and-relationships`
       );
 
-      let isSelfReferentialBelongsTo = association && association.isBelongsTo && association.modelName === modelName;
+      let isSelfReferentialBelongsTo = association && association instanceof BelongsTo && association.modelName === modelName;
 
       assert(!isSelfReferentialBelongsTo, `You're using the association() helper on your ${modelName} factory for ${attr}, which is a belongsTo self-referential relationship. You can't do this as it will lead to infinite recursion. You can move the helper inside of a trait and use it selectively.`);
 

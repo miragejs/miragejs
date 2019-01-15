@@ -81,7 +81,7 @@ export default class Schema {
     this._registry[camelizedModelName].class = ModelClass;
 
     // TODO: set here, remove from model#constructor
-    ModelClass.prototype.schema = this;
+    ModelClass.prototype._schema = this;
     ModelClass.prototype.modelName = modelName;
     // Set up associations
     ModelClass.prototype.hasManyAssociations = {};   // a registry of the model's hasMany associations. Key is key from model definition, value is association instance itself
@@ -359,6 +359,10 @@ export default class Schema {
     let modelClass = this.modelClassFor(modelName);
 
     return _assign({}, modelClass.belongsToAssociations, modelClass.hasManyAssociations);
+  }
+
+  hasModelForModelName(modelName) {
+    return this.modelFor(camelize(modelName));
   }
 
   /*

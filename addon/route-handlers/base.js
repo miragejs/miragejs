@@ -1,5 +1,6 @@
 import assert from 'ember-cli-mirage/assert';
 import { camelize, singularize, dasherize } from 'ember-cli-mirage/utils/inflector';
+import HasMany from '../orm/associations/has-many';
 
 const PATH_VAR_REGEXP = /^:/;
 
@@ -21,6 +22,7 @@ export default class BaseRouteHandler {
       }
     }
     let modelName = dasherize(camelize(singularize(lastPath)));
+
     return modelName;
   }
 
@@ -74,7 +76,7 @@ export default class BaseRouteHandler {
         if (association.isPolymorphic) {
           valueForRelationship = relationship.data;
 
-        } else if (association.isHasMany) {
+        } else if (association instanceof HasMany) {
           valueForRelationship = relationship.data && relationship.data.map(rel => rel.id);
 
         } else {

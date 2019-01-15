@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-mirage",
-  "version": "0.4.9",
+  "version": "0.4.12",
   "description": "A client-side server to help you build, test and demo your Ember app",
   "keywords": [
     "ember-addon",
@@ -30,25 +30,27 @@
     "test": "./scripts/test.sh",
     "test:all": "ember try:each",
     "test:browser": "ember test --test-port=0",
-    "test:node": "cd test-apps/basic-app && yarn test:fastboot",
+    "test:test-projects": "./scripts/test.sh",
     "prepare": "./scripts/link.sh"
   },
   "dependencies": {
+    "@xg-wang/whatwg-fetch": "^3.0.0",
+    "broccoli-file-creator": "^2.1.1",
     "broccoli-funnel": "^1.0.2",
     "broccoli-merge-trees": "^1.1.0",
     "broccoli-stew": "^1.5.0",
     "broccoli-string-replace": "^0.1.2",
     "chalk": "^1.1.1",
     "ember-cli-babel": "^6.8.2",
-    "ember-cli-node-assets": "^0.1.4",
+    "ember-cli-node-assets": "^0.2.2",
     "ember-get-config": "^0.2.2",
-    "ember-inflector": "^2.0.0",
+    "ember-inflector": "^2.0.0 || ^3.0.0",
     "ember-lodash": "^4.17.3",
-    "fake-xml-http-request": "^1.4.0",
+    "fake-xml-http-request": "^2.0.0",
     "faker": "^3.0.0",
     "jsdom": "^11.12.0",
-    "pretender": "^1.6.1",
-    "route-recognizer": "^0.2.3"
+    "pretender": "2.1.0",
+    "route-recognizer": "^0.3.4"
   },
   "devDependencies": {
     "active-model-adapter": "^2.0.3",

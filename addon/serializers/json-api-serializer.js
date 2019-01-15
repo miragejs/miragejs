@@ -223,8 +223,8 @@ const JSONAPISerializer = Serializer.extend({
         graphResource = graph.data[graphKey];
 
       // Check includes
-      } else if (graph.included[dasherize(pluralize(model.modelName))]) {
-        graphResource = graph.included[dasherize(pluralize(model.modelName))][graphKey];
+      } else if (graph.included[pluralize(model.modelName)]) {
+        graphResource = graph.included[pluralize(model.modelName)][graphKey];
       }
 
       // If the model's in the graph, check if relationshipKey should be included
@@ -278,9 +278,9 @@ const JSONAPISerializer = Serializer.extend({
         .forEach(includesPath => { // includesPath is post.comments, for example
           graph.data[graphKey].relationships = graph.data[graphKey].relationships || {};
 
-          let relationshipKeys = includesPath.split('.');
+          let relationshipKeys = includesPath.split('.').map(dasherize);
           let relationshipKey = relationshipKeys[0];
-          let graphRelationshipKey = dasherize(relationshipKey);
+          let graphRelationshipKey = relationshipKey;
           let normalizedRelationshipKey = camelize(relationshipKey);
           let hasAssociation = model.associationKeys.includes(normalizedRelationshipKey);
 
@@ -312,7 +312,7 @@ const JSONAPISerializer = Serializer.extend({
     let models = this.isCollection(resource) ? resource.models : [ resource ];
 
     models.forEach(model => {
-      let collectionName = dasherize(pluralize(model.modelName));
+      let collectionName = pluralize(model.modelName);
       graph.included[collectionName] = graph.included[collectionName] || {};
 
       this._addModelToRequestedIncludesGraph(graph, model, relationshipNames);
@@ -320,7 +320,7 @@ const JSONAPISerializer = Serializer.extend({
   },
 
   _addModelToRequestedIncludesGraph(graph, model, relationshipNames) {
-    let collectionName = dasherize(pluralize(model.modelName));
+    let collectionName = pluralize(model.modelName);
     let resourceKey = this._graphKeyForModel(model);
     graph.included[collectionName][resourceKey] = graph.included[collectionName][resourceKey] || {};
 

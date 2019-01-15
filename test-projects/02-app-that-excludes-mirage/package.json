@@ -1,0 +1,50 @@
+{
+  "name": "basic-app",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Small description for basic-app goes here",
+  "license": "MIT",
+  "author": "",
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
+  },
+  "repository": "",
+  "scripts": {
+    "build": "ember build",
+    "lint:js": "eslint ./*.js app blueprints config lib server tests",
+    "start": "ember serve",
+    "test": "ember test --test-port=0",
+    "test:fastboot": "qunit fastboot-tests/**/*.js"
+  },
+  "devDependencies": {
+    "broccoli-asset-rev": "*",
+    "ember-ajax": "*",
+    "ember-cli": "*",
+    "ember-cli-babel": "*",
+    "ember-cli-dependency-checker": "*",
+    "ember-cli-eslint": "*",
+    "ember-cli-fastboot": "*",
+    "ember-cli-htmlbars": "*",
+    "ember-cli-htmlbars-inline-precompile": "*",
+    "ember-cli-inject-live-reload": "*",
+    "ember-cli-mirage": "*",
+    "ember-cli-qunit": "*",
+    "ember-cli-shims": "*",
+    "ember-cli-sri": "*",
+    "ember-cli-uglify": "*",
+    "ember-data": "*",
+    "ember-export-application-global": "*",
+    "ember-load-initializers": "*",
+    "ember-resolver": "*",
+    "ember-source": "*",
+    "eslint-plugin-ember": "*",
+    "fastboot": "*",
+    "jsdom": "*",
+    "loader.js": "*",
+    "qunit": "*"
+  },
+  "engines": {
+    "node": ">= 8.*"
+  }
+}

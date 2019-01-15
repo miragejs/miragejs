@@ -14,8 +14,8 @@ module('Integration | ORM | Has Many | Many to Many | accessor', function(hooks)
       assert.equal(order.products.models.length, products.length, 'the parent has the correct number of children');
       assert.equal(order.productIds.length, products.length, 'the parent has the correct number of children ids');
 
-      products.forEach((p, i) => {
-        assert.deepEqual(order.products.models[i], p, 'each child is in parent.children array');
+      products.forEach(p => {
+        assert.ok(order.products.includes(p));
 
         if (p.isSaved()) {
           assert.ok(order.productIds.indexOf(p.id) > -1, 'each saved child id is in parent.childrenIds array');

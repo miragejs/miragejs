@@ -121,7 +121,7 @@ module.exports = {
     },
     {
       name: 'node-tests',
-      command: 'yarn run test:node',
+      command: 'yarn run test:test-projects',
       npm: {
         devDependencies: {}
       }

@@ -3,21 +3,30 @@ const path = require('path');
 const mergeTrees = require('broccoli-merge-trees');
 const Funnel = require('broccoli-funnel');
 const map = require('broccoli-stew').map;
-const rm = require('broccoli-stew').rm;
-const replace = require('broccoli-string-replace');
+const writeFile = require('broccoli-file-creator');
 
 module.exports = {
   name: 'ember-cli-mirage',
 
   options: {
     nodeAssets: {
-      'route-recognizer': npmAsset({
-        path: 'dist/route-recognizer.js',
-        sourceMap: 'dist/route-recognizer.js.map'
+      '@xg-wang/whatwg-fetch': npmAsset({
+        import: ['dist/fetch.umd.js']
       }),
-      'fake-xml-http-request': npmAsset('fake_xml_http_request.js'),
-      'pretender': npmAsset('pretender.js'),
-      'faker': npmAsset('build/build/faker.js')
+      'route-recognizer': npmAsset({
+        srcDir: 'dist',
+        import: ['route-recognizer.js'],
+        vendor: ['route-recognizer.js.map']
+      }),
+      'fake-xml-http-request': npmAsset({
+        import: ['fake_xml_http_request.js']
+      }),
+      'pretender': npmAsset({
+        import: ['pretender.js']
+      }),
+      'faker': npmAsset({
+        import: ['build/build/faker.js']
+      })
     }
   },
 
@@ -67,25 +76,22 @@ module.exports = {
   },
 
   treeFor(name) {
-    if (!this._shouldIncludeFiles()) {
-      if (name === 'app' || name === 'addon') {
-        // include a noop initializer even when mirage is excluded from the build
-        let initializerFileName = 'initializers/ember-cli-mirage.js';
-        let tree = rm(this._super.treeFor.apply(this, arguments), (path) => path !== initializerFileName);
+    let tree;
+    let shouldIncludeFiles = this._shouldIncludeFiles();
 
-        return replace(tree, {
-          files: [initializerFileName],
-          patterns: [{
-            match: /[\S\s]*/m,
-            replacement: 'export default {name: \'ember-cli-mirage\',initialize() {}};'
-          }]
-        });
-      }
-
-      return;
+    if (!shouldIncludeFiles && name === 'app') {
+      // Include a noop initializer, even if Mirage is excluded from the build
+      tree = writeFile('initializers/ember-cli-mirage.js', `
+        export default {
+          name: 'ember-cli-mirage',
+          initialize() {}
+        };
+      `);
+    } else if (shouldIncludeFiles) {
+      tree = this._super.treeFor.apply(this, arguments);
     }
 
-    return this._super.treeFor.apply(this, arguments);
+    return tree;
   },
 
   _lintMirageTree(mirageTree) {
@@ -144,15 +150,24 @@ module.exports = {
   }
 };
 
-function npmAsset(filePath) {
+function npmAsset(options = {}) {
+  let defaultOptions = {
+    // guard against usage in FastBoot 1.0, where process.env.EMBER_CLI_FASTBOOT is not available
+    _processTree(input) {
+      return map(input, content => `if (typeof FastBoot !== 'undefined') { ${content} }`);
+    }
+  };
+
+  let assetOptions = Object.assign(defaultOptions, options);
+
   return function() {
-    return {
-      enabled: this._shouldIncludeFiles(),
-      import: [filePath],
-      // guard against usage in FastBoot 1.0, where process.env.EMBER_CLI_FASTBOOT is not available
-      _processTree(input) {
-        return map(input, content => `if (typeof FastBoot !== 'undefined') { ${content} }`);
+    let finalOptions = Object.assign(
+      assetOptions,
+      {
+        enabled: this._shouldIncludeFiles()
       }
-    };
+    );
+
+    return finalOptions;
   };
 }

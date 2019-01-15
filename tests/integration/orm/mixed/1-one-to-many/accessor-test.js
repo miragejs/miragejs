@@ -17,8 +17,8 @@ module('Integration | ORM | Mixed | One To Many | accessor', function(hooks) {
       assert.equal(user.posts.models.length, posts.length, 'the parent has the correct number of children');
       assert.equal(user.postIds.length, posts.length, 'the parent has the correct number of children ids');
 
-      posts.forEach((post, i) => {
-        assert.deepEqual(user.posts.models[i], posts[i], 'each child is in parent.children array');
+      posts.forEach(post => {
+        assert.ok(user.posts.includes(post));
 
         if (post.isSaved()) {
           assert.ok(user.postIds.indexOf(post.id) > -1, 'each saved child id is in parent.childrenIds array');
