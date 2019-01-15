@@ -692,9 +692,9 @@ export default class Server {
 
     // When there is a Model defined, we should return an instance
     // of it instead of returning the bare attributes.
-    let traits = traitsAndOverrides.filter((arg) => arg && typeof arg === 'string');
-    let overrides = _find(traitsAndOverrides, (arg) => _isPlainObject(arg));
-    let collectionFromCreateList = _find(traitsAndOverrides, (arg) => arg && Array.isArray(arg));
+    let traits = options.filter((arg) => arg && typeof arg === 'string');
+    let overrides = _find(options, (arg) => _isPlainObject(arg));
+    let collectionFromCreateList = _find(options, (arg) => arg && Array.isArray(arg));
 
     let attrs = this.build(type, ...traits, overrides);
     let modelOrRecord;
