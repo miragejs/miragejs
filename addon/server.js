@@ -1006,6 +1006,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _modelOrFactoryExistsForTypeOrCollectionName(typeOrCollectionName) {
     // Need this, since singular or plural can be passed in. Can assume singular (type) in 1.0.
