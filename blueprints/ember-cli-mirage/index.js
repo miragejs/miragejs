@@ -4,7 +4,6 @@
 
 var path = require('path');
 var fs = require('fs');
-var chalk = require('chalk');
 var EOL = require('os').EOL;
 
 module.exports = {
