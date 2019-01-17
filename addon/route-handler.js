@@ -16,11 +16,11 @@ const DEFAULT_CODES = { get: 200, put: 204, post: 201, 'delete': 204 };
 function createHandler({ verb, schema, serializerOrRegistry, path, rawHandler, options }) {
   let handler;
   let args = [schema, serializerOrRegistry, rawHandler, path, options];
-  let type = typeOf(rawHandler);
+  let type = typeof rawHandler;
 
   if (type === 'function') {
     handler = new FunctionHandler(...args);
-  } else if (type === 'object') {
+  } else if (type === 'object' && rawHandler) {
     handler = new ObjectHandler(...args);
   } else if (verb === 'get') {
     handler = new GetShorthandHandler(...args);
