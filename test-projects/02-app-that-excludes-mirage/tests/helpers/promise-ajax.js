@@ -1,4 +1,5 @@
 import { Promise } from 'rsvp';
+import $ from 'jquery';
 
 export default (options) => {
   return new Promise((resolve, reject) => {

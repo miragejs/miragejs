@@ -1,8 +1,9 @@
-import {module, test} from 'qunit';
+import { module, test } from 'qunit';
 import { Model } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
 import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
 import RestSerializer from 'ember-cli-mirage/serializers/rest-serializer';
+import $ from 'jquery';
 
 module('Integration | Server Config', function(hooks) {
   hooks.beforeEach(function() {

@@ -28,23 +28,25 @@ module.exports = {
   },
   globals: {
     faker: true,
-    server: true,
-    $: true
+    server: true
   },
   overrides: [
     // node files
     {
       files: [
+        '.template-lintrc.js',
+        'ember-cli-build.js',
         'index.js',
         'testem.js',
-        'ember-cli-build.js',
+        'blueprints/*/index.js',
         'config/**/*.js',
         'tests/dummy/config/**/*.js',
         'fastboot-tests/**/*.js'
       ],
       excludedFiles: [
-        'app/**',
         'addon/**',
+        'addon-test-support/**',
+        'app/**',
         'tests/dummy/app/**'
       ],
       parserOptions: {
@@ -61,7 +63,7 @@ module.exports = {
       })
     },
 
-    // test files
+    // test files. Can remove when we upgrade tests to new style.
     {
       files: ['tests/**/*.js'],
       excludedFiles: ['tests/dummy/**/*.js'],

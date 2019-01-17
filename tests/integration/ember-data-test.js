@@ -67,6 +67,8 @@ module('Integration | Ember Data', function(hooks) {
 
   test(`modelFor is only for auto generated models`, function(assert) {
     assert.notOk(modelFor('friend').__isCustom__, 'Friend model is not the pre defined one');
-    assert.throws(() => modelFor('foo'), () => true, 'Pre defined mirage models cannot be found via modelFor');
+    assert.throws(() => {
+      modelFor('foo');
+    }, /Model of type 'foo' does not exist/);
   });
 });
