@@ -8,5 +8,8 @@ module.exports = class extends AddonDocsConfig {
   // for details on configuration you can override here.
 
   // brand: 'blue'
+  getRootURL() {
+    return '';
+  }
 
 };
