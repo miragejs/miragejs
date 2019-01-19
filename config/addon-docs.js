@@ -9,7 +9,7 @@ module.exports = class extends AddonDocsConfig {
 
   // brand: 'blue'
   getRootURL() {
-    return '';
+    return '/';
   }
 
 };
