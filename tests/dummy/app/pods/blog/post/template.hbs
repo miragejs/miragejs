@@ -1,7 +1,7 @@
 <div class="blog-detail">
-  {{#link-to 'blog' class='blog-detail__back-link'}}
+  {{#link-to "blog" class="blog-detail__back-link"}}
     ← All posts
   {{/link-to}}
 
-  {{component (concat 'blog/data/' model)}}
+  {{component (concat "blog/data/" model)}}
 </div>

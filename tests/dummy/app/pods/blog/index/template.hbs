@@ -1,12 +1,12 @@
 <div class="blog-index">
   <h1>Blog</h1>
-  
+
 
   {{#each posts as |post|}}
     <section>
       <p>{{post.date}}</p>
       <h2>
-        {{#link-to 'blog.post' post.slug}}
+        {{#link-to "blog.post" post.slug}}
           {{post.title}}
         {{/link-to}}
       </h2>

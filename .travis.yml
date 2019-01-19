@@ -1,7 +1,12 @@
 ---
 language: node_js
 node_js:
+  # we recommend testing addons with the same minimum supported node version as Ember CLI
+  # so that your addon works for all apps
   - "8"
+
+sudo: false
+dist: trusty
 
 addons:
   chrome: stable
@@ -39,22 +44,12 @@ jobs:
       script: yarn test:test-projects
 
     - stage: versioned tests
-      env: EMBER_TRY_SCENARIO=ember-lts-2.4
-      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
-    - env: EMBER_TRY_SCENARIO=ember-lts-2.8
-      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
-    - env: EMBER_TRY_SCENARIO=ember-lts-2.12
-      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
-    - env: EMBER_TRY_SCENARIO=ember-lts-2.16
-      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
+      env: EMBER_TRY_SCENARIO=ember-lts-2.18
     - env: EMBER_TRY_SCENARIO=ember-release
-      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
     - env: EMBER_TRY_SCENARIO=ember-beta
-      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
     - env: EMBER_TRY_SCENARIO=ember-canary
-      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
     - env: EMBER_TRY_SCENARIO=ember-default
-      script: node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
+    - env: EMBER_TRY_SCENARIO=ember-default-with-jquery
 
     - stage: npm release
       install: skip
@@ -71,3 +66,6 @@ jobs:
   allow_failures:
     - env: EMBER_TRY_SCENARIO=ember-beta
     - env: EMBER_TRY_SCENARIO=ember-canary
+
+script:
+  - node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO
