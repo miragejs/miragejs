@@ -82,10 +82,17 @@ const defaultRouteOptions = {
   timing: undefined
 };
 
+/**
+  @hide
+*/
 const defaultPassthroughs = [
   'http://localhost:0/chromecheckurl', // mobile chrome
   'http://localhost:30820/socket.io' // electron
 ];
+
+/**
+  @hide
+*/
 export { defaultPassthroughs };
 
 /**
@@ -139,21 +146,33 @@ function extractRouteArguments(args) {
 }
 
 /**
- *
- *
- * @class Server
- * @public
- */
+  The Mirage server.
+
+  Note that `this` within your config function in `mirage/config.js` refers to the server instance, which is the same instance that `server` refers to in your tests.
+
+  @class Server
+  @public
+*/
 export default class Server {
 
-  /**
-   * Build the new server object.
-   *
-   * @constructor
-   * @public
-   */
   constructor(options = {}) {
     this.config(options);
+
+    /**
+      Returns the Mirage Db instance.
+
+      @property db
+      @return Db
+    */
+    this.db = this.db || undefined;
+
+    /**
+      Returns the Mirage Schema (ORM) instance.
+
+      @property schema
+      @return Schema
+    */
+    this.schema = this.schema || undefined;
   }
 
   config(config = {}) {
@@ -164,9 +183,135 @@ export default class Server {
 
     this._config = config;
 
-    this.timing = this.timing || config.timing || 400;
+    /**
+      Set the base namespace used for all routes defined with `get`, `post`, `put` or `del`.
+
+      For example,
+
+      ```js
+      // app/mirage/config.js
+      export default function() {
+        this.namespace = '/api';
+
+        // this route will handle the URL '/api/contacts'
+        this.get('/contacts', 'contacts');
+      };
+      ```
+
+      Note that only routes defined after `this.namespace` are affected. This is useful if you have a few one-off routes that you don't want under your namespace:
+
+      ```js
+      // app/mirage/config.js
+      export default function() {
+
+        // this route handles /auth
+        this.get('/auth', function() { ...});
+
+        this.namespace = '/api';
+        // this route will handle the URL '/api/contacts'
+        this.get('/contacts', 'contacts');
+      };
+      ```
+
+      If your Ember app is loaded from the filesystem vs. a server (e.g. via Cordova or Electron vs. `ember s` or `https://yourhost.com/`), you will need to explicitly define a namespace. Likely values are `/` (if requests are made with relative paths) or `https://yourhost.com/api/...` (if requests are made to a defined server).
+
+      For a sample implementation leveraging a configured API host & namespace, check out [this issue comment](https://github.com/samselikoff/ember-cli-mirage/issues/497#issuecomment-183458721).
+
+      @property namespace
+      @type String
+      @public
+    */
     this.namespace = this.namespace || config.namespace || '';
+
+    /**
+      Sets a string to prefix all route handler URLs with.
+
+      Useful if your Ember app makes API requests to a different port.
+
+      ```js
+      // app/mirage/config.js
+      export default function() {
+        this.prefix = 'http://localhost:8080'
+      };
+      ```
+    */
     this.urlPrefix = this.urlPrefix || config.urlPrefix || '';
+
+    /**
+      Set the number of milliseconds for the the Server's response time.
+
+      By default there's a 400ms delay during development, and 0 delay in testing (so your tests run fast).
+
+      ```js
+      // app/mirage/config.js
+      export default function() {
+        this.timing = 400; // default
+      };
+      ```
+
+      To set the timing for individual routes, see the `timing` option for route handlers.
+
+      @property timing
+      @type Number
+      @public
+    */
+    this.timing = this.timing || config.timing || 400;
+
+    /**
+      Set to `true` or `false` to explicitly specify logging behavior.
+
+      By default, server responses are logged in non-testing environments. Logging is disabled by default in testing, so as not to clutter CI test runner output.
+
+      For example, to enable logging in tests, write the following:
+
+      ```js
+      test('I can view all users', function() {
+        server.logging = true;
+        server.create('user');
+
+        visit('/users');
+        // ...
+      });
+      ```
+
+      You can also write a custom log message, using the [Pretender server's](#pretender) `handledRequest` hook. See [Mirage's default implementation](https://github.com/samselikoff/ember-cli-mirage/blob/2c31ad15a46e90b357a83b6896c6774fa42c6488/addon/server.js#L25) for an example.
+
+      To override,
+
+      ```js
+      // mirage/config.js
+      export default function() {
+        this.pretender.handledRequest = function(verb, path, request) {
+          let { responseText } = request;
+          // log request and response data
+        }
+      }
+      ```
+
+      @property logging
+      @return {Boolean}
+      @public
+    */
+    this.logging = this.logging || undefined;
+
+    /**
+      Export a named `testConfig` function to define routes that only apply in your test environment:
+
+      ```js
+      // mirage/config.js
+      export default function() {
+        // normal config, shared across development + testing
+      }
+
+      export function testConfig() {
+        // test-only config, does not apply to development
+      }
+      ```
+
+      This could be useful if you'd like to use Mirage in testing, but generally proxy to an actual API during development. As you develop, your frontend may be ahead of your API, in which case you'd work with the routes in the default config, and write your tests. Then, once your API implements the new endpoints, you can move the routes to your testConfig, so your tests still run, but Mirage doesn't interfere during development.
+    */
+    this.testConfig = this.testConfig || undefined;
+
     this.trackRequests = config.trackRequests;
 
     this._defineRouteHandlerHelpers();
@@ -196,9 +341,30 @@ export default class Server {
     let hasDefaultScenario = config.scenarios && config.scenarios.hasOwnProperty('default');
 
     let didOverridePretenderConfig = (config.trackRequests !== undefined) && this.pretender;
-    assert(!didOverridePretenderConfig,
-      'You cannot modify Pretender\'s request tracking once the server is created');
-    this.pretender = this.pretender || createPretender(this);
+    assert(
+      !didOverridePretenderConfig,
+      'You cannot modify Pretender\'s request tracking once the server is created'
+    );
+
+    /**
+      Mirage uses [pretender.js](https://github.com/trek/pretender) as its xhttp interceptor. In your Mirage config, `this.pretender` refers to the actual Pretender instance, so any config options that work there will work here as well.
+
+      ```js
+      // app/mirage/config.js
+      export default function() {
+        this.pretender.handledRequest = (verb, path, request) => {
+          console.log(`Your server responded to ${path}`);
+        }
+      };
+      ```
+
+      Refer to [Pretender's docs](https://github.com/pretenderjs/pretender) if you want to change any options on your Pretender instance.
+
+      @property pretender
+      @return {Object} The Pretender instance
+      @public
+    */
+    this.pretender = this.pretender || config.pretender || createPretender(this);
 
     if (config.baseConfig) {
       this.loadConfig(config.baseConfig);
@@ -232,20 +398,23 @@ export default class Server {
    * @method isTest
    * @return {Boolean} True if the environment is 'test', false otherwise.
    * @public
+   * @hide
    */
   isTest() {
     return this.environment === 'test';
   }
 
   /**
-   * Determines if the server should log.
-   *
-   * @method shouldLog
-   * @return The value of this.logging if defined, or false if in the testing environment,
-   * true otherwise.
-   * @public
-   */
+    Determines if the server should log.
+
+    @method shouldLog
+    @return The value of this.logging if defined, or false if in the testing environment,
+    true otherwise.
+    @public
+    @hide
+  */
   shouldLog() {
+
     return typeof this.logging !== 'undefined' ? this.logging : !this.isTest();
   }
 
@@ -255,6 +424,7 @@ export default class Server {
    * @method shouldTrackRequests
    * @return The value of this.trackRequests if defined, false otherwise.
    * @public
+   * @hide
    */
   shouldTrackRequests() {
     return Boolean(this.trackRequests);
@@ -267,6 +437,7 @@ export default class Server {
    * @method loadConfig
    * @param {Object} config The configuration to load.
    * @public
+   * @hide
    */
   loadConfig(config) {
     config.call(this);
@@ -274,14 +445,55 @@ export default class Server {
   }
 
   /**
-   * Whitelist requests to the specified paths and allow them to pass through
-   * your Mirage server to the actual network layer.
-   *
-   * @method passthrough
-   * @param {String} [...paths] Any numer of paths to whitelist
-   * @param {Array} options Unused
-   * @public
-   */
+    By default, if your Ember app makes a request that is not defined in your server config, Mirage will throw an error. You can use `passthrough` to whitelist requests, and allow them to pass through your Mirage server to the actual network layer.
+
+    <aside>
+    <p>Note: Put all passthrough config at the bottom of your <code>config.js</code> file, to give your route handlers precedence.</p>
+    </aside>
+
+    To ignore paths on your current host (as well as configured `namespace`), use a leading `/`:
+
+    ```js
+    this.passthrough('/addresses');
+    ```
+
+    You can also pass a list of paths, or call `passthrough` multiple times:
+
+    ```js
+    this.passthrough('/addresses', '/contacts');
+    this.passthrough('/something');
+    this.passthrough('/else');
+    ```
+
+    These lines will allow all HTTP verbs to pass through. If you want only certain verbs to pass through, pass an array as the last argument with the specified verbs:
+
+    ```js
+    this.passthrough('/addresses', ['post']);
+    this.passthrough('/contacts', '/photos', ['get']);
+    ```
+
+    If you want all requests on the current domain to pass through, simply invoke the method with no arguments:
+
+    ```js
+    this.passthrough();
+    ```
+
+    Note again that the current namespace (i.e. any `namespace` property defined above this call) will be applied.
+
+    You can also allow other-origin hosts to passthrough. If you use a fully-qualified domain name, the `namespace` property will be ignored. Use two * wildcards to match all requests under a path:
+
+    ```js
+    this.passthrough('http://api.foo.bar/**');
+    this.passthrough('http://api.twitter.com/v1/cards/**');
+    ```
+
+    In versions of Pretender prior to 0.12, `passthrough` only worked with jQuery >= 2.x. As long as you're on Pretender@0.12 or higher, you should be all set.
+
+    @method passthrough
+    @param {String} [...paths] Any numer of paths to whitelist
+    @param {Array} options Unused
+    @public
+  */
   passthrough(...paths) {
     let verbs = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head'];
     let lastArg = paths[paths.length - 1];
@@ -302,12 +514,41 @@ export default class Server {
   }
 
   /**
-   * Load the all or only the specified fixtures into Mirage's database.
-   *
-   * @method loadFixtures
-   * @param {String} [...args] The name of the fixture to load.
-   * @public
-   */
+    By default, all the data files under `/fixtures` will be loaded during testing if you don't have factories defined, and during development if you don't have `/scenarios/default.js` defined. You can use `loadFixtures()` to also load fixture files in either of these environments, in addition to using factories to seed your database.
+
+    `server.loadFixtures()` loads all the files, and `server.loadFixtures(file1, file2...)` loads selective fixture files.
+
+    For example, in a test you may want to start out with all your fixture data loaded:
+
+    ```js
+    test('I can view the photos', function() {
+      server.loadFixtures();
+      server.createList('photo', 10);
+
+      visit('/');
+
+      andThen(() => {
+        equal( find('img').length, 10 );
+      });
+    });
+    ```
+
+    or in development, you may want to load a few reference fixture files, and use factories to define the rest of your data:
+
+    ```js
+    // scenarios/default.js
+    export default function(server) {
+      server.loadFixtures('countries', 'states');
+
+      let author = server.create('author');
+      server.createList('post', 10, {author_id: author.id});
+    }
+    ```
+
+    @method loadFixtures
+    @param {String} [...args] The name of the fixture to load.
+    @public
+  */
   loadFixtures(...args) {
     let { fixtures } = this._config;
     if (args.length) {
@@ -328,6 +569,7 @@ export default class Server {
    * @method loadFactories
    * @param {Object} factoryMap
    * @public
+   * @hide
    */
   loadFactories(factoryMap = {}) {
     // Store a reference to the factories
@@ -347,6 +589,7 @@ export default class Server {
    * @method factoryFor
    * @param {String} type
    * @private
+   * @hide
    */
   factoryFor(type) {
     let camelizedType = camelize(type);
@@ -396,6 +639,50 @@ export default class Server {
     return list;
   }
 
+  /**
+    Generates a single model of type *type*, inserts it into the database (giving it an id), and returns the data that was
+    added.
+
+    ```js
+    test("I can view a contact's details", function() {
+      var contact = server.create('contact');
+
+      visit('/contacts/' + contact.id);
+
+      andThen(() => {
+        equal( find('h1').text(), 'The contact is Link');
+      });
+    });
+    ```
+
+    You can override the attributes from the factory definition with a
+    hash passed in as the second parameter. For example, if we had this factory
+
+    ```js
+    export default Factory.extend({
+      name: 'Link'
+    });
+    ```
+
+    we could override the name like this:
+
+    ```js
+    test("I can view the contacts", function() {
+      server.create('contact', {name: 'Zelda'});
+
+      visit('/');
+
+      andThen(() => {
+        equal( find('p').text(), 'Zelda' );
+      });
+    });
+    ```
+
+    @method create
+    @param type
+    @param traitsAndOverrides
+    @public
+  */
   create(type, ...options) {
     if (this._typeIsPluralForModel(type)) {
       console.warn(`Mirage [deprecation]: You called server.create('${type}'), but server.create was intended to be used with the singularized version of the model. Please change this to server.create('${singularize(type)}'). This behavior will be removed in 1.0.`);
@@ -441,6 +728,43 @@ export default class Server {
     return modelOrRecord;
   }
 
+  /**
+    Creates *amount* models of type *type*, optionally overriding the attributes from the factory with *attrs*.
+
+    Returns the array of records that were added to the database.
+
+    Here's an example from a test:
+
+    ```js
+    test("I can view the contacts", function() {
+      server.createList('contact', 5);
+      var youngContacts = server.createList('contact', 5, {age: 15});
+
+      visit('/');
+
+      andThen(function() {
+        equal(currentRouteName(), 'index');
+        equal( find('p').length, 10 );
+      });
+    });
+    ```
+
+    And one from setting up your development database:
+
+    ```js
+    // mirage/scenarios/default.js
+    export default function(server) {
+      var contact = server.create('contact');
+      server.createList('address', 5, {contactId: contact.id});
+    }
+    ```
+
+    @method createList
+    @param type
+    @param amount
+    @param traitsAndOverrides
+    @public
+  */
   createList(type, amount, ...traitsAndOverrides) {
     assert(
       this._modelOrFactoryExistsForTypeOrCollectionName(type),
@@ -509,6 +833,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _defineRouteHandlerHelpers() {
     [['get'], ['post'], ['put'], ['delete', 'del'], ['patch'], ['head'], ['options']].forEach(([verb, alias]) => {
@@ -559,6 +884,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _hasModulesOfType(modules, type) {
     let modulesOfType = modules[type];
@@ -570,6 +896,7 @@ export default class Server {
    * configured options (`urlPrefix` and `namespace`).
    *
    * @private
+   * @hide
    */
   _getFullPath(path) {
     path = path[0] === '/' ? path.slice(1) : path;
@@ -655,6 +982,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _configureDefaultPassthroughs() {
     defaultPassthroughs.forEach((passthroughUrl) => {
@@ -665,6 +993,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _typeIsPluralForModel(typeOrCollectionName) {
     let modelOrFactoryExists = this._modelOrFactoryExistsForTypeOrCollectionName(typeOrCollectionName);
@@ -677,6 +1006,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _modelOrFactoryExistsForTypeOrCollectionName(typeOrCollectionName) {
     // Need this, since singular or plural can be passed in. Can assume singular (type) in 1.0.
@@ -691,6 +1021,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _validateTraits(traits, factory, type) {
     traits.forEach((traitName) => {
@@ -703,6 +1034,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _mergeExtensions(attrs, traits, overrides) {
     let allExtensions = traits.map((traitName) => {
@@ -717,6 +1049,7 @@ export default class Server {
   /**
    *
    * @private
+   * @hide
    */
   _mapAssociationsFromAttributes(modelName, attributes, overrides = {}) {
     Object.keys(attributes || {}).filter((attr) => {

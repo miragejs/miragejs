@@ -1,3 +1,6 @@
+/**
+  @hide
+*/
 let association = function(...traitsAndOverrides) {
   let __isAssociation__ = true;
 

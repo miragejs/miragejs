@@ -12,6 +12,7 @@ import assert from 'ember-cli-mirage/assert';
  * @extends Association
  * @constructor
  * @public
+ * @hide
  */
 export default class HasMany extends Association {
 

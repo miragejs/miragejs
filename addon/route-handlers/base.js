@@ -4,6 +4,9 @@ import HasMany from '../orm/associations/has-many';
 
 const PATH_VAR_REGEXP = /^:/;
 
+/**
+  @hide
+*/
 export default class BaseRouteHandler {
 
   getModelClassFromPath(fullPath) {

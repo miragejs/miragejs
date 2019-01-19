@@ -1,6 +1,9 @@
 import _assign from 'lodash/assign';
 import _has from 'lodash/has';
 
+/**
+  @hide
+*/
 export default function extend(protoProps, staticProps) {
   let Parent = this;
 

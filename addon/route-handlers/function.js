@@ -2,6 +2,9 @@ import BaseRouteHandler from './base';
 import assert from 'ember-cli-mirage/assert';
 import { dasherize, camelize } from 'ember-cli-mirage/utils/inflector';
 
+/**
+ * @hide
+ */
 export default class FunctionRouteHandler extends BaseRouteHandler {
 
   constructor(schema, serializerOrRegistry, userFunction, path) {

@@ -12,6 +12,7 @@ import _isEqual from 'lodash/isEqual';
  * @class PolymorphicCollection
  * @constructor
  * @public
+ * @hide
  */
 export default class PolymorphicCollection {
   constructor(models = []) {

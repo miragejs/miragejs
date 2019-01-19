@@ -8,6 +8,9 @@ import assert from './assert';
 
 import _assign from 'lodash/assign';
 
+/**
+ * @hide
+ */
 export default class SerializerRegistry {
 
   constructor(schema, serializerMap = {}) {

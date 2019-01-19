@@ -1,5 +1,8 @@
 import { dasherize } from 'ember-cli-mirage/utils/inflector';
 
+/**
+  @hide
+*/
 export default class Association {
 
   constructor(modelName, opts) {

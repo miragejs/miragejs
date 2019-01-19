@@ -36,6 +36,9 @@ function createHandler({ verb, schema, serializerOrRegistry, path, rawHandler, o
   return handler;
 }
 
+/**
+ * @hide
+ */
 export default class RouteHandler {
 
   constructor({ schema, verb, rawHandler, customizedCode, options, path, serializerOrRegistry }) {

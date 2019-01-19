@@ -13,9 +13,16 @@ import HasMany from './orm/associations/has-many';
 import BelongsTo from './orm/associations/belongs-to';
 import IdentityManager from './identity-manager';
 
+/**
+  @hide
+*/
 function hasMany(...args) {
   return new HasMany(...args);
 }
+
+/**
+  @hide
+*/
 function belongsTo(...args) {
   return new BelongsTo(...args);
 }

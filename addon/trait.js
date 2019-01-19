@@ -6,4 +6,7 @@ let trait = function(extension) {
   };
 };
 
+/**
+  @hide
+*/
 export default trait;

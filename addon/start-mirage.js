@@ -3,18 +3,20 @@ import readModules from 'ember-cli-mirage/utils/read-modules';
 import Server from 'ember-cli-mirage/server';
 import _assign from 'lodash/assign';
 
-//
-// Helper to start mirage. This should not be called directly. In rfc232/rfc268
-// tests, use `setupMirage()` or the `autoboot` option in the addon config
-// in the environment. In legacy tests that call `startMirage` directly, this
-// should be called via the `startMirage` method exported from
-// `<app>/initializers/ember-cli-mirage`.
-//
-// This is intended to be called with only the `owner` argument (which would be
-// `this.owner` in an rfc232/rfc268 test, or the application instance if called
-// from an instance initializer). However, to support the legacy initializer, it
-// can instead accept a hash of the environment and config objects.
-//
+/**
+  Helper to start mirage. This should not be called directly. In rfc232/rfc268
+  tests, use `setupMirage()` or the `autoboot` option in the addon config
+  in the environment. In legacy tests that call `startMirage` directly, this
+  should be called via the `startMirage` method exported from
+  `<app>/initializers/ember-cli-mirage`.
+
+  This is intended to be called with only the `owner` argument (which would be
+  `this.owner` in an rfc232/rfc268 test, or the application instance if called
+  from an instance initializer). However, to support the legacy initializer, it
+  can instead accept a hash of the environment and config objects.
+
+  @hide
+*/
 export default function startMirage(owner, { env, baseConfig, testConfig } = {}) {
   if (!env || !baseConfig) {
     if (!owner) {

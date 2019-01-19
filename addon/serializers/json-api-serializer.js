@@ -4,8 +4,21 @@ import _get from 'lodash/get';
 import _ from 'lodash';
 import assert from 'ember-cli-mirage/assert';
 
+/**
+  The JSONAPISerializer.
+
+  @class JSONAPISerializer
+  @constructor
+  @public
+  @hide
+ */
 const JSONAPISerializer = Serializer.extend({
 
+  /**
+    Do something.
+    @property keyForModel
+    @public
+  */
   keyForModel(modelName) {
     return dasherize(modelName);
   },

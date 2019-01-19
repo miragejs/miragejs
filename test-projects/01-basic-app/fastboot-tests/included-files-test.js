@@ -23,7 +23,7 @@ qModule('basic-app | fastboot | included files', function(hooks) {
       resilient: false
     });
 
-    let page = await fastboot.visit('/');
+    let page = await fastboot.visit('/module-count');
     let html = await page.html();
 
     assert.equal(findTextFromHtml(html, '[data-test-id="environment"]'), 'development');
@@ -42,7 +42,7 @@ qModule('basic-app | fastboot | included files', function(hooks) {
       resilient: false
     });
 
-    let page = await fastboot.visit('/');
+    let page = await fastboot.visit('/module-count');
     let html = await page.html();
 
     assert.equal(findTextFromHtml(html, '[data-test-id="environment"]'), 'test');
@@ -56,7 +56,7 @@ qModule('basic-app | fastboot | included files', function(hooks) {
       distPath: 'dist',
       resilient: false
     });
-    let page = await fastboot.visit('/');
+    let page = await fastboot.visit('/module-count');
     let html = await page.html();
 
     assert.equal(findTextFromHtml(html, '[data-test-id="environment"]'), 'production');
@@ -75,7 +75,7 @@ qModule('basic-app | fastboot | included files', function(hooks) {
       distPath: 'dist',
       resilient: false
     });
-    let page = await fastboot.visit('/');
+    let page = await fastboot.visit('/module-count');
     let html = await page.html();
 
     assert.equal(findTextFromHtml(html, '[data-test-id="environment"]'), 'production');

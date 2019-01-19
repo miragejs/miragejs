@@ -139,4 +139,7 @@ function sortAttrs(attrs, sequence) {
   return referenceSort(refs);
 }
 
+/**
+ * @hide
+*/
 export default Factory;

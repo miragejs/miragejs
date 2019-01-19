@@ -7,6 +7,8 @@ const Router = EmberRouter.extend({
 });
 
 Router.map(function() {
+  this.route('module-count');
+  this.route('crud-demo');
 });
 
 export default Router;

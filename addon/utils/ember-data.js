@@ -7,8 +7,14 @@ function _hasEmberData() {
   return !!_find(Object.keys(requirejs.entries), (e) => !!e.match(matchRegex));
 }
 
+/**
+  @hide
+*/
 export const hasEmberData = _hasEmberData();
 
+/**
+  @hide
+*/
 export function isDsModel(m) {
   return m && typeof m.eachRelationship === 'function';
 }
