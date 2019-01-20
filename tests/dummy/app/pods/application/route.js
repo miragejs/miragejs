@@ -13,6 +13,8 @@ export default Route.extend({
       "v0.3.x",
       "v0.4.x"
     ].forEach(version => {
+      console.log(version);
+      console.log(pathname);
       if (pathname.match(`/docs/${version}`)) {
         window.location = pathname.replace(`/docs/${version}`, `/versions/${version}`);
       }
