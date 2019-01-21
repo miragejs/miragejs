@@ -1,3 +1,24 @@
+.home {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  max-width: 600px;
+  margin: 4rem auto;
+}
+.home__section {
+  margin-bottom: 2.5rem;
+}
+.home__lead {
+  margin-top: 0.5rem;
+  font-size: 18px;
+  line-height: 1.5;
+}
+.home__cta {
+  padding: 3rem 0;
+}
+.home__cta-link {
+  color: #22292f;
+}
+
 .blog {
   width: 100%;
   margin-top: 3rem;
