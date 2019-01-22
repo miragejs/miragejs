@@ -60,7 +60,7 @@
     "babel-eslint": "^8.2.6",
     "broccoli-test-helper": "^1.3.0",
     "chai": "^4.1.0",
-    "ember-cli-addon-docs": "^0.6.1",
+    "ember-cli-addon-docs": "^0.6.2",
     "ember-cli-addon-docs-esdoc": "^0.2.1",
     "ember-cli-app-version": "^2.0.0",
     "ember-cli-deploy": "^1.0.2",

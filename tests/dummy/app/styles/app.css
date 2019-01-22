@@ -1,3 +1,7 @@
+:root {
+  --brand-primary: #0e97ad;
+}
+
 .home {
   padding-left: 1rem;
   padding-right: 1rem;
