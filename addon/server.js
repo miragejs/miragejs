@@ -189,7 +189,7 @@ export default class Server {
       For example,
 
       ```js
-      // app/mirage/config.js
+      // mirage/config.js
       export default function() {
         this.namespace = '/api';
 
@@ -201,7 +201,7 @@ export default class Server {
       Note that only routes defined after `this.namespace` are affected. This is useful if you have a few one-off routes that you don't want under your namespace:
 
       ```js
-      // app/mirage/config.js
+      // mirage/config.js
       export default function() {
 
         // this route handles /auth
@@ -229,7 +229,7 @@ export default class Server {
       Useful if your Ember app makes API requests to a different port.
 
       ```js
-      // app/mirage/config.js
+      // mirage/config.js
       export default function() {
         this.prefix = 'http://localhost:8080'
       };
@@ -243,7 +243,7 @@ export default class Server {
       By default there's a 400ms delay during development, and 0 delay in testing (so your tests run fast).
 
       ```js
-      // app/mirage/config.js
+      // mirage/config.js
       export default function() {
         this.timing = 400; // default
       };
@@ -350,7 +350,7 @@ export default class Server {
       Mirage uses [pretender.js](https://github.com/trek/pretender) as its xhttp interceptor. In your Mirage config, `this.pretender` refers to the actual Pretender instance, so any config options that work there will work here as well.
 
       ```js
-      // app/mirage/config.js
+      // mirage/config.js
       export default function() {
         this.pretender.handledRequest = (verb, path, request) => {
           console.log(`Your server responded to ${path}`);

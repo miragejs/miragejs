@@ -335,7 +335,7 @@ Additionally, a header for `Content-Type` is set to `application/json`.
 You can customize both the response code and headers by returning a `Response` in your route handler:
 
 ```js
-// app/mirage/config.js
+// mirage/config.js
 import { Response } from 'ember-cli-mirage';
 
 export default function() {
