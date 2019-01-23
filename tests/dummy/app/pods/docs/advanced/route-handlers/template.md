@@ -175,7 +175,7 @@ this.get('/api/authors', function({ authors }) {
 });
 ```
 
-<a name="normalizedRequestAttrs" href="#normalizedRequestAttrs">#</a> this.<b>normalizedRequestAttrs()</b>
+<a name="normalizedRequestAttrs" href="#normalizedRequestAttrs">#</a> this.<b>normalizedRequestAttrs</b>(<em>[ modelName ]</em>)
 
 This helper will return the body of a request in a normalized form, suitable for working with and creating records.
 
@@ -226,6 +226,15 @@ Note that attribute keys were camelCased, and the `team` foreign key was extract
 Note that this helper method leverages your serializer's `normalize` function. In the example above, it's assumed that the app was using the `JSONAPISerializer`, which comes with the `#normalize` method already written. If you're not using one of the bundled serializers, you'll need to implement `#normalize` and have it return a JSON:API document to take advantage of this method.
 
 Additionally, you'll need to use a full `function` here, as opposed to an ES6 arrow function (e.g `() => { ... }`). This is because `normalizeRequestAttrs` requires the `this` context from the function handler, and an arrow function would bind this from the outer scope.
+
+`normalizedRequestAttrs()` relies on a `modelName` to work and attempts to automatically detect it based on the URL of the request. If you use conventional URLs – for example, PATCH /users/1 – the helper should work. If you are using something custom – for example, PATCH /users/edit/1 – you’ll need to provide the `modelName` to the helper:
+
+```js
+this.patch('/users/edit/:id', function(schema, request) {
+  let attrs = this.normalizedRequestAttrs('user');
+  ...
+});
+```
 
 ## External origins
 
