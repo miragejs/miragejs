@@ -23,7 +23,7 @@ The optional `options` hash passed as the last parameter has `timing` and `coale
 
 Set the timing parameter of the response for this particular route. Default is a 400ms delay during development and 0 delay in testing (so your tests run fast).
 
-Note you can set a [global timing parameter](../configuration/#timing) for all routes. Individual timing parameters override the global setting.
+Note you can set a [global timing parameter](/docs/api/modules/ember-cli-mirage/server~Server#timing) for all routes. Individual timing parameters override the global setting.
 
 Example:
 
@@ -34,6 +34,34 @@ this.get('/complex_query', () => {
   return [1, 2, 3, 4, 5];
 }, { timing: 3000 });
 ```
+
+If you want to add delays to a particular test's routes, you can override the timing for individual tests by putting the timing parameter in your test
+
+```js
+test('Call this route with a delay', function() {
+  server.timing = 10000;
+  // ...
+});
+```
+
+Or for all tests in a particular module
+
+```js
+module('Add delayed route calls to multiple tests', function() {
+  server.timing = 10000;
+
+  test('It slowly calls a route', function() {
+    // ...
+  });
+
+  test ('It slow calls another route', function() {
+    // ...
+  });
+});
+```
+
+Because the server is restarted after each test, you don't have to worry about this leaking into other tests.
+
 
 <a name="coalesce" href="#coalesce">#</a> options.<b>coalesce</b>
 
