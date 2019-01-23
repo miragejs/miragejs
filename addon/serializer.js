@@ -203,6 +203,21 @@ class Serializer {
 
       Note that, in accordance with the spec, Mirage gives precedence to an ?include query param over a default include: [] array that you might have specified directly on the serializer. Default includes will still be in effect, however, if a request does not have an ?include query param.
 
+      Also note that default includes specified with the `include: []` array can only take a single model; they cannot take dot-separated paths to nested relationships.
+
+      If you'd like to set a default dot-separated (nested) include path for a resource, you have to do it at the route level by setting a default value for `request.queryParams`:
+
+      ```js
+      this.get('/users', function(schema, request) => {
+        request.queryParams = request.queryParams || {};
+        if (!request.queryParams.include) {
+          request.queryParams.include = 'blog-posts.comments';
+        }
+
+        // rest of route handler logic
+      });
+      ```
+
       @property include
       @public
     */
