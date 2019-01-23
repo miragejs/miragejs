@@ -1,7 +1,6 @@
 import _assign from 'lodash/assign';
 import _map from 'lodash/map';
 import _isEqual from 'lodash/isEqual';
-import _sortBy from 'lodash/sortBy';
 
 function duplicate(data) {
   if (Array.isArray(data)) {
@@ -80,9 +79,7 @@ class DbCollection {
     if (!Array.isArray(data)) {
       return this._insertRecord(data);
     } else {
-      // Need to sort in order to ensure IDs inserted in the correct order
-      let sorted = _sortBy(data, 'id');
-      return _map(sorted, (x) => this._insertRecord(x));
+      return _map(data, attrs => this._insertRecord(attrs));
     }
   }
 

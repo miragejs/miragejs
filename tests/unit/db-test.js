@@ -187,7 +187,7 @@ module('Unit | Db #insert', function(hooks) {
   test('it does not add ids to array data if present', function(assert) {
     db.contacts.insert([{ id: 2, name: 'Link' }, { id: 1, name: 'Ganon' }]);
 
-    assert.deepEqual(db.contacts, [{ id: '1', name: 'Ganon' }, { id: '2', name: 'Link' }]);
+    assert.deepEqual(db.contacts, [{ id: '2', name: 'Link' }, { id: '1', name: 'Ganon' }]);
   });
 
   test('it can insert a record with an id of 0', function(assert) {
@@ -430,10 +430,10 @@ module('Unit | Db #update', function(hooks) {
     let actualContacts = db.contacts;
 
     let expectedContacts = [
-      { id: '123-abc', name: 'Sam', evil: false },
       { id: '1', name: 'Sam', evil: false },
       { id: '2', name: 'Sam', evil: false },
-      { id: '3', name: 'Sam', evil: false }
+      { id: '3', name: 'Sam', evil: false },
+      { id: '123-abc', name: 'Sam', evil: false }
     ];
 
     assert.deepEqual(
@@ -472,10 +472,10 @@ module('Unit | Db #update', function(hooks) {
     db.contacts.update({ evil: false }, { name: 'Sam' });
 
     assert.deepEqual(db.contacts, [
-      { id: '123-abc', name: 'Sam', evil: false },
       { id: '1', name: 'Sam', evil: false },
       { id: '2', name: 'Sam', evil: false },
-      { id: '3', name: 'Ganon', evil: true }
+      { id: '3', name: 'Ganon', evil: true },
+      { id: '123-abc', name: 'Sam', evil: false }
     ]);
   });
 
@@ -487,18 +487,18 @@ module('Unit | Db #update', function(hooks) {
   test('updating a collection returns the updated records', function(assert) {
     let characters = db.contacts.update({ evil: true });
     assert.deepEqual(characters, [
-      { id: '123-abc', name: 'Epona', evil: true },
       { id: '1', name: 'Link', evil: true },
-      { id: '2', name: 'Zelda', evil: true }
+      { id: '2', name: 'Zelda', evil: true },
+      { id: '123-abc', name: 'Epona', evil: true }
     ]);
   });
 
   test('updating multiple records returns the updated records', function(assert) {
     let characters = db.contacts.update({ evil: false }, { evil: true });
     assert.deepEqual(characters, [
-      { id: '123-abc', name: 'Epona', evil: true },
       { id: '1', name: 'Link', evil: true },
-      { id: '2', name: 'Zelda', evil: true }
+      { id: '2', name: 'Zelda', evil: true },
+      { id: '123-abc', name: 'Epona', evil: true }
     ]);
   });
 
@@ -537,9 +537,9 @@ module('Unit | Db #remove', function(hooks) {
     db.contacts.remove(1);
 
     assert.deepEqual(db.contacts, [
-      { id: '123-abc', name: 'Epona', evil: false },
       { id: '2', name: 'Zelda', evil: false },
-      { id: '3', name: 'Ganon', evil: true }
+      { id: '3', name: 'Ganon', evil: true },
+      { id: '123-abc', name: 'Epona', evil: false }
     ]);
   });
 
@@ -557,8 +557,8 @@ module('Unit | Db #remove', function(hooks) {
     db.contacts.remove([1, 2]);
 
     assert.deepEqual(db.contacts, [
-      { id: '123-abc', name: 'Epona', evil: false },
-      { id: '3', name: 'Ganon', evil: true }
+      { id: '3', name: 'Ganon', evil: true },
+      { id: '123-abc', name: 'Epona', evil: false }
     ]);
   });
 
