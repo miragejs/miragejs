@@ -4,6 +4,22 @@ Acceptance testing your Ember app typically involves verifying some user behavio
 
 Many of these tests rely on a given server state. In other words, you want to test that the user can view ten photos, *given that ten photo resources exist on the server* at the time the user boots up the app.
 
+If you're using Application Tests (introduced in [Ember 3.0](https://emberjs.com/blog/2018/02/14/ember-3-0-released.html#toc_updates-to-the-testing-defaults)), add the `setupMirage` hook to the top of your test file:
+
+```diff
+  import { setupApplicationTest } from 'ember-qunit';
++ import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
+
+  module('Acceptance | Homepage test', function(hooks) {
+    setupApplicationTest(hooks);
++   setupMirage(hooks);
+  
+    test('my first test', async function(assert) {
+      // test code
+    });
+  });
+```
+
 Once you've defined your routes, use the `server` variable to define the initial server state directly in your tests:
 
 ```js
