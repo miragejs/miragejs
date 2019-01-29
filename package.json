@@ -49,7 +49,6 @@
     "ember-lodash": "^4.19.4",
     "fake-xml-http-request": "^2.0.0",
     "faker": "^3.0.0",
-    "jsdom": "^13.1.0",
     "pretender": "2.1.1",
     "route-recognizer": "^0.3.4"
   },
@@ -95,6 +94,7 @@
     "eslint-plugin-ember-suave": "^1.0.0",
     "eslint-plugin-node": "^7.0.1",
     "fastboot": "^1.2.0",
+    "jsdom": "^13.1.0",
     "loader.js": "^4.7.0",
     "qunit-dom": "^0.8.4"
   },
