@@ -1,12 +1,13 @@
 <div class="blog-index">
   <h1>Blog</h1>
 
-
-  {{#each posts as |post|}}
+  {{#each (sort-by "meta.publishedAt:desc" model) as |post|}}
     <section>
-      <p>{{post.date}}</p>
+      <time datetime={{post.meta.publishedAt}}>
+        {{moment-format post.meta.publishedAt "MMMM D, YYYY"}}
+      </time>
       <h2>
-        {{#link-to "blog.post" post.slug}}
+        {{#link-to "blog.detail" post.slugAndId}}
           {{post.title}}
         {{/link-to}}
       </h2>

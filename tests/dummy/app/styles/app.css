@@ -75,21 +75,78 @@
 .blog-index h2 a {
   color: rgb(61, 72, 82);
   text-decoration: none;
+  /* font-weight: 800;
+  font-size: 28px; */
 }
 .blog-index h2 a:hover {
   text-decoration: underline;
 }
 .blog-index p {
-  color: #999;
+  color: #8795A1;
 }
 
+.blog-detail time,
+.blog-index time {
+  color: #8795A1;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 500;
+}
 .blog-detail__back-link {
   text-decoration: none;
-  color: #999;
+  color: #8795A1;
   display: block;
   margin-bottom: 30px;
 }
 
 .blog-detail__back-link:hover {
   color: rgb(61, 72, 82);
+}
+
+.blog-detail__hr {
+  border-width: 1px;
+  margin: 3rem 0;
+}
+.blog-detail__comments {
+  margin-bottom: 6rem;
+}
+
+.blog-detail__comment {
+  display: flex;
+  padding-top: 2rem;
+}
+
+.blog-detail__comment-avatar {
+  border-radius: 4px;
+  width: 48px;
+  height: 48px;
+  margin-right: 2rem;
+}
+
+.blog-detail__comment-body {
+  /* padding-lef */
+}
+.blog-detail__comment-info {
+  color: #8795A1;
+  font-size: 14px;
+}
+.blog-detail__comment-permalink {
+  color: #8795A1;
+  text-decoration: none;
+}
+.blog-detail__comment-permalink:hover {
+  color: #3d4852;
+}
+.blog-detail__username-link {
+  color: #3d4852;
+  font-weight: 600;
+  text-decoration: none;
+}
+.blog-detail__comments-github-byline {
+  margin-top: 2rem;
+  font-style: italic;
+  color: #8795A1;
+}
+.blog-detail__comments-github-link {
+  color: #8795A1;
 }

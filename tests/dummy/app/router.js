@@ -55,7 +55,7 @@ Router.map(function() {
     //   });
     // });
 
-    this.route('post', { path: '/:post_slug' });
+    this.route('detail', { path: '/:post_slug_and_id' });
   });
 
   this.route('not-found', { path: '/*path' });
