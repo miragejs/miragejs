@@ -3,3 +3,17 @@
 {{#if wifi.isConnected}}
   <p>We ran the initializer</p>
 {{/if}}
+
+<p>
+  Mirage modules in project:
+  <span data-test-id="mirage-module-count">
+    {{mirageModules.length}}
+  </span>
+</p>
+
+<p>
+  Other modules in project:
+  <span data-test-id="other-module-count">
+    {{otherIncludedModules.length}}
+  </span>
+</p>

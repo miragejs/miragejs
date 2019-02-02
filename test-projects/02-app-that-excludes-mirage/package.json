@@ -42,7 +42,8 @@
     "fastboot": "*",
     "jsdom": "*",
     "loader.js": "*",
-    "qunit": "*"
+    "qunit": "*",
+    "qunit-dom": "*"
   },
   "engines": {
     "node": ">= 8.*"
