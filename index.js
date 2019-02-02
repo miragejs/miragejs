@@ -21,9 +21,6 @@ module.exports = {
       'fake-xml-http-request': npmAsset({
         import: ['fake_xml_http_request.js']
       }),
-      'pretender': npmAsset({
-        import: ['pretender.js']
-      }),
       'faker': npmAsset({
         import: ['build/build/faker.js']
       })
@@ -61,13 +58,6 @@ module.exports = {
       this.mirageDirectory = path.resolve(app.project.root, path.join('tests', 'dummy', 'mirage'));
     } else {
       this.mirageDirectory = path.join(this.app.project.root, '/mirage');
-    }
-
-    if (this._shouldIncludeFiles()) {
-      app.import('vendor/ember-cli-mirage/pretender-shim.js', {
-        type: 'vendor',
-        exports: { 'pretender': ['default'] }
-      });
     }
   },
 
