@@ -231,7 +231,7 @@ export default class Server {
       ```js
       // mirage/config.js
       export default function() {
-        this.prefix = 'http://localhost:8080'
+        this.urlPrefix = 'http://localhost:8080'
       };
       ```
     */
