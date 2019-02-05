@@ -61,7 +61,7 @@ module('Integration | Server | Custom responses', function(hooks) {
     assert.deepEqual(data, undefined);
     assert.equal(xhr.responseText, '');
     assert.equal(xhr.status, 204);
-    assert.equal(xhr.getAllResponseHeaders().trim(), "Content-Type: application/json");
+    assert.equal(xhr.getAllResponseHeaders().trim(), '');
   });
 
 });

@@ -16,4 +16,18 @@ module('Unit | Response', function() {
     assert.ok(response);
     assert.ok(response.toRackResponse());
   });
+
+  test('it adds Content-Type by default', function(assert) {
+    let response = new Response(200, {}, {});
+
+    assert.ok(response);
+    assert.equal(response.headers['Content-Type'], 'application/json');
+  });
+
+  test('it does not add Content-Type for a 204 response', function(assert) {
+    let response = new Response(204);
+
+    assert.ok(response);
+    assert.notOk(response.headers['Content-Type']);
+  });
 });

@@ -44,7 +44,7 @@ export default class Response {
     }
 
     // Default "untyped" responses to application/json
-    if (!this.headers.hasOwnProperty('Content-Type')) {
+    if (code !== 204 && !this.headers.hasOwnProperty('Content-Type')) {
       this.headers['Content-Type'] = 'application/json';
     }
   }
