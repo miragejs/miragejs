@@ -875,8 +875,15 @@ class Model {
 
       } else {
 
+        // Clearing the association
         if (tempAssociate === null) {
           this._updateInDb({ [fk]: null });
+
+        // Self-referential
+        } else if (this.equals(tempAssociate)) {
+          this._updateInDb({ [fk]: this.id });
+
+        // Non-self-referential
         } else if (!tempAssociate.isSaving) {
           tempAssociate.save();
 
