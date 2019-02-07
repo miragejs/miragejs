@@ -116,6 +116,9 @@
   padding-top: 2rem;
 }
 
+.blog-detail__comment-profile-link {
+  flex-shrink: 0;
+}
 .blog-detail__comment-avatar {
   border-radius: 4px;
   width: 48px;

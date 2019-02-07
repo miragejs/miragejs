@@ -23,7 +23,7 @@
 
     {{#each model.comments as |comment|}}
       <div class="blog-detail__comment">
-        <a href={{comment.user.profileUrl}}>
+        <a class="blog-detail__comment-profile-link" href={{comment.user.profileUrl}}>
           <img class="blog-detail__comment-avatar" src={{comment.user.avatarUrl}} alt="profile">
         </a>
 
