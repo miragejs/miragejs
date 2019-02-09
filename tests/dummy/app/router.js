@@ -24,6 +24,7 @@ Router.map(function() {
     this.route('cookbook', function() {
       this.route('manually-starting-mirage');
       this.route('simulating-cookie-responses');
+      this.route('overriding-dependencies');
     });
 
     this.route('advanced', function() {
