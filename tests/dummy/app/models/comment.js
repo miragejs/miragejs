@@ -1,5 +1,5 @@
 import DS from 'ember-data';
-import renderMarkdown from 'dummy/utils/render-markdown';
+import compileMarkdown from 'ember-cli-addon-docs/utils/compile-markdown';
 import { htmlSafe } from '@ember/string';
 import { computed } from '@ember/object';
 
@@ -12,7 +12,7 @@ export default DS.Model.extend({
   createdAt: DS.attr(),
 
   htmlBody: computed('body', function() {
-    return htmlSafe(renderMarkdown(this.body));
+    return htmlSafe(compileMarkdown(this.body));
   })
 
 });
