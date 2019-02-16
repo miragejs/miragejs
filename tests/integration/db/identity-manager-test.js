@@ -22,18 +22,12 @@ const CustomIdentityManager = class {
   }
 };
 
-module('Integration | Server | Factory creation', function(hooks) {
-  hooks.beforeEach(function() {
-    this.Post = Model.extend({
-      author: belongsTo()
-    });
-    this.Author = Model.extend({
-      posts: hasMany()
-    });
-    this.Comment = Model.extend({
-      post: belongsTo()
-    });
+module('Integration | Db | Identity manager', function(hooks) {
+  hooks.afterEach(function() {
+    this.server.shutdown();
+  });
 
+  test('it uses identity managers defined by config', function(assert) {
     this.server = new Server({
       environment: 'test',
       identityManagers: {
@@ -41,20 +35,18 @@ module('Integration | Server | Factory creation', function(hooks) {
         author: CustomIdentityManager
       },
       models: {
-        author: this.Author,
-        comment: this.Comment,
-        post: this.Post
+        author: Model.extend({
+          posts: hasMany()
+        }),
+        comment: Model.extend({
+          post: belongsTo()
+        }),
+        post: Model.extend({
+          author: belongsTo()
+        })
       }
     });
-    this.server.timing = 0;
-    this.server.logging = false;
-  });
 
-  hooks.afterEach(function() {
-    this.server.shutdown();
-  });
-
-  test('it uses identity managers defined by config', function(assert) {
     let author = server.create('author');
     let comment = server.create('comment');
     let post = server.create('post');
@@ -75,7 +67,7 @@ module('Integration | Server | Factory creation', function(hooks) {
         assert.deepEqual(data, dataForRecord);
       }
     };
-    let serverForTest = new Server({
+    this.server = new Server({
       environment: 'test',
       identityManagers: {
         application: IdentityManagerForTest
@@ -84,6 +76,6 @@ module('Integration | Server | Factory creation', function(hooks) {
         foo: Model.extend()
       }
     });
-    serverForTest.create('foo', dataForRecord);
+    this.server.create('foo', dataForRecord);
   });
 });
