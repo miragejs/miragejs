@@ -47,9 +47,9 @@
     "ember-cli-node-assets": "^0.2.2",
     "ember-get-config": "^0.2.2",
     "ember-inflector": "^2.0.0 || ^3.0.0",
-    "ember-lodash": "^4.19.4",
     "fake-xml-http-request": "^2.0.0",
     "faker": "^3.0.0",
+    "lodash": "^4.17.11",
     "pretender": "2.1.1",
     "route-recognizer": "^0.3.4"
   },
