@@ -179,7 +179,7 @@ export default class Server {
     let didOverrideConfig = (config.environment && (this.environment && (this.environment !== config.environment)));
     assert(!didOverrideConfig,
       'You cannot modify Mirage\'s environment once the server is created');
-    this.environment = config.environment || 'development';
+    this.environment = config.environment || this.environment || 'development';
 
     this._config = config;
 
