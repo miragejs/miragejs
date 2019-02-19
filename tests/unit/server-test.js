@@ -520,6 +520,8 @@ module('Unit | Server #create', function() {
     assert.deepEqual(anotherArticle.attrs, { title: 'Lorem ipsum', id: '2', authorId: '2', awesomeCategoryId: '2' });
     assert.equal(server.db.authors.length, 2);
     assert.equal(server.db.categories.length, 2);
+
+    server.shutdown();
   });
 
   test('create allows to create objects with associations with traits and overrides for associations', function(assert) {
@@ -562,6 +564,8 @@ module('Unit | Server #create', function() {
       server.db.categories[0],
       { name: 'splendid software', id: '1', isPublished: true, publishedAt: '2016-01-01 12:00:00' }
     );
+
+    server.shutdown();
   });
 
   test('create does not create (extra) models on associations when they are passed in as overrides', function(assert) {
@@ -593,6 +597,8 @@ module('Unit | Server #create', function() {
     server.create('child', { name: 'Dan', mother });
 
     assert.equal(server.db.mothers.length, 1);
+
+    server.shutdown();
   });
 });
 
@@ -1015,8 +1021,7 @@ module('Unit | Server #build', function(hooks) {
       })
     });
 
-    let server = new Server({
-      environment: 'test',
+    this.server.config({
       factories: {
         article: ArticleFactory,
         category: CategoryFactory
@@ -1030,32 +1035,32 @@ module('Unit | Server #build', function(hooks) {
       }
     });
 
-    let article = server.build('article', 'withCategory');
+    let article = this.server.build('article', 'withCategory');
 
     assert.deepEqual(article, { title: 'Lorem ipsum', categoryId: '1' });
-    assert.equal(server.db.categories.length, 1);
+    assert.equal(this.server.db.categories.length, 1);
     assert.deepEqual(
-      server.db.categories[0],
+      this.server.db.categories[0],
       { name: 'splendid software', id: '1', isPublished: true, publishedAt: '2016-01-01 12:00:00' }
     );
   });
 
   test('build throws errors when using trait that is not defined and distinquishes between traits and non-traits', function(assert) {
-    let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+    this.server.config({
+      factories: {
+        article: Factory.extend({
+          title: 'Lorem ipsum',
 
-      published: trait({
-        isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
-      }),
+          published: trait({
+            isPublished: true,
+            publishedAt: '2010-01-01 10:00:00'
+          }),
 
-      private: {
-        someAttr: 'value'
+          private: {
+            someAttr: 'value'
+          }
+        })
       }
-    });
-
-    this.server.loadFactories({
-      article: ArticleFactory
     });
 
     assert.throws(() => {
@@ -1064,61 +1069,52 @@ module('Unit | Server #build', function(hooks) {
   });
 
   test('build does not build objects and throws error if model is not registered and association helper is used', function(assert) {
-    let CategoryFactory = Factory.extend({
-      name: 'splendid software',
-
-      published: trait({
-        isPublished: true,
-        publishedAt: '2014-01-01 10:00:00'
-      })
-    });
-    let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
-
-      withCategory: trait({
-        category: association('published', { publishedAt: '2016-01-01 12:00:00' })
-      })
-    });
-
-    let server = new Server({
-      environment: 'test',
+    this.server.config({
       factories: {
-        article: ArticleFactory,
-        category: CategoryFactory
+        article: Factory.extend({
+          title: 'Lorem ipsum',
+
+          withCategory: trait({
+            category: association('published', { publishedAt: '2016-01-01 12:00:00' })
+          })
+        }),
+        category: Factory.extend({
+          name: 'splendid software',
+
+          published: trait({
+            isPublished: true,
+            publishedAt: '2014-01-01 10:00:00'
+          })
+        })
       },
       models: {
-        category: Model.extend({
-        })
+        category: Model.extend()
       }
     });
 
     assert.throws(() => {
-      server.build('article', 'withCategory');
+      this.server.build('article', 'withCategory');
     }, /Model not registered: article/);
   });
 
   test('build does not build objects and throws error if model for given association is not registered', function(assert) {
-    let CategoryFactory = Factory.extend({
-      name: 'splendid software',
-
-      published: trait({
-        isPublished: true,
-        publishedAt: '2014-01-01 10:00:00'
-      })
-    });
-    let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
-
-      withCategory: trait({
-        category: association('published', { publishedAt: '2016-01-01 12:00:00' })
-      })
-    });
-
-    let server = new Server({
-      environment: 'test',
+    this.server.config({
       factories: {
-        article: ArticleFactory,
-        category: CategoryFactory
+        article: Factory.extend({
+          title: 'Lorem ipsum',
+
+          withCategory: trait({
+            category: association('published', { publishedAt: '2016-01-01 12:00:00' })
+          })
+        }),
+        category: Factory.extend({
+          name: 'splendid software',
+
+          published: trait({
+            isPublished: true,
+            publishedAt: '2014-01-01 10:00:00'
+          })
+        })
       },
       models: {
         article: Model.extend()
@@ -1126,7 +1122,7 @@ module('Unit | Server #build', function(hooks) {
     });
 
     assert.throws(() => {
-      server.build('article', 'withCategory');
+      this.server.build('article', 'withCategory');
     }, /You're using the `association` factory helper on the 'category' attribute of your article factory/);
   });
 });

@@ -3,9 +3,12 @@ import Server from 'ember-cli-mirage/server';
 import { Model, hasMany, belongsTo, RestSerializer } from 'ember-cli-mirage';
 
 module('Integration | Serializer | RestSerializer', function(hooks) {
+  hooks.afterEach(function() {
+    this.server.shutdown();
+  });
 
   test('it sideloads associations and camel-cases relationships and attributes correctly for a model', function(assert) {
-    let server = new Server({
+    this.server = new Server({
       environment: 'test',
       models: {
         wordSmith: Model.extend({
@@ -27,13 +30,13 @@ module('Integration | Serializer | RestSerializer', function(hooks) {
       }
     });
 
-    let link = server.create('word-smith', { name: 'Link', age: 123 });
+    let link = this.server.create('word-smith', { name: 'Link', age: 123 });
     link.createBlogPost({ title: 'Lorem' });
     link.createBlogPost({ title: 'Ipsum' });
 
-    server.create('word-smith', { name: 'Zelda', age: 230 });
+    this.server.create('word-smith', { name: 'Zelda', age: 230 });
 
-    let result = server.serializerOrRegistry.serialize(link);
+    let result = this.server.serializerOrRegistry.serialize(link);
 
     assert.deepEqual(result, {
       wordSmith: {
@@ -57,7 +60,7 @@ module('Integration | Serializer | RestSerializer', function(hooks) {
   });
 
   test('it works for has-many polymorphic associations', function(assert) {
-    let server = new Server({
+    this.server = new Server({
       environment: 'test',
       models: {
         wordSmith: Model.extend({
@@ -70,14 +73,14 @@ module('Integration | Serializer | RestSerializer', function(hooks) {
       }
     });
 
-    let post = server.create('blog-post', { title: 'Post 1' });
-    let link = server.create('word-smith', {
+    let post = this.server.create('blog-post', { title: 'Post 1' });
+    let link = this.server.create('word-smith', {
       name: 'Link',
       age: 123,
       posts: [ post ]
     });
 
-    let result = server.serializerOrRegistry.serialize(link);
+    let result = this.server.serializerOrRegistry.serialize(link);
 
     assert.deepEqual(result, {
       wordSmith: {
