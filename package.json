@@ -94,6 +94,7 @@
     "ember-source": "~3.4.0",
     "ember-source-channel-url": "^1.1.0",
     "ember-try": "^1.0.0",
+    "escape-string-regexp": "^1.0.5",
     "eslint-plugin-ember": "^5.2.0",
     "eslint-plugin-ember-suave": "^1.0.0",
     "eslint-plugin-node": "^7.0.1",

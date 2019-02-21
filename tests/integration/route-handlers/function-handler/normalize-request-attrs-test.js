@@ -2,22 +2,7 @@ import { module, test } from 'qunit';
 import { Model, ActiveModelSerializer } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
 import promiseAjax from '../../../helpers/promise-ajax';
-
-// eslint-disable-next-line no-console
-let originalWarn = console.warn;
-
-function expectWarning(assert, warning) {
-  if (!warning) {
-    assert.ok(false, 'You must pass in a message when expecting a warning');
-  }
-
-  // eslint-disable-next-line no-console
-  console.warn = message => {
-    let re = new RegExp(warning.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-
-    assert.ok(re.test(message), 'the correct warning message was logged');
-  };
-}
+import regExpFromString from '../../../helpers/reg-exp-from-string';
 
 module('Integration | Route handlers | Function handler | #normalizedRequestAttrs', function(hooks) {
   hooks.beforeEach(function() {
@@ -39,9 +24,6 @@ module('Integration | Route handlers | Function handler | #normalizedRequestAttr
 
   hooks.afterEach(function() {
     this.server.shutdown();
-
-    // eslint-disable-next-line no-console
-    console.warn = originalWarn;
   });
 
   test(`it returns an object with the primary resource's attrs and belongsTo keys camelized`, async function(assert) {
@@ -152,18 +134,13 @@ module('Integration | Route handlers | Function handler | #normalizedRequestAttr
     });
   });
 
-  test(`it warns if the optional parameter is camelized for a model with a compount name`, async function(assert) {
-    assert.expect(2);
-    expectWarning(assert, `but normalizedRequestAttrs was intended to be used with the dasherized version of the model type`);
+  test(`it errors if the optional parameter is camelized for a model with a compount name`, async function(assert) {
+    assert.expect(1);
 
     this.server.post('/fine-comments/create', function() {
-      let attrs = this.normalizedRequestAttrs('fineComment');
-
-      assert.deepEqual(attrs, {
-        shortText: 'lorem ipsum'
-      });
-
-      return {};
+      assert.throws(() => {
+        this.normalizedRequestAttrs('fineComment');
+      }, regExpFromString(`You called normalizedRequestAttrs('fineComment'), but normalizedRequestAttrs was intended to be used with the dasherized version of the model type. Please change this to normalizedRequestAttrs('fine-comment')`));
     });
 
     await promiseAjax({

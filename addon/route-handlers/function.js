@@ -1,6 +1,6 @@
 import BaseRouteHandler from './base';
 import assert from 'ember-cli-mirage/assert';
-import { dasherize, camelize } from 'ember-cli-mirage/utils/inflector';
+import { dasherize } from 'ember-cli-mirage/utils/inflector';
 
 /**
  * @hide
@@ -51,11 +51,7 @@ export default class FunctionRouteHandler extends BaseRouteHandler {
       attrs = this._getAttrsForFormRequest(request);
     } else {
       if (modelName) {
-        if (dasherize(modelName) !== modelName) {
-          // eslint-disable-next-line no-console
-          console.warn(`Mirage [deprecation]: You called normalizedRequestAttrs('${modelName}'), but normalizedRequestAttrs was intended to be used with the dasherized version of the model type. Please change this to normalizedRequestAttrs('${dasherize(modelName)}'). This behavior will be removed in 1.0.`);
-          modelName = camelize(modelName);
-        }
+        assert(dasherize(modelName) === modelName, `You called normalizedRequestAttrs('${modelName}'), but normalizedRequestAttrs was intended to be used with the dasherized version of the model type. Please change this to normalizedRequestAttrs('${dasherize(modelName)}').`);
       } else {
         modelName = this.getModelClassFromPath(path);
       }

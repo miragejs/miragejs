@@ -2,22 +2,11 @@ import { module, test } from 'qunit';
 import { Model, Factory, hasMany, belongsTo } from 'ember-cli-mirage';
 import Inflector from 'ember-inflector';
 import Server from 'ember-cli-mirage/server';
+// import escape from 'escape-string-regexp';
+import regExpFromString from '../../helpers/reg-exp-from-string';
 
 // eslint-disable-next-line no-console
 let originalWarn = console.warn;
-
-function expectWarning(assert, warning) {
-  if (!warning) {
-    assert.ok(false, 'You must pass in a message when expecting a warning');
-  }
-
-  // eslint-disable-next-line no-console
-  console.warn = message => {
-    let re = new RegExp(warning.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-
-    assert.ok(re.test(message), 'the correct warning message was logged');
-  };
-}
 
 function expectNoWarning(assert) {
   // eslint-disable-next-line no-console
@@ -70,18 +59,16 @@ module('Integration | Server | create and createList', function(hooks) {
 
     assert.throws(() => {
       this.server.create('foo');
-    }, /You called server.create\('foo'\) but no model or factory was found\./);
+    }, regExpFromString(`You called server.create('foo') but no model or factory was found.`));
   });
 
-  test('create warns when passing in a pluralized version of a model', function(assert) {
-    assert.expect(3);
+  // This used to be deprecated behavior, but now it errors. So we test it separately from the nonsense test above.
+  test('create throws when passing in a pluralized version of a model', function(assert) {
+    assert.expect(1);
 
-    expectWarning(assert, `server.create was intended to be used with the singularized version of the model`);
-
-    let contact = this.server.create('contacts');
-
-    assert.ok(contact instanceof this.Contact, 'expected a Contact');
-    assert.equal(contact.name, 'Yehuda', 'the factory is used');
+    assert.throws(() => {
+      this.server.create('contacts');
+    }, regExpFromString(`You called server.create('contacts') but no model or factory was found. Make sure you're passing in the singularized version of the model or factory name`));
   });
 
   test('create returns a Model if one is defined', function(assert) {
@@ -107,18 +94,16 @@ module('Integration | Server | create and createList', function(hooks) {
 
     assert.throws(() => {
       this.server.createList('foo', 1);
-    }, /You called server.createList\('foo'\) but no model or factory was found\./);
+    }, regExpFromString(`You called server.createList('foo') but no model or factory was found.`));
   });
 
-  test('createList warns when passing in a pluralized version of a model', function(assert) {
-    assert.expect(3);
+  // This used to be deprecated behavior, but now it errors. So we test it separately from the nonsense test above.
+  test('createList throws when passing in a pluralized version of a model', function(assert) {
+    assert.expect(1);
 
-    expectWarning(assert, `server.createList was intended to be used with the singularized version of the model`);
-
-    let contacts = this.server.createList('contacts', 1);
-
-    assert.ok(contacts[0] instanceof this.Contact, 'expected a Contact');
-    assert.equal(contacts[0].name, 'Yehuda', 'the factory is used');
+    assert.throws(() => {
+      this.server.createList('contacts', 1);
+    }, regExpFromString(`You called server.createList('contacts') but no model or factory was found. Make sure you're passing in the singularized version of the model or factory name.`));
   });
 
   test('createList returns Models if one is defined', function(assert) {

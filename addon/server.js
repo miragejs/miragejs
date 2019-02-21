@@ -679,16 +679,12 @@ export default class Server {
     ```
 
     @method create
-    @param type
+    @param type the singularized type of the model
     @param traitsAndOverrides
     @public
   */
   create(type, ...options) {
-    if (this._typeIsPluralForModel(type)) {
-      console.warn(`Mirage [deprecation]: You called server.create('${type}'), but server.create was intended to be used with the singularized version of the model. Please change this to server.create('${singularize(type)}'). This behavior will be removed in 1.0.`);
-
-      type = singularize(type);
-    }
+    assert(this._modelOrFactoryExistsForType(type), `You called server.create('${type}') but no model or factory was found. Make sure you're passing in the singularized version of the model or factory name.`);
 
     // When there is a Model defined, we should return an instance
     // of it instead of returning the bare attributes.
@@ -766,16 +762,7 @@ export default class Server {
     @public
   */
   createList(type, amount, ...traitsAndOverrides) {
-    assert(
-      this._modelOrFactoryExistsForTypeOrCollectionName(type),
-      `You called server.createList('${type}') but no model or factory was found.`
-    );
-
-    if (this._typeIsPluralForModel(type)) {
-      console.warn(`Mirage [deprecation]: You called server.createList('${type}'), but server.createList was intended to be used with the singularized version of the model. Please change this to server.createList('${singularize(type)}'). This behavior will be removed in 1.0.`);
-
-      type = singularize(type);
-    }
+    assert(this._modelOrFactoryExistsForType(type), `You called server.createList('${type}') but no model or factory was found. Make sure you're passing in the singularized version of the model or factory name.`);
     assert(_isInteger(amount), `second argument has to be an integer, you passed: ${typeof amount}`);
 
     let list = [];
@@ -1008,12 +995,21 @@ export default class Server {
    * @private
    * @hide
    */
-  _modelOrFactoryExistsForTypeOrCollectionName(typeOrCollectionName) {
-    // Need this, since singular or plural can be passed in. Can assume singular (type) in 1.0.
-    let type = singularize(typeOrCollectionName);
-
+  _modelOrFactoryExistsForType(type) {
     let modelExists = (this.schema && this.schema.modelFor(camelize(type)));
     let dbCollectionExists = this.db[toInternalCollectionName(type)];
+
+    return (modelExists || dbCollectionExists) && !this._typeIsPluralForModel(type);
+  }
+
+  /**
+   *
+   * @private
+   * @hide
+   */
+  _modelOrFactoryExistsForTypeOrCollectionName(typeOrCollectionName) {
+    let modelExists = (this.schema && this.schema.modelFor(camelize(typeOrCollectionName)));
+    let dbCollectionExists = this.db[toInternalCollectionName(typeOrCollectionName)];
 
     return modelExists || dbCollectionExists;
   }
