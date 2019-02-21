@@ -2869,9 +2869,9 @@ broccoli-funnel@^1.0.0, broccoli-funnel@^1.0.1, broccoli-funnel@^1.1.0:
     walk-sync "^0.3.1"
 
 broccoli-funnel@^2.0.0, broccoli-funnel@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/broccoli-funnel/-/broccoli-funnel-2.0.1.tgz#6823c73b675ef78fffa7ab800f083e768b51d449"
-  integrity sha512-C8Lnp9TVsSSiZMGEF16C0dCiNg2oJqUKwuZ1K4kVC6qRPG/2Cj/rtB5kRCC9qEbwqhX71bDbfHROx0L3J7zXQg==
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/broccoli-funnel/-/broccoli-funnel-2.0.2.tgz#0edf629569bc10bd02cc525f74b9a38e71366a75"
+  integrity sha512-/vDTqtv7ipjEZQOVqO4vGDVAOZyuYzQ/EgGoyewfOgh1M7IQAToBKZI0oAQPgMBeFPPlIbfMuAngk+ohPBuaHQ==
   dependencies:
     array-equal "^1.0.0"
     blank-object "^1.0.1"
@@ -3045,17 +3045,7 @@ broccoli-plugin@1.1.0:
     rimraf "^2.3.4"
     symlink-or-copy "^1.0.1"
 
-broccoli-plugin@^1.0.0, broccoli-plugin@^1.1.0, broccoli-plugin@^1.2.0, broccoli-plugin@^1.2.1:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/broccoli-plugin/-/broccoli-plugin-1.3.0.tgz#bee704a8e42da08cb58e513aaa436efb7f0ef1ee"
-  integrity sha1-vucEqOQtoIy1jlE6qkNu+38O8e4=
-  dependencies:
-    promise-map-series "^0.2.1"
-    quick-temp "^0.1.3"
-    rimraf "^2.3.4"
-    symlink-or-copy "^1.1.8"
-
-broccoli-plugin@^1.3.0, broccoli-plugin@^1.3.1:
+broccoli-plugin@^1.0.0, broccoli-plugin@^1.1.0, broccoli-plugin@^1.2.0, broccoli-plugin@^1.2.1, broccoli-plugin@^1.3.0, broccoli-plugin@^1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/broccoli-plugin/-/broccoli-plugin-1.3.1.tgz#a26315732fb99ed2d9fb58f12a1e14e986b4fabd"
   integrity sha512-DW8XASZkmorp+q7J4EeDEZz+LoyKLAd2XZULXyD9l4m9/hAKV3vjHmB1kiUshcWAYMgTP1m2i4NnqCE/23h6AQ==
@@ -7473,17 +7463,7 @@ fs-minipass@^1.2.5:
   dependencies:
     minipass "^2.2.1"
 
-fs-tree-diff@^0.5.2, fs-tree-diff@^0.5.4, fs-tree-diff@^0.5.6:
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/fs-tree-diff/-/fs-tree-diff-0.5.7.tgz#315e2b098d5fe7f622880ac965b1b051868ac871"
-  integrity sha512-dJwDX6NBH7IfdfFjZAdHCZ6fIKc8LwR7kzqUhYRFJuX4g9ctG/7cuqJuwegGQsyLEykp6Z4krq+yIFMQlt7d9Q==
-  dependencies:
-    heimdalljs-logger "^0.1.7"
-    object-assign "^4.1.0"
-    path-posix "^1.0.0"
-    symlink-or-copy "^1.1.8"
-
-fs-tree-diff@^0.5.3, fs-tree-diff@^0.5.7, fs-tree-diff@^0.5.9:
+fs-tree-diff@^0.5.2, fs-tree-diff@^0.5.3, fs-tree-diff@^0.5.4, fs-tree-diff@^0.5.6, fs-tree-diff@^0.5.7, fs-tree-diff@^0.5.9:
   version "0.5.9"
   resolved "https://registry.yarnpkg.com/fs-tree-diff/-/fs-tree-diff-0.5.9.tgz#a4ec6182c2f5bd80b9b83c8e23e4522e6f5fd946"
   integrity sha512-872G8ax0kHh01m9n/2KDzgYwouKza0Ad9iFltBpNykvROvf2AGtoOzPJgGx125aolGPER3JuC7uZFrQ7bG1AZw==
@@ -7783,7 +7763,7 @@ glob@^7.0.0, glob@^7.0.3, glob@^7.0.4, glob@^7.1.1, glob@^7.1.2, glob@~7.1.1:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-glob@^7.0.5, glob@^7.1.3:
+glob@^7.1.3:
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.3.tgz#3960832d3f1574108342dafd3a67b332c0969df1"
   integrity sha512-vcfuiIxogLV4DlGBHIUOwI0IbrJ8HWPc4MU7HzviGeNho/UJDfi6B5p3sHeWIQ0KGIU0Jpxi5ZHxemQfLkkAwQ==
@@ -8171,17 +8151,10 @@ heimdalljs-logger@^0.1.7, heimdalljs-logger@^0.1.9:
     debug "^2.2.0"
     heimdalljs "^0.2.6"
 
-heimdalljs@^0.2.0, heimdalljs@^0.2.5, heimdalljs@^0.2.6:
+heimdalljs@^0.2.0, heimdalljs@^0.2.1, heimdalljs@^0.2.3, heimdalljs@^0.2.5, heimdalljs@^0.2.6:
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/heimdalljs/-/heimdalljs-0.2.6.tgz#b0eebabc412813aeb9542f9cc622cb58dbdcd9fe"
   integrity sha512-o9bd30+5vLBvBtzCPwwGqpry2+n0Hi6H1+qwt6y+0kwRHGGF8TFIhJPmnuM0xO97zaKrDZMwO/V56fAnn8m/tA==
-  dependencies:
-    rsvp "~3.2.1"
-
-heimdalljs@^0.2.1, heimdalljs@^0.2.3:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/heimdalljs/-/heimdalljs-0.2.5.tgz#6aa54308eee793b642cff9cf94781445f37730ac"
-  integrity sha1-aqVDCO7nk7ZCz/nPlHgURfN3MKw=
   dependencies:
     rsvp "~3.2.1"
 
@@ -12465,14 +12438,7 @@ ret@~0.1.10:
   resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.15.tgz#b8a4825d5bdb1fc3f6f53c2bc33f81388681c7bc"
   integrity sha512-TTlYpa+OL+vMMNG24xSlQGEJ3B/RzEfUlLct7b5G/ytav+wPrplCpVMFuwzXbkecJrb6IYo1iFb0S9v37754mg==
 
-rimraf@2, rimraf@^2.2.8, rimraf@^2.3.2, rimraf@^2.4.1, rimraf@^2.4.4, rimraf@^2.5.3, rimraf@^2.6.1:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.6.2.tgz#2ed8150d24a16ea8651e6d6ef0f47c4158ce7a36"
-  integrity sha512-lreewLK/BlghmxtfH36YYVg1i8IAce4TI7oao75I1g245+6BctqTVQiBP3YUJ9C6DQOXJmkYR9X9fCLtCOJc5w==
-  dependencies:
-    glob "^7.0.5"
-
-rimraf@^2.3.4, rimraf@^2.4.3, rimraf@^2.5.4, rimraf@^2.6.2:
+rimraf@2, rimraf@^2.2.8, rimraf@^2.3.2, rimraf@^2.3.4, rimraf@^2.4.1, rimraf@^2.4.3, rimraf@^2.4.4, rimraf@^2.5.3, rimraf@^2.5.4, rimraf@^2.6.1, rimraf@^2.6.2:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.6.3.tgz#b2d104fe0d8fb27cf9e0a1cda8262dd3833c6cab"
   integrity sha512-mwqeW5XsA2qAejG46gYdENaxXjx9onRNCfn7L0duuP4hCuTIi/QO7PDK07KJfp1d+izWPrzEJDcSqBa0OZQriA==
@@ -13504,15 +13470,10 @@ svgo@0.6.6:
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.2.tgz#ae27db38f660a7ae2e1c3b7d1bc290819b8519e6"
   integrity sha1-rifbOPZgp64uHDt9G8KQgZuFGeY=
 
-symlink-or-copy@^1.0.0, symlink-or-copy@^1.1.8, symlink-or-copy@^1.2.0:
+symlink-or-copy@^1.0.0, symlink-or-copy@^1.0.1, symlink-or-copy@^1.1.8, symlink-or-copy@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/symlink-or-copy/-/symlink-or-copy-1.2.0.tgz#5d49108e2ab824a34069b68974486c290020b393"
   integrity sha512-W31+GLiBmU/ZR02Ii0mVZICuNEN9daZ63xZMPDsYgPgNjMtg+atqLEGI7PPI936jYSQZxoLb/63xos8Adrx4Eg==
-
-symlink-or-copy@^1.0.1:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/symlink-or-copy/-/symlink-or-copy-1.1.8.tgz#cabe61e0010c1c023c173b25ee5108b37f4b4aa3"
-  integrity sha1-yr5h4AEMHAI8Fzsl7lEIs39LSqM=
 
 table@^4.0.1:
   version "4.0.2"
@@ -14298,7 +14259,7 @@ w3c-xmlserializer@^1.0.1:
     webidl-conversions "^4.0.2"
     xml-name-validator "^3.0.0"
 
-walk-sync@0.3.2, walk-sync@^0.3.0, walk-sync@^0.3.2:
+walk-sync@0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/walk-sync/-/walk-sync-0.3.2.tgz#4827280afc42d0e035367c4a4e31eeac0d136f75"
   integrity sha512-FMB5VqpLqOCcqrzA9okZFc0wq0Qbmdm396qJxvQZhDpyu0W95G9JCmp74tx7iyYnyOcBtUuKJsgIKAqjozvmmQ==
@@ -14314,7 +14275,7 @@ walk-sync@^0.2.5, walk-sync@^0.2.7:
     ensure-posix-path "^1.0.0"
     matcher-collection "^1.0.0"
 
-walk-sync@^0.3.1, walk-sync@^0.3.3:
+walk-sync@^0.3.0, walk-sync@^0.3.1, walk-sync@^0.3.2, walk-sync@^0.3.3:
   version "0.3.4"
   resolved "https://registry.yarnpkg.com/walk-sync/-/walk-sync-0.3.4.tgz#cf78486cc567d3a96b5b2237c6108017a5ffb9a4"
   integrity sha512-ttGcuHA/OBnN2pcM6johpYlEms7XpO5/fyKIr48541xXedan4roO8cS1Q2S/zbbjGH/BarYDAMeS2Mi9HE5Tig==
