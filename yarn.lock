@@ -6934,10 +6934,10 @@ fake-xml-http-request@^2.0.0:
   resolved "https://registry.yarnpkg.com/fake-xml-http-request/-/fake-xml-http-request-2.0.0.tgz#41a92f0ca539477700cb1dafd2df251d55dac8ff"
   integrity sha512-UjNnynb6eLAB0lyh2PlTEkjRJORnNsVF1hbzU+PQv89/cyBV9GDRCy7JAcLQgeCLYT+3kaumWWZKEJvbaK74eQ==
 
-faker@^3.0.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/faker/-/faker-3.1.0.tgz#0f908faf4e6ec02524e54a57e432c5c013e08c9f"
-  integrity sha1-D5CPr05uwCUk5UpX5DLFwBPgjJ8=
+faker@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/faker/-/faker-4.1.0.tgz#1e45bbbecc6774b3c195fad2835109c6d748cc3f"
+  integrity sha1-HkW7vsxndLPBlfrSg1EJxtdIzD8=
 
 fast-deep-equal@^1.0.0:
   version "1.0.0"

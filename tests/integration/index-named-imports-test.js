@@ -2,7 +2,6 @@ import { test } from 'qunit';
 import {
   Factory,
   Response,
-  faker,
   Model,
   Serializer,
   ActiveModelSerializer,
@@ -18,10 +17,6 @@ test('Factory is present in named exports from ember-cli-mirage', function(asser
 
 test('Response is present in named exports from ember-cli-mirage', function(assert) {
   assert.ok(Response);
-});
-
-test('faker is present in named exports from ember-cli-mirage', function(assert) {
-  assert.ok(faker);
 });
 
 test('Model is present in named exports from ember-cli-mirage', function(assert) {

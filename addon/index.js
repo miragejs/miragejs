@@ -2,7 +2,6 @@ import Factory from './factory';
 import trait from './trait';
 import association from './association';
 import Response from './response';
-import faker from './faker';
 import Model from './orm/model';
 import Collection from './orm/collection';
 import Serializer from './serializer';
@@ -32,7 +31,6 @@ export {
   trait,
   association,
   Response,
-  faker,
   Model,
   Collection,
   Serializer,

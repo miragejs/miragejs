@@ -21,6 +21,7 @@
     "@ember/jquery": "*",
     "broccoli-asset-rev": "*",
     "ember-ajax": "*",
+    "ember-auto-import": "*",
     "ember-cli": "*",
     "ember-cli-babel": "*",
     "ember-cli-dependency-checker": "*",
@@ -43,7 +44,8 @@
     "jsdom": "*",
     "loader.js": "*",
     "qunit": "*",
-    "qunit-dom": "*"
+    "qunit-dom": "*",
+    "faker": "*"
   },
   "engines": {
     "node": ">= 8.*"

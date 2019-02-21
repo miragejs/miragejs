@@ -27,7 +27,6 @@ module.exports = {
     'no-unused-vars': ['error', { 'args': 'none' }]
   },
   globals: {
-    faker: true,
     server: true
   },
   overrides: [

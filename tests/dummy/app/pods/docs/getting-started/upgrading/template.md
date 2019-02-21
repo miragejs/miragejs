@@ -5,21 +5,102 @@
 To install a new version of Mirage, run
 
 ```sh
-npm install ember-cli-mirage@X.X.X --save-dev
+yarn install -D ember-cli-mirage@X.X.X
 ember g ember-cli-mirage
 ```
 
 The `ember g ember-cli-mirage` command ensures all of Mirage's Bower dependencies are added to your project. It runs during `ember install`, and it's always a good idea to run it when upgrading.
 
-Use `ember-cli-mirage@beta` to get the latest beta.
 
 ## Changelog
 
-You can view Mirage's full Changelog here:
+You can view all of Mirage's release notes on [our Releases page](https://github.com/samselikoff/ember-cli-mirage/releases).
 
-[https://github.com/samselikoff/ember-cli-mirage/blob/master/CHANGELOG.md](https://github.com/samselikoff/ember-cli-mirage/blob/master/CHANGELOG.md)
+## 0.4.x → 1.0 Upgrade guide
 
-## 0.3.x > 0.4 Upgrade guide
+A few breaking changes were made in the 1.0 release.
+
+**Faker.js**
+
+When Mirage was first released, including npm libraries into Ember CLI apps was difficult. You needed to generate a vendor shim and call `app.import` in order to use the library in your application code.
+
+Because of all this ceremony, it was common for addons to do that work for you, and bundle related packages. This is exactly what Mirage did for [Faker.js](https://github.com/Marak/faker.js), a useful library to have alongside your Mirage factory definitions.
+
+There's a few problems with this, most notably that users _had_ to use the version of Faker that was bundled with Mirage. It was frustrating not being able to take advantage of new Faker features until Mirage upgraded its bundled version.
+
+Now, thanks to [Ember Auto Import](https://github.com/ef4/ember-auto-import), this is no longer the case. Using dependencies directly from npm is painless – just `yarn/npm install` them and `import` them directly from your ES6 classes. Thanks to Auto Import, all that ceremony is taken care of for you.
+
+This also means that users can easily manage their project's version of Faker (and other similar dependencies) independently of the version of Mirage they're using.
+
+For this reason, in 1.0 we are no longer bundling Faker.js with Mirage. This is a breaking change.
+
+Here are the steps you'll need to take to fix this:
+
+1. Install Ember Auto Import (if it's not already installed)
+
+  ```sh
+  ember install ember-auto-import
+  ```
+
+2. Install Faker.js directly from npm:
+
+  ```sh
+  yarn add -D faker
+
+  # or npm install --save-dev faker
+  ```
+
+3. Change all imports of `faker` from the `ember-cli-packge` to import directly from `faker`:
+
+  ```diff
+  - import { Factory, faker } from 'ember-cli-mirage';
+  + import { Factory } from 'ember-cli-mirage';
+  + import faker from 'faker';
+  ```
+
+[There is a codemod](https://github.com/caseywatts/ember-cli-mirage-faker-codemod) that will do this for you, thanks to the gracious work of [Casey Watts](https://github.com/caseywatts).
+
+Additionally, when I originally bundled Faker, I monkey-patched it with some methods that I thought would be "useful" additions. I thought this was a good idea at the time... it wasn't. 🙈
+
+You can look at [the module from v0.4.15](https://github.com/samselikoff/ember-cli-mirage/blob/v0.4.15/addon/faker.js) to see that we added the `faker.list.random`, `faker.list.cycle` and `faker.random.number.range` methods, so if you use these methods too, you'll need to refactor them.
+
+Fortunately, two of them have been added to recent versions of Faker, and one can be replaced with some simple JS:
+
+For `faker.list.random`, use `faker.random.arrayElement`:
+
+```diff
+  countries() {
+-   return faker.list.random([ 'United States of America', 'Canada', 'Mexico' ]);
++   return faker.random.arrayElement([ 'United States of America', 'Canada', 'Mexico' ]);
+  }
+```
+
+For `faker.list.cycle`, use the remainder (modulo) operator:
+
+```diff
+  countries(i) {
+-   return faker.list.cycle([ 'United States of America', 'Canada', 'Mexico' ]);
+
++   let countries = [ 'United States of America', 'Canada', 'Mexico' ];
++   
++   return countries[i % countries.length];
+  }
+```
+
+For `faker.random.number.range`, use `faker.random.number` with min and max options:
+
+```diff
+  age() {
+-   return faker.random.number.range(18, 65);
++   return faker.random.number({ min: 18, max: 65 });
+  }
+```
+
+After that, you should be on your own with respect to Faker! Thanks to Auto Import, you can change versions, or even try out other libraries like [Chance.js](https://chancejs.com/), and rest easy knowing Mirage is a big slimmer and one less thing is beyond your control.
+
+
+
+## 0.3.x → 0.4 Upgrade guide
 
 There is one primary change in 0.4 that could break your 0.3 app.
 
@@ -90,7 +171,7 @@ export default JSONAPISerializer.extend({
 If you do this, I would recommend looking closely at how your real server behaves when serializing resources' relationships and whether it uses resource `links` or resource linkage `data`, and to update your Mirage code accordingly to give you the most faithful representation of your server.
 
 
-## 0.2.x > 0.3 Upgrade guide
+## 0.2.x → 0.3 Upgrade guide
 
 The main change from 0.2.x to 0.3.x is that relationships are now one-way. This better matches the semantics of both Ember Data and common HTTP transfer protocols like JSON:API.
 
@@ -144,7 +225,7 @@ Conceptually this change should be straightforward, as its making existing impli
 
 For more information on the motivation behind change, please read the [0-3 beta series release blog post](http://www.ember-cli-mirage.com/blog/2017/01/09/0-3-0-beta-series/).
 
-## 0.1.x > 0.2 Upgrade guide
+## 0.1.x → 0.2 Upgrade guide
 
 If you're upgrading your Mirage server from v0.1.x to v0.2.x, here's what you need to know:
 
@@ -272,4 +353,4 @@ If you're upgrading your Mirage server from v0.1.x to v0.2.x, here's what you ne
 
 ---
 
-You can always view the [full changelog](https://github.com/samselikoff/ember-cli-mirage/blob/master/CHANGELOG.md) to see everything that's changed. If you think this guide missed a critical part of the upgrade path, please [open an issue](https://github.com/samselikoff/ember-cli-mirage/issues/new) or [help improve it](https://github.com/samselikoff/ember-cli-mirage/edit/gh-pages/docs/v0.3.x/upgrading.md)!
+You can always view the [full changelog](https://github.com/samselikoff/ember-cli-mirage/blob/master/CHANGELOG.md) to see everything that's changed. If you think this guide missed a critical part of the upgrade path, please [open an issue](https://github.com/samselikoff/ember-cli-mirage/issues/new)!

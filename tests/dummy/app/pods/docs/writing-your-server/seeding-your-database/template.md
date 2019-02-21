@@ -45,26 +45,25 @@ Each time this factory is used to create an object, it will have an autogenerate
 
 and so on.
 
-<aside class='Docs-page__aside'>
-  <p>View the full <a href="../factories#using-fakerjs">faker guide</a>.</p>
-</aside>
-
-Mirage also includes the Faker.js library, which pairs nicely with your factories to make your data more realistic:
+Mirage also pairs great with the Faker.js library, which makes it easy to create more realistic looking data:
 
 ```js
 // mirage/factories/author.js
-import { Factory, faker } from 'ember-cli-mirage';
+import { Factory } from 'ember-cli-mirage';
+import faker from 'faker';
 
 export default Factory.extend({
   firstName() {
     return faker.name.firstName();
   },
+
   lastName() {
     return faker.name.lastName();
   },
+
   age() {
     // list method added by Mirage
-    return faker.list.random(18, 20, 28, 32, 45, 60)();
+    return faker.random.number({ min: 18, max: 65 });
   },
 });
 ```

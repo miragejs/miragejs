@@ -79,11 +79,11 @@ Let's create a factory for our author with
 $ ember g mirage-factory author
 ```
 
-Mirage also includes the Faker.js library. Let's use this in the Factory and add some properties to it:
+We can then define some properties on our Factory. They can be simple types like Booleans, Strings or Numbers, or functions that return dynamic data:
 
 ```js
 // mirage/factories/author.js
-import { Factory, faker } from 'ember-cli-mirage';
+import { Factory } from 'ember-cli-mirage';
 
 export default Factory.extend({
 
@@ -93,10 +93,8 @@ export default Factory.extend({
 
   age: 28,
 
-  admin: false,
-
-  avatar() {
-    return faker.internet.avatar();
+  admin() {
+    return Math.random() > 0.5;
   }
 
 });
@@ -108,14 +106,12 @@ This factory creates objects like
 [{
   name: 'Person 1',
   age: 28,
-  admin: false,
-  avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/bergmartin/128.jpg'
+  admin: false
 },
 {
   name: 'Person 2',
   age: 28,
-  admin: false,
-  avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/nemanjaivanovic/128.jpg'
+  admin: true
 }]
 ```
 

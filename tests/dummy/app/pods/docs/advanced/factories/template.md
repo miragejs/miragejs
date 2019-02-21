@@ -90,11 +90,13 @@ relationships (as we'll see in a moment):
 
 ```js
 // mirage/factories/contact.js
-import { Factory, faker } from 'ember-cli-mirage';
+import { Factory } from 'ember-cli-mirage';
 
 export default Factory.extend({
 
-  isAdmin: faker.random.boolean,
+  isAdmin(i) {
+    return Math.random() > 0.5;
+  },
 
   afterCreate(contact, server) {
     // Only allow a max of 5 admins to be created
@@ -172,10 +174,13 @@ You can also use the `afterCreate()` hook (for both `hasMany` and `belongsTo` re
 
 ```js
 // mirage/factories/author.js
-import { Factory, faker } from 'ember-cli-mirage';
+import { Factory } from 'ember-cli-mirage';
 
 export default Factory.extend({
-  firstName: faker.name.firstName,
+  firstName(i) {
+    return `Author ${i}`;
+  },
+
   afterCreate(author, server) {
     server.create('post', { author });
   }
@@ -269,11 +274,21 @@ Traits improve your test suite by pulling unnecessary knowledge about data setup
 
 ## Using Faker.js
 
-The [Faker.js](https://github.com/marak/Faker.js/) library is included with Mirage, and its methods work nicely with factory definitions:
+The [Faker.js](https://github.com/marak/Faker.js/) library pairs nicely with with Mirage factories. It used to be directly included with Mirage, since import npm libraries was a hassle, but with the advent of [Ember Auto Import](https://github.com/ef4/ember-auto-import/issues) it is easier than ever for apps and addons to include it on their own.
+
+To use Faker, make sure your app or addon has Auto Import installed, then install `faker` from npm:
+
+```sh
+ember install ember-auto-import
+yarn add -D faker
+```
+
+Now you can use Faker's methods in your Mirage factories:
 
 ```js
 // mirage/factories/user.js
-import { Factory, faker } from 'ember-cli-mirage';
+import { Factory } from 'ember-cli-mirage';
+import faker from 'faker';
 
 export default Factory.extend({
   firstName() {
@@ -288,21 +303,8 @@ export default Factory.extend({
 });
 ```
 
-We've also added two methods on the `faker` namespace, `list.cycle` and `list.random`, which are useful if you have a set of data you want your factories to iterate through:
+You of course can use alternatives to Faker, like [Chance.js](https://chancejs.com/), in a similar way.
 
-```js
-// mirage/factories/subject.js
-import { Factory, faker } from 'ember-cli-mirage';
-
-export default Factory.extend({
-  name: faker.list.cycle('Economics', 'Philosophy', 'English', 'History', 'Mathematics'),
-  students: faker.list.random(100, 200, 300, 400, 500)
-});
-```
-
-`cycle` loops through the data in order, while `random` chooses a random element from the list each time an object is created.
-
-View [Faker's docs](https://github.com/marak/Faker.js/) for the full faker API.
 
 ## Extending factories
 

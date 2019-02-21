@@ -48,7 +48,6 @@
     "ember-get-config": "^0.2.2",
     "ember-inflector": "^2.0.0 || ^3.0.0",
     "fake-xml-http-request": "^2.0.0",
-    "faker": "^3.0.0",
     "lodash": "^4.17.11",
     "pretender": "2.1.1",
     "route-recognizer": "^0.3.4"
@@ -98,6 +97,7 @@
     "eslint-plugin-ember": "^5.2.0",
     "eslint-plugin-ember-suave": "^1.0.0",
     "eslint-plugin-node": "^7.0.1",
+    "faker": "^4.1.0",
     "fastboot": "^1.2.0",
     "js-yaml": "^3.12.1",
     "jsdom": "^13.1.0",
