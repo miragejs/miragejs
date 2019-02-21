@@ -90,6 +90,12 @@ module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
     assert.strictEqual(this.serializer.getCoalescedIds(request), undefined);
   });
 
+  test('normalizeIds defaults to true', function(assert) {
+    let serializer = new ActiveModelSerializer();
+
+    assert.equal(serializer.normalizeIds, true);
+  });
+
   test('normalize works with normalizeIds set to true', function(assert) {
     this.serializer.normalizeIds = true;
     let payload = {

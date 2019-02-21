@@ -3,7 +3,7 @@ import { underscore, pluralize, dasherize, singularize, camelize } from '../util
 
 export default Serializer.extend({
   serializeIds: 'always',
-  normalizeIds: false,
+  normalizeIds: true,
 
   keyForModel(type) {
     return underscore(type);
