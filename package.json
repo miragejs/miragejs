@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@ember/jquery": "^0.5.2",
-    "@ember/optional-features": "^0.6.3",
+    "@ember/optional-features": "^0.7.0",
     "active-model-adapter": "^2.0.3",
     "babel-eslint": "^8.2.6",
     "broccoli-asset-rev": "^2.7.0",
