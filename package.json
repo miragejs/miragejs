@@ -25,7 +25,8 @@
     "url": "https://github.com/miragejs/server/issues"
   },
   "scripts": {
-    "build": "ember build",
+    "build": "rollup -c",
+    "prepublishOnly": "npm run build",
     "lint:hbs": "ember-template-lint .",
     "lint:js": "eslint .",
     "start": "ember serve",
