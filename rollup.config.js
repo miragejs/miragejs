@@ -1,6 +1,9 @@
+/* global process */
+import path from 'path';
 import babel from 'rollup-plugin-babel';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
+import alias from 'rollup-plugin-alias';
 
 export default {
   input: 'lib/index.js',
@@ -10,8 +13,11 @@ export default {
     name: 'MirageJS.Server'
   },
   plugins: [
-    resolve(),
     commonjs(),
+    alias({
+      '@miragejs/server': path.resolve(process.cwd(), './')
+    }),
+    resolve(),
     babel({
       babelrc: false,
       comments: false,

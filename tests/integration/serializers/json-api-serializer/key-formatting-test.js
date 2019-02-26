@@ -2,7 +2,7 @@ import Schema from 'ember-cli-mirage/orm/schema';
 import Db from 'ember-cli-mirage/db';
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import { Model, JSONAPISerializer } from 'ember-cli-mirage';
-import { underscore } from 'ember-cli-mirage/utils/inflector';
+import { underscore } from '@miragejs/server/lib/utils/inflector';
 import { module, test } from 'qunit';
 
 module('Integration | Serializers | JSON API Serializer | Key Formatting', function(hooks) {
