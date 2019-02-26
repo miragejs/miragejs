@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { Model, hasMany, belongsTo, JSONAPISerializer } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
 import promiseAjax from 'dummy/tests/helpers/promise-ajax';
-import { underscore } from 'ember-cli-mirage/utils/inflector';
+import { underscore } from '@miragejs/server/lib/utils/inflector';
 
 module('Integration | Server | Regressions | 1322 Relationship Path Normalization Test', function(hooks) {
   hooks.beforeEach(function() {

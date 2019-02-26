@@ -2,6 +2,7 @@
   "name": "@miragejs/server",
   "version": "2.0.0-beta.1",
   "description": "A client-side server to help you build, test and demo your Ember app",
+  "main": "dist/index.js",
   "keywords": [
     "ember-addon",
     "pretender",
@@ -11,7 +12,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/samselikoff/ember-cli-mirage.git"
+    "url": "https://github.com/miragejs/server.git"
   },
   "license": "MIT",
   "author": "Sam Selikoff",
@@ -19,9 +20,9 @@
     "doc": "doc",
     "test": "tests"
   },
-  "homepage": "https://github.com/samselikoff/ember-cli-mirage",
+  "homepage": "",
   "bugs": {
-    "url": "https://github.com/samselikoff/ember-cli-mirage/issues"
+    "url": "https://github.com/miragejs/server/issues"
   },
   "scripts": {
     "build": "ember build",
@@ -48,6 +49,7 @@
     "ember-get-config": "^0.2.2",
     "ember-inflector": "^2.0.0 || ^3.0.0",
     "fake-xml-http-request": "^2.0.0",
+    "inflected": "^2.0.4",
     "lodash": "^4.17.11",
     "pretender": "2.1.1",
     "route-recognizer": "^0.3.4"
@@ -103,7 +105,12 @@
     "jsdom": "^13.1.0",
     "loader.js": "^4.7.0",
     "marked": "^0.6.0",
-    "qunit-dom": "^0.8.4"
+    "qunit-dom": "^0.8.4",
+    "rollup": "^1.3.0",
+    "rollup-plugin-alias": "^1.5.1",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-commonjs": "^9.2.1",
+    "rollup-plugin-node-resolve": "^4.0.1"
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"
