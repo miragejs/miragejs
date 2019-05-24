@@ -40,6 +40,28 @@ if (environment === 'development') {
 }
 ```
 
+## trackRequests
+
+Defaults to `false`.
+
+A boolean that controls whether [Pretender's `trackedRequests` feature](https://github.com/pretenderjs/pretender#tracking-requests) is enabled. By default it is disabled to avoid memory issues during long development sessions.
+
+To enable, set to `true`, for example in testing environments:
+
+```js
+// config/environment.js
+module.exports = function(environment) {
+  if (environment === 'test') {
+    ENV['ember-cli-mirage'] = {
+      trackRequests: true
+    };
+  }
+}
+```
+
+This feature is useful for asserting against HTTP requests and responses during tests. See the "Asserting against handled requests and responses" section of the {{docs-link 'Assertions guide' 'docs.testing.assertions'}} to learn more.
+
+
 ## excludeFilesFromBuild
 
 Defaults to `false`.

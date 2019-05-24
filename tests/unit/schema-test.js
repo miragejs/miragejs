@@ -33,4 +33,37 @@ module('Unit | Schema', function() {
     assert.deepEqual(schema.modelFor('article').foreignKeys, ['authorId']);
     assert.deepEqual(schema.modelFor('author').foreignKeys, []);
   });
+
+  test('`first()` returns null when nothing is found', function(assert) {
+    assert.expect(2);
+
+    let db = new Db();
+    let schema = new Schema(db);
+
+    let authorModel = Model.extend({});
+    schema.registerModel('author', authorModel);
+
+    assert.equal(schema.first('author'), null);
+
+    let record = schema.create('author', { id: 1, name: 'Mary Roach' });
+
+    assert.deepEqual(schema.first('author'), record);
+  });
+
+  test('`findBy()` returns null when nothing is found', function(assert) {
+    assert.expect(3);
+
+    let db = new Db();
+    let schema = new Schema(db);
+
+    let authorModel = Model.extend({});
+    schema.registerModel('author', authorModel);
+
+    assert.deepEqual(schema.findBy('author', { name: 'Mary Roach' }), null);
+
+    let record = schema.create('author', { id: 1, name: 'Mary Roach' });
+
+    assert.deepEqual(schema.findBy('author', { name: 'Mary Roach' }), record);
+    assert.equal(schema.findBy('author', { name: 'Charles Dickens' }), null);
+  });
 });
