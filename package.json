@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "A client-side server to help you build, test and demo your Ember app",
   "keywords": [
-    "ember-addon",
     "pretender",
     "prototype",
     "server",
@@ -101,11 +100,5 @@
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"
-  },
-  "ember-addon": {
-    "configPath": "tests/dummy/config",
-    "before": [
-      "ember-cli-babel"
-    ]
   }
 }
