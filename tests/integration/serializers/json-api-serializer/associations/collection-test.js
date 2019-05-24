@@ -90,6 +90,51 @@ module('Integration | Serializers | JSON API Serializer | Associations | Collect
     });
   });
 
+  test(`when shouldIncludeLinkageData returns true for a relationship, it contains linkage data for that relationship on all of the collection, regardless of includes`, function(assert) {
+    let registry = new SerializerRegistry(this.schema, {
+      application: JSONAPISerializer.extend({
+        shouldIncludeLinkageData(relationshipKey, model) {
+          if (relationshipKey == 'posts') {
+            return true;
+          }
+        }
+      })
+    });
+    this.schema.wordSmiths.create({ firstName: 'Link', age: 123 });
+    this.schema.wordSmiths.create({ firstName: 'Zelda', age: 456 });
+
+    let collection = this.schema.wordSmiths.all();
+    let result = registry.serialize(collection);
+
+    assert.deepEqual(result, {
+      data: [{
+        type: 'word-smiths',
+        id: '1',
+        attributes: {
+          'first-name': 'Link',
+          age: 123
+        },
+        relationships: {
+          'posts': {
+            data: []
+          }
+        }
+      }, {
+        type: 'word-smiths',
+        id: '2',
+        attributes: {
+          'first-name': 'Zelda',
+          age: 456
+        },
+        relationships: {
+          'posts': {
+            data: []
+          }
+        }
+      }]
+    });
+  });
+
   test(`it includes linkage data for a has-many relationship that's being included`, function(assert) {
     let registry = new SerializerRegistry(this.schema, {
       application: JSONAPISerializer,

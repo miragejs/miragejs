@@ -8,38 +8,37 @@ const Router = AddonDocsRouter.extend({
 
 Router.map(function() {
   docsRoute(this, function() {
-    this.route('getting-started', { path: '/' }, function() {
-      this.route('overview');
+    this.route('getting-started', function() {
+      this.route('what-is-mirage');
       this.route('installation');
-      this.route('quickstart');
-      this.route('upgrading');
+      this.route('upgrade-guide');
+      this.route('overview');
     });
 
-    this.route('writing-your-server', function() {
-      this.route('defining-routes');
-      this.route('seeding-your-database');
-      this.route('acceptance-testing');
+    this.route('route-handlers', function() {
+      this.route('functions');
+      this.route('shorthands');
     });
 
-    this.route('cookbook', function() {
-      this.route('manually-starting-mirage');
-      this.route('simulating-cookie-responses');
-      this.route('overriding-dependencies');
+    this.route('data-layer', function() {
+      this.route('database');
+      this.route('orm');
+      this.route('factories');
+      this.route('fixtures');
+      this.route('serializers');
+    });
+
+    this.route('testing', function() {
+      this.route('acceptance-tests');
+      this.route('integration-and-unit-tests');
+      this.route('assertions');
     });
 
     this.route('advanced', function() {
-      this.route('route-handlers');
-      this.route('defining-relationships');
-      this.route('factories');
-      this.route('fixtures');
       this.route('environment-options');
-      this.route('shorthands');
-      this.route('identity-managers');
-    });
-
-    this.route('examples', function() {
-      this.route('1-belongs-to');
-      this.route('2-has-many');
+      this.route('simulating-cookie-responses');
+      this.route('mocking-guids');
+      this.route('customizing-the-inflector');
     });
 
     this.route('api', function() {
@@ -48,14 +47,6 @@ Router.map(function() {
   });
 
   this.route('blog', function() {
-    // this.route('old-post-year', { path: '/:post_year' }, function() {
-    //   this.route('old-post-month', { path: '/:post_month' }, function() {
-    //     this.route('old-post-day', { path: '/:post_day' }, function() {
-    //       this.route('old-post-slug', { path: '/:post_slug' });
-    //     });
-    //   });
-    // });
-
     this.route('detail', { path: '/:post_slug_and_id' });
   });
 

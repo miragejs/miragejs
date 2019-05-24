@@ -1,7 +1,7 @@
 import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
 import Serializer from 'ember-cli-mirage/serializer';
 import schemaHelper from '../schema-helper';
-import { camelize } from '@miragejs/server/lib/utils/inflector';
+import { camelize } from 'ember-cli-mirage/utils/inflector';
 import {module, test} from 'qunit';
 
 module('Integration | Serializers | Base | Attribute Key Formatting', function(hooks) {

@@ -28,23 +28,20 @@ module('Integration | Route handlers | Function handler', function(hooks) {
   });
 
   test('a meaningful error is thrown if a custom route handler throws an error', async function(assert) {
-    assert.expect(1);
-
     this.server.get('/users', function() {
       throw 'I goofed';
     });
 
-    try {
-      await promiseAjax({
-        method: 'GET',
-        url: '/users'
-      });
-    } catch(e) {
-      assert.equal(
-        e.xhr.responseText,
-        'Mirage: Your GET handler for the url /users threw an error: I goofed'
-      );
-    }
+    assert.rejects(
+      promiseAjax({ method: 'GET', url: '/users' }),
+      function(ajaxError) {
+        let text = ajaxError.xhr.responseText;
+        let line1 = text.indexOf(`Mirage: Your GET handler for the url /users threw an error`) > 0;
+        let line2 = text.indexOf(`I goofed`) > 0;
+
+        return line1 && line2;
+      }
+    );
   });
 
   test('mirage response string is not serialized to string', async function(assert) {

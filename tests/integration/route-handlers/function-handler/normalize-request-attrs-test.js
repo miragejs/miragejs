@@ -2,7 +2,6 @@ import { module, test } from 'qunit';
 import { Model, ActiveModelSerializer } from 'ember-cli-mirage';
 import Server from 'ember-cli-mirage/server';
 import promiseAjax from '../../../helpers/promise-ajax';
-import regExpFromString from '../../../helpers/reg-exp-from-string';
 
 module('Integration | Route handlers | Function handler | #normalizedRequestAttrs', function(hooks) {
   hooks.beforeEach(function() {
@@ -84,25 +83,15 @@ module('Integration | Route handlers | Function handler | #normalizedRequestAttr
     assert.expect(1);
 
     this.server.post('/users/create', function() {
-      assert.throws(() => {
-        this.normalizedRequestAttrs();
-      }, /the detected model of 'create' does not exist/);
-
-      return {};
+      this.normalizedRequestAttrs();
     });
 
-    await promiseAjax({
-      method: 'POST',
-      url: '/users/create',
-      contentType: 'application/json',
-      data: JSON.stringify({
-        user: {
-          first_name: 'Sam',
-          last_name: 'Selikoff',
-          team_id: 1
-        }
-      })
-    });
+    assert.rejects(
+      promiseAjax({ method: 'POST', url: '/users/create' }),
+      function(ajaxError) {
+        return ajaxError.xhr.responseText.indexOf(`the detected model of 'create' does not exist`) > -1;
+      }
+    );
   });
 
   test(`it accepts an optional modelName if it cannot be inferred from the path `, async function(assert) {
@@ -138,21 +127,15 @@ module('Integration | Route handlers | Function handler | #normalizedRequestAttr
     assert.expect(1);
 
     this.server.post('/fine-comments/create', function() {
-      assert.throws(() => {
-        this.normalizedRequestAttrs('fineComment');
-      }, regExpFromString(`You called normalizedRequestAttrs('fineComment'), but normalizedRequestAttrs was intended to be used with the dasherized version of the model type. Please change this to normalizedRequestAttrs('fine-comment')`));
+      this.normalizedRequestAttrs('fineComment');
     });
 
-    await promiseAjax({
-      method: 'POST',
-      url: '/fine-comments/create',
-      contentType: 'application/json',
-      data: JSON.stringify({
-        user: {
-          short_text: 'lorem ipsum'
-        }
-      })
-    });
+    assert.rejects(
+      promiseAjax({ method: 'POST', url: '/fine-comments/create' }),
+      function(ajaxError) {
+        return ajaxError.xhr.responseText.indexOf(`You called normalizedRequestAttrs('fineComment'), but normalizedRequestAttrs was intended to be used with the dasherized version of the model type. Please change this to normalizedRequestAttrs('fine-comment')`) > 0;
+      }
+    );
   });
 
   test(`it works with a form encoded request that has a lower-case content-type (issue 1398)`, async function(assert) {

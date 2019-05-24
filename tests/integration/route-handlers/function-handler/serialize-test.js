@@ -97,16 +97,18 @@ module('Integration | Route handlers | Function handler | #serialize', function(
     assert.expect(1);
 
     this.server.create('user', { name: 'Sam' });
-
     this.server.get('/users', function(schema) {
       let users = schema.users.all();
 
-      assert.throws(() => {
-        this.serialize(users, 'foo-user');
-      }, /that serializer doesn't exist/);
+      this.serialize(users, 'foo-user');
     });
 
-    await promiseAjax({ method: 'GET', url: '/users' });
+    assert.rejects(
+      promiseAjax({ method: 'GET', url: '/users' }),
+      function(ajaxError) {
+        return ajaxError.xhr.responseText.indexOf(`that serializer doesn't exist`) > 0;
+      }
+    );
   });
 
   test('it noops on plain JS arrays', async function(assert) {

@@ -2,33 +2,33 @@
 
   {{#viewer.nav as |nav|}}
     {{nav.section "Getting started"}}
-    {{nav.item "Overview" "docs.getting-started.index"}}
+    {{nav.item "What is Mirage?" "docs.getting-started.what-is-mirage"}}
     {{nav.item "Installation" "docs.getting-started.installation"}}
-    {{nav.item "Quickstart" "docs.getting-started.quickstart"}}
-    {{nav.item "Upgrading" "docs.getting-started.upgrading"}}
+    {{nav.item "Upgrade guide" "docs.getting-started.upgrade-guide"}}
+    {{nav.item "Overview" "docs.getting-started.overview"}}
 
-    {{nav.section "Writing your server"}}
-    {{nav.item "Defining routes" "docs.writing-your-server.defining-routes"}}
-    {{nav.item "Seeding your database" "docs.writing-your-server.seeding-your-database"}}
-    {{nav.item "Acceptance testing" "docs.writing-your-server.acceptance-testing"}}
+    {{nav.section "Route handlers"}}
+    {{nav.item "Functions" "docs.route-handlers.functions"}}
+    {{nav.item "Shorthands" "docs.route-handlers.shorthands"}}
+
+    {{nav.section "Data layer"}}
+    {{nav.item "The Database" "docs.data-layer.database"}}
+    {{nav.item "The ORM" "docs.data-layer.orm"}}
+    {{nav.item "Factories" "docs.data-layer.factories"}}
+    {{nav.item "Fixtures" "docs.data-layer.fixtures"}}
+    {{nav.item "Serializers" "docs.data-layer.serializers"}}
+
+    {{nav.section "Testing"}}
+    {{nav.item "Acceptance tests" "docs.testing.acceptance-tests"}}
+    {{nav.item "Integration and unit tests" "docs.testing.integration-and-unit-tests"}}
+    {{nav.item "Assertions" "docs.testing.assertions"}}
 
     {{nav.section "Advanced"}}
-    {{nav.item "Route handlers" "docs.advanced.route-handlers"}}
-    {{nav.item "Shorthands" "docs.advanced.shorthands"}}
-    {{nav.item "Defining relationships" "docs.advanced.defining-relationships"}}
-    {{nav.item "Factories" "docs.advanced.factories"}}
-    {{nav.item "Fixtures" "docs.advanced.fixtures"}}
-    {{nav.item "Environment configuration" "docs.advanced.environment-options"}}
-    {{nav.item "Identity managers" "docs.advanced.identity-managers"}}
+    {{nav.item "Environment options" "docs.advanced.environment-options"}}
+    {{nav.item "Simulating cookie responses" "docs.advanced.simulating-cookie-responses"}}
+    {{nav.item "Mocking GUIDs" "docs.advanced.mocking-guids"}}
+    {{nav.item "Customizing the inflector" "docs.advanced.customizing-the-inflector"}}
 
-    {{nav.section "Cookbook"}}
-    {{nav.item "Manually starting Mirage" "docs.cookbook.manually-starting-mirage"}}
-    {{nav.item "Simulating cookie responses" "docs.cookbook.simulating-cookie-responses"}}
-    {{nav.item "Overriding dependencies" "docs.cookbook.overriding-dependencies"}}
-
-    {{!-- {{nav.section "Examples"}}
-    {{nav.item "1: Belongs to (no inverse)" "docs.examples.1-belongs-to"}}
-    {{nav.item "2: Has many (no inverse)" "docs.examples.2-has-many"}} --}}
   {{/viewer.nav}}
 
   {{#viewer.main}}
