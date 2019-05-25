@@ -28,27 +28,6 @@ module.exports = {
     };
   },
 
-  insertServerIntoESLintrc: function() {
-    // Insert server to globals declaration in eslintrc file.
-    // If globals declaration is not present insert it.
-    var text = '    server: true,';
-    var after = 'globals: {\n';
-
-    return this.insertIntoFile('.eslintrc.js', text, { after: after }).then(() => {
-      text = '  globals: {\n    server: true,\n  },';
-      after = 'module.exports = {\n';
-
-      return this.insertIntoFile('.eslintrc.js', text, { after: after });
-    });
-  },
-
-  insertServerIntoJSHintrc: function() {
-    var text = '    "server",';
-    var after = '"predef": [\n';
-
-    return this.insertIntoFile('.jshintrc', text, { after: after });
-  },
-
   insertShutdownIntoDestroyApp: function() {
     if (fs.existsSync('tests/helpers/destroy-app.js')) {
       var shutdownText = '  if (window.server) {\n    window.server.shutdown();\n  }';
@@ -59,10 +38,6 @@ module.exports = {
   },
 
   afterInstall: function() {
-    return this.insertServerIntoESLintrc().then(() => {
-      return this.insertServerIntoJSHintrc().then(() => {
-        return this.insertShutdownIntoDestroyApp();
-      });
-    });
+    return this.insertShutdownIntoDestroyApp();
   }
 };

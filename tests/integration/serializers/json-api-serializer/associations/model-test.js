@@ -77,6 +77,79 @@ module('Integration | Serializers | JSON API Serializer | Associations | Model',
     });
   });
 
+  test(`when shouldIncludeLinkageData returns true for a certain belongsTo relationship, it contains linkage data for that relationship, regardless of includes`, function(assert) {
+    let registry = new SerializerRegistry(this.schema, {
+      application: JSONAPISerializer.extend({
+        shouldIncludeLinkageData(relationshipKey, model) {
+          if (relationshipKey === 'wordSmith') {
+            return true;
+          }
+        }
+      })
+    });
+    let link = this.schema.wordSmiths.create({
+      firstName: 'Link',
+      age: 123
+    });
+    let post = link.createBlogPost({ title: 'Lorem ipsum' });
+
+    let result = registry.serialize(post);
+    assert.deepEqual(result, {
+      data: {
+        type: 'blog-posts',
+        id: '1',
+        attributes: {
+          'title': 'Lorem ipsum'
+        },
+        relationships: {
+          'word-smith': {
+            data: {
+              type: 'word-smiths',
+              id: '1'
+            }
+          }
+        }
+      }
+    });
+  });
+
+  test(`when shouldIncludeLinkageData returns true for a certain hasMany relationship, it contains linkage data for that relationship, regardless of includes`, function(assert) {
+    let registry = new SerializerRegistry(this.schema, {
+      application: JSONAPISerializer,
+      wordSmith: JSONAPISerializer.extend({
+        shouldIncludeLinkageData(relationshipKey, model) {
+          if (relationshipKey === 'blogPosts') {
+            return true;
+          }
+        }
+      })
+    });
+
+    let link = this.schema.wordSmiths.create({ firstName: 'Link' });
+    link.createBlogPost({ title: 'Lorem' });
+    link.createBlogPost({ title: 'Ipsum' });
+
+    let result = registry.serialize(link);
+
+    assert.deepEqual(result, {
+      data: {
+        type: 'word-smiths',
+        id: '1',
+        attributes: {
+          'first-name': 'Link'
+        },
+        relationships: {
+          'blog-posts': {
+            data: [
+              { type: 'blog-posts', id: '1' },
+              { type: 'blog-posts', id: '2' }
+            ]
+          }
+        }
+      }
+    });
+  });
+
   test(`it includes linkage data for a has-many relationship that's being included`, function(assert) {
     let registry = new SerializerRegistry(this.schema, {
       application: JSONAPISerializer,
