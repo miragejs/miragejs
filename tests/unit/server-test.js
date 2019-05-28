@@ -1,6 +1,6 @@
-import Server, { defaultPassthroughs } from 'ember-cli-mirage/server';
+import Server, { defaultPassthroughs } from '../../lib/server';
 import {module, test} from 'qunit';
-import { Model, Factory, belongsTo, hasMany, trait, association } from 'ember-cli-mirage';
+import { Model, Factory, belongsTo, hasMany, trait, association } from '../../lib';
 
 module('Unit | Server', function() {
   test('it can be instantiated', function(assert) {
@@ -32,6 +32,33 @@ module('Unit | Server', function() {
         }
       }
     });
+
+    server.shutdown();
+  });
+
+  test('it sets inflector when inflector is passed as option', function(assert) {
+    assert.expect(1);
+
+    let server = new Server({
+      inflector: {
+        singularize: () => 'test-singularize',
+        plualize: () => 'test-pluralize'
+      }
+    });
+
+    assert.equal(server.inflector.pluralize(), 'test-pluralize');
+    assert.equal(server.inflector.singularize(), 'test-singularize');
+
+    server.shutdown();
+  });
+
+  test('it throws when no inflector is passed', function(assert) {
+    assert.expect(1);
+
+    let server = new Server();
+
+    assert.throws(server.inflector.singularize(), /singularize/);
+    assert.throws(server.inflector.pluralize(), /pluralize/);
 
     server.shutdown();
   });
