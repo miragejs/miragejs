@@ -1,6 +1,6 @@
 {
   "name": "@miragejs/server",
-  "version": "2.0.0-beta.4",
+  "version": "0.1.0",
   "description": "A client-side server to help you build, test and demo your Ember app",
   "main": "dist/index.js",
   "keywords": [
