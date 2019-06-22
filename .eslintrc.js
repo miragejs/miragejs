@@ -5,19 +5,15 @@ module.exports = {
     sourceType: 'module'
   },
   plugins: [
-    'ember'
   ],
   extends: [
     'eslint:recommended',
-    'plugin:ember-suave/recommended'
   ],
   env: {
     browser: true
   },
   rules: {
     'camelcase': 0,
-    'ember-suave/no-direct-property-access': 0,
-    'ember-suave/prefer-destructuring': 0,
     'object-curly-spacing': 0,
     'quotes': 0,
     'array-bracket-spacing': 0,
@@ -27,20 +23,16 @@ module.exports = {
     'no-unused-vars': ['error', { 'args': 'none' }]
   },
   globals: {
-    server: true
   },
   overrides: [
     // node files
     {
       files: [
         '.template-lintrc.js',
-        'ember-cli-build.js',
         'index.js',
         'testem.js',
-        'blueprints/*/index.js',
         'config/**/*.js',
         'tests/dummy/config/**/*.js',
-        'fastboot-tests/**/*.js'
       ],
       excludedFiles: [
         'addon/**',
@@ -67,7 +59,6 @@ module.exports = {
       files: ['tests/**/*.js'],
       excludedFiles: ['tests/dummy/**/*.js'],
       env: {
-        embertest: true
       }
     },
   ]
