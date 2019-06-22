@@ -1,15 +1,15 @@
-import { module, test } from 'qunit';
-import Server from 'ember-cli-mirage/server';
-import { Model, hasMany, belongsTo, RestSerializer } from 'ember-cli-mirage';
+import { module, test } from "qunit";
+import Server from "ember-cli-mirage/server";
+import { Model, hasMany, belongsTo, RestSerializer } from "ember-cli-mirage";
 
-module('Integration | Serializer | RestSerializer', function(hooks) {
+module("Integration | Serializer | RestSerializer", function(hooks) {
   hooks.afterEach(function() {
     this.server.shutdown();
   });
 
-  test('it sideloads associations and camel-cases relationships and attributes correctly for a model', function(assert) {
+  test("it sideloads associations and camel-cases relationships and attributes correctly for a model", function(assert) {
     this.server = new Server({
-      environment: 'test',
+      environment: "test",
       models: {
         wordSmith: Model.extend({
           blogPosts: hasMany()
@@ -21,47 +21,47 @@ module('Integration | Serializer | RestSerializer', function(hooks) {
       serializers: {
         application: RestSerializer,
         wordSmith: RestSerializer.extend({
-          attrs: ['id', 'name'],
-          include: ['blogPosts']
+          attrs: ["id", "name"],
+          include: ["blogPosts"]
         }),
         blogPost: RestSerializer.extend({
-          include: ['wordSmith']
+          include: ["wordSmith"]
         })
       }
     });
 
-    let link = this.server.create('word-smith', { name: 'Link', age: 123 });
-    link.createBlogPost({ title: 'Lorem' });
-    link.createBlogPost({ title: 'Ipsum' });
+    let link = this.server.create("word-smith", { name: "Link", age: 123 });
+    link.createBlogPost({ title: "Lorem" });
+    link.createBlogPost({ title: "Ipsum" });
 
-    this.server.create('word-smith', { name: 'Zelda', age: 230 });
+    this.server.create("word-smith", { name: "Zelda", age: 230 });
 
     let result = this.server.serializerOrRegistry.serialize(link);
 
     assert.deepEqual(result, {
       wordSmith: {
-        id: '1',
-        name: 'Link',
-        blogPosts: ['1', '2']
+        id: "1",
+        name: "Link",
+        blogPosts: ["1", "2"]
       },
       blogPosts: [
         {
-          id: '1',
-          title: 'Lorem',
-          wordSmith: '1'
+          id: "1",
+          title: "Lorem",
+          wordSmith: "1"
         },
         {
-          id: '2',
-          title: 'Ipsum',
-          wordSmith: '1'
+          id: "2",
+          title: "Ipsum",
+          wordSmith: "1"
         }
       ]
     });
   });
 
-  test('it works for has-many polymorphic associations', function(assert) {
+  test("it works for has-many polymorphic associations", function(assert) {
     this.server = new Server({
-      environment: 'test',
+      environment: "test",
       models: {
         wordSmith: Model.extend({
           posts: hasMany({ polymorphic: true })
@@ -73,25 +73,22 @@ module('Integration | Serializer | RestSerializer', function(hooks) {
       }
     });
 
-    let post = this.server.create('blog-post', { title: 'Post 1' });
-    let link = this.server.create('word-smith', {
-      name: 'Link',
+    let post = this.server.create("blog-post", { title: "Post 1" });
+    let link = this.server.create("word-smith", {
+      name: "Link",
       age: 123,
-      posts: [ post ]
+      posts: [post]
     });
 
     let result = this.server.serializerOrRegistry.serialize(link);
 
     assert.deepEqual(result, {
       wordSmith: {
-        id: '1',
-        name: 'Link',
+        id: "1",
+        name: "Link",
         age: 123,
-        posts: [
-          { id: '1', type: 'blog-post' }
-        ]
+        posts: [{ id: "1", type: "blog-post" }]
       }
     });
   });
-
 });

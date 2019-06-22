@@ -1,11 +1,11 @@
-import { Model, belongsTo } from 'ember-cli-mirage';
-import Schema from 'ember-cli-mirage/orm/schema';
-import Db from 'ember-cli-mirage/db';
-import ActiveModelSerializer from 'ember-cli-mirage/serializers/active-model-serializer';
+import { Model, belongsTo } from "ember-cli-mirage";
+import Schema from "ember-cli-mirage/orm/schema";
+import Db from "ember-cli-mirage/db";
+import ActiveModelSerializer from "ember-cli-mirage/serializers/active-model-serializer";
 
-import {module, test} from 'qunit';
+import { module, test } from "qunit";
 
-module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
+module("Unit | Serializers | ActiveModelSerializer", function(hooks) {
   hooks.beforeEach(function() {
     let schema = new Schema(new Db(), {
       contact: Model.extend({
@@ -20,88 +20,88 @@ module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
     });
   });
 
-  test('normalize works', function(assert) {
+  test("normalize works", function(assert) {
     let payload = {
       contact: {
         id: 1,
-        name: 'Link'
+        name: "Link"
       }
     };
     let jsonApiDoc = this.serializer.normalize(payload);
 
     assert.deepEqual(jsonApiDoc, {
       data: {
-        type: 'contacts',
+        type: "contacts",
         id: 1,
         attributes: {
-          name: 'Link'
+          name: "Link"
         }
       }
     });
   });
 
-  test('it hyphenates snake_cased words', function(assert) {
+  test("it hyphenates snake_cased words", function(assert) {
     let payload = {
       contact: {
         id: 1,
-        first_name: 'Link'
+        first_name: "Link"
       }
     };
     let jsonApiDoc = this.serializer.normalize(payload);
 
     assert.deepEqual(jsonApiDoc, {
       data: {
-        type: 'contacts',
+        type: "contacts",
         id: 1,
         attributes: {
-          'first-name': 'Link'
+          "first-name": "Link"
         }
       }
     });
   });
 
-  test('it works without an id', function(assert) {
+  test("it works without an id", function(assert) {
     let payload = {
       contact: {
-        first_name: 'Link',
-        last_name: 'zor'
+        first_name: "Link",
+        last_name: "zor"
       }
     };
     let jsonApiDoc = this.serializer.normalize(payload);
 
     assert.deepEqual(jsonApiDoc, {
       data: {
-        type: 'contacts',
+        type: "contacts",
         attributes: {
-          'first-name': 'Link',
-          'last-name': 'zor'
+          "first-name": "Link",
+          "last-name": "zor"
         }
       }
     });
   });
 
-  test('it returns coalesce Ids if present', function(assert) {
-    let request = { url: '/authors', queryParams: { ids: ['1', '3'] } };
-    assert.deepEqual(this.serializer.getCoalescedIds(request), ['1', '3']);
+  test("it returns coalesce Ids if present", function(assert) {
+    let request = { url: "/authors", queryParams: { ids: ["1", "3"] } };
+    assert.deepEqual(this.serializer.getCoalescedIds(request), ["1", "3"]);
   });
 
-  test('it returns undefined coalesce Ids if not present', function(assert) {
-    let request = { url: '/authors', queryParams: {} };
+  test("it returns undefined coalesce Ids if not present", function(assert) {
+    let request = { url: "/authors", queryParams: {} };
     assert.strictEqual(this.serializer.getCoalescedIds(request), undefined);
   });
 
-  test('normalizeIds defaults to true', function(assert) {
+  test("normalizeIds defaults to true", function(assert) {
     let serializer = new ActiveModelSerializer();
 
     assert.equal(serializer.normalizeIds, true);
   });
 
-  test('normalize works with normalizeIds set to true', function(assert) {
+  test("normalize works with normalizeIds set to true", function(assert) {
     this.serializer.normalizeIds = true;
     let payload = {
       contact: {
         id: 1,
-        name: 'Link',
+        name: "Link",
         address: 1
       }
     };
@@ -109,15 +109,15 @@ module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
 
     assert.deepEqual(jsonApiDoc, {
       data: {
-        type: 'contacts',
+        type: "contacts",
         id: 1,
         attributes: {
-          name: 'Link'
+          name: "Link"
         },
         relationships: {
           address: {
             data: {
-              type: 'address',
+              type: "address",
               id: 1
             }
           }
@@ -127,7 +127,7 @@ module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
   });
 
   test('serializeIds defaults to "always"', function(assert) {
-    let defaultState = new ActiveModelSerializer;
-    assert.equal(defaultState.serializeIds, 'always');
+    let defaultState = new ActiveModelSerializer();
+    assert.equal(defaultState.serializeIds, "always");
   });
 });

@@ -1,10 +1,12 @@
-import Schema from 'ember-cli-mirage/orm/schema';
-import Db from 'ember-cli-mirage/db';
-import SerializerRegistry from 'ember-cli-mirage/serializer-registry';
-import { Model, JSONAPISerializer } from 'ember-cli-mirage';
-import { module, test } from 'qunit';
+import Schema from "ember-cli-mirage/orm/schema";
+import Db from "ember-cli-mirage/db";
+import SerializerRegistry from "ember-cli-mirage/serializer-registry";
+import { Model, JSONAPISerializer } from "ember-cli-mirage";
+import { module, test } from "qunit";
 
-module('Integration | Serializers | JSON API Serializer | Attrs List', function(hooks) {
+module("Integration | Serializers | JSON API Serializer | Attrs List", function(
+  hooks
+) {
   hooks.beforeEach(function() {
     this.schema = new Schema(new Db(), {
       wordSmith: Model,
@@ -16,12 +18,12 @@ module('Integration | Serializers | JSON API Serializer | Attrs List', function(
     let registry = new SerializerRegistry(this.schema, {
       application: JSONAPISerializer,
       wordSmith: JSONAPISerializer.extend({
-        attrs: ['firstName']
+        attrs: ["firstName"]
       })
     });
     let user = this.schema.wordSmiths.create({
       id: 1,
-      firstName: 'Link',
+      firstName: "Link",
       age: 123
     });
 
@@ -29,10 +31,10 @@ module('Integration | Serializers | JSON API Serializer | Attrs List', function(
 
     assert.deepEqual(result, {
       data: {
-        type: 'word-smiths',
-        id: '1',
+        type: "word-smiths",
+        id: "1",
         attributes: {
-          'first-name': 'Link'
+          "first-name": "Link"
         }
       }
     });
@@ -42,60 +44,71 @@ module('Integration | Serializers | JSON API Serializer | Attrs List', function(
     let registry = new SerializerRegistry(this.schema, {
       application: JSONAPISerializer,
       wordSmith: JSONAPISerializer.extend({
-        attrs: ['firstName']
+        attrs: ["firstName"]
       })
     });
-    this.schema.wordSmiths.create({ id: 1, firstName: 'Link', age: 123 });
-    this.schema.wordSmiths.create({ id: 2, firstName: 'Zelda', age: 456 });
+    this.schema.wordSmiths.create({ id: 1, firstName: "Link", age: 123 });
+    this.schema.wordSmiths.create({ id: 2, firstName: "Zelda", age: 456 });
 
     let collection = this.schema.wordSmiths.all();
     let result = registry.serialize(collection);
 
     assert.deepEqual(result, {
-      data: [{
-        type: 'word-smiths',
-        id: '1',
-        attributes: {
-          'first-name': 'Link'
+      data: [
+        {
+          type: "word-smiths",
+          id: "1",
+          attributes: {
+            "first-name": "Link"
+          }
+        },
+        {
+          type: "word-smiths",
+          id: "2",
+          attributes: {
+            "first-name": "Zelda"
+          }
         }
-      }, {
-        type: 'word-smiths',
-        id: '2',
-        attributes: {
-          'first-name': 'Zelda'
-        }
-      }]
+      ]
     });
   });
 
   test(`it can use different attr whitelists for different serializers`, function(assert) {
     let registry = new SerializerRegistry(this.schema, {
       wordSmith: JSONAPISerializer.extend({
-        attrs: ['firstName']
+        attrs: ["firstName"]
       }),
       photograph: JSONAPISerializer.extend({
-        attrs: ['title']
+        attrs: ["title"]
       })
     });
 
-    let link = this.schema.wordSmiths.create({ id: 1, firstName: 'Link', age: 123 });
+    let link = this.schema.wordSmiths.create({
+      id: 1,
+      firstName: "Link",
+      age: 123
+    });
     assert.deepEqual(registry.serialize(link), {
       data: {
-        type: 'word-smiths',
-        id: '1',
+        type: "word-smiths",
+        id: "1",
         attributes: {
-          'first-name': 'Link'
+          "first-name": "Link"
         }
       }
     });
 
-    let photo = this.schema.photographs.create({ id: 1, title: 'Lorem ipsum', createdAt: '2010-01-01' });
+    let photo = this.schema.photographs.create({
+      id: 1,
+      title: "Lorem ipsum",
+      createdAt: "2010-01-01"
+    });
     assert.deepEqual(registry.serialize(photo), {
       data: {
-        type: 'photographs',
-        id: '1',
+        type: "photographs",
+        id: "1",
         attributes: {
-          'title': 'Lorem ipsum'
+          title: "Lorem ipsum"
         }
       }
     });

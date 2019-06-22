@@ -1,3 +1,3 @@
-import Controller from 'ember-cli-addon-docs/controllers/application';
+import Controller from "ember-cli-addon-docs/controllers/application";
 
 export default Controller.extend();

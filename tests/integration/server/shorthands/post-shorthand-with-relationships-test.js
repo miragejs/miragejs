@@ -1,15 +1,17 @@
-import { module, test } from 'qunit';
-import Server from 'ember-cli-mirage/server';
-import { Model, belongsTo, hasMany } from 'ember-cli-mirage';
-import PostShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthands/post';
-import JSONAPISerializer from 'ember-cli-mirage/serializers/json-api-serializer';
-import promiseAjax from '../../../helpers/promise-ajax';
+import { module, test } from "qunit";
+import Server from "ember-cli-mirage/server";
+import { Model, belongsTo, hasMany } from "ember-cli-mirage";
+import PostShorthandRouteHandler from "ember-cli-mirage/route-handlers/shorthands/post";
+import JSONAPISerializer from "ember-cli-mirage/serializers/json-api-serializer";
+import promiseAjax from "../../../helpers/promise-ajax";
 
-module('Integration | Server | Shorthands | Post with relationships', function(hooks) {
+module("Integration | Server | Shorthands | Post with relationships", function(
+  hooks
+) {
   hooks.beforeEach(function() {
     this.newServerWithSchema = function(schema) {
       this.server = new Server({
-        environment: 'development',
+        environment: "development",
         models: schema
       });
       this.server.timing = 0;
@@ -32,7 +34,7 @@ module('Integration | Server | Shorthands | Post with relationships', function(h
     this.server.shutdown();
   });
 
-  test('it works for belongs to', async function(assert) {
+  test("it works for belongs to", async function(assert) {
     let server = this.newServerWithSchema({
       author: Model.extend({
         posts: hasMany()
@@ -42,25 +44,25 @@ module('Integration | Server | Shorthands | Post with relationships', function(h
       })
     });
     server.loadConfig(function() {
-      this.post('/posts');
+      this.post("/posts");
     });
 
     assert.equal(server.db.posts.length, 0);
 
-    let author = server.create('author');
+    let author = server.create("author");
 
     let response = await promiseAjax({
-      method: 'POST',
-      url: '/posts',
+      method: "POST",
+      url: "/posts",
       data: JSON.stringify({
         data: {
           attributes: {
-            title: 'Post 1'
+            title: "Post 1"
           },
           relationships: {
             author: {
               data: {
-                type: 'authors',
+                type: "authors",
                 id: author.id
               }
             }
@@ -76,7 +78,7 @@ module('Integration | Server | Shorthands | Post with relationships', function(h
     assert.equal(post.author.id, author.id);
   });
 
-  test('it works for belongs to polymorphic', async function(assert) {
+  test("it works for belongs to polymorphic", async function(assert) {
     let server = this.newServerWithSchema({
       video: Model.extend(),
       post: Model.extend(),
@@ -85,26 +87,26 @@ module('Integration | Server | Shorthands | Post with relationships', function(h
       })
     });
     server.loadConfig(function() {
-      this.post('/comments');
+      this.post("/comments");
     });
 
     assert.equal(server.db.comments.length, 0);
 
-    let video = server.create('video');
+    let video = server.create("video");
 
     let response = await promiseAjax({
-      method: 'POST',
-      url: '/comments',
+      method: "POST",
+      url: "/comments",
       data: JSON.stringify({
         data: {
-          type: 'comments',
+          type: "comments",
           attributes: {
-            text: 'Comment 1'
+            text: "Comment 1"
           },
           relationships: {
             commentable: {
               data: {
-                type: 'videos',
+                type: "videos",
                 id: video.id
               }
             }
@@ -120,7 +122,7 @@ module('Integration | Server | Shorthands | Post with relationships', function(h
     assert.ok(comment.commentable.equals(video));
   });
 
-  test('it works for has many polymorphic', async function(assert) {
+  test("it works for has many polymorphic", async function(assert) {
     let server = this.newServerWithSchema({
       car: Model.extend(),
       watch: Model.extend(),
@@ -129,32 +131,32 @@ module('Integration | Server | Shorthands | Post with relationships', function(h
       })
     });
     server.loadConfig(function() {
-      this.post('/users');
+      this.post("/users");
     });
 
     assert.equal(server.db.users.length, 0);
 
-    let car = server.create('car');
-    let watch = server.create('watch');
+    let car = server.create("car");
+    let watch = server.create("watch");
 
     let response = await promiseAjax({
-      method: 'POST',
-      url: '/users',
+      method: "POST",
+      url: "/users",
       data: JSON.stringify({
         data: {
-          type: 'users',
+          type: "users",
           attributes: {
-            name: 'Elon Musk'
+            name: "Elon Musk"
           },
           relationships: {
             collectibles: {
               data: [
                 {
-                  type: 'cars',
+                  type: "cars",
                   id: car.id
                 },
                 {
-                  type: 'watches',
+                  type: "watches",
                   id: watch.id
                 }
               ]
@@ -171,5 +173,4 @@ module('Integration | Server | Shorthands | Post with relationships', function(h
     assert.ok(user.collectibles.includes(car));
     assert.ok(user.collectibles.includes(watch));
   });
-
 });

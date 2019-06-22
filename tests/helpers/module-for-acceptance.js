@@ -1,7 +1,7 @@
-import { module } from 'qunit';
-import { resolve } from 'rsvp';
-import startApp from '../helpers/start-app';
-import destroyApp from '../helpers/destroy-app';
+import { module } from "qunit";
+import { resolve } from "rsvp";
+import startApp from "../helpers/start-app";
+import destroyApp from "../helpers/destroy-app";
 
 export default function(name, options = {}) {
   module(name, {
@@ -14,7 +14,8 @@ export default function(name, options = {}) {
     },
 
     afterEach() {
-      let afterEach = options.afterEach && options.afterEach.apply(this, arguments);
+      let afterEach =
+        options.afterEach && options.afterEach.apply(this, arguments);
       return resolve(afterEach).then(() => destroyApp(this.application));
     }
   });

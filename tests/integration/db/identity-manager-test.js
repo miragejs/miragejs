@@ -1,7 +1,7 @@
-import { module, test } from 'qunit';
-import { Model, hasMany, belongsTo } from 'ember-cli-mirage';
-import Server from 'ember-cli-mirage/server';
-import DefaultIdentityManager from 'ember-cli-mirage/identity-manager';
+import { module, test } from "qunit";
+import { Model, hasMany, belongsTo } from "ember-cli-mirage";
+import Server from "ember-cli-mirage/server";
+import DefaultIdentityManager from "ember-cli-mirage/identity-manager";
 
 const CustomIdentityManager = class {
   constructor() {
@@ -9,27 +9,29 @@ const CustomIdentityManager = class {
   }
   fetch() {
     if (this.wasCalled) {
-      throw new Error('IdentityManager used for test only supports one call to fetch');
+      throw new Error(
+        "IdentityManager used for test only supports one call to fetch"
+      );
     }
     this.wasCalled = true;
-    return 'custom-id';
+    return "custom-id";
   }
   set(id) {
-    throw new Error('Not implemented for test.');
+    throw new Error("Not implemented for test.");
   }
   reset() {
-    throw new Error('Not implemented for test.');
+    throw new Error("Not implemented for test.");
   }
 };
 
-module('Integration | Db | Identity manager', function(hooks) {
+module("Integration | Db | Identity manager", function(hooks) {
   hooks.afterEach(function() {
     this.server.shutdown();
   });
 
-  test('it uses identity managers defined by config', function(assert) {
+  test("it uses identity managers defined by config", function(assert) {
     this.server = new Server({
-      environment: 'test',
+      environment: "test",
       identityManagers: {
         post: DefaultIdentityManager,
         author: CustomIdentityManager
@@ -47,19 +49,31 @@ module('Integration | Db | Identity manager', function(hooks) {
       }
     });
 
-    let author = server.create('author');
-    let comment = server.create('comment');
-    let post = server.create('post');
-    assert.equal(author.id, 'custom-id', 'custom identity manager defined in config is used');
-    assert.equal(post.id, '1', 'ember-cli-mirage identity manager defined in config is used');
-    assert.equal(comment.id, '1', 'falls back to ember-cli-mirage identity manager if no one is defined in config for model');
+    let author = server.create("author");
+    let comment = server.create("comment");
+    let post = server.create("post");
+    assert.equal(
+      author.id,
+      "custom-id",
+      "custom identity manager defined in config is used"
+    );
+    assert.equal(
+      post.id,
+      "1",
+      "ember-cli-mirage identity manager defined in config is used"
+    );
+    assert.equal(
+      comment.id,
+      "1",
+      "falls back to ember-cli-mirage identity manager if no one is defined in config for model"
+    );
   });
 
-  test('attribute hash is passed to identity managers fetch method', function(assert) {
+  test("attribute hash is passed to identity managers fetch method", function(assert) {
     assert.expect(2);
 
     let dataForRecord = {
-      foo: 'bar'
+      foo: "bar"
     };
     let IdentityManagerForTest = class {
       fetch(data) {
@@ -68,7 +82,7 @@ module('Integration | Db | Identity manager', function(hooks) {
       }
     };
     this.server = new Server({
-      environment: 'test',
+      environment: "test",
       identityManagers: {
         application: IdentityManagerForTest
       },
@@ -76,6 +90,6 @@ module('Integration | Db | Identity manager', function(hooks) {
         foo: Model.extend()
       }
     });
-    this.server.create('foo', dataForRecord);
+    this.server.create("foo", dataForRecord);
   });
 });

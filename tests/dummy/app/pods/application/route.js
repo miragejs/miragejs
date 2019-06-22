@@ -1,7 +1,6 @@
-import Route from '@ember/routing/route';
+import Route from "@ember/routing/route";
 
 export default Route.extend({
-
   beforeModel() {
     let pathname = window.location.pathname;
     [
@@ -14,9 +13,11 @@ export default Route.extend({
       "v0.4.x"
     ].forEach(version => {
       if (pathname.match(`/docs/${version}`)) {
-        window.location = pathname.replace(`/docs/${version}`, `/versions/${version}`);
+        window.location = pathname.replace(
+          `/docs/${version}`,
+          `/versions/${version}`
+        );
       }
     });
   }
-
 });

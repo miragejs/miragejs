@@ -1,18 +1,16 @@
-import { module, test } from 'qunit';
+import { module, test } from "qunit";
 
-import { Model, JSONAPISerializer } from 'ember-cli-mirage';
-import Server from 'ember-cli-mirage/server';
-import FunctionRouteHandler from 'ember-cli-mirage/route-handlers/function';
+import { Model, JSONAPISerializer } from "ember-cli-mirage";
+import Server from "ember-cli-mirage/server";
+import FunctionRouteHandler from "ember-cli-mirage/route-handlers/function";
 
-module('Integration | Route handlers | Assertions', function(hooks) {
+module("Integration | Route handlers | Assertions", function(hooks) {
   hooks.beforeEach(function() {
     this.server = new Server({
-      environment: 'development',
+      environment: "development",
       models: {
-        user: Model.extend({
-        }),
-        comment: Model.extend({
-        })
+        user: Model.extend({}),
+        comment: Model.extend({})
       },
       serializers: {
         application: JSONAPISerializer
@@ -21,31 +19,31 @@ module('Integration | Route handlers | Assertions', function(hooks) {
     this.server.timing = 0;
     this.server.logging = false;
 
-    this.server.post('/users');
+    this.server.post("/users");
   });
 
   hooks.afterEach(function() {
     this.server.shutdown();
   });
 
-  test('a helpful assert is thrown if a relationship passed in a request is not a defined association on the posted model', async function(assert) {
+  test("a helpful assert is thrown if a relationship passed in a request is not a defined association on the posted model", async function(assert) {
     assert.expect(1);
 
     let request = {
       requestHeaders: {},
-      method: 'POST',
-      url: '/users',
+      method: "POST",
+      url: "/users",
       requestBody: JSON.stringify({
         data: {
-          type: 'user',
+          type: "user",
           attributes: {
-            name: 'Jacob Dylan'
+            name: "Jacob Dylan"
           },
           relationships: {
-            'comments': {
+            comments: {
               data: {
-                type: 'comment',
-                name: 'Bob Dylan'
+                type: "comment",
+                name: "Bob Dylan"
               }
             }
           }
@@ -53,8 +51,11 @@ module('Integration | Route handlers | Assertions', function(hooks) {
       })
     };
 
-    this.functionHandler = new FunctionRouteHandler(this.server.schema, this.server.serializerOrRegistry);
-    this.functionHandler.path = '/users';
+    this.functionHandler = new FunctionRouteHandler(
+      this.server.schema,
+      this.server.serializerOrRegistry
+    );
+    this.functionHandler.path = "/users";
     this.functionHandler.request = request;
 
     assert.throws(function() {

@@ -1,9 +1,9 @@
-import { module, test } from 'qunit';
-import { Model, Factory, hasMany, belongsTo } from 'ember-cli-mirage';
-import Inflector from 'ember-inflector';
-import Server from 'ember-cli-mirage/server';
+import { module, test } from "qunit";
+import { Model, Factory, hasMany, belongsTo } from "ember-cli-mirage";
+import Inflector from "ember-inflector";
+import Server from "ember-cli-mirage/server";
 // import escape from 'escape-string-regexp';
-import regExpFromString from '../../helpers/reg-exp-from-string';
+import regExpFromString from "../../helpers/reg-exp-from-string";
 
 // eslint-disable-next-line no-console
 let originalWarn = console.warn;
@@ -11,11 +11,11 @@ let originalWarn = console.warn;
 function expectNoWarning(assert) {
   // eslint-disable-next-line no-console
   console.warn = () => {
-    assert.notOk(true, 'no warning should be logged');
+    assert.notOk(true, "no warning should be logged");
   };
 }
 
-module('Integration | Server | create and createList', function(hooks) {
+module("Integration | Server | create and createList", function(hooks) {
   hooks.beforeEach(function() {
     this.Contact = Model.extend();
     this.AmazingContact = Model.extend();
@@ -28,7 +28,7 @@ module('Integration | Server | create and createList', function(hooks) {
     this.Data = Model.extend();
 
     this.server = new Server({
-      environment: 'test',
+      environment: "test",
       models: {
         contact: this.Contact,
         amazingContact: this.AmazingContact,
@@ -38,7 +38,7 @@ module('Integration | Server | create and createList', function(hooks) {
       },
       factories: {
         contact: Factory.extend({
-          name: 'Yehuda'
+          name: "Yehuda"
         }),
         amazingContact: Factory
       }
@@ -54,116 +54,122 @@ module('Integration | Server | create and createList', function(hooks) {
     console.warn = originalWarn;
   });
 
-  test('create throws when passing in an undefined model', function(assert) {
+  test("create throws when passing in an undefined model", function(assert) {
     expectNoWarning(assert);
 
     assert.throws(() => {
-      this.server.create('foo');
+      this.server.create("foo");
     }, regExpFromString(`You called server.create('foo') but no model or factory was found.`));
   });
 
   // This used to be deprecated behavior, but now it errors. So we test it separately from the nonsense test above.
-  test('create throws when passing in a pluralized version of a model', function(assert) {
+  test("create throws when passing in a pluralized version of a model", function(assert) {
     assert.expect(1);
 
     assert.throws(() => {
-      this.server.create('contacts');
+      this.server.create("contacts");
     }, regExpFromString(`You called server.create('contacts') but no model or factory was found. Make sure you're passing in the singularized version of the model or factory name`));
   });
 
-  test('create returns a Model if one is defined', function(assert) {
+  test("create returns a Model if one is defined", function(assert) {
     expectNoWarning(assert);
 
-    let contact = this.server.create('contact');
+    let contact = this.server.create("contact");
 
-    assert.ok(contact instanceof this.Contact, 'expected a Contact');
-    assert.equal(contact.name, 'Yehuda', 'the factory is used');
+    assert.ok(contact instanceof this.Contact, "expected a Contact");
+    assert.equal(contact.name, "Yehuda", "the factory is used");
   });
 
-  test('create returns a Model instance if the Model name is uncountable', function(assert) {
+  test("create returns a Model instance if the Model name is uncountable", function(assert) {
     expectNoWarning(assert);
 
-    Inflector.inflector.uncountable('data');
-    let data = this.server.create('data');
+    Inflector.inflector.uncountable("data");
+    let data = this.server.create("data");
 
-    assert.ok(data instanceof this.Data, 'expected a Data');
+    assert.ok(data instanceof this.Data, "expected a Data");
   });
 
-  test('createList throws when passing in an undefined model', function(assert) {
+  test("createList throws when passing in an undefined model", function(assert) {
     expectNoWarning(assert);
 
     assert.throws(() => {
-      this.server.createList('foo', 1);
+      this.server.createList("foo", 1);
     }, regExpFromString(`You called server.createList('foo') but no model or factory was found.`));
   });
 
   // This used to be deprecated behavior, but now it errors. So we test it separately from the nonsense test above.
-  test('createList throws when passing in a pluralized version of a model', function(assert) {
+  test("createList throws when passing in a pluralized version of a model", function(assert) {
     assert.expect(1);
 
     assert.throws(() => {
-      this.server.createList('contacts', 1);
+      this.server.createList("contacts", 1);
     }, regExpFromString(`You called server.createList('contacts') but no model or factory was found. Make sure you're passing in the singularized version of the model or factory name.`));
   });
 
-  test('createList returns Models if one is defined', function(assert) {
+  test("createList returns Models if one is defined", function(assert) {
     expectNoWarning();
 
-    let contacts = this.server.createList('contact', 1);
+    let contacts = this.server.createList("contact", 1);
 
-    assert.ok(contacts[0] instanceof this.Contact, 'expected a Contactl');
-    assert.equal(contacts[0].name, 'Yehuda', 'the factory is used');
+    assert.ok(contacts[0] instanceof this.Contact, "expected a Contactl");
+    assert.equal(contacts[0].name, "Yehuda", "the factory is used");
   });
 
-  test('createList returns Models if the model name is uncountable', function(assert) {
+  test("createList returns Models if the model name is uncountable", function(assert) {
     expectNoWarning(assert);
 
-    Inflector.inflector.uncountable('data');
-    let data = this.server.createList('data', 1);
+    Inflector.inflector.uncountable("data");
+    let data = this.server.createList("data", 1);
 
-    assert.ok(data[0] instanceof this.Data, 'expected a Data');
+    assert.ok(data[0] instanceof this.Data, "expected a Data");
   });
 
-  test('create returns a Model if one is defined, when using a compound name', function(assert) {
+  test("create returns a Model if one is defined, when using a compound name", function(assert) {
     expectNoWarning(assert);
 
-    let contact = this.server.create('amazing-contact');
+    let contact = this.server.create("amazing-contact");
 
-    assert.ok(contact instanceof this.AmazingContact, 'expected an AmazingContact');
+    assert.ok(
+      contact instanceof this.AmazingContact,
+      "expected an AmazingContact"
+    );
   });
 
-  test('createList returns Models if one is defined, when using a compound name', function(assert) {
+  test("createList returns Models if one is defined, when using a compound name", function(assert) {
     expectNoWarning(assert);
 
-    let contacts = this.server.createList('amazing-contact', 1);
+    let contacts = this.server.createList("amazing-contact", 1);
 
-    assert.ok(contacts[0] instanceof this.AmazingContact, 'expected an AmazingContact');
+    assert.ok(
+      contacts[0] instanceof this.AmazingContact,
+      "expected an AmazingContact"
+    );
   });
 
-  test('create falls back to a model if no factory is defined', function(assert) {
+  test("create falls back to a model if no factory is defined", function(assert) {
     expectNoWarning(assert);
 
-    let post = this.server.create('post');
+    let post = this.server.create("post");
 
     assert.ok(post instanceof this.Post);
     assert.equal(post.id, 1);
   });
 
-  test('createList falls back to a model if no factory is defined', function(assert) {
+  test("createList falls back to a model if no factory is defined", function(assert) {
     expectNoWarning(assert);
 
-    let posts = this.server.createList('post', 2);
+    let posts = this.server.createList("post", 2);
 
     assert.ok(posts[0] instanceof this.Post);
     assert.equal(posts.length, 2);
     assert.equal(posts[0].id, 1);
   });
 
-  test('create sets up the db correctly when passing in fks', function(assert) {
+  test("create sets up the db correctly when passing in fks", function(assert) {
     expectNoWarning(assert);
 
-    let author = server.create('author');
-    let post = this.server.create('post', {
+    let author = server.create("author");
+    let post = this.server.create("post", {
       authorId: author.id
     });
     author.reload();
@@ -173,11 +179,11 @@ module('Integration | Server | create and createList', function(hooks) {
     assert.equal(this.server.db.posts[0].authorId, author.id);
   });
 
-  test('create sets up the db correctly when passing in models', function(assert) {
+  test("create sets up the db correctly when passing in models", function(assert) {
     expectNoWarning(assert);
 
-    let author = server.create('author');
-    let post = this.server.create('post', {
+    let author = server.create("author");
+    let post = this.server.create("post", {
       author
     });
 

@@ -6,5 +6,5 @@ export default function() {
   // }
 
   this.passthrough();
-  this.passthrough('https://api.github.com/*');
+  this.passthrough("https://api.github.com/*");
 }

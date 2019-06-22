@@ -1,6 +1,6 @@
-import { Model, belongsTo } from 'ember-cli-mirage';
-import Schema from 'ember-cli-mirage/orm/schema';
-import Db from 'ember-cli-mirage/db';
+import { Model, belongsTo } from "ember-cli-mirage";
+import Schema from "ember-cli-mirage/orm/schema";
+import Db from "ember-cli-mirage/db";
 
 /*
   A model with a belongsTo association can be in six states
@@ -14,41 +14,42 @@ import Db from 'ember-cli-mirage/db';
   where the parent may be undefined.
 */
 export default class BelongsToHelper {
-
   constructor() {
     this.db = new Db();
 
     this.schema = new Schema(this.db, {
       user: Model.extend({
-        representative: belongsTo('user', { inverse: null })
+        representative: belongsTo("user", { inverse: null })
       })
     });
   }
 
   savedChildNoParent() {
-    let link = this.db.users.insert({ name: 'Link' });
+    let link = this.db.users.insert({ name: "Link" });
 
-    return [ this.schema.users.find(link.id), undefined ];
+    return [this.schema.users.find(link.id), undefined];
   }
 
   savedChildSavedParent() {
-    let linkDbRecord = this.db.users.insert({ name: 'Link' });
-    this.db.users.update(linkDbRecord.id, { representativeId: linkDbRecord.id });
+    let linkDbRecord = this.db.users.insert({ name: "Link" });
+    this.db.users.update(linkDbRecord.id, {
+      representativeId: linkDbRecord.id
+    });
 
     let link = this.schema.users.find(linkDbRecord.id);
 
-    return [ link, link ];
+    return [link, link];
   }
 
   newChildNoParent() {
-    return [ this.schema.users.new({ name: 'Link' }), undefined ];
+    return [this.schema.users.new({ name: "Link" }), undefined];
   }
 
   newChildNewParent() {
-    let link = this.schema.users.new({ name: 'Link' });
+    let link = this.schema.users.new({ name: "Link" });
     link.representative = link;
 
-    return [ link, link ];
+    return [link, link];
   }
 
   // Just a saved unassociated parent.
@@ -61,12 +62,11 @@ export default class BelongsToHelper {
   // newParent() {
   //   return this.schema.users.new({ name: 'Bob' });
   // }
-
 }
 
 export const states = [
-  'savedChildNoParent',
-  'savedChildSavedParent',
-  'newChildNoParent',
-  'newChildNewParent'
+  "savedChildNoParent",
+  "savedChildSavedParent",
+  "newChildNoParent",
+  "newChildNewParent"
 ];

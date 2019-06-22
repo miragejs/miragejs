@@ -1,6 +1,6 @@
-import { Model, hasMany } from 'ember-cli-mirage';
-import Schema from 'ember-cli-mirage/orm/schema';
-import Db from 'ember-cli-mirage/db';
+import { Model, hasMany } from "ember-cli-mirage";
+import Schema from "ember-cli-mirage/orm/schema";
+import Db from "ember-cli-mirage/db";
 
 /*
   A model with a hasMany association can be in eight states
@@ -14,7 +14,6 @@ import Db from 'ember-cli-mirage/db';
   where the children array may be empty.
 */
 export default class Helper {
-
   constructor() {
     this.db = new Db();
 
@@ -30,106 +29,104 @@ export default class Helper {
   }
 
   savedParentNoChildren() {
-    let order = this.db.orders.insert({ name: 'Red' });
+    let order = this.db.orders.insert({ name: "Red" });
 
-    return [ this.schema.orders.find(order.id), [] ];
+    return [this.schema.orders.find(order.id), []];
   }
 
   savedParentNewChildren() {
-    let order = this.schema.orders.create({ name: 'Red' });
-    let product1 = this.schema.products.new({ name: 'Blue' });
-    let product2 = this.schema.products.new({ name: 'Green' });
+    let order = this.schema.orders.create({ name: "Red" });
+    let product1 = this.schema.products.new({ name: "Blue" });
+    let product2 = this.schema.products.new({ name: "Green" });
 
-    order.products = [ product1, product2 ];
+    order.products = [product1, product2];
 
-    return [ order, [ product1, product2 ] ];
+    return [order, [product1, product2]];
   }
 
   savedParentSavedChildren() {
     let { schema } = this;
-    schema.db.orders.insert([
-      { id: '1', name: 'Red', productIds: ['2', '3'] }
-    ]);
+    schema.db.orders.insert([{ id: "1", name: "Red", productIds: ["2", "3"] }]);
     schema.db.products.insert([
-      { id: '2', name: 'Blue', orderIds: ['1'] },
-      { id: '3', name: 'Green', orderIds: ['1'] }
+      { id: "2", name: "Blue", orderIds: ["1"] },
+      { id: "3", name: "Green", orderIds: ["1"] }
     ]);
 
-    return [ schema.orders.find(1), [ schema.products.find(2), schema.products.find(3) ] ];
+    return [
+      schema.orders.find(1),
+      [schema.products.find(2), schema.products.find(3)]
+    ];
   }
 
   savedParentMixedChildren() {
-    this.schema.db.orders.insert([
-      { id: '1', name: 'Red', productIds: ['2'] }
-    ]);
+    this.schema.db.orders.insert([{ id: "1", name: "Red", productIds: ["2"] }]);
     this.schema.db.products.insert([
-      { id: '2', name: 'Blue', orderIds: ['1'] }
+      { id: "2", name: "Blue", orderIds: ["1"] }
     ]);
     let order = this.schema.orders.find(1);
     let product1 = this.schema.products.find(2);
-    let product2 = this.schema.products.new({ name: 'Green' });
+    let product2 = this.schema.products.new({ name: "Green" });
 
-    order.products = [ product1, product2 ];
+    order.products = [product1, product2];
 
-    return [ order, [ product1, product2 ] ];
+    return [order, [product1, product2]];
   }
 
   newParentNoChildren() {
-    let order = this.schema.orders.new({ name: 'Red' });
+    let order = this.schema.orders.new({ name: "Red" });
 
-    return [ order, [] ];
+    return [order, []];
   }
 
   newParentNewChildren() {
-    let order = this.schema.orders.new({ name: 'Red' });
-    let product1 = this.schema.products.new({ name: 'Blue' });
-    let product2 = this.schema.products.new({ name: 'Green' });
+    let order = this.schema.orders.new({ name: "Red" });
+    let product1 = this.schema.products.new({ name: "Blue" });
+    let product2 = this.schema.products.new({ name: "Green" });
 
-    order.products = [ product1, product2 ];
+    order.products = [product1, product2];
 
-    return [ order, [ product1, product2 ] ];
+    return [order, [product1, product2]];
   }
 
   newParentSavedChildren() {
-    let order = this.schema.orders.new({ name: 'Red' });
-    let product1 = this.schema.products.create({ name: 'Blue' });
-    let product2 = this.schema.products.create({ name: 'Green' });
+    let order = this.schema.orders.new({ name: "Red" });
+    let product1 = this.schema.products.create({ name: "Blue" });
+    let product2 = this.schema.products.create({ name: "Green" });
 
-    order.products = [ product1, product2 ];
+    order.products = [product1, product2];
 
-    return [ order, [ product1, product2 ] ];
+    return [order, [product1, product2]];
   }
 
   newParentMixedChildren() {
-    let order = this.schema.orders.new({ name: 'Red' });
-    let product1 = this.schema.products.create({ name: 'Blue' });
-    let product2 = this.schema.products.new({ name: 'Green' });
+    let order = this.schema.orders.new({ name: "Red" });
+    let product1 = this.schema.products.create({ name: "Blue" });
+    let product2 = this.schema.products.new({ name: "Green" });
 
-    order.products = [ product1, product2 ];
+    order.products = [product1, product2];
 
-    return [ order, [ product1, product2 ] ];
+    return [order, [product1, product2]];
   }
 
   // Unassociated child models, used for setting tests
   savedChild() {
-    let insertedProduct = this.db.products.insert({ name: 'Blue' });
+    let insertedProduct = this.db.products.insert({ name: "Blue" });
 
     return this.schema.products.find(insertedProduct.id);
   }
 
   newChild() {
-    return this.schema.products.new({ name: 'Blue' });
+    return this.schema.products.new({ name: "Blue" });
   }
-
 }
 
 export const states = [
-  'savedParentNoChildren',
-  'savedParentNewChildren',
-  'savedParentMixedChildren',
-  'savedParentSavedChildren',
-  'newParentNoChildren',
-  'newParentNewChildren',
-  'newParentSavedChildren',
-  'newParentMixedChildren'
+  "savedParentNoChildren",
+  "savedParentNewChildren",
+  "savedParentMixedChildren",
+  "savedParentSavedChildren",
+  "newParentNoChildren",
+  "newParentNewChildren",
+  "newParentSavedChildren",
+  "newParentMixedChildren"
 ];

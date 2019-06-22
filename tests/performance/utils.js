@@ -1,4 +1,4 @@
-import { test } from 'qunit';
+import { test } from "qunit";
 
 export function perfTest(count, message, testFn, timeout = 0) {
   test(`(${count}) ${message}`, function(assert) {
@@ -22,9 +22,5 @@ export function time(fn) {
 }
 
 export function now() {
-  return performance
-    ? performance.now()
-    : Date.now
-      ? Date.now()
-      : +new Date();
+  return performance ? performance.now() : Date.now ? Date.now() : +new Date();
 }

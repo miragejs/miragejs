@@ -2,28 +2,24 @@ module.exports = {
   root: true,
   parserOptions: {
     ecmaVersion: 2017,
-    sourceType: 'module'
+    sourceType: "module"
   },
-  plugins: [
-  ],
-  extends: [
-    'eslint:recommended',
-  ],
+  plugins: [],
+  extends: ["eslint:recommended"],
   env: {
     browser: true
   },
   rules: {
-    'camelcase': 0,
-    'object-curly-spacing': 0,
-    'quotes': 0,
-    'array-bracket-spacing': 0,
-    'no-var': 0,
-    'object-shorthand': 0,
-    'arrow-parens': 0,
-    'no-unused-vars': ['error', { 'args': 'none' }]
+    camelcase: 0,
+    "object-curly-spacing": 0,
+    quotes: 0,
+    "array-bracket-spacing": 0,
+    "no-var": 0,
+    "object-shorthand": 0,
+    "arrow-parens": 0,
+    "no-unused-vars": ["error", { args: "none" }]
   },
-  globals: {
-  },
+  globals: {},
   overrides: [
     // node files
     // {
@@ -53,7 +49,6 @@ module.exports = {
     //     // add your custom rules and overrides for node files here
     //   })
     // },
-
     // test files. Can remove when we upgrade tests to new style.
     // {
     //   files: ['tests/**/*.js'],

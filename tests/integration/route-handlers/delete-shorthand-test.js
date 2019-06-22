@@ -1,14 +1,14 @@
-import {module, test} from 'qunit';
-import Server from 'ember-cli-mirage/server';
-import Model from 'ember-cli-mirage/orm/model';
-import Mirage from 'ember-cli-mirage';
-import DeleteShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthands/delete';
-import JSONAPISerializer from 'ember-cli-mirage/serializers/json-api-serializer';
+import { module, test } from "qunit";
+import Server from "ember-cli-mirage/server";
+import Model from "ember-cli-mirage/orm/model";
+import Mirage from "ember-cli-mirage";
+import DeleteShorthandRouteHandler from "ember-cli-mirage/route-handlers/shorthands/delete";
+import JSONAPISerializer from "ember-cli-mirage/serializers/json-api-serializer";
 
-module('Integration | Route Handlers | DELETE shorthand', function(hooks) {
+module("Integration | Route Handlers | DELETE shorthand", function(hooks) {
   hooks.beforeEach(function() {
     this.server = new Server({
-      environment: 'development',
+      environment: "development",
       models: {
         wordSmith: Model.extend({
           blogPosts: Mirage.hasMany()
@@ -19,12 +19,10 @@ module('Integration | Route Handlers | DELETE shorthand', function(hooks) {
     this.server.timing = 0;
     this.server.logging = false;
 
-    let wordSmiths = [
-      { id: 1, name: 'Ganon', blogPostIds: [1] }
-    ];
+    let wordSmiths = [{ id: 1, name: "Ganon", blogPostIds: [1] }];
     let blogPosts = [
-      { id: 1, title: 'Lorem', wordSmithId: '1' },
-      { id: 2, title: 'Another', wordSmithId: '2' }
+      { id: 1, title: "Lorem", wordSmithId: "1" },
+      { id: 2, title: "Another", wordSmithId: "2" }
     ];
     this.server.db.loadData({ wordSmiths, blogPosts });
 
@@ -36,9 +34,14 @@ module('Integration | Route Handlers | DELETE shorthand', function(hooks) {
     this.server.shutdown();
   });
 
-  test('undefined shorthand deletes the record and returns null', function(assert) {
-    let request = { url: '/word-smiths/1', params: { id: '1' } };
-    let handler = new DeleteShorthandRouteHandler(this.schema, this.serializer, undefined, '/word-smiths/:id');
+  test("undefined shorthand deletes the record and returns null", function(assert) {
+    let request = { url: "/word-smiths/1", params: { id: "1" } };
+    let handler = new DeleteShorthandRouteHandler(
+      this.schema,
+      this.serializer,
+      undefined,
+      "/word-smiths/:id"
+    );
 
     let response = handler.handle(request);
 
@@ -46,9 +49,18 @@ module('Integration | Route Handlers | DELETE shorthand', function(hooks) {
     assert.equal(response, null);
   });
 
-  test('query params are ignored', function(assert) {
-    let request = { url: '/word-smiths/1?foo=bar', params: { id: '1' }, queryParams: { foo: 'bar' } };
-    let handler = new DeleteShorthandRouteHandler(this.schema, this.serializer, undefined, '/word-smiths/:id');
+  test("query params are ignored", function(assert) {
+    let request = {
+      url: "/word-smiths/1?foo=bar",
+      params: { id: "1" },
+      queryParams: { foo: "bar" }
+    };
+    let handler = new DeleteShorthandRouteHandler(
+      this.schema,
+      this.serializer,
+      undefined,
+      "/word-smiths/:id"
+    );
 
     let response = handler.handle(request);
 
@@ -56,9 +68,18 @@ module('Integration | Route Handlers | DELETE shorthand', function(hooks) {
     assert.equal(response, null);
   });
 
-  test('string shorthand deletes the record of the specified type', function(assert) {
-    let request = { url: '/word-smiths/1?foo=bar', params: { id: '1' }, queryParams: { foo: 'bar' } };
-    let handler = new DeleteShorthandRouteHandler(this.schema, this.serializer, undefined, '/word-smiths/:id');
+  test("string shorthand deletes the record of the specified type", function(assert) {
+    let request = {
+      url: "/word-smiths/1?foo=bar",
+      params: { id: "1" },
+      queryParams: { foo: "bar" }
+    };
+    let handler = new DeleteShorthandRouteHandler(
+      this.schema,
+      this.serializer,
+      undefined,
+      "/word-smiths/:id"
+    );
 
     let response = handler.handle(request);
 
@@ -66,9 +87,13 @@ module('Integration | Route Handlers | DELETE shorthand', function(hooks) {
     assert.equal(response, null);
   });
 
-  test('array shorthand deletes the record and all related records', function(assert) {
-    let request = { url: '/word-smiths/1', params: { id: '1' } };
-    let handler = new DeleteShorthandRouteHandler(this.schema, this.serializer, ['word-smith', 'blog-posts']);
+  test("array shorthand deletes the record and all related records", function(assert) {
+    let request = { url: "/word-smiths/1", params: { id: "1" } };
+    let handler = new DeleteShorthandRouteHandler(
+      this.schema,
+      this.serializer,
+      ["word-smith", "blog-posts"]
+    );
 
     let response = handler.handle(request);
 
@@ -77,9 +102,14 @@ module('Integration | Route Handlers | DELETE shorthand', function(hooks) {
     assert.equal(response, null);
   });
 
-  test('if a shorthand tries to access an unknown type it throws an error', function(assert) {
-    let request = { url: '/foobars/1', params: { id: '1' } };
-    let handler = new DeleteShorthandRouteHandler(this.schema, this.serializer, undefined, '/foobars/:id');
+  test("if a shorthand tries to access an unknown type it throws an error", function(assert) {
+    let request = { url: "/foobars/1", params: { id: "1" } };
+    let handler = new DeleteShorthandRouteHandler(
+      this.schema,
+      this.serializer,
+      undefined,
+      "/foobars/:id"
+    );
 
     assert.throws(function() {
       handler.handle(request);
