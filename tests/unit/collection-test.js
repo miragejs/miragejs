@@ -1,42 +1,42 @@
-import Collection from 'ember-cli-mirage/orm/collection';
-import {module, test} from 'qunit';
+import Collection from "ember-cli-mirage/orm/collection";
+import { module, test } from "qunit";
 
-module('Unit | Collection', function() {
-  test('it can be instantiated', function(assert) {
-    let collection = new Collection('plant');
+module("Unit | Collection", function() {
+  test("it can be instantiated", function(assert) {
+    let collection = new Collection("plant");
 
     assert.ok(collection);
   });
 
-  test('it cannot be instantiated without a modelName', function(assert) {
+  test("it cannot be instantiated without a modelName", function(assert) {
     assert.throws(() => {
       new Collection();
     }, /must pass a `modelName`/);
   });
 
-  test('it knows its modelname', function(assert) {
-    let collection = new Collection('author');
+  test("it knows its modelname", function(assert) {
+    let collection = new Collection("author");
 
-    assert.equal(collection.modelName, 'author');
+    assert.equal(collection.modelName, "author");
   });
 
-  test('it can be instantiated with an array of models', function(assert) {
+  test("it can be instantiated with an array of models", function(assert) {
     let models = [{ id: 1 }, { id: 2 }, { id: 3 }];
-    let collection = new Collection('author', models);
+    let collection = new Collection("author", models);
 
     assert.ok(collection);
   });
 
-  test('#models returns the underlying array', function(assert) {
+  test("#models returns the underlying array", function(assert) {
     let models = [{ id: 1 }, { id: 2 }, { id: 3 }];
-    let collection = new Collection('author', models);
+    let collection = new Collection("author", models);
 
     assert.deepEqual(collection.models, models);
   });
 
-  test('#length returns the number of elements', function(assert) {
+  test("#length returns the number of elements", function(assert) {
     let models = [{ id: 1 }, { id: 2 }];
-    let collection = new Collection('post', models);
+    let collection = new Collection("post", models);
 
     assert.equal(collection.length, 2);
 

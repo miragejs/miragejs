@@ -1,9 +1,9 @@
-import IdentityManager from 'ember-cli-mirage/identity-manager';
+import IdentityManager from "ember-cli-mirage/identity-manager";
 
-import {module, test} from 'qunit';
+import { module, test } from "qunit";
 
-module('Unit | Db | IdentityManager', function() {
-  test('it can be instantiated', function(assert) {
+module("Unit | Db | IdentityManager", function() {
+  test("it can be instantiated", function(assert) {
     let manager = new IdentityManager();
     assert.ok(manager);
   });
@@ -26,10 +26,10 @@ module('Unit | Db | IdentityManager', function() {
 
   test(`set indicates an id is being used`, function(assert) {
     let manager = new IdentityManager();
-    manager.set('abc');
+    manager.set("abc");
 
     assert.throws(function() {
-      manager.set('abc');
+      manager.set("abc");
     }, /already been used/);
   });
 
@@ -52,7 +52,7 @@ module('Unit | Db | IdentityManager', function() {
 
   test(`an int as a string passed into set affects future ids used by fetch`, function(assert) {
     let manager = new IdentityManager();
-    manager.set('5');
+    manager.set("5");
 
     assert.equal(manager.fetch(), 6);
     assert.equal(manager.fetch(), 7);
@@ -60,8 +60,8 @@ module('Unit | Db | IdentityManager', function() {
 
   test(`multiple ints as a string passed into set affects future ids used by fetch`, function(assert) {
     let manager = new IdentityManager();
-    manager.set('5');
-    manager.set('6');
+    manager.set("5");
+    manager.set("6");
 
     assert.equal(manager.fetch(), 7);
     assert.equal(manager.fetch(), 8);
@@ -69,7 +69,7 @@ module('Unit | Db | IdentityManager', function() {
 
   test(`a string value that doesn't parse as an int passed into set doesn't affect future ids used by fetch`, function(assert) {
     let manager = new IdentityManager();
-    manager.set('123-abc');
+    manager.set("123-abc");
 
     assert.equal(manager.fetch(), 1);
     assert.equal(manager.fetch(), 2);
@@ -77,9 +77,9 @@ module('Unit | Db | IdentityManager', function() {
 
   test(`reset clears the managers memory`, function(assert) {
     let manager = new IdentityManager();
-    manager.set('abc');
+    manager.set("abc");
     manager.reset();
-    manager.set('abc');
+    manager.set("abc");
 
     assert.ok(true);
   });

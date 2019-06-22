@@ -1,2 +1,2 @@
-import setupMirage from './setup-mirage';
+import setupMirage from "./setup-mirage";
 export { setupMirage };

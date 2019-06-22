@@ -1,11 +1,11 @@
-import {module, test} from 'qunit';
-import Server from 'ember-cli-mirage/server';
-import { Model, Factory } from 'ember-cli-mirage';
+import { module, test } from "qunit";
+import Server from "ember-cli-mirage/server";
+import { Model, Factory } from "ember-cli-mirage";
 
-module('Integration | Database', function(hooks) {
+module("Integration | Database", function(hooks) {
   hooks.beforeEach(function() {
     this.server = new Server({
-      environment: 'development',
+      environment: "development",
       scenarios: {
         default() {}
       },
@@ -16,9 +16,7 @@ module('Integration | Database', function(hooks) {
         author: Factory
       },
       fixtures: {
-        authors: [
-          { id: 1, name: 'Zelda' }
-        ]
+        authors: [{ id: 1, name: "Zelda" }]
       }
     });
   });
@@ -34,7 +32,6 @@ module('Integration | Database', function(hooks) {
 
     let { authors } = this.server.db;
     assert.equal(authors.length, 2);
-    assert.deepEqual(authors.map((a) => a.id), ['1', '2']);
+    assert.deepEqual(authors.map(a => a.id), ["1", "2"]);
   });
 });
-

@@ -1,7 +1,9 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-module('Integration | ORM | Mixed | One To Many | association #set', function(hooks) {
+module("Integration | ORM | Mixed | One To Many | association #set", function(
+  hooks
+) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,13 +11,12 @@ module('Integration | ORM | Mixed | One To Many | association #set', function(ho
   /*
     The model can update its association via parent, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can update its association to a list of saved children`, function(assert) {
-      let [ user, originalPosts ] = this.helper[state]();
+      let [user, originalPosts] = this.helper[state]();
       let savedPost = this.helper.savedChild();
 
-      user.posts = [ savedPost ];
+      user.posts = [savedPost];
 
       assert.ok(user.posts.includes(savedPost));
       assert.ok(user.postIds.indexOf(savedPost.id) > -1);
@@ -31,12 +32,12 @@ module('Integration | ORM | Mixed | One To Many | association #set', function(ho
     });
 
     test(`a ${state} can update its association to a new parent`, function(assert) {
-      let [ user, originalPosts ] = this.helper[state]();
+      let [user, originalPosts] = this.helper[state]();
       let newPost = this.helper.newChild();
 
-      user.posts = [ newPost ];
+      user.posts = [newPost];
 
-      assert.deepEqual(user.postIds, [ undefined ]);
+      assert.deepEqual(user.postIds, [undefined]);
       assert.ok(user.posts.includes(newPost));
 
       user.save();
@@ -50,11 +51,11 @@ module('Integration | ORM | Mixed | One To Many | association #set', function(ho
     });
 
     test(`a ${state} can clear its association via an empty list`, function(assert) {
-      let [ user, originalPosts ] = this.helper[state]();
+      let [user, originalPosts] = this.helper[state]();
 
-      user.posts = [ ];
+      user.posts = [];
 
-      assert.deepEqual(user.postIds, [ ]);
+      assert.deepEqual(user.postIds, []);
       assert.equal(user.posts.models.length, 0);
 
       user.save();
@@ -68,11 +69,11 @@ module('Integration | ORM | Mixed | One To Many | association #set', function(ho
     });
 
     test(`a ${state} can clear its association via an empty list`, function(assert) {
-      let [ user, originalPosts ] = this.helper[state]();
+      let [user, originalPosts] = this.helper[state]();
 
       user.posts = null;
 
-      assert.deepEqual(user.postIds, [ ]);
+      assert.deepEqual(user.postIds, []);
       assert.equal(user.posts.models.length, 0);
 
       user.save();
@@ -84,6 +85,5 @@ module('Integration | ORM | Mixed | One To Many | association #set', function(ho
         }
       });
     });
-
   });
 });

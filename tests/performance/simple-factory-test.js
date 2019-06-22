@@ -1,19 +1,19 @@
-import { module } from 'qunit';
-import { Model, Factory } from 'ember-cli-mirage';
-import Server from 'ember-cli-mirage/server';
-import { perfTest } from './utils';
+import { module } from "qunit";
+import { Model, Factory } from "ember-cli-mirage";
+import Server from "ember-cli-mirage/server";
+import { perfTest } from "./utils";
 
-module('Performance | Factory | Simple', {
+module("Performance | Factory | Simple", {
   beforeEach() {
     this.Car = Model.extend();
     this.CarFactory = Factory.extend({
-      make: 'Fjord',
-      model: 'Wagon',
-      year: '1886'
+      make: "Fjord",
+      model: "Wagon",
+      year: "1886"
     });
 
     this.server = new Server({
-      environment: 'test',
+      environment: "test",
       models: {
         car: this.Car
       },
@@ -29,10 +29,10 @@ module('Performance | Factory | Simple', {
   }
 });
 
-const carMaker = (count) => {
-  server.createList('car', count);
+const carMaker = count => {
+  server.createList("car", count);
 };
 
-perfTest(50, 'models', carMaker);
-perfTest(500, 'models', carMaker);
-perfTest(5000, 'models', carMaker);
+perfTest(50, "models", carMaker);
+perfTest(500, "models", carMaker);
+perfTest(5000, "models", carMaker);

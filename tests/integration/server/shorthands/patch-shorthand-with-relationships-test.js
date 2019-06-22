@@ -1,15 +1,17 @@
-import { module, test } from 'qunit';
-import Server from 'ember-cli-mirage/server';
-import { Model, belongsTo, hasMany } from 'ember-cli-mirage';
-import PostShorthandRouteHandler from 'ember-cli-mirage/route-handlers/shorthands/post';
-import JSONAPISerializer from 'ember-cli-mirage/serializers/json-api-serializer';
-import promiseAjax from '../../../helpers/promise-ajax';
+import { module, test } from "qunit";
+import Server from "ember-cli-mirage/server";
+import { Model, belongsTo, hasMany } from "ember-cli-mirage";
+import PostShorthandRouteHandler from "ember-cli-mirage/route-handlers/shorthands/post";
+import JSONAPISerializer from "ember-cli-mirage/serializers/json-api-serializer";
+import promiseAjax from "../../../helpers/promise-ajax";
 
-module('Integration | Server | Shorthands | Patch with relationships', function(hooks) {
+module("Integration | Server | Shorthands | Patch with relationships", function(
+  hooks
+) {
   hooks.beforeEach(function() {
     this.newServerWithSchema = function(schema) {
       this.server = new Server({
-        environment: 'development',
+        environment: "development",
         models: schema
       });
       this.server.timing = 0;
@@ -32,7 +34,7 @@ module('Integration | Server | Shorthands | Patch with relationships', function(
     this.server.shutdown();
   });
 
-  test('it can null out belongs to relationships', async function(assert) {
+  test("it can null out belongs to relationships", async function(assert) {
     let server = this.newServerWithSchema({
       author: Model.extend({
         posts: hasMany()
@@ -42,19 +44,19 @@ module('Integration | Server | Shorthands | Patch with relationships', function(
       })
     });
     server.loadConfig(function() {
-      this.patch('/posts/:id');
+      this.patch("/posts/:id");
     });
 
-    let author = server.create('author');
-    let post = server.create('post', { author });
+    let author = server.create("author");
+    let post = server.create("post", { author });
 
     await promiseAjax({
-      method: 'PATCH',
+      method: "PATCH",
       url: `/posts/${post.id}`,
       data: JSON.stringify({
         data: {
           attributes: {
-            title: 'Post 1'
+            title: "Post 1"
           },
           relationships: {
             author: {
@@ -69,7 +71,7 @@ module('Integration | Server | Shorthands | Patch with relationships', function(
     assert.equal(post.author, null);
   });
 
-  test('it can null out belongs to polymorphic relationships', async function(assert) {
+  test("it can null out belongs to polymorphic relationships", async function(assert) {
     let server = this.newServerWithSchema({
       video: Model.extend(),
       post: Model.extend(),
@@ -78,21 +80,21 @@ module('Integration | Server | Shorthands | Patch with relationships', function(
       })
     });
     server.loadConfig(function() {
-      this.patch('/comments/:id');
+      this.patch("/comments/:id");
     });
 
-    let video = server.create('video');
-    let comment = server.create('comment', {
+    let video = server.create("video");
+    let comment = server.create("comment", {
       commentable: video
     });
 
     await promiseAjax({
-      method: 'PATCH',
+      method: "PATCH",
       url: `/comments/${comment.id}`,
       data: JSON.stringify({
         data: {
           attributes: {
-            title: 'Post 1'
+            title: "Post 1"
           },
           relationships: {
             commentable: {
@@ -107,7 +109,7 @@ module('Integration | Server | Shorthands | Patch with relationships', function(
     assert.equal(comment.commentable, null);
   });
 
-  test('it can null out has many polymorphic relationships', async function(assert) {
+  test("it can null out has many polymorphic relationships", async function(assert) {
     let server = this.newServerWithSchema({
       car: Model.extend(),
       watch: Model.extend(),
@@ -116,22 +118,21 @@ module('Integration | Server | Shorthands | Patch with relationships', function(
       })
     });
     server.loadConfig(function() {
-      this.patch('/users/:id');
+      this.patch("/users/:id");
     });
 
-    let car = server.create('car');
-    let watch = server.create('watch');
-    let user = server.create('user', {
-      collectibles: [ car, watch ]
+    let car = server.create("car");
+    let watch = server.create("watch");
+    let user = server.create("user", {
+      collectibles: [car, watch]
     });
 
     await promiseAjax({
-      method: 'PATCH',
+      method: "PATCH",
       url: `/users/${user.id}`,
       data: JSON.stringify({
         data: {
-          attributes: {
-          },
+          attributes: {},
           relationships: {
             collectibles: {
               data: null
@@ -145,7 +146,7 @@ module('Integration | Server | Shorthands | Patch with relationships', function(
     assert.equal(user.collectibles.length, 0);
   });
 
-  test('it camelizes relationship names', async function(assert) {
+  test("it camelizes relationship names", async function(assert) {
     let server = this.newServerWithSchema({
       postAuthor: Model.extend({
         posts: hasMany()
@@ -156,24 +157,23 @@ module('Integration | Server | Shorthands | Patch with relationships', function(
     });
 
     server.loadConfig(function() {
-      this.patch('/posts/:id');
+      this.patch("/posts/:id");
     });
 
-    let postAuthor = server.create('post-author');
-    let post = server.create('post');
+    let postAuthor = server.create("post-author");
+    let post = server.create("post");
 
     await promiseAjax({
-      method: 'PATCH',
+      method: "PATCH",
       url: `/posts/${post.id}`,
       data: JSON.stringify({
         data: {
-          attributes: {
-          },
+          attributes: {},
           relationships: {
-            'post-author': {
+            "post-author": {
               data: {
                 id: postAuthor.id,
-                type: 'post-authors'
+                type: "post-authors"
               }
             }
           }
@@ -182,6 +182,10 @@ module('Integration | Server | Shorthands | Patch with relationships', function(
     });
 
     post.reload();
-    assert.equal(post.postAuthorId, postAuthor.id, 'relationship gets updated successfully');
+    assert.equal(
+      post.postAuthorId,
+      postAuthor.id,
+      "relationship gets updated successfully"
+    );
   });
 });

@@ -1,10 +1,9 @@
-import Mirage from 'ember-cli-mirage';
-import Schema from 'ember-cli-mirage/orm/schema';
-import Model from 'ember-cli-mirage/orm/model';
-import Db from 'ember-cli-mirage/db';
+import Mirage from "ember-cli-mirage";
+import Schema from "ember-cli-mirage/orm/schema";
+import Model from "ember-cli-mirage/orm/model";
+import Db from "ember-cli-mirage/db";
 
 export default {
-
   setup() {
     return new Schema(new Db(), {
       wordSmith: Model.extend({
@@ -37,5 +36,4 @@ export default {
       lol: Model
     });
   }
-
 };

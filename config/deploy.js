@@ -1,26 +1,26 @@
 /* eslint-env node */
-'use strict';
+"use strict";
 
 module.exports = function(deployTarget) {
   let ENV = {
     build: {},
     git: {
-      repo: 'git@github.com:samselikoff/ember-cli-mirage.git'
+      repo: "git@github.com:samselikoff/ember-cli-mirage.git"
     }
   };
 
-  if (deployTarget === 'development') {
-    ENV.build.environment = 'development';
+  if (deployTarget === "development") {
+    ENV.build.environment = "development";
     // configure other plugins for development deploy target here
   }
 
-  if (deployTarget === 'staging') {
-    ENV.build.environment = 'production';
+  if (deployTarget === "staging") {
+    ENV.build.environment = "production";
     // configure other plugins for staging deploy target here
   }
 
-  if (deployTarget === 'production') {
-    ENV.build.environment = 'production';
+  if (deployTarget === "production") {
+    ENV.build.environment = "production";
     // configure other plugins for production deploy target here
   }
 
