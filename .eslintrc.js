@@ -26,40 +26,40 @@ module.exports = {
   },
   overrides: [
     // node files
-    {
-      files: [
-        '.template-lintrc.js',
-        'index.js',
-        'testem.js',
-        'config/**/*.js',
-        'tests/dummy/config/**/*.js',
-      ],
-      excludedFiles: [
-        'addon/**',
-        'addon-test-support/**',
-        'app/**',
-        'tests/dummy/app/**'
-      ],
-      parserOptions: {
-        sourceType: 'script',
-        ecmaVersion: 2018
-      },
-      env: {
-        browser: false,
-        node: true
-      },
-      plugins: ['node'],
-      rules: Object.assign({}, require('eslint-plugin-node').configs.recommended.rules, {
-        // add your custom rules and overrides for node files here
-      })
-    },
+    // {
+    //   files: [
+    //     '.template-lintrc.js',
+    //     'index.js',
+    //     'testem.js',
+    //     'config/**/*.js',
+    //     'tests/dummy/config/**/*.js',
+    //   ],
+    //   excludedFiles: [
+    //     'addon/**',
+    //     'addon-test-support/**',
+    //     'app/**',
+    //     'tests/dummy/app/**'
+    //   ],
+    //   parserOptions: {
+    //     sourceType: 'script',
+    //     ecmaVersion: 2018
+    //   },
+    //   env: {
+    //     browser: false,
+    //     node: true
+    //   },
+    //   plugins: ['node'],
+    //   rules: Object.assign({}, require('eslint-plugin-node').configs.recommended.rules, {
+    //     // add your custom rules and overrides for node files here
+    //   })
+    // },
 
     // test files. Can remove when we upgrade tests to new style.
-    {
-      files: ['tests/**/*.js'],
-      excludedFiles: ['tests/dummy/**/*.js'],
-      env: {
-      }
-    },
+    // {
+    //   files: ['tests/**/*.js'],
+    //   excludedFiles: ['tests/dummy/**/*.js'],
+    //   env: {
+    //   }
+    // },
   ]
 };

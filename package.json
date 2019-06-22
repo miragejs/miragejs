@@ -36,9 +36,11 @@
   },
   "dependencies": {
     "chalk": "^2.4.2",
+    "eslint": "^5.16.0",
+    "inflected": "^2.0.4",
     "lodash": "^4.17.11",
     "pretender": "3.0.1",
-    "inflected": "^2.0.4"
+    "prettier": "^1.18.2"
   },
   "devDependencies": {
     "active-model-adapter": "^2.0.3",
