@@ -43,6 +43,8 @@
     "prettier": "^1.18.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
     "active-model-adapter": "^2.0.3",
     "babel-eslint": "^9.0.0",
     "broccoli-asset-rev": "^3.0.0",
