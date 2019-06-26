@@ -1,7 +1,7 @@
 {
   "name": "@miragejs/server",
   "version": "0.1.5",
-  "description": "A client-side server to help you build, test and demo your Ember app",
+  "description": "A client-side server to help you build, test and demo your JavaScript app",
   "main": "dist/index.js",
   "keywords": [
     "pretender",
@@ -15,10 +15,6 @@
   },
   "license": "MIT",
   "author": "Sam Selikoff",
-  "directories": {
-    "doc": "doc",
-    "test": "tests"
-  },
   "homepage": "https://github.com/miragejs/server",
   "bugs": {
     "url": "https://github.com/miragejs/server/issues"
@@ -26,13 +22,7 @@
   "scripts": {
     "build": "rollup -c",
     "prepublishOnly": "npm run build",
-    "lint:hbs": "ember-template-lint .",
-    "lint:js": "eslint .",
-    "start": "ember serve",
-    "test": "testem",
-    "test:all": "ember try:each",
-    "test:browser": "ember test --test-port=0",
-    "test:test-projects": "./scripts/test.sh"
+    "test": "testem"
   },
   "dependencies": {
     "chalk": "^2.4.2",
