@@ -1,13 +1,14 @@
-import Server, { defaultPassthroughs } from "../../lib/server";
 import { module, test } from "qunit";
 import {
+  Server,
+  defaultPassthroughs,
   Model,
   Factory,
   belongsTo,
   hasMany,
   trait,
   association
-} from "../../lib";
+} from "@miragejs/server";
 
 module("Unit | Server", function() {
   test("it can be instantiated", function(assert) {

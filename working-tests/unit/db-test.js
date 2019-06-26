@@ -1,6 +1,7 @@
-import Db from "ember-cli-mirage/db";
-import DefaultIdentityManager from "ember-cli-mirage/identity-manager";
-
+import {
+  _Db as Db,
+  IdentityManager as DefaultIdentityManager
+} from "@miragejs/server";
 import { module, test } from "qunit";
 
 let db;
