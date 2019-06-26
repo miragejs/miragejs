@@ -22,7 +22,8 @@
   "scripts": {
     "build": "rollup -c",
     "prepublishOnly": "npm run build",
-    "test": "testem"
+    "test": "testem ci",
+    "test:server": "testem"
   },
   "dependencies": {
     "chalk": "^2.4.2",
