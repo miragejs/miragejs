@@ -2,7 +2,7 @@ import SerializerRegistry from "ember-cli-mirage/serializer-registry";
 import schemaHelper from "../schema-helper";
 import { module, test } from "qunit";
 
-import _uniqBy from "lodash/uniqBy";
+import { uniqBy } from "lodash-es";
 
 module("Integration | Serializers | Base | Basic", function(hooks) {
   hooks.beforeEach(function() {
@@ -76,7 +76,7 @@ module("Integration | Serializers | Base | Basic", function(hooks) {
     this.schema.wordSmiths.create({ name: "Ganondorf" });
 
     let wordSmiths = this.schema.wordSmiths.all().models;
-    let uniqueNames = _uniqBy(wordSmiths, "name");
+    let uniqueNames = uniqBy(wordSmiths, "name");
     let result = this.registry.serialize(uniqueNames);
 
     assert.deepEqual(result, uniqueNames);

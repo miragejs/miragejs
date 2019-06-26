@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import { Model, Collection, ActiveModelSerializer } from "ember-cli-mirage";
 import Server from "ember-cli-mirage/server";
-import _uniqBy from "lodash/uniqBy";
+import { uniqBy } from "lodash-es";
 import promiseAjax from "../../../helpers/promise-ajax";
 
 module("Integration | Route handlers | Function handler | #serialize", function(
@@ -136,7 +136,7 @@ module("Integration | Route handlers | Function handler | #serialize", function(
 
     this.server.get("/users", function(schema) {
       let users = schema.users.all().models;
-      let uniqueNames = _uniqBy(users, "name");
+      let uniqueNames = uniqBy(users, "name");
       let collection = new Collection("user", uniqueNames);
       let json = this.serialize(collection, "sparse-user");
 
