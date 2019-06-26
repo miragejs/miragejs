@@ -1,8 +1,6 @@
 ---
 language: node_js
 node_js:
-  # we recommend testing addons with the same minimum supported node version as Ember CLI
-  # so that your addon works for all apps
   - "8"
 
 sudo: false
@@ -29,49 +27,7 @@ jobs:
   fail_fast: true
 
   include:
-    - stage: locked dependencies
-      env: NAME=browser tests
+    - stage: tests
+      env: NAME=tests
       install: yarn install
-      script: yarn test:browser
-    - env: NAME=node tests
-      install: yarn install
-      script: yarn test:test-projects
-
-    - stage: floating dependencies
-      env: NAME=browser tests
-      script: yarn test:browser
-    - env: NAME=node tests
-      script: yarn test:test-projects
-
-    - stage: versioned tests
-      env: EMBER_TRY_SCENARIO=ember-lts-2.18
-    - env: EMBER_TRY_SCENARIO=ember-release
-    - env: EMBER_TRY_SCENARIO=ember-beta
-    - env: EMBER_TRY_SCENARIO=ember-canary
-    - env: EMBER_TRY_SCENARIO=ember-default
-    - env: EMBER_TRY_SCENARIO=ember-default-with-jquery
-    
-    - stage: deploy
-      if: (branch = master OR tag IS present) AND type = push
-      env: NAME=deploy
-      script: node_modules/.bin/ember deploy production
-
-
-    - stage: npm release
-      install: skip
-      script: skip
-      deploy:
-        provider: npm
-        email: sam.selikoff@gmail.com
-        api_key:
-          secure: O6cP0nTiCbA+MuD6hRKdyyd6DWTFR/dc9klB10zXTnrwajjzLmenvvshPUv+F6lHCpb2SfrWW6cpFjZ61BPwKaaalF9u8encNkGlDYGtO77sWJu6LuJFeWPZnAC9rdAw4hPjz+gqTL+leeDMHzjB32VRqy2cpwFzet3e+W2eUuk=
-        on:
-          tags: true
-          repo: samselikoff/ember-cli-mirage
-
-  allow_failures:
-    - env: EMBER_TRY_SCENARIO=ember-beta
-    - env: EMBER_TRY_SCENARIO=ember-canary
-
-script:
-  - node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO
+      script: yarn test
