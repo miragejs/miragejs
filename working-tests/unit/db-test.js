@@ -7,9 +7,6 @@ import { module, test } from "qunit";
 let db;
 
 module("Unit | Db", function() {
-  test("it fails", function(assert) {
-    assert.ok(false);
-  });
   test("it can be instantiated", function(assert) {
     db = new Db();
     assert.ok(db);
