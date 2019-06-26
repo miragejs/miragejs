@@ -1,7 +1,0 @@
-{
-  "framework": "qunit",
-  "src_files": [
-    "dist/tests/*.js"
-  ],
-  "before_tests": "rollup -c rollup.test.config.js"
-}

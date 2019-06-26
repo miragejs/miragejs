@@ -5,8 +5,7 @@ import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 import alias from "rollup-plugin-alias";
 import multiEntry from "rollup-plugin-multi-entry";
-import transformAsync from "rollup-plugin-async"
-
+import transformAsync from "rollup-plugin-async";
 
 export default {
   input: "working-tests/**/*.js",
@@ -15,7 +14,7 @@ export default {
     format: "umd",
     name: "MirageJS.Server",
     globals: {
-      'qunit': 'QUnit'
+      qunit: "QUnit"
     }
   },
   external: ["qunit"],
@@ -24,7 +23,7 @@ export default {
     commonjs({
       include: ["node_modules/**"],
       namedExports: {
-        'qunit': ['module', 'test']
+        qunit: ["module", "test"]
       }
     }),
     alias({
