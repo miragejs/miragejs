@@ -46,6 +46,7 @@
     "eslint-plugin-node": "^9.0.1",
     "faker": "^4.1.0",
     "jest": "^24.8.0",
+    "jest-extended": "^0.11.2",
     "js-yaml": "^3.12.1",
     "jsdom": "^15.0.0",
     "qunit": "^2.9.2",

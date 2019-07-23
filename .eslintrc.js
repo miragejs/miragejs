@@ -22,5 +22,14 @@ module.exports = {
     "object-shorthand": 0,
     "arrow-parens": 0,
     "no-unused-vars": ["error", { args: "none" }]
-  }
+  },
+  overrides: [
+    {
+      files: ["jest.config.js", "babel.config.js"],
+      env: {
+        browser: false,
+        node: true
+      }
+    }
+  ]
 };

@@ -78,8 +78,8 @@ describe("Unit | Db #loadData", function() {
     };
     db.loadData(data);
 
-    expect(db.contacts).toEqual(data.contacts);
-    expect(db.addresses).toEqual(data.addresses);
+    expect(db.contacts).toIncludeSameMembers(data.contacts);
+    expect(db.addresses).toIncludeSameMembers(data.addresses);
   });
 
   test("it clones all data so nothing is passed by reference", () => {
@@ -97,13 +97,15 @@ describe("Unit | Db #loadData", function() {
 });
 
 describe("Unit | Db #all", function() {
+  let data;
+
   beforeEach(function() {
-    this.data = {
+    data = {
       contacts: [{ id: "1", name: "Link" }],
       addresses: [{ id: "1", name: "123 Hyrule Way" }]
     };
 
-    db = new Db(this.data);
+    db = new Db(data);
   });
 
   afterEach(function() {
@@ -111,17 +113,17 @@ describe("Unit | Db #all", function() {
   });
 
   test("it can return a collection", () => {
-    expect(db.contacts).toEqual(this.data.contacts);
-    expect(db.addresses).toEqual(this.data.addresses);
+    expect(db.contacts).toIncludeSameMembers(data.contacts);
+    expect(db.addresses).toIncludeSameMembers(data.addresses);
   });
 
   test("the collection is a copy", () => {
     let { contacts } = db;
 
-    expect(contacts).toEqual(this.data.contacts);
+    expect(contacts).toIncludeSameMembers(data.contacts);
     contacts[0].name = "Zelda";
 
-    expect(db.contacts).toEqual(this.data.contacts);
+    expect(db.contacts).toIncludeSameMembers(data.contacts);
   });
 });
 
@@ -142,7 +144,7 @@ describe("Unit | Db #insert", function() {
       name: "Link"
     };
 
-    expect(db.contacts).toEqual([expectedRecord]);
+    expect(db.contacts).toIncludeSameMembers([expectedRecord]);
     expect(link).toEqual(expectedRecord);
   });
 
@@ -166,7 +168,7 @@ describe("Unit | Db #insert", function() {
 
     let records = [{ id: "1", name: "Link" }, { id: "2", name: "Ganon" }];
 
-    expect(db.contacts).toEqual(records);
+    expect(db.contacts).toIncludeSameMembers(records);
   });
 
   test("it does not add an id if present", () => {
@@ -174,7 +176,7 @@ describe("Unit | Db #insert", function() {
 
     db.contacts.insert(attrs);
 
-    expect(db.contacts).toEqual([attrs]);
+    expect(db.contacts).toIncludeSameMembers([attrs]);
   });
 
   test("it can insert an array and return it", () => {
@@ -182,12 +184,12 @@ describe("Unit | Db #insert", function() {
 
     let contacts = db.contacts.insert([{ name: "Zelda" }, { name: "Ganon" }]);
 
-    expect(db.contacts).toEqual([
+    expect(db.contacts).toIncludeSameMembers([
       { id: "1", name: "Link" },
       { id: "2", name: "Zelda" },
       { id: "3", name: "Ganon" }
     ]);
-    expect(contacts).toEqual([
+    expect(contacts).toIncludeSameMembers([
       { id: "2", name: "Zelda" },
       { id: "3", name: "Ganon" }
     ]);
