@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "chalk": "^2.4.2",
-    "eslint": "^5.16.0",
+    "eslint": "^6.1.0",
     "inflected": "^2.0.4",
     "lodash-es": "^4.17.11",
     "pretender": "3.0.1",
