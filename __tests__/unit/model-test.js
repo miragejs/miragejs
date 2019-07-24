@@ -1,32 +1,31 @@
-import { Model } from '@miragejs/server';
-import {module, test} from 'qunit';
+import { Model } from '../../lib';
 
-module('Unit | Model', function() {
-  test('it can be instantiated', function(assert) {
+describe('Unit | Model', function() {
+  test('it can be instantiated', assert => {
     let model = new Model({}, 'user');
-    assert.ok(model);
+    expect(model).toBeTruthy();
   });
 
-  test('it cannot be instantiated without a schema', function(assert) {
-    assert.throws(function() {
+  test('it cannot be instantiated without a schema', assert => {
+    expect(function() {
       new Model();
-    }, /requires a schema/);
+    }).toThrow();
   });
 
-  test('it cannot be instantiated without a modelName', function(assert) {
-    assert.throws(function() {
+  test('it cannot be instantiated without a modelName', assert => {
+    expect(function() {
       new Model({});
-    }, /requires a modelName/);
+    }).toThrow();
   });
 
-  test('findBelongsToAssociation returns association for given type if defined', function(assert) {
+  test('findBelongsToAssociation returns association for given type if defined', assert => {
     let ModelClass = Model.extend();
     let authorAssociationMock = {};
     ModelClass.prototype.belongsToAssociations = {
       author: authorAssociationMock
     };
 
-    assert.equal(ModelClass.findBelongsToAssociation('article'), null);
-    assert.deepEqual(ModelClass.findBelongsToAssociation('author'), authorAssociationMock);
+    expect(ModelClass.findBelongsToAssociation('article')).toBeNull();
+    expect(ModelClass.findBelongsToAssociation('author')).toEqual(authorAssociationMock);
   });
 });
