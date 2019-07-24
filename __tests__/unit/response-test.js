@@ -1,33 +1,31 @@
-import { Response } from '@miragejs/server';
+import { Response } from '../../lib';
 
-import { module, test } from 'qunit';
-
-module('Unit | Response', function() {
-  test('it can be instantiated and return a rack response', function(assert) {
+describe('Unit | Response', function() {
+  test('it can be instantiated and return a rack response', () => {
     let response = new Response(404, {}, {});
 
-    assert.ok(response);
-    assert.ok(response.toRackResponse());
+    expect(response).toBeTruthy();
+    expect(response.toRackResponse()).toBeTruthy();
   });
 
-  test('it can be instantiated with just a response code', function(assert) {
+  test('it can be instantiated with just a response code', () => {
     let response = new Response(404);
 
-    assert.ok(response);
-    assert.ok(response.toRackResponse());
+    expect(response).toBeTruthy();
+    expect(response.toRackResponse()).toBeTruthy();
   });
 
-  test('it adds Content-Type by default', function(assert) {
+  test('it adds Content-Type by default', () => {
     let response = new Response(200, {}, {});
 
-    assert.ok(response);
-    assert.equal(response.headers['Content-Type'], 'application/json');
+    expect(response).toBeTruthy();
+    expect(response.headers['Content-Type']).toEqual('application/json');
   });
 
-  test('it does not add Content-Type for a 204 response', function(assert) {
+  test('it does not add Content-Type for a 204 response', () => {
     let response = new Response(204);
 
-    assert.ok(response);
-    assert.notOk(response.headers['Content-Type']);
+    expect(response).toBeTruthy();
+    expect(response.headers['Content-Type']).toBeFalsy();
   });
 });
