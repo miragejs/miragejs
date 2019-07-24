@@ -1,4 +1,4 @@
-import { Model, belongsTo, _Schema as Schema, _Db as Db } from '@miragejs/server';
+import { Model, belongsTo, _ormSchema as Schema, _Db as Db } from '@miragejs/server';
 
 /*
   A model with a belongsTo association can be in six states
