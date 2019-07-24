@@ -1,86 +1,85 @@
-import IdentityManager from "ember-cli-mirage/identity-manager";
+import "../../lib/container";
+import IdentityManager from "../../lib/identity-manager";
 
-import { module, test } from "qunit";
-
-module("Unit | Db | IdentityManager", function() {
-  test("it can be instantiated", function(assert) {
+describe("Unit | Db | IdentityManager", function() {
+  test("it can be instantiated", () => {
     let manager = new IdentityManager();
-    assert.ok(manager);
+    expect(manager).toBeTruthy();
   });
 
-  test(`fetch returns the latest number`, function(assert) {
+  test(`fetch returns the latest number`, () => {
     let manager = new IdentityManager();
 
-    assert.equal(manager.fetch(), 1);
-    assert.equal(manager.fetch(), 2);
-    assert.equal(manager.fetch(), 3);
+    expect(manager.fetch()).toEqual("1");
+    expect(manager.fetch()).toEqual("2");
+    expect(manager.fetch()).toEqual("3");
   });
 
-  test(`get returns the upcoming id used for fetch`, function(assert) {
+  test(`get returns the upcoming id used for fetch`, () => {
     let manager = new IdentityManager();
 
-    assert.equal(manager.fetch(), 1);
-    assert.equal(manager.get(), 2);
-    assert.equal(manager.fetch(), 2);
+    expect(manager.fetch()).toEqual("1");
+    expect(manager.get()).toEqual(2);
+    expect(manager.fetch()).toEqual("2");
   });
 
-  test(`set indicates an id is being used`, function(assert) {
+  test(`set indicates an id is being used`, () => {
     let manager = new IdentityManager();
     manager.set("abc");
 
-    assert.throws(function() {
+    expect(function() {
       manager.set("abc");
-    }, /already been used/);
+    }).toThrow();
   });
 
-  test(`a numerical value passed into set affects future ids used by fetch`, function(assert) {
+  test(`a numerical value passed into set affects future ids used by fetch`, () => {
     let manager = new IdentityManager();
     manager.set(5);
 
-    assert.equal(manager.fetch(), 6);
-    assert.equal(manager.fetch(), 7);
+    expect(manager.fetch()).toEqual("6");
+    expect(manager.fetch()).toEqual("7");
   });
 
-  test(`multiple numerical values passed into set affects future ids used by fetch`, function(assert) {
+  test(`multiple numerical values passed into set affects future ids used by fetch`, () => {
     let manager = new IdentityManager();
     manager.set(5);
     manager.set(6);
 
-    assert.equal(manager.fetch(), 7);
-    assert.equal(manager.fetch(), 8);
+    expect(manager.fetch()).toEqual("7");
+    expect(manager.fetch()).toEqual("8");
   });
 
-  test(`an int as a string passed into set affects future ids used by fetch`, function(assert) {
+  test(`an int as a string passed into set affects future ids used by fetch`, () => {
     let manager = new IdentityManager();
     manager.set("5");
 
-    assert.equal(manager.fetch(), 6);
-    assert.equal(manager.fetch(), 7);
+    expect(manager.fetch()).toEqual("6");
+    expect(manager.fetch()).toEqual("7");
   });
 
-  test(`multiple ints as a string passed into set affects future ids used by fetch`, function(assert) {
+  test(`multiple ints as a string passed into set affects future ids used by fetch`, () => {
     let manager = new IdentityManager();
     manager.set("5");
     manager.set("6");
 
-    assert.equal(manager.fetch(), 7);
-    assert.equal(manager.fetch(), 8);
+    expect(manager.fetch()).toEqual("7");
+    expect(manager.fetch()).toEqual("8");
   });
 
-  test(`a string value that doesn't parse as an int passed into set doesn't affect future ids used by fetch`, function(assert) {
+  test(`a string value that doesn't parse as an int passed into set doesn't affect future ids used by fetch`, () => {
     let manager = new IdentityManager();
     manager.set("123-abc");
 
-    assert.equal(manager.fetch(), 1);
-    assert.equal(manager.fetch(), 2);
+    expect(manager.fetch()).toEqual("1");
+    expect(manager.fetch()).toEqual("2");
   });
 
-  test(`reset clears the managers memory`, function(assert) {
+  test(`reset clears the managers memory`, () => {
     let manager = new IdentityManager();
     manager.set("abc");
     manager.reset();
     manager.set("abc");
 
-    assert.ok(true);
+    expect(true).toBeTruthy();
   });
 });
