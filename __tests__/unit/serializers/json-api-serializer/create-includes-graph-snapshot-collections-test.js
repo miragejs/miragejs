@@ -4,29 +4,31 @@ import {
   Model,
   hasMany,
   JSONAPISerializer
-} from '@miragejs/server';
-import { module, test } from 'qunit';
+} from '../../../../lib';
 
 /*
   This test is heavily coupled to the implementation and can be deleted
   during a future refactoring.
 */
-module('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot collections', function(hooks) {
-  hooks.beforeEach(function() {
-    let serializer;
-    let registry = {
+describe('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot collections', function() {
+  let serializer = null;
+  let registry = null;
+  let type = null
+  let request = {};
+
+  beforeEach(function() {
+    registry = {
       serializerFor() {
         return serializer;
       }
     };
-    let type = 'foo';
-    let request = {};
+    type = 'foo';
+    request = {};
 
     serializer = new JSONAPISerializer(registry, type, request);
-    this.serializer = serializer;
   });
 
-  test('it works on collections with no includes', function(assert) {
+  test('it works on collections with no includes', () => {
     let schema = new Schema(new Db(), {
       wordSmith: Model.extend({
       })
@@ -34,9 +36,9 @@ module('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot
     schema.wordSmiths.create();
     schema.wordSmiths.create();
 
-    this.serializer._createRequestedIncludesGraph(schema.wordSmiths.all());
+    serializer._createRequestedIncludesGraph(schema.wordSmiths.all());
 
-    assert.deepEqual(this.serializer.request._includesGraph, {
+    expect(serializer.request._includesGraph).toEqual({
       data: {
         'word-smith:1': {},
         'word-smith:2': {}
@@ -44,7 +46,7 @@ module('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot
     });
   });
 
-  test('it works on collections with hasMany relationships and dot-path includes', function(assert) {
+  test('it works on collections with hasMany relationships and dot-path includes', () => {
     let schema = new Schema(new Db(), {
       wordSmith: Model.extend({
         redTags: hasMany(),
@@ -73,11 +75,11 @@ module('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot
     let redTag2 = bluePost2.createRedTag();
     redTag2.createSomeColor();
 
-    this.serializer.request = { queryParams: { include: 'red-tags,blue-posts.red-tags.some-colors' } };
+    serializer.request = { queryParams: { include: 'red-tags,blue-posts.red-tags.some-colors' } };
 
-    this.serializer._createRequestedIncludesGraph(schema.wordSmiths.all());
+    serializer._createRequestedIncludesGraph(schema.wordSmiths.all());
 
-    assert.deepEqual(this.serializer.request._includesGraph, {
+    expect(serializer.request._includesGraph).toEqual({
       data: {
         'word-smith:1': {
           relationships: {

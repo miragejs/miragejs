@@ -5,29 +5,31 @@ import {
   hasMany,
   belongsTo,
   JSONAPISerializer
-} from '@miragejs/server';
-import { module, test } from 'qunit';
+} from '../../../../lib';
 
 /*
   This test is heavily coupled to the implementation and can be deleted
   during a future refactoring.
 */
-module('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot mixed', function(hooks) {
-  hooks.beforeEach(function() {
-    let serializer;
-    let registry = {
+describe('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot mixed', function() {
+  let serializer = null;
+  let registry = null;
+  let type = null
+  let request = {};
+
+  beforeEach(function() {
+    registry = {
       serializerFor() {
         return serializer;
       }
     };
-    let type = 'foo';
-    let request = {};
+    type = 'foo';
+    request = {};
 
     serializer = new JSONAPISerializer(registry, type, request);
-    this.serializer = serializer;
   });
 
-  test('it works on models and collections with dot-path includes', function(assert) {
+  test('it works on models and collections with dot-path includes', () => {
     let schema = new Schema(new Db(), {
       wordSmith: Model.extend({
         blogPosts: hasMany()
@@ -49,11 +51,11 @@ module('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot
     let happyTag2 = blogPost2.createHappyTag();
     happyTag2.createHappyColor();
 
-    this.serializer.request = { queryParams: { include: 'blog-posts.happy-tag.happy-color' } };
+    serializer.request = { queryParams: { include: 'blog-posts.happy-tag.happy-color' } };
 
-    this.serializer._createRequestedIncludesGraph(wordSmith);
+    serializer._createRequestedIncludesGraph(wordSmith);
 
-    assert.deepEqual(this.serializer.request._includesGraph, {
+    expect(serializer.request._includesGraph).toEqual({
       data: {
         'word-smith:1': {
           relationships: {

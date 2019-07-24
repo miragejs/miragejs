@@ -1,18 +1,18 @@
-import { JSONAPISerializer } from '@miragejs/server';
-import { module, test } from 'qunit';
+import { JSONAPISerializer } from '../../../lib';
 
-module('Unit | Serializers | JSON API Serializer', function(hooks) {
-  hooks.beforeEach(function() {
-    this.serializer = new JSONAPISerializer();
+describe('Unit | Serializers | JSON API Serializer', function() {
+  let serializer = null;
+  beforeEach(function() {
+    serializer = new JSONAPISerializer();
   });
 
-  test('it returns coalesce Ids if present', function(assert) {
+  test('it returns coalesce Ids if present', () => {
     let request = { url: '/authors', queryParams: { 'filter[id]': '1,3' } };
-    assert.deepEqual(this.serializer.getCoalescedIds(request), ['1', '3']);
+    expect(serializer.getCoalescedIds(request)).toEqual(['1', '3']);
   });
 
-  test('it returns undefined coalesce Ids if not present', function(assert) {
+  test('it returns undefined coalesce Ids if not present', () => {
     let request = { url: '/authors', queryParams: {} };
-    assert.strictEqual(this.serializer.getCoalescedIds(request), undefined);
+    expect(serializer.getCoalescedIds(request)).toBeUndefined();
   });
 });

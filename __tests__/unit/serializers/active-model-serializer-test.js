@@ -4,12 +4,15 @@ import {
   Model,
   belongsTo,
   ActiveModelSerializer
-} from '@miragejs/server';
-import { module, test } from 'qunit';
+} from '../../../lib';
 
-module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
-  hooks.beforeEach(function() {
-    let schema = new Schema(new Db(), {
+
+describe('Unit | Serializers | ActiveModelSerializer', function() {
+  let serializer = null;
+  let schema = null;
+
+  beforeEach(function() {
+    schema = new Schema(new Db(), {
       contact: Model.extend({
         address: belongsTo()
       }),
@@ -17,21 +20,21 @@ module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
         contact: belongsTo()
       })
     });
-    this.serializer = new ActiveModelSerializer({
+    serializer = new ActiveModelSerializer({
       schema
     });
   });
 
-  test('normalize works', function(assert) {
+  test('normalize works', () => {
     let payload = {
       contact: {
         id: 1,
         name: 'Link'
       }
     };
-    let jsonApiDoc = this.serializer.normalize(payload);
+    let jsonApiDoc = serializer.normalize(payload);
 
-    assert.deepEqual(jsonApiDoc, {
+    expect(jsonApiDoc).toEqual({
       data: {
         type: 'contacts',
         id: 1,
@@ -42,16 +45,16 @@ module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
     });
   });
 
-  test('it hyphenates snake_cased words', function(assert) {
+  test('it hyphenates snake_cased words', () => {
     let payload = {
       contact: {
         id: 1,
         first_name: 'Link'
       }
     };
-    let jsonApiDoc = this.serializer.normalize(payload);
+    let jsonApiDoc = serializer.normalize(payload);
 
-    assert.deepEqual(jsonApiDoc, {
+    expect(jsonApiDoc).toEqual({
       data: {
         type: 'contacts',
         id: 1,
@@ -62,16 +65,16 @@ module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
     });
   });
 
-  test('it works without an id', function(assert) {
+  test('it works without an id', () => {
     let payload = {
       contact: {
         first_name: 'Link',
         last_name: 'zor'
       }
     };
-    let jsonApiDoc = this.serializer.normalize(payload);
+    let jsonApiDoc = serializer.normalize(payload);
 
-    assert.deepEqual(jsonApiDoc, {
+    expect(jsonApiDoc).toEqual({
       data: {
         type: 'contacts',
         attributes: {
@@ -82,24 +85,24 @@ module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
     });
   });
 
-  test('it returns coalesce Ids if present', function(assert) {
+  test('it returns coalesce Ids if present', () => {
     let request = { url: '/authors', queryParams: { ids: ['1', '3'] } };
-    assert.deepEqual(this.serializer.getCoalescedIds(request), ['1', '3']);
+    expect(serializer.getCoalescedIds(request)).toEqual(['1', '3']);
   });
 
-  test('it returns undefined coalesce Ids if not present', function(assert) {
+  test('it returns undefined coalesce Ids if not present', () => {
     let request = { url: '/authors', queryParams: {} };
-    assert.strictEqual(this.serializer.getCoalescedIds(request), undefined);
+    expect(serializer.getCoalescedIds(request)).toBeUndefined();
   });
 
-  test('normalizeIds defaults to true', function(assert) {
+  test('normalizeIds defaults to true', () => {
     let serializer = new ActiveModelSerializer();
 
-    assert.equal(serializer.normalizeIds, true);
+    expect(serializer.normalizeIds).toEqual(true);
   });
 
-  test('normalize works with normalizeIds set to true', function(assert) {
-    this.serializer.normalizeIds = true;
+  test('normalize works with normalizeIds set to true', () => {
+    serializer.normalizeIds = true;
     let payload = {
       contact: {
         id: 1,
@@ -107,9 +110,9 @@ module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
         address: 1
       }
     };
-    let jsonApiDoc = this.serializer.normalize(payload);
+    let jsonApiDoc = serializer.normalize(payload);
 
-    assert.deepEqual(jsonApiDoc, {
+    expect(jsonApiDoc).toEqual({
       data: {
         type: 'contacts',
         id: 1,
@@ -128,8 +131,8 @@ module('Unit | Serializers | ActiveModelSerializer', function(hooks) {
     });
   });
 
-  test('serializeIds defaults to "always"', function(assert) {
+  test('serializeIds defaults to "always"', () => {
     let defaultState = new ActiveModelSerializer;
-    assert.equal(defaultState.serializeIds, 'always');
+    expect(defaultState.serializeIds).toEqual('always');
   });
 });

@@ -3,20 +3,22 @@ import {
   _Db as Db,
   Model,
   RestSerializer
-} from '@miragejs/server';
-import { module, test } from 'qunit';
+} from '../../../lib';
 
-module('Unit | Serializers | RestSerializer', function(hooks) {
-  hooks.beforeEach(function() {
-    let schema = new Schema(new Db(), {
+
+describe('Unit | Serializers | RestSerializer', function() {
+  let schema = null;
+  let serializer = null;
+  beforeEach(function() {
+    schema = new Schema(new Db(), {
       person: Model
     });
-    this.serializer = new RestSerializer({
+    serializer = new RestSerializer({
       schema
     });
   });
 
-  test('it hyphenates camelized words', function(assert) {
+  test('it hyphenates camelized words', () => {
     let payload = {
       'person': {
         'id': 1,
@@ -24,9 +26,9 @@ module('Unit | Serializers | RestSerializer', function(hooks) {
         'lastName': 'Sanchez'
       }
     };
-    let jsonApiDoc = this.serializer.normalize(payload);
+    let jsonApiDoc = serializer.normalize(payload);
 
-    assert.deepEqual(jsonApiDoc, {
+    expect(jsonApiDoc).toEqual({
       data: {
         type: 'people',
         id: 1,
@@ -38,18 +40,18 @@ module('Unit | Serializers | RestSerializer', function(hooks) {
     });
   });
 
-  test('it returns coalesce Ids if present', function(assert) {
+  test('it returns coalesce Ids if present', () => {
     let request = { url: '/authors', queryParams: { ids: ['1', '3'] } };
-    assert.deepEqual(this.serializer.getCoalescedIds(request), ['1', '3']);
+    expect(serializer.getCoalescedIds(request)).toEqual(['1', '3']);
   });
 
-  test('it returns undefined coalesce Ids if not present', function(assert) {
+  test('it returns undefined coalesce Ids if not present', () => {
     let request = { url: '/authors', queryParams: {} };
-    assert.strictEqual(this.serializer.getCoalescedIds(request), undefined);
+    expect(serializer.getCoalescedIds(request)).toBeUndefined();
   });
 });
 
-test('serializeIds defaults to "always"', function(assert) {
+test('serializeIds defaults to "always"', () => {
   let defaultState = new RestSerializer;
-  assert.equal(defaultState.serializeIds, 'always');
+  expect(defaultState.serializeIds).toEqual('always');
 });
