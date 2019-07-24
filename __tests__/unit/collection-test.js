@@ -1,47 +1,46 @@
-import { Collection } from '@miragejs/server';
-import {module, test} from 'qunit';
+import { Collection } from '../../lib';
 
-module('Unit | Collection', function() {
-  test('it can be instantiated', function(assert) {
+describe('Unit | Collection', function() {
+  test('it can be instantiated', () => {
     let collection = new Collection('plant');
 
-    assert.ok(collection);
+    expect(collection).toBeTruthy();
   });
 
-  test('it cannot be instantiated without a modelName', function(assert) {
-    assert.throws(() => {
+  test('it cannot be instantiated without a modelName', () => {
+    expect(() => {
       new Collection();
-    }, /must pass a `modelName`/);
+    }).toThrow();
   });
 
-  test('it knows its modelname', function(assert) {
+  test('it knows its modelname', () => {
     let collection = new Collection('author');
 
-    assert.equal(collection.modelName, 'author');
+    expect(collection.modelName).toEqual('author');
   });
 
-  test('it can be instantiated with an array of models', function(assert) {
+  test('it can be instantiated with an array of models', () => {
     let models = [{ id: 1 }, { id: 2 }, { id: 3 }];
     let collection = new Collection('author', models);
 
-    assert.ok(collection);
+    expect(collection).toBeTruthy();
   });
 
-  test('#models returns the underlying array', function(assert) {
+  test('#models returns the underlying array', () => {
     let models = [{ id: 1 }, { id: 2 }, { id: 3 }];
     let collection = new Collection('author', models);
 
-    assert.deepEqual(collection.models, models);
+    expect(collection.models).toEqual(models);
   });
 
-  test('#length returns the number of elements', function(assert) {
+  test('#length returns the number of elements', () => {
     let models = [{ id: 1 }, { id: 2 }];
     let collection = new Collection('post', models);
 
-    assert.equal(collection.length, 2);
+    expect(collection).toHaveLength(2);
 
     collection.models = [{ id: 1 }];
-    assert.equal(collection.length, 1);
+    expect(collection).toHaveLength(1);
   });
 
   // test('collection.filter returns collection instance', function(assert) {
