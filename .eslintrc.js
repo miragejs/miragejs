@@ -4,10 +4,14 @@ module.exports = {
     ecmaVersion: 2017,
     sourceType: "module"
   },
-  plugins: [],
-  extends: ["eslint:recommended"],
+  plugins: ["jest"],
+  extends: [
+    "eslint:recommended",
+    "plugin:jest/recommended",
+    "plugin:jest/style"
+  ],
   env: {
-    browser: true
+    "jest/globals": true
   },
   rules: {
     camelcase: 0,
@@ -19,42 +23,13 @@ module.exports = {
     "arrow-parens": 0,
     "no-unused-vars": ["error", { args: "none" }]
   },
-  globals: {},
   overrides: [
-    // node files
-    // {
-    //   files: [
-    //     '.template-lintrc.js',
-    //     'index.js',
-    //     'testem.js',
-    //     'config/**/*.js',
-    //     'tests/dummy/config/**/*.js',
-    //   ],
-    //   excludedFiles: [
-    //     'addon/**',
-    //     'addon-test-support/**',
-    //     'app/**',
-    //     'tests/dummy/app/**'
-    //   ],
-    //   parserOptions: {
-    //     sourceType: 'script',
-    //     ecmaVersion: 2018
-    //   },
-    //   env: {
-    //     browser: false,
-    //     node: true
-    //   },
-    //   plugins: ['node'],
-    //   rules: Object.assign({}, require('eslint-plugin-node').configs.recommended.rules, {
-    //     // add your custom rules and overrides for node files here
-    //   })
-    // },
-    // test files. Can remove when we upgrade tests to new style.
-    // {
-    //   files: ['tests/**/*.js'],
-    //   excludedFiles: ['tests/dummy/**/*.js'],
-    //   env: {
-    //   }
-    // },
+    {
+      files: ["jest.config.js", "babel.config.js"],
+      env: {
+        browser: false,
+        node: true
+      }
+    }
   ]
 };
