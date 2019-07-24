@@ -9,7 +9,6 @@ import {
   association
 } from '@miragejs/server';
 import {module, test} from 'qunit';
-import { } from 'ember-cli-mirage';
 
 module('Unit | Server', function() {
   test('it can be instantiated', function(assert) {

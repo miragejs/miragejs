@@ -1,4 +1,4 @@
-import { _ormSchema as Schema, _Db as Db, _ormCollection as Collection, Model } from '@miragejs/server';
+import { _ormSchema as Schema, _Db as Db, Collection, Model } from '@miragejs/server';
 import {module, test} from 'qunit';
 
 module('Integration | ORM | collection', function(hooks) {
