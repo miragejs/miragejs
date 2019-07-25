@@ -3,6 +3,7 @@
   "version": "0.1.13",
   "description": "A client-side server to help you build, test and demo your JavaScript app",
   "main": "dist/index.js",
+  "browser": "dist/browser.js",
   "keywords": [
     "pretender",
     "prototype",
