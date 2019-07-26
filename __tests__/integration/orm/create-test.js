@@ -2,8 +2,8 @@ import { _ormSchema as Schema, _Db as Db, Model } from "@miragejs/server";
 
 var db, schema, User;
 
-describe("Integration | ORM | create", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | ORM | create", () => {
+  beforeEach(() =>  {
     User = Model.extend();
     db = new Db();
     schema = new Schema(db, {

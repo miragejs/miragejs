@@ -1,7 +1,7 @@
 import Helper, { states } from "./_helper";
 
-describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association #setId", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association #setId", () => {
+  beforeEach(() =>  {
     this.helper = new Helper();
   });
 

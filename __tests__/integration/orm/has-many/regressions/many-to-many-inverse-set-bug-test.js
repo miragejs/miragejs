@@ -5,8 +5,8 @@ import {
   _ormSchema as Schema
 } from "@miragejs/server";
 
-describe("Integration | ORM | Has Many | Regressions | Many to many inverse set bug", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | ORM | Has Many | Regressions | Many to many inverse set bug", () => {
+  beforeEach(() =>  {
     this.db = new Db();
 
     this.schema = new Schema(this.db, {

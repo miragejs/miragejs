@@ -1,7 +1,7 @@
 import Helper, { states } from "./_helper";
 
-describe("Integration | ORM | Has Many | One-way Polymorphic | delete", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | ORM | Has Many | One-way Polymorphic | delete", () => {
+  beforeEach(() =>  {
     this.helper = new Helper();
   });
 

@@ -1,8 +1,10 @@
-import { Model, Server, hasMany, belongsTo } from "@miragejs/server";
+import { Server, Model, hasMany, belongsTo } from "../../../lib/index";
 
-describe("Integration | ORM | assertions", function(hooks) {
-  hooks.beforeEach(function() {
-    this.server = new Server({
+describe("Integration | ORM | assertions", () => {
+  let server;
+
+  beforeEach(() => {
+    server = new Server({
       models: {
         user: Model.extend({
           posts: hasMany()
@@ -14,13 +16,13 @@ describe("Integration | ORM | assertions", function(hooks) {
     });
   });
 
-  hooks.afterEach(function() {
-    this.server.shutdown();
+  afterEach(() => {
+    server.shutdown();
   });
 
   test("it errors when passing in the wrong type for a HasMany association", () => {
     expect(() => {
-      this.server.schema.users.create({
+      server.schema.users.create({
         name: "Sam",
         posts: [1]
       });
@@ -28,7 +30,7 @@ describe("Integration | ORM | assertions", function(hooks) {
   });
 
   test(`it doesn't error when passing in an empty array`, () => {
-    this.server.schema.users.create({
+    server.schema.users.create({
       name: "Sam",
       posts: []
     });
@@ -37,7 +39,7 @@ describe("Integration | ORM | assertions", function(hooks) {
 
   test("it errors when passing in the wrong type for a HasMany association foreign key", () => {
     expect(() => {
-      this.server.schema.users.create({
+      server.schema.users.create({
         name: "Sam",
         postIds: "foo"
       });
@@ -46,7 +48,7 @@ describe("Integration | ORM | assertions", function(hooks) {
 
   test("it errors when passing in a missing foreign key for a HasMany association foreign key", () => {
     expect(() => {
-      this.server.schema.users.create({
+      server.schema.users.create({
         name: "Sam",
         postIds: [2]
       });
@@ -55,7 +57,7 @@ describe("Integration | ORM | assertions", function(hooks) {
 
   test("it errors when passing in the wrong type for a BelongsTo association", () => {
     expect(() => {
-      this.server.schema.posts.create({
+      server.schema.posts.create({
         title: "Post 1",
         author: "sam"
       });
@@ -64,7 +66,7 @@ describe("Integration | ORM | assertions", function(hooks) {
 
   test("it errors when passing in a missing foreign key for a BelongsTo association foreign key", () => {
     expect(() => {
-      this.server.schema.posts.create({
+      server.schema.posts.create({
         title: "Post 1",
         authorId: 1
       });

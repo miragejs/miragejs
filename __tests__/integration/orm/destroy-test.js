@@ -2,8 +2,8 @@ import { _ormSchema as Schema, _Db as Db, Model } from "@miragejs/server";
 
 let db;
 
-describe("Integration | ORM | destroy", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | ORM | destroy", () => {
+  beforeEach(() =>  {
     db = new Db({
       users: [
         { id: 1, name: "Link", evil: false },

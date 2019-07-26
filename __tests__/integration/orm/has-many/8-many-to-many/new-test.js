@@ -1,7 +1,7 @@
 import Helper from "./_helper";
 
-describe("Integration | ORM | Has Many | Many to Many | new", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | ORM | Has Many | Many to Many | new", () => {
+  beforeEach(() =>  {
     this.helper = new Helper();
     this.schema = this.helper.schema;
   });

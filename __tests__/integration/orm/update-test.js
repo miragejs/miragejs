@@ -1,7 +1,7 @@
 import { Model, _ormSchema as Schema, _Db as Db } from "@miragejs/server";
 
-describe("Integration | ORM | update", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | ORM | update", () => {
+  beforeEach(() =>  {
     this.db = new Db({
       users: [
         { id: 1, name: "Link", location: "Hyrule", evil: false },

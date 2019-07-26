@@ -12,8 +12,8 @@ var User = Model.extend({
 });
 var Address = Model.extend();
 
-describe("Integration | ORM | reinitialize associations", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | ORM | reinitialize associations", () => {
+  beforeEach(() =>  {
     this.schema = new Schema(new Db(), {
       address: Address,
       user: User

@@ -1,7 +1,7 @@
 import Helper, { states } from "./_helper";
 
-describe("Integration | ORM | Belongs To | Named one-way reflexive self referential | accessor", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | ORM | Belongs To | Named one-way reflexive self referential | accessor", () => {
+  beforeEach(() =>  {
     this.helper = new Helper();
   });
 

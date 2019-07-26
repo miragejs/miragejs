@@ -8,8 +8,8 @@ import {
 var schema;
 var User = Model.extend();
 
-describe("Integration | ORM | #find", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | ORM | #find", () => {
+  beforeEach(() =>  {
     let db = new Db({
       users: [{ id: 1, name: "Link" }, { id: 2, name: "Zelda" }]
     });

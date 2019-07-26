@@ -1,7 +1,7 @@
 import Helper, { states } from "./_helper";
 
-describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | association #setIds", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | association #setIds", () => {
+  beforeEach(() =>  {
     this.helper = new Helper();
   });
 

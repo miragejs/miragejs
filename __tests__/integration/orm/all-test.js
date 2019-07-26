@@ -1,9 +1,8 @@
-import {
-  _ormSchema as Schema,
-  _Db as Db,
-  Model,
-  Collection
-} from "@miragejs/server";
+import "../../../lib/container";
+import Db from "../../../lib/db";
+import Schema from "../../../lib/orm/schema";
+import Model from "../../../lib/orm/model";
+import Collection from "../../../lib/orm/collection";
 
 describe("Integration | ORM | #all", function() {
   test("it can return all models", () => {

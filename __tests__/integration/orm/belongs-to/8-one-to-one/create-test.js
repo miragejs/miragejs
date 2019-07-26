@@ -1,8 +1,8 @@
 import Helper from "./_helper";
 import { Model } from "@miragejs/server";
 
-describe("Integration | ORM | Belongs To | One To One | create", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | ORM | Belongs To | One To One | create", () => {
+  beforeEach(() =>  {
     this.helper = new Helper();
     this.helper.schema.registerModel("foo", Model);
   });

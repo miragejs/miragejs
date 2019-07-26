@@ -5,8 +5,8 @@ import {
   Model
 } from "@miragejs/server";
 
-describe("Integration | ORM | collection", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | ORM | collection", () => {
+  beforeEach(() =>  {
     this.User = Model.extend();
     this.db = new Db({
       users: [
