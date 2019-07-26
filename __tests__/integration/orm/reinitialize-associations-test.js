@@ -5,7 +5,7 @@ import {
   _ormSchema as Schema,
   _Db as Db
 } from "@miragejs/server";
-import { module, test } from "qunit";
+ 
 
 // Model classes are defined statically, just like in a typical app
 var User = Model.extend({
@@ -13,7 +13,7 @@ var User = Model.extend({
 });
 var Address = Model.extend();
 
-module("Integration | ORM | reinitialize associations", function(hooks) {
+describe("Integration | ORM | reinitialize associations", function(hooks) {
   hooks.beforeEach(function() {
     this.schema = new Schema(new Db(), {
       address: Address,

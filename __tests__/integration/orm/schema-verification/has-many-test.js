@@ -1,78 +1,82 @@
-import { Model, hasMany, _Db as Db, _ormSchema as Schema } from '@miragejs/server';
-import { module, test } from 'qunit';
+import {
+  Model,
+  hasMany,
+  _Db as Db,
+  _ormSchema as Schema
+} from "@miragejs/server";
+import { module, test } from "qunit";
 
-module('Integration | ORM | Schema Verification | Has Many', function() {
-  test('a one-way has many association is correct', assert => {
-    let schema = new Schema(new Db({
-      users: [
-        { id: 1, name: 'Frodo' }
-      ],
-      posts: [
-        { id: 1, title: 'Lorem' }
-      ]
-    }), {
-      user: Model.extend({
-        posts: hasMany()
+describe("Integration | ORM | Schema Verification | Has Many", function() {
+  test("a one-way has many association is correct", assert => {
+    let schema = new Schema(
+      new Db({
+        users: [{ id: 1, name: "Frodo" }],
+        posts: [{ id: 1, title: "Lorem" }]
       }),
-      post: Model.extend()
-    });
+      {
+        user: Model.extend({
+          posts: hasMany()
+        }),
+        post: Model.extend()
+      }
+    );
 
     let frodo = schema.users.find(1);
-    let association = frodo.associationFor('posts');
+    let association = frodo.associationFor("posts");
 
-    expect(association.key).toEqual('posts');
-    expect(association.modelName).toEqual('post');
-    expect(association.ownerModelName).toEqual('user');
+    expect(association.key).toEqual("posts");
+    expect(association.modelName).toEqual("post");
+    expect(association.ownerModelName).toEqual("user");
 
     let post = schema.posts.find(1);
 
     expect(post.inverseFor(association) === null).toBeTruthy();
   });
 
-  test('a named one-way has many association is correct', assert => {
-    let schema = new Schema(new Db({
-      users: [
-        { id: 1, name: 'Frodo' }
-      ],
-      posts: [
-        { id: 1, title: 'Lorem' }
-      ]
-    }), {
-      user: Model.extend({
-        blogPosts: hasMany('post')
+  test("a named one-way has many association is correct", assert => {
+    let schema = new Schema(
+      new Db({
+        users: [{ id: 1, name: "Frodo" }],
+        posts: [{ id: 1, title: "Lorem" }]
       }),
-      post: Model.extend()
-    });
+      {
+        user: Model.extend({
+          blogPosts: hasMany("post")
+        }),
+        post: Model.extend()
+      }
+    );
 
     let frodo = schema.users.find(1);
-    let association = frodo.associationFor('blogPosts');
+    let association = frodo.associationFor("blogPosts");
 
-    expect(association.key).toEqual('blogPosts');
-    expect(association.modelName).toEqual('post');
-    expect(association.ownerModelName).toEqual('user');
+    expect(association.key).toEqual("blogPosts");
+    expect(association.modelName).toEqual("post");
+    expect(association.ownerModelName).toEqual("user");
 
     let post = schema.posts.find(1);
 
     expect(post.inverseFor(association) === null).toBeTruthy();
   });
 
-  test('a reflexive hasMany association with an implicit inverse is correct', assert => {
-    let schema = new Schema(new Db({
-      tags: [
-        { id: 1, name: 'economics' }
-      ]
-    }), {
-      tag: Model.extend({
-        tags: hasMany()
-      })
-    });
+  test("a reflexive hasMany association with an implicit inverse is correct", assert => {
+    let schema = new Schema(
+      new Db({
+        tags: [{ id: 1, name: "economics" }]
+      }),
+      {
+        tag: Model.extend({
+          tags: hasMany()
+        })
+      }
+    );
 
     let tag = schema.tags.find(1);
-    let association = tag.associationFor('tags');
+    let association = tag.associationFor("tags");
 
-    expect(association.key).toEqual('tags');
-    expect(association.modelName).toEqual('tag');
-    expect(association.ownerModelName).toEqual('tag');
+    expect(association.key).toEqual("tags");
+    expect(association.modelName).toEqual("tag");
+    expect(association.ownerModelName).toEqual("tag");
 
     expect(tag.inverseFor(association) === association).toBeTruthy();
   });

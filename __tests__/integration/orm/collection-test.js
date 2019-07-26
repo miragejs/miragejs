@@ -4,9 +4,9 @@ import {
   Collection,
   Model
 } from "@miragejs/server";
-import { module, test } from "qunit";
+ 
 
-module("Integration | ORM | collection", function(hooks) {
+describe("Integration | ORM | collection", function(hooks) {
   hooks.beforeEach(function() {
     this.User = Model.extend();
     this.db = new Db({

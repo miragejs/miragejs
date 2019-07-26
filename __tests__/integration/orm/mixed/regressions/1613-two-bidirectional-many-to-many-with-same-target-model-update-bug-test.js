@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { Model, hasMany, belongsTo, _Db as Db, _ormSchema as Schema } from '@miragejs/server';
 
-module('Integration | ORM | Mixed | Regressions | 1613 Two bidirectional one-to-many relationships with same target model update ids bug', function(hooks) {
+describe('Integration | ORM | Mixed | Regressions | 1613 Two bidirectional one-to-many relationships with same target model update ids bug', function(hooks) {
   hooks.beforeEach(function() {
     this.db = new Db();
 

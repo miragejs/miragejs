@@ -1,10 +1,10 @@
 import { _ormSchema as Schema, _Db as Db, Model } from "@miragejs/server";
-import { module, test } from "qunit";
+ 
 
 let schema;
 let User = Model.extend();
 
-module("Integration | ORM | #first", function(hooks) {
+describe("Integration | ORM | #first", function(hooks) {
   hooks.beforeEach(function() {
     let db = new Db();
     db.createCollection("users");

@@ -1,7 +1,7 @@
 import { Model, belongsTo, _ormSchema as Schema, _Db as Db } from '@miragejs/server';
 import { module, test } from 'qunit';
 
-module('Integration | ORM | Belongs To | Basic | regressions', function() {
+describe('Integration | ORM | Belongs To | Basic | regressions', function() {
   test('belongsTo accessors works when foreign key is present but falsy', assert => {
     let db = new Db({
       posts: [

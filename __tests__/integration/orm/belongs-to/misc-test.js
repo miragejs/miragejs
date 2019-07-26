@@ -1,7 +1,7 @@
 // import { Model, belongsTo, _ormSchema as Schema, _Db as Db } from '@miragejs/server';
 import { module, test } from 'qunit';
 
-module('Integration | ORM | Belongs To | Misc', function() {
+describe('Integration | ORM | Belongs To | Misc', function() {
   test('an ambiguous schema throws an error', assert => {
     expect(true).toBeTruthy();
     // assert.throws(function() {

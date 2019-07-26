@@ -1,7 +1,7 @@
 import { Model, _ormSchema as Schema, _Db as Db } from "@miragejs/server";
-import { module, test } from "qunit";
+ 
 
-module("Integration | ORM | update", function(hooks) {
+describe("Integration | ORM | update", function(hooks) {
   hooks.beforeEach(function() {
     this.db = new Db({
       users: [

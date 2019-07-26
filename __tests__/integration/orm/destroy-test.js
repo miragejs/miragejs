@@ -1,9 +1,9 @@
 import { _ormSchema as Schema, _Db as Db, Model } from "@miragejs/server";
-import { module, test } from "qunit";
+ 
 
 let db;
 
-module("Integration | ORM | destroy", function(hooks) {
+describe("Integration | ORM | destroy", function(hooks) {
   hooks.beforeEach(function() {
     db = new Db({
       users: [

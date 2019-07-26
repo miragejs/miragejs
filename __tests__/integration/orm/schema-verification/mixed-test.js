@@ -1,7 +1,7 @@
 import { Model, hasMany, belongsTo, _Db as Db, _ormSchema as Schema } from '@miragejs/server';
 import { module, test } from 'qunit';
 
-module('Integration | ORM | Schema Verification | Mixed', function() {
+describe('Integration | ORM | Schema Verification | Mixed', function() {
   test('unnamed one-to-many associations are correct', assert => {
     let schema = new Schema(new Db({
       wordSmiths: [

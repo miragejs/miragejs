@@ -1,7 +1,7 @@
 import Helper from './_helper';
 import { module, test } from 'qunit';
 
-module('Integration | ORM | Has Many | Named Reflexive | new', function(hooks) {
+describe('Integration | ORM | Has Many | Named Reflexive | new', function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
     this.schema = this.helper.schema;

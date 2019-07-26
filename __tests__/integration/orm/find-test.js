@@ -4,12 +4,12 @@ import {
   _Db as Db,
   Model
 } from "@miragejs/server";
-import { module, test } from "qunit";
+ 
 
 var schema;
 var User = Model.extend();
 
-module("Integration | ORM | #find", function(hooks) {
+describe("Integration | ORM | #find", function(hooks) {
   hooks.beforeEach(function() {
     let db = new Db({
       users: [{ id: 1, name: "Link" }, { id: 2, name: "Zelda" }]

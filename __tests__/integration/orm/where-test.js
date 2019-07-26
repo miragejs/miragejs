@@ -4,12 +4,12 @@ import {
   _ormSchema as Schema,
   _Db as Db
 } from "@miragejs/server";
-import { module, test } from "qunit";
+ 
 
 let schema;
 let User = Model.extend();
 
-module("Integration | ORM | #where", function(hooks) {
+describe("Integration | ORM | #where", function(hooks) {
   hooks.beforeEach(function() {
     let db = new Db({
       users: [

@@ -2,9 +2,9 @@
 // import Schema from 'ember-cli-mirage/orm/schema';
 // import { Server, Model } from '@miragejs/server';
 // import Inflector from 'ember-inflector';
-import { module, test } from "qunit";
+ 
 
-module("Integration | ORM | inflector-collectionName integration", function(
+describe("Integration | ORM | inflector-collectionName integration", function(
   hooks
 ) {
   // TODO: deal with this inflector test later

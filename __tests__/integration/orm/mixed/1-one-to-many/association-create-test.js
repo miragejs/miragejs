@@ -1,7 +1,7 @@
 import Helper, { states } from './_helper';
 import { module, test } from 'qunit';
 
-module('Integration | ORM | Mixed | One To Many | association #create', function(hooks) {
+describe('Integration | ORM | Mixed | One To Many | association #create', function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });

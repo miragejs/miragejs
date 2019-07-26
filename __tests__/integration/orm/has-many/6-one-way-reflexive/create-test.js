@@ -2,7 +2,7 @@ import Helper from './_helper';
 import { Model } from '@miragejs/server';
 import { module, test } from 'qunit';
 
-module('Integration | ORM | Has Many | One-Way Reflexive | create', function(hooks) {
+describe('Integration | ORM | Has Many | One-Way Reflexive | create', function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
     this.helper.schema.registerModel('foo', Model);

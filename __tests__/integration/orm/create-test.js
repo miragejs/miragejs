@@ -1,9 +1,9 @@
 import { _ormSchema as Schema, _Db as Db, Model } from "@miragejs/server";
-import { module, test } from "qunit";
+ 
 
 var db, schema, User;
 
-module("Integration | ORM | create", function(hooks) {
+describe("Integration | ORM | create", function(hooks) {
   hooks.beforeEach(function() {
     User = Model.extend();
     db = new Db();

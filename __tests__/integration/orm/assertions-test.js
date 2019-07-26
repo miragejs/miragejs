@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
+ 
 import { Model, Server, hasMany, belongsTo } from "@miragejs/server";
 
-module("Integration | ORM | assertions", function(hooks) {
+describe("Integration | ORM | assertions", function(hooks) {
   hooks.beforeEach(function() {
     this.server = new Server({
       models: {

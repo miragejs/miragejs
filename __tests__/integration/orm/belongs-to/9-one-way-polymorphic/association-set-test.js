@@ -1,7 +1,7 @@
 import Helper, { states } from './_helper';
 import { module, test } from 'qunit';
 
-module('Integration | ORM | Belongs To | One-way Polymorphic | association #set', function(hooks) {
+describe('Integration | ORM | Belongs To | One-way Polymorphic | association #set', function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });

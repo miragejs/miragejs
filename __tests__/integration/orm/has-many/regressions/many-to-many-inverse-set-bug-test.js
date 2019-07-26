@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { Model, hasMany, _Db as Db, _ormSchema as Schema } from '@miragejs/server';
 
-module('Integration | ORM | Has Many | Regressions | Many to many inverse set bug', function(hooks) {
+describe('Integration | ORM | Has Many | Regressions | Many to many inverse set bug', function(hooks) {
   hooks.beforeEach(function() {
     this.db = new Db();
 

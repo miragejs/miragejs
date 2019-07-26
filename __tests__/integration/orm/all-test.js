@@ -4,9 +4,8 @@ import {
   Model,
   Collection
 } from "@miragejs/server";
-import { module, test } from "qunit";
 
-module("Integration | ORM | #all", function() {
+describe("Integration | ORM | #all", function() {
   test("it can return all models", assert => {
     let db = new Db({
       users: [{ id: 1, name: "Link" }, { id: 2, name: "Zelda" }]
