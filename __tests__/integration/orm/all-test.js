@@ -6,7 +6,7 @@ import {
 } from "@miragejs/server";
 
 describe("Integration | ORM | #all", function() {
-  test("it can return all models", assert => {
+  test("it can return all models", () => {
     let db = new Db({
       users: [{ id: 1, name: "Link" }, { id: 2, name: "Zelda" }]
     });
@@ -22,7 +22,7 @@ describe("Integration | ORM | #all", function() {
     expect(users.models[1].attrs).toEqual({ id: "2", name: "Zelda" });
   });
 
-  test("it returns an empty array when no models exist", assert => {
+  test("it returns an empty array when no models exist", () => {
     let db = new Db({ users: [] });
 
     let User = Model.extend();

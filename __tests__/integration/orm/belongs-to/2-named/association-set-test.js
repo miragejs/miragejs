@@ -9,7 +9,7 @@ describe("Integration | ORM | Belongs To | Named | association #set", function(h
     The model can update its association via parent, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can update its association to a saved parent`, assert => {
+    test(`a ${state} can update its association to a saved parent`, () => {
       let [post] = this.helper[state]();
       let savedAuthor = this.helper.savedParent();
 
@@ -19,7 +19,7 @@ describe("Integration | ORM | Belongs To | Named | association #set", function(h
       expect(post.author).toEqual(savedAuthor);
     });
 
-    test(`a ${state} can update its association to a new parent`, assert => {
+    test(`a ${state} can update its association to a new parent`, () => {
       let [post] = this.helper[state]();
       let newAuthor = this.helper.newParent();
 
@@ -29,7 +29,7 @@ describe("Integration | ORM | Belongs To | Named | association #set", function(h
       expect(post.author).toEqual(newAuthor);
     });
 
-    test(`a ${state} can update its association to a null parent`, assert => {
+    test(`a ${state} can update its association to a null parent`, () => {
       let [post] = this.helper[state]();
 
       post.author = null;

@@ -9,7 +9,7 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association 
     The model can create a has-many association, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can create an associated parent`, assert => {
+    test(`a ${state} can create an associated parent`, () => {
       let [user] = this.helper[state]();
       let initialCount = user.commentables.models.length;
 

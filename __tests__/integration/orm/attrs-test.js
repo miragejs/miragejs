@@ -12,13 +12,13 @@ describe("Integration | ORM | attrs", function(hooks) {
     });
   });
 
-  test("attrs returns the models attributes", assert => {
+  test("attrs returns the models attributes", () => {
     let user = schema.users.find(1);
 
     expect(user.attrs).toEqual({ id: "1", name: "Link", evil: false });
   });
 
-  test("attributes can be read via plain property access", assert => {
+  test("attributes can be read via plain property access", () => {
     let user = schema.users.find(1);
 
     expect(user.name).toEqual("Link");

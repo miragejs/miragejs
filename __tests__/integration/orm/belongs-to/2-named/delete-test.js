@@ -6,7 +6,7 @@ describe("Integration | ORM | Belongs To | Named | delete", function(hooks) {
   });
 
   states.forEach(state => {
-    test(`deleting the parent updates the child's foreign key for a ${state}`, assert => {
+    test(`deleting the parent updates the child's foreign key for a ${state}`, () => {
       let [post, user] = this.helper[state]();
 
       if (user) {

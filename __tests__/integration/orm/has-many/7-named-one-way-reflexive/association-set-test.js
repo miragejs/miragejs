@@ -9,7 +9,7 @@ describe("Integration | ORM | Has Many | Named One-Way Reflexive | association #
     The model can update its association via parent, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can update its association to a list of saved children`, assert => {
+    test(`a ${state} can update its association to a list of saved children`, () => {
       let [tag] = this.helper[state]();
       let savedTag = this.helper.savedChild();
 
@@ -22,7 +22,7 @@ describe("Integration | ORM | Has Many | Named One-Way Reflexive | association #
       tag.save();
     });
 
-    test(`a ${state} can update its association to a new parent`, assert => {
+    test(`a ${state} can update its association to a new parent`, () => {
       let [tag] = this.helper[state]();
       let newTag = this.helper.newChild();
 
@@ -35,7 +35,7 @@ describe("Integration | ORM | Has Many | Named One-Way Reflexive | association #
       tag.save();
     });
 
-    test(`a ${state} can clear its association via an empty list`, assert => {
+    test(`a ${state} can clear its association via an empty list`, () => {
       let [tag] = this.helper[state]();
 
       tag.labels = [];
@@ -46,7 +46,7 @@ describe("Integration | ORM | Has Many | Named One-Way Reflexive | association #
       tag.save();
     });
 
-    test(`a ${state} can clear its association via an empty list`, assert => {
+    test(`a ${state} can clear its association via an empty list`, () => {
       let [tag] = this.helper[state]();
 
       tag.labels = null;

@@ -6,7 +6,7 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | delete", fun
   });
 
   states.forEach(state => {
-    test(`deleting the parent updates the child's foreign key for a ${state}`, assert => {
+    test(`deleting the parent updates the child's foreign key for a ${state}`, () => {
       let [comment, post] = this.helper[state]();
 
       if (post) {

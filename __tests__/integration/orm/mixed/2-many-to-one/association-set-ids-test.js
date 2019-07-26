@@ -9,7 +9,7 @@ describe("Integration | ORM | Mixed | Many To One | association #setIds", functi
     The model can update its association via parentId, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can update its association to a saved parent via parentId`, assert => {
+    test(`a ${state} can update its association to a saved parent via parentId`, () => {
       let [post, originalUser] = this.helper[state]();
       let user = this.helper.savedParent();
 
@@ -32,7 +32,7 @@ describe("Integration | ORM | Mixed | Many To One | association #setIds", functi
       }
     });
 
-    test(`a ${state} can clear its association via a null parentId`, assert => {
+    test(`a ${state} can clear its association via a null parentId`, () => {
       let [post, originalUser] = this.helper[state]();
 
       post.userId = null;

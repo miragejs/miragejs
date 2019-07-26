@@ -9,7 +9,7 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association 
     The model can update its association via parent, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can update its association to a saved parent`, assert => {
+    test(`a ${state} can update its association to a saved parent`, () => {
       let [comment] = this.helper[state]();
       let post = this.helper.savedParent();
 
@@ -21,7 +21,7 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association 
       expect(post.comment.attrs).toEqual(comment.attrs);
     });
 
-    test(`a ${state} can update its association to a new parent`, assert => {
+    test(`a ${state} can update its association to a new parent`, () => {
       let [comment] = this.helper[state]();
       let post = this.helper.newParent();
 
@@ -34,7 +34,7 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association 
       expect(post.comment.attrs).toEqual(comment.attrs);
     });
 
-    test(`a ${state} can update its association to a null parent`, assert => {
+    test(`a ${state} can update its association to a null parent`, () => {
       let [comment] = this.helper[state]();
 
       comment.commentable = null;

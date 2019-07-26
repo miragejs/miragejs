@@ -9,7 +9,7 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | association #crea
     The model can create a has-many association, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can create an associated parent`, assert => {
+    test(`a ${state} can create an associated parent`, () => {
       let [user] = this.helper[state]();
       let initialCount = user.things.models.length;
 

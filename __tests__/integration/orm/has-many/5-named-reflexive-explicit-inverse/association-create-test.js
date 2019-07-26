@@ -9,7 +9,7 @@ describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | asso
     The model can create a has-many association, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can create an associated child`, assert => {
+    test(`a ${state} can create an associated child`, () => {
       let [tag] = this.helper[state]();
       let initialCount = tag.labels.models.length;
 

@@ -10,7 +10,7 @@ describe("Integration | ORM | Has Many | Many to Many | association #new", funct
   */
 
   states.forEach(state => {
-    test(`a ${state} can build a new associated child`, assert => {
+    test(`a ${state} can build a new associated child`, () => {
       let [order] = this.helper[state]();
       let initialCount = order.products.models.length;
 

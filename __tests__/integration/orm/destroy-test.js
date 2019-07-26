@@ -17,7 +17,7 @@ describe("Integration | ORM | destroy", function(hooks) {
     });
   });
 
-  test("destroying a model removes the associated record from the db", assert => {
+  test("destroying a model removes the associated record from the db", () => {
     expect(db.users).toHaveLength(3);
 
     let link = this.schema.users.find(1);
@@ -27,7 +27,7 @@ describe("Integration | ORM | destroy", function(hooks) {
     expect(db.users).toHaveLength(2);
   });
 
-  test("destroying a collection removes the associated records from the db", assert => {
+  test("destroying a collection removes the associated records from the db", () => {
     expect(db.users).toHaveLength(3);
 
     let users = this.schema.users.all();

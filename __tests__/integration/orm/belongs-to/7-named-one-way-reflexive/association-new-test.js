@@ -10,7 +10,7 @@ describe("Integration | ORM | Belongs To | Named One-Way Reflexive | association
   */
 
   states.forEach(state => {
-    test(`a ${state} can build a new associated parent`, assert => {
+    test(`a ${state} can build a new associated parent`, () => {
       let [child] = this.helper[state]();
 
       let ganon = child.newParent({ name: "Ganon" });

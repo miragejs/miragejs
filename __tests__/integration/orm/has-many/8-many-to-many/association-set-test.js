@@ -9,7 +9,7 @@ describe("Integration | ORM | Has Many | Many to Many | association #set", funct
     The model can update its association via parent, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can update its association to a list of saved children`, assert => {
+    test(`a ${state} can update its association to a list of saved children`, () => {
       let [order, originalProducts] = this.helper[state]();
       let savedProduct = this.helper.savedChild();
 
@@ -27,7 +27,7 @@ describe("Integration | ORM | Has Many | Many to Many | association #set", funct
       });
     });
 
-    test(`a ${state} can update its association to a new parent`, assert => {
+    test(`a ${state} can update its association to a new parent`, () => {
       let [order, originalProducts] = this.helper[state]();
       let newProduct = this.helper.newChild();
 
@@ -45,7 +45,7 @@ describe("Integration | ORM | Has Many | Many to Many | association #set", funct
       });
     });
 
-    test(`a ${state} can clear its association via an empty list`, assert => {
+    test(`a ${state} can clear its association via an empty list`, () => {
       let [order, originalProducts] = this.helper[state]();
 
       order.products = [];
@@ -60,7 +60,7 @@ describe("Integration | ORM | Has Many | Many to Many | association #set", funct
       });
     });
 
-    test(`a ${state} can clear its association via an empty list`, assert => {
+    test(`a ${state} can clear its association via an empty list`, () => {
       let [order, originalProducts] = this.helper[state]();
 
       order.products = null;

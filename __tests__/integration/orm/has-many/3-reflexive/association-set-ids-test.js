@@ -6,7 +6,7 @@ describe("Integration | ORM | Has Many | Reflexive | association #setIds", funct
   });
 
   states.forEach(state => {
-    test(`a ${state} can update its association to include a saved child via childIds`, assert => {
+    test(`a ${state} can update its association to include a saved child via childIds`, () => {
       let [tag, originalTags] = this.helper[state]();
       let savedTag = this.helper.savedChild();
 
@@ -27,7 +27,7 @@ describe("Integration | ORM | Has Many | Reflexive | association #setIds", funct
       });
     });
 
-    test(`a ${state} can clear its association via a null childIds`, assert => {
+    test(`a ${state} can clear its association via a null childIds`, () => {
       let [tag, originalTags] = this.helper[state]();
 
       tag.tagIds = null;

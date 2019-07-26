@@ -23,7 +23,7 @@ describe("Integration | ORM | #where", function(hooks) {
     });
   });
 
-  test("it returns models that match a query with where", assert => {
+  test("it returns models that match a query with where", () => {
     let users = schema.users.where({ good: false });
 
     expect(users instanceof Collection).toBeTruthy();
@@ -36,7 +36,7 @@ describe("Integration | ORM | #where", function(hooks) {
     });
   });
 
-  test("it returns models that match using a query function", assert => {
+  test("it returns models that match using a query function", () => {
     let users = schema.users.where(function(rec) {
       return !rec.good;
     });
@@ -51,7 +51,7 @@ describe("Integration | ORM | #where", function(hooks) {
     });
   });
 
-  test("it returns an empty collection if no models match a query", assert => {
+  test("it returns an empty collection if no models match a query", () => {
     let users = schema.users.where({ name: "Link", good: false });
 
     expect(users instanceof Collection).toBeTruthy();

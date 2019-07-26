@@ -6,7 +6,7 @@ import {
 } from "@miragejs/server";
 
 describe("Integration | ORM | Belongs To | Basic | regressions", function() {
-  test("belongsTo accessors works when foreign key is present but falsy", assert => {
+  test("belongsTo accessors works when foreign key is present but falsy", () => {
     let db = new Db({
       posts: [{ id: 1, authorId: 0, name: "some post" }],
       authors: [{ id: 0, name: "Foo" }]

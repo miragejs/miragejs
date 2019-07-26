@@ -14,7 +14,7 @@ describe("Integration | ORM | update", function(hooks) {
     });
   });
 
-  test("a collection can update its models with a key and value", assert => {
+  test("a collection can update its models with a key and value", () => {
     let collection = this.schema.users.all();
     collection.update("evil", true);
 
@@ -30,7 +30,7 @@ describe("Integration | ORM | update", function(hooks) {
     });
   });
 
-  test("it can update its models with a hash of attrs", assert => {
+  test("it can update its models with a hash of attrs", () => {
     let collection = this.schema.users.all();
     collection.update({ location: "The water temple", evil: true });
 
@@ -52,7 +52,7 @@ describe("Integration | ORM | update", function(hooks) {
     });
   });
 
-  test("it can set an attribute and then save the model", assert => {
+  test("it can set an attribute and then save the model", () => {
     let user = this.schema.users.find(1);
 
     user.name = "Young link";
@@ -86,7 +86,7 @@ describe("Integration | ORM | update", function(hooks) {
     });
   });
 
-  test("it can update and immediately persist a single attribute", assert => {
+  test("it can update and immediately persist a single attribute", () => {
     let link = this.schema.users.find(1);
     link.update("evil", true);
 
@@ -104,7 +104,7 @@ describe("Integration | ORM | update", function(hooks) {
     });
   });
 
-  test("it can update a hash of attrs immediately", assert => {
+  test("it can update a hash of attrs immediately", () => {
     var link = this.schema.users.find(1);
     link.update({ name: "Evil link", evil: true });
 
@@ -122,7 +122,7 @@ describe("Integration | ORM | update", function(hooks) {
     });
   });
 
-  test("it can update a non-existing attribute", assert => {
+  test("it can update a non-existing attribute", () => {
     var link = this.schema.users.find(1);
     link.update({
       name: "Evil link",
@@ -146,7 +146,7 @@ describe("Integration | ORM | update", function(hooks) {
     });
   });
 
-  test("if users sets incorrectly an attribute without using update, it will still work", assert => {
+  test("if users sets incorrectly an attribute without using update, it will still work", () => {
     var link = this.schema.users.find(1);
     link.reallyEvil = "absolutely evil";
     link.update({ reallyEvil: "a little flower", evil: true });

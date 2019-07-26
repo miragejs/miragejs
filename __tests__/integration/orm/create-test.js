@@ -11,19 +11,19 @@ describe("Integration | ORM | create", function(hooks) {
     });
   });
 
-  test("it cannot make new models that havent been registered", assert => {
+  test("it cannot make new models that havent been registered", () => {
     expect(function() {
       schema.authors.new({ name: "Link" });
     }).toThrow();
   });
 
-  test("it cannot create models that havent been registered", assert => {
+  test("it cannot create models that havent been registered", () => {
     expect(function() {
       schema.authors.create({ name: "Link" });
     }).toThrow();
   });
 
-  test("it can make new models and then save them", assert => {
+  test("it can make new models and then save them", () => {
     let user = schema.users.new({ name: "Link" });
 
     expect(user instanceof User).toBeTruthy();
@@ -37,7 +37,7 @@ describe("Integration | ORM | create", function(hooks) {
     expect(db.users).toEqual([{ id: "1", name: "Link" }]);
   });
 
-  test("it can create new models, saved directly to the db", assert => {
+  test("it can create new models, saved directly to the db", () => {
     let user = schema.users.create({ name: "Link" });
 
     expect(user instanceof Model).toBeTruthy();

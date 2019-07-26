@@ -6,7 +6,7 @@ describe("Integration | ORM | Has Many | Many to Many | delete", function(hooks)
   });
 
   states.forEach(state => {
-    test(`deleting children updates the parent's foreign key for a ${state}`, assert => {
+    test(`deleting children updates the parent's foreign key for a ${state}`, () => {
       let [order, products] = this.helper[state]();
 
       if (products && products.length) {

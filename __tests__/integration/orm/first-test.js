@@ -13,7 +13,7 @@ describe("Integration | ORM | #first", function(hooks) {
     schema.registerModel("user", User);
   });
 
-  test("it can find the first model", assert => {
+  test("it can find the first model", () => {
     let user = schema.users.first();
 
     expect(user instanceof User).toBeTruthy();

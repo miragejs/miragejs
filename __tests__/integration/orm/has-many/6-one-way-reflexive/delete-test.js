@@ -6,7 +6,7 @@ describe("Integration | ORM | Has Many | One-Way Reflexive | delete", function(h
   });
 
   states.forEach(state => {
-    test(`deleting children updates the parent's foreign key for a ${state}`, assert => {
+    test(`deleting children updates the parent's foreign key for a ${state}`, () => {
       let [tag, tags] = this.helper[state]();
 
       if (tags && tags.length) {

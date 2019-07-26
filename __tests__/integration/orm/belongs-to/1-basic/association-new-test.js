@@ -10,7 +10,7 @@ describe("Integration | ORM | Belongs To | Basic | association #new", function(h
   */
 
   states.forEach(state => {
-    test(`a ${state} can build a new associated parent`, assert => {
+    test(`a ${state} can build a new associated parent`, () => {
       let [post] = this.helper[state]();
 
       let ganon = post.newAuthor({ name: "Ganon" });

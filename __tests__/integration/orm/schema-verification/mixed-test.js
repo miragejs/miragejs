@@ -7,7 +7,7 @@ import {
 } from "@miragejs/server";
 
 describe("Integration | ORM | Schema Verification | Mixed", function() {
-  test("unnamed one-to-many associations are correct", assert => {
+  test("unnamed one-to-many associations are correct", () => {
     let schema = new Schema(
       new Db({
         wordSmiths: [{ id: 1, name: "Frodo" }],
@@ -37,7 +37,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     );
   });
 
-  test("a named one-to-many association is correct", assert => {
+  test("a named one-to-many association is correct", () => {
     let schema = new Schema(
       new Db({
         wordSmiths: [{ id: 1, name: "Frodo" }],
@@ -65,7 +65,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     expect(post.inverseFor(association)).toEqual(post.associationFor("author"));
   });
 
-  test("multiple has-many associations of the same type", assert => {
+  test("multiple has-many associations of the same type", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],
@@ -107,7 +107,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     );
   });
 
-  test("one-to-many reflexive association is correct", assert => {
+  test("one-to-many reflexive association is correct", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }]
@@ -132,7 +132,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     );
   });
 
-  test("one-to-many polymorphic association is correct", assert => {
+  test("one-to-many polymorphic association is correct", () => {
     let schema = new Schema(
       new Db({
         authors: [{ id: 1, name: "Peter" }],
@@ -173,7 +173,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     );
   });
 
-  test("multiple implicit inverse associations with the same key throws an error", assert => {
+  test("multiple implicit inverse associations with the same key throws an error", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],
@@ -199,7 +199,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     }).toThrow();
   });
 
-  test("multiple explicit inverse associations with the same key throws an error", assert => {
+  test("multiple explicit inverse associations with the same key throws an error", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],
@@ -225,7 +225,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     }).toThrow();
   });
 
-  test("explicit inverse is chosen over implicit inverses", assert => {
+  test("explicit inverse is chosen over implicit inverses", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],
@@ -256,7 +256,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     );
   });
 
-  test("multiple explicit inverse associations with the same key but different models does not throw an error", assert => {
+  test("multiple explicit inverse associations with the same key but different models does not throw an error", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],

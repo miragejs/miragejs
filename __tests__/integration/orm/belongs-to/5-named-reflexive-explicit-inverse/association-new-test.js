@@ -10,7 +10,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | as
   */
 
   states.forEach(state => {
-    test(`a ${state} can build a new associated parent`, assert => {
+    test(`a ${state} can build a new associated parent`, () => {
       let [user] = this.helper[state]();
 
       let ganon = user.newBestFriend({ name: "Ganon" });

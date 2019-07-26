@@ -9,7 +9,7 @@ describe("Integration | ORM | Belongs To | Named one-way reflexive self referent
     The model can update its association via parent, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can update its association to itself`, assert => {
+    test(`a ${state} can update its association to itself`, () => {
       let [user] = this.helper[state]();
 
       user.representative = user;
@@ -23,7 +23,7 @@ describe("Integration | ORM | Belongs To | Named one-way reflexive self referent
       expect(user.representative.attrs).toEqual(user.attrs);
     });
 
-    test(`a ${state} can update its association to a null parent`, assert => {
+    test(`a ${state} can update its association to a null parent`, () => {
       let [user] = this.helper[state]();
 
       user.representative = null;

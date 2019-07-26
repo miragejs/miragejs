@@ -10,7 +10,7 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | association #new"
   */
 
   states.forEach(state => {
-    test(`a ${state} can build a new associated parent`, assert => {
+    test(`a ${state} can build a new associated parent`, () => {
       let [user] = this.helper[state]();
       let initialCount = user.things.models.length;
 

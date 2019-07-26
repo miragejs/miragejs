@@ -7,7 +7,7 @@ describe("Integration | ORM | Mixed | One To Many Polymorphic | create", functio
     this.helper.schema.registerModel("foo", Model);
   });
 
-  test("it sets up associations correctly when passing in the foreign key", assert => {
+  test("it sets up associations correctly when passing in the foreign key", () => {
     let post = this.helper.schema.create("post");
     let user = this.helper.schema.create("user", {
       thingIds: [{ type: "post", id: post.id }]
@@ -29,7 +29,7 @@ describe("Integration | ORM | Mixed | One To Many Polymorphic | create", functio
     });
   });
 
-  test("it sets up associations correctly when passing in an array of models", assert => {
+  test("it sets up associations correctly when passing in an array of models", () => {
     let post = this.helper.schema.create("post");
     let user = this.helper.schema.create("user", {
       things: [post]
@@ -50,7 +50,7 @@ describe("Integration | ORM | Mixed | One To Many Polymorphic | create", functio
     });
   });
 
-  test("it sets up associations correctly when passing in a collection", assert => {
+  test("it sets up associations correctly when passing in a collection", () => {
     let post = this.helper.schema.create("post");
     let user = this.helper.schema.create("user", {
       things: this.helper.schema.posts.all()

@@ -17,14 +17,14 @@ describe("Integration | ORM | #findOrCreateBy", function(hooks) {
     });
   });
 
-  test("it returns the first model that matches the attrs", assert => {
+  test("it returns the first model that matches the attrs", () => {
     let user = this.schema.users.findOrCreateBy({ good: true });
 
     expect(user instanceof this.User).toBeTruthy();
     expect(user.attrs).toEqual({ id: "1", name: "Link", good: true });
   });
 
-  test("it creates a model if no existing model with the attrs is found", assert => {
+  test("it creates a model if no existing model with the attrs is found", () => {
     expect(this.schema.db.users).toHaveLength(3);
 
     let newUser = this.schema.users.findOrCreateBy({
@@ -36,22 +36,4 @@ describe("Integration | ORM | #findOrCreateBy", function(hooks) {
     expect(newUser instanceof this.User).toBeTruthy();
     expect(newUser.attrs).toEqual({ id: "4", name: "Link", good: false });
   });
-
-  // test('it returns models that match using a query function', function(assert) {
-  //   let users = schema.users.where(function(rec) {
-  //     return !rec.good;
-  //   });
-  //
-  //   assert.ok(users instanceof Collection, 'it returns a collection');
-  //   assert.equal(users.models.length, 1);
-  //   assert.ok(users.models[0] instanceof User);
-  //   assert.deepEqual(users.models[0].attrs, { id: '3', name: 'Ganon', good: false });
-  // });
-
-  // test('it returns an empty collection if no models match a query', function(assert) {
-  //   let users = schema.users.where({ name: 'Link', good: false });
-  //
-  //   assert.ok(users instanceof Collection, 'it returns a collection');
-  //   assert.equal(users.models.length, 0);
-  // });
 });

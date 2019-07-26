@@ -9,7 +9,7 @@ describe("Integration | ORM | Belongs To | One To One | association #set", funct
     The model can update its association via parent, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can update its association to a saved parent`, assert => {
+    test(`a ${state} can update its association to a saved parent`, () => {
       let [user] = this.helper[state]();
       let profile = this.helper.savedParent();
 
@@ -21,7 +21,7 @@ describe("Integration | ORM | Belongs To | One To One | association #set", funct
       expect(profile.user.attrs).toEqual(user.attrs);
     });
 
-    test(`a ${state} can update its association to a new parent`, assert => {
+    test(`a ${state} can update its association to a new parent`, () => {
       let [user] = this.helper[state]();
       let profile = this.helper.newParent();
 
@@ -34,7 +34,7 @@ describe("Integration | ORM | Belongs To | One To One | association #set", funct
       expect(profile.user.attrs).toEqual(user.attrs);
     });
 
-    test(`a ${state} can update its association to a null parent`, assert => {
+    test(`a ${state} can update its association to a null parent`, () => {
       let [user] = this.helper[state]();
 
       user.profile = null;

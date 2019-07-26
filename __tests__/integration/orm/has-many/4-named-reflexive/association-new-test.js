@@ -10,7 +10,7 @@ describe("Integration | ORM | Has Many | Named Reflexive | association #new", fu
   */
 
   states.forEach(state => {
-    test(`a ${state} can build a new associated child`, assert => {
+    test(`a ${state} can build a new associated child`, () => {
       let [tag] = this.helper[state]();
       let initialCount = tag.labels.models.length;
 

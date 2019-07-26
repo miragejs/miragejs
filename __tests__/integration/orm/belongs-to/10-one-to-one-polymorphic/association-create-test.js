@@ -9,7 +9,7 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association 
     The model can create a belongs-to association, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can create an associated parent`, assert => {
+    test(`a ${state} can create an associated parent`, () => {
       let [comment] = this.helper[state]();
 
       let post = comment.createCommentable("post", { title: "Lorem" });

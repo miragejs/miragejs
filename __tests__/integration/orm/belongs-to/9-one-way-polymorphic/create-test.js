@@ -7,7 +7,7 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | create", functi
     this.helper.schema.registerModel("foo", Model);
   });
 
-  test("it sets up associations correctly when passing in the foreign key", assert => {
+  test("it sets up associations correctly when passing in the foreign key", () => {
     let post = this.helper.schema.create("post");
     let comment = this.helper.schema.create("comment", {
       commentableId: { id: post.id, type: "post" }
@@ -24,7 +24,7 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | create", functi
     });
   });
 
-  test("it sets up associations correctly when passing in the association itself", assert => {
+  test("it sets up associations correctly when passing in the association itself", () => {
     let post = this.helper.schema.create("post");
     let comment = this.helper.schema.create("comment", {
       commentable: post

@@ -21,7 +21,7 @@ describe("Integration | ORM | collection", function(hooks) {
     });
   });
 
-  test("a collection can save its models", assert => {
+  test("a collection can save its models", () => {
     let collection = this.schema.users.all();
     collection.models[0].name = "Sam";
     collection.save();
@@ -29,7 +29,7 @@ describe("Integration | ORM | collection", function(hooks) {
     expect(this.db.users[0]).toEqual({ id: "1", name: "Sam", good: true });
   });
 
-  test("a collection can reload its models", assert => {
+  test("a collection can reload its models", () => {
     let collection = this.schema.users.all();
     expect(collection.models[0].name).toEqual("Link");
 
@@ -40,7 +40,7 @@ describe("Integration | ORM | collection", function(hooks) {
     expect(collection.models[0].name).toEqual("Link");
   });
 
-  test("a collection can filter its models", assert => {
+  test("a collection can filter its models", () => {
     let collection = this.schema.users.all();
     expect(collection.models).toHaveLength(3);
 
@@ -51,7 +51,7 @@ describe("Integration | ORM | collection", function(hooks) {
     expect(newCollection.models).toHaveLength(2);
   });
 
-  test("a collection can sort its models", assert => {
+  test("a collection can sort its models", () => {
     let collection = this.schema.users.all();
     expect(collection.models.map(m => m.name)).toEqual([
       "Link",
@@ -72,7 +72,7 @@ describe("Integration | ORM | collection", function(hooks) {
     ]);
   });
 
-  test("a collection can slice its models", assert => {
+  test("a collection can slice its models", () => {
     let collection = this.schema.users.all();
     expect(collection.models.map(m => m.name)).toEqual([
       "Link",
@@ -87,7 +87,7 @@ describe("Integration | ORM | collection", function(hooks) {
     expect(newCollection.models.map(m => m.name)).toEqual(["Zelda", "Ganon"]);
   });
 
-  test("a collection can merge with another collection", assert => {
+  test("a collection can merge with another collection", () => {
     let goodGuys = this.schema.users.where(user => user.good);
     let badGuys = this.schema.users.where(user => !user.good);
 

@@ -7,7 +7,7 @@ import {
 } from "@miragejs/server";
 
 describe("Integration | ORM | Belongs To | Regressions | Issue 1112", function() {
-  test(`deleting a record with a polymorphic belongsTo doesn't interfere with other dependents`, assert => {
+  test(`deleting a record with a polymorphic belongsTo doesn't interfere with other dependents`, () => {
     let schema = new Schema(new Db(), {
       comment: Model.extend({
         commentable: belongsTo({ polymorphic: true }),

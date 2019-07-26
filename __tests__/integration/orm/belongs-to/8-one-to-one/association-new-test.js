@@ -10,7 +10,7 @@ describe("Integration | ORM | Belongs To | One To One | association #new", funct
   */
 
   states.forEach(state => {
-    test(`a ${state} can build a new associated parent`, assert => {
+    test(`a ${state} can build a new associated parent`, () => {
       let [user] = this.helper[state]();
 
       let profile = user.newProfile({ age: 300 });

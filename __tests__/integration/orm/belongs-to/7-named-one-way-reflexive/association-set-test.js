@@ -9,7 +9,7 @@ describe("Integration | ORM | Belongs To | Named One-Way Reflexive | association
     The model can update its association via parent, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can update its association to a saved parent`, assert => {
+    test(`a ${state} can update its association to a saved parent`, () => {
       let [child] = this.helper[state]();
       let savedParent = this.helper.savedParent();
 
@@ -19,7 +19,7 @@ describe("Integration | ORM | Belongs To | Named One-Way Reflexive | association
       expect(child.parent.attrs).toEqual(savedParent.attrs);
     });
 
-    test(`a ${state} can update its association to a new parent`, assert => {
+    test(`a ${state} can update its association to a new parent`, () => {
       let [child] = this.helper[state]();
       let newParent = this.helper.newParent();
 
@@ -29,7 +29,7 @@ describe("Integration | ORM | Belongs To | Named One-Way Reflexive | association
       expect(child.parent).toEqual(newParent);
     });
 
-    test(`a ${state} can update its association to a null parent`, assert => {
+    test(`a ${state} can update its association to a null parent`, () => {
       let [child] = this.helper[state]();
 
       child.parent = null;

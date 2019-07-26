@@ -6,7 +6,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive | delete", function(h
   });
 
   states.forEach(state => {
-    test(`deleting the parent updates the child's foreign key for a ${state}`, assert => {
+    test(`deleting the parent updates the child's foreign key for a ${state}`, () => {
       let [user, bestFriend] = this.helper[state]();
 
       if (bestFriend) {

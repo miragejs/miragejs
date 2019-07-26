@@ -9,7 +9,7 @@ describe("Integration | ORM | Belongs To | Named One-Way Reflexive | association
     The model can create a belongs-to association, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can create an associated parent`, assert => {
+    test(`a ${state} can create an associated parent`, () => {
       let [child] = this.helper[state]();
 
       let ganon = child.createParent({ name: "Ganon" });

@@ -5,7 +5,7 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | create", fun
     this.helper = new Helper();
   });
 
-  test("it sets up associations correctly when passing in the foreign key", assert => {
+  test("it sets up associations correctly when passing in the foreign key", () => {
     let post = this.helper.schema.create("post");
     let user = this.helper.schema.create("user", {
       commentableIds: [{ type: "post", id: post.id }]
@@ -25,7 +25,7 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | create", fun
     });
   });
 
-  test("it sets up associations correctly when passing in an array of models", assert => {
+  test("it sets up associations correctly when passing in an array of models", () => {
     let post = this.helper.schema.create("post");
     let user = this.helper.schema.create("user", {
       commentables: [post]
@@ -41,7 +41,7 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | create", fun
     expect(this.helper.db.posts.length).toEqual(1);
   });
 
-  test("it sets up associations correctly when passing in a collection", assert => {
+  test("it sets up associations correctly when passing in a collection", () => {
     let post = this.helper.schema.create("post");
     let user = this.helper.schema.create("user", {
       commentables: this.helper.schema.posts.all()

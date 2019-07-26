@@ -6,7 +6,7 @@ describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | acce
   });
 
   states.forEach(state => {
-    test(`the references of a ${state} are correct`, assert => {
+    test(`the references of a ${state} are correct`, () => {
       let [tag, tags] = this.helper[state]();
 
       expect(tag.labels.models.length).toEqual(tags.length);

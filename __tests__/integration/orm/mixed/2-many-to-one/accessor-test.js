@@ -9,7 +9,7 @@ describe("Integration | ORM | Mixed | Many To One | accessor", function(hooks) {
     The reference to a belongs-to association is correct, for all states
   */
   states.forEach(state => {
-    test(`the references of a ${state} are correct`, assert => {
+    test(`the references of a ${state} are correct`, () => {
       let [post, user] = this.helper[state]();
 
       if (post.user) {

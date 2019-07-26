@@ -6,7 +6,7 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | instantiating",
     this.schema = this.helper.schema;
   });
 
-  test("the child accepts a saved parent id", assert => {
+  test("the child accepts a saved parent id", () => {
     let post = this.helper.savedParent();
     let comment = this.schema.comments.new({
       commentableId: { id: post.id, type: "post" }
@@ -19,13 +19,13 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | instantiating",
     });
   });
 
-  test("the child errors if the parent id doesnt exist", assert => {
+  test("the child errors if the parent id doesnt exist", () => {
     expect(function() {
       this.schema.comments.new({ commentableId: { type: "post", id: 2 } });
     }).toThrow();
   });
 
-  test("the child accepts a null parent id", assert => {
+  test("the child accepts a null parent id", () => {
     let comment = this.schema.comments.new({ commentableId: null });
 
     expect(comment.commentableId).toEqual(null);
@@ -33,7 +33,7 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | instantiating",
     expect(comment.attrs).toEqual({ commentableId: null });
   });
 
-  test("the child accepts a saved parent model", assert => {
+  test("the child accepts a saved parent model", () => {
     let post = this.helper.savedParent();
     let comment = this.schema.comments.new({ commentable: post });
 
@@ -41,7 +41,7 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | instantiating",
     expect(comment.commentable).toEqual(post);
   });
 
-  test("the child accepts a new parent model", assert => {
+  test("the child accepts a new parent model", () => {
     let post = this.schema.posts.new({ text: "foo" });
     let comment = this.schema.comments.new({ commentable: post });
 
@@ -50,7 +50,7 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | instantiating",
     expect(comment.attrs).toEqual({ commentableId: null });
   });
 
-  test("the child accepts a null parent model", assert => {
+  test("the child accepts a null parent model", () => {
     let comment = this.schema.comments.new({ commentable: null });
 
     expect(comment.commentableId).toEqual(null);
@@ -58,7 +58,7 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | instantiating",
     expect(comment.attrs).toEqual({ commentableId: null });
   });
 
-  test("the child accepts a parent model and id", assert => {
+  test("the child accepts a parent model and id", () => {
     let post = this.helper.savedParent();
     let comment = this.schema.comments.new({
       commentable: post,
@@ -72,7 +72,7 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | instantiating",
     });
   });
 
-  test("the child accepts no reference to a parent id or model as empty obj", assert => {
+  test("the child accepts no reference to a parent id or model as empty obj", () => {
     let comment = this.schema.comments.new({});
 
     expect(comment.commentableId).toEqual(null);
@@ -80,7 +80,7 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | instantiating",
     expect(comment.attrs).toEqual({ commentableId: null });
   });
 
-  test("the child accepts no reference to a parent id or model", assert => {
+  test("the child accepts no reference to a parent id or model", () => {
     let comment = this.schema.comments.new();
 
     expect(comment.commentableId).toEqual(null);

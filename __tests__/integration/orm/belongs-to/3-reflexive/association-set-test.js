@@ -9,7 +9,7 @@ describe("Integration | ORM | Belongs To | Reflexive | association #set", functi
     The model can update its association via parent, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can update its association to a saved parent`, assert => {
+    test(`a ${state} can update its association to a saved parent`, () => {
       let [user, originalUser] = this.helper[state]();
       let friend = this.helper.savedParent();
 
@@ -25,7 +25,7 @@ describe("Integration | ORM | Belongs To | Reflexive | association #set", functi
       }
     });
 
-    test(`a ${state} can update its association to a new parent`, assert => {
+    test(`a ${state} can update its association to a new parent`, () => {
       let [user, originalUser] = this.helper[state]();
       let friend = this.helper.newParent();
 
@@ -41,7 +41,7 @@ describe("Integration | ORM | Belongs To | Reflexive | association #set", functi
       }
     });
 
-    test(`a ${state} can update its association to a null parent`, assert => {
+    test(`a ${state} can update its association to a null parent`, () => {
       let [user, originalUser] = this.helper[state]();
 
       user.user = null;

@@ -6,7 +6,7 @@ describe("Integration | ORM | Mixed | One To Many | instantiating", function(hoo
     this.schema = this.helper.schema;
   });
 
-  test("the child accepts a saved parent id", assert => {
+  test("the child accepts a saved parent id", () => {
     let user = this.helper.savedParent();
     let post = this.schema.posts.new({ userId: user.id });
 
@@ -20,13 +20,13 @@ describe("Integration | ORM | Mixed | One To Many | instantiating", function(hoo
     expect(user.posts.includes(post)).toBeTruthy();
   });
 
-  test("the child errors if the parent id doesnt exist", assert => {
+  test("the child errors if the parent id doesnt exist", () => {
     expect(function() {
       this.schema.posts.new({ userId: 2 });
     }).toThrow();
   });
 
-  test("the child accepts a null parent id", assert => {
+  test("the child accepts a null parent id", () => {
     let post = this.schema.posts.new({ userId: null });
 
     expect(post.userId).toEqual(null);
@@ -34,7 +34,7 @@ describe("Integration | ORM | Mixed | One To Many | instantiating", function(hoo
     expect(post.attrs).toEqual({ userId: null });
   });
 
-  test("the child accepts a saved parent model", assert => {
+  test("the child accepts a saved parent model", () => {
     let user = this.helper.savedParent();
     let post = this.schema.posts.new({ user });
 
@@ -48,7 +48,7 @@ describe("Integration | ORM | Mixed | One To Many | instantiating", function(hoo
     expect(user.posts.includes(post)).toBeTruthy();
   });
 
-  test("the child accepts a new parent model", assert => {
+  test("the child accepts a new parent model", () => {
     let user = this.schema.users.new({ age: 300 });
     let post = this.schema.posts.new({ user });
 
@@ -58,7 +58,7 @@ describe("Integration | ORM | Mixed | One To Many | instantiating", function(hoo
     expect(user.posts.includes(post)).toBeTruthy();
   });
 
-  test("the child accepts a null parent model", assert => {
+  test("the child accepts a null parent model", () => {
     let post = this.schema.posts.new({ user: null });
 
     expect(post.userId).toEqual(null);
@@ -66,7 +66,7 @@ describe("Integration | ORM | Mixed | One To Many | instantiating", function(hoo
     expect(post.attrs).toEqual({ userId: null });
   });
 
-  test("the child accepts a parent model and id", assert => {
+  test("the child accepts a parent model and id", () => {
     let user = this.helper.savedParent();
     let post = this.schema.posts.new({ user, userId: user.id });
 
@@ -77,7 +77,7 @@ describe("Integration | ORM | Mixed | One To Many | instantiating", function(hoo
     expect(user.posts.includes(post)).toBeTruthy();
   });
 
-  test("the child accepts no reference to a parent id or model as empty obj", assert => {
+  test("the child accepts no reference to a parent id or model as empty obj", () => {
     let post = this.schema.posts.new({});
 
     expect(post.userId).toEqual(null);
@@ -85,7 +85,7 @@ describe("Integration | ORM | Mixed | One To Many | instantiating", function(hoo
     expect(post.attrs).toEqual({ userId: null });
   });
 
-  test("the child accepts no reference to a parent id or model", assert => {
+  test("the child accepts no reference to a parent id or model", () => {
     let post = this.schema.posts.new();
 
     expect(post.userId).toEqual(null);

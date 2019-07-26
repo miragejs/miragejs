@@ -6,7 +6,7 @@ describe("Integration | ORM | Belongs To | Named One-Way Reflexive | delete", fu
   });
 
   states.forEach(state => {
-    test(`deleting the parent updates the child's foreign key for a ${state}`, assert => {
+    test(`deleting the parent updates the child's foreign key for a ${state}`, () => {
       let [user, parent] = this.helper[state]();
 
       if (parent) {

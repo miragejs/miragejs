@@ -10,7 +10,7 @@ describe("Integration | ORM | Mixed | Many To One | association #new", function(
   */
 
   states.forEach(state => {
-    test(`a ${state} can build a new associated parent`, assert => {
+    test(`a ${state} can build a new associated parent`, () => {
       let [post, originalUser] = this.helper[state]();
 
       let user = post.newUser({ name: "Zelda" });

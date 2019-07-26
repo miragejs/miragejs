@@ -7,7 +7,7 @@ describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | crea
     this.helper.schema.registerModel("foo", Model);
   });
 
-  test("it sets up associations correctly when passing in the foreign key", assert => {
+  test("it sets up associations correctly when passing in the foreign key", () => {
     let { schema } = this.helper;
     let tagA = schema.tags.create();
     let tagB = schema.tags.create({
@@ -27,7 +27,7 @@ describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | crea
     expect(this.helper.db.tags[1]).toEqual({ id: "2", labelIds: ["1"] });
   });
 
-  test("it sets up associations correctly when passing in an array of models", assert => {
+  test("it sets up associations correctly when passing in an array of models", () => {
     let { schema } = this.helper;
     let tagA = schema.tags.create();
     let tagB = schema.tags.create({
@@ -43,7 +43,7 @@ describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | crea
     expect(this.helper.db.tags.length).toEqual(2);
   });
 
-  test("it sets up associations correctly when passing in a collection", assert => {
+  test("it sets up associations correctly when passing in a collection", () => {
     let { schema } = this.helper;
     let tagA = schema.tags.create();
     let tagB = schema.tags.create({
@@ -59,7 +59,7 @@ describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | crea
     expect(this.helper.db.tags.length).toEqual(2);
   });
 
-  test("it throws an error if a model is passed in without a defined relationship", assert => {
+  test("it throws an error if a model is passed in without a defined relationship", () => {
     let { schema } = this.helper;
 
     expect(function() {
@@ -69,7 +69,7 @@ describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | crea
     }).toThrow();
   });
 
-  test("it throws an error if an array of models is passed in without a defined relationship", assert => {
+  test("it throws an error if an array of models is passed in without a defined relationship", () => {
     let { schema } = this.helper;
 
     expect(function() {
@@ -79,7 +79,7 @@ describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | crea
     }).toThrow();
   });
 
-  test("it throws an error if a collection is passed in without a defined relationship", assert => {
+  test("it throws an error if a collection is passed in without a defined relationship", () => {
     let { schema } = this.helper;
     schema.foos.create();
     schema.foos.create();

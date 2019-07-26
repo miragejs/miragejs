@@ -9,7 +9,7 @@ describe("Integration | ORM | Belongs To | Reflexive | association #setId", func
     The model can update its association via parentId, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can update its association to a saved parent via parentId`, assert => {
+    test(`a ${state} can update its association to a saved parent via parentId`, () => {
       let [user, originalUser] = this.helper[state]();
       let friend = this.helper.savedParent();
 
@@ -27,7 +27,7 @@ describe("Integration | ORM | Belongs To | Reflexive | association #setId", func
   });
 
   ["savedChildSavedParent", "newChildSavedParent"].forEach(state => {
-    test(`a ${state} can clear its association via a null parentId`, assert => {
+    test(`a ${state} can clear its association via a null parentId`, () => {
       let [user, originalUser] = this.helper[state]();
 
       user.userId = null;

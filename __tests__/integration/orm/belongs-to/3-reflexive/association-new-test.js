@@ -10,7 +10,7 @@ describe("Integration | ORM | Belongs To | Reflexive | association #new", functi
   */
 
   states.forEach(state => {
-    test(`a ${state} can build a new associated parent`, assert => {
+    test(`a ${state} can build a new associated parent`, () => {
       let [user, originalUser] = this.helper[state]();
 
       let ganon = user.newUser({ name: "Ganon" });

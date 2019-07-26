@@ -9,7 +9,7 @@ describe("Integration | ORM | Belongs To | One To One | association #setId", fun
     The model can update its association via parentId, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can update its association to a saved parent via parentId`, assert => {
+    test(`a ${state} can update its association to a saved parent via parentId`, () => {
       let [user] = this.helper[state]();
       let profile = this.helper.savedParent();
 
@@ -26,19 +26,4 @@ describe("Integration | ORM | Belongs To | One To One | association #setId", fun
     });
   });
 
-  // [
-  //   'savedChildSavedParent',
-  //   'newChildSavedParent'
-  // ].forEach((state) => {
-  //
-  //   test(`a ${state} can clear its association via a null parentId`, function(assert) {
-  //     let [ user ] = this.helper[state]();
-  //
-  //     user.userId = null;
-  //
-  //     assert.equal(user.userId, null);
-  //     assert.equal(user.user, null);
-  //   });
-  //
-  // });
 });

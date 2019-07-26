@@ -19,20 +19,20 @@ describe("Integration | ORM | #find", function(hooks) {
     });
   });
 
-  test("it can find a model by id", assert => {
+  test("it can find a model by id", () => {
     let zelda = schema.users.find(2);
 
     expect(zelda instanceof User).toBeTruthy();
     expect(zelda.attrs).toEqual({ id: "2", name: "Zelda" });
   });
 
-  test("it returns null if no model is found for an id", assert => {
+  test("it returns null if no model is found for an id", () => {
     let user = schema.users.find(4);
 
     expect(user).toBeNull();
   });
 
-  test("it can find multiple models by ids", assert => {
+  test("it can find multiple models by ids", () => {
     let users = schema.users.find([1, 2]);
 
     expect(users instanceof Collection).toBeTruthy();
@@ -41,7 +41,7 @@ describe("Integration | ORM | #find", function(hooks) {
     expect(users.models[1].attrs).toEqual({ id: "2", name: "Zelda" });
   });
 
-  test("it errors if incorrect number of models are found for an array of ids", assert => {
+  test("it errors if incorrect number of models are found for an array of ids", () => {
     expect(function() {
       schema.users.find([1, 6]);
     }).toThrow();

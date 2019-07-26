@@ -6,7 +6,7 @@ import {
 } from "@miragejs/server";
 
 describe("Integration | ORM | Schema Verification | Has Many", function() {
-  test("a one-way has many association is correct", assert => {
+  test("a one-way has many association is correct", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],
@@ -32,7 +32,7 @@ describe("Integration | ORM | Schema Verification | Has Many", function() {
     expect(post.inverseFor(association) === null).toBeTruthy();
   });
 
-  test("a named one-way has many association is correct", assert => {
+  test("a named one-way has many association is correct", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],
@@ -58,7 +58,7 @@ describe("Integration | ORM | Schema Verification | Has Many", function() {
     expect(post.inverseFor(association) === null).toBeTruthy();
   });
 
-  test("a reflexive hasMany association with an implicit inverse is correct", assert => {
+  test("a reflexive hasMany association with an implicit inverse is correct", () => {
     let schema = new Schema(
       new Db({
         tags: [{ id: 1, name: "economics" }]

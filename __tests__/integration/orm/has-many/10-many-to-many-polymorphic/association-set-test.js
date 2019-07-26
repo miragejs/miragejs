@@ -9,7 +9,7 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association 
     The model can update its association via parent, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can update its association to a list of saved children`, assert => {
+    test(`a ${state} can update its association to a list of saved children`, () => {
       let [user, originalPosts] = this.helper[state]();
       let savedPost = this.helper.savedChild();
 
@@ -31,7 +31,7 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association 
       });
     });
 
-    test(`a ${state} can update its association to a new parent`, assert => {
+    test(`a ${state} can update its association to a new parent`, () => {
       let [user, originalPosts] = this.helper[state]();
       let newPost = this.helper.newChild();
 
@@ -49,7 +49,7 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association 
       });
     });
 
-    test(`a ${state} can clear its association via an empty list`, assert => {
+    test(`a ${state} can clear its association via an empty list`, () => {
       let [user, originalPosts] = this.helper[state]();
 
       user.commentables = [];
@@ -65,7 +65,7 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association 
       });
     });
 
-    test(`a ${state} can clear its association via null`, assert => {
+    test(`a ${state} can clear its association via null`, () => {
       let [user, originalPosts] = this.helper[state]();
 
       user.commentables = null;

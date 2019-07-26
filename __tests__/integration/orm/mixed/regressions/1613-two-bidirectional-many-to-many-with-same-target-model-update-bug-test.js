@@ -22,7 +22,7 @@ describe("Integration | ORM | Mixed | Regressions | 1613 Two bidirectional one-t
     });
   });
 
-  test(`it works, and all inverses are correctly updated`, assert => {
+  test(`it works, and all inverses are correctly updated`, () => {
     let user = this.schema.users.create();
     let post = this.schema.posts.create();
 

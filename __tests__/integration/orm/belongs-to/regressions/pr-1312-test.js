@@ -7,7 +7,7 @@ import {
 } from "@miragejs/server";
 
 describe("Integration | ORM | Belongs To | Regressions | pr-1312", function() {
-  test(`creating and using a record with a polymorphic hasMany and explicit inverse does not fail when accessing the association`, assert => {
+  test(`creating and using a record with a polymorphic hasMany and explicit inverse does not fail when accessing the association`, () => {
     let schema = new Schema(new Db(), {
       comment: Model.extend({
         commentable: belongsTo({ polymorphic: true, inverse: "comments" })

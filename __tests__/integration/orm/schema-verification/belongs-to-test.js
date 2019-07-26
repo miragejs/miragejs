@@ -6,7 +6,7 @@ import {
 } from "@miragejs/server";
 
 describe("Integration | ORM | Schema Verification | Belongs To", function() {
-  test("a one-way belongsTo association is correct", assert => {
+  test("a one-way belongsTo association is correct", () => {
     let schema = new Schema(
       new Db({
         authors: [{ id: 1, name: "Frodo" }],
@@ -30,7 +30,7 @@ describe("Integration | ORM | Schema Verification | Belongs To", function() {
     expect(frodo.inverseFor(association) === null).toBeTruthy();
   });
 
-  test("a one-way named belongsTo association is correct", assert => {
+  test("a one-way named belongsTo association is correct", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],
@@ -54,7 +54,7 @@ describe("Integration | ORM | Schema Verification | Belongs To", function() {
     expect(frodo.inverseFor(association) === null).toBeTruthy();
   });
 
-  test("a reflexive belongsTo association is correct and has an implicit inverse", assert => {
+  test("a reflexive belongsTo association is correct and has an implicit inverse", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }]
@@ -75,7 +75,7 @@ describe("Integration | ORM | Schema Verification | Belongs To", function() {
     expect(frodo.inverseFor(association) === association).toBeTruthy();
   });
 
-  test("a named reflexive belongsTo association with an implicit inverse is correct", assert => {
+  test("a named reflexive belongsTo association with an implicit inverse is correct", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }]
@@ -96,7 +96,7 @@ describe("Integration | ORM | Schema Verification | Belongs To", function() {
     expect(frodo.inverseFor(association) === association).toBeTruthy();
   });
 
-  test("a named reflexive belongsTo association with an explicit inverse is correct", assert => {
+  test("a named reflexive belongsTo association with an explicit inverse is correct", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }]
@@ -117,7 +117,7 @@ describe("Integration | ORM | Schema Verification | Belongs To", function() {
     expect(frodo.inverseFor(association) === association).toBeTruthy();
   });
 
-  test("a one-way reflexive belongsTo association with a null inverse is correct", assert => {
+  test("a one-way reflexive belongsTo association with a null inverse is correct", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }]
@@ -138,7 +138,7 @@ describe("Integration | ORM | Schema Verification | Belongs To", function() {
     expect(frodo.inverseFor(association) === null).toBeTruthy();
   });
 
-  test("a named one-way way reflexive belongsTo association with a null inverse is correct", assert => {
+  test("a named one-way way reflexive belongsTo association with a null inverse is correct", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }]
@@ -159,7 +159,7 @@ describe("Integration | ORM | Schema Verification | Belongs To", function() {
     expect(frodo.inverseFor(association) === null).toBeTruthy();
   });
 
-  test("a one-to-one belongsTo association with an implicit inverse is correct", assert => {
+  test("a one-to-one belongsTo association with an implicit inverse is correct", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],

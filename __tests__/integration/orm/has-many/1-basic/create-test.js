@@ -7,7 +7,7 @@ describe("Integration | ORM | Has Many | Basic | create", function(hooks) {
     this.helper.schema.registerModel("foo", Model);
   });
 
-  test("it sets up associations correctly when passing in the foreign key", assert => {
+  test("it sets up associations correctly when passing in the foreign key", () => {
     let post = this.helper.schema.create("post");
     let user = this.helper.schema.create("user", {
       postIds: [post.id]
@@ -22,7 +22,7 @@ describe("Integration | ORM | Has Many | Basic | create", function(hooks) {
     expect(this.helper.db.users[0]).toEqual({ id: "1", postIds: ["1"] });
   });
 
-  test("it sets up associations correctly when passing in an array of models", assert => {
+  test("it sets up associations correctly when passing in an array of models", () => {
     let post = this.helper.schema.create("post");
     let user = this.helper.schema.create("user", {
       posts: [post]
@@ -37,7 +37,7 @@ describe("Integration | ORM | Has Many | Basic | create", function(hooks) {
     expect(this.helper.db.users[0]).toEqual({ id: "1", postIds: ["1"] });
   });
 
-  test("it sets up associations correctly when passing in a collection", assert => {
+  test("it sets up associations correctly when passing in a collection", () => {
     let post = this.helper.schema.create("post");
     let user = this.helper.schema.create("user", {
       posts: this.helper.schema.posts.all()
@@ -52,7 +52,7 @@ describe("Integration | ORM | Has Many | Basic | create", function(hooks) {
     expect(this.helper.db.users[0]).toEqual({ id: "1", postIds: ["1"] });
   });
 
-  test("it throws an error if a model is passed in without a defined relationship", assert => {
+  test("it throws an error if a model is passed in without a defined relationship", () => {
     let { schema } = this.helper;
 
     expect(function() {
@@ -62,7 +62,7 @@ describe("Integration | ORM | Has Many | Basic | create", function(hooks) {
     }).toThrow();
   });
 
-  test("it throws an error if an array of models is passed in without a defined relationship", assert => {
+  test("it throws an error if an array of models is passed in without a defined relationship", () => {
     let { schema } = this.helper;
 
     expect(function() {
@@ -72,7 +72,7 @@ describe("Integration | ORM | Has Many | Basic | create", function(hooks) {
     }).toThrow();
   });
 
-  test("it throws an error if a collection is passed in without a defined relationship", assert => {
+  test("it throws an error if a collection is passed in without a defined relationship", () => {
     let { schema } = this.helper;
     schema.create("foo");
     schema.create("foo");

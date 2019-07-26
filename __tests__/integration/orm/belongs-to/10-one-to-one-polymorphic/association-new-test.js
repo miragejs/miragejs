@@ -10,7 +10,7 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association 
   */
 
   states.forEach(state => {
-    test(`a ${state} can build a new associated parent`, assert => {
+    test(`a ${state} can build a new associated parent`, () => {
       let [comment] = this.helper[state]();
 
       let post = comment.newCommentable("post", { age: 300 });

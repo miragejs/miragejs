@@ -6,7 +6,7 @@ describe("Integration | ORM | Has Many | Many to Many | accessor", function(hook
   });
 
   states.forEach(state => {
-    test(`the references of a ${state} are correct`, assert => {
+    test(`the references of a ${state} are correct`, () => {
       let [order, products] = this.helper[state]();
 
       expect(order.products.models.length).toEqual(products.length);

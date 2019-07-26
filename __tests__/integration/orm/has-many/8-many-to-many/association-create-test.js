@@ -9,7 +9,7 @@ describe("Integration | ORM | Has Many | Many to Many | association #create", fu
     The model can create a has-many association, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can create an associated child`, assert => {
+    test(`a ${state} can create an associated child`, () => {
       let [order] = this.helper[state]();
       let initialCount = order.products.models.length;
 

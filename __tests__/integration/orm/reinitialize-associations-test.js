@@ -25,12 +25,12 @@ describe("Integration | ORM | reinitialize associations", function(hooks) {
 
   // By running two tests, we force the statically-defined classes to be
   // registered twice.
-  test("safely initializes associations", assert => {
+  test("safely initializes associations", () => {
     expect(this.schema.users.find(1).addresses.models[0].country).toEqual(
       "Hyrule"
     );
   });
-  test("safely initializes associations again", assert => {
+  test("safely initializes associations again", () => {
     expect(this.schema.users.find(1).addresses.models[0].country).toEqual(
       "Hyrule"
     );

@@ -9,7 +9,7 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | accessor", functi
     The reference to a belongs-to association is correct, for all states
   */
   states.forEach(state => {
-    test(`the references of a ${state} are correct`, assert => {
+    test(`the references of a ${state} are correct`, () => {
       let [user, posts] = this.helper[state]();
 
       expect(user.things.models.length).toEqual(posts.length);

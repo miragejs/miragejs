@@ -18,7 +18,7 @@ describe("Integration | ORM | assertions", function(hooks) {
     this.server.shutdown();
   });
 
-  test("it errors when passing in the wrong type for a HasMany association", assert => {
+  test("it errors when passing in the wrong type for a HasMany association", () => {
     expect(() => {
       this.server.schema.users.create({
         name: "Sam",
@@ -27,7 +27,7 @@ describe("Integration | ORM | assertions", function(hooks) {
     }).toThrow();
   });
 
-  test(`it doesn't error when passing in an empty array`, assert => {
+  test(`it doesn't error when passing in an empty array`, () => {
     this.server.schema.users.create({
       name: "Sam",
       posts: []
@@ -35,7 +35,7 @@ describe("Integration | ORM | assertions", function(hooks) {
     expect(true).toBeTruthy();
   });
 
-  test("it errors when passing in the wrong type for a HasMany association foreign key", assert => {
+  test("it errors when passing in the wrong type for a HasMany association foreign key", () => {
     expect(() => {
       this.server.schema.users.create({
         name: "Sam",
@@ -44,7 +44,7 @@ describe("Integration | ORM | assertions", function(hooks) {
     }).toThrow();
   });
 
-  test("it errors when passing in a missing foreign key for a HasMany association foreign key", assert => {
+  test("it errors when passing in a missing foreign key for a HasMany association foreign key", () => {
     expect(() => {
       this.server.schema.users.create({
         name: "Sam",
@@ -53,7 +53,7 @@ describe("Integration | ORM | assertions", function(hooks) {
     }).toThrow();
   });
 
-  test("it errors when passing in the wrong type for a BelongsTo association", assert => {
+  test("it errors when passing in the wrong type for a BelongsTo association", () => {
     expect(() => {
       this.server.schema.posts.create({
         title: "Post 1",
@@ -62,7 +62,7 @@ describe("Integration | ORM | assertions", function(hooks) {
     }).toThrow();
   });
 
-  test("it errors when passing in a missing foreign key for a BelongsTo association foreign key", assert => {
+  test("it errors when passing in a missing foreign key for a BelongsTo association foreign key", () => {
     expect(() => {
       this.server.schema.posts.create({
         title: "Post 1",

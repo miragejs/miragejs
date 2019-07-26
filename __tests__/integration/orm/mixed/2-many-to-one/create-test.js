@@ -7,7 +7,7 @@ describe("Integration | ORM | Mixed | Many To One | create", function(hooks) {
     this.helper.schema.registerModel("foo", Model);
   });
 
-  test("it sets up associations correctly when passing in the foreign key", assert => {
+  test("it sets up associations correctly when passing in the foreign key", () => {
     let { schema } = this.helper;
     let user = schema.create("user");
     let post = schema.create("post", {
@@ -27,7 +27,7 @@ describe("Integration | ORM | Mixed | Many To One | create", function(hooks) {
     expect(db.users[0]).toEqual({ id: "1", postIds: ["1"] });
   });
 
-  test("it sets up associations correctly when passing in the association itself", assert => {
+  test("it sets up associations correctly when passing in the association itself", () => {
     let { schema } = this.helper;
     let user = schema.create("user");
     let post = schema.create("post", {
@@ -46,7 +46,7 @@ describe("Integration | ORM | Mixed | Many To One | create", function(hooks) {
     expect(db.users[0]).toEqual({ id: "1", postIds: ["1"] });
   });
 
-  test("it throws an error if a model is passed in without a defined relationship", assert => {
+  test("it throws an error if a model is passed in without a defined relationship", () => {
     let { schema } = this.helper;
 
     expect(function() {
@@ -56,7 +56,7 @@ describe("Integration | ORM | Mixed | Many To One | create", function(hooks) {
     }).toThrow();
   });
 
-  test("it throws an error if a collection is passed in without a defined relationship", assert => {
+  test("it throws an error if a collection is passed in without a defined relationship", () => {
     let { schema } = this.helper;
     schema.create("foo");
     schema.create("foo");

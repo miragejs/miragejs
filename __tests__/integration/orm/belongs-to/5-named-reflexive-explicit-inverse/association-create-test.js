@@ -9,7 +9,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | as
     The model can create a belongs-to association, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can create an associated parent`, assert => {
+    test(`a ${state} can create an associated parent`, () => {
       let [user] = this.helper[state]();
 
       let ganon = user.createBestFriend({ name: "Ganon" });

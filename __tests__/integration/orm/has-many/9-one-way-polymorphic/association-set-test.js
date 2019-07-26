@@ -9,7 +9,7 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | association #set"
     The model can update its association via parent, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can update its association to a list of saved children`, assert => {
+    test(`a ${state} can update its association to a list of saved children`, () => {
       let [user] = this.helper[state]();
       let savedPost = this.helper.savedChild();
 
@@ -23,7 +23,7 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | association #set"
       ).toBeTruthy();
     });
 
-    test(`a ${state} can update its association to a new parent`, assert => {
+    test(`a ${state} can update its association to a new parent`, () => {
       let [user] = this.helper[state]();
       let newPost = this.helper.newChild();
 
@@ -33,7 +33,7 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | association #set"
       expect(user.things.models[0]).toEqual(newPost);
     });
 
-    test(`a ${state} can clear its association via an empty list`, assert => {
+    test(`a ${state} can clear its association via an empty list`, () => {
       let [user] = this.helper[state]();
 
       user.things = [];
@@ -42,7 +42,7 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | association #set"
       expect(user.things.models.length).toEqual(0);
     });
 
-    test(`a ${state} can clear its association via null`, assert => {
+    test(`a ${state} can clear its association via null`, () => {
       let [user] = this.helper[state]();
 
       user.things = null;

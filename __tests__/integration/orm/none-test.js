@@ -23,7 +23,7 @@ describe("Integration | ORM | #none", function(hooks) {
     });
   });
 
-  test("it returns an empty collection", assert => {
+  test("it returns an empty collection", () => {
     let users = schema.users.none();
 
     expect(users instanceof Collection).toBeTruthy();

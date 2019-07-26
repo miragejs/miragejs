@@ -9,7 +9,7 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | association #setI
     The model can update its association via parentId, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can update its association to a saved parent via parentId`, assert => {
+    test(`a ${state} can update its association to a saved parent via parentId`, () => {
       let [user] = this.helper[state]();
       let savedPost = this.helper.savedChild();
 
@@ -23,7 +23,7 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | association #setI
       ).toBeTruthy();
     });
 
-    test(`a ${state} can clear its association via a null parentId`, assert => {
+    test(`a ${state} can clear its association via a null parentId`, () => {
       let [user] = this.helper[state]();
 
       user.thingIds = null;

@@ -6,7 +6,7 @@ describe("Integration | ORM | Belongs To | Named | instantiating", function(hook
     this.schema = this.helper.schema;
   });
 
-  test("the child accepts a saved parent id", assert => {
+  test("the child accepts a saved parent id", () => {
     let author = this.helper.savedParent();
     let post = this.schema.posts.new({ authorId: author.id });
 
@@ -15,13 +15,13 @@ describe("Integration | ORM | Belongs To | Named | instantiating", function(hook
     expect(post.attrs).toEqual({ authorId: author.id });
   });
 
-  test("the child errors if the parent id doesnt exist", assert => {
+  test("the child errors if the parent id doesnt exist", () => {
     expect(function() {
       this.schema.posts.new({ authorId: 2 });
     }).toThrow();
   });
 
-  test("the child accepts a null parent id", assert => {
+  test("the child accepts a null parent id", () => {
     let post = this.schema.posts.new({ authorId: null });
 
     expect(post.authorId).toEqual(null);
@@ -29,7 +29,7 @@ describe("Integration | ORM | Belongs To | Named | instantiating", function(hook
     expect(post.attrs).toEqual({ authorId: null });
   });
 
-  test("the child accepts a saved parent model", assert => {
+  test("the child accepts a saved parent model", () => {
     let author = this.helper.savedParent();
     let post = this.schema.posts.new({ author });
 
@@ -37,7 +37,7 @@ describe("Integration | ORM | Belongs To | Named | instantiating", function(hook
     expect(post.author).toEqual(author);
   });
 
-  test("the child accepts a new parent model", assert => {
+  test("the child accepts a new parent model", () => {
     let zelda = this.schema.users.new({ name: "Zelda" });
     let post = this.schema.posts.new({ author: zelda });
 
@@ -46,7 +46,7 @@ describe("Integration | ORM | Belongs To | Named | instantiating", function(hook
     expect(post.attrs).toEqual({ authorId: null });
   });
 
-  test("the child accepts a null parent model", assert => {
+  test("the child accepts a null parent model", () => {
     let post = this.schema.posts.new({ author: null });
 
     expect(post.authorId).toEqual(null);
@@ -54,7 +54,7 @@ describe("Integration | ORM | Belongs To | Named | instantiating", function(hook
     expect(post.attrs).toEqual({ authorId: null });
   });
 
-  test("the child accepts a parent model and id", assert => {
+  test("the child accepts a parent model and id", () => {
     let author = this.helper.savedParent();
     let post = this.schema.posts.new({ author, authorId: author.id });
 
@@ -63,7 +63,7 @@ describe("Integration | ORM | Belongs To | Named | instantiating", function(hook
     expect(post.attrs).toEqual({ authorId: author.id });
   });
 
-  test("the child accepts no reference to a parent id or model as empty obj", assert => {
+  test("the child accepts no reference to a parent id or model as empty obj", () => {
     let post = this.schema.posts.new({});
 
     expect(post.authorId).toEqual(null);
@@ -71,7 +71,7 @@ describe("Integration | ORM | Belongs To | Named | instantiating", function(hook
     expect(post.attrs).toEqual({ authorId: null });
   });
 
-  test("the child accepts no reference to a parent id or model", assert => {
+  test("the child accepts no reference to a parent id or model", () => {
     let post = this.schema.posts.new();
 
     expect(post.authorId).toEqual(null);

@@ -9,7 +9,7 @@ describe("Integration | ORM | Mixed | Many To One | association #create", functi
     The model can create a has-many association, for all states
   */
   states.forEach(state => {
-    test(`a ${state} can create an associated parent`, assert => {
+    test(`a ${state} can create an associated parent`, () => {
       let [post, originalUser] = this.helper[state]();
 
       let user = post.createUser({ name: "Zelda" });

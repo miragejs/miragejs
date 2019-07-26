@@ -6,7 +6,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | in
     this.schema = this.helper.schema;
   });
 
-  test("the child accepts a saved parent id", assert => {
+  test("the child accepts a saved parent id", () => {
     let friend = this.helper.savedParent();
     let user = this.schema.users.new({ bestFriendId: friend.id });
 
@@ -15,13 +15,13 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | in
     expect(user.attrs).toEqual({ bestFriendId: friend.id });
   });
 
-  test("the child errors if the parent id doesnt exist", assert => {
+  test("the child errors if the parent id doesnt exist", () => {
     expect(function() {
       this.schema.users.new({ bestFriendId: 2 });
     }).toThrow();
   });
 
-  test("the child accepts a null parent id", assert => {
+  test("the child accepts a null parent id", () => {
     let user = this.schema.users.new({ bestFriendId: null });
 
     expect(user.bestFriendId).toEqual(null);
@@ -29,7 +29,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | in
     expect(user.attrs).toEqual({ bestFriendId: null });
   });
 
-  test("the child accepts a saved parent model", assert => {
+  test("the child accepts a saved parent model", () => {
     let friend = this.helper.savedParent();
     let user = this.schema.users.new({ bestFriend: friend });
 
@@ -38,7 +38,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | in
     expect(user.attrs).toEqual({ bestFriendId: null }); // this would update when saved
   });
 
-  test("the child accepts a new parent model", assert => {
+  test("the child accepts a new parent model", () => {
     let zelda = this.schema.users.new({ name: "Zelda" });
     let user = this.schema.users.new({ bestFriend: zelda });
 
@@ -47,7 +47,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | in
     expect(user.attrs).toEqual({ bestFriendId: null });
   });
 
-  test("the child accepts a null parent model", assert => {
+  test("the child accepts a null parent model", () => {
     let user = this.schema.users.new({ bestFriend: null });
 
     expect(user.bestFriendId).toEqual(null);
@@ -55,7 +55,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | in
     expect(user.attrs).toEqual({ bestFriendId: null });
   });
 
-  test("the child accepts a parent model and id", assert => {
+  test("the child accepts a parent model and id", () => {
     let friend = this.helper.savedParent();
     let user = this.schema.users.new({
       bestFriend: friend,
@@ -67,7 +67,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | in
     expect(user.attrs).toEqual({ bestFriendId: friend.id });
   });
 
-  test("the child accepts no reference to a parent id or model as empty obj", assert => {
+  test("the child accepts no reference to a parent id or model as empty obj", () => {
     let user = this.schema.users.new({});
 
     expect(user.bestFriendId).toEqual(null);
@@ -75,7 +75,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | in
     expect(user.attrs).toEqual({ bestFriendId: null });
   });
 
-  test("the child accepts no reference to a parent id or model", assert => {
+  test("the child accepts no reference to a parent id or model", () => {
     let user = this.schema.users.new();
 
     expect(user.bestFriendId).toEqual(null);

@@ -10,7 +10,7 @@ describe("Integration | ORM | Belongs To | Named one-way reflexive self referent
   */
 
   ["savedChildNoParent", "savedChildSavedParent"].forEach(state => {
-    test(`a ${state} can update its association to itself via parentId`, assert => {
+    test(`a ${state} can update its association to itself via parentId`, () => {
       let [user] = this.helper[state]();
 
       user.representativeId = user.id;
@@ -26,7 +26,7 @@ describe("Integration | ORM | Belongs To | Named one-way reflexive self referent
   });
 
   ["savedChildSavedParent", "newChildNewParent"].forEach(state => {
-    test(`a ${state} can clear its association via a null parentId`, assert => {
+    test(`a ${state} can clear its association via a null parentId`, () => {
       let [user] = this.helper[state]();
 
       user.representativeId = null;

@@ -6,7 +6,7 @@ describe("Integration | ORM | Has Many | Named One-Way Reflexive | new", functio
     this.schema = this.helper.schema;
   });
 
-  test("the parent accepts a saved child id", assert => {
+  test("the parent accepts a saved child id", () => {
     let tagA = this.helper.savedChild();
     let tagB = this.schema.tags.new({
       labelIds: [tagA.id]
@@ -16,13 +16,13 @@ describe("Integration | ORM | Has Many | Named One-Way Reflexive | new", functio
     expect(tagB.labels.includes(tagA)).toBeTruthy();
   });
 
-  test("the parent errors if the children ids don't exist", assert => {
+  test("the parent errors if the children ids don't exist", () => {
     expect(function() {
       this.schema.tags.new({ labelIds: [2] });
     }).toThrow();
   });
 
-  test("the parent accepts null children foreign key", assert => {
+  test("the parent accepts null children foreign key", () => {
     let tag = this.schema.tags.new({ labelIds: null });
 
     expect(tag.labels.models.length).toEqual(0);
@@ -30,7 +30,7 @@ describe("Integration | ORM | Has Many | Named One-Way Reflexive | new", functio
     expect(tag.attrs).toEqual({ labelIds: null });
   });
 
-  test("the parent accepts saved children", assert => {
+  test("the parent accepts saved children", () => {
     let tagA = this.helper.savedChild();
     let tagB = this.schema.tags.new({ labels: [tagA] });
 
@@ -38,7 +38,7 @@ describe("Integration | ORM | Has Many | Named One-Way Reflexive | new", functio
     expect(tagB.labels.models[0]).toEqual(tagA);
   });
 
-  test("the parent accepts new children", assert => {
+  test("the parent accepts new children", () => {
     let tagA = this.schema.tags.new({ color: "Red" });
     let tagB = this.schema.tags.new({ labels: [tagA] });
 
@@ -46,7 +46,7 @@ describe("Integration | ORM | Has Many | Named One-Way Reflexive | new", functio
     expect(tagB.labels.models[0]).toEqual(tagA);
   });
 
-  test("the parent accepts null children", assert => {
+  test("the parent accepts null children", () => {
     let tag = this.schema.tags.new({ labels: null });
 
     expect(tag.labels.models.length).toEqual(0);
@@ -54,7 +54,7 @@ describe("Integration | ORM | Has Many | Named One-Way Reflexive | new", functio
     expect(tag.attrs).toEqual({ labelIds: null });
   });
 
-  test("the parent accepts children and child ids", assert => {
+  test("the parent accepts children and child ids", () => {
     let tagA = this.helper.savedChild();
     let tagB = this.schema.tags.new({ labels: [tagA], labelIds: [tagA.id] });
 
@@ -62,7 +62,7 @@ describe("Integration | ORM | Has Many | Named One-Way Reflexive | new", functio
     expect(tagB.labels.models[0]).toEqual(tagA);
   });
 
-  test("the parent accepts no reference to children or child ids as empty obj", assert => {
+  test("the parent accepts no reference to children or child ids as empty obj", () => {
     let tag = this.schema.tags.new({});
 
     expect(tag.labelIds).toEqual([]);
@@ -70,7 +70,7 @@ describe("Integration | ORM | Has Many | Named One-Way Reflexive | new", functio
     expect(tag.attrs).toEqual({ labelIds: null });
   });
 
-  test("the parent accepts no reference to children or child ids", assert => {
+  test("the parent accepts no reference to children or child ids", () => {
     let tag = this.schema.tags.new();
 
     expect(tag.labelIds).toEqual([]);

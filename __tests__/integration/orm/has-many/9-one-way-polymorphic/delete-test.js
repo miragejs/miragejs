@@ -6,7 +6,7 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | delete", function
   });
 
   states.forEach(state => {
-    test(`deleting children updates the parent's foreign key for a ${state}`, assert => {
+    test(`deleting children updates the parent's foreign key for a ${state}`, () => {
       let [user, posts] = this.helper[state]();
 
       if (posts && posts.length) {

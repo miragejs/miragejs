@@ -9,7 +9,7 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | accessor", f
     The reference to a belongs-to association is correct, for all states
   */
   states.forEach(state => {
-    test(`the references of a ${state} are correct`, assert => {
+    test(`the references of a ${state} are correct`, () => {
       let [comment, post] = this.helper[state]();
 
       // We use .attrs here because otherwise deepEqual goes on infinite recursive comparison
