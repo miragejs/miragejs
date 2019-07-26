@@ -11,15 +11,15 @@ module('Integration | ORM | Belongs To | Named | association #create', function(
   */
   states.forEach((state) => {
 
-    test(`a ${state} can create an associated parent`, function(assert) {
+    test(`a ${state} can create an associated parent`, assert => {
       let [ post ] = this.helper[state]();
 
       let ganon = post.createAuthor({ name: 'Ganon' });
 
-      assert.ok(ganon.id, 'the parent was persisted');
-      assert.deepEqual(post.author.attrs, ganon.attrs);
-      assert.equal(post.authorId, ganon.id);
-      assert.equal(this.helper.schema.posts.find(post.id).authorId, ganon.id, 'the child was persisted');
+      expect(ganon.id).toBeTruthy();
+      expect(post.author.attrs).toEqual(ganon.attrs);
+      expect(post.authorId).toEqual(ganon.id);
+      expect(this.helper.schema.posts.find(post.id).authorId).toEqual(ganon.id);
     });
 
   });

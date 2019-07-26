@@ -12,23 +12,23 @@ module('Integration | ORM | Mixed | One To Many Polymorphic | association #new',
 
   states.forEach((state) => {
 
-    test(`a ${state} can build a new associated parent`, function(assert) {
+    test(`a ${state} can build a new associated parent`, assert => {
       let [ user ] = this.helper[state]();
       let initialCount = user.things.models.length;
 
       let post = user.newThing('post', { title: 'Lorem ipsum' });
 
-      assert.ok(!post.id, 'the child was not persisted');
-      assert.equal(user.things.models.length, initialCount + 1);
+      expect(!post.id).toBeTruthy();
+      expect(user.things.models.length).toEqual(initialCount + 1);
 
       post.save();
 
-      assert.deepEqual(post.attrs, { id: post.id, title: 'Lorem ipsum', userId: user.id }, 'the child was persisted');
-      assert.equal(user.things.models.length, initialCount + 1, 'the collection size was increased');
-      assert.ok(user.things.includes(post), 'the model was added to user.things');
-      assert.ok(user.thingIds.find(obj => {
+      expect(post.attrs).toEqual({ id: post.id, title: 'Lorem ipsum', userId: user.id });
+      expect(user.things.models.length).toEqual(initialCount + 1);
+      expect(user.things.includes(post)).toBeTruthy();
+      expect(user.thingIds.find(obj => {
         return (obj.id === post.id && obj.type === 'post');
-      }), 'the id was added to the fks array');
+      })).toBeTruthy();
     });
 
   });

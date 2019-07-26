@@ -8,21 +8,21 @@ module('Integration | ORM | Has Many | Reflexive | accessor', function(hooks) {
 
   states.forEach((state) => {
 
-    test(`the references of a ${state} are correct`, function(assert) {
+    test(`the references of a ${state} are correct`, assert => {
       let [ tag, tags ] = this.helper[state]();
 
-      assert.equal(tag.tags.models.length, tags.length, 'the parent has the correct number of children');
-      assert.equal(tag.tagIds.length, tags.length, 'the parent has the correct number of children ids');
+      expect(tag.tags.models.length).toEqual(tags.length);
+      expect(tag.tagIds.length).toEqual(tags.length);
 
       tags.forEach(t => {
-        assert.ok(tag.tags.includes(t));
+        expect(tag.tags.includes(t)).toBeTruthy();
 
         if (t.isSaved()) {
-          assert.ok(tag.tagIds.indexOf(t.id) > -1, 'each saved child id is in parent.childrenIds array');
+          expect(tag.tagIds.indexOf(t.id) > -1).toBeTruthy();
         }
 
         // Check the inverse
-        assert.ok(t.tags.includes(tag));
+        expect(t.tags.includes(tag)).toBeTruthy();
       });
     });
 

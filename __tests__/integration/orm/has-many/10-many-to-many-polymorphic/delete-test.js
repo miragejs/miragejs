@@ -8,7 +8,7 @@ module('Integration | ORM | Has Many | Many-to-many Polymorphic | delete', funct
 
   states.forEach((state) => {
 
-    test(`deleting children updates the parent's foreign key for a ${state}`, function(assert) {
+    test(`deleting children updates the parent's foreign key for a ${state}`, assert => {
       let [ user, posts ] = this.helper[state]();
 
       if (posts && posts.length) {
@@ -16,8 +16,8 @@ module('Integration | ORM | Has Many | Many-to-many Polymorphic | delete', funct
         user.reload();
       }
 
-      assert.equal(user.commentables.length, 0);
-      assert.equal(user.commentableIds.length, 0);
+      expect(user.commentables.length).toEqual(0);
+      expect(user.commentableIds.length).toEqual(0);
     });
 
   });

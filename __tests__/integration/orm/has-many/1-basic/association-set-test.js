@@ -11,42 +11,42 @@ module('Integration | ORM | Has Many | Basic | association #set', function(hooks
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a list of saved children`, function(assert) {
+    test(`a ${state} can update its association to a list of saved children`, assert => {
       let [ user ] = this.helper[state]();
       let savedPost = this.helper.savedChild();
 
       user.posts = [ savedPost ];
 
-      assert.ok(user.posts.models.indexOf(savedPost) > -1);
-      assert.ok(user.postIds.indexOf(savedPost.id) > -1);
+      expect(user.posts.models.indexOf(savedPost) > -1).toBeTruthy();
+      expect(user.postIds.indexOf(savedPost.id) > -1).toBeTruthy();
     });
 
-    test(`a ${state} can update its association to a new parent`, function(assert) {
+    test(`a ${state} can update its association to a new parent`, assert => {
       let [ user ] = this.helper[state]();
       let newPost = this.helper.newChild();
 
       user.posts = [ newPost ];
 
-      assert.deepEqual(user.postIds, [ undefined ]);
-      assert.deepEqual(user.posts.models[0], newPost);
+      expect(user.postIds).toEqual([ undefined ]);
+      expect(user.posts.models[0]).toEqual(newPost);
     });
 
-    test(`a ${state} can clear its association via an empty list`, function(assert) {
+    test(`a ${state} can clear its association via an empty list`, assert => {
       let [ user ] = this.helper[state]();
 
       user.posts = [ ];
 
-      assert.deepEqual(user.postIds, [ ]);
-      assert.equal(user.posts.models.length, 0);
+      expect(user.postIds).toEqual([ ]);
+      expect(user.posts.models.length).toEqual(0);
     });
 
-    test(`a ${state} can clear its association via an empty list`, function(assert) {
+    test(`a ${state} can clear its association via an empty list`, assert => {
       let [ user ] = this.helper[state]();
 
       user.posts = null;
 
-      assert.deepEqual(user.postIds, [ ]);
-      assert.equal(user.posts.models.length, 0);
+      expect(user.postIds).toEqual([ ]);
+      expect(user.posts.models.length).toEqual(0);
     });
 
   });

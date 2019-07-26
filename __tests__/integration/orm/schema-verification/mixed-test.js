@@ -2,7 +2,7 @@ import { Model, hasMany, belongsTo, _Db as Db, _ormSchema as Schema } from '@mir
 import { module, test } from 'qunit';
 
 module('Integration | ORM | Schema Verification | Mixed', function() {
-  test('unnamed one-to-many associations are correct', function(assert) {
+  test('unnamed one-to-many associations are correct', assert => {
     let schema = new Schema(new Db({
       wordSmiths: [
         { id: 1, name: 'Frodo' }
@@ -22,16 +22,16 @@ module('Integration | ORM | Schema Verification | Mixed', function() {
     let frodo = schema.wordSmiths.find(1);
     let association = frodo.associationFor('blogPosts');
 
-    assert.equal(association.key, 'blogPosts');
-    assert.equal(association.modelName, 'blog-post');
-    assert.equal(association.ownerModelName, 'word-smith');
+    expect(association.key).toEqual('blogPosts');
+    expect(association.modelName).toEqual('blog-post');
+    expect(association.ownerModelName).toEqual('word-smith');
 
     let post = schema.blogPosts.find(1);
 
-    assert.deepEqual(post.inverseFor(association), post.associationFor('wordSmith'));
+    expect(post.inverseFor(association)).toEqual(post.associationFor('wordSmith'));
   });
 
-  test('a named one-to-many association is correct', function(assert) {
+  test('a named one-to-many association is correct', assert => {
     let schema = new Schema(new Db({
       wordSmiths: [
         { id: 1, name: 'Frodo' }
@@ -51,16 +51,16 @@ module('Integration | ORM | Schema Verification | Mixed', function() {
     let frodo = schema.wordSmiths.find(1);
     let association = frodo.associationFor('posts');
 
-    assert.equal(association.key, 'posts');
-    assert.equal(association.modelName, 'blog-post');
-    assert.equal(association.ownerModelName, 'word-smith');
+    expect(association.key).toEqual('posts');
+    expect(association.modelName).toEqual('blog-post');
+    expect(association.ownerModelName).toEqual('word-smith');
 
     let post = schema.blogPosts.find(1);
 
-    assert.deepEqual(post.inverseFor(association), post.associationFor('author'));
+    expect(post.inverseFor(association)).toEqual(post.associationFor('author'));
   });
 
-  test('multiple has-many associations of the same type', function(assert) {
+  test('multiple has-many associations of the same type', assert => {
     let schema = new Schema(new Db({
       users: [
         { id: 1, name: 'Frodo' }
@@ -82,24 +82,24 @@ module('Integration | ORM | Schema Verification | Mixed', function() {
     let frodo = schema.users.find(1);
     let notesAssociation = frodo.associationFor('notes');
 
-    assert.equal(notesAssociation.key, 'notes');
-    assert.equal(notesAssociation.modelName, 'post');
-    assert.equal(notesAssociation.ownerModelName, 'user');
+    expect(notesAssociation.key).toEqual('notes');
+    expect(notesAssociation.modelName).toEqual('post');
+    expect(notesAssociation.ownerModelName).toEqual('user');
 
     let post = schema.posts.find(1);
 
-    assert.deepEqual(post.inverseFor(notesAssociation), post.associationFor('author'));
+    expect(post.inverseFor(notesAssociation)).toEqual(post.associationFor('author'));
 
     let messagesAssociation = frodo.associationFor('messages');
 
-    assert.equal(messagesAssociation.key, 'messages');
-    assert.equal(messagesAssociation.modelName, 'post');
-    assert.equal(messagesAssociation.ownerModelName, 'user');
+    expect(messagesAssociation.key).toEqual('messages');
+    expect(messagesAssociation.modelName).toEqual('post');
+    expect(messagesAssociation.ownerModelName).toEqual('user');
 
-    assert.deepEqual(post.inverseFor(messagesAssociation), post.associationFor('messenger'));
+    expect(post.inverseFor(messagesAssociation)).toEqual(post.associationFor('messenger'));
   });
 
-  test('one-to-many reflexive association is correct', function(assert) {
+  test('one-to-many reflexive association is correct', assert => {
     let schema = new Schema(new Db({
       users: [
         { id: 1, name: 'Frodo' }
@@ -114,14 +114,14 @@ module('Integration | ORM | Schema Verification | Mixed', function() {
     let frodo = schema.users.find(1);
     let parentAssociation = frodo.associationFor('parent');
 
-    assert.equal(parentAssociation.key, 'parent');
-    assert.equal(parentAssociation.modelName, 'user');
-    assert.equal(parentAssociation.ownerModelName, 'user');
+    expect(parentAssociation.key).toEqual('parent');
+    expect(parentAssociation.modelName).toEqual('user');
+    expect(parentAssociation.ownerModelName).toEqual('user');
 
-    assert.deepEqual(frodo.inverseFor(parentAssociation), frodo.associationFor('children'));
+    expect(frodo.inverseFor(parentAssociation)).toEqual(frodo.associationFor('children'));
   });
 
-  test('one-to-many polymorphic association is correct', function(assert) {
+  test('one-to-many polymorphic association is correct', assert => {
     let schema = new Schema(new Db({
       authors: [
         { id: 1, name: 'Peter' }
@@ -153,13 +153,13 @@ module('Integration | ORM | Schema Verification | Mixed', function() {
     let article = schema.articles.find(1);
     let articleAuthorAssociation = article.associationFor('author');
 
-    assert.deepEqual(post.inverseFor(writingsAssociation), postAuthorAssociation);
-    assert.deepEqual(article.inverseFor(writingsAssociation), articleAuthorAssociation);
-    assert.deepEqual(author.inverseFor(postAuthorAssociation), writingsAssociation);
-    assert.deepEqual(author.inverseFor(postAuthorAssociation), writingsAssociation);
+    expect(post.inverseFor(writingsAssociation)).toEqual(postAuthorAssociation);
+    expect(article.inverseFor(writingsAssociation)).toEqual(articleAuthorAssociation);
+    expect(author.inverseFor(postAuthorAssociation)).toEqual(writingsAssociation);
+    expect(author.inverseFor(postAuthorAssociation)).toEqual(writingsAssociation);
   });
 
-  test('multiple implicit inverse associations with the same key throws an error', function(assert) {
+  test('multiple implicit inverse associations with the same key throws an error', assert => {
     let schema = new Schema(new Db({
       users: [
         { id: 1, name: 'Frodo' }
@@ -181,12 +181,12 @@ module('Integration | ORM | Schema Verification | Mixed', function() {
     let userPostsAssociation = frodo.associationFor('posts');
     let post = schema.posts.find(1);
 
-    assert.throws(function() {
+    expect(function() {
       post.inverseFor(userPostsAssociation);
-    }, /The post model has multiple possible inverse associations for the user.posts association./);
+    }).toThrow();
   });
 
-  test('multiple explicit inverse associations with the same key throws an error', function(assert) {
+  test('multiple explicit inverse associations with the same key throws an error', assert => {
     let schema = new Schema(new Db({
       users: [
         { id: 1, name: 'Frodo' }
@@ -208,12 +208,12 @@ module('Integration | ORM | Schema Verification | Mixed', function() {
     let userPostsAssociation = frodo.associationFor('posts');
     let post = schema.posts.find(1);
 
-    assert.throws(function() {
+    expect(function() {
       post.inverseFor(userPostsAssociation);
-    }, /The post model has defined multiple explicit inverse associations for the user.posts association./);
+    }).toThrow();
   });
 
-  test('explicit inverse is chosen over implicit inverses', function(assert) {
+  test('explicit inverse is chosen over implicit inverses', assert => {
     let schema = new Schema(new Db({
       users: [
         { id: 1, name: 'Frodo' }
@@ -234,16 +234,16 @@ module('Integration | ORM | Schema Verification | Mixed', function() {
     let frodo = schema.users.find(1);
     let userPostsAssociation = frodo.associationFor('posts');
 
-    assert.equal(userPostsAssociation.key, 'posts');
-    assert.equal(userPostsAssociation.modelName, 'post');
-    assert.equal(userPostsAssociation.ownerModelName, 'user');
+    expect(userPostsAssociation.key).toEqual('posts');
+    expect(userPostsAssociation.modelName).toEqual('post');
+    expect(userPostsAssociation.ownerModelName).toEqual('user');
 
     let post = schema.posts.find(1);
 
-    assert.deepEqual(post.inverseFor(userPostsAssociation), post.associationFor('authors'));
+    expect(post.inverseFor(userPostsAssociation)).toEqual(post.associationFor('authors'));
   });
 
-  test('multiple explicit inverse associations with the same key but different models does not throw an error', function(assert) {
+  test('multiple explicit inverse associations with the same key but different models does not throw an error', assert => {
     let schema = new Schema(new Db({
       users: [
         { id: 1, name: 'Frodo' }
@@ -275,9 +275,9 @@ module('Integration | ORM | Schema Verification | Mixed', function() {
     let userAuthoredBooksAssociation = frodo.associationFor('authoredBooks');
     let postsAuthorsAssociation = post.associationFor('authors');
     let bookAuthorsAssociation = book.associationFor('authors');
-    assert.deepEqual(post.inverseFor(userAuthoredPostsAssociation), post.associationFor('authors'));
-    assert.deepEqual(book.inverseFor(userAuthoredBooksAssociation), book.associationFor('authors'));
-    assert.deepEqual(frodo.inverseFor(postsAuthorsAssociation), frodo.associationFor('authoredPosts'));
-    assert.deepEqual(frodo.inverseFor(bookAuthorsAssociation), frodo.associationFor('authoredBooks'));
+    expect(post.inverseFor(userAuthoredPostsAssociation)).toEqual(post.associationFor('authors'));
+    expect(book.inverseFor(userAuthoredBooksAssociation)).toEqual(book.associationFor('authors'));
+    expect(frodo.inverseFor(postsAuthorsAssociation)).toEqual(frodo.associationFor('authoredPosts'));
+    expect(frodo.inverseFor(bookAuthorsAssociation)).toEqual(frodo.associationFor('authoredBooks'));
   });
 });

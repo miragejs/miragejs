@@ -2,7 +2,7 @@ import { Model, hasMany, _Db as Db, _ormSchema as Schema } from '@miragejs/serve
 import { module, test } from 'qunit';
 
 module('Integration | ORM | Schema Verification | Has Many', function() {
-  test('a one-way has many association is correct', function(assert) {
+  test('a one-way has many association is correct', assert => {
     let schema = new Schema(new Db({
       users: [
         { id: 1, name: 'Frodo' }
@@ -20,16 +20,16 @@ module('Integration | ORM | Schema Verification | Has Many', function() {
     let frodo = schema.users.find(1);
     let association = frodo.associationFor('posts');
 
-    assert.equal(association.key, 'posts');
-    assert.equal(association.modelName, 'post');
-    assert.equal(association.ownerModelName, 'user');
+    expect(association.key).toEqual('posts');
+    expect(association.modelName).toEqual('post');
+    expect(association.ownerModelName).toEqual('user');
 
     let post = schema.posts.find(1);
 
-    assert.ok(post.inverseFor(association) === null, 'there is no inverse');
+    expect(post.inverseFor(association) === null).toBeTruthy();
   });
 
-  test('a named one-way has many association is correct', function(assert) {
+  test('a named one-way has many association is correct', assert => {
     let schema = new Schema(new Db({
       users: [
         { id: 1, name: 'Frodo' }
@@ -47,16 +47,16 @@ module('Integration | ORM | Schema Verification | Has Many', function() {
     let frodo = schema.users.find(1);
     let association = frodo.associationFor('blogPosts');
 
-    assert.equal(association.key, 'blogPosts');
-    assert.equal(association.modelName, 'post');
-    assert.equal(association.ownerModelName, 'user');
+    expect(association.key).toEqual('blogPosts');
+    expect(association.modelName).toEqual('post');
+    expect(association.ownerModelName).toEqual('user');
 
     let post = schema.posts.find(1);
 
-    assert.ok(post.inverseFor(association) === null, 'there is no inverse');
+    expect(post.inverseFor(association) === null).toBeTruthy();
   });
 
-  test('a reflexive hasMany association with an implicit inverse is correct', function(assert) {
+  test('a reflexive hasMany association with an implicit inverse is correct', assert => {
     let schema = new Schema(new Db({
       tags: [
         { id: 1, name: 'economics' }
@@ -70,10 +70,10 @@ module('Integration | ORM | Schema Verification | Has Many', function() {
     let tag = schema.tags.find(1);
     let association = tag.associationFor('tags');
 
-    assert.equal(association.key, 'tags');
-    assert.equal(association.modelName, 'tag');
-    assert.equal(association.ownerModelName, 'tag');
+    expect(association.key).toEqual('tags');
+    expect(association.modelName).toEqual('tag');
+    expect(association.ownerModelName).toEqual('tag');
 
-    assert.ok(tag.inverseFor(association) === association, 'the implicit inverse was found');
+    expect(tag.inverseFor(association) === association).toBeTruthy();
   });
 });

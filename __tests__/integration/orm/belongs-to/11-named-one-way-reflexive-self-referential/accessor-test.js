@@ -11,16 +11,16 @@ module('Integration | ORM | Belongs To | Named one-way reflexive self referentia
   */
   states.forEach((state) => {
 
-    test(`the references of a ${state} are correct`, function(assert) {
+    test(`the references of a ${state} are correct`, assert => {
       let [ user, representative ] = this.helper[state]();
 
       // We use .attrs here because otherwise deepEqual goes on infinite recursive comparison
       if (representative) {
-        assert.deepEqual(user.representative.attrs, representative.attrs, 'the model reference is correct');
-        assert.equal(user.representativeId, representative.id, 'the modelId reference is correct');
+        expect(user.representative.attrs).toEqual(representative.attrs);
+        expect(user.representativeId).toEqual(representative.id);
       } else {
-        assert.deepEqual(user.representative, null, 'the model reference is correct');
-        assert.equal(user.representativeId, null, 'the modelId reference is correct');
+        expect(user.representative).toEqual(null);
+        expect(user.representativeId).toEqual(null);
       }
     });
 

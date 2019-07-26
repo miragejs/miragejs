@@ -8,7 +8,7 @@ module('Integration | ORM | Belongs To | One-to-one Polymorphic | create', funct
     this.helper.schema.registerModel('foo', Model);
   });
 
-  test('it sets up associations correctly when passing in the foreign key', function(assert) {
+  test('it sets up associations correctly when passing in the foreign key', assert => {
     let { schema } = this.helper;
     let post = schema.create('post');
     let comment = schema.create('comment', {
@@ -16,50 +16,50 @@ module('Integration | ORM | Belongs To | One-to-one Polymorphic | create', funct
     });
     post.reload();
 
-    assert.deepEqual(comment.commentableId, { type: 'post', id: post.id });
-    assert.deepEqual(comment.commentable.attrs, post.attrs);
-    assert.deepEqual(post.comment.attrs, comment.attrs);
-    assert.equal(schema.db.comments.length, 1);
-    assert.equal(schema.db.posts.length, 1);
-    assert.deepEqual(schema.db.comments[0], { id: '1', commentableId: { type: 'post', id: '1' } });
-    assert.deepEqual(schema.db.posts[0], { id: '1', commentId: '1' });
+    expect(comment.commentableId).toEqual({ type: 'post', id: post.id });
+    expect(comment.commentable.attrs).toEqual(post.attrs);
+    expect(post.comment.attrs).toEqual(comment.attrs);
+    expect(schema.db.comments.length).toEqual(1);
+    expect(schema.db.posts.length).toEqual(1);
+    expect(schema.db.comments[0]).toEqual({ id: '1', commentableId: { type: 'post', id: '1' } });
+    expect(schema.db.posts[0]).toEqual({ id: '1', commentId: '1' });
   });
 
-  test('it sets up associations correctly when passing in the association itself', function(assert) {
+  test('it sets up associations correctly when passing in the association itself', assert => {
     let { schema } = this.helper;
     let post = schema.create('post');
     let comment = schema.create('comment', {
       commentable: post
     });
 
-    assert.deepEqual(comment.commentableId, { type: 'post', id: post.id });
-    assert.deepEqual(comment.commentable.attrs, post.attrs);
-    assert.deepEqual(post.comment.attrs, comment.attrs);
-    assert.equal(schema.db.comments.length, 1);
-    assert.equal(schema.db.posts.length, 1);
-    assert.deepEqual(schema.db.comments[0], { id: '1', commentableId: { type: 'post', id: '1' } });
-    assert.deepEqual(schema.db.posts[0], { id: '1', commentId: '1' });
+    expect(comment.commentableId).toEqual({ type: 'post', id: post.id });
+    expect(comment.commentable.attrs).toEqual(post.attrs);
+    expect(post.comment.attrs).toEqual(comment.attrs);
+    expect(schema.db.comments.length).toEqual(1);
+    expect(schema.db.posts.length).toEqual(1);
+    expect(schema.db.comments[0]).toEqual({ id: '1', commentableId: { type: 'post', id: '1' } });
+    expect(schema.db.posts[0]).toEqual({ id: '1', commentId: '1' });
   });
 
-  test('it throws an error if a model is passed in without a defined relationship', function(assert) {
+  test('it throws an error if a model is passed in without a defined relationship', assert => {
     let { schema } = this.helper;
 
-    assert.throws(function() {
+    expect(function() {
       schema.create('comment', {
         foo: schema.create('foo')
       });
-    }, /you haven't defined that key as an association on your model/);
+    }).toThrow();
   });
 
-  test('it throws an error if a collection is passed in without a defined relationship', function(assert) {
+  test('it throws an error if a collection is passed in without a defined relationship', assert => {
     let { schema } = this.helper;
     schema.create('foo');
     schema.create('foo');
 
-    assert.throws(function() {
+    expect(function() {
       schema.create('comment', {
         foos: schema.foos.all()
       });
-    }, /you haven't defined that key as an association on your model/);
+    }).toThrow();
   });
 });

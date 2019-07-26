@@ -7,78 +7,78 @@ module('Integration | ORM | Belongs To | One-way Polymorphic | instantiating', f
     this.schema = this.helper.schema;
   });
 
-  test('the child accepts a saved parent id', function(assert) {
+  test('the child accepts a saved parent id', assert => {
     let post = this.helper.savedParent();
     let comment = this.schema.comments.new({
       commentableId: { id: post.id, type: 'post' }
     });
 
-    assert.deepEqual(comment.commentableId, { id: post.id, type: 'post' });
-    assert.deepEqual(comment.commentable, post);
-    assert.deepEqual(comment.attrs, { commentableId: { id: post.id, type: 'post' } });
+    expect(comment.commentableId).toEqual({ id: post.id, type: 'post' });
+    expect(comment.commentable).toEqual(post);
+    expect(comment.attrs).toEqual({ commentableId: { id: post.id, type: 'post' } });
   });
 
-  test('the child errors if the parent id doesnt exist', function(assert) {
-    assert.throws(function() {
+  test('the child errors if the parent id doesnt exist', assert => {
+    expect(function() {
       this.schema.comments.new({ commentableId: { type: 'post', id: 2 } });
-    }, /You're instantiating a comment that has a commentableId of post:2, but that record doesn't exist in the database/);
+    }).toThrow();
   });
 
-  test('the child accepts a null parent id', function(assert) {
+  test('the child accepts a null parent id', assert => {
     let comment = this.schema.comments.new({ commentableId: null });
 
-    assert.equal(comment.commentableId, null);
-    assert.deepEqual(comment.commentable, null);
-    assert.deepEqual(comment.attrs, { commentableId: null });
+    expect(comment.commentableId).toEqual(null);
+    expect(comment.commentable).toEqual(null);
+    expect(comment.attrs).toEqual({ commentableId: null });
   });
 
-  test('the child accepts a saved parent model', function(assert) {
+  test('the child accepts a saved parent model', assert => {
     let post = this.helper.savedParent();
     let comment = this.schema.comments.new({ commentable: post });
 
-    assert.deepEqual(comment.commentableId, { type: 'post', id: post.id });
-    assert.deepEqual(comment.commentable, post);
+    expect(comment.commentableId).toEqual({ type: 'post', id: post.id });
+    expect(comment.commentable).toEqual(post);
   });
 
-  test('the child accepts a new parent model', function(assert) {
+  test('the child accepts a new parent model', assert => {
     let post = this.schema.posts.new({ text: 'foo' });
     let comment = this.schema.comments.new({ commentable: post });
 
-    assert.deepEqual(comment.commentableId, { type: 'post', id: undefined });
-    assert.deepEqual(comment.commentable, post);
-    assert.deepEqual(comment.attrs, { commentableId: null });
+    expect(comment.commentableId).toEqual({ type: 'post', id: undefined });
+    expect(comment.commentable).toEqual(post);
+    expect(comment.attrs).toEqual({ commentableId: null });
   });
 
-  test('the child accepts a null parent model', function(assert) {
+  test('the child accepts a null parent model', assert => {
     let comment = this.schema.comments.new({ commentable: null });
 
-    assert.equal(comment.commentableId, null);
-    assert.deepEqual(comment.commentable, null);
-    assert.deepEqual(comment.attrs, { commentableId: null });
+    expect(comment.commentableId).toEqual(null);
+    expect(comment.commentable).toEqual(null);
+    expect(comment.attrs).toEqual({ commentableId: null });
   });
 
-  test('the child accepts a parent model and id', function(assert) {
+  test('the child accepts a parent model and id', assert => {
     let post = this.helper.savedParent();
     let comment = this.schema.comments.new({ commentable: post, commentableId: { type: 'post', id: post.id } });
 
-    assert.deepEqual(comment.commentableId, { type: 'post', id: '1' });
-    assert.deepEqual(comment.commentable, post);
-    assert.deepEqual(comment.attrs, { commentableId: { type: 'post', id: post.id } });
+    expect(comment.commentableId).toEqual({ type: 'post', id: '1' });
+    expect(comment.commentable).toEqual(post);
+    expect(comment.attrs).toEqual({ commentableId: { type: 'post', id: post.id } });
   });
 
-  test('the child accepts no reference to a parent id or model as empty obj', function(assert) {
+  test('the child accepts no reference to a parent id or model as empty obj', assert => {
     let comment = this.schema.comments.new({});
 
-    assert.equal(comment.commentableId, null);
-    assert.deepEqual(comment.commentable, null);
-    assert.deepEqual(comment.attrs, { commentableId: null });
+    expect(comment.commentableId).toEqual(null);
+    expect(comment.commentable).toEqual(null);
+    expect(comment.attrs).toEqual({ commentableId: null });
   });
 
-  test('the child accepts no reference to a parent id or model', function(assert) {
+  test('the child accepts no reference to a parent id or model', assert => {
     let comment = this.schema.comments.new();
 
-    assert.equal(comment.commentableId, null);
-    assert.deepEqual(comment.commentable, null);
-    assert.deepEqual(comment.attrs, { commentableId: null });
+    expect(comment.commentableId).toEqual(null);
+    expect(comment.commentable).toEqual(null);
+    expect(comment.attrs).toEqual({ commentableId: null });
   });
 });

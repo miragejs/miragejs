@@ -7,75 +7,75 @@ module('Integration | ORM | Has Many | Named | instantiating', function(hooks) {
     this.schema = this.helper.schema;
   });
 
-  test('the parent accepts a saved child id', function(assert) {
+  test('the parent accepts a saved child id', assert => {
     let post = this.helper.savedChild();
     let user = this.schema.users.new({
       blogPostIds: [ post.id ]
     });
 
-    assert.deepEqual(user.blogPostIds, [ post.id ]);
-    assert.deepEqual(user.blogPosts.models[0], post);
+    expect(user.blogPostIds).toEqual([ post.id ]);
+    expect(user.blogPosts.models[0]).toEqual(post);
   });
 
-  test('the parent errors if the children ids don\'t exist', function(assert) {
-    assert.throws(function() {
+  test('the parent errors if the children ids don\'t exist', assert => {
+    expect(function() {
       this.schema.users.new({ blogPostIds: [ 2 ] });
-    }, /You're instantiating a user that has a blogPostIds of 2, but some of those records don't exist in the database/);
+    }).toThrow();
   });
 
-  test('the parent accepts null children foreign key', function(assert) {
+  test('the parent accepts null children foreign key', assert => {
     let user = this.schema.users.new({ blogPostIds: null });
 
-    assert.equal(user.blogPosts.models.length, 0);
-    assert.deepEqual(user.blogPostIds, []);
-    assert.deepEqual(user.attrs, { blogPostIds: null });
+    expect(user.blogPosts.models.length).toEqual(0);
+    expect(user.blogPostIds).toEqual([]);
+    expect(user.attrs).toEqual({ blogPostIds: null });
   });
 
-  test('the parent accepts saved children', function(assert) {
+  test('the parent accepts saved children', assert => {
     let post = this.helper.savedChild();
     let user = this.schema.users.new({ blogPosts: [ post ] });
 
-    assert.deepEqual(user.blogPostIds, [ post.id ]);
-    assert.deepEqual(user.blogPosts.models[0], post);
+    expect(user.blogPostIds).toEqual([ post.id ]);
+    expect(user.blogPosts.models[0]).toEqual(post);
   });
 
-  test('the parent accepts new children', function(assert) {
+  test('the parent accepts new children', assert => {
     let post = this.schema.posts.new({ title: 'Lorem' });
     let user = this.schema.users.new({ blogPosts: [ post ] });
 
-    assert.deepEqual(user.blogPostIds, [ undefined ]);
-    assert.deepEqual(user.blogPosts.models[0], post);
+    expect(user.blogPostIds).toEqual([ undefined ]);
+    expect(user.blogPosts.models[0]).toEqual(post);
   });
 
-  test('the parent accepts null children', function(assert) {
+  test('the parent accepts null children', assert => {
     let user = this.schema.users.new({ blogPosts: null });
 
-    assert.equal(user.blogPosts.models.length, 0);
-    assert.deepEqual(user.blogPostIds, []);
-    assert.deepEqual(user.attrs, { blogPostIds: null });
+    expect(user.blogPosts.models.length).toEqual(0);
+    expect(user.blogPostIds).toEqual([]);
+    expect(user.attrs).toEqual({ blogPostIds: null });
   });
 
-  test('the parent accepts children and child ids', function(assert) {
+  test('the parent accepts children and child ids', assert => {
     let post = this.helper.savedChild();
     let user = this.schema.users.new({ blogPosts: [ post ], blogPostIds: [ post.id ] });
 
-    assert.deepEqual(user.blogPostIds, [ post.id ]);
-    assert.deepEqual(user.blogPosts.models[0], post);
+    expect(user.blogPostIds).toEqual([ post.id ]);
+    expect(user.blogPosts.models[0]).toEqual(post);
   });
 
-  test('the parent accepts no reference to children or child ids as empty obj', function(assert) {
+  test('the parent accepts no reference to children or child ids as empty obj', assert => {
     let user = this.schema.users.new({});
 
-    assert.deepEqual(user.blogPostIds, []);
-    assert.deepEqual(user.blogPosts.models, []);
-    assert.deepEqual(user.attrs, { blogPostIds: null });
+    expect(user.blogPostIds).toEqual([]);
+    expect(user.blogPosts.models).toEqual([]);
+    expect(user.attrs).toEqual({ blogPostIds: null });
   });
 
-  test('the parent accepts no reference to children or child ids', function(assert) {
+  test('the parent accepts no reference to children or child ids', assert => {
     let user = this.schema.users.new();
 
-    assert.deepEqual(user.blogPostIds, []);
-    assert.deepEqual(user.blogPosts.models, []);
-    assert.deepEqual(user.attrs, { blogPostIds: null });
+    expect(user.blogPostIds).toEqual([]);
+    expect(user.blogPosts.models).toEqual([]);
+    expect(user.attrs).toEqual({ blogPostIds: null });
   });
 });

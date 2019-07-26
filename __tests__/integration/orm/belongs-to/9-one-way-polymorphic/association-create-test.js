@@ -11,15 +11,15 @@ module('Integration | ORM | Belongs To | One-way Polymorphic | association #crea
   */
   states.forEach((state) => {
 
-    test(`a ${state} can create an associated parent`, function(assert) {
+    test(`a ${state} can create an associated parent`, assert => {
       let [ comment ] = this.helper[state]();
 
       let post = comment.createCommentable('post', { title: 'Lorem ipsum' });
 
-      assert.ok(post.id, 'the parent was persisted');
-      assert.deepEqual(comment.commentable.attrs, post.attrs);
-      assert.deepEqual(comment.commentableId, { id: post.id, type: 'post' });
-      assert.ok(this.helper.db.posts.find(post.id), 'the child was persisted');
+      expect(post.id).toBeTruthy();
+      expect(comment.commentable.attrs).toEqual(post.attrs);
+      expect(comment.commentableId).toEqual({ id: post.id, type: 'post' });
+      expect(this.helper.db.posts.find(post.id)).toBeTruthy();
     });
 
   });

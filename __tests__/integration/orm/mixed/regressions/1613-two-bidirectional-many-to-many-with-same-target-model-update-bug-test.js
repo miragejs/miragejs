@@ -17,7 +17,7 @@ module('Integration | ORM | Mixed | Regressions | 1613 Two bidirectional one-to-
     });
   });
 
-  test(`it works, and all inverses are correctly updated`, function(assert) {
+  test(`it works, and all inverses are correctly updated`, assert => {
     let user = this.schema.users.create();
     let post = this.schema.posts.create();
 
@@ -26,7 +26,7 @@ module('Integration | ORM | Mixed | Regressions | 1613 Two bidirectional one-to-
       editorId: user.id
     });
 
-    assert.deepEqual(this.db.posts.find(1), { id: '1', authorId: '1', editorId: '1' });
-    assert.deepEqual(this.db.users.find(1), { id: '1', authoredPostIds: [ '1' ], editedPostIds: [ '1' ] });
+    expect(this.db.posts.find(1)).toEqual({ id: '1', authorId: '1', editorId: '1' });
+    expect(this.db.users.find(1)).toEqual({ id: '1', authoredPostIds: [ '1' ], editedPostIds: [ '1' ] });
   });
 });

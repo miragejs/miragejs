@@ -11,76 +11,76 @@ module('Integration | ORM | Mixed | One To Many | association #set', function(ho
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a list of saved children`, function(assert) {
+    test(`a ${state} can update its association to a list of saved children`, assert => {
       let [ user, originalPosts ] = this.helper[state]();
       let savedPost = this.helper.savedChild();
 
       user.posts = [ savedPost ];
 
-      assert.ok(user.posts.includes(savedPost));
-      assert.ok(user.postIds.indexOf(savedPost.id) > -1);
+      expect(user.posts.includes(savedPost)).toBeTruthy();
+      expect(user.postIds.indexOf(savedPost.id) > -1).toBeTruthy();
 
       user.save();
 
       originalPosts.forEach(post => {
         if (post.isSaved()) {
           post.reload();
-          assert.equal(post.user, null);
+          expect(post.user).toEqual(null);
         }
       });
     });
 
-    test(`a ${state} can update its association to a new parent`, function(assert) {
+    test(`a ${state} can update its association to a new parent`, assert => {
       let [ user, originalPosts ] = this.helper[state]();
       let newPost = this.helper.newChild();
 
       user.posts = [ newPost ];
 
-      assert.deepEqual(user.postIds, [ undefined ]);
-      assert.ok(user.posts.includes(newPost));
+      expect(user.postIds).toEqual([ undefined ]);
+      expect(user.posts.includes(newPost)).toBeTruthy();
 
       user.save();
 
       originalPosts.forEach(post => {
         if (post.isSaved()) {
           post.reload();
-          assert.equal(post.user, null);
+          expect(post.user).toEqual(null);
         }
       });
     });
 
-    test(`a ${state} can clear its association via an empty list`, function(assert) {
+    test(`a ${state} can clear its association via an empty list`, assert => {
       let [ user, originalPosts ] = this.helper[state]();
 
       user.posts = [ ];
 
-      assert.deepEqual(user.postIds, [ ]);
-      assert.equal(user.posts.models.length, 0);
+      expect(user.postIds).toEqual([ ]);
+      expect(user.posts.models.length).toEqual(0);
 
       user.save();
 
       originalPosts.forEach(post => {
         if (post.isSaved()) {
           post.reload();
-          assert.equal(post.user, null);
+          expect(post.user).toEqual(null);
         }
       });
     });
 
-    test(`a ${state} can clear its association via an empty list`, function(assert) {
+    test(`a ${state} can clear its association via an empty list`, assert => {
       let [ user, originalPosts ] = this.helper[state]();
 
       user.posts = null;
 
-      assert.deepEqual(user.postIds, [ ]);
-      assert.equal(user.posts.models.length, 0);
+      expect(user.postIds).toEqual([ ]);
+      expect(user.posts.models.length).toEqual(0);
 
       user.save();
 
       originalPosts.forEach(post => {
         if (post.isSaved()) {
           post.reload();
-          assert.equal(post.user, null);
+          expect(post.user).toEqual(null);
         }
       });
     });

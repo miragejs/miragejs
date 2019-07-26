@@ -21,8 +21,8 @@ module('Integration | ORM | inflector-collectionName integration', function(hook
   //   this.server.shutdown();
   // });
 
-  test(' [regression] collection creation respects irregular plural rules', function(assert) {
-    assert.ok(true);
+  test(' [regression] collection creation respects irregular plural rules', assert => {
+    expect(true).toBeTruthy();
     // assert.equal(this.server.db._collections.length, 1);
     // assert.equal(this.server.db._collections[0].name, 'headsOfState');
   });

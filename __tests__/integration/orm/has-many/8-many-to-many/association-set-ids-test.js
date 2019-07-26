@@ -8,40 +8,40 @@ module('Integration | ORM | Has Many | Many to Many | association #setIds', func
 
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to include a saved child via childIds`, function(assert) {
+    test(`a ${state} can update its association to include a saved child via childIds`, assert => {
       let [ order, originalProducts ] = this.helper[state]();
       let savedProduct = this.helper.savedChild();
 
       order.productIds = [ savedProduct.id ];
 
-      assert.deepEqual(order.products.models[0].attrs, savedProduct.attrs);
-      assert.deepEqual(order.productIds, [ savedProduct.id ]);
+      expect(order.products.models[0].attrs).toEqual(savedProduct.attrs);
+      expect(order.productIds).toEqual([ savedProduct.id ]);
 
       order.save();
       savedProduct.reload();
 
-      assert.deepEqual(savedProduct.orders.models[0].attrs, order.attrs, 'the inverse was set');
+      expect(savedProduct.orders.models[0].attrs).toEqual(order.attrs);
       originalProducts.forEach(p => {
         if (p.isSaved()) {
           p.reload();
-          assert.notOk(p.orders.includes(order), 'old inverses were cleared');
+          expect(p.orders.includes(order)).toBeFalsy();
         }
       });
     });
 
-    test(`a ${state} can clear its association via a null childIds`, function(assert) {
+    test(`a ${state} can clear its association via a null childIds`, assert => {
       let [ order, originalProducts ] = this.helper[state]();
 
       order.productIds = null;
 
-      assert.deepEqual(order.products.models, []);
-      assert.deepEqual(order.productIds, []);
+      expect(order.products.models).toEqual([]);
+      expect(order.productIds).toEqual([]);
 
       order.save();
 
       originalProducts.forEach(p => {
         p.reload();
-        assert.notOk(p.orders.includes(order), 'old inverses were cleared');
+        expect(p.orders.includes(order)).toBeFalsy();
       });
     });
 

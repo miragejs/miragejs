@@ -11,14 +11,14 @@ module('Integration | ORM | Belongs To | Named One-Way Reflexive | association #
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a saved parent via parentId`, function(assert) {
+    test(`a ${state} can update its association to a saved parent via parentId`, assert => {
       let [ child ] = this.helper[state]();
       let savedParent = this.helper.savedParent();
 
       child.parentId = savedParent.id;
 
-      assert.equal(child.parentId, savedParent.id);
-      assert.deepEqual(child.parent.attrs, savedParent.attrs);
+      expect(child.parentId).toEqual(savedParent.id);
+      expect(child.parent.attrs).toEqual(savedParent.attrs);
     });
 
   });
@@ -28,13 +28,13 @@ module('Integration | ORM | Belongs To | Named One-Way Reflexive | association #
     'newChildSavedParent'
   ].forEach((state) => {
 
-    test(`a ${state} can clear its association via a null parentId`, function(assert) {
+    test(`a ${state} can clear its association via a null parentId`, assert => {
       let [ child ] = this.helper[state]();
 
       child.parentId = null;
 
-      assert.equal(child.parentId, null);
-      assert.deepEqual(child.parent, null);
+      expect(child.parentId).toEqual(null);
+      expect(child.parent).toEqual(null);
     });
 
   });

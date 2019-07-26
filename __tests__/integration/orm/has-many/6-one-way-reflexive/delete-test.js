@@ -8,7 +8,7 @@ module('Integration | ORM | Has Many | One-Way Reflexive | delete', function(hoo
 
   states.forEach((state) => {
 
-    test(`deleting children updates the parent's foreign key for a ${state}`, function(assert) {
+    test(`deleting children updates the parent's foreign key for a ${state}`, assert => {
       let [ tag, tags ] = this.helper[state]();
 
       if (tags && tags.length) {
@@ -16,8 +16,8 @@ module('Integration | ORM | Has Many | One-Way Reflexive | delete', function(hoo
         tag.reload();
       }
 
-      assert.equal(tag.tags.length, 0);
-      assert.equal(tag.tagIds.length, 0);
+      expect(tag.tags.length).toEqual(0);
+      expect(tag.tagIds.length).toEqual(0);
     });
 
   });

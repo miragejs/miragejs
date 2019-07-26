@@ -11,38 +11,38 @@ module('Integration | ORM | Mixed | One To Many | association #setIds', function
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a saved parent via parentId`, function(assert) {
+    test(`a ${state} can update its association to a saved parent via parentId`, assert => {
       let [ user, originalPosts ] = this.helper[state]();
       let savedPost = this.helper.savedChild();
 
       user.postIds = [ savedPost.id ];
 
-      assert.ok(user.posts.includes(savedPost));
-      assert.deepEqual(user.postIds, [ savedPost.id ]);
+      expect(user.posts.includes(savedPost)).toBeTruthy();
+      expect(user.postIds).toEqual([ savedPost.id ]);
 
       user.save();
       savedPost.reload();
 
       // Check the inverse
-      assert.deepEqual(savedPost.user.attrs, user.attrs);
-      assert.equal(savedPost.userId, user.id);
+      expect(savedPost.user.attrs).toEqual(user.attrs);
+      expect(savedPost.userId).toEqual(user.id);
 
       // Check old associates
       originalPosts.forEach(post => {
         if (post.isSaved()) {
           post.reload();
-          assert.equal(post.user, null);
+          expect(post.user).toEqual(null);
         }
       });
     });
 
-    test(`a ${state} can clear its association via a null parentId`, function(assert) {
+    test(`a ${state} can clear its association via a null parentId`, assert => {
       let [ user, originalPosts ] = this.helper[state]();
 
       user.postIds = null;
 
-      assert.deepEqual(user.posts.models, []);
-      assert.deepEqual(user.postIds, []);
+      expect(user.posts.models).toEqual([]);
+      expect(user.postIds).toEqual([]);
 
       user.save();
 
@@ -50,7 +50,7 @@ module('Integration | ORM | Mixed | One To Many | association #setIds', function
       originalPosts.forEach(post => {
         if (post.isSaved()) {
           post.reload();
-          assert.equal(post.user, null);
+          expect(post.user).toEqual(null);
         }
       });
     });

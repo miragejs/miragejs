@@ -8,7 +8,7 @@ module('Integration | ORM | Has Many | Named One-Way Reflexive | create', functi
     this.helper.schema.registerModel('foo', Model);
   });
 
-  test('it sets up associations correctly when passing in the foreign key', function(assert) {
+  test('it sets up associations correctly when passing in the foreign key', assert => {
     let { schema } = this.helper;
     let tagA = schema.tags.create();
     let tagB = schema.tags.create({
@@ -17,16 +17,16 @@ module('Integration | ORM | Has Many | Named One-Way Reflexive | create', functi
 
     tagA.reload();
 
-    assert.deepEqual(tagB.labelIds, [ tagA.id ]);
-    assert.deepEqual(tagA.labelIds, [ ], 'the inverse was not set');
-    assert.deepEqual(tagB.attrs.labelIds, [ tagA.id ], 'the ids were persisted');
-    assert.deepEqual(tagB.labels.models[0].attrs, tagA.attrs);
-    assert.equal(this.helper.db.tags.length, 2);
-    assert.deepEqual(this.helper.db.tags[0], { id: '1', labelIds: null });
-    assert.deepEqual(this.helper.db.tags[1], { id: '2', labelIds: [ '1' ] });
+    expect(tagB.labelIds).toEqual([ tagA.id ]);
+    expect(tagA.labelIds).toEqual([ ]);
+    expect(tagB.attrs.labelIds).toEqual([ tagA.id ]);
+    expect(tagB.labels.models[0].attrs).toEqual(tagA.attrs);
+    expect(this.helper.db.tags.length).toEqual(2);
+    expect(this.helper.db.tags[0]).toEqual({ id: '1', labelIds: null });
+    expect(this.helper.db.tags[1]).toEqual({ id: '2', labelIds: [ '1' ] });
   });
 
-  test('it sets up associations correctly when passing in an array of models', function(assert) {
+  test('it sets up associations correctly when passing in an array of models', assert => {
     let { schema } = this.helper;
     let tagA = schema.tags.create();
     let tagB = schema.tags.create({
@@ -35,14 +35,14 @@ module('Integration | ORM | Has Many | Named One-Way Reflexive | create', functi
 
     tagA.reload();
 
-    assert.deepEqual(tagB.labelIds, [ tagA.id ]);
-    assert.deepEqual(tagA.labelIds, [ ], 'the inverse was not set');
-    assert.deepEqual(tagB.attrs.labelIds, [ tagA.id ], 'the ids were persisted');
-    assert.deepEqual(tagA.attrs.labelIds, null, 'the inverse was not set');
-    assert.equal(this.helper.db.tags.length, 2);
+    expect(tagB.labelIds).toEqual([ tagA.id ]);
+    expect(tagA.labelIds).toEqual([ ]);
+    expect(tagB.attrs.labelIds).toEqual([ tagA.id ]);
+    expect(tagA.attrs.labelIds).toEqual(null);
+    expect(this.helper.db.tags.length).toEqual(2);
   });
 
-  test('it sets up associations correctly when passing in a collection', function(assert) {
+  test('it sets up associations correctly when passing in a collection', assert => {
     let { schema } = this.helper;
     let tagA = schema.tags.create();
     let tagB = schema.tags.create({
@@ -51,42 +51,42 @@ module('Integration | ORM | Has Many | Named One-Way Reflexive | create', functi
 
     tagA.reload();
 
-    assert.deepEqual(tagB.labelIds, [ tagA.id ]);
-    assert.deepEqual(tagA.labelIds, [ ], 'the inverse was not set');
-    assert.deepEqual(tagB.attrs.labelIds, [ tagA.id ]);
-    assert.deepEqual(tagA.attrs.labelIds, null, 'the inverse was not set');
-    assert.equal(this.helper.db.tags.length, 2);
+    expect(tagB.labelIds).toEqual([ tagA.id ]);
+    expect(tagA.labelIds).toEqual([ ]);
+    expect(tagB.attrs.labelIds).toEqual([ tagA.id ]);
+    expect(tagA.attrs.labelIds).toEqual(null);
+    expect(this.helper.db.tags.length).toEqual(2);
   });
 
-  test('it throws an error if a model is passed in without a defined relationship', function(assert) {
+  test('it throws an error if a model is passed in without a defined relationship', assert => {
     let { schema } = this.helper;
 
-    assert.throws(function() {
+    expect(function() {
       schema.tags.create({
         foo: schema.create('foo')
       });
-    }, /you haven't defined that key as an association on your model/);
+    }).toThrow();
   });
 
-  test('it throws an error if an array of models is passed in without a defined relationship', function(assert) {
+  test('it throws an error if an array of models is passed in without a defined relationship', assert => {
     let { schema } = this.helper;
 
-    assert.throws(function() {
+    expect(function() {
       schema.tags.create({
         foos: [ schema.create('foo') ]
       });
-    }, /you haven't defined that key as an association on your model/);
+    }).toThrow();
   });
 
-  test('it throws an error if a collection is passed in without a defined relationship', function(assert) {
+  test('it throws an error if a collection is passed in without a defined relationship', assert => {
     let { schema } = this.helper;
     schema.foos.create();
     schema.foos.create();
 
-    assert.throws(function() {
+    expect(function() {
       schema.tags.create({
         foos: schema.foos.all()
       });
-    }, /you haven't defined that key as an association on your model/);
+    }).toThrow();
   });
 });

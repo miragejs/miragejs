@@ -11,25 +11,21 @@ module('Integration | ORM | Has Many | Many-to-many Polymorphic | accessor', fun
   */
   states.forEach((state) => {
 
-    test(`the references of a ${state} are correct`, function(assert) {
+    test(`the references of a ${state} are correct`, assert => {
       let [ user, posts ] = this.helper[state]();
 
-      assert.equal(user.commentables.models.length, posts.length, 'the parent has the correct number of children');
-      assert.equal(user.commentableIds.length, posts.length, 'the parent has the correct number of children ids');
+      expect(user.commentables.models.length).toEqual(posts.length);
+      expect(user.commentableIds.length).toEqual(posts.length);
 
       posts.forEach((post, i) => {
-        assert.ok(user.commentables.includes(post), 'each child is in parent.children array');
+        expect(user.commentables.includes(post)).toBeTruthy();
 
         if (post.isSaved()) {
-          assert.deepEqual(
-            user.commentableIds[i],
-            { type: 'post', id: post.id },
-            'each saved child id is in parent.childrenIds array'
-          );
+          expect(user.commentableIds[i]).toEqual({ type: 'post', id: post.id });
         }
 
         // Check the inverse
-        assert.ok(post.users.includes(user));
+        expect(post.users.includes(user)).toBeTruthy();
       });
     });
 

@@ -16,21 +16,21 @@ module('Integration | ORM | #findOrCreateBy', function(hooks) {
     });
   });
 
-  test('it returns the first model that matches the attrs', function(assert) {
+  test('it returns the first model that matches the attrs', assert => {
     let user = this.schema.users.findOrCreateBy({ good: true });
 
-    assert.ok(user instanceof this.User);
-    assert.deepEqual(user.attrs, { id: '1', name: 'Link', good: true });
+    expect(user instanceof this.User).toBeTruthy();
+    expect(user.attrs).toEqual({ id: '1', name: 'Link', good: true });
   });
 
-  test('it creates a model if no existing model with the attrs is found', function(assert) {
-    assert.equal(this.schema.db.users.length, 3);
+  test('it creates a model if no existing model with the attrs is found', assert => {
+    expect(this.schema.db.users.length).toEqual(3);
 
     let newUser = this.schema.users.findOrCreateBy({ name: 'Link', good: false });
 
-    assert.equal(this.schema.db.users.length, 4);
-    assert.ok(newUser instanceof this.User);
-    assert.deepEqual(newUser.attrs, { id: '4', name: 'Link', good: false });
+    expect(this.schema.db.users.length).toEqual(4);
+    expect(newUser instanceof this.User).toBeTruthy();
+    expect(newUser.attrs).toEqual({ id: '4', name: 'Link', good: false });
   });
 
   // test('it returns models that match using a query function', function(assert) {

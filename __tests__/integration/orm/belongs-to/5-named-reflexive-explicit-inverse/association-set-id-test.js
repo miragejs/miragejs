@@ -11,14 +11,14 @@ module('Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | asso
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a saved parent via parentId`, function(assert) {
+    test(`a ${state} can update its association to a saved parent via parentId`, assert => {
       let [ user ] = this.helper[state]();
       let friend = this.helper.savedParent();
 
       user.bestFriendId = friend.id;
 
-      assert.equal(user.bestFriendId, friend.id);
-      assert.deepEqual(user.bestFriend.attrs, friend.attrs);
+      expect(user.bestFriendId).toEqual(friend.id);
+      expect(user.bestFriend.attrs).toEqual(friend.attrs);
     });
 
   });
@@ -28,13 +28,13 @@ module('Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | asso
     'newChildSavedParent'
   ].forEach((state) => {
 
-    test(`a ${state} can clear its association via a null parentId`, function(assert) {
+    test(`a ${state} can clear its association via a null parentId`, assert => {
       let [ user ] = this.helper[state]();
 
       user.bestFriendId = null;
 
-      assert.equal(user.bestFriendId, null);
-      assert.equal(user.bestFriend, null);
+      expect(user.bestFriendId).toEqual(null);
+      expect(user.bestFriend).toEqual(null);
     });
 
   });

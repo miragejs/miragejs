@@ -7,75 +7,75 @@ module('Integration | ORM | Has Many | Many-to-many Polymorphic | instantiating'
     this.schema = this.helper.schema;
   });
 
-  test('the parent accepts a saved child id', function(assert) {
+  test('the parent accepts a saved child id', assert => {
     let post = this.helper.savedChild();
     let user = this.schema.users.new({
       commentableIds: [ { type: 'post', id: post.id } ]
     });
 
-    assert.deepEqual(user.commentableIds, [ { type: 'post', id: post.id } ]);
-    assert.ok(user.commentables.includes(post));
+    expect(user.commentableIds).toEqual([ { type: 'post', id: post.id } ]);
+    expect(user.commentables.includes(post)).toBeTruthy();
   });
 
-  test('the parent errors if the children ids don\'t exist', function(assert) {
-    assert.throws(function() {
+  test('the parent errors if the children ids don\'t exist', assert => {
+    expect(function() {
       this.schema.users.new({ commentableIds: [ { type: 'post', id: 2 } ] });
-    }, /You're instantiating a user that has a commentableIds of post:2, but some of those records don't exist in the database/);
+    }).toThrow();
   });
 
-  test('the parent accepts null children foreign key', function(assert) {
+  test('the parent accepts null children foreign key', assert => {
     let user = this.schema.users.new({ commentableIds: null });
 
-    assert.equal(user.commentables.models.length, 0);
-    assert.deepEqual(user.commentableIds, []);
-    assert.deepEqual(user.attrs, { commentableIds: null });
+    expect(user.commentables.models.length).toEqual(0);
+    expect(user.commentableIds).toEqual([]);
+    expect(user.attrs).toEqual({ commentableIds: null });
   });
 
-  test('the parent accepts saved children', function(assert) {
+  test('the parent accepts saved children', assert => {
     let post = this.helper.savedChild();
     let user = this.schema.users.new({ commentables: [ post ] });
 
-    assert.deepEqual(user.commentableIds, [ { type: 'post', id: post.id } ]);
-    assert.ok(user.commentables.includes(post));
+    expect(user.commentableIds).toEqual([ { type: 'post', id: post.id } ]);
+    expect(user.commentables.includes(post)).toBeTruthy();
   });
 
-  test('the parent accepts new children', function(assert) {
+  test('the parent accepts new children', assert => {
     let post = this.schema.posts.new({ title: 'Lorem' });
     let user = this.schema.users.new({ commentables: [ post ] });
 
-    assert.deepEqual(user.commentableIds, [ { type: 'post', id: undefined } ]);
-    assert.ok(user.commentables.includes(post));
+    expect(user.commentableIds).toEqual([ { type: 'post', id: undefined } ]);
+    expect(user.commentables.includes(post)).toBeTruthy();
   });
 
-  test('the parent accepts null children', function(assert) {
+  test('the parent accepts null children', assert => {
     let user = this.schema.users.new({ commentables: null });
 
-    assert.equal(user.commentables.models.length, 0);
-    assert.deepEqual(user.commentableIds, []);
-    assert.deepEqual(user.attrs, { commentableIds: null });
+    expect(user.commentables.models.length).toEqual(0);
+    expect(user.commentableIds).toEqual([]);
+    expect(user.attrs).toEqual({ commentableIds: null });
   });
 
-  test('the parent accepts children and child ids', function(assert) {
+  test('the parent accepts children and child ids', assert => {
     let post = this.helper.savedChild();
     let user = this.schema.users.new({ commentables: [ post ], commentableIds: [ { type: 'post', id: post.id } ] });
 
-    assert.deepEqual(user.commentableIds, [ { type: 'post', id: post.id } ]);
-    assert.ok(user.commentables.includes(post));
+    expect(user.commentableIds).toEqual([ { type: 'post', id: post.id } ]);
+    expect(user.commentables.includes(post)).toBeTruthy();
   });
 
-  test('the parent accepts no reference to children or child ids as empty obj', function(assert) {
+  test('the parent accepts no reference to children or child ids as empty obj', assert => {
     let user = this.schema.users.new({});
 
-    assert.deepEqual(user.commentableIds, []);
-    assert.deepEqual(user.commentables.models, []);
-    assert.deepEqual(user.attrs, { commentableIds: null });
+    expect(user.commentableIds).toEqual([]);
+    expect(user.commentables.models).toEqual([]);
+    expect(user.attrs).toEqual({ commentableIds: null });
   });
 
-  test('the parent accepts no reference to children or child ids', function(assert) {
+  test('the parent accepts no reference to children or child ids', assert => {
     let user = this.schema.users.new();
 
-    assert.deepEqual(user.commentableIds, []);
-    assert.deepEqual(user.commentables.models, []);
-    assert.deepEqual(user.attrs, { commentableIds: null });
+    expect(user.commentableIds).toEqual([]);
+    expect(user.commentables.models).toEqual([]);
+    expect(user.attrs).toEqual({ commentableIds: null });
   });
 });

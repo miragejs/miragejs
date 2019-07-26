@@ -12,23 +12,23 @@ module('Integration | ORM | Has Many | Many to Many | association #new', functio
 
   states.forEach((state) => {
 
-    test(`a ${state} can build a new associated child`, function(assert) {
+    test(`a ${state} can build a new associated child`, assert => {
       let [ order ] = this.helper[state]();
       let initialCount = order.products.models.length;
 
       let blueProduct = order.newProduct({ name: 'Blue' });
 
-      assert.ok(!blueProduct.id, 'the child was not persisted');
-      assert.equal(order.products.models.length, initialCount + 1);
-      assert.equal(blueProduct.orders.models.length, 1, 'the inverse was set');
+      expect(!blueProduct.id).toBeTruthy();
+      expect(order.products.models.length).toEqual(initialCount + 1);
+      expect(blueProduct.orders.models.length).toEqual(1);
 
       blueProduct.save();
 
-      assert.deepEqual(blueProduct.attrs, { id: blueProduct.id, name: 'Blue', orderIds: [ order.id ] }, 'the child was persisted');
-      assert.equal(order.products.models.length, initialCount + 1, 'the collection size was increased');
-      assert.ok(order.products.includes(blueProduct), 'the model was added to order.products');
-      assert.ok(order.productIds.indexOf(blueProduct.id) > -1, 'the id was added to the fks array');
-      assert.ok(blueProduct.orders.includes(order), 'the inverse was set');
+      expect(blueProduct.attrs).toEqual({ id: blueProduct.id, name: 'Blue', orderIds: [ order.id ] });
+      expect(order.products.models.length).toEqual(initialCount + 1);
+      expect(order.products.includes(blueProduct)).toBeTruthy();
+      expect(order.productIds.indexOf(blueProduct.id) > -1).toBeTruthy();
+      expect(blueProduct.orders.includes(order)).toBeTruthy();
     });
 
   });

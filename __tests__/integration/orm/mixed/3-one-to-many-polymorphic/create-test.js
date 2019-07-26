@@ -8,58 +8,58 @@ module('Integration | ORM | Mixed | One To Many Polymorphic | create', function(
     this.helper.schema.registerModel('foo', Model);
   });
 
-  test('it sets up associations correctly when passing in the foreign key', function(assert) {
+  test('it sets up associations correctly when passing in the foreign key', assert => {
     let post = this.helper.schema.create('post');
     let user = this.helper.schema.create('user', {
       thingIds: [ { type: 'post', id: post.id } ]
     });
     post.reload();
 
-    assert.deepEqual(user.thingIds, [ { type: 'post', id: post.id } ]);
-    assert.deepEqual(user.attrs.thingIds, [ { type: 'post', id: post.id } ], 'the ids were persisted');
-    assert.ok(user.things.includes(post));
-    assert.deepEqual(post.user.attrs, user.attrs);
+    expect(user.thingIds).toEqual([ { type: 'post', id: post.id } ]);
+    expect(user.attrs.thingIds).toEqual([ { type: 'post', id: post.id } ]);
+    expect(user.things.includes(post)).toBeTruthy();
+    expect(post.user.attrs).toEqual(user.attrs);
 
     let { db } = this.helper;
-    assert.equal(db.posts.length, 1);
-    assert.deepEqual(db.posts[0], { id: '1', userId: '1' });
-    assert.equal(db.users.length, 1);
-    assert.deepEqual(db.users[0], { id: '1', thingIds: [ { type: 'post', id: '1' } ] });
+    expect(db.posts.length).toEqual(1);
+    expect(db.posts[0]).toEqual({ id: '1', userId: '1' });
+    expect(db.users.length).toEqual(1);
+    expect(db.users[0]).toEqual({ id: '1', thingIds: [ { type: 'post', id: '1' } ] });
   });
 
-  test('it sets up associations correctly when passing in an array of models', function(assert) {
+  test('it sets up associations correctly when passing in an array of models', assert => {
     let post = this.helper.schema.create('post');
     let user = this.helper.schema.create('user', {
       things: [ post ]
     });
 
-    assert.deepEqual(user.thingIds, [ { type: 'post', id: post.id } ]);
-    assert.deepEqual(user.attrs.thingIds, [ { type: 'post', id: post.id } ], 'the ids were persisted');
-    assert.ok(user.things.includes(post));
-    assert.deepEqual(post.user.attrs, user.attrs);
+    expect(user.thingIds).toEqual([ { type: 'post', id: post.id } ]);
+    expect(user.attrs.thingIds).toEqual([ { type: 'post', id: post.id } ]);
+    expect(user.things.includes(post)).toBeTruthy();
+    expect(post.user.attrs).toEqual(user.attrs);
 
     let { db } = this.helper;
-    assert.equal(db.posts.length, 1);
-    assert.deepEqual(db.posts[0], { id: '1', userId: '1' });
-    assert.equal(db.users.length, 1);
-    assert.deepEqual(db.users[0], { id: '1', thingIds: [ { type: 'post', id: '1' } ] });
+    expect(db.posts.length).toEqual(1);
+    expect(db.posts[0]).toEqual({ id: '1', userId: '1' });
+    expect(db.users.length).toEqual(1);
+    expect(db.users[0]).toEqual({ id: '1', thingIds: [ { type: 'post', id: '1' } ] });
   });
 
-  test('it sets up associations correctly when passing in a collection', function(assert) {
+  test('it sets up associations correctly when passing in a collection', assert => {
     let post = this.helper.schema.create('post');
     let user = this.helper.schema.create('user', {
       things: this.helper.schema.posts.all()
     });
     post.reload();
 
-    assert.deepEqual(user.thingIds, [ { type: 'post', id: post.id } ]);
-    assert.deepEqual(user.attrs.thingIds, [ { type: 'post', id: post.id } ], 'the ids were persisted');
-    assert.ok(user.things.includes(post));
+    expect(user.thingIds).toEqual([ { type: 'post', id: post.id } ]);
+    expect(user.attrs.thingIds).toEqual([ { type: 'post', id: post.id } ]);
+    expect(user.things.includes(post)).toBeTruthy();
 
     let { db } = this.helper;
-    assert.equal(db.posts.length, 1);
-    assert.deepEqual(db.posts[0], { id: '1', userId: '1' });
-    assert.equal(db.users.length, 1);
-    assert.deepEqual(db.users[0], { id: '1', thingIds: [ { type: 'post', id: '1' } ] });
+    expect(db.posts.length).toEqual(1);
+    expect(db.posts[0]).toEqual({ id: '1', userId: '1' });
+    expect(db.users.length).toEqual(1);
+    expect(db.users[0]).toEqual({ id: '1', thingIds: [ { type: 'post', id: '1' } ] });
   });
 });

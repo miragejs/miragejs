@@ -17,30 +17,30 @@ module('Integration | ORM | #where', function(hooks) {
     });
   });
 
-  test('it returns models that match a query with where', function(assert) {
+  test('it returns models that match a query with where', assert => {
     let users = schema.users.where({ good: false });
 
-    assert.ok(users instanceof Collection, 'it returns a collection');
-    assert.equal(users.models.length, 1);
-    assert.ok(users.models[0] instanceof User);
-    assert.deepEqual(users.models[0].attrs, { id: '3', name: 'Ganon', good: false });
+    expect(users instanceof Collection).toBeTruthy();
+    expect(users.models.length).toEqual(1);
+    expect(users.models[0] instanceof User).toBeTruthy();
+    expect(users.models[0].attrs).toEqual({ id: '3', name: 'Ganon', good: false });
   });
 
-  test('it returns models that match using a query function', function(assert) {
+  test('it returns models that match using a query function', assert => {
     let users = schema.users.where(function(rec) {
       return !rec.good;
     });
 
-    assert.ok(users instanceof Collection, 'it returns a collection');
-    assert.equal(users.models.length, 1);
-    assert.ok(users.models[0] instanceof User);
-    assert.deepEqual(users.models[0].attrs, { id: '3', name: 'Ganon', good: false });
+    expect(users instanceof Collection).toBeTruthy();
+    expect(users.models.length).toEqual(1);
+    expect(users.models[0] instanceof User).toBeTruthy();
+    expect(users.models[0].attrs).toEqual({ id: '3', name: 'Ganon', good: false });
   });
 
-  test('it returns an empty collection if no models match a query', function(assert) {
+  test('it returns an empty collection if no models match a query', assert => {
     let users = schema.users.where({ name: 'Link', good: false });
 
-    assert.ok(users instanceof Collection, 'it returns a collection');
-    assert.equal(users.models.length, 0);
+    expect(users instanceof Collection).toBeTruthy();
+    expect(users.models.length).toEqual(0);
   });
 });

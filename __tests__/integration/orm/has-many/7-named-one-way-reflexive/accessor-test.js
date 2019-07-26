@@ -8,17 +8,17 @@ module('Integration | ORM | Has Many | Named One-Way Reflexive | accessor', func
 
   states.forEach((state) => {
 
-    test(`the references of a ${state} are correct`, function(assert) {
+    test(`the references of a ${state} are correct`, assert => {
       let [ tag, tags ] = this.helper[state]();
 
-      assert.equal(tag.labels.models.length, tags.length, 'the parent has the correct number of children');
-      assert.equal(tag.labelIds.length, tags.length, 'the parent has the correct number of children ids');
+      expect(tag.labels.models.length).toEqual(tags.length);
+      expect(tag.labelIds.length).toEqual(tags.length);
 
       tags.forEach(t => {
-        assert.ok(tag.labels.includes(t));
+        expect(tag.labels.includes(t)).toBeTruthy();
 
         if (t.isSaved()) {
-          assert.ok(tag.labelIds.indexOf(t.id) > -1, 'each saved child id is in parent.childrenIds array');
+          expect(tag.labelIds.indexOf(t.id) > -1).toBeTruthy();
         }
       });
     });

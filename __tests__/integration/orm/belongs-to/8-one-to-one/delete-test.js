@@ -8,7 +8,7 @@ module('Integration | ORM | Belongs To | One To One | delete', function(hooks) {
 
   states.forEach((state) => {
 
-    test(`deleting the parent updates the child's foreign key for a ${state}`, function(assert) {
+    test(`deleting the parent updates the child's foreign key for a ${state}`, assert => {
       let [ user, profile ] = this.helper[state]();
 
       if (profile) {
@@ -16,8 +16,8 @@ module('Integration | ORM | Belongs To | One To One | delete', function(hooks) {
         user.reload();
       }
 
-      assert.equal(user.profileId, null);
-      assert.deepEqual(user.profile, null);
+      expect(user.profileId).toEqual(null);
+      expect(user.profile).toEqual(null);
     });
 
   });

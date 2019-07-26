@@ -15,7 +15,7 @@ module('Integration | ORM | Has Many | Regressions | Many to many inverse set bu
     });
   });
 
-  test(`it works`, function(assert) {
+  test(`it works`, assert => {
     this.db.loadData({
       posts: [
         { id: '1', tagIds: [ '15', '16' ] },
@@ -29,8 +29,8 @@ module('Integration | ORM | Has Many | Regressions | Many to many inverse set bu
 
     this.schema.posts.find(1).update({ tagIds: [ '15' ] });
 
-    assert.deepEqual(this.db.posts.find(1).tagIds, [ '15' ]);
-    assert.deepEqual(this.db.tags.find(15).postIds, [ '1' ]);
-    assert.deepEqual(this.db.tags.find(16).postIds, [ '2' ]);
+    expect(this.db.posts.find(1).tagIds).toEqual([ '15' ]);
+    expect(this.db.tags.find(15).postIds).toEqual([ '1' ]);
+    expect(this.db.tags.find(16).postIds).toEqual([ '2' ]);
   });
 });

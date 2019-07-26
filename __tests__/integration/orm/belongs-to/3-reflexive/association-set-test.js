@@ -11,50 +11,50 @@ module('Integration | ORM | Belongs To | Reflexive | association #set', function
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a saved parent`, function(assert) {
+    test(`a ${state} can update its association to a saved parent`, assert => {
       let [ user, originalUser ] = this.helper[state]();
       let friend = this.helper.savedParent();
 
       user.user = friend;
 
-      assert.equal(user.userId, friend.id);
-      assert.deepEqual(user.user.attrs, friend.attrs);
+      expect(user.userId).toEqual(friend.id);
+      expect(user.user.attrs).toEqual(friend.attrs);
 
       user.save();
       if (originalUser) {
         originalUser.reload();
-        assert.equal(originalUser.userId, null, 'old inverses were cleared out');
+        expect(originalUser.userId).toEqual(null);
       }
     });
 
-    test(`a ${state} can update its association to a new parent`, function(assert) {
+    test(`a ${state} can update its association to a new parent`, assert => {
       let [ user, originalUser ] = this.helper[state]();
       let friend = this.helper.newParent();
 
       user.user = friend;
 
-      assert.equal(user.userId, null);
-      assert.deepEqual(user.user.attrs, friend.attrs);
+      expect(user.userId).toEqual(null);
+      expect(user.user.attrs).toEqual(friend.attrs);
 
       user.save();
       if (originalUser) {
         originalUser.reload();
-        assert.equal(originalUser.userId, null, 'old inverses were cleared out');
+        expect(originalUser.userId).toEqual(null);
       }
     });
 
-    test(`a ${state} can update its association to a null parent`, function(assert) {
+    test(`a ${state} can update its association to a null parent`, assert => {
       let [ user, originalUser ] = this.helper[state]();
 
       user.user = null;
 
-      assert.equal(user.userId, null);
-      assert.deepEqual(user.user, null);
+      expect(user.userId).toEqual(null);
+      expect(user.user).toEqual(null);
 
       user.save();
       if (originalUser) {
         originalUser.reload();
-        assert.equal(originalUser.userId, null, 'old inverses were cleared out');
+        expect(originalUser.userId).toEqual(null);
       }
     });
 

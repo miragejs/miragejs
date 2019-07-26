@@ -11,15 +11,15 @@ module('Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | asso
   */
   states.forEach((state) => {
 
-    test(`a ${state} can create an associated parent`, function(assert) {
+    test(`a ${state} can create an associated parent`, assert => {
       let [ user ] = this.helper[state]();
 
       let ganon = user.createBestFriend({ name: 'Ganon' });
 
-      assert.ok(ganon.id, 'the parent was persisted');
-      assert.deepEqual(user.bestFriend.attrs, ganon.attrs);
-      assert.equal(user.bestFriendId, ganon.id);
-      assert.equal(this.helper.schema.users.find(user.id).bestFriendId, ganon.id, 'the user was persisted');
+      expect(ganon.id).toBeTruthy();
+      expect(user.bestFriend.attrs).toEqual(ganon.attrs);
+      expect(user.bestFriendId).toEqual(ganon.id);
+      expect(this.helper.schema.users.find(user.id).bestFriendId).toEqual(ganon.id);
     });
 
   });

@@ -12,23 +12,23 @@ module('Integration | ORM | Has Many | Named Reflexive Explicit Inverse | associ
 
   states.forEach((state) => {
 
-    test(`a ${state} can build a new associated child`, function(assert) {
+    test(`a ${state} can build a new associated child`, assert => {
       let [ tag ] = this.helper[state]();
       let initialCount = tag.labels.models.length;
 
       let blueTag = tag.newLabel({ name: 'Blue' });
 
-      assert.ok(!blueTag.id, 'the child was not persisted');
-      assert.equal(tag.labels.models.length, initialCount + 1);
-      assert.equal(blueTag.labels.models.length, 1, 'the inverse was set');
+      expect(!blueTag.id).toBeTruthy();
+      expect(tag.labels.models.length).toEqual(initialCount + 1);
+      expect(blueTag.labels.models.length).toEqual(1);
 
       blueTag.save();
 
-      assert.deepEqual(blueTag.attrs, { id: blueTag.id, name: 'Blue', labelIds: [ tag.id ] }, 'the child was persisted');
-      assert.equal(tag.labels.models.length, initialCount + 1, 'the collection size was increased');
-      assert.ok(tag.labels.includes(blueTag), 'the model was added to tag.labels');
-      assert.ok(tag.labelIds.indexOf(blueTag.id) > -1, 'the id was added to the fks array');
-      assert.ok(blueTag.labels.includes(tag), 'the inverse was set');
+      expect(blueTag.attrs).toEqual({ id: blueTag.id, name: 'Blue', labelIds: [ tag.id ] });
+      expect(tag.labels.models.length).toEqual(initialCount + 1);
+      expect(tag.labels.includes(blueTag)).toBeTruthy();
+      expect(tag.labelIds.indexOf(blueTag.id) > -1).toBeTruthy();
+      expect(blueTag.labels.includes(tag)).toBeTruthy();
     });
 
   });

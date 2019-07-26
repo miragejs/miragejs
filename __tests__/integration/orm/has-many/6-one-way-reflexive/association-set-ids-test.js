@@ -8,28 +8,28 @@ module('Integration | ORM | Has Many | One-Way Reflexive | association #setIds',
 
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to include a saved child via childIds`, function(assert) {
+    test(`a ${state} can update its association to include a saved child via childIds`, assert => {
       let [ tag ] = this.helper[state]();
       let savedTag = this.helper.savedChild();
 
       tag.tagIds = [ savedTag.id ];
 
-      assert.deepEqual(tag.tags.models[0].attrs, savedTag.attrs);
-      assert.deepEqual(tag.tagIds, [ savedTag.id ]);
+      expect(tag.tags.models[0].attrs).toEqual(savedTag.attrs);
+      expect(tag.tagIds).toEqual([ savedTag.id ]);
 
       tag.save();
       savedTag.reload();
 
-      assert.equal(savedTag.tags.models.length, 0, 'the inverse was not set');
+      expect(savedTag.tags.models.length).toEqual(0);
     });
 
-    test(`a ${state} can clear its association via a null childIds`, function(assert) {
+    test(`a ${state} can clear its association via a null childIds`, assert => {
       let [ tag ] = this.helper[state]();
 
       tag.tagIds = null;
 
-      assert.deepEqual(tag.tags.models, []);
-      assert.deepEqual(tag.tagIds, []);
+      expect(tag.tags.models).toEqual([]);
+      expect(tag.tagIds).toEqual([]);
 
       tag.save();
     });

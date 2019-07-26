@@ -17,10 +17,10 @@ module('Integration | ORM | #none', function(hooks) {
     });
   });
 
-  test('it returns an empty collection', function(assert) {
+  test('it returns an empty collection', assert => {
     let users = schema.users.none();
 
-    assert.ok(users instanceof Collection, 'it returns a collection');
-    assert.equal(users.models.length, 0);
+    expect(users instanceof Collection).toBeTruthy();
+    expect(users.models.length).toEqual(0);
   });
 });

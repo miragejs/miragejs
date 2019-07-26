@@ -8,7 +8,7 @@ module('Integration | ORM | Has Many | Many to Many | delete', function(hooks) {
 
   states.forEach((state) => {
 
-    test(`deleting children updates the parent's foreign key for a ${state}`, function(assert) {
+    test(`deleting children updates the parent's foreign key for a ${state}`, assert => {
       let [ order, products ] = this.helper[state]();
 
       if (products && products.length) {
@@ -16,8 +16,8 @@ module('Integration | ORM | Has Many | Many to Many | delete', function(hooks) {
         order.reload();
       }
 
-      assert.equal(order.products.length, 0);
-      assert.equal(order.productIds.length, 0);
+      expect(order.products.length).toEqual(0);
+      expect(order.productIds.length).toEqual(0);
     });
 
   });

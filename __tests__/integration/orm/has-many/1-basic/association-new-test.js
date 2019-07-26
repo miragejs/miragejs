@@ -12,21 +12,21 @@ module('Integration | ORM | Has Many | Basic | association #new', function(hooks
 
   states.forEach((state) => {
 
-    test(`a ${state} can build a new associated parent`, function(assert) {
+    test(`a ${state} can build a new associated parent`, assert => {
       let [ user ] = this.helper[state]();
       let initialCount = user.posts.models.length;
 
       let post = user.newPost({ title: 'Lorem ipsum' });
 
-      assert.ok(!post.id, 'the child was not persisted');
-      assert.equal(user.posts.models.length, initialCount + 1);
+      expect(!post.id).toBeTruthy();
+      expect(user.posts.models.length).toEqual(initialCount + 1);
 
       post.save();
 
-      assert.deepEqual(post.attrs, { id: post.id, title: 'Lorem ipsum' }, 'the child was persisted');
-      assert.equal(user.posts.models.length, initialCount + 1, 'the collection size was increased');
-      assert.deepEqual(user.posts.models.filter((a) => a.id === post.id)[0], post, 'the model was added to user.posts');
-      assert.ok(user.postIds.indexOf(post.id) > -1, 'the id was added to the fks array');
+      expect(post.attrs).toEqual({ id: post.id, title: 'Lorem ipsum' });
+      expect(user.posts.models.length).toEqual(initialCount + 1);
+      expect(user.posts.models.filter((a) => a.id === post.id)[0]).toEqual(post);
+      expect(user.postIds.indexOf(post.id) > -1).toBeTruthy();
     });
 
   });

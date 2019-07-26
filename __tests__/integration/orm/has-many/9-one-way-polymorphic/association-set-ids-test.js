@@ -11,23 +11,25 @@ module('Integration | ORM | Has Many | One-way Polymorphic | association #setIds
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a saved parent via parentId`, function(assert) {
+    test(`a ${state} can update its association to a saved parent via parentId`, assert => {
       let [ user ] = this.helper[state]();
       let savedPost = this.helper.savedChild();
 
       user.thingIds = [ { type: 'post', id: savedPost.id } ];
 
-      assert.ok(user.things.includes(savedPost));
-      assert.ok(user.thingIds.find(({ id, type }) => ((id === savedPost.id && type === 'post'))));
+      expect(user.things.includes(savedPost)).toBeTruthy();
+      expect(
+        user.thingIds.find(({ id, type }) => ((id === savedPost.id && type === 'post')))
+      ).toBeTruthy();
     });
 
-    test(`a ${state} can clear its association via a null parentId`, function(assert) {
+    test(`a ${state} can clear its association via a null parentId`, assert => {
       let [ user ] = this.helper[state]();
 
       user.thingIds = null;
 
-      assert.deepEqual(user.things.models, []);
-      assert.deepEqual(user.thingIds, []);
+      expect(user.things.models).toEqual([]);
+      expect(user.thingIds).toEqual([]);
     });
 
   });

@@ -11,23 +11,23 @@ module('Integration | ORM | Mixed | Many To One | accessor', function(hooks) {
   */
   states.forEach((state) => {
 
-    test(`the references of a ${state} are correct`, function(assert) {
+    test(`the references of a ${state} are correct`, assert => {
       let [ post, user ] = this.helper[state]();
 
       if (post.user) {
-        assert.ok(post.user.equals(user));
+        expect(post.user.equals(user)).toBeTruthy();
       } else {
-        assert.equal(post.user, null);
-        assert.equal(user, null);
+        expect(post.user).toEqual(null);
+        expect(user).toEqual(null);
       }
-      assert.equal(post.userId, user ? user.id : null);
+      expect(post.userId).toEqual(user ? user.id : null);
 
       post.save();
 
       // Check the inverse
       if (user && user.isSaved()) {
         user.reload();
-        assert.ok(user.posts.includes(post));
+        expect(user.posts.includes(post)).toBeTruthy();
       }
     });
 

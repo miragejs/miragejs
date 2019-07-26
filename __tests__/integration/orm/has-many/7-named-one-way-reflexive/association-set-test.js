@@ -11,50 +11,50 @@ module('Integration | ORM | Has Many | Named One-Way Reflexive | association #se
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a list of saved children`, function(assert) {
+    test(`a ${state} can update its association to a list of saved children`, assert => {
       let [ tag ] = this.helper[state]();
       let savedTag = this.helper.savedChild();
 
       tag.labels = [ savedTag ];
 
-      assert.ok(tag.labels.includes(savedTag));
-      assert.equal(tag.labelIds[0], savedTag.id);
-      assert.notOk(savedTag.labels.includes(tag), 'the inverse was not set');
+      expect(tag.labels.includes(savedTag)).toBeTruthy();
+      expect(tag.labelIds[0]).toEqual(savedTag.id);
+      expect(savedTag.labels.includes(tag)).toBeFalsy();
 
       tag.save();
     });
 
-    test(`a ${state} can update its association to a new parent`, function(assert) {
+    test(`a ${state} can update its association to a new parent`, assert => {
       let [ tag ] = this.helper[state]();
       let newTag = this.helper.newChild();
 
       tag.labels = [ newTag ];
 
-      assert.ok(tag.labels.includes(newTag));
-      assert.equal(tag.labelIds[0], undefined);
-      assert.notOk(newTag.labels.includes(tag), 'the inverse was not set');
+      expect(tag.labels.includes(newTag)).toBeTruthy();
+      expect(tag.labelIds[0]).toEqual(undefined);
+      expect(newTag.labels.includes(tag)).toBeFalsy();
 
       tag.save();
     });
 
-    test(`a ${state} can clear its association via an empty list`, function(assert) {
+    test(`a ${state} can clear its association via an empty list`, assert => {
       let [ tag ] = this.helper[state]();
 
       tag.labels = [ ];
 
-      assert.deepEqual(tag.labelIds, [ ]);
-      assert.equal(tag.labels.models.length, 0);
+      expect(tag.labelIds).toEqual([ ]);
+      expect(tag.labels.models.length).toEqual(0);
 
       tag.save();
     });
 
-    test(`a ${state} can clear its association via an empty list`, function(assert) {
+    test(`a ${state} can clear its association via an empty list`, assert => {
       let [ tag ] = this.helper[state]();
 
       tag.labels = null;
 
-      assert.deepEqual(tag.labelIds, [ ]);
-      assert.equal(tag.labels.models.length, 0);
+      expect(tag.labelIds).toEqual([ ]);
+      expect(tag.labels.models.length).toEqual(0);
 
       tag.save();
     });

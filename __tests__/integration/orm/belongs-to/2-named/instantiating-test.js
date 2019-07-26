@@ -7,76 +7,76 @@ module('Integration | ORM | Belongs To | Named | instantiating', function(hooks)
     this.schema = this.helper.schema;
   });
 
-  test('the child accepts a saved parent id', function(assert) {
+  test('the child accepts a saved parent id', assert => {
     let author = this.helper.savedParent();
     let post = this.schema.posts.new({ authorId: author.id });
 
-    assert.equal(post.authorId, author.id);
-    assert.deepEqual(post.author, author);
-    assert.deepEqual(post.attrs, { authorId: author.id });
+    expect(post.authorId).toEqual(author.id);
+    expect(post.author).toEqual(author);
+    expect(post.attrs).toEqual({ authorId: author.id });
   });
 
-  test('the child errors if the parent id doesnt exist', function(assert) {
-    assert.throws(function() {
+  test('the child errors if the parent id doesnt exist', assert => {
+    expect(function() {
       this.schema.posts.new({ authorId: 2 });
-    }, /You're instantiating a post that has a authorId of 2, but that record doesn't exist in the database/);
+    }).toThrow();
   });
 
-  test('the child accepts a null parent id', function(assert) {
+  test('the child accepts a null parent id', assert => {
     let post = this.schema.posts.new({ authorId: null });
 
-    assert.equal(post.authorId, null);
-    assert.deepEqual(post.author, null);
-    assert.deepEqual(post.attrs, { authorId: null });
+    expect(post.authorId).toEqual(null);
+    expect(post.author).toEqual(null);
+    expect(post.attrs).toEqual({ authorId: null });
   });
 
-  test('the child accepts a saved parent model', function(assert) {
+  test('the child accepts a saved parent model', assert => {
     let author = this.helper.savedParent();
     let post = this.schema.posts.new({ author });
 
-    assert.equal(post.authorId, 1);
-    assert.deepEqual(post.author, author);
+    expect(post.authorId).toEqual(1);
+    expect(post.author).toEqual(author);
   });
 
-  test('the child accepts a new parent model', function(assert) {
+  test('the child accepts a new parent model', assert => {
     let zelda = this.schema.users.new({ name: 'Zelda' });
     let post = this.schema.posts.new({ author: zelda });
 
-    assert.equal(post.authorId, null);
-    assert.deepEqual(post.author, zelda);
-    assert.deepEqual(post.attrs, { authorId: null });
+    expect(post.authorId).toEqual(null);
+    expect(post.author).toEqual(zelda);
+    expect(post.attrs).toEqual({ authorId: null });
   });
 
-  test('the child accepts a null parent model', function(assert) {
+  test('the child accepts a null parent model', assert => {
     let post = this.schema.posts.new({ author: null });
 
-    assert.equal(post.authorId, null);
-    assert.deepEqual(post.author, null);
-    assert.deepEqual(post.attrs, { authorId: null });
+    expect(post.authorId).toEqual(null);
+    expect(post.author).toEqual(null);
+    expect(post.attrs).toEqual({ authorId: null });
   });
 
-  test('the child accepts a parent model and id', function(assert) {
+  test('the child accepts a parent model and id', assert => {
     let author = this.helper.savedParent();
     let post = this.schema.posts.new({ author, authorId: author.id });
 
-    assert.equal(post.authorId, '1');
-    assert.deepEqual(post.author, author);
-    assert.deepEqual(post.attrs, { authorId: author.id });
+    expect(post.authorId).toEqual('1');
+    expect(post.author).toEqual(author);
+    expect(post.attrs).toEqual({ authorId: author.id });
   });
 
-  test('the child accepts no reference to a parent id or model as empty obj', function(assert) {
+  test('the child accepts no reference to a parent id or model as empty obj', assert => {
     let post = this.schema.posts.new({});
 
-    assert.equal(post.authorId, null);
-    assert.deepEqual(post.author, null);
-    assert.deepEqual(post.attrs, { authorId: null });
+    expect(post.authorId).toEqual(null);
+    expect(post.author).toEqual(null);
+    expect(post.attrs).toEqual({ authorId: null });
   });
 
-  test('the child accepts no reference to a parent id or model', function(assert) {
+  test('the child accepts no reference to a parent id or model', assert => {
     let post = this.schema.posts.new();
 
-    assert.equal(post.authorId, null);
-    assert.deepEqual(post.author, null);
-    assert.deepEqual(post.attrs, { authorId: null });
+    expect(post.authorId).toEqual(null);
+    expect(post.author).toEqual(null);
+    expect(post.attrs).toEqual({ authorId: null });
   });
 });

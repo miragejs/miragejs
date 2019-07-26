@@ -11,40 +11,42 @@ module('Integration | ORM | Has Many | Many-to-many Polymorphic | association #s
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a saved parent via parentId`, function(assert) {
+    test(`a ${state} can update its association to a saved parent via parentId`, assert => {
       let [ user, originalPosts ] = this.helper[state]();
       let savedPost = this.helper.savedChild();
 
       user.commentableIds = [ { type: 'post', id: savedPost.id } ];
 
-      assert.ok(user.commentables.includes(savedPost));
-      assert.ok(user.commentableIds.find(({ id, type }) => ((id === savedPost.id && type === 'post'))));
+      expect(user.commentables.includes(savedPost)).toBeTruthy();
+      expect(
+        user.commentableIds.find(({ id, type }) => ((id === savedPost.id && type === 'post')))
+      ).toBeTruthy();
 
       user.save();
       savedPost.reload();
 
-      assert.ok(savedPost.users.includes(user), 'the inverse was set');
+      expect(savedPost.users.includes(user)).toBeTruthy();
       originalPosts.forEach(post => {
         if (post.isSaved()) {
           post.reload();
-          assert.notOk(post.users.includes(user), 'old inverses were cleared');
+          expect(post.users.includes(user)).toBeFalsy();
         }
       });
     });
 
-    test(`a ${state} can clear its association via a null ids`, function(assert) {
+    test(`a ${state} can clear its association via a null ids`, assert => {
       let [ user, originalPosts ] = this.helper[state]();
 
       user.commentableIds = null;
 
-      assert.deepEqual(user.commentables.models, []);
-      assert.deepEqual(user.commentableIds, []);
+      expect(user.commentables.models).toEqual([]);
+      expect(user.commentableIds).toEqual([]);
 
       user.save();
 
       originalPosts.forEach(post => {
         post.reload();
-        assert.notOk(post.users.includes(user), 'old inverses were cleared');
+        expect(post.users.includes(user)).toBeFalsy();
       });
     });
 

@@ -8,7 +8,7 @@ module('Integration | ORM | Belongs To | Named One-Way Reflexive | delete', func
 
   states.forEach((state) => {
 
-    test(`deleting the parent updates the child's foreign key for a ${state}`, function(assert) {
+    test(`deleting the parent updates the child's foreign key for a ${state}`, assert => {
       let [ user, parent ] = this.helper[state]();
 
       if (parent) {
@@ -16,8 +16,8 @@ module('Integration | ORM | Belongs To | Named One-Way Reflexive | delete', func
         user.reload();
       }
 
-      assert.equal(user.parentId, null);
-      assert.deepEqual(user.parent, null);
+      expect(user.parentId).toEqual(null);
+      expect(user.parent).toEqual(null);
     });
 
   });

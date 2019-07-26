@@ -11,20 +11,20 @@ module('Integration | ORM | Belongs To | One To One | association #setId', funct
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a saved parent via parentId`, function(assert) {
+    test(`a ${state} can update its association to a saved parent via parentId`, assert => {
       let [ user ] = this.helper[state]();
       let profile = this.helper.savedParent();
 
       user.profileId = profile.id;
 
-      assert.equal(user.profileId, profile.id);
-      assert.deepEqual(user.profile.attrs, profile.attrs);
+      expect(user.profileId).toEqual(profile.id);
+      expect(user.profile.attrs).toEqual(profile.attrs);
 
       user.save();
       profile.reload();
 
-      assert.equal(profile.userId, user.id, 'the inverse was set');
-      assert.deepEqual(profile.user.attrs, user.attrs);
+      expect(profile.userId).toEqual(user.id);
+      expect(profile.user.attrs).toEqual(user.attrs);
     });
 
   });

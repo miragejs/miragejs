@@ -11,15 +11,15 @@ module('Integration | ORM | Belongs To | Named One-Way Reflexive | association #
   */
   states.forEach((state) => {
 
-    test(`a ${state} can create an associated parent`, function(assert) {
+    test(`a ${state} can create an associated parent`, assert => {
       let [ child ] = this.helper[state]();
 
       let ganon = child.createParent({ name: 'Ganon' });
 
-      assert.ok(ganon.id, 'the parent was persisted');
-      assert.deepEqual(child.parent.attrs, ganon.attrs);
-      assert.equal(child.parentId, ganon.id);
-      assert.equal(this.helper.schema.users.find(child.id).parentId, ganon.id, 'the child was persisted');
+      expect(ganon.id).toBeTruthy();
+      expect(child.parent.attrs).toEqual(ganon.attrs);
+      expect(child.parentId).toEqual(ganon.id);
+      expect(this.helper.schema.users.find(child.id).parentId).toEqual(ganon.id);
     });
 
   });

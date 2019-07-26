@@ -16,31 +16,31 @@ module('Integration | ORM | #find', function(hooks) {
     });
   });
 
-  test('it can find a model by id', function(assert) {
+  test('it can find a model by id', assert => {
     let zelda = schema.users.find(2);
 
-    assert.ok(zelda instanceof User);
-    assert.deepEqual(zelda.attrs, { id: '2', name: 'Zelda' });
+    expect(zelda instanceof User).toBeTruthy();
+    expect(zelda.attrs).toEqual({ id: '2', name: 'Zelda' });
   });
 
-  test('it returns null if no model is found for an id', function(assert) {
+  test('it returns null if no model is found for an id', assert => {
     let user = schema.users.find(4);
 
-    assert.equal(user, null);
+    expect(user).toEqual(null);
   });
 
-  test('it can find multiple models by ids', function(assert) {
+  test('it can find multiple models by ids', assert => {
     let users = schema.users.find([1, 2]);
 
-    assert.ok(users instanceof Collection, 'it returns a collection');
-    assert.ok(users.models[0] instanceof User);
-    assert.equal(users.models.length, 2);
-    assert.deepEqual(users.models[1].attrs, { id: '2', name: 'Zelda' });
+    expect(users instanceof Collection).toBeTruthy();
+    expect(users.models[0] instanceof User).toBeTruthy();
+    expect(users.models.length).toEqual(2);
+    expect(users.models[1].attrs).toEqual({ id: '2', name: 'Zelda' });
   });
 
-  test('it errors if incorrect number of models are found for an array of ids', function(assert) {
-    assert.throws(function() {
+  test('it errors if incorrect number of models are found for an array of ids', assert => {
+    expect(function() {
       schema.users.find([1, 6]);
-    }, /Couldn't find all users/);
+    }).toThrow();
   });
 });

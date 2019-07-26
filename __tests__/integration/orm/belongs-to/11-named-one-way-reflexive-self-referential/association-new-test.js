@@ -12,19 +12,19 @@ module('Integration | ORM | Belongs To | Named one-way reflexive self referentia
 
   states.forEach((state) => {
 
-    test(`a ${state} can build a new associated parent`, function(assert) {
+    test(`a ${state} can build a new associated parent`, assert => {
       let [ user ] = this.helper[state]();
 
       let ganon = user.newRepresentative({ name: 'Ganon' });
 
-      assert.ok(!ganon.id, 'the parent was not persisted');
-      assert.deepEqual(user.representative, ganon);
-      assert.equal(user.representativeId, null);
+      expect(!ganon.id).toBeTruthy();
+      expect(user.representative).toEqual(ganon);
+      expect(user.representativeId).toEqual(null);
 
       user.save();
 
-      assert.ok(ganon.id, 'saving the child persists the parent');
-      assert.equal(user.representativeId, ganon.id, 'the childs fk was updated');
+      expect(ganon.id).toBeTruthy();
+      expect(user.representativeId).toEqual(ganon.id);
     });
 
   });

@@ -11,33 +11,33 @@ module('Integration | ORM | Belongs To | One-way Polymorphic | association #set'
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a saved parent`, function(assert) {
+    test(`a ${state} can update its association to a saved parent`, assert => {
       let [ comment ] = this.helper[state]();
       let savedPost = this.helper.savedParent();
 
       comment.commentable = savedPost;
 
-      assert.deepEqual(comment.commentableId, { id: savedPost.id, type: 'post' });
-      assert.deepEqual(comment.commentable, savedPost);
+      expect(comment.commentableId).toEqual({ id: savedPost.id, type: 'post' });
+      expect(comment.commentable).toEqual(savedPost);
     });
 
-    test(`a ${state} can update its association to a new parent`, function(assert) {
+    test(`a ${state} can update its association to a new parent`, assert => {
       let [ comment ] = this.helper[state]();
       let newPost = this.helper.newParent();
 
       comment.commentable = newPost;
 
-      assert.deepEqual(comment.commentableId, { id: undefined, type: 'post' });
-      assert.deepEqual(comment.commentable, newPost);
+      expect(comment.commentableId).toEqual({ id: undefined, type: 'post' });
+      expect(comment.commentable).toEqual(newPost);
     });
 
-    test(`a ${state} can update its association to a null parent`, function(assert) {
+    test(`a ${state} can update its association to a null parent`, assert => {
       let [ comment ] = this.helper[state]();
 
       comment.commentable = null;
 
-      assert.equal(comment.commentableId, null);
-      assert.deepEqual(comment.commentable, null);
+      expect(comment.commentableId).toEqual(null);
+      expect(comment.commentable).toEqual(null);
     });
 
   });

@@ -11,11 +11,11 @@ module('Integration | ORM | Belongs To | Basic | accessor', function(hooks) {
   */
   states.forEach((state) => {
 
-    test(`the references of a ${state} are correct`, function(assert) {
+    test(`the references of a ${state} are correct`, assert => {
       let [ post, author ] = this.helper[state]();
 
-      assert.deepEqual(post.author, author ? author : null, 'the model reference is correct');
-      assert.equal(post.authorId, author ? author.id : null, 'the modelId reference is correct');
+      expect(post.author).toEqual(author ? author : null);
+      expect(post.authorId).toEqual(author ? author.id : null);
     });
 
   });

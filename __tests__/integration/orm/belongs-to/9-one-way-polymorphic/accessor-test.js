@@ -11,11 +11,11 @@ module('Integration | ORM | Belongs To | One-way Polymorphic | accessor', functi
   */
   states.forEach((state) => {
 
-    test(`the references of a ${state} are correct`, function(assert) {
+    test(`the references of a ${state} are correct`, assert => {
       let [ comment, post ] = this.helper[state]();
 
-      assert.deepEqual(comment.commentable, post ? post : null, 'the model reference is correct');
-      assert.deepEqual(comment.commentableId, post ? { id: post.id, type: 'post' } : null, 'the modelId reference is correct');
+      expect(comment.commentable).toEqual(post ? post : null);
+      expect(comment.commentableId).toEqual(post ? { id: post.id, type: 'post' } : null);
     });
 
   });

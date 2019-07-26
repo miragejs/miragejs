@@ -12,19 +12,19 @@ module('Integration | ORM | Belongs To | Named Reflexive | association #new', fu
 
   states.forEach((state) => {
 
-    test(`a ${state} can build a new associated parent`, function(assert) {
+    test(`a ${state} can build a new associated parent`, assert => {
       let [ user ] = this.helper[state]();
 
       let ganon = user.newBestFriend({ name: 'Ganon' });
 
-      assert.ok(!ganon.id, 'the parent was not persisted');
-      assert.deepEqual(user.bestFriend, ganon);
-      assert.equal(user.bestFriendId, null);
+      expect(!ganon.id).toBeTruthy();
+      expect(user.bestFriend).toEqual(ganon);
+      expect(user.bestFriendId).toEqual(null);
 
       user.save();
 
-      assert.ok(ganon.id, 'saving the child persists the parent');
-      assert.equal(user.bestFriendId, ganon.id, 'the childs fk was updated');
+      expect(ganon.id).toBeTruthy();
+      expect(user.bestFriendId).toEqual(ganon.id);
     });
 
   });

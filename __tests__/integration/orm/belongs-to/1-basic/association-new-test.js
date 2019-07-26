@@ -12,19 +12,19 @@ module('Integration | ORM | Belongs To | Basic | association #new', function(hoo
 
   states.forEach((state) => {
 
-    test(`a ${state} can build a new associated parent`, function(assert) {
+    test(`a ${state} can build a new associated parent`, assert => {
       let [ post ] = this.helper[state]();
 
       let ganon = post.newAuthor({ name: 'Ganon' });
 
-      assert.ok(!ganon.id, 'the parent was not persisted');
-      assert.deepEqual(post.author, ganon);
-      assert.equal(post.authorId, null);
+      expect(!ganon.id).toBeTruthy();
+      expect(post.author).toEqual(ganon);
+      expect(post.authorId).toEqual(null);
 
       post.save();
 
-      assert.ok(ganon.id, 'saving the child persists the parent');
-      assert.equal(post.authorId, ganon.id, 'the childs fk was updated');
+      expect(ganon.id).toBeTruthy();
+      expect(post.authorId).toEqual(ganon.id);
     });
 
   });

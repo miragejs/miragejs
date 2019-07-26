@@ -2,7 +2,7 @@ import { Model, belongsTo, _ormSchema as Schema, _Db as Db } from '@miragejs/ser
 import { module, test } from 'qunit';
 
 module('Integration | ORM | Belongs To | Basic | regressions', function() {
-  test('belongsTo accessors works when foreign key is present but falsy', function(assert) {
+  test('belongsTo accessors works when foreign key is present but falsy', assert => {
     let db = new Db({
       posts: [
         { id: 1, authorId: 0, name: 'some post' }
@@ -20,6 +20,6 @@ module('Integration | ORM | Belongs To | Basic | regressions', function() {
     });
 
     let post = schema.posts.find(1);
-    assert.equal(post.author.name, 'Foo');
+    expect(post.author.name).toEqual('Foo');
   });
 });

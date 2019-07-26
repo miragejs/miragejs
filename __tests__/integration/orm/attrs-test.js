@@ -15,15 +15,15 @@ module("Integration | ORM | attrs", function(hooks) {
     });
   });
 
-  test("attrs returns the models attributes", function(assert) {
+  test("attrs returns the models attributes", assert => {
     let user = schema.users.find(1);
 
-    assert.deepEqual(user.attrs, { id: "1", name: "Link", evil: false });
+    expect(user.attrs).toEqual({ id: "1", name: "Link", evil: false });
   });
 
-  test("attributes can be read via plain property access", function(assert) {
+  test("attributes can be read via plain property access", assert => {
     let user = schema.users.find(1);
 
-    assert.equal(user.name, "Link");
+    expect(user.name).toEqual("Link");
   });
 });

@@ -11,38 +11,38 @@ module('Integration | ORM | Mixed | One To Many Polymorphic | association #setId
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a saved parent via parentId`, function(assert) {
+    test(`a ${state} can update its association to a saved parent via parentId`, assert => {
       let [ user, originalPosts ] = this.helper[state]();
       let savedPost = this.helper.savedChild();
 
       user.thingIds = [ { type: 'post', id: savedPost.id } ];
 
-      assert.ok(user.things.includes(savedPost));
-      assert.deepEqual(user.thingIds, [ { type: 'post', id: savedPost.id } ]);
+      expect(user.things.includes(savedPost)).toBeTruthy();
+      expect(user.thingIds).toEqual([ { type: 'post', id: savedPost.id } ]);
 
       user.save();
       savedPost.reload();
 
       // Check the inverse
-      assert.deepEqual(savedPost.user.attrs, user.attrs);
-      assert.equal(savedPost.userId, user.id);
+      expect(savedPost.user.attrs).toEqual(user.attrs);
+      expect(savedPost.userId).toEqual(user.id);
 
       // Check old associates
       originalPosts.forEach(post => {
         if (post.isSaved()) {
           post.reload();
-          assert.equal(post.user, null);
+          expect(post.user).toEqual(null);
         }
       });
     });
 
-    test(`a ${state} can clear its association via a null parentId`, function(assert) {
+    test(`a ${state} can clear its association via a null parentId`, assert => {
       let [ user, originalPosts ] = this.helper[state]();
 
       user.thingIds = null;
 
-      assert.deepEqual(user.things.models, []);
-      assert.deepEqual(user.thingIds, []);
+      expect(user.things.models).toEqual([]);
+      expect(user.thingIds).toEqual([]);
 
       user.save();
 
@@ -50,7 +50,7 @@ module('Integration | ORM | Mixed | One To Many Polymorphic | association #setId
       originalPosts.forEach(post => {
         if (post.isSaved()) {
           post.reload();
-          assert.equal(post.user, null);
+          expect(post.user).toEqual(null);
         }
       });
     });

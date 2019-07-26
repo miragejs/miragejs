@@ -8,39 +8,39 @@ module('Integration | ORM | Has Many | Reflexive | association #setIds', functio
 
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to include a saved child via childIds`, function(assert) {
+    test(`a ${state} can update its association to include a saved child via childIds`, assert => {
       let [ tag, originalTags ] = this.helper[state]();
       let savedTag = this.helper.savedChild();
 
       tag.tagIds = [ savedTag.id ];
 
-      assert.deepEqual(tag.tags.models[0].attrs, savedTag.attrs);
-      assert.deepEqual(tag.tagIds, [ savedTag.id ]);
+      expect(tag.tags.models[0].attrs).toEqual(savedTag.attrs);
+      expect(tag.tagIds).toEqual([ savedTag.id ]);
 
       tag.save();
       savedTag.reload();
 
-      assert.deepEqual(savedTag.tags.models[0].attrs, tag.attrs, 'the inverse was set');
+      expect(savedTag.tags.models[0].attrs).toEqual(tag.attrs);
       originalTags.forEach(originalTag => {
         if (originalTag.isSaved()) {
           originalTag.reload();
-          assert.notOk(originalTag.tags.includes(tag), 'old inverses were cleared');
+          expect(originalTag.tags.includes(tag)).toBeFalsy();
         }
       });
     });
 
-    test(`a ${state} can clear its association via a null childIds`, function(assert) {
+    test(`a ${state} can clear its association via a null childIds`, assert => {
       let [ tag, originalTags ] = this.helper[state]();
 
       tag.tagIds = null;
 
-      assert.deepEqual(tag.tags.models, []);
-      assert.deepEqual(tag.tagIds, []);
+      expect(tag.tags.models).toEqual([]);
+      expect(tag.tagIds).toEqual([]);
 
       tag.save();
       originalTags.forEach(originalTag => {
         originalTag.reload();
-        assert.notOk(originalTag.tags.includes(tag), 'old inverses were cleared');
+        expect(originalTag.tags.includes(tag)).toBeFalsy();
       });
     });
 

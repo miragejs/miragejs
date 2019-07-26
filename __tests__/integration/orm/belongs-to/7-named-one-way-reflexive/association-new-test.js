@@ -12,19 +12,19 @@ module('Integration | ORM | Belongs To | Named One-Way Reflexive | association #
 
   states.forEach((state) => {
 
-    test(`a ${state} can build a new associated parent`, function(assert) {
+    test(`a ${state} can build a new associated parent`, assert => {
       let [ child ] = this.helper[state]();
 
       let ganon = child.newParent({ name: 'Ganon' });
 
-      assert.ok(!ganon.id, 'the parent was not persisted');
-      assert.deepEqual(child.parent, ganon);
-      assert.equal(child.parentId, null);
+      expect(!ganon.id).toBeTruthy();
+      expect(child.parent).toEqual(ganon);
+      expect(child.parentId).toEqual(null);
 
       child.save();
 
-      assert.ok(ganon.id, 'saving the child persists the parent');
-      assert.equal(child.parentId, ganon.id, 'the childs fk was updated');
+      expect(ganon.id).toBeTruthy();
+      expect(child.parentId).toEqual(ganon.id);
     });
 
   });

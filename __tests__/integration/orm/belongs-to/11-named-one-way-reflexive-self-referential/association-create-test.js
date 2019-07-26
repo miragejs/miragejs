@@ -11,15 +11,15 @@ module('Integration | ORM | Belongs To | Named one-way reflexive self referentia
   */
   states.forEach((state) => {
 
-    test(`a ${state} can create an associated parent`, function(assert) {
+    test(`a ${state} can create an associated parent`, assert => {
       let [ user ] = this.helper[state]();
 
       let ganon = user.createRepresentative({ name: 'Ganon' });
 
-      assert.ok(ganon.id, 'the parent was persisted');
-      assert.deepEqual(user.representative.attrs, ganon.attrs);
-      assert.equal(user.representativeId, ganon.id);
-      assert.equal(this.helper.schema.users.find(user.id).representativeId, ganon.id, 'the user was persisted');
+      expect(ganon.id).toBeTruthy();
+      expect(user.representative.attrs).toEqual(ganon.attrs);
+      expect(user.representativeId).toEqual(ganon.id);
+      expect(this.helper.schema.users.find(user.id).representativeId).toEqual(ganon.id);
     });
 
   });

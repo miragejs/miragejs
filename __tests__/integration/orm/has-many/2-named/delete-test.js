@@ -8,7 +8,7 @@ module('Integration | ORM | Has Many | Named | delete', function(hooks) {
 
   states.forEach((state) => {
 
-    test(`deleting children updates the parent's foreign key for a ${state}`, function(assert) {
+    test(`deleting children updates the parent's foreign key for a ${state}`, assert => {
       let [ user, blogPosts ] = this.helper[state]();
 
       if (blogPosts && blogPosts.length) {
@@ -16,8 +16,8 @@ module('Integration | ORM | Has Many | Named | delete', function(hooks) {
         user.reload();
       }
 
-      assert.equal(user.blogPosts.length, 0);
-      assert.equal(user.blogPostIds.length, 0);
+      expect(user.blogPosts.length).toEqual(0);
+      expect(user.blogPostIds.length).toEqual(0);
     });
 
   });

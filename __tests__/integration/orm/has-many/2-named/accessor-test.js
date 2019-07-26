@@ -11,17 +11,17 @@ module('Integration | ORM | Has Many | Named | accessor', function(hooks) {
   */
   states.forEach((state) => {
 
-    test(`the references of a ${state} are correct`, function(assert) {
+    test(`the references of a ${state} are correct`, assert => {
       let [ user, posts ] = this.helper[state]();
 
-      assert.equal(user.blogPosts.models.length, posts.length, 'the parent has the correct number of children');
-      assert.equal(user.blogPostIds.length, posts.length, 'the parent has the correct number of children ids');
+      expect(user.blogPosts.models.length).toEqual(posts.length);
+      expect(user.blogPostIds.length).toEqual(posts.length);
 
       posts.forEach((post, i) => {
-        assert.deepEqual(user.blogPosts.models[i], posts[i], 'each child is in parent.children array');
+        expect(user.blogPosts.models[i]).toEqual(posts[i]);
 
         if (post.isSaved()) {
-          assert.ok(user.blogPostIds.indexOf(post.id) > -1, 'each saved child id is in parent.childrenIds array');
+          expect(user.blogPostIds.indexOf(post.id) > -1).toBeTruthy();
         }
       });
     });

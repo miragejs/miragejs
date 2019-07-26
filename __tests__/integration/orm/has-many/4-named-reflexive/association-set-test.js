@@ -11,69 +11,69 @@ module('Integration | ORM | Has Many | Named Reflexive | association #set', func
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a list of saved children`, function(assert) {
+    test(`a ${state} can update its association to a list of saved children`, assert => {
       let [ tag, originalTags ] = this.helper[state]();
       let savedTag = this.helper.savedChild();
 
       tag.labels = [ savedTag ];
 
-      assert.ok(tag.labels.includes(savedTag));
-      assert.equal(tag.labelIds[0], savedTag.id);
-      assert.ok(savedTag.labels.includes(tag), 'the inverse was set');
+      expect(tag.labels.includes(savedTag)).toBeTruthy();
+      expect(tag.labelIds[0]).toEqual(savedTag.id);
+      expect(savedTag.labels.includes(tag)).toBeTruthy();
 
       tag.save();
 
       originalTags.forEach(originalTag => {
         originalTag.reload();
-        assert.notOk(originalTag.labels.includes(tag), 'old inverses were cleared');
+        expect(originalTag.labels.includes(tag)).toBeFalsy();
       });
     });
 
-    test(`a ${state} can update its association to a new parent`, function(assert) {
+    test(`a ${state} can update its association to a new parent`, assert => {
       let [ tag, originalTags ] = this.helper[state]();
       let newTag = this.helper.newChild();
 
       tag.labels = [ newTag ];
 
-      assert.ok(tag.labels.includes(newTag));
-      assert.equal(tag.labelIds[0], undefined);
-      assert.ok(newTag.labels.includes(tag), 'the inverse was set');
+      expect(tag.labels.includes(newTag)).toBeTruthy();
+      expect(tag.labelIds[0]).toEqual(undefined);
+      expect(newTag.labels.includes(tag)).toBeTruthy();
 
       tag.save();
 
       originalTags.forEach(originalTag => {
         originalTag.reload();
-        assert.notOk(originalTag.labels.includes(tag), 'old inverses were cleared');
+        expect(originalTag.labels.includes(tag)).toBeFalsy();
       });
     });
 
-    test(`a ${state} can clear its association via an empty list`, function(assert) {
+    test(`a ${state} can clear its association via an empty list`, assert => {
       let [ tag, originalTags ] = this.helper[state]();
 
       tag.labels = [ ];
 
-      assert.deepEqual(tag.labelIds, [ ]);
-      assert.equal(tag.labels.models.length, 0);
+      expect(tag.labelIds).toEqual([ ]);
+      expect(tag.labels.models.length).toEqual(0);
 
       tag.save();
       originalTags.forEach(originalTag => {
         originalTag.reload();
-        assert.notOk(originalTag.labels.includes(tag), 'old inverses were cleared');
+        expect(originalTag.labels.includes(tag)).toBeFalsy();
       });
     });
 
-    test(`a ${state} can clear its association via an empty list`, function(assert) {
+    test(`a ${state} can clear its association via an empty list`, assert => {
       let [ tag, originalTags ] = this.helper[state]();
 
       tag.labels = null;
 
-      assert.deepEqual(tag.labelIds, [ ]);
-      assert.equal(tag.labels.models.length, 0);
+      expect(tag.labelIds).toEqual([ ]);
+      expect(tag.labels.models.length).toEqual(0);
 
       tag.save();
       originalTags.forEach(originalTag => {
         originalTag.reload();
-        assert.notOk(originalTag.labels.includes(tag), 'old inverses were cleared');
+        expect(originalTag.labels.includes(tag)).toBeFalsy();
       });
     });
 

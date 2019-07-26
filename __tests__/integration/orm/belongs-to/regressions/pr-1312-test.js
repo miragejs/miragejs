@@ -2,7 +2,7 @@ import { Model, belongsTo, hasMany, _ormSchema as Schema, _Db as Db } from '@mir
 import { module, test } from 'qunit';
 
 module('Integration | ORM | Belongs To | Regressions | pr-1312', function() {
-  test(`creating and using a record with a polymorphic hasMany and explicit inverse does not fail when accessing the association`, function(assert) {
+  test(`creating and using a record with a polymorphic hasMany and explicit inverse does not fail when accessing the association`, assert => {
     let schema = new Schema(new Db(), {
       comment: Model.extend({
         commentable: belongsTo({ polymorphic: true, inverse: 'comments' })
@@ -16,6 +16,6 @@ module('Integration | ORM | Belongs To | Regressions | pr-1312', function() {
     let post = schema.posts.create();
     post.createComment();
 
-    assert.equal(post.comments.models.length, 1);
+    expect(post.comments.models.length).toEqual(1);
   });
 });

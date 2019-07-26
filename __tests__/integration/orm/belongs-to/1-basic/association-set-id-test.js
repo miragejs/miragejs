@@ -11,14 +11,14 @@ module('Integration | ORM | Belongs To | Basic | association #setId', function(h
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a saved parent via parentId`, function(assert) {
+    test(`a ${state} can update its association to a saved parent via parentId`, assert => {
       let [ post ] = this.helper[state]();
       let savedAuthor = this.helper.savedParent();
 
       post.authorId = savedAuthor.id;
 
-      assert.equal(post.authorId, savedAuthor.id);
-      assert.deepEqual(post.author.attrs, savedAuthor.attrs);
+      expect(post.authorId).toEqual(savedAuthor.id);
+      expect(post.author.attrs).toEqual(savedAuthor.attrs);
     });
 
   });
@@ -28,13 +28,13 @@ module('Integration | ORM | Belongs To | Basic | association #setId', function(h
     'newChildSavedParent'
   ].forEach((state) => {
 
-    test(`a ${state} can clear its association via a null parentId`, function(assert) {
+    test(`a ${state} can clear its association via a null parentId`, assert => {
       let [ post ] = this.helper[state]();
 
       post.authorId = null;
 
-      assert.equal(post.authorId, null);
-      assert.deepEqual(post.author, null);
+      expect(post.authorId).toEqual(null);
+      expect(post.author).toEqual(null);
     });
 
   });

@@ -11,32 +11,32 @@ module('Integration | ORM | Belongs To | Named one-way reflexive self referentia
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to itself`, function(assert) {
+    test(`a ${state} can update its association to itself`, assert => {
       let [ user ] = this.helper[state]();
 
       user.representative = user;
 
-      assert.equal(user.representativeId, user.id);
-      assert.deepEqual(user.representative.attrs, user.attrs);
+      expect(user.representativeId).toEqual(user.id);
+      expect(user.representative.attrs).toEqual(user.attrs);
 
       user.save();
 
-      assert.equal(user.representativeId, user.id);
-      assert.deepEqual(user.representative.attrs, user.attrs);
+      expect(user.representativeId).toEqual(user.id);
+      expect(user.representative.attrs).toEqual(user.attrs);
     });
 
-    test(`a ${state} can update its association to a null parent`, function(assert) {
+    test(`a ${state} can update its association to a null parent`, assert => {
       let [ user ] = this.helper[state]();
 
       user.representative = null;
 
-      assert.equal(user.representativeId, null);
-      assert.deepEqual(user.representative, null);
+      expect(user.representativeId).toEqual(null);
+      expect(user.representative).toEqual(null);
 
       user.save();
 
-      assert.equal(user.representativeId, null);
-      assert.deepEqual(user.representative, null);
+      expect(user.representativeId).toEqual(null);
+      expect(user.representative).toEqual(null);
     });
 
   });

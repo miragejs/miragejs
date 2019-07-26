@@ -12,38 +12,38 @@ module('Integration | ORM | create', function(hooks) {
     });
   });
 
-  test('it cannot make new models that havent been registered', function(assert) {
-    assert.throws(function() {
+  test('it cannot make new models that havent been registered', assert => {
+    expect(function() {
       schema.authors.new({ name: 'Link' });
-    });
+    }).toThrow();
   });
 
-  test('it cannot create models that havent been registered', function(assert) {
-    assert.throws(function() {
+  test('it cannot create models that havent been registered', assert => {
+    expect(function() {
       schema.authors.create({ name: 'Link' });
-    });
+    }).toThrow();
   });
 
-  test('it can make new models and then save them', function(assert) {
+  test('it can make new models and then save them', assert => {
     let user = schema.users.new({ name: 'Link' });
 
-    assert.ok(user instanceof User);
-    assert.deepEqual(user.attrs, { name: 'Link' });
-    assert.deepEqual(db.users, []);
+    expect(user instanceof User).toBeTruthy();
+    expect(user.attrs).toEqual({ name: 'Link' });
+    expect(db.users).toEqual([]);
 
     user.save();
 
-    assert.ok(user.id, 'user has an id getter');
-    assert.deepEqual(user.attrs, { id: '1', name: 'Link' });
-    assert.deepEqual(db.users, [{ id: '1', name: 'Link' }]);
+    expect(user.id).toBeTruthy();
+    expect(user.attrs).toEqual({ id: '1', name: 'Link' });
+    expect(db.users).toEqual([{ id: '1', name: 'Link' }]);
   });
 
-  test('it can create new models, saved directly to the db', function(assert) {
+  test('it can create new models, saved directly to the db', assert => {
     let user = schema.users.create({ name: 'Link' });
 
-    assert.ok(user instanceof Model);
-    assert.ok(user instanceof User);
-    assert.deepEqual(user.attrs, { id: '1', name: 'Link' });
-    assert.deepEqual(db.users, [{ id: '1', name: 'Link' }]);
+    expect(user instanceof Model).toBeTruthy();
+    expect(user instanceof User).toBeTruthy();
+    expect(user.attrs).toEqual({ id: '1', name: 'Link' });
+    expect(db.users).toEqual([{ id: '1', name: 'Link' }]);
   });
 });

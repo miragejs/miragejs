@@ -14,10 +14,10 @@ module('Integration | ORM | #first', function(hooks) {
     schema.registerModel('user', User);
   });
 
-  test('it can find the first model', function(assert) {
+  test('it can find the first model', assert => {
     let user = schema.users.first();
 
-    assert.ok(user instanceof User);
-    assert.deepEqual(user.attrs, { id: '1', name: 'Link' });
+    expect(user instanceof User).toBeTruthy();
+    expect(user.attrs).toEqual({ id: '1', name: 'Link' });
   });
 });

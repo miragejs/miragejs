@@ -11,16 +11,16 @@ module('Integration | ORM | Belongs To | One To One | association #create', func
   */
   states.forEach((state) => {
 
-    test(`a ${state} can create an associated parent`, function(assert) {
+    test(`a ${state} can create an associated parent`, assert => {
       let [ user ] = this.helper[state]();
 
       let profile = user.createProfile({ age: 300 });
 
-      assert.ok(profile.id, 'the parent was persisted');
-      assert.deepEqual(user.profile.attrs, profile.attrs);
-      assert.deepEqual(profile.user.attrs, user.attrs, 'the inverse was set');
-      assert.equal(user.profileId, profile.id);
-      assert.equal(this.helper.schema.users.find(user.id).profileId, profile.id, 'the user was persisted');
+      expect(profile.id).toBeTruthy();
+      expect(user.profile.attrs).toEqual(profile.attrs);
+      expect(profile.user.attrs).toEqual(user.attrs);
+      expect(user.profileId).toEqual(profile.id);
+      expect(this.helper.schema.users.find(user.id).profileId).toEqual(profile.id);
     });
 
   });

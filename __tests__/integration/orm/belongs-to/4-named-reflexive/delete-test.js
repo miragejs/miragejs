@@ -8,7 +8,7 @@ module('Integration | ORM | Belongs To | Named Reflexive | delete', function(hoo
 
   states.forEach((state) => {
 
-    test(`deleting the parent updates the child's foreign key for a ${state}`, function(assert) {
+    test(`deleting the parent updates the child's foreign key for a ${state}`, assert => {
       let [ user, bestFriend ] = this.helper[state]();
 
       if (bestFriend) {
@@ -16,8 +16,8 @@ module('Integration | ORM | Belongs To | Named Reflexive | delete', function(hoo
         user.reload();
       }
 
-      assert.equal(user.bestFriendId, null);
-      assert.deepEqual(user.bestFriend, null);
+      expect(user.bestFriendId).toEqual(null);
+      expect(user.bestFriend).toEqual(null);
     });
 
   });

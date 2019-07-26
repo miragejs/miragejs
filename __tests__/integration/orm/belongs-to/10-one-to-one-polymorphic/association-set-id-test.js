@@ -11,20 +11,20 @@ module('Integration | ORM | Belongs To | One-to-one Polymorphic | association #s
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a saved parent via parentId`, function(assert) {
+    test(`a ${state} can update its association to a saved parent via parentId`, assert => {
       let [ comment ] = this.helper[state]();
       let post = this.helper.savedParent();
 
       comment.commentableId = { type: 'post', id: post.id };
 
-      assert.deepEqual(comment.commentableId, { type: 'post', id: post.id });
-      assert.deepEqual(comment.commentable.attrs, post.attrs);
+      expect(comment.commentableId).toEqual({ type: 'post', id: post.id });
+      expect(comment.commentable.attrs).toEqual(post.attrs);
 
       comment.save();
       post.reload();
 
-      assert.equal(post.commentId, comment.id, 'the inverse was set');
-      assert.deepEqual(post.comment.attrs, comment.attrs);
+      expect(post.commentId).toEqual(comment.id);
+      expect(post.comment.attrs).toEqual(comment.attrs);
     });
 
   });
@@ -34,13 +34,13 @@ module('Integration | ORM | Belongs To | One-to-one Polymorphic | association #s
     'newChildSavedParent'
   ].forEach((state) => {
 
-    test(`a ${state} can clear its association via a null parentId`, function(assert) {
+    test(`a ${state} can clear its association via a null parentId`, assert => {
       let [ comment ] = this.helper[state]();
 
       comment.commentableId = null;
 
-      assert.equal(comment.commentableId, null);
-      assert.equal(comment.commentable, null);
+      expect(comment.commentableId).toEqual(null);
+      expect(comment.commentable).toEqual(null);
     });
 
   });

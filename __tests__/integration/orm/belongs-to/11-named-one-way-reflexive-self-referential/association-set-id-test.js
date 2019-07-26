@@ -15,18 +15,18 @@ module('Integration | ORM | Belongs To | Named one-way reflexive self referentia
     'savedChildSavedParent'
   ].forEach((state) => {
 
-    test(`a ${state} can update its association to itself via parentId`, function(assert) {
+    test(`a ${state} can update its association to itself via parentId`, assert => {
       let [ user ] = this.helper[state]();
 
       user.representativeId = user.id;
 
-      assert.equal(user.representativeId, user.id);
-      assert.deepEqual(user.representative.attrs, user.attrs);
+      expect(user.representativeId).toEqual(user.id);
+      expect(user.representative.attrs).toEqual(user.attrs);
 
       user.save();
 
-      assert.equal(user.representativeId, user.id);
-      assert.deepEqual(user.representative.attrs, user.attrs);
+      expect(user.representativeId).toEqual(user.id);
+      expect(user.representative.attrs).toEqual(user.attrs);
     });
 
   });
@@ -36,18 +36,18 @@ module('Integration | ORM | Belongs To | Named one-way reflexive self referentia
     'newChildNewParent'
   ].forEach((state) => {
 
-    test(`a ${state} can clear its association via a null parentId`, function(assert) {
+    test(`a ${state} can clear its association via a null parentId`, assert => {
       let [ user ] = this.helper[state]();
 
       user.representativeId = null;
 
-      assert.equal(user.representativeId, null);
-      assert.equal(user.representative, null);
+      expect(user.representativeId).toEqual(null);
+      expect(user.representative).toEqual(null);
 
       user.save();
 
-      assert.equal(user.representativeId, null);
-      assert.equal(user.representative, null);
+      expect(user.representativeId).toEqual(null);
+      expect(user.representative).toEqual(null);
     });
 
   });

@@ -11,23 +11,23 @@ module('Integration | ORM | Has Many | Named | association #setIds', function(ho
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a saved parent via parentId`, function(assert) {
+    test(`a ${state} can update its association to a saved parent via parentId`, assert => {
       let [ user ] = this.helper[state]();
       let savedPost = this.helper.savedChild();
 
       user.blogPostIds = [ savedPost.id ];
 
-      assert.deepEqual(user.blogPosts.models[0].attrs, savedPost.attrs);
-      assert.deepEqual(user.blogPostIds, [ savedPost.id ]);
+      expect(user.blogPosts.models[0].attrs).toEqual(savedPost.attrs);
+      expect(user.blogPostIds).toEqual([ savedPost.id ]);
     });
 
-    test(`a ${state} can clear its association via a null parentId`, function(assert) {
+    test(`a ${state} can clear its association via a null parentId`, assert => {
       let [ user ] = this.helper[state]();
 
       user.blogPostIds = null;
 
-      assert.deepEqual(user.blogPosts.models, []);
-      assert.deepEqual(user.blogPostIds, []);
+      expect(user.blogPosts.models).toEqual([]);
+      expect(user.blogPostIds).toEqual([]);
     });
 
   });

@@ -11,38 +11,38 @@ module('Integration | ORM | Belongs To | One-to-one Polymorphic | association #s
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a saved parent`, function(assert) {
+    test(`a ${state} can update its association to a saved parent`, assert => {
       let [ comment ] = this.helper[state]();
       let post = this.helper.savedParent();
 
       comment.commentable = post;
 
-      assert.deepEqual(comment.commentableId, { type: 'post', id: post.id });
-      assert.deepEqual(comment.commentable.attrs, post.attrs);
-      assert.equal(post.commentId, comment.id, 'the inverse was set');
-      assert.deepEqual(post.comment.attrs, comment.attrs);
+      expect(comment.commentableId).toEqual({ type: 'post', id: post.id });
+      expect(comment.commentable.attrs).toEqual(post.attrs);
+      expect(post.commentId).toEqual(comment.id);
+      expect(post.comment.attrs).toEqual(comment.attrs);
     });
 
-    test(`a ${state} can update its association to a new parent`, function(assert) {
+    test(`a ${state} can update its association to a new parent`, assert => {
       let [ comment ] = this.helper[state]();
       let post = this.helper.newParent();
 
       comment.commentable = post;
 
-      assert.deepEqual(comment.commentableId, { type: 'post', id: undefined });
-      assert.deepEqual(comment.commentable.attrs, post.attrs);
+      expect(comment.commentableId).toEqual({ type: 'post', id: undefined });
+      expect(comment.commentable.attrs).toEqual(post.attrs);
 
-      assert.equal(post.commentId, comment.id, 'the inverse was set');
-      assert.deepEqual(post.comment.attrs, comment.attrs);
+      expect(post.commentId).toEqual(comment.id);
+      expect(post.comment.attrs).toEqual(comment.attrs);
     });
 
-    test(`a ${state} can update its association to a null parent`, function(assert) {
+    test(`a ${state} can update its association to a null parent`, assert => {
       let [ comment ] = this.helper[state]();
 
       comment.commentable = null;
 
-      assert.equal(comment.commentableId, null);
-      assert.deepEqual(comment.commentable, null);
+      expect(comment.commentableId).toEqual(null);
+      expect(comment.commentable).toEqual(null);
     });
 
   });

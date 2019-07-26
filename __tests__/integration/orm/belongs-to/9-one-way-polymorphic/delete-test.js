@@ -8,7 +8,7 @@ module('Integration | ORM | Belongs To | One-way Polymorphic | delete', function
 
   states.forEach((state) => {
 
-    test(`deleting the parent updates the child's foreign key for a ${state}`, function(assert) {
+    test(`deleting the parent updates the child's foreign key for a ${state}`, assert => {
       let [ comment, post ] = this.helper[state]();
 
       if (post) {
@@ -16,8 +16,8 @@ module('Integration | ORM | Belongs To | One-way Polymorphic | delete', function
         comment.reload();
       }
 
-      assert.equal(comment.commentableId, null);
-      assert.equal(comment.post, null);
+      expect(comment.commentableId).toEqual(null);
+      expect(comment.post).toEqual(null);
     });
 
   });

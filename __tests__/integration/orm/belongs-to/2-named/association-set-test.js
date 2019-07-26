@@ -11,33 +11,33 @@ module('Integration | ORM | Belongs To | Named | association #set', function(hoo
   */
   states.forEach((state) => {
 
-    test(`a ${state} can update its association to a saved parent`, function(assert) {
+    test(`a ${state} can update its association to a saved parent`, assert => {
       let [ post ] = this.helper[state]();
       let savedAuthor = this.helper.savedParent();
 
       post.author = savedAuthor;
 
-      assert.equal(post.authorId, savedAuthor.id);
-      assert.deepEqual(post.author, savedAuthor);
+      expect(post.authorId).toEqual(savedAuthor.id);
+      expect(post.author).toEqual(savedAuthor);
     });
 
-    test(`a ${state} can update its association to a new parent`, function(assert) {
+    test(`a ${state} can update its association to a new parent`, assert => {
       let [ post ] = this.helper[state]();
       let newAuthor = this.helper.newParent();
 
       post.author = newAuthor;
 
-      assert.equal(post.authorId, null);
-      assert.deepEqual(post.author, newAuthor);
+      expect(post.authorId).toEqual(null);
+      expect(post.author).toEqual(newAuthor);
     });
 
-    test(`a ${state} can update its association to a null parent`, function(assert) {
+    test(`a ${state} can update its association to a null parent`, assert => {
       let [ post ] = this.helper[state]();
 
       post.author = null;
 
-      assert.equal(post.authorId, null);
-      assert.deepEqual(post.author, null);
+      expect(post.authorId).toEqual(null);
+      expect(post.author).toEqual(null);
     });
 
   });

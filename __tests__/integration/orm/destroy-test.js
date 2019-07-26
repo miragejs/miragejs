@@ -18,22 +18,22 @@ module('Integration | ORM | destroy', function(hooks) {
     });
   });
 
-  test('destroying a model removes the associated record from the db', function(assert) {
-    assert.deepEqual(db.users.length, 3);
+  test('destroying a model removes the associated record from the db', assert => {
+    expect(db.users.length).toEqual(3);
 
     let link = this.schema.users.find(1);
     link.destroy();
 
-    assert.deepEqual(db.users.find(1), null);
-    assert.deepEqual(db.users.length, 2);
+    expect(db.users.find(1)).toEqual(null);
+    expect(db.users.length).toEqual(2);
   });
 
-  test('destroying a collection removes the associated records from the db', function(assert) {
-    assert.deepEqual(db.users.length, 3);
+  test('destroying a collection removes the associated records from the db', assert => {
+    expect(db.users.length).toEqual(3);
 
     let users = this.schema.users.all();
     users.destroy();
 
-    assert.deepEqual(db.users, []);
+    expect(db.users).toEqual([]);
   });
 });

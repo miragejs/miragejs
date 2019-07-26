@@ -7,77 +7,77 @@ module('Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | inst
     this.schema = this.helper.schema;
   });
 
-  test('the child accepts a saved parent id', function(assert) {
+  test('the child accepts a saved parent id', assert => {
     let friend = this.helper.savedParent();
     let user = this.schema.users.new({ bestFriendId: friend.id });
 
-    assert.equal(user.bestFriendId, friend.id);
-    assert.deepEqual(user.bestFriend.attrs, friend.attrs);
-    assert.deepEqual(user.attrs, { bestFriendId: friend.id });
+    expect(user.bestFriendId).toEqual(friend.id);
+    expect(user.bestFriend.attrs).toEqual(friend.attrs);
+    expect(user.attrs).toEqual({ bestFriendId: friend.id });
   });
 
-  test('the child errors if the parent id doesnt exist', function(assert) {
-    assert.throws(function() {
+  test('the child errors if the parent id doesnt exist', assert => {
+    expect(function() {
       this.schema.users.new({ bestFriendId: 2 });
-    }, /You're instantiating a user that has a bestFriendId of 2, but that record doesn't exist in the database/);
+    }).toThrow();
   });
 
-  test('the child accepts a null parent id', function(assert) {
+  test('the child accepts a null parent id', assert => {
     let user = this.schema.users.new({ bestFriendId: null });
 
-    assert.equal(user.bestFriendId, null);
-    assert.equal(user.bestFriend, null);
-    assert.deepEqual(user.attrs, { bestFriendId: null });
+    expect(user.bestFriendId).toEqual(null);
+    expect(user.bestFriend).toEqual(null);
+    expect(user.attrs).toEqual({ bestFriendId: null });
   });
 
-  test('the child accepts a saved parent model', function(assert) {
+  test('the child accepts a saved parent model', assert => {
     let friend = this.helper.savedParent();
     let user = this.schema.users.new({ bestFriend: friend });
 
-    assert.equal(user.bestFriendId, 1);
-    assert.deepEqual(user.bestFriend.attrs, friend.attrs);
-    assert.deepEqual(user.attrs, { bestFriendId: null }); // this would update when saved
+    expect(user.bestFriendId).toEqual(1);
+    expect(user.bestFriend.attrs).toEqual(friend.attrs);
+    expect(user.attrs).toEqual({ bestFriendId: null }); // this would update when saved
   });
 
-  test('the child accepts a new parent model', function(assert) {
+  test('the child accepts a new parent model', assert => {
     let zelda = this.schema.users.new({ name: 'Zelda' });
     let user = this.schema.users.new({ bestFriend: zelda });
 
-    assert.equal(user.bestFriendId, null);
-    assert.deepEqual(user.bestFriend, zelda);
-    assert.deepEqual(user.attrs, { bestFriendId: null });
+    expect(user.bestFriendId).toEqual(null);
+    expect(user.bestFriend).toEqual(zelda);
+    expect(user.attrs).toEqual({ bestFriendId: null });
   });
 
-  test('the child accepts a null parent model', function(assert) {
+  test('the child accepts a null parent model', assert => {
     let user = this.schema.users.new({ bestFriend: null });
 
-    assert.equal(user.bestFriendId, null);
-    assert.deepEqual(user.bestFriend, null);
-    assert.deepEqual(user.attrs, { bestFriendId: null });
+    expect(user.bestFriendId).toEqual(null);
+    expect(user.bestFriend).toEqual(null);
+    expect(user.attrs).toEqual({ bestFriendId: null });
   });
 
-  test('the child accepts a parent model and id', function(assert) {
+  test('the child accepts a parent model and id', assert => {
     let friend = this.helper.savedParent();
     let user = this.schema.users.new({ bestFriend: friend, bestFriendId: friend.id });
 
-    assert.equal(user.bestFriendId, '1');
-    assert.deepEqual(user.bestFriend, friend);
-    assert.deepEqual(user.attrs, { bestFriendId: friend.id });
+    expect(user.bestFriendId).toEqual('1');
+    expect(user.bestFriend).toEqual(friend);
+    expect(user.attrs).toEqual({ bestFriendId: friend.id });
   });
 
-  test('the child accepts no reference to a parent id or model as empty obj', function(assert) {
+  test('the child accepts no reference to a parent id or model as empty obj', assert => {
     let user = this.schema.users.new({});
 
-    assert.equal(user.bestFriendId, null);
-    assert.deepEqual(user.bestFriend, null);
-    assert.deepEqual(user.attrs, { bestFriendId: null });
+    expect(user.bestFriendId).toEqual(null);
+    expect(user.bestFriend).toEqual(null);
+    expect(user.attrs).toEqual({ bestFriendId: null });
   });
 
-  test('the child accepts no reference to a parent id or model', function(assert) {
+  test('the child accepts no reference to a parent id or model', assert => {
     let user = this.schema.users.new();
 
-    assert.equal(user.bestFriendId, null);
-    assert.deepEqual(user.bestFriend, null);
-    assert.deepEqual(user.attrs, { bestFriendId: null });
+    expect(user.bestFriendId).toEqual(null);
+    expect(user.bestFriend).toEqual(null);
+    expect(user.attrs).toEqual({ bestFriendId: null });
   });
 });

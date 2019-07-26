@@ -6,7 +6,7 @@ module('Integration | ORM | Has Many | Many-to-many Polymorphic | create', funct
     this.helper = new Helper();
   });
 
-  test('it sets up associations correctly when passing in the foreign key', function(assert) {
+  test('it sets up associations correctly when passing in the foreign key', assert => {
     let post = this.helper.schema.create('post');
     let user = this.helper.schema.create('user', {
       commentableIds: [ { type: 'post', id: post.id } ]
@@ -14,16 +14,16 @@ module('Integration | ORM | Has Many | Many-to-many Polymorphic | create', funct
 
     post.reload();
 
-    assert.deepEqual(user.commentableIds, [ { type: 'post', id: post.id } ]);
-    assert.deepEqual(user.attrs.commentableIds, [ { type: 'post', id: post.id } ], 'the ids were persisted');
-    assert.deepEqual(user.commentables.models[0].attrs, post.attrs);
-    assert.equal(this.helper.db.posts.length, 1);
-    assert.equal(this.helper.db.users.length, 1);
-    assert.deepEqual(this.helper.db.posts[0], { id: '1', userIds: [ '1' ] });
-    assert.deepEqual(this.helper.db.users[0], { id: '1', commentableIds: [ { type: 'post', id: '1' } ] });
+    expect(user.commentableIds).toEqual([ { type: 'post', id: post.id } ]);
+    expect(user.attrs.commentableIds).toEqual([ { type: 'post', id: post.id } ]);
+    expect(user.commentables.models[0].attrs).toEqual(post.attrs);
+    expect(this.helper.db.posts.length).toEqual(1);
+    expect(this.helper.db.users.length).toEqual(1);
+    expect(this.helper.db.posts[0]).toEqual({ id: '1', userIds: [ '1' ] });
+    expect(this.helper.db.users[0]).toEqual({ id: '1', commentableIds: [ { type: 'post', id: '1' } ] });
   });
 
-  test('it sets up associations correctly when passing in an array of models', function(assert) {
+  test('it sets up associations correctly when passing in an array of models', assert => {
     let post = this.helper.schema.create('post');
     let user = this.helper.schema.create('user', {
       commentables: [ post ]
@@ -31,15 +31,15 @@ module('Integration | ORM | Has Many | Many-to-many Polymorphic | create', funct
 
     post.reload();
 
-    assert.deepEqual(user.commentableIds, [ { type: 'post', id: post.id } ]);
-    assert.deepEqual(post.userIds, [ '1' ], 'the inverse was set');
-    assert.deepEqual(user.attrs.commentableIds, [ { type: 'post', id: post.id } ], 'the ids were persisted');
-    assert.deepEqual(post.attrs.userIds, [ user.id ], 'the inverse was set');
-    assert.equal(this.helper.db.users.length, 1);
-    assert.equal(this.helper.db.posts.length, 1);
+    expect(user.commentableIds).toEqual([ { type: 'post', id: post.id } ]);
+    expect(post.userIds).toEqual([ '1' ]);
+    expect(user.attrs.commentableIds).toEqual([ { type: 'post', id: post.id } ]);
+    expect(post.attrs.userIds).toEqual([ user.id ]);
+    expect(this.helper.db.users.length).toEqual(1);
+    expect(this.helper.db.posts.length).toEqual(1);
   });
 
-  test('it sets up associations correctly when passing in a collection', function(assert) {
+  test('it sets up associations correctly when passing in a collection', assert => {
     let post = this.helper.schema.create('post');
     let user = this.helper.schema.create('user', {
       commentables: this.helper.schema.posts.all()
@@ -47,11 +47,11 @@ module('Integration | ORM | Has Many | Many-to-many Polymorphic | create', funct
 
     post.reload();
 
-    assert.deepEqual(user.commentableIds, [ { type: 'post', id: post.id } ]);
-    assert.deepEqual(post.userIds, [ user.id ], 'the inverse was set');
-    assert.deepEqual(user.attrs.commentableIds, [ { type: 'post', id: post.id } ]);
-    assert.deepEqual(post.attrs.userIds, [ user.id ], 'the inverse was set');
-    assert.equal(this.helper.db.users.length, 1);
-    assert.equal(this.helper.db.posts.length, 1);
+    expect(user.commentableIds).toEqual([ { type: 'post', id: post.id } ]);
+    expect(post.userIds).toEqual([ user.id ]);
+    expect(user.attrs.commentableIds).toEqual([ { type: 'post', id: post.id } ]);
+    expect(post.attrs.userIds).toEqual([ user.id ]);
+    expect(this.helper.db.users.length).toEqual(1);
+    expect(this.helper.db.posts.length).toEqual(1);
   });
 });

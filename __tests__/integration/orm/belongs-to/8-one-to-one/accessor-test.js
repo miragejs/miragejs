@@ -11,22 +11,22 @@ module('Integration | ORM | Belongs To | One To One | accessor', function(hooks)
   */
   states.forEach((state) => {
 
-    test(`the references of a ${state} are correct`, function(assert) {
+    test(`the references of a ${state} are correct`, assert => {
       let [ user, profile ] = this.helper[state]();
 
       // We use .attrs here because otherwise deepEqual goes on infinite recursive comparison
       if (profile) {
-        assert.deepEqual(user.profile.attrs, profile.attrs, 'the model reference is correct');
-        assert.equal(user.profileId, profile.id, 'the modelId reference is correct');
+        expect(user.profile.attrs).toEqual(profile.attrs);
+        expect(user.profileId).toEqual(profile.id);
       } else {
-        assert.deepEqual(user.profile, null, 'the model reference is correct');
-        assert.equal(user.profileId, null, 'the modelId reference is correct');
+        expect(user.profile).toEqual(null);
+        expect(user.profileId).toEqual(null);
       }
 
       // If there's a profile in this state, make sure the inverse association is correct
       if (profile) {
-        assert.deepEqual(profile.user.attrs, user.attrs, 'the inverse model reference is correct');
-        assert.equal(profile.userId, user.id, 'the inverse modelId reference is correct');
+        expect(profile.user.attrs).toEqual(user.attrs);
+        expect(profile.userId).toEqual(user.id);
       }
     });
 

@@ -11,28 +11,28 @@ module('Integration | ORM | Has Many | Reflexive | association #create', functio
   */
   states.forEach((state) => {
 
-    test(`a ${state} can create an associated child`, function(assert) {
+    test(`a ${state} can create an associated child`, assert => {
       let [ tag ] = this.helper[state]();
       let initialCount = tag.tags.models.length;
 
       let orangeTag = tag.createTag({ name: 'Orange' });
       let blueTag = tag.createTag({ name: 'Blue' });
 
-      assert.ok(orangeTag.id, 'the child was persisted');
-      assert.ok(blueTag.id, 'the child was persisted');
-      assert.equal(tag.tags.models.length, initialCount + 2, 'the collection size was increased');
-      assert.ok(tag.tags.includes(orangeTag), 'the model was added to tag.tags');
-      assert.ok(tag.tags.includes(blueTag), 'the model was added to tag.tags');
-      assert.ok(tag.tagIds.indexOf(orangeTag.id) > -1, 'the id was added to the fks array');
-      assert.ok(tag.tagIds.indexOf(blueTag.id) > -1, 'the id was added to the fks array');
-      assert.ok(tag.attrs.tagIds.indexOf(orangeTag.id) > -1, 'fks were persisted');
-      assert.ok(tag.attrs.tagIds.indexOf(blueTag.id) > -1, 'fks were persisted');
+      expect(orangeTag.id).toBeTruthy();
+      expect(blueTag.id).toBeTruthy();
+      expect(tag.tags.models.length).toEqual(initialCount + 2);
+      expect(tag.tags.includes(orangeTag)).toBeTruthy();
+      expect(tag.tags.includes(blueTag)).toBeTruthy();
+      expect(tag.tagIds.indexOf(orangeTag.id) > -1).toBeTruthy();
+      expect(tag.tagIds.indexOf(blueTag.id) > -1).toBeTruthy();
+      expect(tag.attrs.tagIds.indexOf(orangeTag.id) > -1).toBeTruthy();
+      expect(tag.attrs.tagIds.indexOf(blueTag.id) > -1).toBeTruthy();
 
       // Check the inverse
-      assert.equal(orangeTag.tags.models.length, 1);
-      assert.ok(orangeTag.tags.includes(tag), 'the inverse was set');
-      assert.equal(blueTag.tags.models.length, 1);
-      assert.ok(blueTag.tags.includes(tag), 'the inverse was set');
+      expect(orangeTag.tags.models.length).toEqual(1);
+      expect(orangeTag.tags.includes(tag)).toBeTruthy();
+      expect(blueTag.tags.models.length).toEqual(1);
+      expect(blueTag.tags.includes(tag)).toBeTruthy();
     });
 
   });

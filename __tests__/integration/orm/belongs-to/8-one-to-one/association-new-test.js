@@ -12,21 +12,21 @@ module('Integration | ORM | Belongs To | One To One | association #new', functio
 
   states.forEach((state) => {
 
-    test(`a ${state} can build a new associated parent`, function(assert) {
+    test(`a ${state} can build a new associated parent`, assert => {
       let [ user ] = this.helper[state]();
 
       let profile = user.newProfile({ age: 300 });
 
-      assert.ok(!profile.id, 'the parent was not persisted');
-      assert.deepEqual(user.profile, profile);
-      assert.equal(user.profileId, null);
-      assert.deepEqual(profile.user, user, 'the inverse was set');
-      assert.equal(profile.userId, user.id);
+      expect(!profile.id).toBeTruthy();
+      expect(user.profile).toEqual(profile);
+      expect(user.profileId).toEqual(null);
+      expect(profile.user).toEqual(user);
+      expect(profile.userId).toEqual(user.id);
 
       user.save();
 
-      assert.ok(profile.id, 'saving the child persists the parent');
-      assert.equal(user.profileId, profile.id, 'the childs fk was updated');
+      expect(profile.id).toBeTruthy();
+      expect(user.profileId).toEqual(profile.id);
     });
 
   });

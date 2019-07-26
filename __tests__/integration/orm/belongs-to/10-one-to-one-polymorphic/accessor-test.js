@@ -11,22 +11,22 @@ module('Integration | ORM | Belongs To | One-to-one Polymorphic | accessor', fun
   */
   states.forEach((state) => {
 
-    test(`the references of a ${state} are correct`, function(assert) {
+    test(`the references of a ${state} are correct`, assert => {
       let [ comment, post ] = this.helper[state]();
 
       // We use .attrs here because otherwise deepEqual goes on infinite recursive comparison
       if (post) {
-        assert.deepEqual(comment.commentable.attrs, post.attrs, 'the model reference is correct');
-        assert.deepEqual(comment.commentableId, { type: 'post', id: post.id }, 'the modelId reference is correct');
+        expect(comment.commentable.attrs).toEqual(post.attrs);
+        expect(comment.commentableId).toEqual({ type: 'post', id: post.id });
       } else {
-        assert.deepEqual(comment.commentable, null, 'the model reference is correct');
-        assert.equal(comment.commentableId, null, 'the modelId reference is correct');
+        expect(comment.commentable).toEqual(null);
+        expect(comment.commentableId).toEqual(null);
       }
 
       // If there's a post in this state, make sure the inverse association is correct
       if (post) {
-        assert.deepEqual(post.comment.attrs, comment.attrs, 'the inverse model reference is correct');
-        assert.equal(post.commentId, comment.id, 'the inverse modelId reference is correct');
+        expect(post.comment.attrs).toEqual(comment.attrs);
+        expect(post.commentId).toEqual(comment.id);
       }
     });
 

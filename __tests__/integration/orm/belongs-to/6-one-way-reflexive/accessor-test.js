@@ -11,16 +11,16 @@ module('Integration | ORM | Belongs To | One-Way Reflexive | accessor', function
   */
   states.forEach((state) => {
 
-    test(`the references of a ${state} are correct`, function(assert) {
+    test(`the references of a ${state} are correct`, assert => {
       let [ user, parent ] = this.helper[state]();
 
       // We use .attrs here to avoid infinite recursion
       if (parent) {
-        assert.deepEqual(user.user.attrs, parent.attrs, 'the model reference is correct');
-        assert.equal(user.userId, parent.id, 'the modelId reference is correct');
+        expect(user.user.attrs).toEqual(parent.attrs);
+        expect(user.userId).toEqual(parent.id);
       } else {
-        assert.deepEqual(user.user, null, 'the model reference is correct');
-        assert.equal(user.userId, null, 'the modelId reference is correct');
+        expect(user.user).toEqual(null);
+        expect(user.userId).toEqual(null);
       }
     });
 
