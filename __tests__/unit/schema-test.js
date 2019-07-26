@@ -15,7 +15,7 @@ describe('Unit | Schema', function() {
   test('it cannot be instantiated without a db', () => {
     expect(function() {
       new Schema();
-    }).toThrow();
+    }).toThrow('A schema requires a db');
   });
 
   test('modelFor returns model for given type if registered', () => {

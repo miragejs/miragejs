@@ -10,7 +10,7 @@ describe('Unit | Collection', function() {
   test('it cannot be instantiated without a modelName', () => {
     expect(() => {
       new Collection();
-    }).toThrow();
+    }).toThrow(/must pass a `modelName`/);
   });
 
   test('it knows its modelname', () => {

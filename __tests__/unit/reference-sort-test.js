@@ -18,7 +18,7 @@ describe('mirage:reference-sort', function() {
         ['propA', 'propB'],
         ['propB', 'propA']
       ]);
-    }).toThrow();
+    }).toThrow('Cyclic dependency in properties ["propB","propA"]');
 
   });
 

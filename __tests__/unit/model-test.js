@@ -9,13 +9,13 @@ describe('Unit | Model', function() {
   test('it cannot be instantiated without a schema', () => {
     expect(function() {
       new Model();
-    }).toThrow();
+    }).toThrow('A model requires a schema');
   });
 
   test('it cannot be instantiated without a modelName', () => {
     expect(function() {
       new Model({});
-    }).toThrow();
+    }).toThrow('A model requires a modelName');
   });
 
   test('findBelongsToAssociation returns association for given type if defined', () => {

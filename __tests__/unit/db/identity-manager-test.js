@@ -30,7 +30,7 @@ describe('Unit | Db | IdentityManager', function() {
 
     expect(function() {
       manager.set('abc');
-    }).toThrow();
+    }).toThrow('Attempting to use the ID abc, but it\'s already been used');
   });
 
   test(`a numerical value passed into set affects future ids used by fetch`, () => {
