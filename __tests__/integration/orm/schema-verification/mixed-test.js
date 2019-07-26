@@ -5,7 +5,6 @@ import {
   _Db as Db,
   _ormSchema as Schema
 } from "@miragejs/server";
-import { module, test } from "qunit";
 
 describe("Integration | ORM | Schema Verification | Mixed", function() {
   test("unnamed one-to-many associations are correct", assert => {

@@ -1,5 +1,4 @@
 import Helper, { states } from "./_helper";
-import { module, test } from "qunit";
 
 describe("Integration | ORM | Belongs To | One-Way Reflexive | association #setId", function(hooks) {
   hooks.beforeEach(function() {

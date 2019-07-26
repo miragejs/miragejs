@@ -1,5 +1,4 @@
 import Helper from "./_helper";
-import { module, test } from "qunit";
 
 describe("Integration | ORM | Has Many | Many-to-many Polymorphic | create", function(hooks) {
   hooks.beforeEach(function() {

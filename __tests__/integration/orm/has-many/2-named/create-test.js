@@ -1,6 +1,5 @@
 import Helper from "./_helper";
 import { Model } from "@miragejs/server";
-import { module, test } from "qunit";
 
 describe("Integration | ORM | Has Many | Named | create", function(hooks) {
   hooks.beforeEach(function() {

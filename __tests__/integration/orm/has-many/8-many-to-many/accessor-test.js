@@ -1,5 +1,4 @@
 import Helper, { states } from "./_helper";
-import { module, test } from "qunit";
 
 describe("Integration | ORM | Has Many | Many to Many | accessor", function(hooks) {
   hooks.beforeEach(function() {

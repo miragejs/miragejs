@@ -1,4 +1,3 @@
-import { module, test } from "qunit";
 import {
   Model,
   hasMany,

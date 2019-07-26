@@ -1,5 +1,4 @@
 import Helper from "./_helper";
-import { module, test } from "qunit";
 
 describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | new", function(hooks) {
   hooks.beforeEach(function() {

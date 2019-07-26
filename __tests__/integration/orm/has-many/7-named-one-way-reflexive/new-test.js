@@ -1,5 +1,4 @@
 import Helper from "./_helper";
-import { module, test } from "qunit";
 
 describe("Integration | ORM | Has Many | Named One-Way Reflexive | new", function(hooks) {
   hooks.beforeEach(function() {

@@ -4,7 +4,6 @@ import {
   _ormSchema as Schema,
   _Db as Db
 } from "@miragejs/server";
-import { module, test } from "qunit";
 
 describe("Integration | ORM | Schema Verification | Belongs To", function() {
   test("a one-way belongsTo association is correct", assert => {

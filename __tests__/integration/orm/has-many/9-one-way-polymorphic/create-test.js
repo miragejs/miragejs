@@ -1,6 +1,5 @@
 import Helper from "./_helper";
 import { Model } from "@miragejs/server";
-import { module, test } from "qunit";
 
 describe("Integration | ORM | Has Many | One-way Polymorphic | create", function(hooks) {
   hooks.beforeEach(function() {

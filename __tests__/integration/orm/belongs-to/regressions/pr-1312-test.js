@@ -5,7 +5,6 @@ import {
   _ormSchema as Schema,
   _Db as Db
 } from "@miragejs/server";
-import { module, test } from "qunit";
 
 describe("Integration | ORM | Belongs To | Regressions | pr-1312", function() {
   test(`creating and using a record with a polymorphic hasMany and explicit inverse does not fail when accessing the association`, assert => {
