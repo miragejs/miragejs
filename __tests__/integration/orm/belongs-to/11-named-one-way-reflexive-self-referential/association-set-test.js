@@ -1,7 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Named one-way reflexive self referential | association #set", () => {
-  let helper; beforeEach(() => {
+  let helper;
+  beforeEach(() => {
     helper = new Helper();
   });
 

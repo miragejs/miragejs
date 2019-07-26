@@ -1,7 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Named Reflexive | association #create", () => {
-  let helper; beforeEach(() => {
+  let helper;
+  beforeEach(() => {
     helper = new Helper();
   });
 
@@ -17,9 +18,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive | association #create
       expect(ganon.id).toBeTruthy();
       expect(user.bestFriend.attrs).toEqual(ganon.attrs);
       expect(user.bestFriendId).toEqual(ganon.id);
-      expect(helper.schema.users.find(user.id).bestFriendId).toEqual(
-        ganon.id
-      );
+      expect(helper.schema.users.find(user.id).bestFriendId).toEqual(ganon.id);
     });
   });
 });

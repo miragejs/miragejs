@@ -1,7 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association #create", () => {
-  let helper; beforeEach(() => {
+  let helper;
+  beforeEach(() => {
     helper = new Helper();
   });
 
@@ -18,9 +19,10 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association 
       expect(comment.commentable.attrs).toEqual(post.attrs);
       expect(post.comment.attrs).toEqual(comment.attrs);
       expect(comment.commentableId).toEqual({ type: "post", id: post.id });
-      expect(
-        helper.schema.comments.find(comment.id).commentableId
-      ).toEqual({ type: "post", id: post.id });
+      expect(helper.schema.comments.find(comment.id).commentableId).toEqual({
+        type: "post",
+        id: post.id
+      });
     });
   });
 });

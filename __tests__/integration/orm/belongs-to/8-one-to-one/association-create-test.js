@@ -1,7 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | One To One | association #create", () => {
-  let helper; beforeEach(() => {
+  let helper;
+  beforeEach(() => {
     helper = new Helper();
   });
 
@@ -18,9 +19,7 @@ describe("Integration | ORM | Belongs To | One To One | association #create", ()
       expect(user.profile.attrs).toEqual(profile.attrs);
       expect(profile.user.attrs).toEqual(user.attrs);
       expect(user.profileId).toEqual(profile.id);
-      expect(helper.schema.users.find(user.id).profileId).toEqual(
-        profile.id
-      );
+      expect(helper.schema.users.find(user.id).profileId).toEqual(profile.id);
     });
   });
 });

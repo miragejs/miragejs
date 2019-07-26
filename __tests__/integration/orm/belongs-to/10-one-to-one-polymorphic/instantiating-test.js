@@ -1,7 +1,8 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Belongs To | One-to-one Polymorphic | instantiating", () => {
-  let helper; beforeEach(() => {
+  let helper;
+  beforeEach(() => {
     helper = new Helper();
     this.schema = helper.schema;
   });
