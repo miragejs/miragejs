@@ -27,8 +27,8 @@ describe("Integration | ORM | Belongs To | Named Reflexive | association #setId"
 
       user.bestFriendId = null;
 
-      expect(user.bestFriendId).toBeNull();
-      expect(user.bestFriend).toBeNull();
+      expect(user.bestFriendId).toBeNil();
+      expect(user.bestFriend).toBeNil();
     });
   });
 });

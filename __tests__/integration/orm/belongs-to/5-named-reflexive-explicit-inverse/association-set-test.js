@@ -26,7 +26,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | as
 
       user.bestFriend = friend;
 
-      expect(user.bestFriendId).toBeNull();
+      expect(user.bestFriendId).toBeNil();
       expect(user.bestFriend.attrs).toEqual(friend.attrs);
     });
 
@@ -35,8 +35,8 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | as
 
       user.bestFriend = null;
 
-      expect(user.bestFriendId).toBeNull();
-      expect(user.bestFriend).toBeNull();
+      expect(user.bestFriendId).toBeNil();
+      expect(user.bestFriend).toBeNil();
     });
   });
 });

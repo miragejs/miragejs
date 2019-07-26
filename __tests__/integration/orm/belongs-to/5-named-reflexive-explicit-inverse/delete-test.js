@@ -15,8 +15,8 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | de
         user.reload();
       }
 
-      expect(user.bestFriendId).toBeNull();
-      expect(user.bestFriend).toBeNull();
+      expect(user.bestFriendId).toBeNil();
+      expect(user.bestFriend).toBeNil();
     });
   });
 });

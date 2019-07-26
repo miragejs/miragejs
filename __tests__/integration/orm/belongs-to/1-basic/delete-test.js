@@ -15,8 +15,8 @@ describe("Integration | ORM | Belongs To | Basic | delete", () => {
         post.reload();
       }
 
-      expect(post.authorId).toBeNull();
-      expect(post.author).toBeNull();
+      expect(post.authorId).toBeNil();
+      expect(post.author).toBeNil();
     });
   });
 });

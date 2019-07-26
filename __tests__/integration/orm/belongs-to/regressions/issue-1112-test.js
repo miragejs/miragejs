@@ -1,10 +1,7 @@
-import {
-  Model,
-  belongsTo,
-  hasMany,
-  _ormSchema as Schema,
-  _Db as Db
-} from "@miragejs/server";
+import "@lib/container";
+import Db from "@lib/db";
+import Schema from "@lib/orm/schema";
+import { Model, belongsTo, hasMany } from "@miragejs/server";
 
 describe("Integration | ORM | Belongs To | Regressions | Issue 1112", function() {
   test(`deleting a record with a polymorphic belongsTo doesn't interfere with other dependents`, () => {

@@ -28,7 +28,7 @@ describe("Integration | ORM | Belongs To | One To One | association #set", () =>
 
       user.profile = profile;
 
-      expect(user.profileId).toBeNull();
+      expect(user.profileId).toBeNil();
       expect(user.profile.attrs).toEqual(profile.attrs);
 
       expect(profile.userId).toEqual(user.id);
@@ -40,8 +40,8 @@ describe("Integration | ORM | Belongs To | One To One | association #set", () =>
 
       user.profile = null;
 
-      expect(user.profileId).toBeNull();
-      expect(user.profile).toBeNull();
+      expect(user.profileId).toBeNil();
+      expect(user.profile).toBeNil();
     });
   });
 });

@@ -18,7 +18,7 @@ describe("Integration | ORM | Belongs To | One To One | association #new", () =>
 
       expect(!profile.id).toBeTruthy();
       expect(user.profile).toEqual(profile);
-      expect(user.profileId).toBeNull();
+      expect(user.profileId).toBeNil();
       expect(profile.user).toEqual(user);
       expect(profile.userId).toEqual(user.id);
 

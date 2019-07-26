@@ -33,8 +33,8 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association 
 
       comment.commentableId = null;
 
-      expect(comment.commentableId).toBeNull();
-      expect(comment.commentable).toBeNull();
+      expect(comment.commentableId).toBeNil();
+      expect(comment.commentable).toBeNil();
     });
   });
 });

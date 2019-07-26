@@ -1,15 +1,16 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Belongs To | Named Reflexive | instantiating", () => {
-  let helper;
+  let helper, schema;
+
   beforeEach(() => {
     helper = new Helper();
-    this.schema = helper.schema;
+    schema = helper.schema;
   });
 
   test("the child accepts a saved parent id", () => {
     let friend = helper.savedParent();
-    let user = this.schema.users.new({ bestFriendId: friend.id });
+    let user = schema.users.new({ bestFriendId: friend.id });
 
     expect(user.bestFriendId).toEqual(friend.id);
     expect(user.bestFriend.attrs).toEqual(friend.attrs);
@@ -18,47 +19,47 @@ describe("Integration | ORM | Belongs To | Named Reflexive | instantiating", () 
 
   test("the child errors if the parent id doesnt exist", () => {
     expect(function() {
-      this.schema.users.new({ bestFriendId: 2 });
+      schema.users.new({ bestFriendId: 2 });
     }).toThrow();
   });
 
   test("the child accepts a null parent id", () => {
-    let user = this.schema.users.new({ bestFriendId: null });
+    let user = schema.users.new({ bestFriendId: null });
 
-    expect(user.bestFriendId).toBeNull();
-    expect(user.bestFriend).toBeNull();
+    expect(user.bestFriendId).toBeNil();
+    expect(user.bestFriend).toBeNil();
     expect(user.attrs).toEqual({ bestFriendId: null });
   });
 
   test("the child accepts a saved parent model", () => {
     let friend = helper.savedParent();
-    let user = this.schema.users.new({ bestFriend: friend });
+    let user = schema.users.new({ bestFriend: friend });
 
-    expect(user.bestFriendId).toEqual(1);
+    expect(user.bestFriendId).toEqual("1");
     expect(user.bestFriend.attrs).toEqual(friend.attrs);
     expect(user.attrs).toEqual({ bestFriendId: null }); // this would update when saved
   });
 
   test("the child accepts a new parent model", () => {
-    let zelda = this.schema.users.new({ name: "Zelda" });
-    let user = this.schema.users.new({ bestFriend: zelda });
+    let zelda = schema.users.new({ name: "Zelda" });
+    let user = schema.users.new({ bestFriend: zelda });
 
-    expect(user.bestFriendId).toBeNull();
+    expect(user.bestFriendId).toBeNil();
     expect(user.bestFriend).toEqual(zelda);
     expect(user.attrs).toEqual({ bestFriendId: null });
   });
 
   test("the child accepts a null parent model", () => {
-    let user = this.schema.users.new({ bestFriend: null });
+    let user = schema.users.new({ bestFriend: null });
 
-    expect(user.bestFriendId).toBeNull();
-    expect(user.bestFriend).toBeNull();
+    expect(user.bestFriendId).toBeNil();
+    expect(user.bestFriend).toBeNil();
     expect(user.attrs).toEqual({ bestFriendId: null });
   });
 
   test("the child accepts a parent model and id", () => {
     let friend = helper.savedParent();
-    let user = this.schema.users.new({
+    let user = schema.users.new({
       bestFriend: friend,
       bestFriendId: friend.id
     });
@@ -69,18 +70,18 @@ describe("Integration | ORM | Belongs To | Named Reflexive | instantiating", () 
   });
 
   test("the child accepts no reference to a parent id or model as empty obj", () => {
-    let user = this.schema.users.new({});
+    let user = schema.users.new({});
 
-    expect(user.bestFriendId).toBeNull();
-    expect(user.bestFriend).toBeNull();
+    expect(user.bestFriendId).toBeNil();
+    expect(user.bestFriend).toBeNil();
     expect(user.attrs).toEqual({ bestFriendId: null });
   });
 
   test("the child accepts no reference to a parent id or model", () => {
-    let user = this.schema.users.new();
+    let user = schema.users.new();
 
-    expect(user.bestFriendId).toBeNull();
-    expect(user.bestFriend).toBeNull();
+    expect(user.bestFriendId).toBeNil();
+    expect(user.bestFriend).toBeNil();
     expect(user.attrs).toEqual({ bestFriendId: null });
   });
 });

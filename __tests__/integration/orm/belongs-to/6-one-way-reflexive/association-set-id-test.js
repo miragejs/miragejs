@@ -27,8 +27,8 @@ describe("Integration | ORM | Belongs To | One-Way Reflexive | association #setI
 
       child.userId = null;
 
-      expect(child.userId).toBeNull();
-      expect(child.user).toBeNull();
+      expect(child.userId).toBeNil();
+      expect(child.user).toBeNil();
     });
   });
 });

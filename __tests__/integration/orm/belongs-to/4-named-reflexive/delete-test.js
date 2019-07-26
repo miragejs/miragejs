@@ -15,8 +15,8 @@ describe("Integration | ORM | Belongs To | Named Reflexive | delete", () => {
         user.reload();
       }
 
-      expect(user.bestFriendId).toBeNull();
-      expect(user.bestFriend).toBeNull();
+      expect(user.bestFriendId).toBeNil();
+      expect(user.bestFriend).toBeNil();
     });
   });
 });

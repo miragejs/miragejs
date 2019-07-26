@@ -15,8 +15,8 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | delete", () 
         comment.reload();
       }
 
-      expect(comment.commentableId).toBeNull();
-      expect(comment.commentable).toBeNull();
+      expect(comment.commentableId).toBeNil();
+      expect(comment.commentable).toBeNil();
     });
   });
 });

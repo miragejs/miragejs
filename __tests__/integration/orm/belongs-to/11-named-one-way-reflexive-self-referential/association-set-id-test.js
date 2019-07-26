@@ -32,13 +32,13 @@ describe("Integration | ORM | Belongs To | Named one-way reflexive self referent
 
       user.representativeId = null;
 
-      expect(user.representativeId).toBeNull();
-      expect(user.representative).toBeNull();
+      expect(user.representativeId).toBeNil();
+      expect(user.representative).toBeNil();
 
       user.save();
 
-      expect(user.representativeId).toBeNull();
-      expect(user.representative).toBeNull();
+      expect(user.representativeId).toBeNil();
+      expect(user.representative).toBeNil();
     });
   });
 });

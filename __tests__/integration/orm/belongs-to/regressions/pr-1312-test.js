@@ -1,10 +1,7 @@
-import {
-  Model,
-  belongsTo,
-  hasMany,
-  _ormSchema as Schema,
-  _Db as Db
-} from "@miragejs/server";
+import "@lib/container";
+import Db from "@lib/db";
+import Schema from "@lib/orm/schema";
+import { Model, belongsTo, hasMany } from "@miragejs/server";
 
 describe("Integration | ORM | Belongs To | Regressions | pr-1312", function() {
   test(`creating and using a record with a polymorphic hasMany and explicit inverse does not fail when accessing the association`, () => {

@@ -15,8 +15,8 @@ describe("Integration | ORM | Belongs To | Named One-Way Reflexive | delete", ()
         user.reload();
       }
 
-      expect(user.parentId).toBeNull();
-      expect(user.parent).toBeNull();
+      expect(user.parentId).toBeNil();
+      expect(user.parent).toBeNil();
     });
   });
 });

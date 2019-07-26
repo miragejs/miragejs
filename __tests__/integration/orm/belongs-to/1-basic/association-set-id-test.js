@@ -27,8 +27,8 @@ describe("Integration | ORM | Belongs To | Basic | association #setId", () => {
 
       post.authorId = null;
 
-      expect(post.authorId).toBeNull();
-      expect(post.author).toBeNull();
+      expect(post.authorId).toBeNil();
+      expect(post.author).toBeNil();
     });
   });
 });

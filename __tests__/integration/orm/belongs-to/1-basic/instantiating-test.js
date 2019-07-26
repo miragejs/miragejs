@@ -26,8 +26,8 @@ describe("Integration | ORM | Belongs To | Basic | instantiating", () => {
   test("the child accepts a null parent id", () => {
     let post = schema.posts.new({ authorId: null });
 
-    expect(post.authorId).toBeNull();
-    expect(post.author).toBeNull();
+    expect(post.authorId).toBeNil();
+    expect(post.author).toBeNil();
     expect(post.attrs).toEqual({ authorId: null });
   });
 
@@ -51,8 +51,8 @@ describe("Integration | ORM | Belongs To | Basic | instantiating", () => {
   test("the child accepts a null parent model", () => {
     let post = schema.posts.new({ author: null });
 
-    expect(post.authorId).toBeNull();
-    expect(post.author).toBeNull();
+    expect(post.authorId).toBeNil();
+    expect(post.author).toBeNil();
     expect(post.attrs).toEqual({ authorId: null });
   });
 
@@ -68,16 +68,16 @@ describe("Integration | ORM | Belongs To | Basic | instantiating", () => {
   test("the child accepts no reference to a parent id or model as empty obj", () => {
     let post = schema.posts.new({});
 
-    expect(post.authorId).toBeNull();
-    expect(post.author).toBeNull();
+    expect(post.authorId).toBeNil();
+    expect(post.author).toBeNil();
     expect(post.attrs).toEqual({ authorId: null });
   });
 
   test("the child accepts no reference to a parent id or model", () => {
     let post = schema.posts.new();
 
-    expect(post.authorId).toBeNull();
-    expect(post.author).toBeNull();
+    expect(post.authorId).toBeNil();
+    expect(post.author).toBeNil();
     expect(post.attrs).toEqual({ authorId: null });
   });
 });

@@ -18,8 +18,8 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | ac
         expect(user.bestFriend.attrs).toEqual(friend.attrs);
         expect(user.bestFriendId).toEqual(friend.id);
       } else {
-        expect(user.bestFriend).toBeNull();
-        expect(user.bestFriendId).toBeNull();
+        expect(user.bestFriend).toBeNil();
+        expect(user.bestFriendId).toBeNil();
       }
 
       // If there's a friend in this state, make sure the inverse association is correct
