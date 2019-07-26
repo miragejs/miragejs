@@ -1,25 +1,33 @@
-import Server from "ember-cli-mirage/server";
-import promiseAjax from "../helpers/promise-ajax";
+import { Server } from "@miragejs/server";
 
 describe("Integration | Passthrough", () => {
-  let server;
+  let server, originalError;
+
   beforeEach(() => {
     server = new Server({
       environment: "development"
     });
     server.timing = 0;
     server.logging = false;
+
+    /*
+      Waiting to hear back on this:
+
+        https://stackoverflow.com/questions/57227095/how-can-i-catch-or-suppress-a-rejected-network-request-from-jest
+
+      For now, suppress console error messages
+    */
+    originalError = console.error;
+    console.error = () => {};
   });
 
   afterEach(function() {
     server.shutdown();
+    console.error = originalError;
   });
 
-  test("it can passthrough individual paths", () => {
+  test("it can passthrough individual paths", async () => {
     expect.assertions(2);
-    let done1 = assert.async();
-    let done2 = assert.async();
-    let { server } = this;
 
     server.loadConfig(function() {
       this.get("/contacts", function() {
@@ -28,29 +36,15 @@ describe("Integration | Passthrough", () => {
       this.passthrough("/addresses");
     });
 
-    promiseAjax({
-      method: "GET",
-      url: "/contacts"
-    }).then(response => {
-      expect(response.data).toEqual(123);
-      done1();
-    });
+    let res = await fetch("/contacts");
+    let data = await res.json();
+    expect(data).toEqual(123);
 
-    promiseAjax({
-      method: "GET",
-      url: "/addresses"
-    }).catch(error => {
-      expect(error.xhr.status).toEqual(404);
-      done2();
-    });
+    await expect(fetch("/addresses")).rejects.toThrow(`Network request failed`);
   });
 
-  test("it can passthrough certain verbs for individual paths", () => {
-    assert.expect(3);
-    let done1 = assert.async();
-    let done2 = assert.async();
-    let done3 = assert.async();
-    let { server } = this;
+  test("it can passthrough certain verbs for individual paths", async () => {
+    expect.assertions(3);
 
     server.loadConfig(function() {
       this.get("/contacts", function() {
@@ -58,60 +52,37 @@ describe("Integration | Passthrough", () => {
       });
       this.passthrough("/addresses", ["post"]);
     });
-    server.pretender.unhandledRequest = function(/* verb, path */) {
-      expect(true).toBeTruthy();
-      done2();
-    };
 
-    promiseAjax({
-      method: "GET",
-      url: "/contacts"
-    }).then(response => {
-      expect(response.data).toEqual(123);
-      done1();
-    });
+    let res = await fetch("/contacts");
+    let data = await res.json();
+    expect(data).toEqual(123);
 
-    promiseAjax({
-      method: "GET",
-      url: "/addresses"
-    });
+    await expect(fetch("/addresses")).rejects.toThrow(
+      `Mirage: Your Ember app tried to GET '/addresses', but there was no route defined to handle this request`
+    );
 
-    promiseAjax({
-      method: "POST",
-      url: "/addresses"
-    }).catch(error => {
-      expect(error.xhr.status).toEqual(404);
-      done3();
-    });
+    await expect(fetch("/addresses", { method: "POST" })).rejects.toThrow(
+      `Network request failed`
+    );
   });
 
-  test("it can passthrough all verbs by default", () => {
+  test("it can passthrough all verbs by default", async () => {
     let verbs = ["GET", "HEAD", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"];
-    assert.expect(verbs.length);
-
-    let done = verbs.map(() => assert.async());
-    let { server } = this;
+    expect.assertions(7);
 
     server.loadConfig(function() {
       this.passthrough("/addresses");
     });
 
-    verbs.forEach((verb, index) => {
-      promiseAjax({
-        method: verb,
-        url: "/addresses"
-      }).catch(error => {
-        expect(error.xhr.status).toEqual(404);
-        done[index]();
-      });
-    });
+    for (let method of verbs) {
+      await expect(fetch("/addresses", { method })).rejects.toThrow(
+        "Network request failed"
+      );
+    }
   });
 
-  test("it can passthrough multiple paths in a single call", () => {
+  test("it can passthrough multiple paths in a single call", async () => {
     expect.assertions(2);
-    let done1 = assert.async();
-    let done2 = assert.async();
-    let { server } = this;
 
     server.loadConfig(function() {
       this.get("/contacts", function() {
@@ -120,56 +91,26 @@ describe("Integration | Passthrough", () => {
       this.passthrough("/contacts", "/addresses");
     });
 
-    promiseAjax({
-      method: "GET",
-      url: "/contacts"
-    }).catch(error => {
-      expect(error.xhr.status).toEqual(404);
-      done1();
-    });
-
-    promiseAjax({
-      method: "POST",
-      url: "/addresses"
-    }).catch(error => {
-      expect(error.xhr.status).toEqual(404);
-      done2();
-    });
+    await expect(fetch("/contacts")).rejects.toThrow("Network request failed");
+    await expect(fetch("/addresses")).rejects.toThrow("Network request failed");
   });
 
-  test("user can call passthrough multiple times", () => {
+  test("user can call passthrough multiple times", async () => {
     expect.assertions(2);
-    let done1 = assert.async();
-    let done2 = assert.async();
-    let { server } = this;
 
     server.loadConfig(function() {
       this.passthrough("/contacts");
       this.passthrough("/addresses", ["post"]);
     });
 
-    promiseAjax({
-      method: "GET",
-      url: "/contacts"
-    }).catch(error => {
-      expect(error.xhr.status).toEqual(404);
-      done1();
-    });
-
-    promiseAjax({
-      method: "POST",
-      url: "/addresses"
-    }).catch(error => {
-      expect(error.xhr.status).toEqual(404);
-      done2();
-    });
+    await expect(fetch("/contacts")).rejects.toThrow("Network request failed");
+    await expect(fetch("/addresses", { method: "POST" })).rejects.toThrow(
+      "Network request failed"
+    );
   });
 
-  test("passthrough without args allows all paths on the current domain to passthrough", () => {
+  test("passthrough without args allows all paths on the current domain to passthrough", async () => {
     expect.assertions(2);
-    let done1 = assert.async();
-    let done2 = assert.async();
-    let { server } = this;
 
     server.loadConfig(function() {
       this.get("/contacts", function() {
@@ -178,28 +119,15 @@ describe("Integration | Passthrough", () => {
       this.passthrough();
     });
 
-    promiseAjax({
-      method: "GET",
-      url: "/contacts"
-    }).then(response => {
-      expect(response.data).toEqual(123);
-      done1();
-    });
+    let res = await fetch("/contacts");
+    let data = await res.json();
+    expect(data).toEqual(123);
 
-    promiseAjax({
-      method: "GET",
-      url: "/addresses"
-    }).catch(error => {
-      expect(error.xhr.status).toEqual(404);
-      done2();
-    });
+    await expect(fetch("/addresses")).rejects.toThrow("Network request failed");
   });
 
-  test("passthrough without args allows index route on current domain to passthrough", () => {
+  test("passthrough without args allows index route on current domain to passthrough", async () => {
     expect.assertions(2);
-    let done1 = assert.async();
-    let done2 = assert.async();
-    let { server } = this;
 
     server.loadConfig(function() {
       this.get("/contacts", function() {
@@ -208,44 +136,22 @@ describe("Integration | Passthrough", () => {
       this.passthrough();
     });
 
-    promiseAjax({
-      method: "GET",
-      url: "/contacts"
-    }).then(response => {
-      expect(response.data).toEqual(123);
-      done1(); // test will fail bc only 1 assertion, but we don't have to wait
-    });
+    let res = await fetch("/contacts");
+    let data = await res.json();
+    expect(data).toEqual(123);
 
-    promiseAjax({
-      method: "GET",
-      url: "/"
-    })
-      .then(response => {
-        // a passthrough request to index on the current domain
-        // actually succeeds here, since that's where the test runner is served
-        expect(response.data).toBeTruthy();
-        done2();
-      })
-      .catch(() => {
-        done2(); // test will fail bc only 1 assertion, but we don't have to wait
-      });
+    await expect(fetch("/")).rejects.toThrow("Network request failed");
   });
 
-  test("it can passthrough other-origin hosts", () => {
-    assert.expect(1);
-    let done1 = assert.async();
-    let { server } = this;
+  test("it can passthrough other-origin hosts", async () => {
+    expect.assertions(1);
 
     server.loadConfig(function() {
       this.passthrough("http://api.foo.bar/**");
     });
 
-    promiseAjax({
-      method: "GET",
-      url: "/addresses"
-    }).catch(error => {
-      expect(true).toBeTruthy();
-      done1();
-    });
+    await expect(fetch("http://api.foo.bar/addresses")).rejects.toThrow(
+      "Network request failed"
+    );
   });
 });
