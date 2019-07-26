@@ -1,4 +1,9 @@
-import { _ormSchema as Schema, _Db as Db, Model, Collection } from '@miragejs/server';
+import {
+  _ormSchema as Schema,
+  _Db as Db,
+  Model,
+  Collection
+} from "@miragejs/server";
 import { module, test } from "qunit";
 
 module("Integration | ORM | #all", function() {
@@ -14,7 +19,7 @@ module("Integration | ORM | #all", function() {
     let users = schema.users.all();
     expect(users instanceof Collection).toBeTruthy();
     expect(users.models[0] instanceof User).toBeTruthy();
-    expect(users.models.length).toEqual(2);
+    expect(users.models).toHaveLength(2);
     expect(users.models[1].attrs).toEqual({ id: "2", name: "Zelda" });
   });
 
@@ -30,6 +35,6 @@ module("Integration | ORM | #all", function() {
 
     expect(users instanceof Collection).toBeTruthy();
     expect(users.modelName).toEqual("user");
-    expect(users.models.length).toEqual(0);
+    expect(users.models).toHaveLength(0);
   });
 });
