@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Mixed | One To Many | association #set", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +11,8 @@ describe("Integration | ORM | Mixed | One To Many | association #set", () => {
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a list of saved children`, () => {
-      let [user, originalPosts] = this.helper[state]();
-      let savedPost = this.helper.savedChild();
+      let [user, originalPosts] = helper[state]();
+      let savedPost = helper.savedChild();
 
       user.posts = [savedPost];
 
@@ -23,14 +24,14 @@ describe("Integration | ORM | Mixed | One To Many | association #set", () => {
       originalPosts.forEach(post => {
         if (post.isSaved()) {
           post.reload();
-          expect(post.user).toEqual(null);
+          expect(post.user).toBeNull();
         }
       });
     });
 
     test(`a ${state} can update its association to a new parent`, () => {
-      let [user, originalPosts] = this.helper[state]();
-      let newPost = this.helper.newChild();
+      let [user, originalPosts] = helper[state]();
+      let newPost = helper.newChild();
 
       user.posts = [newPost];
 
@@ -42,43 +43,43 @@ describe("Integration | ORM | Mixed | One To Many | association #set", () => {
       originalPosts.forEach(post => {
         if (post.isSaved()) {
           post.reload();
-          expect(post.user).toEqual(null);
+          expect(post.user).toBeNull();
         }
       });
     });
 
     test(`a ${state} can clear its association via an empty list`, () => {
-      let [user, originalPosts] = this.helper[state]();
+      let [user, originalPosts] = helper[state]();
 
       user.posts = [];
 
       expect(user.postIds).toBeEmpty();
-      expect(user.posts.models.length).toEqual(0);
+      expect(user.posts.models).toHaveLength(0);
 
       user.save();
 
       originalPosts.forEach(post => {
         if (post.isSaved()) {
           post.reload();
-          expect(post.user).toEqual(null);
+          expect(post.user).toBeNull();
         }
       });
     });
 
     test(`a ${state} can clear its association via an empty list`, () => {
-      let [user, originalPosts] = this.helper[state]();
+      let [user, originalPosts] = helper[state]();
 
       user.posts = null;
 
       expect(user.postIds).toBeEmpty();
-      expect(user.posts.models.length).toEqual(0);
+      expect(user.posts.models).toHaveLength(0);
 
       user.save();
 
       originalPosts.forEach(post => {
         if (post.isSaved()) {
           post.reload();
-          expect(post.user).toEqual(null);
+          expect(post.user).toBeNull();
         }
       });
     });

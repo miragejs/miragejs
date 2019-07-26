@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Mixed | One To Many | association #setIds", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +11,8 @@ describe("Integration | ORM | Mixed | One To Many | association #setIds", () => 
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a saved parent via parentId`, () => {
-      let [user, originalPosts] = this.helper[state]();
-      let savedPost = this.helper.savedChild();
+      let [user, originalPosts] = helper[state]();
+      let savedPost = helper.savedChild();
 
       user.postIds = [savedPost.id];
 
@@ -29,13 +30,13 @@ describe("Integration | ORM | Mixed | One To Many | association #setIds", () => 
       originalPosts.forEach(post => {
         if (post.isSaved()) {
           post.reload();
-          expect(post.user).toEqual(null);
+          expect(post.user).toBeNull();
         }
       });
     });
 
     test(`a ${state} can clear its association via a null parentId`, () => {
-      let [user, originalPosts] = this.helper[state]();
+      let [user, originalPosts] = helper[state]();
 
       user.postIds = null;
 
@@ -48,7 +49,7 @@ describe("Integration | ORM | Mixed | One To Many | association #setIds", () => 
       originalPosts.forEach(post => {
         if (post.isSaved()) {
           post.reload();
-          expect(post.user).toEqual(null);
+          expect(post.user).toBeNull();
         }
       });
     });

@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Mixed | Many To One | association #setIds", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +11,8 @@ describe("Integration | ORM | Mixed | Many To One | association #setIds", () => 
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a saved parent via parentId`, () => {
-      let [post, originalUser] = this.helper[state]();
-      let user = this.helper.savedParent();
+      let [post, originalUser] = helper[state]();
+      let user = helper.savedParent();
 
       post.userId = user.id;
 
@@ -33,12 +34,12 @@ describe("Integration | ORM | Mixed | Many To One | association #setIds", () => 
     });
 
     test(`a ${state} can clear its association via a null parentId`, () => {
-      let [post, originalUser] = this.helper[state]();
+      let [post, originalUser] = helper[state]();
 
       post.userId = null;
 
-      expect(post.user).toEqual(null);
-      expect(post.userId).toEqual(null);
+      expect(post.user).toBeNull();
+      expect(post.userId).toBeNull();
 
       post.save();
 

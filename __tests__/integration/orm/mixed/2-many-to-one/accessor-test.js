@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Mixed | Many To One | accessor", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,13 +11,13 @@ describe("Integration | ORM | Mixed | Many To One | accessor", () => {
   */
   states.forEach(state => {
     test(`the references of a ${state} are correct`, () => {
-      let [post, user] = this.helper[state]();
+      let [post, user] = helper[state]();
 
       if (post.user) {
         expect(post.user.equals(user)).toBeTruthy();
       } else {
-        expect(post.user).toEqual(null);
-        expect(user).toEqual(null);
+        expect(post.user).toBeNull();
+        expect(user).toBeNull();
       }
       expect(post.userId).toEqual(user ? user.id : null);
 

@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Mixed | Many To One | association #create", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,7 +11,7 @@ describe("Integration | ORM | Mixed | Many To One | association #create", () => 
   */
   states.forEach(state => {
     test(`a ${state} can create an associated parent`, () => {
-      let [post, originalUser] = this.helper[state]();
+      let [post, originalUser] = helper[state]();
 
       let user = post.createUser({ name: "Zelda" });
 
