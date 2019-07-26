@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Basic | association #new", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -11,13 +12,13 @@ describe("Integration | ORM | Belongs To | Basic | association #new", () => {
 
   states.forEach(state => {
     test(`a ${state} can build a new associated parent`, () => {
-      let [post] = this.helper[state]();
+      let [post] = helper[state]();
 
       let ganon = post.newAuthor({ name: "Ganon" });
 
       expect(!ganon.id).toBeTruthy();
       expect(post.author).toEqual(ganon);
-      expect(post.authorId).toEqual(null);
+      expect(post.authorId).toBeNil();
 
       post.save();
 

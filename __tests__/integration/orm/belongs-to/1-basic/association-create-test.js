@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Basic | association #create", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,14 +11,14 @@ describe("Integration | ORM | Belongs To | Basic | association #create", () => {
   */
   states.forEach(state => {
     test(`a ${state} can create an associated parent`, () => {
-      let [post] = this.helper[state]();
+      let [post] = helper[state]();
 
       let ganon = post.createAuthor({ name: "Ganon" });
 
       expect(ganon.id).toBeTruthy();
       expect(post.author.attrs).toEqual(ganon.attrs);
       expect(post.authorId).toEqual(ganon.id);
-      expect(this.helper.schema.posts.find(post.id).authorId).toEqual(ganon.id);
+      expect(helper.schema.posts.find(post.id).authorId).toEqual(ganon.id);
     });
   });
 });

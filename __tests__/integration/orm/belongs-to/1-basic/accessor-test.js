@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Basic | accessor", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,7 +11,7 @@ describe("Integration | ORM | Belongs To | Basic | accessor", () => {
   */
   states.forEach(state => {
     test(`the references of a ${state} are correct`, () => {
-      let [post, author] = this.helper[state]();
+      let [post, author] = helper[state]();
 
       expect(post.author).toEqual(author ? author : null);
       expect(post.authorId).toEqual(author ? author.id : null);

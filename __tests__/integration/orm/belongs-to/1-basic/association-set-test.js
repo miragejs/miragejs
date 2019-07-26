@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Basic | association #set", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +11,8 @@ describe("Integration | ORM | Belongs To | Basic | association #set", () => {
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a saved parent`, () => {
-      let [post] = this.helper[state]();
-      let savedAuthor = this.helper.savedParent();
+      let [post] = helper[state]();
+      let savedAuthor = helper.savedParent();
 
       post.author = savedAuthor;
 
@@ -20,22 +21,22 @@ describe("Integration | ORM | Belongs To | Basic | association #set", () => {
     });
 
     test(`a ${state} can update its association to a new parent`, () => {
-      let [post] = this.helper[state]();
-      let newAuthor = this.helper.newParent();
+      let [post] = helper[state]();
+      let newAuthor = helper.newParent();
 
       post.author = newAuthor;
 
-      expect(post.authorId).toEqual(null);
+      expect(post.authorId).toBeNil();
       expect(post.author).toEqual(newAuthor);
     });
 
     test(`a ${state} can update its association to a null parent`, () => {
-      let [post] = this.helper[state]();
+      let [post] = helper[state]();
 
       post.author = null;
 
-      expect(post.authorId).toEqual(null);
-      expect(post.author).toEqual(null);
+      expect(post.authorId).toBeNil();
+      expect(post.author).toBeNil();
     });
   });
 });

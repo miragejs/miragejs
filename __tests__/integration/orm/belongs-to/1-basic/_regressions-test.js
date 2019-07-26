@@ -1,9 +1,7 @@
-import {
-  Model,
-  belongsTo,
-  _ormSchema as Schema,
-  _Db as Db
-} from "@miragejs/server";
+import "../../../../../lib/container";
+import Db from "../../../../../lib/db";
+import Schema from "../../../../../lib/orm/schema";
+import { Model, belongsTo } from "../../../../../lib/index";
 
 describe("Integration | ORM | Belongs To | Basic | regressions", function() {
   test("belongsTo accessors works when foreign key is present but falsy", () => {
