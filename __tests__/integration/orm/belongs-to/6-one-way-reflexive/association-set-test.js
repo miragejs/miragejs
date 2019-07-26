@@ -1,8 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | One-Way Reflexive | association #set", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
+  let helper; beforeEach(() => {
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +10,8 @@ describe("Integration | ORM | Belongs To | One-Way Reflexive | association #set"
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a saved parent`, () => {
-      let [child] = this.helper[state]();
-      let savedParent = this.helper.savedParent();
+      let [child] = helper[state]();
+      let savedParent = helper.savedParent();
 
       child.user = savedParent;
 
@@ -20,8 +20,8 @@ describe("Integration | ORM | Belongs To | One-Way Reflexive | association #set"
     });
 
     test(`a ${state} can update its association to a new parent`, () => {
-      let [child] = this.helper[state]();
-      let newParent = this.helper.newParent();
+      let [child] = helper[state]();
+      let newParent = helper.newParent();
 
       child.user = newParent;
 
@@ -30,7 +30,7 @@ describe("Integration | ORM | Belongs To | One-Way Reflexive | association #set"
     });
 
     test(`a ${state} can update its association to a null parent`, () => {
-      let [child] = this.helper[state]();
+      let [child] = helper[state]();
 
       child.user = null;
 

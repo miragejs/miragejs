@@ -1,8 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Named one-way reflexive self referential | association #set", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
+  let helper; beforeEach(() => {
+    helper = new Helper();
   });
 
   /*
@@ -10,7 +10,7 @@ describe("Integration | ORM | Belongs To | Named one-way reflexive self referent
   */
   states.forEach(state => {
     test(`a ${state} can update its association to itself`, () => {
-      let [user] = this.helper[state]();
+      let [user] = helper[state]();
 
       user.representative = user;
 
@@ -24,7 +24,7 @@ describe("Integration | ORM | Belongs To | Named one-way reflexive self referent
     });
 
     test(`a ${state} can update its association to a null parent`, () => {
-      let [user] = this.helper[state]();
+      let [user] = helper[state]();
 
       user.representative = null;
 

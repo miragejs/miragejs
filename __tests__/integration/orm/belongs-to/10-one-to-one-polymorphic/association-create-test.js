@@ -1,8 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association #create", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
+  let helper; beforeEach(() => {
+    helper = new Helper();
   });
 
   /*
@@ -10,7 +10,7 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association 
   */
   states.forEach(state => {
     test(`a ${state} can create an associated parent`, () => {
-      let [comment] = this.helper[state]();
+      let [comment] = helper[state]();
 
       let post = comment.createCommentable("post", { title: "Lorem" });
 
@@ -19,7 +19,7 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association 
       expect(post.comment.attrs).toEqual(comment.attrs);
       expect(comment.commentableId).toEqual({ type: "post", id: post.id });
       expect(
-        this.helper.schema.comments.find(comment.id).commentableId
+        helper.schema.comments.find(comment.id).commentableId
       ).toEqual({ type: "post", id: post.id });
     });
   });

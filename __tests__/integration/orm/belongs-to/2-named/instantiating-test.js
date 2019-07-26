@@ -1,14 +1,16 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Belongs To | Named | instantiating", () => {
+  let helper, schema;
+
   beforeEach(() => {
-    this.helper = new Helper();
-    this.schema = this.helper.schema;
+    helper = new Helper();
+    schema = helper.schema;
   });
 
   test("the child accepts a saved parent id", () => {
-    let author = this.helper.savedParent();
-    let post = this.schema.posts.new({ authorId: author.id });
+    let author = helper.savedParent();
+    let post = schema.posts.new({ authorId: author.id });
 
     expect(post.authorId).toEqual(author.id);
     expect(post.author).toEqual(author);
@@ -17,46 +19,46 @@ describe("Integration | ORM | Belongs To | Named | instantiating", () => {
 
   test("the child errors if the parent id doesnt exist", () => {
     expect(function() {
-      this.schema.posts.new({ authorId: 2 });
+      schema.posts.new({ authorId: 2 });
     }).toThrow();
   });
 
   test("the child accepts a null parent id", () => {
-    let post = this.schema.posts.new({ authorId: null });
+    let post = schema.posts.new({ authorId: null });
 
-    expect(post.authorId).toEqual(null);
-    expect(post.author).toEqual(null);
+    expect(post.authorId).toBeNil();
+    expect(post.author).toBeNil();
     expect(post.attrs).toEqual({ authorId: null });
   });
 
   test("the child accepts a saved parent model", () => {
-    let author = this.helper.savedParent();
-    let post = this.schema.posts.new({ author });
+    let author = helper.savedParent();
+    let post = schema.posts.new({ author });
 
-    expect(post.authorId).toEqual(1);
+    expect(post.authorId).toEqual("1");
     expect(post.author).toEqual(author);
   });
 
   test("the child accepts a new parent model", () => {
-    let zelda = this.schema.users.new({ name: "Zelda" });
-    let post = this.schema.posts.new({ author: zelda });
+    let zelda = schema.users.new({ name: "Zelda" });
+    let post = schema.posts.new({ author: zelda });
 
-    expect(post.authorId).toEqual(null);
+    expect(post.authorId).toBeNil();
     expect(post.author).toEqual(zelda);
     expect(post.attrs).toEqual({ authorId: null });
   });
 
   test("the child accepts a null parent model", () => {
-    let post = this.schema.posts.new({ author: null });
+    let post = schema.posts.new({ author: null });
 
-    expect(post.authorId).toEqual(null);
-    expect(post.author).toEqual(null);
+    expect(post.authorId).toBeNil();
+    expect(post.author).toBeNil();
     expect(post.attrs).toEqual({ authorId: null });
   });
 
   test("the child accepts a parent model and id", () => {
-    let author = this.helper.savedParent();
-    let post = this.schema.posts.new({ author, authorId: author.id });
+    let author = helper.savedParent();
+    let post = schema.posts.new({ author, authorId: author.id });
 
     expect(post.authorId).toEqual("1");
     expect(post.author).toEqual(author);
@@ -64,18 +66,18 @@ describe("Integration | ORM | Belongs To | Named | instantiating", () => {
   });
 
   test("the child accepts no reference to a parent id or model as empty obj", () => {
-    let post = this.schema.posts.new({});
+    let post = schema.posts.new({});
 
-    expect(post.authorId).toEqual(null);
-    expect(post.author).toEqual(null);
+    expect(post.authorId).toBeNil();
+    expect(post.author).toBeNil();
     expect(post.attrs).toEqual({ authorId: null });
   });
 
   test("the child accepts no reference to a parent id or model", () => {
-    let post = this.schema.posts.new();
+    let post = schema.posts.new();
 
-    expect(post.authorId).toEqual(null);
-    expect(post.author).toEqual(null);
+    expect(post.authorId).toBeNil();
+    expect(post.author).toBeNil();
     expect(post.attrs).toEqual({ authorId: null });
   });
 });

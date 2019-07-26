@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Named | association #setId", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +11,8 @@ describe("Integration | ORM | Belongs To | Named | association #setId", () => {
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a saved parent via parentId`, () => {
-      let [post] = this.helper[state]();
-      let savedAuthor = this.helper.savedParent();
+      let [post] = helper[state]();
+      let savedAuthor = helper.savedParent();
 
       post.authorId = savedAuthor.id;
 
@@ -22,12 +23,12 @@ describe("Integration | ORM | Belongs To | Named | association #setId", () => {
 
   ["savedChildSavedParent", "newChildSavedParent"].forEach(state => {
     test(`a ${state} can clear its association via a null parentId`, () => {
-      let [post] = this.helper[state]();
+      let [post] = helper[state]();
 
       post.authorId = null;
 
-      expect(post.authorId).toEqual(null);
-      expect(post.author).toEqual(null);
+      expect(post.authorId).toBeNil();
+      expect(post.author).toBeNil();
     });
   });
 });

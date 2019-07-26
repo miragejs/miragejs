@@ -2,13 +2,13 @@ import Helper from "./_helper";
 import { Model } from "@miragejs/server";
 
 describe("Integration | ORM | Belongs To | One To One | create", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
-    this.helper.schema.registerModel("foo", Model);
+  let helper; beforeEach(() => {
+    helper = new Helper();
+    helper.schema.registerModel("foo", Model);
   });
 
   test("it sets up associations correctly when passing in the foreign key", () => {
-    let { schema } = this.helper;
+    let { schema } = helper;
     let profile = schema.create("profile");
     let user = schema.create("user", {
       profileId: profile.id
@@ -25,7 +25,7 @@ describe("Integration | ORM | Belongs To | One To One | create", () => {
   });
 
   test("it sets up associations correctly when passing in the association itself", () => {
-    let { schema } = this.helper;
+    let { schema } = helper;
     let profile = schema.create("profile");
     let user = schema.create("user", {
       profile
@@ -41,7 +41,7 @@ describe("Integration | ORM | Belongs To | One To One | create", () => {
   });
 
   test("it throws an error if a model is passed in without a defined relationship", () => {
-    let { schema } = this.helper;
+    let { schema } = helper;
 
     expect(function() {
       schema.create("user", {
@@ -51,7 +51,7 @@ describe("Integration | ORM | Belongs To | One To One | create", () => {
   });
 
   test("it throws an error if a collection is passed in without a defined relationship", () => {
-    let { schema } = this.helper;
+    let { schema } = helper;
     schema.create("foo");
     schema.create("foo");
 

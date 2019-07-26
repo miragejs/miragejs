@@ -1,8 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | One-way Polymorphic | association #setId", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
+  let helper; beforeEach(() => {
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +10,8 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | association #se
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a saved parent via parentId`, () => {
-      let [comment] = this.helper[state]();
-      let savedPost = this.helper.savedParent();
+      let [comment] = helper[state]();
+      let savedPost = helper.savedParent();
 
       comment.commentableId = { id: savedPost.id, type: "post" };
 
@@ -22,7 +22,7 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | association #se
 
   ["savedChildSavedParent", "newChildSavedParent"].forEach(state => {
     test(`a ${state} can clear its association via a null parentId`, () => {
-      let [comment] = this.helper[state]();
+      let [comment] = helper[state]();
 
       comment.commentableId = null;
 

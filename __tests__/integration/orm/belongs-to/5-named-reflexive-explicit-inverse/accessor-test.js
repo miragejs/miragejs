@@ -1,8 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | accessor", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
+  let helper; beforeEach(() => {
+    helper = new Helper();
   });
 
   /*
@@ -10,7 +10,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | ac
   */
   states.forEach(state => {
     test(`the references of a ${state} are correct`, () => {
-      let [user, friend] = this.helper[state]();
+      let [user, friend] = helper[state]();
 
       // We use .attrs here because otherwise deepEqual goes on infinite recursive comparison
       if (friend) {

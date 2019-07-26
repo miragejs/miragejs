@@ -1,8 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Reflexive | association #setId", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
+  let helper; beforeEach(() => {
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +10,8 @@ describe("Integration | ORM | Belongs To | Reflexive | association #setId", () =
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a saved parent via parentId`, () => {
-      let [user, originalUser] = this.helper[state]();
-      let friend = this.helper.savedParent();
+      let [user, originalUser] = helper[state]();
+      let friend = helper.savedParent();
 
       user.userId = friend.id;
 
@@ -28,7 +28,7 @@ describe("Integration | ORM | Belongs To | Reflexive | association #setId", () =
 
   ["savedChildSavedParent", "newChildSavedParent"].forEach(state => {
     test(`a ${state} can clear its association via a null parentId`, () => {
-      let [user, originalUser] = this.helper[state]();
+      let [user, originalUser] = helper[state]();
 
       user.userId = null;
 

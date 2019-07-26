@@ -1,13 +1,13 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Belongs To | One To One | instantiating", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
-    this.schema = this.helper.schema;
+  let helper; beforeEach(() => {
+    helper = new Helper();
+    this.schema = helper.schema;
   });
 
   test("the child accepts a saved parent id", () => {
-    let profile = this.helper.savedParent();
+    let profile = helper.savedParent();
     let user = this.schema.users.new({ profileId: profile.id });
 
     expect(user.profileId).toEqual(profile.id);
@@ -30,7 +30,7 @@ describe("Integration | ORM | Belongs To | One To One | instantiating", () => {
   });
 
   test("the child accepts a saved parent model", () => {
-    let profile = this.helper.savedParent();
+    let profile = helper.savedParent();
     let user = this.schema.users.new({ profile });
 
     expect(user.profileId).toEqual(1);
@@ -56,7 +56,7 @@ describe("Integration | ORM | Belongs To | One To One | instantiating", () => {
   });
 
   test("the child accepts a parent model and id", () => {
-    let profile = this.helper.savedParent();
+    let profile = helper.savedParent();
     let user = this.schema.users.new({ profile, profileId: profile.id });
 
     expect(user.profileId).toEqual("1");

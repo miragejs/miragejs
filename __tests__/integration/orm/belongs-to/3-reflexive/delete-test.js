@@ -1,13 +1,13 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Reflexive | delete", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
+  let helper; beforeEach(() => {
+    helper = new Helper();
   });
 
   states.forEach(state => {
     test(`deleting the parent updates the child's foreign key for a ${state}`, () => {
-      let [user, targetUser] = this.helper[state]();
+      let [user, targetUser] = helper[state]();
 
       if (targetUser) {
         targetUser.destroy();

@@ -1,8 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association #new", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
+  let helper; beforeEach(() => {
+    helper = new Helper();
   });
 
   /*
@@ -11,7 +11,7 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association 
 
   states.forEach(state => {
     test(`a ${state} can build a new associated parent`, () => {
-      let [comment] = this.helper[state]();
+      let [comment] = helper[state]();
 
       let post = comment.newCommentable("post", { age: 300 });
 

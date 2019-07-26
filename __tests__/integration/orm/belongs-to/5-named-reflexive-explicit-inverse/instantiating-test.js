@@ -1,13 +1,13 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | instantiating", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
-    this.schema = this.helper.schema;
+  let helper; beforeEach(() => {
+    helper = new Helper();
+    this.schema = helper.schema;
   });
 
   test("the child accepts a saved parent id", () => {
-    let friend = this.helper.savedParent();
+    let friend = helper.savedParent();
     let user = this.schema.users.new({ bestFriendId: friend.id });
 
     expect(user.bestFriendId).toEqual(friend.id);
@@ -30,7 +30,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | in
   });
 
   test("the child accepts a saved parent model", () => {
-    let friend = this.helper.savedParent();
+    let friend = helper.savedParent();
     let user = this.schema.users.new({ bestFriend: friend });
 
     expect(user.bestFriendId).toEqual(1);
@@ -56,7 +56,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | in
   });
 
   test("the child accepts a parent model and id", () => {
-    let friend = this.helper.savedParent();
+    let friend = helper.savedParent();
     let user = this.schema.users.new({
       bestFriend: friend,
       bestFriendId: friend.id

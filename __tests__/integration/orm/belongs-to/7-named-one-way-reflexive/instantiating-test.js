@@ -1,13 +1,13 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Belongs To | Named One-Way Reflexive | instantiating", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
-    this.schema = this.helper.schema;
+  let helper; beforeEach(() => {
+    helper = new Helper();
+    this.schema = helper.schema;
   });
 
   test("the child accepts a saved parent id", () => {
-    let parent = this.helper.savedParent();
+    let parent = helper.savedParent();
     let child = this.schema.users.new({ parentId: parent.id });
 
     expect(child.parentId).toEqual(parent.id);
@@ -30,7 +30,7 @@ describe("Integration | ORM | Belongs To | Named One-Way Reflexive | instantiati
   });
 
   test("the child accepts a saved parent model", () => {
-    let parent = this.helper.savedParent();
+    let parent = helper.savedParent();
     let child = this.schema.users.new({ parent });
 
     expect(child.parentId).toEqual(1);
@@ -55,7 +55,7 @@ describe("Integration | ORM | Belongs To | Named One-Way Reflexive | instantiati
   });
 
   test("the child accepts a parent model and id", () => {
-    let parent = this.helper.savedParent();
+    let parent = helper.savedParent();
     let child = this.schema.users.new({ parent, parentId: parent.id });
 
     expect(child.parentId).toEqual("1");

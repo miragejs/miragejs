@@ -1,8 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | association #setId", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
+  let helper; beforeEach(() => {
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +10,8 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | as
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a saved parent via parentId`, () => {
-      let [user] = this.helper[state]();
-      let friend = this.helper.savedParent();
+      let [user] = helper[state]();
+      let friend = helper.savedParent();
 
       user.bestFriendId = friend.id;
 
@@ -22,7 +22,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | as
 
   ["savedChildSavedParent", "newChildSavedParent"].forEach(state => {
     test(`a ${state} can clear its association via a null parentId`, () => {
-      let [user] = this.helper[state]();
+      let [user] = helper[state]();
 
       user.bestFriendId = null;
 

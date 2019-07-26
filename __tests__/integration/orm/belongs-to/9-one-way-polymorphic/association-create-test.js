@@ -1,8 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | One-way Polymorphic | association #create", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
+  let helper; beforeEach(() => {
+    helper = new Helper();
   });
 
   /*
@@ -10,14 +10,14 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | association #cr
   */
   states.forEach(state => {
     test(`a ${state} can create an associated parent`, () => {
-      let [comment] = this.helper[state]();
+      let [comment] = helper[state]();
 
       let post = comment.createCommentable("post", { title: "Lorem ipsum" });
 
       expect(post.id).toBeTruthy();
       expect(comment.commentable.attrs).toEqual(post.attrs);
       expect(comment.commentableId).toEqual({ id: post.id, type: "post" });
-      expect(this.helper.db.posts.find(post.id)).toBeTruthy();
+      expect(helper.db.posts.find(post.id)).toBeTruthy();
     });
   });
 });

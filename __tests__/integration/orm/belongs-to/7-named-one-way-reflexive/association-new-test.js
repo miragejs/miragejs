@@ -1,8 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Named One-Way Reflexive | association #new", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
+  let helper; beforeEach(() => {
+    helper = new Helper();
   });
 
   /*
@@ -11,7 +11,7 @@ describe("Integration | ORM | Belongs To | Named One-Way Reflexive | association
 
   states.forEach(state => {
     test(`a ${state} can build a new associated parent`, () => {
-      let [child] = this.helper[state]();
+      let [child] = helper[state]();
 
       let ganon = child.newParent({ name: "Ganon" });
 

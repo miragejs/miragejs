@@ -1,7 +1,7 @@
-import "../../../../../lib/container";
-import Db from "../../../../../lib/db";
-import Schema from "../../../../../lib/orm/schema";
-import { Model, belongsTo } from "../../../../../lib/index";
+import "@lib/container";
+import Db from "@lib/db";
+import Schema from "@lib/orm/schema";
+import { Model, belongsTo } from "@miragejs/server";
 
 /*
   A model with a belongsTo association can be in six states

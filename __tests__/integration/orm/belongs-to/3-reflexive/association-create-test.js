@@ -1,8 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Reflexive | association #create", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
+  let helper; beforeEach(() => {
+    helper = new Helper();
   });
 
   /*
@@ -10,7 +10,7 @@ describe("Integration | ORM | Belongs To | Reflexive | association #create", () 
   */
   states.forEach(state => {
     test(`a ${state} can create an associated parent`, () => {
-      let [user, originalUser] = this.helper[state]();
+      let [user, originalUser] = helper[state]();
 
       let ganon = user.createUser({ name: "Ganon" });
 
@@ -19,7 +19,7 @@ describe("Integration | ORM | Belongs To | Reflexive | association #create", () 
       expect(ganon.user.attrs).toEqual(user.attrs);
       expect(user.userId).toEqual(ganon.id);
       expect(ganon.userId).toEqual(user.id);
-      expect(this.helper.schema.users.find(user.id).userId).toEqual(ganon.id);
+      expect(helper.schema.users.find(user.id).userId).toEqual(ganon.id);
 
       if (originalUser) {
         originalUser.reload();

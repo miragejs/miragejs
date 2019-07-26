@@ -1,8 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Named one-way reflexive self referential | accessor", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
+  let helper; beforeEach(() => {
+    helper = new Helper();
   });
 
   /*
@@ -10,7 +10,7 @@ describe("Integration | ORM | Belongs To | Named one-way reflexive self referent
   */
   states.forEach(state => {
     test(`the references of a ${state} are correct`, () => {
-      let [user, representative] = this.helper[state]();
+      let [user, representative] = helper[state]();
 
       // We use .attrs here because otherwise deepEqual goes on infinite recursive comparison
       if (representative) {

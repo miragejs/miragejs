@@ -1,8 +1,8 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | One To One | association #set", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
+  let helper; beforeEach(() => {
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +10,8 @@ describe("Integration | ORM | Belongs To | One To One | association #set", () =>
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a saved parent`, () => {
-      let [user] = this.helper[state]();
-      let profile = this.helper.savedParent();
+      let [user] = helper[state]();
+      let profile = helper.savedParent();
 
       user.profile = profile;
 
@@ -22,8 +22,8 @@ describe("Integration | ORM | Belongs To | One To One | association #set", () =>
     });
 
     test(`a ${state} can update its association to a new parent`, () => {
-      let [user] = this.helper[state]();
-      let profile = this.helper.newParent();
+      let [user] = helper[state]();
+      let profile = helper.newParent();
 
       user.profile = profile;
 
@@ -35,7 +35,7 @@ describe("Integration | ORM | Belongs To | One To One | association #set", () =>
     });
 
     test(`a ${state} can update its association to a null parent`, () => {
-      let [user] = this.helper[state]();
+      let [user] = helper[state]();
 
       user.profile = null;
 

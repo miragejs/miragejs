@@ -1,13 +1,13 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Belongs To | One-to-one Polymorphic | instantiating", () => {
-  beforeEach(() => {
-    this.helper = new Helper();
-    this.schema = this.helper.schema;
+  let helper; beforeEach(() => {
+    helper = new Helper();
+    this.schema = helper.schema;
   });
 
   test("the child accepts a saved parent id", () => {
-    let post = this.helper.savedParent();
+    let post = helper.savedParent();
     let comment = this.schema.comments.new({
       commentableId: { type: "post", id: post.id }
     });
@@ -34,7 +34,7 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | instantiatin
   });
 
   test("the child accepts a saved parent model", () => {
-    let post = this.helper.savedParent();
+    let post = helper.savedParent();
     let comment = this.schema.comments.new({ commentable: post });
 
     expect(comment.commentableId).toEqual({ type: "post", id: post.id });
@@ -60,7 +60,7 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | instantiatin
   });
 
   test("the child accepts a parent model and id", () => {
-    let post = this.helper.savedParent();
+    let post = helper.savedParent();
     let comment = this.schema.comments.new({
       commentable: post,
       commentableId: { type: "post", id: post.id }
