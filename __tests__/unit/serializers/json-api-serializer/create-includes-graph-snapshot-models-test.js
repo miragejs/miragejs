@@ -5,45 +5,46 @@ import {
   hasMany,
   belongsTo,
   JSONAPISerializer
-} from '@miragejs/server';
-import { module, test } from 'qunit';
+} from "../../../../lib";
 
 /*
   This test is heavily coupled to the implementation and can be deleted
   during a future refactoring.
 */
-module('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot models', function(hooks) {
-  hooks.beforeEach(function() {
-    let serializer;
-    let registry = {
+describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot models", function() {
+  let serializer = null;
+  let registry = null;
+  let type = null;
+  let request = {};
+
+  beforeEach(function() {
+    registry = {
       serializerFor() {
         return serializer;
       }
     };
-    let type = 'foo';
-    let request = {};
+    type = "foo";
+    request = {};
 
     serializer = new JSONAPISerializer(registry, type, request);
-    this.serializer = serializer;
   });
 
-  test('it works on models with no includes', function(assert) {
+  test("it works on models with no includes", () => {
     let schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-      })
+      wordSmith: Model.extend({})
     });
     let wordSmith = schema.wordSmiths.create();
 
-    this.serializer._createRequestedIncludesGraph(wordSmith);
+    serializer._createRequestedIncludesGraph(wordSmith);
 
-    assert.deepEqual(this.serializer.request._includesGraph, {
+    expect(serializer.request._includesGraph).toEqual({
       data: {
-        'word-smith:1': {}
+        "word-smith:1": {}
       }
     });
   });
 
-  test("it doesn't choke on an empty belongsTo relationship", function(assert) {
+  test("it doesn't choke on an empty belongsTo relationship", () => {
     let schema = new Schema(new Db(), {
       wordSmith: Model.extend({
         blogPost: belongsTo()
@@ -56,23 +57,25 @@ module('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot
     let wordSmith = schema.wordSmiths.create();
     wordSmith.createBlogPost();
 
-    this.serializer.request = { queryParams: { include: 'blog-post.happy-category' } };
+    serializer.request = {
+      queryParams: { include: "blog-post.happy-category" }
+    };
 
-    this.serializer._createRequestedIncludesGraph(wordSmith);
+    serializer._createRequestedIncludesGraph(wordSmith);
 
-    assert.deepEqual(this.serializer.request._includesGraph, {
+    expect(serializer.request._includesGraph).toEqual({
       data: {
-        'word-smith:1': {
+        "word-smith:1": {
           relationships: {
-            'blog-post': 'blog-post:1'
+            "blog-post": "blog-post:1"
           }
         }
       },
       included: {
-        'blog-posts': {
-          'blog-post:1': {
+        "blog-posts": {
+          "blog-post:1": {
             relationships: {
-              'happy-category': undefined
+              "happy-category": undefined
             }
           }
         }
@@ -80,7 +83,7 @@ module('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot
     });
   });
 
-  test('it works on models with belongsTo relationships', function(assert) {
+  test("it works on models with belongsTo relationships", () => {
     let schema = new Schema(new Db(), {
       wordSmith: Model.extend({
         redTag: belongsTo(),
@@ -97,33 +100,31 @@ module('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot
     let bluePost = wordSmith.createBluePost();
     bluePost.createRedTag();
 
-    this.serializer.request = { queryParams: { include: 'red-tag,blue-post' } };
+    serializer.request = { queryParams: { include: "red-tag,blue-post" } };
 
-    this.serializer._createRequestedIncludesGraph(wordSmith);
+    serializer._createRequestedIncludesGraph(wordSmith);
 
-    assert.deepEqual(this.serializer.request._includesGraph, {
+    expect(serializer.request._includesGraph).toEqual({
       data: {
-        'word-smith:1': {
+        "word-smith:1": {
           relationships: {
-            'red-tag': 'red-tag:1',
-            'blue-post': 'blue-post:1'
+            "red-tag": "red-tag:1",
+            "blue-post": "blue-post:1"
           }
         }
       },
       included: {
-        'red-tags': {
-          'red-tag:1': {
-          }
+        "red-tags": {
+          "red-tag:1": {}
         },
-        'blue-posts': {
-          'blue-post:1': {
-          }
+        "blue-posts": {
+          "blue-post:1": {}
         }
       }
     });
   });
 
-  test('it works on models with belongsTo relationships and dot-path includes', function(assert) {
+  test("it works on models with belongsTo relationships and dot-path includes", () => {
     let schema = new Schema(new Db(), {
       wordSmith: Model.extend({
         redTag: belongsTo(),
@@ -135,8 +136,7 @@ module('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot
       redTag: Model.extend({
         someColor: belongsTo()
       }),
-      someColor: Model.extend({
-      })
+      someColor: Model.extend({})
     });
     let wordSmith = schema.wordSmiths.create();
     wordSmith.createRedTag();
@@ -145,44 +145,45 @@ module('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot
     let redTag = bluePost.createRedTag();
     redTag.createSomeColor();
 
-    this.serializer.request = { queryParams: { include: 'red-tag,blue-post.red-tag.some-color' } };
+    serializer.request = {
+      queryParams: { include: "red-tag,blue-post.red-tag.some-color" }
+    };
 
-    this.serializer._createRequestedIncludesGraph(wordSmith);
+    serializer._createRequestedIncludesGraph(wordSmith);
 
-    assert.deepEqual(this.serializer.request._includesGraph, {
+    expect(serializer.request._includesGraph).toEqual({
       data: {
-        'word-smith:1': {
+        "word-smith:1": {
           relationships: {
-            'red-tag': 'red-tag:1',
-            'blue-post': 'blue-post:1'
+            "red-tag": "red-tag:1",
+            "blue-post": "blue-post:1"
           }
         }
       },
       included: {
-        'red-tags': {
-          'red-tag:1': {
-          },
-          'red-tag:2': {
+        "red-tags": {
+          "red-tag:1": {},
+          "red-tag:2": {
             relationships: {
-              'some-color': 'some-color:1'
+              "some-color": "some-color:1"
             }
           }
         },
-        'blue-posts': {
-          'blue-post:1': {
+        "blue-posts": {
+          "blue-post:1": {
             relationships: {
-              'red-tag': 'red-tag:2'
+              "red-tag": "red-tag:2"
             }
           }
         },
-        'some-colors': {
-          'some-color:1': {}
+        "some-colors": {
+          "some-color:1": {}
         }
       }
     });
   });
 
-  test('it works on models with hasMany relationships', function(assert) {
+  test("it works on models with hasMany relationships", () => {
     let schema = new Schema(new Db(), {
       wordSmith: Model.extend({
         redTags: hasMany(),
@@ -200,35 +201,32 @@ module('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot
     let bluePost = wordSmith.createBluePost();
     bluePost.createRedTag();
 
-    this.serializer.request = { queryParams: { include: 'red-tags,blue-posts' } };
+    serializer.request = { queryParams: { include: "red-tags,blue-posts" } };
 
-    this.serializer._createRequestedIncludesGraph(wordSmith);
+    serializer._createRequestedIncludesGraph(wordSmith);
 
-    assert.deepEqual(this.serializer.request._includesGraph, {
+    expect(serializer.request._includesGraph).toEqual({
       data: {
-        'word-smith:1': {
+        "word-smith:1": {
           relationships: {
-            'red-tags': [ 'red-tag:1', 'red-tag:2' ],
-            'blue-posts': [ 'blue-post:1' ]
+            "red-tags": ["red-tag:1", "red-tag:2"],
+            "blue-posts": ["blue-post:1"]
           }
         }
       },
       included: {
-        'red-tags': {
-          'red-tag:1': {
-          },
-          'red-tag:2': {
-          }
+        "red-tags": {
+          "red-tag:1": {},
+          "red-tag:2": {}
         },
-        'blue-posts': {
-          'blue-post:1': {
-          }
+        "blue-posts": {
+          "blue-post:1": {}
         }
       }
     });
   });
 
-  test('it works on models with hasMany relationships and dot-path includes', function(assert) {
+  test("it works on models with hasMany relationships and dot-path includes", () => {
     let schema = new Schema(new Db(), {
       wordSmith: Model.extend({
         redTags: hasMany(),
@@ -250,38 +248,40 @@ module('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot
     let redTag = bluePost.createRedTag();
     redTag.createSomeColor();
 
-    this.serializer.request = { queryParams: { include: 'red-tags,blue-posts.red-tags.some-colors' } };
+    serializer.request = {
+      queryParams: { include: "red-tags,blue-posts.red-tags.some-colors" }
+    };
 
-    this.serializer._createRequestedIncludesGraph(wordSmith);
+    serializer._createRequestedIncludesGraph(wordSmith);
 
-    assert.deepEqual(this.serializer.request._includesGraph, {
+    expect(serializer.request._includesGraph).toEqual({
       data: {
-        'word-smith:1': {
+        "word-smith:1": {
           relationships: {
-            'red-tags': [ 'red-tag:1', 'red-tag:2' ],
-            'blue-posts': [ 'blue-post:1' ]
+            "red-tags": ["red-tag:1", "red-tag:2"],
+            "blue-posts": ["blue-post:1"]
           }
         }
       },
       included: {
-        'red-tags': {
-          'red-tag:1': {},
-          'red-tag:2': {},
-          'red-tag:3': {
+        "red-tags": {
+          "red-tag:1": {},
+          "red-tag:2": {},
+          "red-tag:3": {
             relationships: {
-              'some-colors': [ 'some-color:1' ]
+              "some-colors": ["some-color:1"]
             }
           }
         },
-        'blue-posts': {
-          'blue-post:1': {
+        "blue-posts": {
+          "blue-post:1": {
             relationships: {
-              'red-tags': [ 'red-tag:3' ]
+              "red-tags": ["red-tag:3"]
             }
           }
         },
-        'some-colors': {
-          'some-color:1': {}
+        "some-colors": {
+          "some-color:1": {}
         }
       }
     });

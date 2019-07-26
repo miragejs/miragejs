@@ -1,5 +1,4 @@
-import "../../lib/container";
-import IdentityManager from "../../lib/identity-manager";
+import { IdentityManager } from "../../../lib";
 
 describe("Unit | Db | IdentityManager", function() {
   test("it can be instantiated", () => {
@@ -19,6 +18,7 @@ describe("Unit | Db | IdentityManager", function() {
     let manager = new IdentityManager();
 
     expect(manager.fetch()).toEqual("1");
+    // TODO: strange case since it's the one returning int instead of string
     expect(manager.get()).toEqual(2);
     expect(manager.fetch()).toEqual("2");
   });
@@ -29,7 +29,7 @@ describe("Unit | Db | IdentityManager", function() {
 
     expect(function() {
       manager.set("abc");
-    }).toThrow();
+    }).toThrow("Attempting to use the ID abc, but it's already been used");
   });
 
   test(`a numerical value passed into set affects future ids used by fetch`, () => {
