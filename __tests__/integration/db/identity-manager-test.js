@@ -1,11 +1,10 @@
-import { module, test } from "qunit";
 import {
   Model,
   hasMany,
   belongsTo,
   Server,
   IdentityManager as DefaultIdentityManager
-} from "@miragejs/server";
+} from "../../../lib/index";
 
 const CustomIdentityManager = class {
   constructor() {
@@ -28,13 +27,15 @@ const CustomIdentityManager = class {
   }
 };
 
-module("Integration | Db | Identity manager", function(hooks) {
-  hooks.afterEach(function() {
-    this.server.shutdown();
+describe("Integration | Db | Identity manager", function() {
+  let server;
+
+  afterEach(() => {
+    server.shutdown();
   });
 
-  test("it uses identity managers defined by config", function(assert) {
-    this.server = new Server({
+  test("it uses identity managers defined by config", () => {
+    server = new Server({
       environment: "test",
       identityManagers: {
         post: DefaultIdentityManager,
@@ -56,36 +57,25 @@ module("Integration | Db | Identity manager", function(hooks) {
     let author = server.create("author");
     let comment = server.create("comment");
     let post = server.create("post");
-    assert.equal(
-      author.id,
-      "custom-id",
-      "custom identity manager defined in config is used"
-    );
-    assert.equal(
-      post.id,
-      "1",
-      "ember-cli-mirage identity manager defined in config is used"
-    );
-    assert.equal(
-      comment.id,
-      "1",
-      "falls back to ember-cli-mirage identity manager if no one is defined in config for model"
-    );
+
+    expect(author.id).toEqual("custom-id");
+    expect(post.id).toEqual("1");
+    expect(comment.id).toEqual("1");
   });
 
-  test("attribute hash is passed to identity managers fetch method", function(assert) {
-    assert.expect(2);
+  test("attribute hash is passed to identity managers fetch method", () => {
+    expect.assertions(2);
 
     let dataForRecord = {
       foo: "bar"
     };
     let IdentityManagerForTest = class {
       fetch(data) {
-        assert.ok(data);
-        assert.deepEqual(data, dataForRecord);
+        expect(data).toBeTruthy();
+        expect(data).toEqual(dataForRecord);
       }
     };
-    this.server = new Server({
+    server = new Server({
       environment: "test",
       identityManagers: {
         application: IdentityManagerForTest
@@ -94,6 +84,7 @@ module("Integration | Db | Identity manager", function(hooks) {
         foo: Model.extend()
       }
     });
-    this.server.create("foo", dataForRecord);
+
+    server.create("foo", dataForRecord);
   });
 });
