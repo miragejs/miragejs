@@ -93,7 +93,9 @@ describe("Unit | Server #create", function() {
 
     expect(function() {
       server.create("contact");
-    }).toThrow('Mirage: You called server.create(\'contact\') but no model or factory was found. Make sure you\'re passing in the singularized version of the model or factory name.');
+    }).toThrow(
+      "Mirage: You called server.create('contact') but no model or factory was found. Make sure you're passing in the singularized version of the model or factory name."
+    );
 
     server.shutdown();
   });
@@ -108,7 +110,9 @@ describe("Unit | Server #create", function() {
 
     expect(function() {
       server.create("contact");
-    }).toThrow('Mirage: You called server.create(\'contact\') but no model or factory was found. Make sure you\'re passing in the singularized version of the model or factory name.');
+    }).toThrow(
+      "Mirage: You called server.create('contact') but no model or factory was found. Make sure you're passing in the singularized version of the model or factory name."
+    );
 
     server.shutdown();
   });
@@ -519,7 +523,7 @@ describe("Unit | Server #create", function() {
 
     expect(() => {
       server.create("article", "private");
-    }).toThrow('\'private\' trait is not registered in \'article\' factory');
+    }).toThrow("'private' trait is not registered in 'article' factory");
 
     server.shutdown();
   });
@@ -836,7 +840,7 @@ describe("Unit | Server #createList", function() {
 
     expect(() => {
       server.createList("article", 2, "private");
-    }).toThrow('\'private\' trait is not registered in \'article\' factory');
+    }).toThrow("'private' trait is not registered in 'article' factory");
   });
 
   test("createList throws an error if the second argument is not an integer", () => {
@@ -855,7 +859,9 @@ describe("Unit | Server #createList", function() {
 
     expect(() => {
       server.createList("article", "published");
-    }).toThrow('Mirage: second argument has to be an integer, you passed: string');
+    }).toThrow(
+      "Mirage: second argument has to be an integer, you passed: string"
+    );
   });
 });
 
@@ -1197,7 +1203,7 @@ describe("Unit | Server #build", function() {
 
     expect(() => {
       server.build("article", "private");
-    }).toThrow('\'private\' trait is not registered in \'article\' factory');
+    }).toThrow("'private' trait is not registered in 'article' factory");
   });
 
   test("build does not build objects and throws error if model is not registered and association helper is used", () => {
@@ -1228,7 +1234,7 @@ describe("Unit | Server #build", function() {
 
     expect(() => {
       server.build("article", "withCategory");
-    }).toThrow('Mirage: Model not registered: article');
+    }).toThrow("Mirage: Model not registered: article");
   });
 
   test("build does not build objects and throws error if model for given association is not registered", () => {
@@ -1259,7 +1265,9 @@ describe("Unit | Server #build", function() {
 
     expect(() => {
       server.build("article", "withCategory");
-    }).toThrow('Mirage: You\'re using the `association` factory helper on the \'category\' attribute of your article factory, but that attribute is not a `belongsTo` association. Read the Factories docs for more information: http://www.ember-cli-mirage.com/docs/v0.3.x/factories/#factories-and-relationships');
+    }).toThrow(
+      "Mirage: You're using the `association` factory helper on the 'category' attribute of your article factory, but that attribute is not a `belongsTo` association. Read the Factories docs for more information: http://www.ember-cli-mirage.com/docs/v0.3.x/factories/#factories-and-relationships"
+    );
   });
 });
 
@@ -1423,7 +1431,7 @@ describe("Unit | Server #buildList", function() {
 
     expect(() => {
       server.buildList("article", 2, "private");
-    }).toThrow('\'private\' trait is not registered in \'article\' factory');
+    }).toThrow("'private' trait is not registered in 'article' factory");
   });
 
   test("buildList throws an error if the second argument is not an integer", function() {
@@ -1442,7 +1450,9 @@ describe("Unit | Server #buildList", function() {
 
     expect(() => {
       server.buildList("article", "published");
-    }).toThrow('Mirage: second argument has to be an integer, you passed: string');
+    }).toThrow(
+      "Mirage: second argument has to be an integer, you passed: string"
+    );
   });
 });
 
