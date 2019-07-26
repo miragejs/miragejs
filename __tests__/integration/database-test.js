@@ -25,13 +25,13 @@ module("Integration | Database", function(hooks) {
     this.server.shutdown();
   });
 
-  test(`[regression] When loaded, fixture files correctly update the database's autoincrement id`, function(assert) {
+  test(`[regression] When loaded, fixture files correctly update the database's autoincrement id`, assert => {
     this.server.loadFixtures();
 
     this.server.schema.authors.create({});
 
     let { authors } = this.server.db;
-    assert.equal(authors.length, 2);
-    assert.deepEqual(authors.map(a => a.id), ["1", "2"]);
+    expect(authors.length).toEqual(2);
+    expect(authors.map(a => a.id)).toEqual(["1", "2"]);
   });
 });
