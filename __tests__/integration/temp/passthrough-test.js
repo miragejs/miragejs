@@ -1,22 +1,22 @@
-import { module, test } from "qunit";
 import Server from "ember-cli-mirage/server";
 import promiseAjax from "../helpers/promise-ajax";
 
-module("Integration | Passthrough", function(hooks) {
-  hooks.beforeEach(function() {
-    this.server = new Server({
+describe("Integration | Passthrough", () => {
+  let server;
+  beforeEach(() => {
+    server = new Server({
       environment: "development"
     });
-    this.server.timing = 0;
-    this.server.logging = false;
+    server.timing = 0;
+    server.logging = false;
   });
 
-  hooks.afterEach(function() {
-    this.server.shutdown();
+  afterEach(function() {
+    server.shutdown();
   });
 
-  test("it can passthrough individual paths", function(assert) {
-    assert.expect(2);
+  test("it can passthrough individual paths", () => {
+    expect.assertions(2);
     let done1 = assert.async();
     let done2 = assert.async();
     let { server } = this;
@@ -32,7 +32,7 @@ module("Integration | Passthrough", function(hooks) {
       method: "GET",
       url: "/contacts"
     }).then(response => {
-      assert.equal(response.data, 123);
+      expect(response.data).toEqual(123);
       done1();
     });
 
@@ -40,12 +40,12 @@ module("Integration | Passthrough", function(hooks) {
       method: "GET",
       url: "/addresses"
     }).catch(error => {
-      assert.equal(error.xhr.status, 404);
+      expect(error.xhr.status).toEqual(404);
       done2();
     });
   });
 
-  test("it can passthrough certain verbs for individual paths", function(assert) {
+  test("it can passthrough certain verbs for individual paths", () => {
     assert.expect(3);
     let done1 = assert.async();
     let done2 = assert.async();
@@ -59,7 +59,7 @@ module("Integration | Passthrough", function(hooks) {
       this.passthrough("/addresses", ["post"]);
     });
     server.pretender.unhandledRequest = function(/* verb, path */) {
-      assert.ok(true, "it doesnt passthrough GET");
+      expect(true).toBeTruthy();
       done2();
     };
 
@@ -67,7 +67,7 @@ module("Integration | Passthrough", function(hooks) {
       method: "GET",
       url: "/contacts"
     }).then(response => {
-      assert.equal(response.data, 123);
+      expect(response.data).toEqual(123);
       done1();
     });
 
@@ -80,12 +80,12 @@ module("Integration | Passthrough", function(hooks) {
       method: "POST",
       url: "/addresses"
     }).catch(error => {
-      assert.equal(error.xhr.status, 404);
+      expect(error.xhr.status).toEqual(404);
       done3();
     });
   });
 
-  test("it can passthrough all verbs by default", function(assert) {
+  test("it can passthrough all verbs by default", () => {
     let verbs = ["GET", "HEAD", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"];
     assert.expect(verbs.length);
 
@@ -101,14 +101,14 @@ module("Integration | Passthrough", function(hooks) {
         method: verb,
         url: "/addresses"
       }).catch(error => {
-        assert.equal(error.xhr.status, 404);
+        expect(error.xhr.status).toEqual(404);
         done[index]();
       });
     });
   });
 
-  test("it can passthrough multiple paths in a single call", function(assert) {
-    assert.expect(2);
+  test("it can passthrough multiple paths in a single call", () => {
+    expect.assertions(2);
     let done1 = assert.async();
     let done2 = assert.async();
     let { server } = this;
@@ -124,7 +124,7 @@ module("Integration | Passthrough", function(hooks) {
       method: "GET",
       url: "/contacts"
     }).catch(error => {
-      assert.equal(error.xhr.status, 404);
+      expect(error.xhr.status).toEqual(404);
       done1();
     });
 
@@ -132,13 +132,13 @@ module("Integration | Passthrough", function(hooks) {
       method: "POST",
       url: "/addresses"
     }).catch(error => {
-      assert.equal(error.xhr.status, 404);
+      expect(error.xhr.status).toEqual(404);
       done2();
     });
   });
 
-  test("user can call passthrough multiple times", function(assert) {
-    assert.expect(2);
+  test("user can call passthrough multiple times", () => {
+    expect.assertions(2);
     let done1 = assert.async();
     let done2 = assert.async();
     let { server } = this;
@@ -152,7 +152,7 @@ module("Integration | Passthrough", function(hooks) {
       method: "GET",
       url: "/contacts"
     }).catch(error => {
-      assert.equal(error.xhr.status, 404);
+      expect(error.xhr.status).toEqual(404);
       done1();
     });
 
@@ -160,13 +160,13 @@ module("Integration | Passthrough", function(hooks) {
       method: "POST",
       url: "/addresses"
     }).catch(error => {
-      assert.equal(error.xhr.status, 404);
+      expect(error.xhr.status).toEqual(404);
       done2();
     });
   });
 
-  test("passthrough without args allows all paths on the current domain to passthrough", function(assert) {
-    assert.expect(2);
+  test("passthrough without args allows all paths on the current domain to passthrough", () => {
+    expect.assertions(2);
     let done1 = assert.async();
     let done2 = assert.async();
     let { server } = this;
@@ -182,7 +182,7 @@ module("Integration | Passthrough", function(hooks) {
       method: "GET",
       url: "/contacts"
     }).then(response => {
-      assert.equal(response.data, 123);
+      expect(response.data).toEqual(123);
       done1();
     });
 
@@ -190,13 +190,13 @@ module("Integration | Passthrough", function(hooks) {
       method: "GET",
       url: "/addresses"
     }).catch(error => {
-      assert.equal(error.xhr.status, 404);
+      expect(error.xhr.status).toEqual(404);
       done2();
     });
   });
 
-  test("passthrough without args allows index route on current domain to passthrough", function(assert) {
-    assert.expect(2);
+  test("passthrough without args allows index route on current domain to passthrough", () => {
+    expect.assertions(2);
     let done1 = assert.async();
     let done2 = assert.async();
     let { server } = this;
@@ -212,7 +212,7 @@ module("Integration | Passthrough", function(hooks) {
       method: "GET",
       url: "/contacts"
     }).then(response => {
-      assert.equal(response.data, 123, "contacts is intercepted");
+      expect(response.data).toEqual(123);
       done1(); // test will fail bc only 1 assertion, but we don't have to wait
     });
 
@@ -223,7 +223,7 @@ module("Integration | Passthrough", function(hooks) {
       .then(response => {
         // a passthrough request to index on the current domain
         // actually succeeds here, since that's where the test runner is served
-        assert.ok(response.data, "/ is passed through");
+        expect(response.data).toBeTruthy();
         done2();
       })
       .catch(() => {
@@ -231,7 +231,7 @@ module("Integration | Passthrough", function(hooks) {
       });
   });
 
-  test("it can passthrough other-origin hosts", function(assert) {
+  test("it can passthrough other-origin hosts", () => {
     assert.expect(1);
     let done1 = assert.async();
     let { server } = this;
@@ -244,7 +244,7 @@ module("Integration | Passthrough", function(hooks) {
       method: "GET",
       url: "/addresses"
     }).catch(error => {
-      assert.ok(true);
+      expect(true).toBeTruthy();
       done1();
     });
   });

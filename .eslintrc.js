@@ -30,6 +30,12 @@ module.exports = {
         browser: false,
         node: true
       }
+    },
+    {
+      files: ["__tests__/**"],
+      env: {
+        browser: true
+      }
     }
   ]
 };

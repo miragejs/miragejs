@@ -1,9 +1,9 @@
-import { module, test } from "qunit";
-import Server from "ember-cli-mirage/server";
+import { Server } from "@miragejs/server";
 
-module("Integration | Server #loadFixtures", function(hooks) {
-  hooks.beforeEach(function() {
-    this.server = new Server({
+describe("Integration | Server #loadFixtures", () => {
+  let server;
+  beforeEach(() => {
+    server = new Server({
       environment: "development",
       scenarios: {
         default() {}
@@ -21,31 +21,31 @@ module("Integration | Server #loadFixtures", function(hooks) {
     });
   });
 
-  hooks.afterEach(function() {
-    this.server.shutdown();
+  afterEach(function() {
+    server.shutdown();
   });
 
-  test("it can load all fixtures in the map", function(assert) {
-    this.server.loadFixtures();
+  test("it can load all fixtures in the map", () => {
+    server.loadFixtures();
 
-    assert.equal(this.server.db.authors.length, 2);
-    assert.equal(this.server.db.posts.length, 2);
-    assert.equal(this.server.db.comments.length, 1);
+    expect(server.db.authors).toHaveLength(2);
+    expect(server.db.posts).toHaveLength(2);
+    expect(server.db.comments).toHaveLength(1);
   });
 
-  test("it can load a single named fixture file", function(assert) {
-    this.server.loadFixtures("authors");
+  test("it can load a single named fixture file", () => {
+    server.loadFixtures("authors");
 
-    assert.equal(this.server.db.authors.length, 2);
-    assert.equal(this.server.db.posts.length, 0);
-    assert.equal(this.server.db.comments.length, 0);
+    expect(server.db.authors).toHaveLength(2);
+    expect(server.db.posts).toHaveLength(0);
+    expect(server.db.comments).toHaveLength(0);
   });
 
-  test("it can load several named single fixtures", function(assert) {
-    this.server.loadFixtures("authors", "posts");
+  test("it can load several named single fixtures", () => {
+    server.loadFixtures("authors", "posts");
 
-    assert.equal(this.server.db.authors.length, 2);
-    assert.equal(this.server.db.posts.length, 2);
-    assert.equal(this.server.db.comments.length, 0);
+    expect(server.db.authors).toHaveLength(2);
+    expect(server.db.posts).toHaveLength(2);
+    expect(server.db.comments).toHaveLength(0);
   });
 });

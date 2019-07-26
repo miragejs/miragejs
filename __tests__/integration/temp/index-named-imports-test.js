@@ -1,4 +1,3 @@
-import { test } from "qunit";
 import {
   Factory,
   Response,
@@ -9,31 +8,31 @@ import {
   hasMany,
   belongsTo,
   IdentityManager
-} from "ember-cli-mirage";
+} from "@miragejs/server";
 
-test("Factory is present in named exports from ember-cli-mirage", function(assert) {
-  assert.ok(Factory);
+test("Factory is present in named exports from ember-cli-mirage", () => {
+  expect(Factory).toBeTruthy();
 });
 
-test("Response is present in named exports from ember-cli-mirage", function(assert) {
-  assert.ok(Response);
+test("Response is present in named exports from ember-cli-mirage", () => {
+  expect(Response).toBeTruthy();
 });
 
-test("Model is present in named exports from ember-cli-mirage", function(assert) {
-  assert.ok(Model);
+test("Model is present in named exports from ember-cli-mirage", () => {
+  expect(Model).toBeTruthy();
 });
 
-test("serializers are present in named exports from ember-cli-mirage", function(assert) {
-  assert.ok(ActiveModelSerializer);
-  assert.ok(JSONAPISerializer);
-  assert.ok(Serializer);
+test("serializers are present in named exports from ember-cli-mirage", () => {
+  expect(ActiveModelSerializer).toBeTruthy();
+  expect(JSONAPISerializer).toBeTruthy();
+  expect(Serializer).toBeTruthy();
 });
 
-test("relationship helpers are present in named exports from ember-cli-mirage", function(assert) {
-  assert.ok(hasMany);
-  assert.ok(belongsTo);
+test("relationship helpers are present in named exports from ember-cli-mirage", () => {
+  expect(hasMany).toBeTruthy();
+  expect(belongsTo).toBeTruthy();
 });
 
-test("IdentityManager ist present in named exports from ember-cli-mirage", function(assert) {
-  assert.ok(IdentityManager);
+test("IdentityManager ist present in named exports from ember-cli-mirage", () => {
+  expect(IdentityManager).toBeTruthy();
 });

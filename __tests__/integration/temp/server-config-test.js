@@ -1,13 +1,13 @@
-import { module, test } from "qunit";
 import { Model } from "ember-cli-mirage";
 import Server from "ember-cli-mirage/server";
 import ActiveModelSerializer from "ember-cli-mirage/serializers/active-model-serializer";
 import RestSerializer from "ember-cli-mirage/serializers/rest-serializer";
 import $ from "jquery";
 
-module("Integration | Server Config", function(hooks) {
-  hooks.beforeEach(function() {
-    this.server = new Server({
+describe("Integration | Server Config", () => {
+  let server;
+  beforeEach(() => {
+    server = new Server({
       environment: "development",
       models: {
         contact: Model,
@@ -17,32 +17,32 @@ module("Integration | Server Config", function(hooks) {
         contact: ActiveModelSerializer
       }
     });
-    this.server.timing = 0;
-    this.server.logging = false;
+    server.timing = 0;
+    server.logging = false;
   });
 
-  hooks.afterEach(function() {
-    this.server.shutdown();
+  afterEach(function() {
+    server.shutdown();
   });
 
-  test("namespace can be configured", function(assert) {
+  test("namespace can be configured", () => {
     assert.expect(1);
     let done = assert.async();
 
     let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
-    this.server.db.loadData({
+    server.db.loadData({
       contacts
     });
-    this.server.namespace = "api";
-    this.server.get("/contacts");
+    server.namespace = "api";
+    server.get("/contacts");
 
     $.getJSON("/api/contacts", function(data) {
-      assert.deepEqual(data, { contacts });
+      expect(data).toEqual({ contacts });
       done();
     });
   });
 
-  test("urlPrefix can be configured", function(assert) {
+  test("urlPrefix can be configured", () => {
     assert.expect(1);
     let done = assert.async();
     let { server } = this;
@@ -55,12 +55,12 @@ module("Integration | Server Config", function(hooks) {
     server.get("/contacts");
 
     $.getJSON("http://localhost:3000/contacts", function(data) {
-      assert.deepEqual(data, { contacts });
+      expect(data).toEqual({ contacts });
       done();
     });
   });
 
-  test("urlPrefix and namespace can be configured simultaneously", function(assert) {
+  test("urlPrefix and namespace can be configured simultaneously", () => {
     assert.expect(1);
     let done = assert.async();
     let { server } = this;
@@ -74,28 +74,28 @@ module("Integration | Server Config", function(hooks) {
     server.get("/contacts");
 
     $.getJSON("http://localhost:3000/api/contacts", function(data) {
-      assert.deepEqual(data, { contacts });
+      expect(data).toEqual({ contacts });
       done();
     });
   });
 
-  test("fully qualified domain names can be used in configuration", function(assert) {
+  test("fully qualified domain names can be used in configuration", () => {
     assert.expect(1);
     let done = assert.async();
 
     let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
-    this.server.db.loadData({
+    server.db.loadData({
       contacts
     });
-    this.server.get("http://example.org/api/contacts");
+    server.get("http://example.org/api/contacts");
 
     $.getJSON("http://example.org/api/contacts", function(data) {
-      assert.deepEqual(data, { contacts });
+      expect(data).toEqual({ contacts });
       done();
     });
   });
 
-  test("urlPrefix/namespace are ignored when fully qualified domain names are used in configuration", function(assert) {
+  test("urlPrefix/namespace are ignored when fully qualified domain names are used in configuration", () => {
     assert.expect(1);
     let done = assert.async();
     let { server } = this;
@@ -108,81 +108,81 @@ module("Integration | Server Config", function(hooks) {
     server.get("http://example.org/api/contacts");
 
     $.getJSON("http://example.org/api/contacts", function(data) {
-      assert.deepEqual(data, { contacts });
+      expect(data).toEqual({ contacts });
       done();
     });
   });
 
-  test("blank urlPrefix and namespace ends up as /", function(assert) {
+  test("blank urlPrefix and namespace ends up as /", () => {
     assert.expect(1);
     let done = assert.async();
 
     let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
-    this.server.db.loadData({
+    server.db.loadData({
       contacts
     });
-    this.server.namespace = "";
-    this.server.urlPrefix = "";
-    this.server.get("contacts");
+    server.namespace = "";
+    server.urlPrefix = "";
+    server.get("contacts");
 
     $.getJSON("/contacts", function(data) {
-      assert.deepEqual(data, { contacts });
+      expect(data).toEqual({ contacts });
       done();
     });
   });
 
-  test("namespace with no slash gets one", function(assert) {
+  test("namespace with no slash gets one", () => {
     assert.expect(1);
     let done = assert.async();
 
     let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
-    this.server.db.loadData({
+    server.db.loadData({
       contacts
     });
-    this.server.namespace = "api";
-    this.server.get("contacts");
+    server.namespace = "api";
+    server.get("contacts");
 
     $.getJSON("/api/contacts", function(data) {
-      assert.deepEqual(data, { contacts });
+      expect(data).toEqual({ contacts });
       done();
     });
   });
 
-  test("urlPrefix with no slash gets one", function(assert) {
+  test("urlPrefix with no slash gets one", () => {
     assert.expect(1);
     let done = assert.async();
 
     let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
-    this.server.db.loadData({
+    server.db.loadData({
       contacts
     });
-    this.server.urlPrefix = "pre";
-    this.server.get("contacts");
+    server.urlPrefix = "pre";
+    server.get("contacts");
 
     $.getJSON("/pre/contacts", function(data) {
-      assert.deepEqual(data, { contacts });
+      expect(data).toEqual({ contacts });
       done();
     });
   });
 
-  test("namespace of / works", function(assert) {
+  test("namespace of / works", () => {
     assert.expect(1);
     let done = assert.async();
 
     let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
-    this.server.db.loadData({
+    server.db.loadData({
       contacts
     });
-    this.server.namespace = "/";
-    this.server.get("contacts");
+    server.namespace = "/";
+    server.get("contacts");
 
     $.getJSON("/contacts", function(data) {
-      assert.deepEqual(data, { contacts });
+      expect(data).toEqual({ contacts });
       done();
     });
   });
 
-  test("redefining options using the config method works", function(assert) {
+  test("redefining options using the config method works", () => {
     assert.expect(5);
     let done = assert.async();
     let { server } = this;
@@ -201,34 +201,34 @@ module("Integration | Server Config", function(hooks) {
     });
     server.get("contacts");
 
-    assert.equal(server.timing, 1000);
+    expect(server.timing).toEqual(1000);
     $.getJSON("http://localhost:3000/api/contacts", function(data) {
-      assert.deepEqual(data, { contacts });
+      expect(data).toEqual({ contacts });
       done();
     });
     let serializerMap = server.serializerOrRegistry._serializerMap;
-    assert.equal(Object.keys(serializerMap).length, 2);
-    assert.equal(serializerMap.contact, ActiveModelSerializer);
-    assert.equal(serializerMap.post, RestSerializer);
+    expect(Object.keys(serializerMap)).toHaveLength(2);
+    expect(serializerMap.contact).toEqual(ActiveModelSerializer);
+    expect(serializerMap.post).toEqual(RestSerializer);
   });
 
-  test("changing the environment of the server throws an error", function(assert) {
+  test("changing the environment of the server throws an error", () => {
     let { server } = this;
 
-    assert.throws(function() {
+    expect(function() {
       server.config({
         environment: "test"
       });
-    }, /You cannot modify Mirage's environment once the server is created/);
+    }).toThrow();
   });
 
-  test("changing the trackRequests configuration of the server throws an error", function(assert) {
+  test("changing the trackRequests configuration of the server throws an error", () => {
     let { server } = this;
 
-    assert.throws(function() {
+    expect(function() {
       server.config({
         trackRequests: true
       });
-    }, /You cannot modify Pretender's request tracking once the server is created/);
+    }).toThrow();
   });
 });

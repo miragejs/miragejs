@@ -1,10 +1,10 @@
-import { module, test } from "qunit";
 import { Model, Factory } from "ember-cli-mirage";
 import Server from "ember-cli-mirage/server";
 
-module("Integration | Server with ORM", function(hooks) {
-  hooks.beforeEach(function() {
-    this.server = new Server({
+describe("Integration | Server with ORM", () => {
+  let server;
+  beforeEach(() => {
+    server = new Server({
       environment: "test",
       models: {
         blogPost: Model
@@ -13,22 +13,22 @@ module("Integration | Server with ORM", function(hooks) {
         blogPost: Factory
       }
     });
-    this.server.timing = 0;
-    this.server.logging = false;
+    server.timing = 0;
+    server.logging = false;
   });
 
-  hooks.afterEach(function() {
-    this.server.shutdown();
+  afterEach(function() {
+    server.shutdown();
   });
 
-  test("a single blogPost db collection is made", function(assert) {
-    assert.equal(this.server.db._collections.length, 1);
-    assert.equal(this.server.db._collections[0].name, "blogPosts");
+  test("a single blogPost db collection is made", () => {
+    expect(server.db._collections).toHaveLength(1);
+    expect(server.db._collections[0].name).toEqual("blogPosts");
   });
 
-  test("create looks up the appropriate db collection", function(assert) {
+  test("create looks up the appropriate db collection", () => {
     server.create("blog-post");
 
-    assert.equal(this.server.db.blogPosts.length, 1);
+    expect(server.db.blogPosts).toHaveLength(1);
   });
 });

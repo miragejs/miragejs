@@ -1,140 +1,132 @@
-import { module, test } from "qunit";
-import Server from "ember-cli-mirage/server";
-import { Model } from "ember-cli-mirage";
-import promiseAjax from "../helpers/promise-ajax";
+import { Server, Model } from "@miragejs/server";
 
-module("Integration | HTTP Verbs", function(hooks) {
-  hooks.beforeEach(function() {
-    this.server = new Server({
+describe("Integration | HTTP Verbs", () => {
+  let server;
+  beforeEach(() => {
+    server = new Server({
       environment: "development",
       models: {
         contact: Model
       }
     });
-    this.server.timing = 0;
-    this.server.logging = false;
+    server.timing = 0;
+    server.logging = false;
   });
 
-  hooks.afterEach(function() {
-    this.server.shutdown();
+  afterEach(function() {
+    server.shutdown();
   });
 
-  test("mirage responds to get", async function(assert) {
-    assert.expect(1);
+  test("mirage responds to get", async () => {
+    expect.assertions(1);
 
-    this.server.get("/contacts", function() {
-      return true;
+    server.get("/contacts", function() {
+      return { some: "data" };
     });
 
-    let { data } = await promiseAjax({
-      method: "GET",
-      url: "/contacts"
-    });
+    let res = await fetch("/contacts", { method: "GET" });
+    let data = await res.json();
 
-    assert.equal(data, true);
+    expect(data).toEqual({ some: "data" });
   });
 
-  test("mirage responds to post", async function(assert) {
-    assert.expect(1);
+  test("mirage responds to post", async () => {
+    expect.assertions(1);
 
-    this.server.post("/contacts", function() {
-      return true;
+    server.post("/contacts", function() {
+      return { some: "data" };
     });
 
-    let { data } = await promiseAjax({
-      method: "POST",
-      url: "/contacts"
+    let res = await fetch("/contacts", {
+      method: "POST"
     });
+    let data = await res.json();
 
-    assert.equal(data, true);
+    expect(data).toEqual({ some: "data" });
   });
 
-  test("mirage responds to put", async function(assert) {
-    assert.expect(1);
+  test("mirage responds to put", async () => {
+    expect.assertions(1);
 
-    this.server.put("/contacts", function() {
-      return true;
+    server.put("/contacts", function() {
+      return { some: "data" };
     });
 
-    let { data } = await promiseAjax({
+    let res = await fetch("/contacts", {
       method: "PUT",
       url: "/contacts"
     });
+    let data = await res.json();
 
-    assert.equal(data, true);
+    expect(data).toEqual({ some: "data" });
   });
 
-  test("mirage responds to delete", async function(assert) {
-    assert.expect(1);
+  test("mirage responds to delete", async () => {
+    expect.assertions(1);
 
-    this.server.delete("/contacts", function() {
-      return true;
+    server.delete("/contacts", function() {
+      return { some: "data" };
     });
 
-    let { data } = await promiseAjax({
+    let res = await fetch("/contacts", {
       method: "DELETE",
       url: "/contacts"
     });
+    let data = await res.json();
 
-    assert.equal(data, true);
+    expect(data).toEqual({ some: "data" });
   });
 
-  test("mirage responds to patch", async function(assert) {
-    assert.expect(1);
+  test("mirage responds to patch", async () => {
+    expect.assertions(1);
 
-    this.server.patch("/contacts", function() {
-      return true;
+    server.patch("/contacts", function() {
+      return { some: "data" };
     });
 
-    let { data } = await promiseAjax({
-      method: "PATCH",
-      url: "/contacts"
+    let res = await fetch("/contacts", {
+      method: "PATCH"
     });
+    let data = await res.json();
 
-    assert.equal(data, true);
+    expect(data).toEqual({ some: "data" });
   });
 
-  test("mirage responds to resource", function(assert) {
-    assert.expect(0);
-    let done = assert.async();
+  test("mirage responds to resource", async () => {
+    expect.assertions(1);
 
-    this.server.resource("contacts");
+    server.resource("contacts");
 
-    promiseAjax({
-      method: "GET",
-      url: "/contacts"
-    }).then(function() {
-      done();
-    });
+    let res = await fetch("/contacts", { method: "GET" });
+    let data = await res.json();
+
+    expect(data).toEqual({ contacts: [] });
   });
 
-  test("response code can be customized", async function(assert) {
-    assert.expect(1);
+  test("response code can be customized", async () => {
+    expect.assertions(1);
 
-    this.server.get("/contacts", {}, 404);
+    server.get("/contacts", {}, 404);
 
-    try {
-      await promiseAjax({
-        method: "GET",
-        url: "/contacts"
-      });
-    } catch (e) {
-      assert.ok(e.xhr.status, 404);
-    }
+    let res = await fetch("/contacts", {
+      method: "GET"
+    });
+
+    expect(res.status).toEqual(404);
   });
 
-  test("mirage responds to options", async function(assert) {
-    assert.expect(1);
+  test("mirage responds to options", async () => {
+    expect.assertions(1);
 
-    this.server.options("/contacts", function() {
-      return true;
+    server.options("/contacts", function() {
+      return { some: "data" };
     });
 
-    let { data } = await promiseAjax({
-      method: "OPTIONS",
-      url: "/contacts"
+    let res = await fetch("/contacts", {
+      method: "OPTIONS"
     });
+    let data = await res.json();
 
-    assert.equal(data, true);
+    expect(data).toEqual({ some: "data" });
   });
 });
