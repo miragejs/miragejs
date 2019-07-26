@@ -32,8 +32,8 @@ describe("Integration | ORM | Has Many | Many to Many | association #setIds", ()
 
       order.productIds = null;
 
-      expect(order.products.models).toEqual([]);
-      expect(order.productIds).toEqual([]);
+      expect(order.products.models).toBeEmpty();
+      expect(order.productIds).toBeEmpty();
 
       order.save();
 

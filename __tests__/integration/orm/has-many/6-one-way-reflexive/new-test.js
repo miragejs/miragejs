@@ -26,7 +26,7 @@ describe("Integration | ORM | Has Many | One-Way Reflexive | new", () => {
     let tag = this.schema.tags.new({ tagIds: null });
 
     expect(tag.tags.models.length).toEqual(0);
-    expect(tag.tagIds).toEqual([]);
+    expect(tag.tagIds).toBeEmpty();
     expect(tag.attrs).toEqual({ tagIds: null });
   });
 
@@ -50,7 +50,7 @@ describe("Integration | ORM | Has Many | One-Way Reflexive | new", () => {
     let tag = this.schema.tags.new({ tags: null });
 
     expect(tag.tags.models.length).toEqual(0);
-    expect(tag.tagIds).toEqual([]);
+    expect(tag.tagIds).toBeEmpty();
     expect(tag.attrs).toEqual({ tagIds: null });
   });
 
@@ -65,16 +65,16 @@ describe("Integration | ORM | Has Many | One-Way Reflexive | new", () => {
   test("the parent accepts no reference to children or child ids as empty obj", () => {
     let tag = this.schema.tags.new({});
 
-    expect(tag.tagIds).toEqual([]);
-    expect(tag.tags.models).toEqual([]);
+    expect(tag.tagIds).toBeEmpty();
+    expect(tag.tags.models).toBeEmpty();
     expect(tag.attrs).toEqual({ tagIds: null });
   });
 
   test("the parent accepts no reference to children or child ids", () => {
     let tag = this.schema.tags.new();
 
-    expect(tag.tagIds).toEqual([]);
-    expect(tag.tags.models).toEqual([]);
+    expect(tag.tagIds).toBeEmpty();
+    expect(tag.tags.models).toBeEmpty();
     expect(tag.attrs).toEqual({ tagIds: null });
   });
 });

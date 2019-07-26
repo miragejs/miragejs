@@ -27,6 +27,6 @@ describe("Integration | ORM | Belongs To | Regressions | Issue 1112", function()
 
     comment.destroy();
 
-    expect(user.reload().commentIds).toEqual([]);
+    expect(user.reload().commentIds).toBeEmpty();
   });
 });

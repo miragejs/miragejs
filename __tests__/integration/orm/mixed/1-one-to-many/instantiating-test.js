@@ -26,7 +26,7 @@ describe("Integration | ORM | Mixed | One To Many | instantiating", () => {
     let user = this.schema.users.new({ postIds: null });
 
     expect(user.posts.models.length).toEqual(0);
-    expect(user.postIds).toEqual([]);
+    expect(user.postIds).toBeEmpty();
     expect(user.attrs).toEqual({ postIds: null });
   });
 
@@ -50,7 +50,7 @@ describe("Integration | ORM | Mixed | One To Many | instantiating", () => {
     let user = this.schema.users.new({ posts: null });
 
     expect(user.posts.models.length).toEqual(0);
-    expect(user.postIds).toEqual([]);
+    expect(user.postIds).toBeEmpty();
     expect(user.attrs).toEqual({ postIds: null });
   });
 
@@ -65,16 +65,16 @@ describe("Integration | ORM | Mixed | One To Many | instantiating", () => {
   test("the parent accepts no reference to children or child ids as empty obj", () => {
     let user = this.schema.users.new({});
 
-    expect(user.postIds).toEqual([]);
-    expect(user.posts.models).toEqual([]);
+    expect(user.postIds).toBeEmpty();
+    expect(user.posts.models).toBeEmpty();
     expect(user.attrs).toEqual({ postIds: null });
   });
 
   test("the parent accepts no reference to children or child ids", () => {
     let user = this.schema.users.new();
 
-    expect(user.postIds).toEqual([]);
-    expect(user.posts.models).toEqual([]);
+    expect(user.postIds).toBeEmpty();
+    expect(user.posts.models).toBeEmpty();
     expect(user.attrs).toEqual({ postIds: null });
   });
 });

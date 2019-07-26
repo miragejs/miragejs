@@ -1,24 +1,29 @@
-import { Model, _ormSchema as Schema, _Db as Db } from "@miragejs/server";
+import "../../../lib/container";
+import Db from "../../../lib/db";
+import Schema from "../../../lib/orm/schema";
+import Model from "../../../lib/orm/model";
 
 describe("Integration | ORM | update", () => {
-  beforeEach(() =>  {
-    this.db = new Db({
+  let db, schema;
+
+  beforeEach(() => {
+    db = new Db({
       users: [
         { id: 1, name: "Link", location: "Hyrule", evil: false },
         { id: 2, name: "Zelda", location: "Hyrule", evil: false }
       ]
     });
 
-    this.schema = new Schema(this.db, {
+    schema = new Schema(db, {
       user: Model
     });
   });
 
   test("a collection can update its models with a key and value", () => {
-    let collection = this.schema.users.all();
+    let collection = schema.users.all();
     collection.update("evil", true);
 
-    expect(this.db.users).toEqual([
+    expect(db.users).toIncludeSameMembers([
       { id: "1", name: "Link", location: "Hyrule", evil: true },
       { id: "2", name: "Zelda", location: "Hyrule", evil: true }
     ]);
@@ -31,10 +36,10 @@ describe("Integration | ORM | update", () => {
   });
 
   test("it can update its models with a hash of attrs", () => {
-    let collection = this.schema.users.all();
+    let collection = schema.users.all();
     collection.update({ location: "The water temple", evil: true });
 
-    expect(this.db.users).toEqual([
+    expect(db.users).toIncludeSameMembers([
       { id: "1", name: "Link", location: "The water temple", evil: true },
       { id: "2", name: "Zelda", location: "The water temple", evil: true }
     ]);
@@ -53,7 +58,7 @@ describe("Integration | ORM | update", () => {
   });
 
   test("it can set an attribute and then save the model", () => {
-    let user = this.schema.users.find(1);
+    let user = schema.users.find(1);
 
     user.name = "Young link";
 
@@ -63,7 +68,7 @@ describe("Integration | ORM | update", () => {
       location: "Hyrule",
       evil: false
     });
-    expect(this.db.users.find(1)).toEqual({
+    expect(db.users.find(1)).toEqual({
       id: "1",
       name: "Link",
       location: "Hyrule",
@@ -78,7 +83,7 @@ describe("Integration | ORM | update", () => {
       location: "Hyrule",
       evil: false
     });
-    expect(this.db.users.find(1)).toEqual({
+    expect(db.users.find(1)).toEqual({
       id: "1",
       name: "Young link",
       location: "Hyrule",
@@ -87,7 +92,7 @@ describe("Integration | ORM | update", () => {
   });
 
   test("it can update and immediately persist a single attribute", () => {
-    let link = this.schema.users.find(1);
+    let link = schema.users.find(1);
     link.update("evil", true);
 
     expect(link.attrs).toEqual({
@@ -96,7 +101,7 @@ describe("Integration | ORM | update", () => {
       location: "Hyrule",
       evil: true
     });
-    expect(this.db.users.find(1)).toEqual({
+    expect(db.users.find(1)).toEqual({
       id: "1",
       name: "Link",
       location: "Hyrule",
@@ -105,7 +110,7 @@ describe("Integration | ORM | update", () => {
   });
 
   test("it can update a hash of attrs immediately", () => {
-    var link = this.schema.users.find(1);
+    var link = schema.users.find(1);
     link.update({ name: "Evil link", evil: true });
 
     expect(link.attrs).toEqual({
@@ -114,7 +119,7 @@ describe("Integration | ORM | update", () => {
       location: "Hyrule",
       evil: true
     });
-    expect(this.db.users.find(1)).toEqual({
+    expect(db.users.find(1)).toEqual({
       id: "1",
       name: "Evil link",
       location: "Hyrule",
@@ -123,7 +128,7 @@ describe("Integration | ORM | update", () => {
   });
 
   test("it can update a non-existing attribute", () => {
-    var link = this.schema.users.find(1);
+    var link = schema.users.find(1);
     link.update({
       name: "Evil link",
       evil: true,
@@ -137,7 +142,7 @@ describe("Integration | ORM | update", () => {
       evil: true,
       reallyEvil: "absolutely evil"
     });
-    expect(this.db.users.find(1)).toEqual({
+    expect(db.users.find(1)).toEqual({
       id: "1",
       name: "Evil link",
       location: "Hyrule",
@@ -147,7 +152,7 @@ describe("Integration | ORM | update", () => {
   });
 
   test("if users sets incorrectly an attribute without using update, it will still work", () => {
-    var link = this.schema.users.find(1);
+    var link = schema.users.find(1);
     link.reallyEvil = "absolutely evil";
     link.update({ reallyEvil: "a little flower", evil: true });
     expect(link.attrs).toEqual({
@@ -157,7 +162,7 @@ describe("Integration | ORM | update", () => {
       location: "Hyrule",
       name: "Link"
     });
-    expect(this.db.users.find(1)).toEqual({
+    expect(db.users.find(1)).toEqual({
       id: "1",
       reallyEvil: "a little flower",
       evil: true,

@@ -26,7 +26,7 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | instantiating", (
     let user = this.schema.users.new({ thingIds: null });
 
     expect(user.things.models.length).toEqual(0);
-    expect(user.thingIds).toEqual([]);
+    expect(user.thingIds).toBeEmpty();
     expect(user.attrs).toEqual({ thingIds: null });
   });
 
@@ -50,7 +50,7 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | instantiating", (
     let user = this.schema.users.new({ things: null });
 
     expect(user.things.models.length).toEqual(0);
-    expect(user.thingIds).toEqual([]);
+    expect(user.thingIds).toBeEmpty();
     expect(user.attrs).toEqual({ thingIds: null });
   });
 
@@ -68,16 +68,16 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | instantiating", (
   test("the parent accepts no reference to children or child ids as empty obj", () => {
     let user = this.schema.users.new({});
 
-    expect(user.thingIds).toEqual([]);
-    expect(user.things.models).toEqual([]);
+    expect(user.thingIds).toBeEmpty();
+    expect(user.things.models).toBeEmpty();
     expect(user.attrs).toEqual({ thingIds: null });
   });
 
   test("the parent accepts no reference to children or child ids", () => {
     let user = this.schema.users.new();
 
-    expect(user.thingIds).toEqual([]);
-    expect(user.things.models).toEqual([]);
+    expect(user.thingIds).toBeEmpty();
+    expect(user.things.models).toBeEmpty();
     expect(user.attrs).toEqual({ thingIds: null });
   });
 });

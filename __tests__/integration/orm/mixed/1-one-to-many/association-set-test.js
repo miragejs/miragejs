@@ -52,7 +52,7 @@ describe("Integration | ORM | Mixed | One To Many | association #set", () => {
 
       user.posts = [];
 
-      expect(user.postIds).toEqual([]);
+      expect(user.postIds).toBeEmpty();
       expect(user.posts.models.length).toEqual(0);
 
       user.save();
@@ -70,7 +70,7 @@ describe("Integration | ORM | Mixed | One To Many | association #set", () => {
 
       user.posts = null;
 
-      expect(user.postIds).toEqual([]);
+      expect(user.postIds).toBeEmpty();
       expect(user.posts.models.length).toEqual(0);
 
       user.save();

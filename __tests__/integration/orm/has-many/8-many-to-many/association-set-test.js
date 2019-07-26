@@ -50,7 +50,7 @@ describe("Integration | ORM | Has Many | Many to Many | association #set", () =>
 
       order.products = [];
 
-      expect(order.productIds).toEqual([]);
+      expect(order.productIds).toBeEmpty();
       expect(order.products.models.length).toEqual(0);
 
       order.save();
@@ -65,7 +65,7 @@ describe("Integration | ORM | Has Many | Many to Many | association #set", () =>
 
       order.products = null;
 
-      expect(order.productIds).toEqual([]);
+      expect(order.productIds).toBeEmpty();
       expect(order.products.models.length).toEqual(0);
 
       order.save();

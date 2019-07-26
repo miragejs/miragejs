@@ -50,7 +50,7 @@ describe("Integration | ORM | Has Many | Named Reflexive | association #set", ()
 
       tag.labels = [];
 
-      expect(tag.labelIds).toEqual([]);
+      expect(tag.labelIds).toBeEmpty();
       expect(tag.labels.models.length).toEqual(0);
 
       tag.save();
@@ -65,7 +65,7 @@ describe("Integration | ORM | Has Many | Named Reflexive | association #set", ()
 
       tag.labels = null;
 
-      expect(tag.labelIds).toEqual([]);
+      expect(tag.labelIds).toBeEmpty();
       expect(tag.labels.models.length).toEqual(0);
 
       tag.save();

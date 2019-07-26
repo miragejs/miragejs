@@ -26,7 +26,7 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | instantiatin
     let user = this.schema.users.new({ commentableIds: null });
 
     expect(user.commentables.models.length).toEqual(0);
-    expect(user.commentableIds).toEqual([]);
+    expect(user.commentableIds).toBeEmpty();
     expect(user.attrs).toEqual({ commentableIds: null });
   });
 
@@ -50,7 +50,7 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | instantiatin
     let user = this.schema.users.new({ commentables: null });
 
     expect(user.commentables.models.length).toEqual(0);
-    expect(user.commentableIds).toEqual([]);
+    expect(user.commentableIds).toBeEmpty();
     expect(user.attrs).toEqual({ commentableIds: null });
   });
 
@@ -68,16 +68,16 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | instantiatin
   test("the parent accepts no reference to children or child ids as empty obj", () => {
     let user = this.schema.users.new({});
 
-    expect(user.commentableIds).toEqual([]);
-    expect(user.commentables.models).toEqual([]);
+    expect(user.commentableIds).toBeEmpty();
+    expect(user.commentables.models).toBeEmpty();
     expect(user.attrs).toEqual({ commentableIds: null });
   });
 
   test("the parent accepts no reference to children or child ids", () => {
     let user = this.schema.users.new();
 
-    expect(user.commentableIds).toEqual([]);
-    expect(user.commentables.models).toEqual([]);
+    expect(user.commentableIds).toBeEmpty();
+    expect(user.commentables.models).toBeEmpty();
     expect(user.attrs).toEqual({ commentableIds: null });
   });
 });

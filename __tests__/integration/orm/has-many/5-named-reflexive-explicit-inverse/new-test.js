@@ -26,7 +26,7 @@ describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | new"
     let tag = this.schema.tags.new({ labelIds: null });
 
     expect(tag.labels.models.length).toEqual(0);
-    expect(tag.labelIds).toEqual([]);
+    expect(tag.labelIds).toBeEmpty();
     expect(tag.attrs).toEqual({ labelIds: null });
   });
 
@@ -50,7 +50,7 @@ describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | new"
     let tag = this.schema.tags.new({ labels: null });
 
     expect(tag.labels.models.length).toEqual(0);
-    expect(tag.labelIds).toEqual([]);
+    expect(tag.labelIds).toBeEmpty();
     expect(tag.attrs).toEqual({ labelIds: null });
   });
 
@@ -65,16 +65,16 @@ describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | new"
   test("the parent accepts no reference to children or child ids as empty obj", () => {
     let tag = this.schema.tags.new({});
 
-    expect(tag.labelIds).toEqual([]);
-    expect(tag.labels.models).toEqual([]);
+    expect(tag.labelIds).toBeEmpty();
+    expect(tag.labels.models).toBeEmpty();
     expect(tag.attrs).toEqual({ labelIds: null });
   });
 
   test("the parent accepts no reference to children or child ids", () => {
     let tag = this.schema.tags.new();
 
-    expect(tag.labelIds).toEqual([]);
-    expect(tag.labels.models).toEqual([]);
+    expect(tag.labelIds).toBeEmpty();
+    expect(tag.labels.models).toBeEmpty();
     expect(tag.attrs).toEqual({ labelIds: null });
   });
 });

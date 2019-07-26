@@ -28,8 +28,8 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | association #setI
 
       user.thingIds = null;
 
-      expect(user.things.models).toEqual([]);
-      expect(user.thingIds).toEqual([]);
+      expect(user.things.models).toBeEmpty();
+      expect(user.thingIds).toBeEmpty();
     });
   });
 });

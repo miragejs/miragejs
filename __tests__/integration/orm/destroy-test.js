@@ -1,9 +1,12 @@
-import { _ormSchema as Schema, _Db as Db, Model } from "@miragejs/server";
-
-let db;
+import "../../../lib/container";
+import Db from "../../../lib/db";
+import Schema from "../../../lib/orm/schema";
+import Model from "../../../lib/orm/model";
 
 describe("Integration | ORM | destroy", () => {
-  beforeEach(() =>  {
+  let db, schema;
+
+  beforeEach(() => {
     db = new Db({
       users: [
         { id: 1, name: "Link", evil: false },
@@ -12,7 +15,7 @@ describe("Integration | ORM | destroy", () => {
       ]
     });
 
-    this.schema = new Schema(db, {
+    schema = new Schema(db, {
       user: Model
     });
   });
@@ -20,7 +23,7 @@ describe("Integration | ORM | destroy", () => {
   test("destroying a model removes the associated record from the db", () => {
     expect(db.users).toHaveLength(3);
 
-    let link = this.schema.users.find(1);
+    let link = schema.users.find(1);
     link.destroy();
 
     expect(db.users.find(1)).toBeNull();
@@ -30,9 +33,9 @@ describe("Integration | ORM | destroy", () => {
   test("destroying a collection removes the associated records from the db", () => {
     expect(db.users).toHaveLength(3);
 
-    let users = this.schema.users.all();
+    let users = schema.users.all();
     users.destroy();
 
-    expect(db.users).toEqual([]);
+    expect(db.users).toBeEmpty();
   });
 });

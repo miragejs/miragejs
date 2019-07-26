@@ -39,8 +39,8 @@ describe("Integration | ORM | Mixed | One To Many Polymorphic | association #set
 
       user.thingIds = null;
 
-      expect(user.things.models).toEqual([]);
-      expect(user.thingIds).toEqual([]);
+      expect(user.things.models).toBeEmpty();
+      expect(user.thingIds).toBeEmpty();
 
       user.save();
 

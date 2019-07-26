@@ -32,8 +32,8 @@ describe("Integration | ORM | Has Many | Reflexive | association #setIds", () =>
 
       tag.tagIds = null;
 
-      expect(tag.tags.models).toEqual([]);
-      expect(tag.tagIds).toEqual([]);
+      expect(tag.tags.models).toBeEmpty();
+      expect(tag.tagIds).toBeEmpty();
 
       tag.save();
       originalTags.forEach(originalTag => {

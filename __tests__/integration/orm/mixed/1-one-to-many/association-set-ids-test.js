@@ -39,8 +39,8 @@ describe("Integration | ORM | Mixed | One To Many | association #setIds", () => 
 
       user.postIds = null;
 
-      expect(user.posts.models).toEqual([]);
-      expect(user.postIds).toEqual([]);
+      expect(user.posts.models).toBeEmpty();
+      expect(user.postIds).toBeEmpty();
 
       user.save();
 

@@ -24,8 +24,8 @@ describe("Integration | ORM | Has Many | Named | association #setIds", () => {
 
       user.blogPostIds = null;
 
-      expect(user.blogPosts.models).toEqual([]);
-      expect(user.blogPostIds).toEqual([]);
+      expect(user.blogPosts.models).toBeEmpty();
+      expect(user.blogPostIds).toBeEmpty();
     });
   });
 });

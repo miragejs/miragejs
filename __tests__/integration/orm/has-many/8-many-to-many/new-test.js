@@ -26,7 +26,7 @@ describe("Integration | ORM | Has Many | Many to Many | new", () => {
     let order = this.schema.orders.new({ productIds: null });
 
     expect(order.products.models.length).toEqual(0);
-    expect(order.productIds).toEqual([]);
+    expect(order.productIds).toBeEmpty();
     expect(order.attrs).toEqual({ productIds: null });
   });
 
@@ -50,7 +50,7 @@ describe("Integration | ORM | Has Many | Many to Many | new", () => {
     let order = this.schema.orders.new({ products: null });
 
     expect(order.products.models.length).toEqual(0);
-    expect(order.productIds).toEqual([]);
+    expect(order.productIds).toBeEmpty();
     expect(order.attrs).toEqual({ productIds: null });
   });
 
@@ -68,16 +68,16 @@ describe("Integration | ORM | Has Many | Many to Many | new", () => {
   test("the parent accepts no reference to children or child ids as empty obj", () => {
     let order = this.schema.orders.new({});
 
-    expect(order.productIds).toEqual([]);
-    expect(order.products.models).toEqual([]);
+    expect(order.productIds).toBeEmpty();
+    expect(order.products.models).toBeEmpty();
     expect(order.attrs).toEqual({ productIds: null });
   });
 
   test("the parent accepts no reference to children or child ids", () => {
     let order = this.schema.orders.new();
 
-    expect(order.productIds).toEqual([]);
-    expect(order.products.models).toEqual([]);
+    expect(order.productIds).toBeEmpty();
+    expect(order.products.models).toBeEmpty();
     expect(order.attrs).toEqual({ productIds: null });
   });
 });

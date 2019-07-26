@@ -1,14 +1,15 @@
-import {
-  _ormSchema as Schema,
-  _Db as Db,
-  Collection,
-  Model
-} from "@miragejs/server";
+import "../../../lib/container";
+import Db from "../../../lib/db";
+import Schema from "../../../lib/orm/schema";
+import Model from "../../../lib/orm/model";
+import Collection from "../../../lib/orm/collection";
 
 describe("Integration | ORM | collection", () => {
-  beforeEach(() =>  {
-    this.User = Model.extend();
-    this.db = new Db({
+  let User, db, schema;
+
+  beforeEach(() => {
+    User = Model.extend();
+    db = new Db({
       users: [
         { id: 1, name: "Link", good: true },
         { id: 2, name: "Zelda", good: true },
@@ -16,21 +17,21 @@ describe("Integration | ORM | collection", () => {
       ]
     });
 
-    this.schema = new Schema(this.db, {
-      user: this.User
+    schema = new Schema(db, {
+      user: User
     });
   });
 
   test("a collection can save its models", () => {
-    let collection = this.schema.users.all();
+    let collection = schema.users.all();
     collection.models[0].name = "Sam";
     collection.save();
 
-    expect(this.db.users[0]).toEqual({ id: "1", name: "Sam", good: true });
+    expect(db.users[0]).toEqual({ id: "1", name: "Sam", good: true });
   });
 
   test("a collection can reload its models", () => {
-    let collection = this.schema.users.all();
+    let collection = schema.users.all();
     expect(collection.models[0].name).toEqual("Link");
 
     collection.models[0].name = "Sam";
@@ -41,7 +42,7 @@ describe("Integration | ORM | collection", () => {
   });
 
   test("a collection can filter its models", () => {
-    let collection = this.schema.users.all();
+    let collection = schema.users.all();
     expect(collection.models).toHaveLength(3);
 
     let newCollection = collection.filter(author => author.good);
@@ -52,7 +53,7 @@ describe("Integration | ORM | collection", () => {
   });
 
   test("a collection can sort its models", () => {
-    let collection = this.schema.users.all();
+    let collection = schema.users.all();
     expect(collection.models.map(m => m.name)).toEqual([
       "Link",
       "Zelda",
@@ -73,7 +74,7 @@ describe("Integration | ORM | collection", () => {
   });
 
   test("a collection can slice its models", () => {
-    let collection = this.schema.users.all();
+    let collection = schema.users.all();
     expect(collection.models.map(m => m.name)).toEqual([
       "Link",
       "Zelda",
@@ -88,8 +89,8 @@ describe("Integration | ORM | collection", () => {
   });
 
   test("a collection can merge with another collection", () => {
-    let goodGuys = this.schema.users.where(user => user.good);
-    let badGuys = this.schema.users.where(user => !user.good);
+    let goodGuys = schema.users.where(user => user.good);
+    let badGuys = schema.users.where(user => !user.good);
 
     expect(goodGuys.models).toHaveLength(2);
     expect(badGuys.models).toHaveLength(1);

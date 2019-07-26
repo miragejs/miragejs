@@ -1,15 +1,14 @@
-import {
-  Model,
-  Collection,
-  _ormSchema as Schema,
-  _Db as Db
-} from "@miragejs/server";
-
-let schema;
-let User = Model.extend();
+import "../../../lib/container";
+import Db from "../../../lib/db";
+import Schema from "../../../lib/orm/schema";
+import Model from "../../../lib/orm/model";
+import Collection from "../../../lib/orm/collection";
 
 describe("Integration | ORM | #where", () => {
-  beforeEach(() =>  {
+  let schema;
+  let User = Model.extend();
+
+  beforeEach(() => {
     let db = new Db({
       users: [
         { id: 1, name: "Link", good: true },

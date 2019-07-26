@@ -39,8 +39,8 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association 
 
       user.commentableIds = null;
 
-      expect(user.commentables.models).toEqual([]);
-      expect(user.commentableIds).toEqual([]);
+      expect(user.commentables.models).toBeEmpty();
+      expect(user.commentableIds).toBeEmpty();
 
       user.save();
 

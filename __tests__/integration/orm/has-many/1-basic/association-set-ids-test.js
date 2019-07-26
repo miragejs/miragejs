@@ -24,8 +24,8 @@ describe("Integration | ORM | Has Many | Basic | association #setIds", () => {
 
       user.postIds = null;
 
-      expect(user.posts.models).toEqual([]);
-      expect(user.postIds).toEqual([]);
+      expect(user.posts.models).toBeEmpty();
+      expect(user.postIds).toBeEmpty();
     });
   });
 });

@@ -26,8 +26,8 @@ describe("Integration | ORM | Has Many | Named One-Way Reflexive | association #
 
       tag.labelIds = null;
 
-      expect(tag.labels.models).toEqual([]);
-      expect(tag.labelIds).toEqual([]);
+      expect(tag.labels.models).toBeEmpty();
+      expect(tag.labelIds).toBeEmpty();
 
       tag.save();
     });

@@ -34,7 +34,7 @@ describe("Integration | ORM | Has Many | Named | association #set", () => {
 
       user.blogPosts = [];
 
-      expect(user.blogPostIds).toEqual([]);
+      expect(user.blogPostIds).toBeEmpty();
       expect(user.blogPosts.models.length).toEqual(0);
     });
 
@@ -43,7 +43,7 @@ describe("Integration | ORM | Has Many | Named | association #set", () => {
 
       user.blogPosts = null;
 
-      expect(user.blogPostIds).toEqual([]);
+      expect(user.blogPostIds).toBeEmpty();
       expect(user.blogPosts.models.length).toEqual(0);
     });
   });

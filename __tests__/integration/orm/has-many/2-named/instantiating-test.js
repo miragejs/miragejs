@@ -26,7 +26,7 @@ describe("Integration | ORM | Has Many | Named | instantiating", () => {
     let user = this.schema.users.new({ blogPostIds: null });
 
     expect(user.blogPosts.models.length).toEqual(0);
-    expect(user.blogPostIds).toEqual([]);
+    expect(user.blogPostIds).toBeEmpty();
     expect(user.attrs).toEqual({ blogPostIds: null });
   });
 
@@ -50,7 +50,7 @@ describe("Integration | ORM | Has Many | Named | instantiating", () => {
     let user = this.schema.users.new({ blogPosts: null });
 
     expect(user.blogPosts.models.length).toEqual(0);
-    expect(user.blogPostIds).toEqual([]);
+    expect(user.blogPostIds).toBeEmpty();
     expect(user.attrs).toEqual({ blogPostIds: null });
   });
 
@@ -68,16 +68,16 @@ describe("Integration | ORM | Has Many | Named | instantiating", () => {
   test("the parent accepts no reference to children or child ids as empty obj", () => {
     let user = this.schema.users.new({});
 
-    expect(user.blogPostIds).toEqual([]);
-    expect(user.blogPosts.models).toEqual([]);
+    expect(user.blogPostIds).toBeEmpty();
+    expect(user.blogPosts.models).toBeEmpty();
     expect(user.attrs).toEqual({ blogPostIds: null });
   });
 
   test("the parent accepts no reference to children or child ids", () => {
     let user = this.schema.users.new();
 
-    expect(user.blogPostIds).toEqual([]);
-    expect(user.blogPosts.models).toEqual([]);
+    expect(user.blogPostIds).toBeEmpty();
+    expect(user.blogPosts.models).toBeEmpty();
     expect(user.attrs).toEqual({ blogPostIds: null });
   });
 });

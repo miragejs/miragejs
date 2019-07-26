@@ -1,9 +1,12 @@
-import { _ormSchema as Schema, _Db as Db, Model } from "@miragejs/server";
-
-var db, schema, User;
+import "../../../lib/container";
+import Db from "../../../lib/db";
+import Schema from "../../../lib/orm/schema";
+import Model from "../../../lib/orm/model";
 
 describe("Integration | ORM | create", () => {
-  beforeEach(() =>  {
+  let db, schema, User;
+
+  beforeEach(() => {
     User = Model.extend();
     db = new Db();
     schema = new Schema(db, {
@@ -28,13 +31,13 @@ describe("Integration | ORM | create", () => {
 
     expect(user instanceof User).toBeTruthy();
     expect(user.attrs).toEqual({ name: "Link" });
-    expect(db.users).toEqual([]);
+    expect(db.users).toBeEmpty();
 
     user.save();
 
     expect(user.id).toBeTruthy();
     expect(user.attrs).toEqual({ id: "1", name: "Link" });
-    expect(db.users).toEqual([{ id: "1", name: "Link" }]);
+    expect(db.users).toIncludeSameMembers([{ id: "1", name: "Link" }]);
   });
 
   test("it can create new models, saved directly to the db", () => {
@@ -43,6 +46,6 @@ describe("Integration | ORM | create", () => {
     expect(user instanceof Model).toBeTruthy();
     expect(user instanceof User).toBeTruthy();
     expect(user.attrs).toEqual({ id: "1", name: "Link" });
-    expect(db.users).toEqual([{ id: "1", name: "Link" }]);
+    expect(db.users).toIncludeSameMembers([{ id: "1", name: "Link" }]);
   });
 });

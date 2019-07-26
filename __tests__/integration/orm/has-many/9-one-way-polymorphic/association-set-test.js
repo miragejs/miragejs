@@ -38,7 +38,7 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | association #set"
 
       user.things = [];
 
-      expect(user.thingIds).toEqual([]);
+      expect(user.thingIds).toBeEmpty();
       expect(user.things.models.length).toEqual(0);
     });
 
@@ -47,7 +47,7 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | association #set"
 
       user.things = null;
 
-      expect(user.thingIds).toEqual([]);
+      expect(user.thingIds).toBeEmpty();
       expect(user.things.models.length).toEqual(0);
     });
   });

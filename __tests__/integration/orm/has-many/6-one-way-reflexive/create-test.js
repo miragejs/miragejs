@@ -17,7 +17,7 @@ describe("Integration | ORM | Has Many | One-Way Reflexive | create", () => {
     tagA.reload();
 
     expect(tagB.tagIds).toEqual([tagA.id]);
-    expect(tagA.tagIds).toEqual([]);
+    expect(tagA.tagIds).toBeEmpty();
     expect(tagB.attrs.tagIds).toEqual([tagA.id]);
     expect(tagB.tags.models[0].attrs).toEqual(tagA.attrs);
     expect(this.helper.db.tags.length).toEqual(2);
@@ -35,7 +35,7 @@ describe("Integration | ORM | Has Many | One-Way Reflexive | create", () => {
     tagA.reload();
 
     expect(tagB.tagIds).toEqual([tagA.id]);
-    expect(tagA.tagIds).toEqual([]);
+    expect(tagA.tagIds).toBeEmpty();
     expect(tagB.attrs.tagIds).toEqual([tagA.id]);
     expect(tagA.attrs.tagIds).toEqual(null);
     expect(this.helper.db.tags.length).toEqual(2);
@@ -51,7 +51,7 @@ describe("Integration | ORM | Has Many | One-Way Reflexive | create", () => {
     tagA.reload();
 
     expect(tagB.tagIds).toEqual([tagA.id]);
-    expect(tagA.tagIds).toEqual([]);
+    expect(tagA.tagIds).toBeEmpty();
     expect(tagB.attrs.tagIds).toEqual([tagA.id]);
     expect(tagA.attrs.tagIds).toEqual(null);
     expect(this.helper.db.tags.length).toEqual(2);
