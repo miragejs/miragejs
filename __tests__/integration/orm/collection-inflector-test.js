@@ -2,11 +2,8 @@
 // import Schema from 'ember-cli-mirage/orm/schema';
 // import { Server, Model } from '@miragejs/server';
 // import Inflector from 'ember-inflector';
- 
 
-describe("Integration | ORM | inflector-collectionName integration", function(
-  hooks
-) {
+describe("Integration | ORM | inflector-collectionName integration", function(hooks) {
   // TODO: deal with this inflector test later
   // hooks.beforeEach(function() {
   //   Inflector.inflector.irregular('head-of-state', 'heads-of-state');

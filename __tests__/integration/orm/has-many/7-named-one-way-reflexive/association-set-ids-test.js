@@ -1,21 +1,20 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Has Many | Named One-Way Reflexive | association #setIds', function(hooks) {
+describe("Integration | ORM | Has Many | Named One-Way Reflexive | association #setIds", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
 
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can update its association to include a saved child via childIds`, assert => {
-      let [ tag ] = this.helper[state]();
+      let [tag] = this.helper[state]();
       let savedTag = this.helper.savedChild();
 
-      tag.labelIds = [ savedTag.id ];
+      tag.labelIds = [savedTag.id];
 
       expect(tag.labels.models[0].attrs).toEqual(savedTag.attrs);
-      expect(tag.labelIds).toEqual([ savedTag.id ]);
+      expect(tag.labelIds).toEqual([savedTag.id]);
 
       tag.save();
       savedTag.reload();
@@ -24,7 +23,7 @@ describe('Integration | ORM | Has Many | Named One-Way Reflexive | association #
     });
 
     test(`a ${state} can clear its association via a null childIds`, assert => {
-      let [ tag ] = this.helper[state]();
+      let [tag] = this.helper[state]();
 
       tag.labelIds = null;
 
@@ -33,6 +32,5 @@ describe('Integration | ORM | Has Many | Named One-Way Reflexive | association #
 
       tag.save();
     });
-
   });
 });

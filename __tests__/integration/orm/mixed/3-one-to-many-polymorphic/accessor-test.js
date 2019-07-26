@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Mixed | One To Many Polymorphic | accessor', function(hooks) {
+describe("Integration | ORM | Mixed | One To Many Polymorphic | accessor", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,10 +9,9 @@ describe('Integration | ORM | Mixed | One To Many Polymorphic | accessor', funct
   /*
     The reference to a belongs-to association is correct, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`the references of a ${state} are correct`, assert => {
-      let [ user, posts ] = this.helper[state]();
+      let [user, posts] = this.helper[state]();
 
       expect(user.things.models.length).toEqual(posts.length);
       expect(user.thingIds.length).toEqual(posts.length);
@@ -21,9 +20,11 @@ describe('Integration | ORM | Mixed | One To Many Polymorphic | accessor', funct
         expect(user.things.includes(post)).toBeTruthy();
 
         if (post.isSaved()) {
-          expect(user.thingIds.find(obj => {
-            return (obj.id === post.id && obj.type === 'post');
-          })).toBeTruthy();
+          expect(
+            user.thingIds.find(obj => {
+              return obj.id === post.id && obj.type === "post";
+            })
+          ).toBeTruthy();
         }
 
         // Check the inverse
@@ -31,6 +32,5 @@ describe('Integration | ORM | Mixed | One To Many Polymorphic | accessor', funct
         expect(post.userId).toEqual(user.id);
       });
     });
-
   });
 });

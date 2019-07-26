@@ -1,4 +1,10 @@
-import { Model, hasMany, belongsTo, _Db as Db, _ormSchema as Schema } from '@miragejs/server';
+import {
+  Model,
+  hasMany,
+  belongsTo,
+  _Db as Db,
+  _ormSchema as Schema
+} from "@miragejs/server";
 
 /*
   A model with a hasMany association can be in eight states
@@ -12,7 +18,6 @@ import { Model, hasMany, belongsTo, _Db as Db, _ormSchema as Schema } from '@mir
   where the children array may be empty.
 */
 export default class Helper {
-
   constructor() {
     this.db = new Db();
 
@@ -27,76 +32,71 @@ export default class Helper {
   }
 
   savedChildNoParent() {
-    let post = this.db.posts.insert({ title: 'Lorem' });
+    let post = this.db.posts.insert({ title: "Lorem" });
 
-    return [ this.schema.posts.find(post.id), null ];
+    return [this.schema.posts.find(post.id), null];
   }
 
   savedChildNewParent() {
-    let post = this.schema.posts.create({ title: 'Lorem' });
-    let user = this.schema.users.new({ name: 'Link' });
+    let post = this.schema.posts.create({ title: "Lorem" });
+    let user = this.schema.users.new({ name: "Link" });
 
     post.user = user;
 
-    return [ post, user ];
+    return [post, user];
   }
 
   savedChildSavedParent() {
     let { schema } = this;
     schema.db.loadData({
-      posts: [
-        { id: '1', title: 'Lorem', userId: '1' }
-      ],
-      users: [
-        { id: '1', name: 'Link', postIds: ['1'] }
-      ]
+      posts: [{ id: "1", title: "Lorem", userId: "1" }],
+      users: [{ id: "1", name: "Link", postIds: ["1"] }]
     });
 
-    return [ schema.posts.find(1), schema.users.find(1) ];
+    return [schema.posts.find(1), schema.users.find(1)];
   }
 
   newChildNoParent() {
-    let post = this.schema.posts.new({ title: 'Lorem' });
+    let post = this.schema.posts.new({ title: "Lorem" });
 
-    return [ post, null ];
+    return [post, null];
   }
 
   newChildNewParent() {
-    let post = this.schema.posts.new({ title: 'Lorem' });
-    let user = this.schema.users.new({ name: 'Link' });
+    let post = this.schema.posts.new({ title: "Lorem" });
+    let user = this.schema.users.new({ name: "Link" });
 
     post.user = user;
 
-    return [ post, user ];
+    return [post, user];
   }
 
   newChildSavedParent() {
-    let post = this.schema.posts.create({ title: 'Lorem' });
-    let user = this.schema.users.new({ name: 'Link' });
+    let post = this.schema.posts.create({ title: "Lorem" });
+    let user = this.schema.users.new({ name: "Link" });
 
     post.user = user;
 
-    return [ post, user ];
+    return [post, user];
   }
 
   // Unassociated models
   savedParent() {
-    let insertedUser = this.db.users.insert({ name: 'Link' });
+    let insertedUser = this.db.users.insert({ name: "Link" });
 
     return this.schema.users.find(insertedUser.id);
   }
 
   newParent() {
-    return this.schema.users.new({ name: 'Link' });
+    return this.schema.users.new({ name: "Link" });
   }
-
 }
 
 export const states = [
-  'savedChildNoParent',
-  'savedChildNewParent',
-  'savedChildSavedParent',
-  'newChildNoParent',
-  'newChildNewParent',
-  'newChildSavedParent'
+  "savedChildNoParent",
+  "savedChildNewParent",
+  "savedChildSavedParent",
+  "newChildNoParent",
+  "newChildNewParent",
+  "newChildSavedParent"
 ];

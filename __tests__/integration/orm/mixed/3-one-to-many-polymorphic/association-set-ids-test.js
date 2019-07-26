@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Mixed | One To Many Polymorphic | association #setIds', function(hooks) {
+describe("Integration | ORM | Mixed | One To Many Polymorphic | association #setIds", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,16 +9,15 @@ describe('Integration | ORM | Mixed | One To Many Polymorphic | association #set
   /*
     The model can update its association via parentId, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can update its association to a saved parent via parentId`, assert => {
-      let [ user, originalPosts ] = this.helper[state]();
+      let [user, originalPosts] = this.helper[state]();
       let savedPost = this.helper.savedChild();
 
-      user.thingIds = [ { type: 'post', id: savedPost.id } ];
+      user.thingIds = [{ type: "post", id: savedPost.id }];
 
       expect(user.things.includes(savedPost)).toBeTruthy();
-      expect(user.thingIds).toEqual([ { type: 'post', id: savedPost.id } ]);
+      expect(user.thingIds).toEqual([{ type: "post", id: savedPost.id }]);
 
       user.save();
       savedPost.reload();
@@ -37,7 +36,7 @@ describe('Integration | ORM | Mixed | One To Many Polymorphic | association #set
     });
 
     test(`a ${state} can clear its association via a null parentId`, assert => {
-      let [ user, originalPosts ] = this.helper[state]();
+      let [user, originalPosts] = this.helper[state]();
 
       user.thingIds = null;
 
@@ -54,6 +53,5 @@ describe('Integration | ORM | Mixed | One To Many Polymorphic | association #set
         }
       });
     });
-
   });
 });

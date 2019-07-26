@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Belongs To | One-Way Reflexive | association #create', function(hooks) {
+describe("Integration | ORM | Belongs To | One-Way Reflexive | association #create", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,18 +9,16 @@ describe('Integration | ORM | Belongs To | One-Way Reflexive | association #crea
   /*
     The model can create a belongs-to association, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can create an associated parent`, assert => {
-      let [ child ] = this.helper[state]();
+      let [child] = this.helper[state]();
 
-      let ganon = child.createUser({ name: 'Ganon' });
+      let ganon = child.createUser({ name: "Ganon" });
 
       expect(ganon.id).toBeTruthy();
       expect(child.user.attrs).toEqual(ganon.attrs);
       expect(child.userId).toEqual(ganon.id);
       expect(this.helper.schema.users.find(child.id).userId).toEqual(ganon.id);
     });
-
   });
 });

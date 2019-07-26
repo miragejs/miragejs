@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Has Many | Many-to-many Polymorphic | accessor', function(hooks) {
+describe("Integration | ORM | Has Many | Many-to-many Polymorphic | accessor", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,10 +9,9 @@ describe('Integration | ORM | Has Many | Many-to-many Polymorphic | accessor', f
   /*
     The reference to a belongs-to association is correct, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`the references of a ${state} are correct`, assert => {
-      let [ user, posts ] = this.helper[state]();
+      let [user, posts] = this.helper[state]();
 
       expect(user.commentables.models.length).toEqual(posts.length);
       expect(user.commentableIds.length).toEqual(posts.length);
@@ -21,13 +20,12 @@ describe('Integration | ORM | Has Many | Many-to-many Polymorphic | accessor', f
         expect(user.commentables.includes(post)).toBeTruthy();
 
         if (post.isSaved()) {
-          expect(user.commentableIds[i]).toEqual({ type: 'post', id: post.id });
+          expect(user.commentableIds[i]).toEqual({ type: "post", id: post.id });
         }
 
         // Check the inverse
         expect(post.users.includes(user)).toBeTruthy();
       });
     });
-
   });
 });

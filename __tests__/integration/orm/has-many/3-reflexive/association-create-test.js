@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Has Many | Reflexive | association #create', function(hooks) {
+describe("Integration | ORM | Has Many | Reflexive | association #create", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,14 +9,13 @@ describe('Integration | ORM | Has Many | Reflexive | association #create', funct
   /*
     The model can create a has-many association, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can create an associated child`, assert => {
-      let [ tag ] = this.helper[state]();
+      let [tag] = this.helper[state]();
       let initialCount = tag.tags.models.length;
 
-      let orangeTag = tag.createTag({ name: 'Orange' });
-      let blueTag = tag.createTag({ name: 'Blue' });
+      let orangeTag = tag.createTag({ name: "Orange" });
+      let blueTag = tag.createTag({ name: "Blue" });
 
       expect(orangeTag.id).toBeTruthy();
       expect(blueTag.id).toBeTruthy();
@@ -34,6 +33,5 @@ describe('Integration | ORM | Has Many | Reflexive | association #create', funct
       expect(blueTag.tags.models.length).toEqual(1);
       expect(blueTag.tags.includes(tag)).toBeTruthy();
     });
-
   });
 });

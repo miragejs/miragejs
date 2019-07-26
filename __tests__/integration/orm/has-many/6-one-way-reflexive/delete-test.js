@@ -1,15 +1,14 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Has Many | One-Way Reflexive | delete', function(hooks) {
+describe("Integration | ORM | Has Many | One-Way Reflexive | delete", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
 
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`deleting children updates the parent's foreign key for a ${state}`, assert => {
-      let [ tag, tags ] = this.helper[state]();
+      let [tag, tags] = this.helper[state]();
 
       if (tags && tags.length) {
         tags.forEach(t => t.destroy());
@@ -19,6 +18,5 @@ describe('Integration | ORM | Has Many | One-Way Reflexive | delete', function(h
       expect(tag.tags.length).toEqual(0);
       expect(tag.tagIds.length).toEqual(0);
     });
-
   });
 });

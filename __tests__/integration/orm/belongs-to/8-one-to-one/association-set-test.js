@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Belongs To | One To One | association #set', function(hooks) {
+describe("Integration | ORM | Belongs To | One To One | association #set", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,10 +9,9 @@ describe('Integration | ORM | Belongs To | One To One | association #set', funct
   /*
     The model can update its association via parent, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can update its association to a saved parent`, assert => {
-      let [ user ] = this.helper[state]();
+      let [user] = this.helper[state]();
       let profile = this.helper.savedParent();
 
       user.profile = profile;
@@ -24,7 +23,7 @@ describe('Integration | ORM | Belongs To | One To One | association #set', funct
     });
 
     test(`a ${state} can update its association to a new parent`, assert => {
-      let [ user ] = this.helper[state]();
+      let [user] = this.helper[state]();
       let profile = this.helper.newParent();
 
       user.profile = profile;
@@ -37,13 +36,12 @@ describe('Integration | ORM | Belongs To | One To One | association #set', funct
     });
 
     test(`a ${state} can update its association to a null parent`, assert => {
-      let [ user ] = this.helper[state]();
+      let [user] = this.helper[state]();
 
       user.profile = null;
 
       expect(user.profileId).toEqual(null);
       expect(user.profile).toEqual(null);
     });
-
   });
 });

@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Belongs To | One To One | association #new', function(hooks) {
+describe("Integration | ORM | Belongs To | One To One | association #new", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -10,10 +10,9 @@ describe('Integration | ORM | Belongs To | One To One | association #new', funct
     The model can make a new unsaved belongs-to association, for all states
   */
 
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can build a new associated parent`, assert => {
-      let [ user ] = this.helper[state]();
+      let [user] = this.helper[state]();
 
       let profile = user.newProfile({ age: 300 });
 
@@ -28,6 +27,5 @@ describe('Integration | ORM | Belongs To | One To One | association #new', funct
       expect(profile.id).toBeTruthy();
       expect(user.profileId).toEqual(profile.id);
     });
-
   });
 });

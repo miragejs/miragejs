@@ -1,4 +1,9 @@
-import { Model, belongsTo, _ormSchema as Schema, _Db as Db } from '@miragejs/server';
+import {
+  Model,
+  belongsTo,
+  _ormSchema as Schema,
+  _Db as Db
+} from "@miragejs/server";
 
 /*
   A model with a belongsTo association can be in six states
@@ -12,7 +17,6 @@ import { Model, belongsTo, _ormSchema as Schema, _Db as Db } from '@miragejs/ser
   where the parent may be undefined.
 */
 export default class BelongsToHelper {
-
   constructor() {
     this.db = new Db();
     this.loadData = this.db.loadData.bind(this.db);
@@ -28,76 +32,73 @@ export default class BelongsToHelper {
   }
 
   savedChildNoParent() {
-    let insertedComment = this.db.comments.insert({ text: 'Lorem' });
+    let insertedComment = this.db.comments.insert({ text: "Lorem" });
 
-    return [ this.schema.comments.find(insertedComment.id), undefined ];
+    return [this.schema.comments.find(insertedComment.id), undefined];
   }
 
   savedChildNewParent() {
-    let comment = this.schema.comments.create({ text: 'Lorem' });
-    let post = this.schema.posts.new({ title: 'Post 1' });
+    let comment = this.schema.comments.create({ text: "Lorem" });
+    let post = this.schema.posts.new({ title: "Post 1" });
 
     comment.commentable = post;
 
-    return [ comment, post ];
+    return [comment, post];
   }
 
   savedChildSavedParent() {
     this.loadData({
-      posts: [
-        { id: '1', title: 'Post 1', commentId: '1' }
-      ],
+      posts: [{ id: "1", title: "Post 1", commentId: "1" }],
       comments: [
-        { id: '1', text: 'Lorem', commentableId: { id: '1', type: 'post' } }
+        { id: "1", text: "Lorem", commentableId: { id: "1", type: "post" } }
       ]
     });
 
     let comment = this.schema.comments.find(1);
     let post = this.schema.posts.find(1);
 
-    return [ comment, post ];
+    return [comment, post];
   }
 
   newChildNoParent() {
-    return [ this.schema.comments.new({ text: 'Lorem' }), undefined ];
+    return [this.schema.comments.new({ text: "Lorem" }), undefined];
   }
 
   newChildNewParent() {
-    let post = this.schema.posts.new({ title: 'Post 1' });
-    let comment = this.schema.comments.new({ text: 'Lorem' });
+    let post = this.schema.posts.new({ title: "Post 1" });
+    let comment = this.schema.comments.new({ text: "Lorem" });
     comment.commentable = post;
 
-    return [ comment, post ];
+    return [comment, post];
   }
 
   newChildSavedParent() {
-    let insertedPost = this.db.posts.insert({ title: 'Post 1' });
-    let comment = this.schema.comments.new({ text: 'Lorem' });
+    let insertedPost = this.db.posts.insert({ title: "Post 1" });
+    let comment = this.schema.comments.new({ text: "Lorem" });
     let savedProfile = this.schema.posts.find(insertedPost.id);
 
     comment.commentable = savedProfile;
 
-    return [ comment, savedProfile ];
+    return [comment, savedProfile];
   }
 
   // Just a saved unassociated parent.
   savedParent() {
-    let insertedPost = this.db.posts.insert({ title: 'Post 1' });
+    let insertedPost = this.db.posts.insert({ title: "Post 1" });
 
     return this.schema.posts.find(insertedPost.id);
   }
 
   newParent() {
-    return this.schema.posts.new({ title: 'Post 1' });
+    return this.schema.posts.new({ title: "Post 1" });
   }
-
 }
 
 export const states = [
-  'savedChildNoParent',
-  'savedChildNewParent',
-  'savedChildSavedParent',
-  'newChildNoParent',
-  'newChildNewParent',
-  'newChildSavedParent'
+  "savedChildNoParent",
+  "savedChildNewParent",
+  "savedChildSavedParent",
+  "newChildNoParent",
+  "newChildNewParent",
+  "newChildSavedParent"
 ];

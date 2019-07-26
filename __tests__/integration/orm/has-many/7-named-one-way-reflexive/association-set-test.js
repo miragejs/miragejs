@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Has Many | Named One-Way Reflexive | association #set', function(hooks) {
+describe("Integration | ORM | Has Many | Named One-Way Reflexive | association #set", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,13 +9,12 @@ describe('Integration | ORM | Has Many | Named One-Way Reflexive | association #
   /*
     The model can update its association via parent, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can update its association to a list of saved children`, assert => {
-      let [ tag ] = this.helper[state]();
+      let [tag] = this.helper[state]();
       let savedTag = this.helper.savedChild();
 
-      tag.labels = [ savedTag ];
+      tag.labels = [savedTag];
 
       expect(tag.labels.includes(savedTag)).toBeTruthy();
       expect(tag.labelIds[0]).toEqual(savedTag.id);
@@ -25,10 +24,10 @@ describe('Integration | ORM | Has Many | Named One-Way Reflexive | association #
     });
 
     test(`a ${state} can update its association to a new parent`, assert => {
-      let [ tag ] = this.helper[state]();
+      let [tag] = this.helper[state]();
       let newTag = this.helper.newChild();
 
-      tag.labels = [ newTag ];
+      tag.labels = [newTag];
 
       expect(tag.labels.includes(newTag)).toBeTruthy();
       expect(tag.labelIds[0]).toEqual(undefined);
@@ -38,26 +37,25 @@ describe('Integration | ORM | Has Many | Named One-Way Reflexive | association #
     });
 
     test(`a ${state} can clear its association via an empty list`, assert => {
-      let [ tag ] = this.helper[state]();
+      let [tag] = this.helper[state]();
 
-      tag.labels = [ ];
+      tag.labels = [];
 
-      expect(tag.labelIds).toEqual([ ]);
+      expect(tag.labelIds).toEqual([]);
       expect(tag.labels.models.length).toEqual(0);
 
       tag.save();
     });
 
     test(`a ${state} can clear its association via an empty list`, assert => {
-      let [ tag ] = this.helper[state]();
+      let [tag] = this.helper[state]();
 
       tag.labels = null;
 
-      expect(tag.labelIds).toEqual([ ]);
+      expect(tag.labelIds).toEqual([]);
       expect(tag.labels.models.length).toEqual(0);
 
       tag.save();
     });
-
   });
 });

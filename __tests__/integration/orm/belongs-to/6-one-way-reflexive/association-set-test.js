@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Belongs To | One-Way Reflexive | association #set', function(hooks) {
+describe("Integration | ORM | Belongs To | One-Way Reflexive | association #set", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,10 +9,9 @@ describe('Integration | ORM | Belongs To | One-Way Reflexive | association #set'
   /*
     The model can update its association via parent, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can update its association to a saved parent`, assert => {
-      let [ child ] = this.helper[state]();
+      let [child] = this.helper[state]();
       let savedParent = this.helper.savedParent();
 
       child.user = savedParent;
@@ -22,7 +21,7 @@ describe('Integration | ORM | Belongs To | One-Way Reflexive | association #set'
     });
 
     test(`a ${state} can update its association to a new parent`, assert => {
-      let [ child ] = this.helper[state]();
+      let [child] = this.helper[state]();
       let newParent = this.helper.newParent();
 
       child.user = newParent;
@@ -32,13 +31,12 @@ describe('Integration | ORM | Belongs To | One-Way Reflexive | association #set'
     });
 
     test(`a ${state} can update its association to a null parent`, assert => {
-      let [ child ] = this.helper[state]();
+      let [child] = this.helper[state]();
 
       child.user = null;
 
       expect(child.userId).toEqual(null);
       expect(child.user).toEqual(null);
     });
-
   });
 });

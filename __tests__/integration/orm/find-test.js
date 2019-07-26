@@ -4,7 +4,6 @@ import {
   _Db as Db,
   Model
 } from "@miragejs/server";
- 
 
 var schema;
 var User = Model.extend();

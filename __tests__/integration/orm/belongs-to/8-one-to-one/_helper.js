@@ -1,4 +1,9 @@
-import { Model, belongsTo, _ormSchema as Schema, _Db as Db } from '@miragejs/server';
+import {
+  Model,
+  belongsTo,
+  _ormSchema as Schema,
+  _Db as Db
+} from "@miragejs/server";
 
 /*
   A model with a belongsTo association can be in six states
@@ -12,7 +17,6 @@ import { Model, belongsTo, _ormSchema as Schema, _Db as Db } from '@miragejs/ser
   where the parent may be undefined.
 */
 export default class BelongsToHelper {
-
   constructor() {
     this.db = new Db();
 
@@ -27,50 +31,53 @@ export default class BelongsToHelper {
   }
 
   savedChildNoParent() {
-    let insertedUser = this.db.users.insert({ name: 'Link' });
+    let insertedUser = this.db.users.insert({ name: "Link" });
 
-    return [ this.schema.users.find(insertedUser.id), undefined ];
+    return [this.schema.users.find(insertedUser.id), undefined];
   }
 
   savedChildNewParent() {
-    let user = this.schema.users.create({ name: 'Link' });
+    let user = this.schema.users.create({ name: "Link" });
     let profile = this.schema.profiles.new({ age: 300 });
 
     user.profile = profile;
 
-    return [ user, profile ];
+    return [user, profile];
   }
 
   savedChildSavedParent() {
     let insertedProfile = this.db.profiles.insert({ age: 300 });
-    let insertedUser = this.db.users.insert({ name: 'Link', profileId: insertedProfile.id });
+    let insertedUser = this.db.users.insert({
+      name: "Link",
+      profileId: insertedProfile.id
+    });
     this.db.profiles.update(insertedProfile.id, { userId: insertedUser.id });
     let user = this.schema.users.find(insertedUser.id);
     let profile = this.schema.profiles.find(insertedProfile.id);
 
-    return [ user, profile ];
+    return [user, profile];
   }
 
   newChildNoParent() {
-    return [ this.schema.users.new({ name: 'Link' }), undefined ];
+    return [this.schema.users.new({ name: "Link" }), undefined];
   }
 
   newChildNewParent() {
     let profile = this.schema.profiles.new({ age: 300 });
-    let user = this.schema.users.new({ name: 'Link' });
+    let user = this.schema.users.new({ name: "Link" });
     user.profile = profile;
 
-    return [ user, profile ];
+    return [user, profile];
   }
 
   newChildSavedParent() {
     let insertedProfile = this.db.profiles.insert({ age: 300 });
-    let user = this.schema.users.new({ name: 'Link' });
+    let user = this.schema.users.new({ name: "Link" });
     let savedProfile = this.schema.profiles.find(insertedProfile.id);
 
     user.profile = savedProfile;
 
-    return [ user, savedProfile ];
+    return [user, savedProfile];
   }
 
   // Just a saved unassociated parent.
@@ -83,14 +90,13 @@ export default class BelongsToHelper {
   newParent() {
     return this.schema.profiles.new({ age: 300 });
   }
-
 }
 
 export const states = [
-  'savedChildNoParent',
-  'savedChildNewParent',
-  'savedChildSavedParent',
-  'newChildNoParent',
-  'newChildNewParent',
-  'newChildSavedParent'
+  "savedChildNoParent",
+  "savedChildNewParent",
+  "savedChildSavedParent",
+  "newChildNoParent",
+  "newChildNewParent",
+  "newChildSavedParent"
 ];

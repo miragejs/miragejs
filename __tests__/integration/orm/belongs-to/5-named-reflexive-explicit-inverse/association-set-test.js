@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | association #set', function(hooks) {
+describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | association #set", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,10 +9,9 @@ describe('Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | as
   /*
     The model can update its association via parent, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can update its association to a saved parent`, assert => {
-      let [ user ] = this.helper[state]();
+      let [user] = this.helper[state]();
       let friend = this.helper.savedParent();
 
       user.bestFriend = friend;
@@ -22,7 +21,7 @@ describe('Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | as
     });
 
     test(`a ${state} can update its association to a new parent`, assert => {
-      let [ user ] = this.helper[state]();
+      let [user] = this.helper[state]();
       let friend = this.helper.newParent();
 
       user.bestFriend = friend;
@@ -32,13 +31,12 @@ describe('Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | as
     });
 
     test(`a ${state} can update its association to a null parent`, assert => {
-      let [ user ] = this.helper[state]();
+      let [user] = this.helper[state]();
 
       user.bestFriend = null;
 
       expect(user.bestFriendId).toEqual(null);
       expect(user.bestFriend).toEqual(null);
     });
-
   });
 });

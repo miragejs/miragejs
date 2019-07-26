@@ -5,7 +5,6 @@ import {
   _ormSchema as Schema,
   _Db as Db
 } from "@miragejs/server";
- 
 
 // Model classes are defined statically, just like in a typical app
 var User = Model.extend({

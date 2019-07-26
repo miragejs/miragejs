@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Mixed | Many To One | association #setIds', function(hooks) {
+describe("Integration | ORM | Mixed | Many To One | association #setIds", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,10 +9,9 @@ describe('Integration | ORM | Mixed | Many To One | association #setIds', functi
   /*
     The model can update its association via parentId, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can update its association to a saved parent via parentId`, assert => {
-      let [ post, originalUser ] = this.helper[state]();
+      let [post, originalUser] = this.helper[state]();
       let user = this.helper.savedParent();
 
       post.userId = user.id;
@@ -35,7 +34,7 @@ describe('Integration | ORM | Mixed | Many To One | association #setIds', functi
     });
 
     test(`a ${state} can clear its association via a null parentId`, assert => {
-      let [ post, originalUser ] = this.helper[state]();
+      let [post, originalUser] = this.helper[state]();
 
       post.userId = null;
 
@@ -49,6 +48,5 @@ describe('Integration | ORM | Mixed | Many To One | association #setIds', functi
         expect(originalUser.posts.includes(post)).toBeFalsy();
       }
     });
-
   });
 });

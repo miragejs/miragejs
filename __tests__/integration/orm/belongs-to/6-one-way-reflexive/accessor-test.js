@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Belongs To | One-Way Reflexive | accessor', function(hooks) {
+describe("Integration | ORM | Belongs To | One-Way Reflexive | accessor", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,10 +9,9 @@ describe('Integration | ORM | Belongs To | One-Way Reflexive | accessor', functi
   /*
     The reference to a belongs-to association is correct, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`the references of a ${state} are correct`, assert => {
-      let [ user, parent ] = this.helper[state]();
+      let [user, parent] = this.helper[state]();
 
       // We use .attrs here to avoid infinite recursion
       if (parent) {
@@ -23,6 +22,5 @@ describe('Integration | ORM | Belongs To | One-Way Reflexive | accessor', functi
         expect(user.userId).toEqual(null);
       }
     });
-
   });
 });

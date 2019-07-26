@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Belongs To | Basic | association #new', function(hooks) {
+describe("Integration | ORM | Belongs To | Basic | association #new", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -10,12 +10,11 @@ describe('Integration | ORM | Belongs To | Basic | association #new', function(h
     The model can make a new unsaved belongs-to association, for all states
   */
 
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can build a new associated parent`, assert => {
-      let [ post ] = this.helper[state]();
+      let [post] = this.helper[state]();
 
-      let ganon = post.newAuthor({ name: 'Ganon' });
+      let ganon = post.newAuthor({ name: "Ganon" });
 
       expect(!ganon.id).toBeTruthy();
       expect(post.author).toEqual(ganon);
@@ -26,6 +25,5 @@ describe('Integration | ORM | Belongs To | Basic | association #new', function(h
       expect(ganon.id).toBeTruthy();
       expect(post.authorId).toEqual(ganon.id);
     });
-
   });
 });

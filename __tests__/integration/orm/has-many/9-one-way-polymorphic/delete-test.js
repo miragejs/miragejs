@@ -1,15 +1,14 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Has Many | One-way Polymorphic | delete', function(hooks) {
+describe("Integration | ORM | Has Many | One-way Polymorphic | delete", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
 
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`deleting children updates the parent's foreign key for a ${state}`, assert => {
-      let [ user, posts ] = this.helper[state]();
+      let [user, posts] = this.helper[state]();
 
       if (posts && posts.length) {
         posts.forEach(p => p.destroy());
@@ -19,6 +18,5 @@ describe('Integration | ORM | Has Many | One-way Polymorphic | delete', function
       expect(user.things.length).toEqual(0);
       expect(user.thingIds.length).toEqual(0);
     });
-
   });
 });

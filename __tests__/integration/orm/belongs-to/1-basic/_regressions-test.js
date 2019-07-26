@@ -1,15 +1,16 @@
-import { Model, belongsTo, _ormSchema as Schema, _Db as Db } from '@miragejs/server';
-import { module, test } from 'qunit';
+import {
+  Model,
+  belongsTo,
+  _ormSchema as Schema,
+  _Db as Db
+} from "@miragejs/server";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Belongs To | Basic | regressions', function() {
-  test('belongsTo accessors works when foreign key is present but falsy', assert => {
+describe("Integration | ORM | Belongs To | Basic | regressions", function() {
+  test("belongsTo accessors works when foreign key is present but falsy", assert => {
     let db = new Db({
-      posts: [
-        { id: 1, authorId: 0, name: 'some post' }
-      ],
-      authors: [
-        { id: 0, name: 'Foo' }
-      ]
+      posts: [{ id: 1, authorId: 0, name: "some post" }],
+      authors: [{ id: 0, name: "Foo" }]
     });
 
     let schema = new Schema(db, {
@@ -20,6 +21,6 @@ describe('Integration | ORM | Belongs To | Basic | regressions', function() {
     });
 
     let post = schema.posts.find(1);
-    expect(post.author.name).toEqual('Foo');
+    expect(post.author.name).toEqual("Foo");
   });
 });

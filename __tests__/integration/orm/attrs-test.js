@@ -1,5 +1,4 @@
 import { _Db as Db, _ormSchema as Schema, Model } from "@miragejs/server";
- 
 
 var db, schema, User;
 

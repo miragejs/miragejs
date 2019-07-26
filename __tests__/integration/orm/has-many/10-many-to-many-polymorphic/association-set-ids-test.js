@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Has Many | Many-to-many Polymorphic | association #setIds', function(hooks) {
+describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association #setIds", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,17 +9,18 @@ describe('Integration | ORM | Has Many | Many-to-many Polymorphic | association 
   /*
     The model can update its association via parentId, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can update its association to a saved parent via parentId`, assert => {
-      let [ user, originalPosts ] = this.helper[state]();
+      let [user, originalPosts] = this.helper[state]();
       let savedPost = this.helper.savedChild();
 
-      user.commentableIds = [ { type: 'post', id: savedPost.id } ];
+      user.commentableIds = [{ type: "post", id: savedPost.id }];
 
       expect(user.commentables.includes(savedPost)).toBeTruthy();
       expect(
-        user.commentableIds.find(({ id, type }) => ((id === savedPost.id && type === 'post')))
+        user.commentableIds.find(
+          ({ id, type }) => id === savedPost.id && type === "post"
+        )
       ).toBeTruthy();
 
       user.save();
@@ -35,7 +36,7 @@ describe('Integration | ORM | Has Many | Many-to-many Polymorphic | association 
     });
 
     test(`a ${state} can clear its association via a null ids`, assert => {
-      let [ user, originalPosts ] = this.helper[state]();
+      let [user, originalPosts] = this.helper[state]();
 
       user.commentableIds = null;
 
@@ -49,6 +50,5 @@ describe('Integration | ORM | Has Many | Many-to-many Polymorphic | association 
         expect(post.users.includes(user)).toBeFalsy();
       });
     });
-
   });
 });

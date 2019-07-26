@@ -1,4 +1,9 @@
-import { Model, belongsTo, _ormSchema as Schema, _Db as Db } from '@miragejs/server';
+import {
+  Model,
+  belongsTo,
+  _ormSchema as Schema,
+  _Db as Db
+} from "@miragejs/server";
 
 /*
   A model with a belongsTo association can be in six states
@@ -12,81 +17,82 @@ import { Model, belongsTo, _ormSchema as Schema, _Db as Db } from '@miragejs/ser
   where the parent may be undefined.
 */
 export default class BelongsToHelper {
-
   constructor() {
     this.db = new Db();
 
     this.schema = new Schema(this.db, {
       user: Model.extend({
-        parent: belongsTo('user', { inverse: null })
+        parent: belongsTo("user", { inverse: null })
       })
     });
   }
 
   savedChildNoParent() {
-    let insertedUser = this.db.users.insert({ name: 'Link' });
+    let insertedUser = this.db.users.insert({ name: "Link" });
 
-    return [ this.schema.users.find(insertedUser.id), undefined ];
+    return [this.schema.users.find(insertedUser.id), undefined];
   }
 
   savedChildNewParent() {
-    let child = this.schema.users.create({ name: 'Link' });
-    let parent = this.schema.users.new({ name: 'Bob' });
+    let child = this.schema.users.create({ name: "Link" });
+    let parent = this.schema.users.new({ name: "Bob" });
 
     child.parent = parent;
 
-    return [ child, parent ];
+    return [child, parent];
   }
 
   savedChildSavedParent() {
-    let insertedParent = this.db.users.insert({ name: 'Bob' });
-    let insertedChild = this.db.users.insert({ name: 'Link', parentId: insertedParent.id });
+    let insertedParent = this.db.users.insert({ name: "Bob" });
+    let insertedChild = this.db.users.insert({
+      name: "Link",
+      parentId: insertedParent.id
+    });
     let child = this.schema.users.find(insertedChild.id);
     let parent = this.schema.users.find(insertedParent.id);
 
-    return [ child, parent ];
+    return [child, parent];
   }
 
   newChildNoParent() {
-    return [ this.schema.users.new({ name: 'Link' }), undefined ];
+    return [this.schema.users.new({ name: "Link" }), undefined];
   }
 
   newChildNewParent() {
-    let parent = this.schema.users.new({ name: 'Link' });
-    let child = this.schema.users.new({ name: 'Bob' });
+    let parent = this.schema.users.new({ name: "Link" });
+    let child = this.schema.users.new({ name: "Bob" });
     child.parent = parent;
 
-    return [ child, parent ];
+    return [child, parent];
   }
 
   newChildSavedParent() {
-    let insertedParent = this.db.users.insert({ name: 'Bob' });
-    let child = this.schema.users.new({ name: 'Link' });
+    let insertedParent = this.db.users.insert({ name: "Bob" });
+    let child = this.schema.users.new({ name: "Link" });
     let savedParent = this.schema.users.find(insertedParent.id);
 
     child.parent = savedParent;
 
-    return [ child, savedParent ];
+    return [child, savedParent];
   }
 
   // Just a saved unassociated parent.
   savedParent() {
-    let insertedParent = this.db.users.insert({ name: 'Bob' });
+    let insertedParent = this.db.users.insert({ name: "Bob" });
 
     return this.schema.users.find(insertedParent.id);
   }
 
   newParent() {
-    return this.schema.users.new({ name: 'Bob' });
+    return this.schema.users.new({ name: "Bob" });
   }
-
 }
 
 export const states = [
-  'savedChildNoParent',
-  'savedChildNewParent',
-  'savedChildSavedParent',
-  'newChildNoParent',
-  'newChildNewParent',
-  'newChildSavedParent'
+  "savedChildNoParent",
+  "savedChildNewParent",
+  "savedChildSavedParent",
+  "newChildNoParent",
+  "newChildNewParent",
+  "newChildSavedParent"
 ];

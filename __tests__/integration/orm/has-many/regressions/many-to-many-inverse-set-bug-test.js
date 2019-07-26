@@ -1,7 +1,12 @@
-import { module, test } from 'qunit';
-import { Model, hasMany, _Db as Db, _ormSchema as Schema } from '@miragejs/server';
+import { module, test } from "qunit";
+import {
+  Model,
+  hasMany,
+  _Db as Db,
+  _ormSchema as Schema
+} from "@miragejs/server";
 
-describe('Integration | ORM | Has Many | Regressions | Many to many inverse set bug', function(hooks) {
+describe("Integration | ORM | Has Many | Regressions | Many to many inverse set bug", function(hooks) {
   hooks.beforeEach(function() {
     this.db = new Db();
 
@@ -17,20 +22,14 @@ describe('Integration | ORM | Has Many | Regressions | Many to many inverse set 
 
   test(`it works`, assert => {
     this.db.loadData({
-      posts: [
-        { id: '1', tagIds: [ '15', '16' ] },
-        { id: '2', tagIds: [ '16' ] }
-      ],
-      tags: [
-        { id: '15', postIds: [ '1' ] },
-        { id: '16', postIds: [ '1', '2' ] }
-      ]
+      posts: [{ id: "1", tagIds: ["15", "16"] }, { id: "2", tagIds: ["16"] }],
+      tags: [{ id: "15", postIds: ["1"] }, { id: "16", postIds: ["1", "2"] }]
     });
 
-    this.schema.posts.find(1).update({ tagIds: [ '15' ] });
+    this.schema.posts.find(1).update({ tagIds: ["15"] });
 
-    expect(this.db.posts.find(1).tagIds).toEqual([ '15' ]);
-    expect(this.db.tags.find(15).postIds).toEqual([ '1' ]);
-    expect(this.db.tags.find(16).postIds).toEqual([ '2' ]);
+    expect(this.db.posts.find(1).tagIds).toEqual(["15"]);
+    expect(this.db.tags.find(15).postIds).toEqual(["1"]);
+    expect(this.db.tags.find(16).postIds).toEqual(["2"]);
   });
 });

@@ -1,18 +1,24 @@
-import { module, test } from 'qunit';
-import { Model, hasMany, belongsTo, _Db as Db, _ormSchema as Schema } from '@miragejs/server';
+import { module, test } from "qunit";
+import {
+  Model,
+  hasMany,
+  belongsTo,
+  _Db as Db,
+  _ormSchema as Schema
+} from "@miragejs/server";
 
-describe('Integration | ORM | Mixed | Regressions | 1613 Two bidirectional one-to-many relationships with same target model update ids bug', function(hooks) {
+describe("Integration | ORM | Mixed | Regressions | 1613 Two bidirectional one-to-many relationships with same target model update ids bug", function(hooks) {
   hooks.beforeEach(function() {
     this.db = new Db();
 
     this.schema = new Schema(this.db, {
       user: Model.extend({
-        authoredPosts: hasMany('post', { inverse: 'author' }),
-        editedPosts: hasMany('post', { inverse: 'editor' })
+        authoredPosts: hasMany("post", { inverse: "author" }),
+        editedPosts: hasMany("post", { inverse: "editor" })
       }),
       post: Model.extend({
-        author: belongsTo('user', { inverse: 'authoredPosts' }),
-        editor: belongsTo('user', { inverse: 'editedPosts' })
+        author: belongsTo("user", { inverse: "authoredPosts" }),
+        editor: belongsTo("user", { inverse: "editedPosts" })
       })
     });
   });
@@ -26,7 +32,15 @@ describe('Integration | ORM | Mixed | Regressions | 1613 Two bidirectional one-t
       editorId: user.id
     });
 
-    expect(this.db.posts.find(1)).toEqual({ id: '1', authorId: '1', editorId: '1' });
-    expect(this.db.users.find(1)).toEqual({ id: '1', authoredPostIds: [ '1' ], editedPostIds: [ '1' ] });
+    expect(this.db.posts.find(1)).toEqual({
+      id: "1",
+      authorId: "1",
+      editorId: "1"
+    });
+    expect(this.db.users.find(1)).toEqual({
+      id: "1",
+      authoredPostIds: ["1"],
+      editedPostIds: ["1"]
+    });
   });
 });

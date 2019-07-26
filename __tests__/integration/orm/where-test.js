@@ -4,7 +4,6 @@ import {
   _ormSchema as Schema,
   _Db as Db
 } from "@miragejs/server";
- 
 
 let schema;
 let User = Model.extend();

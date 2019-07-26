@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Mixed | Many To One | association #create', function(hooks) {
+describe("Integration | ORM | Mixed | Many To One | association #create", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,12 +9,11 @@ describe('Integration | ORM | Mixed | Many To One | association #create', functi
   /*
     The model can create a has-many association, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can create an associated parent`, assert => {
-      let [ post, originalUser ] = this.helper[state]();
+      let [post, originalUser] = this.helper[state]();
 
-      let user = post.createUser({ name: 'Zelda' });
+      let user = post.createUser({ name: "Zelda" });
 
       expect(user.id).toBeTruthy();
       expect(post.user.attrs).toEqual(user.attrs);
@@ -29,6 +28,5 @@ describe('Integration | ORM | Mixed | Many To One | association #create', functi
         expect(originalUser.posts.includes(post)).toBeFalsy();
       }
     });
-
   });
 });

@@ -4,7 +4,6 @@ import {
   Collection,
   Model
 } from "@miragejs/server";
- 
 
 describe("Integration | ORM | collection", function(hooks) {
   hooks.beforeEach(function() {

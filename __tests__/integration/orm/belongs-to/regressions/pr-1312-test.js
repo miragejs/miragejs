@@ -1,15 +1,21 @@
-import { Model, belongsTo, hasMany, _ormSchema as Schema, _Db as Db } from '@miragejs/server';
-import { module, test } from 'qunit';
+import {
+  Model,
+  belongsTo,
+  hasMany,
+  _ormSchema as Schema,
+  _Db as Db
+} from "@miragejs/server";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Belongs To | Regressions | pr-1312', function() {
+describe("Integration | ORM | Belongs To | Regressions | pr-1312", function() {
   test(`creating and using a record with a polymorphic hasMany and explicit inverse does not fail when accessing the association`, assert => {
     let schema = new Schema(new Db(), {
       comment: Model.extend({
-        commentable: belongsTo({ polymorphic: true, inverse: 'comments' })
+        commentable: belongsTo({ polymorphic: true, inverse: "comments" })
       }),
 
       post: Model.extend({
-        comments: hasMany('comment', { inverse: 'commentable' })
+        comments: hasMany("comment", { inverse: "commentable" })
       })
     });
 

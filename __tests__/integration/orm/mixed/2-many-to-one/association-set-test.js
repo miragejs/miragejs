@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Mixed | Many To One | association #set', function(hooks) {
+describe("Integration | ORM | Mixed | Many To One | association #set", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,10 +9,9 @@ describe('Integration | ORM | Mixed | Many To One | association #set', function(
   /*
     The model can update its association via parent, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can update its association to a saved parent`, assert => {
-      let [ post, originalUser ] = this.helper[state]();
+      let [post, originalUser] = this.helper[state]();
       let savedUser = this.helper.savedParent();
 
       post.user = savedUser;
@@ -30,7 +29,7 @@ describe('Integration | ORM | Mixed | Many To One | association #set', function(
     });
 
     test(`a ${state} can update its association to a new parent`, assert => {
-      let [ post, originalUser ] = this.helper[state]();
+      let [post, originalUser] = this.helper[state]();
       let newUser = this.helper.newParent();
 
       post.user = newUser;
@@ -48,7 +47,7 @@ describe('Integration | ORM | Mixed | Many To One | association #set', function(
     });
 
     test(`a ${state} can update its association to a null parent`, assert => {
-      let [ post, originalUser ] = this.helper[state]();
+      let [post, originalUser] = this.helper[state]();
 
       post.user = null;
 
@@ -62,6 +61,5 @@ describe('Integration | ORM | Mixed | Many To One | association #set', function(
         expect(originalUser.posts.includes(post)).toBeFalsy();
       }
     });
-
   });
 });

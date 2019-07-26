@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Belongs To | One To One | accessor', function(hooks) {
+describe("Integration | ORM | Belongs To | One To One | accessor", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,10 +9,9 @@ describe('Integration | ORM | Belongs To | One To One | accessor', function(hook
   /*
     The reference to a belongs-to association is correct, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`the references of a ${state} are correct`, assert => {
-      let [ user, profile ] = this.helper[state]();
+      let [user, profile] = this.helper[state]();
 
       // We use .attrs here because otherwise deepEqual goes on infinite recursive comparison
       if (profile) {
@@ -29,6 +28,5 @@ describe('Integration | ORM | Belongs To | One To One | accessor', function(hook
         expect(profile.userId).toEqual(user.id);
       }
     });
-
   });
 });

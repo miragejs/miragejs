@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Belongs To | One To One | association #setId', function(hooks) {
+describe("Integration | ORM | Belongs To | One To One | association #setId", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,10 +9,9 @@ describe('Integration | ORM | Belongs To | One To One | association #setId', fun
   /*
     The model can update its association via parentId, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can update its association to a saved parent via parentId`, assert => {
-      let [ user ] = this.helper[state]();
+      let [user] = this.helper[state]();
       let profile = this.helper.savedParent();
 
       user.profileId = profile.id;
@@ -26,7 +25,6 @@ describe('Integration | ORM | Belongs To | One To One | association #setId', fun
       expect(profile.userId).toEqual(user.id);
       expect(profile.user.attrs).toEqual(user.attrs);
     });
-
   });
 
   // [

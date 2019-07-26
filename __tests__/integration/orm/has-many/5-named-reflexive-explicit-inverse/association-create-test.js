@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Has Many | Named Reflexive Explicit Inverse | association #create', function(hooks) {
+describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | association #create", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,13 +9,12 @@ describe('Integration | ORM | Has Many | Named Reflexive Explicit Inverse | asso
   /*
     The model can create a has-many association, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can create an associated child`, assert => {
-      let [ tag ] = this.helper[state]();
+      let [tag] = this.helper[state]();
       let initialCount = tag.labels.models.length;
 
-      let orangeTag = tag.createLabel({ name: 'Orange' });
+      let orangeTag = tag.createLabel({ name: "Orange" });
 
       expect(orangeTag.id).toBeTruthy();
       expect(tag.labels.models.length).toEqual(initialCount + 1);
@@ -24,6 +23,5 @@ describe('Integration | ORM | Has Many | Named Reflexive Explicit Inverse | asso
       expect(tag.attrs.labelIds.indexOf(orangeTag.id) > -1).toBeTruthy();
       expect(orangeTag.labels.includes(tag)).toBeTruthy();
     });
-
   });
 });

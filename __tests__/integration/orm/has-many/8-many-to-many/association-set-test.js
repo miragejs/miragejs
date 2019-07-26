@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Has Many | Many to Many | association #set', function(hooks) {
+describe("Integration | ORM | Has Many | Many to Many | association #set", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,13 +9,12 @@ describe('Integration | ORM | Has Many | Many to Many | association #set', funct
   /*
     The model can update its association via parent, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can update its association to a list of saved children`, assert => {
-      let [ order, originalProducts ] = this.helper[state]();
+      let [order, originalProducts] = this.helper[state]();
       let savedProduct = this.helper.savedChild();
 
-      order.products = [ savedProduct ];
+      order.products = [savedProduct];
 
       expect(order.products.includes(savedProduct)).toBeTruthy();
       expect(order.productIds[0]).toEqual(savedProduct.id);
@@ -30,10 +29,10 @@ describe('Integration | ORM | Has Many | Many to Many | association #set', funct
     });
 
     test(`a ${state} can update its association to a new parent`, assert => {
-      let [ order, originalProducts ] = this.helper[state]();
+      let [order, originalProducts] = this.helper[state]();
       let newProduct = this.helper.newChild();
 
-      order.products = [ newProduct ];
+      order.products = [newProduct];
 
       expect(order.products.includes(newProduct)).toBeTruthy();
       expect(order.productIds[0]).toEqual(undefined);
@@ -48,11 +47,11 @@ describe('Integration | ORM | Has Many | Many to Many | association #set', funct
     });
 
     test(`a ${state} can clear its association via an empty list`, assert => {
-      let [ order, originalProducts ] = this.helper[state]();
+      let [order, originalProducts] = this.helper[state]();
 
-      order.products = [ ];
+      order.products = [];
 
-      expect(order.productIds).toEqual([ ]);
+      expect(order.productIds).toEqual([]);
       expect(order.products.models.length).toEqual(0);
 
       order.save();
@@ -63,11 +62,11 @@ describe('Integration | ORM | Has Many | Many to Many | association #set', funct
     });
 
     test(`a ${state} can clear its association via an empty list`, assert => {
-      let [ order, originalProducts ] = this.helper[state]();
+      let [order, originalProducts] = this.helper[state]();
 
       order.products = null;
 
-      expect(order.productIds).toEqual([ ]);
+      expect(order.productIds).toEqual([]);
       expect(order.products.models.length).toEqual(0);
 
       order.save();
@@ -77,6 +76,5 @@ describe('Integration | ORM | Has Many | Many to Many | association #set', funct
         expect(p.orders.includes(order)).toBeFalsy();
       });
     });
-
   });
 });

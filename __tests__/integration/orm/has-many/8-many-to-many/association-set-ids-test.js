@@ -1,21 +1,20 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Has Many | Many to Many | association #setIds', function(hooks) {
+describe("Integration | ORM | Has Many | Many to Many | association #setIds", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
 
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can update its association to include a saved child via childIds`, assert => {
-      let [ order, originalProducts ] = this.helper[state]();
+      let [order, originalProducts] = this.helper[state]();
       let savedProduct = this.helper.savedChild();
 
-      order.productIds = [ savedProduct.id ];
+      order.productIds = [savedProduct.id];
 
       expect(order.products.models[0].attrs).toEqual(savedProduct.attrs);
-      expect(order.productIds).toEqual([ savedProduct.id ]);
+      expect(order.productIds).toEqual([savedProduct.id]);
 
       order.save();
       savedProduct.reload();
@@ -30,7 +29,7 @@ describe('Integration | ORM | Has Many | Many to Many | association #setIds', fu
     });
 
     test(`a ${state} can clear its association via a null childIds`, assert => {
-      let [ order, originalProducts ] = this.helper[state]();
+      let [order, originalProducts] = this.helper[state]();
 
       order.productIds = null;
 
@@ -44,6 +43,5 @@ describe('Integration | ORM | Has Many | Many to Many | association #setIds', fu
         expect(p.orders.includes(order)).toBeFalsy();
       });
     });
-
   });
 });

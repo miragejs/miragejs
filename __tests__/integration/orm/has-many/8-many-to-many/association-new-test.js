@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Has Many | Many to Many | association #new', function(hooks) {
+describe("Integration | ORM | Has Many | Many to Many | association #new", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -10,13 +10,12 @@ describe('Integration | ORM | Has Many | Many to Many | association #new', funct
     The model can make a new unsaved belongs-to association, for all states
   */
 
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can build a new associated child`, assert => {
-      let [ order ] = this.helper[state]();
+      let [order] = this.helper[state]();
       let initialCount = order.products.models.length;
 
-      let blueProduct = order.newProduct({ name: 'Blue' });
+      let blueProduct = order.newProduct({ name: "Blue" });
 
       expect(!blueProduct.id).toBeTruthy();
       expect(order.products.models.length).toEqual(initialCount + 1);
@@ -24,12 +23,15 @@ describe('Integration | ORM | Has Many | Many to Many | association #new', funct
 
       blueProduct.save();
 
-      expect(blueProduct.attrs).toEqual({ id: blueProduct.id, name: 'Blue', orderIds: [ order.id ] });
+      expect(blueProduct.attrs).toEqual({
+        id: blueProduct.id,
+        name: "Blue",
+        orderIds: [order.id]
+      });
       expect(order.products.models.length).toEqual(initialCount + 1);
       expect(order.products.includes(blueProduct)).toBeTruthy();
       expect(order.productIds.indexOf(blueProduct.id) > -1).toBeTruthy();
       expect(blueProduct.orders.includes(order)).toBeTruthy();
     });
-
   });
 });

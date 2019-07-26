@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Has Many | Named | accessor', function(hooks) {
+describe("Integration | ORM | Has Many | Named | accessor", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -9,10 +9,9 @@ describe('Integration | ORM | Has Many | Named | accessor', function(hooks) {
   /*
     The reference to a belongs-to association is correct, for all states
   */
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`the references of a ${state} are correct`, assert => {
-      let [ user, posts ] = this.helper[state]();
+      let [user, posts] = this.helper[state]();
 
       expect(user.blogPosts.models.length).toEqual(posts.length);
       expect(user.blogPostIds.length).toEqual(posts.length);
@@ -25,6 +24,5 @@ describe('Integration | ORM | Has Many | Named | accessor', function(hooks) {
         }
       });
     });
-
   });
 });

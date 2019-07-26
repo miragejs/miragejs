@@ -1,15 +1,14 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Has Many | Reflexive | accessor', function(hooks) {
+describe("Integration | ORM | Has Many | Reflexive | accessor", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
 
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`the references of a ${state} are correct`, assert => {
-      let [ tag, tags ] = this.helper[state]();
+      let [tag, tags] = this.helper[state]();
 
       expect(tag.tags.models.length).toEqual(tags.length);
       expect(tag.tagIds.length).toEqual(tags.length);
@@ -25,6 +24,5 @@ describe('Integration | ORM | Has Many | Reflexive | accessor', function(hooks) 
         expect(t.tags.includes(tag)).toBeTruthy();
       });
     });
-
   });
 });

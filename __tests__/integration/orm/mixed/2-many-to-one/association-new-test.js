@@ -1,7 +1,7 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Mixed | Many To One | association #new', function(hooks) {
+describe("Integration | ORM | Mixed | Many To One | association #new", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
@@ -10,12 +10,11 @@ describe('Integration | ORM | Mixed | Many To One | association #new', function(
     The model can make a new unsaved belongs-to association, for all states
   */
 
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`a ${state} can build a new associated parent`, assert => {
-      let [ post, originalUser ] = this.helper[state]();
+      let [post, originalUser] = this.helper[state]();
 
-      let user = post.newUser({ name: 'Zelda' });
+      let user = post.newUser({ name: "Zelda" });
 
       expect(!user.id).toBeTruthy();
       expect(post.user).toEqual(user);
@@ -37,6 +36,5 @@ describe('Integration | ORM | Mixed | Many To One | association #new', function(
         expect(originalUser.posts.includes(post)).toBeFalsy();
       }
     });
-
   });
 });

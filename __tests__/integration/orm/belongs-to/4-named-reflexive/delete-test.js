@@ -1,15 +1,14 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Belongs To | Named Reflexive | delete', function(hooks) {
+describe("Integration | ORM | Belongs To | Named Reflexive | delete", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
 
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`deleting the parent updates the child's foreign key for a ${state}`, assert => {
-      let [ user, bestFriend ] = this.helper[state]();
+      let [user, bestFriend] = this.helper[state]();
 
       if (bestFriend) {
         bestFriend.destroy();
@@ -19,6 +18,5 @@ describe('Integration | ORM | Belongs To | Named Reflexive | delete', function(h
       expect(user.bestFriendId).toEqual(null);
       expect(user.bestFriend).toEqual(null);
     });
-
   });
 });

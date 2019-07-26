@@ -1,15 +1,14 @@
-import Helper, { states } from './_helper';
-import { module, test } from 'qunit';
+import Helper, { states } from "./_helper";
+import { module, test } from "qunit";
 
-describe('Integration | ORM | Has Many | Many to Many | delete', function(hooks) {
+describe("Integration | ORM | Has Many | Many to Many | delete", function(hooks) {
   hooks.beforeEach(function() {
     this.helper = new Helper();
   });
 
-  states.forEach((state) => {
-
+  states.forEach(state => {
     test(`deleting children updates the parent's foreign key for a ${state}`, assert => {
-      let [ order, products ] = this.helper[state]();
+      let [order, products] = this.helper[state]();
 
       if (products && products.length) {
         products.forEach(t => t.destroy());
@@ -19,6 +18,5 @@ describe('Integration | ORM | Has Many | Many to Many | delete', function(hooks)
       expect(order.products.length).toEqual(0);
       expect(order.productIds.length).toEqual(0);
     });
-
   });
 });

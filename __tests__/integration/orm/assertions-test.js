@@ -1,4 +1,3 @@
- 
 import { Model, Server, hasMany, belongsTo } from "@miragejs/server";
 
 describe("Integration | ORM | assertions", function(hooks) {
