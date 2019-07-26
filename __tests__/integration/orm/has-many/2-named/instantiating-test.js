@@ -1,15 +1,15 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Has Many | Named | instantiating", () => {
-  let helper;
+  let helper, schema;
   beforeEach(() => {
     helper = new Helper();
-    this.schema = helper.schema;
+    schema = helper.schema;
   });
 
   test("the parent accepts a saved child id", () => {
     let post = helper.savedChild();
-    let user = this.schema.users.new({
+    let user = schema.users.new({
       blogPostIds: [post.id]
     });
 
@@ -19,12 +19,12 @@ describe("Integration | ORM | Has Many | Named | instantiating", () => {
 
   test("the parent errors if the children ids don't exist", () => {
     expect(function() {
-      this.schema.users.new({ blogPostIds: [2] });
+      schema.users.new({ blogPostIds: [2] });
     }).toThrow();
   });
 
   test("the parent accepts null children foreign key", () => {
-    let user = this.schema.users.new({ blogPostIds: null });
+    let user = schema.users.new({ blogPostIds: null });
 
     expect(user.blogPosts.models).toHaveLength(0);
     expect(user.blogPostIds).toBeEmpty();
@@ -33,22 +33,22 @@ describe("Integration | ORM | Has Many | Named | instantiating", () => {
 
   test("the parent accepts saved children", () => {
     let post = helper.savedChild();
-    let user = this.schema.users.new({ blogPosts: [post] });
+    let user = schema.users.new({ blogPosts: [post] });
 
     expect(user.blogPostIds).toEqual([post.id]);
     expect(user.blogPosts.models[0]).toEqual(post);
   });
 
   test("the parent accepts new children", () => {
-    let post = this.schema.posts.new({ title: "Lorem" });
-    let user = this.schema.users.new({ blogPosts: [post] });
+    let post = schema.posts.new({ title: "Lorem" });
+    let user = schema.users.new({ blogPosts: [post] });
 
     expect(user.blogPostIds).toEqual([undefined]);
     expect(user.blogPosts.models[0]).toEqual(post);
   });
 
   test("the parent accepts null children", () => {
-    let user = this.schema.users.new({ blogPosts: null });
+    let user = schema.users.new({ blogPosts: null });
 
     expect(user.blogPosts.models).toHaveLength(0);
     expect(user.blogPostIds).toBeEmpty();
@@ -57,7 +57,7 @@ describe("Integration | ORM | Has Many | Named | instantiating", () => {
 
   test("the parent accepts children and child ids", () => {
     let post = helper.savedChild();
-    let user = this.schema.users.new({
+    let user = schema.users.new({
       blogPosts: [post],
       blogPostIds: [post.id]
     });
@@ -67,7 +67,7 @@ describe("Integration | ORM | Has Many | Named | instantiating", () => {
   });
 
   test("the parent accepts no reference to children or child ids as empty obj", () => {
-    let user = this.schema.users.new({});
+    let user = schema.users.new({});
 
     expect(user.blogPostIds).toBeEmpty();
     expect(user.blogPosts.models).toBeEmpty();
@@ -75,7 +75,7 @@ describe("Integration | ORM | Has Many | Named | instantiating", () => {
   });
 
   test("the parent accepts no reference to children or child ids", () => {
-    let user = this.schema.users.new();
+    let user = schema.users.new();
 
     expect(user.blogPostIds).toBeEmpty();
     expect(user.blogPosts.models).toBeEmpty();
