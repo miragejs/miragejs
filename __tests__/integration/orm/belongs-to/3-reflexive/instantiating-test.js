@@ -25,8 +25,8 @@ describe("Integration | ORM | Belongs To | Reflexive | instantiating", () => {
   test("the child accepts a null parent id", () => {
     let user = this.schema.users.new({ userId: null });
 
-    expect(user.userId).toEqual(null);
-    expect(user.user).toEqual(null);
+    expect(user.userId).toBeNull();
+    expect(user.user).toBeNull();
     expect(user.attrs).toEqual({ userId: null });
   });
 
@@ -43,7 +43,7 @@ describe("Integration | ORM | Belongs To | Reflexive | instantiating", () => {
     let zelda = this.schema.users.new({ name: "Zelda" });
     let user = this.schema.users.new({ user: zelda });
 
-    expect(user.userId).toEqual(null);
+    expect(user.userId).toBeNull();
     expect(user.user).toEqual(zelda);
     expect(user.attrs).toEqual({ userId: null });
   });
@@ -51,8 +51,8 @@ describe("Integration | ORM | Belongs To | Reflexive | instantiating", () => {
   test("the child accepts a null parent model", () => {
     let user = this.schema.users.new({ user: null });
 
-    expect(user.userId).toEqual(null);
-    expect(user.user).toEqual(null);
+    expect(user.userId).toBeNull();
+    expect(user.user).toBeNull();
     expect(user.attrs).toEqual({ userId: null });
   });
 
@@ -68,16 +68,16 @@ describe("Integration | ORM | Belongs To | Reflexive | instantiating", () => {
   test("the child accepts no reference to a parent id or model as empty obj", () => {
     let user = this.schema.users.new({});
 
-    expect(user.userId).toEqual(null);
-    expect(user.user).toEqual(null);
+    expect(user.userId).toBeNull();
+    expect(user.user).toBeNull();
     expect(user.attrs).toEqual({ userId: null });
   });
 
   test("the child accepts no reference to a parent id or model", () => {
     let user = this.schema.users.new();
 
-    expect(user.userId).toEqual(null);
-    expect(user.user).toEqual(null);
+    expect(user.userId).toBeNull();
+    expect(user.user).toBeNull();
     expect(user.attrs).toEqual({ userId: null });
   });
 });

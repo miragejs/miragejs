@@ -21,6 +21,6 @@ describe("Integration | ORM | Belongs To | Regressions | pr-1312", function() {
     let post = schema.posts.create();
     post.createComment();
 
-    expect(post.comments.models.length).toEqual(1);
+    expect(post.comments.models).toHaveLength(1);
   });
 });

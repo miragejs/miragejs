@@ -15,8 +15,8 @@ describe("Integration | ORM | Belongs To | One To One | delete", () => {
         user.reload();
       }
 
-      expect(user.profileId).toEqual(null);
-      expect(user.profile).toEqual(null);
+      expect(user.profileId).toBeNull();
+      expect(user.profile).toBeNull();
     });
   });
 });

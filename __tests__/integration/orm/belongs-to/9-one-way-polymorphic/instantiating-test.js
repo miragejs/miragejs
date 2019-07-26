@@ -29,8 +29,8 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | instantiating",
   test("the child accepts a null parent id", () => {
     let comment = this.schema.comments.new({ commentableId: null });
 
-    expect(comment.commentableId).toEqual(null);
-    expect(comment.commentable).toEqual(null);
+    expect(comment.commentableId).toBeNull();
+    expect(comment.commentable).toBeNull();
     expect(comment.attrs).toEqual({ commentableId: null });
   });
 
@@ -54,8 +54,8 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | instantiating",
   test("the child accepts a null parent model", () => {
     let comment = this.schema.comments.new({ commentable: null });
 
-    expect(comment.commentableId).toEqual(null);
-    expect(comment.commentable).toEqual(null);
+    expect(comment.commentableId).toBeNull();
+    expect(comment.commentable).toBeNull();
     expect(comment.attrs).toEqual({ commentableId: null });
   });
 
@@ -76,16 +76,16 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | instantiating",
   test("the child accepts no reference to a parent id or model as empty obj", () => {
     let comment = this.schema.comments.new({});
 
-    expect(comment.commentableId).toEqual(null);
-    expect(comment.commentable).toEqual(null);
+    expect(comment.commentableId).toBeNull();
+    expect(comment.commentable).toBeNull();
     expect(comment.attrs).toEqual({ commentableId: null });
   });
 
   test("the child accepts no reference to a parent id or model", () => {
     let comment = this.schema.comments.new();
 
-    expect(comment.commentableId).toEqual(null);
-    expect(comment.commentable).toEqual(null);
+    expect(comment.commentableId).toBeNull();
+    expect(comment.commentable).toBeNull();
     expect(comment.attrs).toEqual({ commentableId: null });
   });
 });

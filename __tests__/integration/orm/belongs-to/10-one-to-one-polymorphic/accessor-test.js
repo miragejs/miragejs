@@ -18,8 +18,8 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | accessor", (
         expect(comment.commentable.attrs).toEqual(post.attrs);
         expect(comment.commentableId).toEqual({ type: "post", id: post.id });
       } else {
-        expect(comment.commentable).toEqual(null);
-        expect(comment.commentableId).toEqual(null);
+        expect(comment.commentable).toBeNull();
+        expect(comment.commentableId).toBeNull();
       }
 
       // If there's a post in this state, make sure the inverse association is correct

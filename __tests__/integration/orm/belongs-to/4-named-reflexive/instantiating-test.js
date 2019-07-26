@@ -25,8 +25,8 @@ describe("Integration | ORM | Belongs To | Named Reflexive | instantiating", () 
   test("the child accepts a null parent id", () => {
     let user = this.schema.users.new({ bestFriendId: null });
 
-    expect(user.bestFriendId).toEqual(null);
-    expect(user.bestFriend).toEqual(null);
+    expect(user.bestFriendId).toBeNull();
+    expect(user.bestFriend).toBeNull();
     expect(user.attrs).toEqual({ bestFriendId: null });
   });
 
@@ -43,7 +43,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive | instantiating", () 
     let zelda = this.schema.users.new({ name: "Zelda" });
     let user = this.schema.users.new({ bestFriend: zelda });
 
-    expect(user.bestFriendId).toEqual(null);
+    expect(user.bestFriendId).toBeNull();
     expect(user.bestFriend).toEqual(zelda);
     expect(user.attrs).toEqual({ bestFriendId: null });
   });
@@ -51,8 +51,8 @@ describe("Integration | ORM | Belongs To | Named Reflexive | instantiating", () 
   test("the child accepts a null parent model", () => {
     let user = this.schema.users.new({ bestFriend: null });
 
-    expect(user.bestFriendId).toEqual(null);
-    expect(user.bestFriend).toEqual(null);
+    expect(user.bestFriendId).toBeNull();
+    expect(user.bestFriend).toBeNull();
     expect(user.attrs).toEqual({ bestFriendId: null });
   });
 
@@ -71,16 +71,16 @@ describe("Integration | ORM | Belongs To | Named Reflexive | instantiating", () 
   test("the child accepts no reference to a parent id or model as empty obj", () => {
     let user = this.schema.users.new({});
 
-    expect(user.bestFriendId).toEqual(null);
-    expect(user.bestFriend).toEqual(null);
+    expect(user.bestFriendId).toBeNull();
+    expect(user.bestFriend).toBeNull();
     expect(user.attrs).toEqual({ bestFriendId: null });
   });
 
   test("the child accepts no reference to a parent id or model", () => {
     let user = this.schema.users.new();
 
-    expect(user.bestFriendId).toEqual(null);
-    expect(user.bestFriend).toEqual(null);
+    expect(user.bestFriendId).toBeNull();
+    expect(user.bestFriend).toBeNull();
     expect(user.attrs).toEqual({ bestFriendId: null });
   });
 });

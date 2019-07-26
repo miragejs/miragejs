@@ -26,7 +26,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive | association #set", 
 
       user.bestFriend = friend;
 
-      expect(user.bestFriendId).toEqual(null);
+      expect(user.bestFriendId).toBeNull();
       expect(user.bestFriend.attrs).toEqual(friend.attrs);
     });
 
@@ -35,8 +35,8 @@ describe("Integration | ORM | Belongs To | Named Reflexive | association #set", 
 
       user.bestFriend = null;
 
-      expect(user.bestFriendId).toEqual(null);
-      expect(user.bestFriend).toEqual(null);
+      expect(user.bestFriendId).toBeNull();
+      expect(user.bestFriend).toBeNull();
     });
   });
 });

@@ -22,7 +22,7 @@ describe("Integration | ORM | Belongs To | Reflexive | association #setId", () =
       user.save();
       if (originalUser) {
         originalUser.reload();
-        expect(originalUser.userId).toEqual(null);
+        expect(originalUser.userId).toBeNull();
       }
     });
   });
@@ -33,13 +33,13 @@ describe("Integration | ORM | Belongs To | Reflexive | association #setId", () =
 
       user.userId = null;
 
-      expect(user.userId).toEqual(null);
-      expect(user.user).toEqual(null);
+      expect(user.userId).toBeNull();
+      expect(user.user).toBeNull();
 
       user.save();
       if (originalUser) {
         originalUser.reload();
-        expect(originalUser.userId).toEqual(null);
+        expect(originalUser.userId).toBeNull();
       }
     });
   });

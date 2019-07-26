@@ -19,7 +19,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | cr
 
     expect(user.bestFriendId).toEqual(friend.id);
     expect(user.bestFriend.attrs).toEqual(friend.attrs);
-    expect(schema.db.users.length).toEqual(2);
+    expect(schema.db.users).toHaveLength(2);
     expect(schema.db.users[0]).toEqual({ id: "1", bestFriendId: "2" });
     expect(schema.db.users[1]).toEqual({ id: "2", bestFriendId: "1" });
   });
@@ -33,7 +33,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | cr
 
     expect(user.bestFriendId).toEqual(friend.id);
     expect(user.bestFriend.attrs).toEqual(friend.attrs);
-    expect(schema.db.users.length).toEqual(2);
+    expect(schema.db.users).toHaveLength(2);
     expect(schema.db.users[0]).toEqual({ id: "1", bestFriendId: "2" });
     expect(schema.db.users[1]).toEqual({ id: "2", bestFriendId: "1" });
   });

@@ -18,8 +18,8 @@ describe("Integration | ORM | Belongs To | One To One | accessor", () => {
         expect(user.profile.attrs).toEqual(profile.attrs);
         expect(user.profileId).toEqual(profile.id);
       } else {
-        expect(user.profile).toEqual(null);
-        expect(user.profileId).toEqual(null);
+        expect(user.profile).toBeNull();
+        expect(user.profileId).toBeNull();
       }
 
       // If there's a profile in this state, make sure the inverse association is correct

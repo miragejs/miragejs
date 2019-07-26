@@ -18,8 +18,8 @@ describe("Integration | ORM | Belongs To | Named one-way reflexive self referent
         expect(user.representative.attrs).toEqual(representative.attrs);
         expect(user.representativeId).toEqual(representative.id);
       } else {
-        expect(user.representative).toEqual(null);
-        expect(user.representativeId).toEqual(null);
+        expect(user.representative).toBeNull();
+        expect(user.representativeId).toBeNull();
       }
     });
   });

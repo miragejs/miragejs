@@ -19,8 +19,8 @@ describe("Integration | ORM | Belongs To | One To One | create", () => {
     expect(user.profileId).toEqual(profile.id);
     expect(user.profile.attrs).toEqual(profile.attrs);
     expect(profile.user.attrs).toEqual(user.attrs);
-    expect(schema.db.users.length).toEqual(1);
-    expect(schema.db.profiles.length).toEqual(1);
+    expect(schema.db.users).toHaveLength(1);
+    expect(schema.db.profiles).toHaveLength(1);
     expect(schema.db.users[0]).toEqual({ id: "1", profileId: "1" });
     expect(schema.db.profiles[0]).toEqual({ id: "1", userId: "1" });
   });
@@ -35,8 +35,8 @@ describe("Integration | ORM | Belongs To | One To One | create", () => {
     expect(user.profileId).toEqual(profile.id);
     expect(user.profile.attrs).toEqual(profile.attrs);
     expect(profile.user.attrs).toEqual(user.attrs);
-    expect(schema.db.users.length).toEqual(1);
-    expect(schema.db.profiles.length).toEqual(1);
+    expect(schema.db.users).toHaveLength(1);
+    expect(schema.db.profiles).toHaveLength(1);
     expect(schema.db.users[0]).toEqual({ id: "1", profileId: "1" });
     expect(schema.db.profiles[0]).toEqual({ id: "1", userId: "1" });
   });

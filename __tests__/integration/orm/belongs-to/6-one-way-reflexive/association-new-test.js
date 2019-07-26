@@ -18,7 +18,7 @@ describe("Integration | ORM | Belongs To | One-Way Reflexive | association #new"
 
       expect(!ganon.id).toBeTruthy();
       expect(child.user).toEqual(ganon);
-      expect(child.userId).toEqual(null);
+      expect(child.userId).toBeNull();
 
       child.save();
 

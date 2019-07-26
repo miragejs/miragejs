@@ -25,8 +25,8 @@ describe("Integration | ORM | Belongs To | Named One-Way Reflexive | instantiati
   test("the child accepts a null parent id", () => {
     let child = this.schema.users.new({ parentId: null });
 
-    expect(child.parentId).toEqual(null);
-    expect(child.parent).toEqual(null);
+    expect(child.parentId).toBeNull();
+    expect(child.parent).toBeNull();
     expect(child.attrs).toEqual({ parentId: null });
   });
 
@@ -42,7 +42,7 @@ describe("Integration | ORM | Belongs To | Named One-Way Reflexive | instantiati
     let zelda = this.schema.users.new({ name: "Zelda" });
     let child = this.schema.users.new({ parent: zelda });
 
-    expect(child.parentId).toEqual(null);
+    expect(child.parentId).toBeNull();
     expect(child.parent).toEqual(zelda);
     expect(child.attrs).toEqual({ parentId: null });
   });
@@ -50,8 +50,8 @@ describe("Integration | ORM | Belongs To | Named One-Way Reflexive | instantiati
   test("the child accepts a null parent model", () => {
     let child = this.schema.users.new({ parent: null });
 
-    expect(child.parentId).toEqual(null);
-    expect(child.parent).toEqual(null);
+    expect(child.parentId).toBeNull();
+    expect(child.parent).toBeNull();
     expect(child.attrs).toEqual({ parentId: null });
   });
 
@@ -67,16 +67,16 @@ describe("Integration | ORM | Belongs To | Named One-Way Reflexive | instantiati
   test("the child accepts no reference to a parent id or model as empty obj", () => {
     let child = this.schema.users.new({});
 
-    expect(child.parentId).toEqual(null);
-    expect(child.parent).toEqual(null);
+    expect(child.parentId).toBeNull();
+    expect(child.parent).toBeNull();
     expect(child.attrs).toEqual({ parentId: null });
   });
 
   test("the child accepts no reference to a parent id or model", () => {
     let child = this.schema.users.new();
 
-    expect(child.parentId).toEqual(null);
-    expect(child.parent).toEqual(null);
+    expect(child.parentId).toBeNull();
+    expect(child.parent).toBeNull();
     expect(child.attrs).toEqual({ parentId: null });
   });
 });

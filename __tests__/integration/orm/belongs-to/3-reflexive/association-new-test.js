@@ -18,7 +18,7 @@ describe("Integration | ORM | Belongs To | Reflexive | association #new", () => 
 
       expect(!ganon.id).toBeTruthy();
       expect(user.user).toEqual(ganon);
-      expect(user.userId).toEqual(null);
+      expect(user.userId).toBeNull();
       expect(ganon.user).toEqual(user);
 
       user.save();
@@ -28,7 +28,7 @@ describe("Integration | ORM | Belongs To | Reflexive | association #new", () => 
 
       if (originalUser) {
         originalUser.reload();
-        expect(originalUser.userId).toEqual(null);
+        expect(originalUser.userId).toBeNull();
       }
     });
   });

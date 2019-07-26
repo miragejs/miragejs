@@ -40,8 +40,8 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | association 
 
       comment.commentable = null;
 
-      expect(comment.commentableId).toEqual(null);
-      expect(comment.commentable).toEqual(null);
+      expect(comment.commentableId).toBeNull();
+      expect(comment.commentable).toBeNull();
     });
   });
 });

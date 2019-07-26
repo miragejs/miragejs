@@ -17,7 +17,7 @@ describe("Integration | ORM | Belongs To | One-Way Reflexive | create", () => {
 
     expect(child.userId).toEqual(parent.id);
     expect(child.user.attrs).toEqual(parent.attrs);
-    expect(schema.db.users.length).toEqual(2);
+    expect(schema.db.users).toHaveLength(2);
     expect(schema.db.users[0]).toEqual({ id: "1", userId: null });
     expect(schema.db.users[1]).toEqual({ id: "2", userId: "1" });
   });
@@ -31,7 +31,7 @@ describe("Integration | ORM | Belongs To | One-Way Reflexive | create", () => {
 
     expect(child.userId).toEqual(parent.id);
     expect(child.user.attrs).toEqual(parent.attrs);
-    expect(schema.db.users.length).toEqual(2);
+    expect(schema.db.users).toHaveLength(2);
     expect(schema.db.users[0]).toEqual({ id: "1", userId: null });
     expect(schema.db.users[1]).toEqual({ id: "2", userId: "1" });
   });

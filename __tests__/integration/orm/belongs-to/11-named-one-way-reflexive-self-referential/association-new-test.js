@@ -18,7 +18,7 @@ describe("Integration | ORM | Belongs To | Named one-way reflexive self referent
 
       expect(!ganon.id).toBeTruthy();
       expect(user.representative).toEqual(ganon);
-      expect(user.representativeId).toEqual(null);
+      expect(user.representativeId).toBeNull();
 
       user.save();
 

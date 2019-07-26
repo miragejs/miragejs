@@ -18,8 +18,8 @@ describe("Integration | ORM | Belongs To | Named One-Way Reflexive | accessor", 
         expect(user.parent.attrs).toEqual(parent.attrs);
         expect(user.parentId).toEqual(parent.id);
       } else {
-        expect(user.parent).toEqual(null);
-        expect(user.parentId).toEqual(null);
+        expect(user.parent).toBeNull();
+        expect(user.parentId).toBeNull();
       }
     });
   });

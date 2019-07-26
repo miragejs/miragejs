@@ -18,7 +18,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | as
 
       expect(!ganon.id).toBeTruthy();
       expect(user.bestFriend).toEqual(ganon);
-      expect(user.bestFriendId).toEqual(null);
+      expect(user.bestFriendId).toBeNull();
 
       user.save();
 

@@ -25,8 +25,8 @@ describe("Integration | ORM | Belongs To | One To One | instantiating", () => {
   test("the child accepts a null parent id", () => {
     let user = this.schema.users.new({ profileId: null });
 
-    expect(user.profileId).toEqual(null);
-    expect(user.profile).toEqual(null);
+    expect(user.profileId).toBeNull();
+    expect(user.profile).toBeNull();
     expect(user.attrs).toEqual({ profileId: null });
   });
 
@@ -43,7 +43,7 @@ describe("Integration | ORM | Belongs To | One To One | instantiating", () => {
     let profile = this.schema.profiles.new({ age: 300 });
     let user = this.schema.users.new({ profile });
 
-    expect(user.profileId).toEqual(null);
+    expect(user.profileId).toBeNull();
     expect(user.profile).toEqual(profile);
     expect(user.attrs).toEqual({ profileId: null });
   });
@@ -51,8 +51,8 @@ describe("Integration | ORM | Belongs To | One To One | instantiating", () => {
   test("the child accepts a null parent model", () => {
     let user = this.schema.users.new({ profile: null });
 
-    expect(user.profileId).toEqual(null);
-    expect(user.profile).toEqual(null);
+    expect(user.profileId).toBeNull();
+    expect(user.profile).toBeNull();
     expect(user.attrs).toEqual({ profileId: null });
   });
 
@@ -68,16 +68,16 @@ describe("Integration | ORM | Belongs To | One To One | instantiating", () => {
   test("the child accepts no reference to a parent id or model as empty obj", () => {
     let user = this.schema.users.new({});
 
-    expect(user.profileId).toEqual(null);
-    expect(user.profile).toEqual(null);
+    expect(user.profileId).toBeNull();
+    expect(user.profile).toBeNull();
     expect(user.attrs).toEqual({ profileId: null });
   });
 
   test("the child accepts no reference to a parent id or model", () => {
     let user = this.schema.users.new();
 
-    expect(user.profileId).toEqual(null);
-    expect(user.profile).toEqual(null);
+    expect(user.profileId).toBeNull();
+    expect(user.profile).toBeNull();
     expect(user.attrs).toEqual({ profileId: null });
   });
 });

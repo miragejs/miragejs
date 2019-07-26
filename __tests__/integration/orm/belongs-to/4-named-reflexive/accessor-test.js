@@ -18,8 +18,8 @@ describe("Integration | ORM | Belongs To | Named Reflexive | accessor", () => {
         expect(user.bestFriend.attrs).toEqual(friend.attrs);
         expect(user.bestFriendId).toEqual(friend.id);
       } else {
-        expect(user.bestFriend).toEqual(null);
-        expect(user.bestFriendId).toEqual(null);
+        expect(user.bestFriend).toBeNull();
+        expect(user.bestFriendId).toBeNull();
       }
 
       // If there's a friend in this state, make sure the inverse association is correct

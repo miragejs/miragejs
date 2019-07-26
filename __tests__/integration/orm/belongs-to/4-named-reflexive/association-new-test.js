@@ -18,7 +18,7 @@ describe("Integration | ORM | Belongs To | Named Reflexive | association #new", 
 
       expect(!ganon.id).toBeTruthy();
       expect(user.bestFriend).toEqual(ganon);
-      expect(user.bestFriendId).toEqual(null);
+      expect(user.bestFriendId).toBeNull();
 
       user.save();
 

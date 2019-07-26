@@ -19,7 +19,7 @@ describe("Integration | ORM | Belongs To | Reflexive | create", () => {
 
     expect(user.userId).toEqual(friend.id);
     expect(user.user.attrs).toEqual(friend.attrs);
-    expect(schema.db.users.length).toEqual(2);
+    expect(schema.db.users).toHaveLength(2);
     expect(schema.db.users[0]).toEqual({ id: "1", userId: "2" });
     expect(schema.db.users[1]).toEqual({ id: "2", userId: "1" });
   });
@@ -33,7 +33,7 @@ describe("Integration | ORM | Belongs To | Reflexive | create", () => {
 
     expect(user.userId).toEqual(friend.id);
     expect(user.user.attrs).toEqual(friend.attrs);
-    expect(schema.db.users.length).toEqual(2);
+    expect(schema.db.users).toHaveLength(2);
     expect(schema.db.users[0]).toEqual({ id: "1", userId: "2" });
     expect(schema.db.users[1]).toEqual({ id: "2", userId: "1" });
   });

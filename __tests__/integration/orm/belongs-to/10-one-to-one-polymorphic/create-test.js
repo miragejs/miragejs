@@ -19,8 +19,8 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | create", () 
     expect(comment.commentableId).toEqual({ type: "post", id: post.id });
     expect(comment.commentable.attrs).toEqual(post.attrs);
     expect(post.comment.attrs).toEqual(comment.attrs);
-    expect(schema.db.comments.length).toEqual(1);
-    expect(schema.db.posts.length).toEqual(1);
+    expect(schema.db.comments).toHaveLength(1);
+    expect(schema.db.posts).toHaveLength(1);
     expect(schema.db.comments[0]).toEqual({
       id: "1",
       commentableId: { type: "post", id: "1" }
@@ -38,8 +38,8 @@ describe("Integration | ORM | Belongs To | One-to-one Polymorphic | create", () 
     expect(comment.commentableId).toEqual({ type: "post", id: post.id });
     expect(comment.commentable.attrs).toEqual(post.attrs);
     expect(post.comment.attrs).toEqual(comment.attrs);
-    expect(schema.db.comments.length).toEqual(1);
-    expect(schema.db.posts.length).toEqual(1);
+    expect(schema.db.comments).toHaveLength(1);
+    expect(schema.db.posts).toHaveLength(1);
     expect(schema.db.comments[0]).toEqual({
       id: "1",
       commentableId: { type: "post", id: "1" }

@@ -27,8 +27,8 @@ describe("Integration | ORM | Belongs To | One-way Polymorphic | association #se
 
       comment.commentableId = null;
 
-      expect(comment.commentableId).toEqual(null);
-      expect(comment.commentable).toEqual(null);
+      expect(comment.commentableId).toBeNull();
+      expect(comment.commentable).toBeNull();
     });
   });
 });
