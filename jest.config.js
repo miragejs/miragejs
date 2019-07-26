@@ -1,5 +1,5 @@
 let jsdom = {
-  displayName: "browser",
+  displayName: "jsdom",
   transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash-es)"],
   setupFilesAfterEnv: ["jest-extended"],
   testMatch: ["**/__tests__/**/*-test.[jt]s?(x)"],
