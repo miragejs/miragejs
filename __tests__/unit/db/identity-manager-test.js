@@ -1,8 +1,7 @@
-import { IdentityManager } from '../../../lib';
+import { IdentityManager } from "../../../lib";
 
-
-describe('Unit | Db | IdentityManager', function() {
-  test('it can be instantiated', () => {
+describe("Unit | Db | IdentityManager", function() {
+  test("it can be instantiated", () => {
     let manager = new IdentityManager();
     expect(manager).toBeTruthy();
   });
@@ -10,35 +9,35 @@ describe('Unit | Db | IdentityManager', function() {
   test(`fetch returns the latest number`, () => {
     let manager = new IdentityManager();
 
-    expect(manager.fetch()).toEqual('1');
-    expect(manager.fetch()).toEqual('2');
-    expect(manager.fetch()).toEqual('3');
+    expect(manager.fetch()).toEqual("1");
+    expect(manager.fetch()).toEqual("2");
+    expect(manager.fetch()).toEqual("3");
   });
 
   test(`get returns the upcoming id used for fetch`, () => {
     let manager = new IdentityManager();
 
-    expect(manager.fetch()).toEqual('1');
+    expect(manager.fetch()).toEqual("1");
     // TODO: strange case since it's the one returning int instead of string
     expect(manager.get()).toEqual(2);
-    expect(manager.fetch()).toEqual('2');
+    expect(manager.fetch()).toEqual("2");
   });
 
   test(`set indicates an id is being used`, () => {
     let manager = new IdentityManager();
-    manager.set('abc');
+    manager.set("abc");
 
     expect(function() {
-      manager.set('abc');
-    }).toThrow('Attempting to use the ID abc, but it\'s already been used');
+      manager.set("abc");
+    }).toThrow("Attempting to use the ID abc, but it's already been used");
   });
 
   test(`a numerical value passed into set affects future ids used by fetch`, () => {
     let manager = new IdentityManager();
     manager.set(5);
 
-    expect(manager.fetch()).toEqual('6');
-    expect(manager.fetch()).toEqual('7');
+    expect(manager.fetch()).toEqual("6");
+    expect(manager.fetch()).toEqual("7");
   });
 
   test(`multiple numerical values passed into set affects future ids used by fetch`, () => {
@@ -46,40 +45,40 @@ describe('Unit | Db | IdentityManager', function() {
     manager.set(5);
     manager.set(6);
 
-    expect(manager.fetch()).toEqual('7');
-    expect(manager.fetch()).toEqual('8');
+    expect(manager.fetch()).toEqual("7");
+    expect(manager.fetch()).toEqual("8");
   });
 
   test(`an int as a string passed into set affects future ids used by fetch`, () => {
     let manager = new IdentityManager();
-    manager.set('5');
+    manager.set("5");
 
-    expect(manager.fetch()).toEqual('6');
-    expect(manager.fetch()).toEqual('7');
+    expect(manager.fetch()).toEqual("6");
+    expect(manager.fetch()).toEqual("7");
   });
 
   test(`multiple ints as a string passed into set affects future ids used by fetch`, () => {
     let manager = new IdentityManager();
-    manager.set('5');
-    manager.set('6');
+    manager.set("5");
+    manager.set("6");
 
-    expect(manager.fetch()).toEqual('7');
-    expect(manager.fetch()).toEqual('8');
+    expect(manager.fetch()).toEqual("7");
+    expect(manager.fetch()).toEqual("8");
   });
 
   test(`a string value that doesn't parse as an int passed into set doesn't affect future ids used by fetch`, () => {
     let manager = new IdentityManager();
-    manager.set('123-abc');
+    manager.set("123-abc");
 
-    expect(manager.fetch()).toEqual('1');
-    expect(manager.fetch()).toEqual('2');
+    expect(manager.fetch()).toEqual("1");
+    expect(manager.fetch()).toEqual("2");
   });
 
   test(`reset clears the managers memory`, () => {
     let manager = new IdentityManager();
-    manager.set('abc');
+    manager.set("abc");
     manager.reset();
-    manager.set('abc');
+    manager.set("abc");
 
     expect(true).toBeTruthy();
   });

@@ -4,10 +4,9 @@ import {
   Model,
   belongsTo,
   ActiveModelSerializer
-} from '../../../lib';
+} from "../../../lib";
 
-
-describe('Unit | Serializers | ActiveModelSerializer', function() {
+describe("Unit | Serializers | ActiveModelSerializer", function() {
   let serializer = null;
   let schema = null;
 
@@ -25,88 +24,88 @@ describe('Unit | Serializers | ActiveModelSerializer', function() {
     });
   });
 
-  test('normalize works', () => {
+  test("normalize works", () => {
     let payload = {
       contact: {
         id: 1,
-        name: 'Link'
+        name: "Link"
       }
     };
     let jsonApiDoc = serializer.normalize(payload);
 
     expect(jsonApiDoc).toEqual({
       data: {
-        type: 'contacts',
+        type: "contacts",
         id: 1,
         attributes: {
-          name: 'Link'
+          name: "Link"
         }
       }
     });
   });
 
-  test('it hyphenates snake_cased words', () => {
+  test("it hyphenates snake_cased words", () => {
     let payload = {
       contact: {
         id: 1,
-        first_name: 'Link'
+        first_name: "Link"
       }
     };
     let jsonApiDoc = serializer.normalize(payload);
 
     expect(jsonApiDoc).toEqual({
       data: {
-        type: 'contacts',
+        type: "contacts",
         id: 1,
         attributes: {
-          'first-name': 'Link'
+          "first-name": "Link"
         }
       }
     });
   });
 
-  test('it works without an id', () => {
+  test("it works without an id", () => {
     let payload = {
       contact: {
-        first_name: 'Link',
-        last_name: 'zor'
+        first_name: "Link",
+        last_name: "zor"
       }
     };
     let jsonApiDoc = serializer.normalize(payload);
 
     expect(jsonApiDoc).toEqual({
       data: {
-        type: 'contacts',
+        type: "contacts",
         attributes: {
-          'first-name': 'Link',
-          'last-name': 'zor'
+          "first-name": "Link",
+          "last-name": "zor"
         }
       }
     });
   });
 
-  test('it returns coalesce Ids if present', () => {
-    let request = { url: '/authors', queryParams: { ids: ['1', '3'] } };
-    expect(serializer.getCoalescedIds(request)).toEqual(['1', '3']);
+  test("it returns coalesce Ids if present", () => {
+    let request = { url: "/authors", queryParams: { ids: ["1", "3"] } };
+    expect(serializer.getCoalescedIds(request)).toEqual(["1", "3"]);
   });
 
-  test('it returns undefined coalesce Ids if not present', () => {
-    let request = { url: '/authors', queryParams: {} };
+  test("it returns undefined coalesce Ids if not present", () => {
+    let request = { url: "/authors", queryParams: {} };
     expect(serializer.getCoalescedIds(request)).toBeUndefined();
   });
 
-  test('normalizeIds defaults to true', () => {
+  test("normalizeIds defaults to true", () => {
     let serializer = new ActiveModelSerializer();
 
     expect(serializer.normalizeIds).toEqual(true);
   });
 
-  test('normalize works with normalizeIds set to true', () => {
+  test("normalize works with normalizeIds set to true", () => {
     serializer.normalizeIds = true;
     let payload = {
       contact: {
         id: 1,
-        name: 'Link',
+        name: "Link",
         address: 1
       }
     };
@@ -114,15 +113,15 @@ describe('Unit | Serializers | ActiveModelSerializer', function() {
 
     expect(jsonApiDoc).toEqual({
       data: {
-        type: 'contacts',
+        type: "contacts",
         id: 1,
         attributes: {
-          name: 'Link'
+          name: "Link"
         },
         relationships: {
           address: {
             data: {
-              type: 'address',
+              type: "address",
               id: 1
             }
           }
@@ -132,7 +131,7 @@ describe('Unit | Serializers | ActiveModelSerializer', function() {
   });
 
   test('serializeIds defaults to "always"', () => {
-    let defaultState = new ActiveModelSerializer;
-    expect(defaultState.serializeIds).toEqual('always');
+    let defaultState = new ActiveModelSerializer();
+    expect(defaultState.serializeIds).toEqual("always");
   });
 });

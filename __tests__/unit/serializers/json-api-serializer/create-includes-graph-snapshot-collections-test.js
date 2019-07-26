@@ -4,16 +4,16 @@ import {
   Model,
   hasMany,
   JSONAPISerializer
-} from '../../../../lib';
+} from "../../../../lib";
 
 /*
   This test is heavily coupled to the implementation and can be deleted
   during a future refactoring.
 */
-describe('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot collections', function() {
+describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot collections", function() {
   let serializer = null;
   let registry = null;
-  let type = null
+  let type = null;
   let request = {};
 
   beforeEach(function() {
@@ -22,16 +22,15 @@ describe('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapsh
         return serializer;
       }
     };
-    type = 'foo';
+    type = "foo";
     request = {};
 
     serializer = new JSONAPISerializer(registry, type, request);
   });
 
-  test('it works on collections with no includes', () => {
+  test("it works on collections with no includes", () => {
     let schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-      })
+      wordSmith: Model.extend({})
     });
     schema.wordSmiths.create();
     schema.wordSmiths.create();
@@ -40,13 +39,13 @@ describe('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapsh
 
     expect(serializer.request._includesGraph).toEqual({
       data: {
-        'word-smith:1': {},
-        'word-smith:2': {}
+        "word-smith:1": {},
+        "word-smith:2": {}
       }
     });
   });
 
-  test('it works on collections with hasMany relationships and dot-path includes', () => {
+  test("it works on collections with hasMany relationships and dot-path includes", () => {
     let schema = new Schema(new Db(), {
       wordSmith: Model.extend({
         redTags: hasMany(),
@@ -75,56 +74,58 @@ describe('Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapsh
     let redTag2 = bluePost2.createRedTag();
     redTag2.createSomeColor();
 
-    serializer.request = { queryParams: { include: 'red-tags,blue-posts.red-tags.some-colors' } };
+    serializer.request = {
+      queryParams: { include: "red-tags,blue-posts.red-tags.some-colors" }
+    };
 
     serializer._createRequestedIncludesGraph(schema.wordSmiths.all());
 
     expect(serializer.request._includesGraph).toEqual({
       data: {
-        'word-smith:1': {
+        "word-smith:1": {
           relationships: {
-            'red-tags': [ 'red-tag:1', 'red-tag:2' ],
-            'blue-posts': [ 'blue-post:1' ]
+            "red-tags": ["red-tag:1", "red-tag:2"],
+            "blue-posts": ["blue-post:1"]
           }
         },
-        'word-smith:2': {
+        "word-smith:2": {
           relationships: {
-            'red-tags': [ 'red-tag:4' ],
-            'blue-posts': [ 'blue-post:2' ]
+            "red-tags": ["red-tag:4"],
+            "blue-posts": ["blue-post:2"]
           }
         }
       },
       included: {
-        'red-tags': {
-          'red-tag:1': {},
-          'red-tag:2': {},
-          'red-tag:3': {
+        "red-tags": {
+          "red-tag:1": {},
+          "red-tag:2": {},
+          "red-tag:3": {
             relationships: {
-              'some-colors': [ 'some-color:1' ]
+              "some-colors": ["some-color:1"]
             }
           },
-          'red-tag:4': {},
-          'red-tag:5': {
+          "red-tag:4": {},
+          "red-tag:5": {
             relationships: {
-              'some-colors': [ 'some-color:2' ]
+              "some-colors": ["some-color:2"]
             }
           }
         },
-        'blue-posts': {
-          'blue-post:1': {
+        "blue-posts": {
+          "blue-post:1": {
             relationships: {
-              'red-tags': [ 'red-tag:3' ]
+              "red-tags": ["red-tag:3"]
             }
           },
-          'blue-post:2': {
+          "blue-post:2": {
             relationships: {
-              'red-tags': [ 'red-tag:5' ]
+              "red-tags": ["red-tag:5"]
             }
           }
         },
-        'some-colors': {
-          'some-color:1': {},
-          'some-color:2': {}
+        "some-colors": {
+          "some-color:1": {},
+          "some-color:2": {}
         }
       }
     });

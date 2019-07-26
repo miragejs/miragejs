@@ -7,32 +7,32 @@ import {
   hasMany,
   trait,
   association
-} from '../../lib';
+} from "../../lib";
 
-describe('Unit | Server', function() {
-  test('it can be instantiated', () => {
-    let server = new Server({ environment: 'test' });
+describe("Unit | Server", function() {
+  test("it can be instantiated", () => {
+    let server = new Server({ environment: "test" });
 
     expect(server).toBeTruthy();
 
     server.shutdown();
   });
 
-  test('routes return pretender handler', () => {
-    let server = new Server({ environment: 'test' });
+  test("routes return pretender handler", () => {
+    let server = new Server({ environment: "test" });
 
-    let handler = server.post('foo');
+    let handler = server.post("foo");
 
     expect(handler.numberOfCalls).toBe(0);
 
     server.shutdown();
   });
 
-  test('it runs the default scenario in non-test environments', () => {
+  test("it runs the default scenario in non-test environments", () => {
     expect.assertions(1);
 
     let server = new Server({
-      environment: 'development',
+      environment: "development",
       scenarios: {
         default() {
           expect(true).toBeTruthy();
@@ -44,9 +44,9 @@ describe('Unit | Server', function() {
   });
 });
 
-describe('Unit | Server #loadConfig', function() {
-  test('forces timing to 0 in test environment', () => {
-    let server = new Server({ environment: 'test' });
+describe("Unit | Server #loadConfig", function() {
+  test("forces timing to 0 in test environment", () => {
+    let server = new Server({ environment: "test" });
 
     server.loadConfig(function() {
       this.timing = 50;
@@ -58,7 +58,7 @@ describe('Unit | Server #loadConfig', function() {
   });
 
   test("doesn't modify user's timing config in other environments", () => {
-    let server = new Server({ environment: 'blah' });
+    let server = new Server({ environment: "blah" });
 
     server.loadConfig(function() {
       this.timing = 50;
@@ -70,16 +70,16 @@ describe('Unit | Server #loadConfig', function() {
   });
 });
 
-describe('Unit | Server #db', function() {
-  test('its db is isolated across instances', () => {
-    let server1 = new Server({ environment: 'test' });
+describe("Unit | Server #db", function() {
+  test("its db is isolated across instances", () => {
+    let server1 = new Server({ environment: "test" });
 
-    server1.db.createCollection('contacts');
-    server1.db.contacts.insert({ name: 'Sam' });
+    server1.db.createCollection("contacts");
+    server1.db.contacts.insert({ name: "Sam" });
 
     server1.shutdown();
 
-    let server2 = new Server({ environment: 'test' });
+    let server2 = new Server({ environment: "test" });
 
     expect(server2.contacts).toBeUndefined();
 
@@ -87,105 +87,105 @@ describe('Unit | Server #db', function() {
   });
 });
 
-describe('Unit | Server #create', function() {
-  test('create fails when no factories or models are registered', () => {
-    let server = new Server({ environment: 'test' });
+describe("Unit | Server #create", function() {
+  test("create fails when no factories or models are registered", () => {
+    let server = new Server({ environment: "test" });
 
     expect(function() {
-      server.create('contact');
+      server.create("contact");
     }).toThrow();
 
     server.shutdown();
   });
 
-  test('create fails when an expected factory isn\'t registered', () => {
+  test("create fails when an expected factory isn't registered", () => {
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         address: Factory
       }
     });
 
     expect(function() {
-      server.create('contact');
-    }).toThrow();
+      server.create("contact");
+    }).toThrow(/no model or factory was found/);
 
     server.shutdown();
   });
 
-  test('create works when models but no factories are registered', () => {
+  test("create works when models but no factories are registered", () => {
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       models: {
         contact: Model
       }
     });
 
-    server.create('contact');
+    server.create("contact");
 
     expect(server.db.contacts).toHaveLength(1);
 
     server.shutdown();
   });
 
-  test('create adds the data to the db', () => {
+  test("create adds the data to the db", () => {
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         contact: Factory.extend({
-          name: 'Sam'
+          name: "Sam"
         })
       }
     });
 
-    server.create('contact');
+    server.create("contact");
     let contactsInDb = server.db.contacts;
 
     expect(contactsInDb).toHaveLength(1);
-    expect(contactsInDb[0]).toEqual({ id: '1', name: 'Sam' });
+    expect(contactsInDb[0]).toEqual({ id: "1", name: "Sam" });
 
     server.shutdown();
   });
 
-  test('create returns the new data in the db', () => {
+  test("create returns the new data in the db", () => {
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         contact: Factory.extend({
-          name: 'Sam'
+          name: "Sam"
         })
       }
     });
 
-    let contact = server.create('contact');
+    let contact = server.create("contact");
 
-    expect(contact).toEqual({ id: '1', name: 'Sam' });
+    expect(contact).toEqual({ id: "1", name: "Sam" });
 
     server.shutdown();
   });
 
-  test('create allows for attr overrides', () => {
+  test("create allows for attr overrides", () => {
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         contact: Factory.extend({
-          name: 'Sam'
+          name: "Sam"
         })
       }
     });
 
-    let sam = server.create('contact');
-    let link = server.create('contact', { name: 'Link' });
+    let sam = server.create("contact");
+    let link = server.create("contact", { name: "Link" });
 
-    expect(sam).toEqual({ id: '1', name: 'Sam' });
-    expect(link).toEqual({ id: '2', name: 'Link' });
+    expect(sam).toEqual({ id: "1", name: "Sam" });
+    expect(link).toEqual({ id: "2", name: "Link" });
 
     server.shutdown();
   });
 
-  test('create allows for attr overrides with extended factories', () => {
+  test("create allows for attr overrides with extended factories", () => {
     let ContactFactory = Factory.extend({
-      name: 'Link',
+      name: "Link",
       age: 500
     });
     let FriendFactory = ContactFactory.extend({
@@ -195,50 +195,55 @@ describe('Unit | Server #create', function() {
     });
 
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         contact: ContactFactory,
         friend: FriendFactory
       }
     });
 
-    let link = server.create('friend');
-    let youngLink = server.create('friend', { age: 10 });
+    let link = server.create("friend");
+    let youngLink = server.create("friend", { age: 10 });
 
-    expect(link).toEqual({ id: '1', name: 'Link', age: 500, is_young: false });
-    expect(youngLink).toEqual({ id: '2', name: 'Link', age: 10, is_young: true });
+    expect(link).toEqual({ id: "1", name: "Link", age: 500, is_young: false });
+    expect(youngLink).toEqual({
+      id: "2",
+      name: "Link",
+      age: 10,
+      is_young: true
+    });
 
     server.shutdown();
   });
 
-  test('create allows for attr overrides with arrays', () => {
+  test("create allows for attr overrides with arrays", () => {
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         contact: Factory.extend({
-          name: ['Sam', 'Carl']
+          name: ["Sam", "Carl"]
         })
       }
     });
 
-    let sam = server.create('contact');
-    let link = server.create('contact', { name: ['Link'] });
-    let noname = server.create('contact', { name: [] });
+    let sam = server.create("contact");
+    let link = server.create("contact", { name: ["Link"] });
+    let noname = server.create("contact", { name: [] });
 
-    expect(sam).toEqual({ id: '1', name: ['Sam', 'Carl'] });
-    expect(link).toEqual({ id: '2', name: ['Link'] });
-    expect(noname).toEqual({ id: '3', name: [] });
+    expect(sam).toEqual({ id: "1", name: ["Sam", "Carl"] });
+    expect(link).toEqual({ id: "2", name: ["Link"] });
+    expect(noname).toEqual({ id: "3", name: [] });
 
     server.shutdown();
   });
 
-  test('create allows for nested attr overrides', () => {
+  test("create allows for nested attr overrides", () => {
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         contact: Factory.extend({
           address: {
-            streetName: 'Main',
+            streetName: "Main",
             streetAddress(i) {
               return 1000 + i;
             }
@@ -247,18 +252,24 @@ describe('Unit | Server #create', function() {
       }
     });
 
-    let contact1 = server.create('contact');
-    let contact2 = server.create('contact');
+    let contact1 = server.create("contact");
+    let contact2 = server.create("contact");
 
-    expect(contact1).toEqual({ id: '1', address: { streetName: 'Main', streetAddress: 1000 } });
-    expect(contact2).toEqual({ id: '2', address: { streetName: 'Main', streetAddress: 1001 } });
+    expect(contact1).toEqual({
+      id: "1",
+      address: { streetName: "Main", streetAddress: 1000 }
+    });
+    expect(contact2).toEqual({
+      id: "2",
+      address: { streetName: "Main", streetAddress: 1001 }
+    });
 
     server.shutdown();
   });
 
-  test('factories can have dynamic properties that depend on attr overrides', () => {
+  test("factories can have dynamic properties that depend on attr overrides", () => {
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         baz: Factory.extend({
           bar() {
@@ -268,20 +279,20 @@ describe('Unit | Server #create', function() {
       }
     });
 
-    let baz1 = server.create('baz', { name: 'foo' });
+    let baz1 = server.create("baz", { name: "foo" });
 
-    expect(baz1).toEqual({ id: '1', name: 'foo', bar: 'oo' });
+    expect(baz1).toEqual({ id: "1", name: "foo", bar: "oo" });
 
     server.shutdown();
   });
 
-  test('create allows for arrays of attr overrides', () => {
+  test("create allows for arrays of attr overrides", () => {
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         contact: Factory.extend({
           websites: [
-            'http://example.com',
+            "http://example.com",
             function(i) {
               return `http://placekitten.com/${320 + i}/${240 + i}`;
             }
@@ -290,209 +301,238 @@ describe('Unit | Server #create', function() {
       }
     });
 
-    let contact1 = server.create('contact');
-    let contact2 = server.create('contact');
+    let contact1 = server.create("contact");
+    let contact2 = server.create("contact");
 
-    expect(contact1).toEqual(
-      { id: '1', websites: ['http://example.com', 'http://placekitten.com/320/240'] }
-    );
-    expect(contact2).toEqual(
-      { id: '2', websites: ['http://example.com', 'http://placekitten.com/321/241'] }
-    );
+    expect(contact1).toEqual({
+      id: "1",
+      websites: ["http://example.com", "http://placekitten.com/320/240"]
+    });
+    expect(contact2).toEqual({
+      id: "2",
+      websites: ["http://example.com", "http://placekitten.com/321/241"]
+    });
 
     server.shutdown();
   });
 
-  test('create allows to extend factory with trait', () => {
+  test("create allows to extend factory with trait", () => {
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
+        publishedAt: "2010-01-01 10:00:00"
       })
     });
 
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         article: ArticleFactory
       }
     });
 
-    let article = server.create('article');
-    let publishedArticle = server.create('article', 'published');
+    let article = server.create("article");
+    let publishedArticle = server.create("article", "published");
 
-    expect(article).toEqual({ id: '1', title: 'Lorem ipsum' });
-    expect(publishedArticle).toEqual({ id: '2', title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2010-01-01 10:00:00' });
+    expect(article).toEqual({ id: "1", title: "Lorem ipsum" });
+    expect(publishedArticle).toEqual({
+      id: "2",
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2010-01-01 10:00:00"
+    });
 
     server.shutdown();
   });
 
-  test('create allows to extend factory with multiple traits', () => {
+  test("create allows to extend factory with multiple traits", () => {
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
+        publishedAt: "2010-01-01 10:00:00"
       }),
 
       withContent: trait({
-        content: 'content'
+        content: "content"
       })
     });
 
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         article: ArticleFactory
       }
     });
 
-    let article = server.create('article');
-    let publishedArticle = server.create('article', 'published');
-    let publishedArticleWithContent = server.create('article', 'published', 'withContent');
+    let article = server.create("article");
+    let publishedArticle = server.create("article", "published");
+    let publishedArticleWithContent = server.create(
+      "article",
+      "published",
+      "withContent"
+    );
 
-    expect(article).toEqual({ id: '1', title: 'Lorem ipsum' });
-    expect(publishedArticle).toEqual({ id: '2', title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2010-01-01 10:00:00' });
-    expect(publishedArticleWithContent).toEqual({ id: '3', title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2010-01-01 10:00:00', content: 'content' });
+    expect(article).toEqual({ id: "1", title: "Lorem ipsum" });
+    expect(publishedArticle).toEqual({
+      id: "2",
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2010-01-01 10:00:00"
+    });
+    expect(publishedArticleWithContent).toEqual({
+      id: "3",
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2010-01-01 10:00:00",
+      content: "content"
+    });
 
     server.shutdown();
   });
 
-  test('create allows to extend factory with traits containing afterCreate callbacks', () => {
+  test("create allows to extend factory with traits containing afterCreate callbacks", () => {
     let CommentFactory = Factory.extend({
-      content: 'content'
+      content: "content"
     });
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       withComments: trait({
         afterCreate(article, server) {
-          server.createList('comment', 3, { article });
+          server.createList("comment", 3, { article });
         }
       })
     });
 
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         article: ArticleFactory,
         comment: CommentFactory
       }
     });
 
-    let articleWithComments = server.create('article', 'withComments');
+    let articleWithComments = server.create("article", "withComments");
 
-    expect(articleWithComments).toEqual({ id: '1', title: 'Lorem ipsum' });
+    expect(articleWithComments).toEqual({ id: "1", title: "Lorem ipsum" });
     expect(server.db.comments).toHaveLength(3);
 
     server.shutdown();
   });
 
-  test('create does not execute afterCreate callbacks from traits that are not applied', () => {
+  test("create does not execute afterCreate callbacks from traits that are not applied", () => {
     let CommentFactory = Factory.extend({
-      content: 'content'
+      content: "content"
     });
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       withComments: trait({
         afterCreate(article, server) {
-          server.createList('comment', 3, { article });
+          server.createList("comment", 3, { article });
         }
       })
     });
 
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         article: ArticleFactory,
         comment: CommentFactory
       }
     });
 
-    let articleWithComments = server.create('article');
+    let articleWithComments = server.create("article");
 
-    expect(articleWithComments).toEqual({ id: '1', title: 'Lorem ipsum' });
+    expect(articleWithComments).toEqual({ id: "1", title: "Lorem ipsum" });
     expect(server.db.comments).toHaveLength(0);
 
     server.shutdown();
   });
 
-  test('create allows to extend with multiple traits and to apply attr overrides', () => {
+  test("create allows to extend with multiple traits and to apply attr overrides", () => {
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
+        publishedAt: "2010-01-01 10:00:00"
       }),
 
       withContent: trait({
-        content: 'content'
+        content: "content"
       })
     });
 
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         article: ArticleFactory
       }
     });
 
     let overrides = {
-      publishedAt: '2012-01-01 10:00:00'
+      publishedAt: "2012-01-01 10:00:00"
     };
-    let publishedArticleWithContent = server.create('article', 'published', 'withContent', overrides);
+    let publishedArticleWithContent = server.create(
+      "article",
+      "published",
+      "withContent",
+      overrides
+    );
 
-    expect(publishedArticleWithContent).toEqual({ id: '1', title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2012-01-01 10:00:00', content: 'content' });
+    expect(publishedArticleWithContent).toEqual({
+      id: "1",
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2012-01-01 10:00:00",
+      content: "content"
+    });
 
     server.shutdown();
   });
 
-  test('create throws errors when using trait that is not defined and distinquishes between traits and non-traits', () => {
+  test("create throws errors when using trait that is not defined and distinquishes between traits and non-traits", () => {
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
+        publishedAt: "2010-01-01 10:00:00"
       }),
 
       private: {
-        someAttr: 'value'
+        someAttr: "value"
       }
     });
 
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         article: ArticleFactory
       }
     });
 
     expect(() => {
-      server.create('article', 'private');
-    }).toThrow();
+      server.create("article", "private");
+    }).toThrow(/'private' trait is not registered in 'article' factory/);
 
     server.shutdown();
   });
 
-  test('create allows to create objects with associations', () => {
+  test("create allows to create objects with associations", () => {
     let AuthorFactory = Factory.extend({
-      name: 'Sam'
+      name: "Sam"
     });
     let CategoryFactory = Factory.extend({
-      name: 'splendid software'
+      name: "splendid software"
     });
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       withCategory: trait({
         awesomeCategory: association()
@@ -502,16 +542,15 @@ describe('Unit | Server #create', function() {
     });
 
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       models: {
         author: Model.extend({
           articles: hasMany()
         }),
-        category: Model.extend({
-        }),
+        category: Model.extend({}),
         article: Model.extend({
           author: belongsTo(),
-          awesomeCategory: belongsTo('category')
+          awesomeCategory: belongsTo("category")
         })
       },
       factories: {
@@ -521,90 +560,108 @@ describe('Unit | Server #create', function() {
       }
     });
 
-    let article = server.create('article', 'withCategory');
+    let article = server.create("article", "withCategory");
 
-    expect(article.attrs).toEqual({ title: 'Lorem ipsum', id: '1', authorId: '1', awesomeCategoryId: '1' });
+    expect(article.attrs).toEqual({
+      title: "Lorem ipsum",
+      id: "1",
+      authorId: "1",
+      awesomeCategoryId: "1"
+    });
     expect(server.db.authors).toHaveLength(1);
     expect(server.db.categories).toHaveLength(1);
 
-    let anotherArticle = server.create('article', 'withCategory');
-    expect(anotherArticle.attrs).toEqual({ title: 'Lorem ipsum', id: '2', authorId: '2', awesomeCategoryId: '2' });
+    let anotherArticle = server.create("article", "withCategory");
+    expect(anotherArticle.attrs).toEqual({
+      title: "Lorem ipsum",
+      id: "2",
+      authorId: "2",
+      awesomeCategoryId: "2"
+    });
     expect(server.db.authors).toHaveLength(2);
     expect(server.db.categories).toHaveLength(2);
 
     server.shutdown();
   });
 
-  test('create allows to create objects with associations with traits and overrides for associations', () => {
+  test("create allows to create objects with associations with traits and overrides for associations", () => {
     let CategoryFactory = Factory.extend({
-      name: 'splendid software',
+      name: "splendid software",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2014-01-01 10:00:00'
+        publishedAt: "2014-01-01 10:00:00"
       })
     });
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       withCategory: trait({
-        category: association('published', { publishedAt: '2016-01-01 12:00:00' })
+        category: association("published", {
+          publishedAt: "2016-01-01 12:00:00"
+        })
       })
     });
 
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         article: ArticleFactory,
         category: CategoryFactory
       },
       models: {
-        category: Model.extend({
-        }),
+        category: Model.extend({}),
         article: Model.extend({
-          category: belongsTo('category')
+          category: belongsTo("category")
         })
       }
     });
 
-    let article = server.create('article', 'withCategory');
+    let article = server.create("article", "withCategory");
 
-    expect(article.attrs).toEqual({ title: 'Lorem ipsum', id: '1', categoryId: '1' });
+    expect(article.attrs).toEqual({
+      title: "Lorem ipsum",
+      id: "1",
+      categoryId: "1"
+    });
     expect(server.db.categories).toHaveLength(1);
-    expect(server.db.categories[0]).toEqual(
-      { name: 'splendid software', id: '1', isPublished: true, publishedAt: '2016-01-01 12:00:00' }
-    );
+    expect(server.db.categories[0]).toEqual({
+      name: "splendid software",
+      id: "1",
+      isPublished: true,
+      publishedAt: "2016-01-01 12:00:00"
+    });
 
     server.shutdown();
   });
 
-  test('create does not create (extra) models on associations when they are passed in as overrides', () => {
+  test("create does not create (extra) models on associations when they are passed in as overrides", () => {
     let MotherFactory = Factory.extend({
-      name: 'Should not create'
+      name: "Should not create"
     });
     let ChildFactory = Factory.extend({
       mother: association()
     });
 
     let server = new Server({
-      environment: 'test',
+      environment: "test",
       factories: {
         mother: MotherFactory,
         child: ChildFactory
       },
       models: {
         mother: Model.extend({
-          children: hasMany('child')
+          children: hasMany("child")
         }),
         child: Model.extend({
-          mother: belongsTo('mother')
+          mother: belongsTo("mother")
         })
       }
     });
 
-    let mother = server.create('mother', { name: 'Lynda' });
-    server.create('child', { name: 'Don', mother });
-    server.create('child', { name: 'Dan', mother });
+    let mother = server.create("mother", { name: "Lynda" });
+    server.create("child", { name: "Don", mother });
+    server.create("child", { name: "Dan", mother });
 
     expect(server.db.mothers).toHaveLength(1);
 
@@ -612,45 +669,45 @@ describe('Unit | Server #create', function() {
   });
 });
 
-describe('Unit | Server #createList', function() {
-  let server = null
+describe("Unit | Server #createList", function() {
+  let server = null;
   beforeEach(function() {
-    server = new Server({ environment: 'test' });
+    server = new Server({ environment: "test" });
   });
 
   afterEach(function() {
     server.shutdown();
   });
 
-  test('createList adds the given number of elements to the db', () => {
+  test("createList adds the given number of elements to the db", () => {
     server.loadFactories({
-      contact: Factory.extend({ name: 'Sam' })
+      contact: Factory.extend({ name: "Sam" })
     });
 
-    server.createList('contact', 3);
+    server.createList("contact", 3);
     let contactsInDb = server.db.contacts;
 
     expect(contactsInDb).toHaveLength(3);
-    expect(contactsInDb[0]).toEqual({ id: '1', name: 'Sam' });
-    expect(contactsInDb[1]).toEqual({ id: '2', name: 'Sam' });
-    expect(contactsInDb[2]).toEqual({ id: '3', name: 'Sam' });
+    expect(contactsInDb[0]).toEqual({ id: "1", name: "Sam" });
+    expect(contactsInDb[1]).toEqual({ id: "2", name: "Sam" });
+    expect(contactsInDb[2]).toEqual({ id: "3", name: "Sam" });
   });
 
-  test('createList returns the created elements', () => {
+  test("createList returns the created elements", () => {
     server.loadFactories({
-      contact: Factory.extend({ name: 'Sam' })
+      contact: Factory.extend({ name: "Sam" })
     });
 
-    server.create('contact');
-    let contacts = server.createList('contact', 3);
+    server.create("contact");
+    let contacts = server.createList("contact", 3);
 
     expect(contacts).toHaveLength(3);
-    expect(contacts[0]).toEqual({ id: '2', name: 'Sam' });
-    expect(contacts[1]).toEqual({ id: '3', name: 'Sam' });
-    expect(contacts[2]).toEqual({ id: '4', name: 'Sam' });
+    expect(contacts[0]).toEqual({ id: "2", name: "Sam" });
+    expect(contacts[1]).toEqual({ id: "3", name: "Sam" });
+    expect(contacts[2]).toEqual({ id: "4", name: "Sam" });
   });
 
-  test('createList respects sequences', () => {
+  test("createList respects sequences", () => {
     server.loadFactories({
       contact: Factory.extend({
         name(i) {
@@ -659,38 +716,38 @@ describe('Unit | Server #createList', function() {
       })
     });
 
-    let contacts = server.createList('contact', 3);
+    let contacts = server.createList("contact", 3);
 
-    expect(contacts[0]).toEqual({ id: '1', name: 'name0' });
-    expect(contacts[1]).toEqual({ id: '2', name: 'name1' });
-    expect(contacts[2]).toEqual({ id: '3', name: 'name2' });
+    expect(contacts[0]).toEqual({ id: "1", name: "name0" });
+    expect(contacts[1]).toEqual({ id: "2", name: "name1" });
+    expect(contacts[2]).toEqual({ id: "3", name: "name2" });
   });
 
-  test('createList respects attr overrides', () => {
+  test("createList respects attr overrides", () => {
     server.loadFactories({
-      contact: Factory.extend({ name: 'Sam' })
+      contact: Factory.extend({ name: "Sam" })
     });
 
-    let sams = server.createList('contact', 2);
-    let links = server.createList('contact', 2, { name: 'Link' });
+    let sams = server.createList("contact", 2);
+    let links = server.createList("contact", 2, { name: "Link" });
 
-    expect(sams[0]).toEqual({ id: '1', name: 'Sam' });
-    expect(sams[1]).toEqual({ id: '2', name: 'Sam' });
-    expect(links[0]).toEqual({ id: '3', name: 'Link' });
-    expect(links[1]).toEqual({ id: '4', name: 'Link' });
+    expect(sams[0]).toEqual({ id: "1", name: "Sam" });
+    expect(sams[1]).toEqual({ id: "2", name: "Sam" });
+    expect(links[0]).toEqual({ id: "3", name: "Link" });
+    expect(links[1]).toEqual({ id: "4", name: "Link" });
   });
 
-  test('createList respects traits', () => {
+  test("createList respects traits", () => {
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
+        publishedAt: "2010-01-01 10:00:00"
       }),
 
       withContent: trait({
-        content: 'content'
+        content: "content"
       })
     });
 
@@ -698,25 +755,35 @@ describe('Unit | Server #createList', function() {
       article: ArticleFactory
     });
 
-    let articles = server.createList('article', 2, 'published', 'withContent');
+    let articles = server.createList("article", 2, "published", "withContent");
 
-    expect(articles[0]).toEqual({ id: '1', title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2010-01-01 10:00:00', content: 'content' });
-    expect(articles[1]).toEqual({ id: '2', title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2010-01-01 10:00:00', content: 'content' });
+    expect(articles[0]).toEqual({
+      id: "1",
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2010-01-01 10:00:00",
+      content: "content"
+    });
+    expect(articles[1]).toEqual({
+      id: "2",
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2010-01-01 10:00:00",
+      content: "content"
+    });
   });
 
-  test('createList respects traits with attr overrides', () => {
+  test("createList respects traits with attr overrides", () => {
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
+        publishedAt: "2010-01-01 10:00:00"
       }),
 
       withContent: trait({
-        content: 'content'
+        content: "content"
       })
     });
 
@@ -724,26 +791,42 @@ describe('Unit | Server #createList', function() {
       article: ArticleFactory
     });
 
-    let overrides = { publishedAt: '2012-01-01 10:00:00' };
-    let articles = server.createList('article', 2, 'published', 'withContent', overrides);
+    let overrides = { publishedAt: "2012-01-01 10:00:00" };
+    let articles = server.createList(
+      "article",
+      2,
+      "published",
+      "withContent",
+      overrides
+    );
 
-    expect(articles[0]).toEqual({ id: '1', title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2012-01-01 10:00:00', content: 'content' });
-    expect(articles[1]).toEqual({ id: '2', title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2012-01-01 10:00:00', content: 'content' });
+    expect(articles[0]).toEqual({
+      id: "1",
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2012-01-01 10:00:00",
+      content: "content"
+    });
+    expect(articles[1]).toEqual({
+      id: "2",
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2012-01-01 10:00:00",
+      content: "content"
+    });
   });
 
-  test('createList throws errors when using trait that is not defined and distinquishes between traits and non-traits', () => {
+  test("createList throws errors when using trait that is not defined and distinquishes between traits and non-traits", () => {
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
+        publishedAt: "2010-01-01 10:00:00"
       }),
 
       private: {
-        someAttr: 'value'
+        someAttr: "value"
       }
     });
 
@@ -752,17 +835,17 @@ describe('Unit | Server #createList', function() {
     });
 
     expect(() => {
-      server.createList('article', 2, 'private');
+      server.createList("article", 2, "private");
     }).toThrow();
   });
 
-  test('createList throws an error if the second argument is not an integer', () => {
+  test("createList throws an error if the second argument is not an integer", () => {
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
+        publishedAt: "2010-01-01 10:00:00"
       })
     });
 
@@ -771,57 +854,57 @@ describe('Unit | Server #createList', function() {
     });
 
     expect(() => {
-      server.createList('article', 'published');
-    }).toThrow();
+      server.createList("article", "published");
+    }).toThrow(/second argument has to be an integer, you passed: string/);
   });
 });
 
-describe('Unit | Server #build', function() {
+describe("Unit | Server #build", function() {
   let server = null;
   beforeEach(function() {
-    server = new Server({ environment: 'test' });
+    server = new Server({ environment: "test" });
   });
 
   afterEach(function() {
     server.shutdown();
   });
 
-  test('build does not add the data to the db', () => {
+  test("build does not add the data to the db", () => {
     server.loadFactories({
-      contact: Factory.extend({ name: 'Sam' })
+      contact: Factory.extend({ name: "Sam" })
     });
 
-    server.build('contact');
+    server.build("contact");
     let contactsInDb = server.db.contacts;
 
     expect(contactsInDb).toHaveLength(0);
   });
 
-  test('build returns the new attrs with no id', () => {
+  test("build returns the new attrs with no id", () => {
     server.loadFactories({
-      contact: Factory.extend({ name: 'Sam' })
+      contact: Factory.extend({ name: "Sam" })
     });
 
-    let contact = server.build('contact');
+    let contact = server.build("contact");
 
-    expect(contact).toEqual({ name: 'Sam' });
+    expect(contact).toEqual({ name: "Sam" });
   });
 
-  test('build allows for attr overrides', () => {
+  test("build allows for attr overrides", () => {
     server.loadFactories({
-      contact: Factory.extend({ name: 'Sam' })
+      contact: Factory.extend({ name: "Sam" })
     });
 
-    let sam = server.build('contact');
-    let link = server.build('contact', { name: 'Link' });
+    let sam = server.build("contact");
+    let link = server.build("contact", { name: "Link" });
 
-    expect(sam).toEqual({ name: 'Sam' });
-    expect(link).toEqual({ name: 'Link' });
+    expect(sam).toEqual({ name: "Sam" });
+    expect(link).toEqual({ name: "Link" });
   });
 
-  test('build allows for attr overrides with extended factories', () => {
+  test("build allows for attr overrides with extended factories", () => {
     let ContactFactory = Factory.extend({
-      name: 'Link',
+      name: "Link",
       age: 500
     });
     let FriendFactory = ContactFactory.extend({
@@ -834,32 +917,32 @@ describe('Unit | Server #build', function() {
       friend: FriendFactory
     });
 
-    let link = server.build('friend');
-    let youngLink = server.build('friend', { age: 10 });
+    let link = server.build("friend");
+    let youngLink = server.build("friend", { age: 10 });
 
-    expect(link).toEqual({ name: 'Link', age: 500, is_young: false });
-    expect(youngLink).toEqual({ name: 'Link', age: 10, is_young: true });
+    expect(link).toEqual({ name: "Link", age: 500, is_young: false });
+    expect(youngLink).toEqual({ name: "Link", age: 10, is_young: true });
   });
 
-  test('build allows for attr overrides with arrays', () => {
+  test("build allows for attr overrides with arrays", () => {
     server.loadFactories({
-      contact: Factory.extend({ name: ['Sam', 'Carl'] })
+      contact: Factory.extend({ name: ["Sam", "Carl"] })
     });
 
-    let sam = server.build('contact');
-    let link = server.build('contact', { name: ['Link'] });
-    let noname = server.build('contact', { name: [] });
+    let sam = server.build("contact");
+    let link = server.build("contact", { name: ["Link"] });
+    let noname = server.build("contact", { name: [] });
 
-    expect(sam).toEqual({ name: ['Sam', 'Carl'] });
-    expect(link).toEqual({ name: ['Link'] });
+    expect(sam).toEqual({ name: ["Sam", "Carl"] });
+    expect(link).toEqual({ name: ["Link"] });
     expect(noname).toEqual({ name: [] });
   });
 
-  test('build allows for nested attr overrides', () => {
+  test("build allows for nested attr overrides", () => {
     server.loadFactories({
       contact: Factory.extend({
         address: {
-          streetName: 'Main',
+          streetName: "Main",
           streetAddress(i) {
             return 1000 + i;
           }
@@ -867,18 +950,22 @@ describe('Unit | Server #build', function() {
       })
     });
 
-    let contact1 = server.build('contact');
-    let contact2 = server.build('contact');
+    let contact1 = server.build("contact");
+    let contact2 = server.build("contact");
 
-    expect(contact1).toEqual({ address: { streetName: 'Main', streetAddress: 1000 } });
-    expect(contact2).toEqual({ address: { streetName: 'Main', streetAddress: 1001 } });
+    expect(contact1).toEqual({
+      address: { streetName: "Main", streetAddress: 1000 }
+    });
+    expect(contact2).toEqual({
+      address: { streetName: "Main", streetAddress: 1001 }
+    });
   });
 
-  test('build allows for arrays of attr overrides', () => {
+  test("build allows for arrays of attr overrides", () => {
     server.loadFactories({
       contact: Factory.extend({
         websites: [
-          'http://example.com',
+          "http://example.com",
           function(i) {
             return `http://placekitten.com/${320 + i}/${240 + i}`;
           }
@@ -886,20 +973,24 @@ describe('Unit | Server #build', function() {
       })
     });
 
-    let contact1 = server.build('contact');
-    let contact2 = server.build('contact');
+    let contact1 = server.build("contact");
+    let contact2 = server.build("contact");
 
-    expect(contact1).toEqual({ websites: ['http://example.com', 'http://placekitten.com/320/240'] });
-    expect(contact2).toEqual({ websites: ['http://example.com', 'http://placekitten.com/321/241'] });
+    expect(contact1).toEqual({
+      websites: ["http://example.com", "http://placekitten.com/320/240"]
+    });
+    expect(contact2).toEqual({
+      websites: ["http://example.com", "http://placekitten.com/321/241"]
+    });
   });
 
-  test('build allows to extend factory with trait', () => {
+  test("build allows to extend factory with trait", () => {
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
+        publishedAt: "2010-01-01 10:00:00"
       })
     });
 
@@ -907,25 +998,28 @@ describe('Unit | Server #build', function() {
       article: ArticleFactory
     });
 
-    let article = server.build('article');
-    let publishedArticle = server.build('article', 'published');
+    let article = server.build("article");
+    let publishedArticle = server.build("article", "published");
 
-    expect(article).toEqual({ title: 'Lorem ipsum' });
-    expect(publishedArticle).toEqual({ title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2010-01-01 10:00:00' });
+    expect(article).toEqual({ title: "Lorem ipsum" });
+    expect(publishedArticle).toEqual({
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2010-01-01 10:00:00"
+    });
   });
 
-  test('build allows to extend factory with multiple traits', () => {
+  test("build allows to extend factory with multiple traits", () => {
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
+        publishedAt: "2010-01-01 10:00:00"
       }),
 
       withContent: trait({
-        content: 'content'
+        content: "content"
       })
     });
 
@@ -933,28 +1027,39 @@ describe('Unit | Server #build', function() {
       article: ArticleFactory
     });
 
-    let article = server.build('article');
-    let publishedArticle = server.build('article', 'published');
-    let publishedArticleWithContent = server.build('article', 'published', 'withContent');
+    let article = server.build("article");
+    let publishedArticle = server.build("article", "published");
+    let publishedArticleWithContent = server.build(
+      "article",
+      "published",
+      "withContent"
+    );
 
-    expect(article).toEqual({ title: 'Lorem ipsum' });
-    expect(publishedArticle).toEqual({ title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2010-01-01 10:00:00' });
-    expect(publishedArticleWithContent).toEqual({ title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2010-01-01 10:00:00', content: 'content' });
+    expect(article).toEqual({ title: "Lorem ipsum" });
+    expect(publishedArticle).toEqual({
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2010-01-01 10:00:00"
+    });
+    expect(publishedArticleWithContent).toEqual({
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2010-01-01 10:00:00",
+      content: "content"
+    });
   });
 
-  test('build allows to extend with multiple traits and to apply attr overrides', () => {
+  test("build allows to extend with multiple traits and to apply attr overrides", () => {
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
+        publishedAt: "2010-01-01 10:00:00"
       }),
 
       withContent: trait({
-        content: 'content'
+        content: "content"
       })
     });
 
@@ -963,23 +1068,32 @@ describe('Unit | Server #build', function() {
     });
 
     let overrides = {
-      publishedAt: '2012-01-01 10:00:00'
+      publishedAt: "2012-01-01 10:00:00"
     };
-    let publishedArticleWithContent = server.build('article', 'published', 'withContent', overrides);
+    let publishedArticleWithContent = server.build(
+      "article",
+      "published",
+      "withContent",
+      overrides
+    );
 
-    expect(publishedArticleWithContent).toEqual({ title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2012-01-01 10:00:00', content: 'content' });
+    expect(publishedArticleWithContent).toEqual({
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2012-01-01 10:00:00",
+      content: "content"
+    });
   });
 
-  test('build allows to build objects with associations', () => {
+  test("build allows to build objects with associations", () => {
     let AuthorFactory = Factory.extend({
-      name: 'Yehuda'
+      name: "Yehuda"
     });
     let CategoryFactory = Factory.extend({
-      name: 'splendid software'
+      name: "splendid software"
     });
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       withCategory: trait({
         awesomeCategory: association()
@@ -1001,35 +1115,40 @@ describe('Unit | Server #build', function() {
       author: Model.extend({
         articles: hasMany()
       }),
-      category: Model.extend({
-      }),
+      category: Model.extend({}),
       article: Model.extend({
         author: belongsTo(),
-        awesomeCategory: belongsTo('category')
+        awesomeCategory: belongsTo("category")
       })
     });
 
-    let article = server.build('article', 'withCategory');
+    let article = server.build("article", "withCategory");
 
-    expect(article).toEqual({ title: 'Lorem ipsum', authorId: '1', awesomeCategoryId: '1' });
+    expect(article).toEqual({
+      title: "Lorem ipsum",
+      authorId: "1",
+      awesomeCategoryId: "1"
+    });
     expect(server.db.authors).toHaveLength(1);
     expect(server.db.categories).toHaveLength(1);
   });
 
-  test('build allows to build objects with associations with traits and overrides for associations', () => {
+  test("build allows to build objects with associations with traits and overrides for associations", () => {
     let CategoryFactory = Factory.extend({
-      name: 'splendid software',
+      name: "splendid software",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2014-01-01 10:00:00'
+        publishedAt: "2014-01-01 10:00:00"
       })
     });
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       withCategory: trait({
-        category: association('published', { publishedAt: '2016-01-01 12:00:00' })
+        category: association("published", {
+          publishedAt: "2016-01-01 12:00:00"
+        })
       })
     });
 
@@ -1039,62 +1158,66 @@ describe('Unit | Server #build', function() {
         category: CategoryFactory
       },
       models: {
-        category: Model.extend({
-        }),
+        category: Model.extend({}),
         article: Model.extend({
           category: belongsTo()
         })
       }
     });
 
-    let article = server.build('article', 'withCategory');
+    let article = server.build("article", "withCategory");
 
-    expect(article).toEqual({ title: 'Lorem ipsum', categoryId: '1' });
+    expect(article).toEqual({ title: "Lorem ipsum", categoryId: "1" });
     expect(server.db.categories).toHaveLength(1);
-    expect(server.db.categories[0]).toEqual(
-      { name: 'splendid software', id: '1', isPublished: true, publishedAt: '2016-01-01 12:00:00' }
-    );
+    expect(server.db.categories[0]).toEqual({
+      name: "splendid software",
+      id: "1",
+      isPublished: true,
+      publishedAt: "2016-01-01 12:00:00"
+    });
   });
 
-  test('build throws errors when using trait that is not defined and distinquishes between traits and non-traits', () => {
+  test("build throws errors when using trait that is not defined and distinquishes between traits and non-traits", () => {
     server.config({
       factories: {
         article: Factory.extend({
-          title: 'Lorem ipsum',
+          title: "Lorem ipsum",
 
           published: trait({
             isPublished: true,
-            publishedAt: '2010-01-01 10:00:00'
+            publishedAt: "2010-01-01 10:00:00"
           }),
 
           private: {
-            someAttr: 'value'
+            someAttr: "value"
           }
         })
       }
     });
 
     expect(() => {
-      server.build('article', 'private');
+      server.build("article", "private");
     }).toThrow();
   });
 
-  test('build does not build objects and throws error if model is not registered and association helper is used', () => {
+  test("build does not build objects and throws error if model is not registered and association helper is used", () => {
     server.config({
       factories: {
         article: Factory.extend({
-          title: 'Lorem ipsum',
+          title: "Lorem ipsum",
 
           withCategory: trait({
-            category: association('published', { publishedAt: '2016-01-01 12:00:00' })
+            category: association("published", {
+              publishedAt: "2016-01-01 12:00:00"
+            })
           })
         }),
         category: Factory.extend({
-          name: 'splendid software',
+          name: "splendid software",
 
           published: trait({
             isPublished: true,
-            publishedAt: '2014-01-01 10:00:00'
+            publishedAt: "2014-01-01 10:00:00"
           })
         })
       },
@@ -1104,26 +1227,28 @@ describe('Unit | Server #build', function() {
     });
 
     expect(() => {
-      server.build('article', 'withCategory');
-    }).toThrow();
+      server.build("article", "withCategory");
+    }).toThrow(/Model not registered: article/);
   });
 
-  test('build does not build objects and throws error if model for given association is not registered', () => {
+  test("build does not build objects and throws error if model for given association is not registered", () => {
     server.config({
       factories: {
         article: Factory.extend({
-          title: 'Lorem ipsum',
+          title: "Lorem ipsum",
 
           withCategory: trait({
-            category: association('published', { publishedAt: '2016-01-01 12:00:00' })
+            category: association("published", {
+              publishedAt: "2016-01-01 12:00:00"
+            })
           })
         }),
         category: Factory.extend({
-          name: 'splendid software',
+          name: "splendid software",
 
           published: trait({
             isPublished: true,
-            publishedAt: '2014-01-01 10:00:00'
+            publishedAt: "2014-01-01 10:00:00"
           })
         })
       },
@@ -1133,47 +1258,49 @@ describe('Unit | Server #build', function() {
     });
 
     expect(() => {
-      server.build('article', 'withCategory');
-    }).toThrow();
+      server.build("article", "withCategory");
+    }).toThrow(
+      /You're using the `association` factory helper on the 'category' attribute of your article factory/
+    );
   });
 });
 
-describe('Unit | Server #buildList', function(){
+describe("Unit | Server #buildList", function() {
   let server = null;
   beforeEach(function() {
-    server = new Server({ environment: 'test' });
+    server = new Server({ environment: "test" });
   });
 
   afterEach(function() {
     server.shutdown();
   });
 
-  test('buildList does not add elements to the db', () => {
+  test("buildList does not add elements to the db", () => {
     server.loadFactories({
-      contact: Factory.extend({ name: 'Sam' })
+      contact: Factory.extend({ name: "Sam" })
     });
 
-    server.buildList('contact', 3);
+    server.buildList("contact", 3);
     let contactsInDb = server.db.contacts;
 
     expect(contactsInDb).toHaveLength(0);
   });
 
-  test('buildList returns the built elements without ids', () => {
+  test("buildList returns the built elements without ids", () => {
     server.loadFactories({
-      contact: Factory.extend({ name: 'Sam' })
+      contact: Factory.extend({ name: "Sam" })
     });
 
-    server.create('contact');
-    let contacts = server.buildList('contact', 3);
+    server.create("contact");
+    let contacts = server.buildList("contact", 3);
 
     expect(contacts).toHaveLength(3);
-    expect(contacts[0]).toEqual({ name: 'Sam' });
-    expect(contacts[1]).toEqual({ name: 'Sam' });
-    expect(contacts[2]).toEqual({ name: 'Sam' });
+    expect(contacts[0]).toEqual({ name: "Sam" });
+    expect(contacts[1]).toEqual({ name: "Sam" });
+    expect(contacts[2]).toEqual({ name: "Sam" });
   });
 
-  test('buildList respects sequences', () => {
+  test("buildList respects sequences", () => {
     server.loadFactories({
       contact: Factory.extend({
         name(i) {
@@ -1182,38 +1309,38 @@ describe('Unit | Server #buildList', function(){
       })
     });
 
-    let contacts = server.buildList('contact', 3);
+    let contacts = server.buildList("contact", 3);
 
-    expect(contacts[0]).toEqual({ name: 'name0' });
-    expect(contacts[1]).toEqual({ name: 'name1' });
-    expect(contacts[2]).toEqual({ name: 'name2' });
+    expect(contacts[0]).toEqual({ name: "name0" });
+    expect(contacts[1]).toEqual({ name: "name1" });
+    expect(contacts[2]).toEqual({ name: "name2" });
   });
 
-  test('buildList respects attr overrides', () => {
+  test("buildList respects attr overrides", () => {
     server.loadFactories({
-      contact: Factory.extend({ name: 'Sam' })
+      contact: Factory.extend({ name: "Sam" })
     });
 
-    let sams = server.buildList('contact', 2);
-    let links = server.buildList('contact', 2, { name: 'Link' });
+    let sams = server.buildList("contact", 2);
+    let links = server.buildList("contact", 2, { name: "Link" });
 
-    expect(sams[0]).toEqual({ name: 'Sam' });
-    expect(sams[1]).toEqual({ name: 'Sam' });
-    expect(links[0]).toEqual({ name: 'Link' });
-    expect(links[1]).toEqual({ name: 'Link' });
+    expect(sams[0]).toEqual({ name: "Sam" });
+    expect(sams[1]).toEqual({ name: "Sam" });
+    expect(links[0]).toEqual({ name: "Link" });
+    expect(links[1]).toEqual({ name: "Link" });
   });
 
-  test('buildList respects traits', () => {
+  test("buildList respects traits", () => {
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
+        publishedAt: "2010-01-01 10:00:00"
       }),
 
       withContent: trait({
-        content: 'content'
+        content: "content"
       })
     });
 
@@ -1221,25 +1348,33 @@ describe('Unit | Server #buildList', function(){
       article: ArticleFactory
     });
 
-    let articles = server.buildList('article', 2, 'published', 'withContent');
+    let articles = server.buildList("article", 2, "published", "withContent");
 
-    expect(articles[0]).toEqual({ title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2010-01-01 10:00:00', content: 'content' });
-    expect(articles[1]).toEqual({ title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2010-01-01 10:00:00', content: 'content' });
+    expect(articles[0]).toEqual({
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2010-01-01 10:00:00",
+      content: "content"
+    });
+    expect(articles[1]).toEqual({
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2010-01-01 10:00:00",
+      content: "content"
+    });
   });
 
-  test('buildList respects traits with attr overrides', () => {
+  test("buildList respects traits with attr overrides", () => {
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
+        publishedAt: "2010-01-01 10:00:00"
       }),
 
       withContent: trait({
-        content: 'content'
+        content: "content"
       })
     });
 
@@ -1247,26 +1382,40 @@ describe('Unit | Server #buildList', function(){
       article: ArticleFactory
     });
 
-    let overrides = { publishedAt: '2012-01-01 10:00:00' };
-    let articles = server.buildList('article', 2, 'published', 'withContent', overrides);
+    let overrides = { publishedAt: "2012-01-01 10:00:00" };
+    let articles = server.buildList(
+      "article",
+      2,
+      "published",
+      "withContent",
+      overrides
+    );
 
-    expect(articles[0]).toEqual({ title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2012-01-01 10:00:00', content: 'content' });
-    expect(articles[1]).toEqual({ title: 'Lorem ipsum', isPublished: true,
-      publishedAt: '2012-01-01 10:00:00', content: 'content' });
+    expect(articles[0]).toEqual({
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2012-01-01 10:00:00",
+      content: "content"
+    });
+    expect(articles[1]).toEqual({
+      title: "Lorem ipsum",
+      isPublished: true,
+      publishedAt: "2012-01-01 10:00:00",
+      content: "content"
+    });
   });
 
-  test('buildList throws errors when using trait that is not defined and distinquishes between traits and non-traits', () => {
+  test("buildList throws errors when using trait that is not defined and distinquishes between traits and non-traits", () => {
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
+        publishedAt: "2010-01-01 10:00:00"
       }),
 
       private: {
-        someAttr: 'value'
+        someAttr: "value"
       }
     });
 
@@ -1275,17 +1424,17 @@ describe('Unit | Server #buildList', function(){
     });
 
     expect(() => {
-      server.buildList('article', 2, 'private');
-    }).toThrow();
+      server.buildList("article", 2, "private");
+    }).toThrow(/'private' trait is not registered in 'article' factory/);
   });
 
-  test('buildList throws an error if the second argument is not an integer', function() {
+  test("buildList throws an error if the second argument is not an integer", function() {
     let ArticleFactory = Factory.extend({
-      title: 'Lorem ipsum',
+      title: "Lorem ipsum",
 
       published: trait({
         isPublished: true,
-        publishedAt: '2010-01-01 10:00:00'
+        publishedAt: "2010-01-01 10:00:00"
       })
     });
 
@@ -1294,19 +1443,21 @@ describe('Unit | Server #buildList', function(){
     });
 
     expect(() => {
-      server.buildList('article', 'published');
-    }).toThrow();
+      server.buildList("article", "published");
+    }).toThrow(/second argument has to be an integer, you passed: string/);
   });
 });
 
-describe('Unit | Server #defaultPassthroughs', function() {
-  test('server configures default passthroughs when useDefaultPassthroughs is true', () => {
+describe("Unit | Server #defaultPassthroughs", function() {
+  test("server configures default passthroughs when useDefaultPassthroughs is true", () => {
     let server = new Server({ useDefaultPassthroughs: true });
 
     expect.assertions(defaultPassthroughs.length);
-    defaultPassthroughs.forEach((passthroughUrl) => {
-      let passthroughRequest = { method: 'GET', url: passthroughUrl };
-      let isPassedThrough = server.pretender.checkPassthrough(passthroughRequest);
+    defaultPassthroughs.forEach(passthroughUrl => {
+      let passthroughRequest = { method: "GET", url: passthroughUrl };
+      let isPassedThrough = server.pretender.checkPassthrough(
+        passthroughRequest
+      );
 
       expect(isPassedThrough).toBeTruthy();
     });
@@ -1314,13 +1465,15 @@ describe('Unit | Server #defaultPassthroughs', function() {
     server.shutdown();
   });
 
-  test('server does not configure default passthroughs when useDefaultPassthroughs is false', () => {
+  test("server does not configure default passthroughs when useDefaultPassthroughs is false", () => {
     let server = new Server({ useDefaultPassthroughs: false });
 
     expect.assertions(defaultPassthroughs.length);
-    defaultPassthroughs.forEach((passthroughUrl) => {
-      let passthroughRequest = { method: 'GET', url: passthroughUrl };
-      let isPassedThrough = server.pretender.checkPassthrough(passthroughRequest);
+    defaultPassthroughs.forEach(passthroughUrl => {
+      let passthroughRequest = { method: "GET", url: passthroughUrl };
+      let isPassedThrough = server.pretender.checkPassthrough(
+        passthroughRequest
+      );
 
       expect(!isPassedThrough).toBeTruthy();
     });
