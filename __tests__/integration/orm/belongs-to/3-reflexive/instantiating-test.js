@@ -1,15 +1,16 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Belongs To | Reflexive | instantiating", () => {
-  let helper;
+  let helper, schema;
+
   beforeEach(() => {
     helper = new Helper();
-    this.schema = helper.schema;
+    schema = helper.schema;
   });
 
   test("the child accepts a saved parent id", () => {
     let friend = helper.savedParent();
-    let user = this.schema.users.new({ userId: friend.id });
+    let user = schema.users.new({ userId: friend.id });
 
     expect(user.userId).toEqual(friend.id);
     expect(user.user.attrs).toEqual(friend.attrs);
@@ -18,47 +19,47 @@ describe("Integration | ORM | Belongs To | Reflexive | instantiating", () => {
 
   test("the child errors if the parent id doesnt exist", () => {
     expect(function() {
-      this.schema.users.new({ userId: 2 });
+      schema.users.new({ userId: 2 });
     }).toThrow();
   });
 
   test("the child accepts a null parent id", () => {
-    let user = this.schema.users.new({ userId: null });
+    let user = schema.users.new({ userId: null });
 
-    expect(user.userId).toBeNull();
-    expect(user.user).toBeNull();
+    expect(user.userId).toBeNil();
+    expect(user.user).toBeNil();
     expect(user.attrs).toEqual({ userId: null });
   });
 
   test("the child accepts a saved parent model", () => {
     let friend = helper.savedParent();
-    let user = this.schema.users.new({ user: friend });
+    let user = schema.users.new({ user: friend });
 
-    expect(user.userId).toEqual(1);
+    expect(user.userId).toEqual("1");
     expect(user.user.attrs).toEqual(friend.attrs);
     expect(user.attrs).toEqual({ userId: null }); // this would update when saved
   });
 
   test("the child accepts a new parent model", () => {
-    let zelda = this.schema.users.new({ name: "Zelda" });
-    let user = this.schema.users.new({ user: zelda });
+    let zelda = schema.users.new({ name: "Zelda" });
+    let user = schema.users.new({ user: zelda });
 
-    expect(user.userId).toBeNull();
+    expect(user.userId).toBeNil();
     expect(user.user).toEqual(zelda);
     expect(user.attrs).toEqual({ userId: null });
   });
 
   test("the child accepts a null parent model", () => {
-    let user = this.schema.users.new({ user: null });
+    let user = schema.users.new({ user: null });
 
-    expect(user.userId).toBeNull();
-    expect(user.user).toBeNull();
+    expect(user.userId).toBeNil();
+    expect(user.user).toBeNil();
     expect(user.attrs).toEqual({ userId: null });
   });
 
   test("the child accepts a parent model and id", () => {
     let friend = helper.savedParent();
-    let user = this.schema.users.new({ user: friend, userId: friend.id });
+    let user = schema.users.new({ user: friend, userId: friend.id });
 
     expect(user.userId).toEqual("1");
     expect(user.user).toEqual(friend);
@@ -66,18 +67,18 @@ describe("Integration | ORM | Belongs To | Reflexive | instantiating", () => {
   });
 
   test("the child accepts no reference to a parent id or model as empty obj", () => {
-    let user = this.schema.users.new({});
+    let user = schema.users.new({});
 
-    expect(user.userId).toBeNull();
-    expect(user.user).toBeNull();
+    expect(user.userId).toBeNil();
+    expect(user.user).toBeNil();
     expect(user.attrs).toEqual({ userId: null });
   });
 
   test("the child accepts no reference to a parent id or model", () => {
-    let user = this.schema.users.new();
+    let user = schema.users.new();
 
-    expect(user.userId).toBeNull();
-    expect(user.user).toBeNull();
+    expect(user.userId).toBeNil();
+    expect(user.user).toBeNil();
     expect(user.attrs).toEqual({ userId: null });
   });
 });

@@ -22,7 +22,7 @@ describe("Integration | ORM | Belongs To | Reflexive | association #set", () => 
       user.save();
       if (originalUser) {
         originalUser.reload();
-        expect(originalUser.userId).toBeNull();
+        expect(originalUser.userId).toBeNil();
       }
     });
 
@@ -32,13 +32,13 @@ describe("Integration | ORM | Belongs To | Reflexive | association #set", () => 
 
       user.user = friend;
 
-      expect(user.userId).toBeNull();
+      expect(user.userId).toBeNil();
       expect(user.user.attrs).toEqual(friend.attrs);
 
       user.save();
       if (originalUser) {
         originalUser.reload();
-        expect(originalUser.userId).toBeNull();
+        expect(originalUser.userId).toBeNil();
       }
     });
 
@@ -47,13 +47,13 @@ describe("Integration | ORM | Belongs To | Reflexive | association #set", () => 
 
       user.user = null;
 
-      expect(user.userId).toBeNull();
-      expect(user.user).toBeNull();
+      expect(user.userId).toBeNil();
+      expect(user.user).toBeNil();
 
       user.save();
       if (originalUser) {
         originalUser.reload();
-        expect(originalUser.userId).toBeNull();
+        expect(originalUser.userId).toBeNil();
       }
     });
   });

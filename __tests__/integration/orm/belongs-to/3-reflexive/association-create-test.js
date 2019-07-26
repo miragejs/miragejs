@@ -24,7 +24,7 @@ describe("Integration | ORM | Belongs To | Reflexive | association #create", () 
 
       if (originalUser) {
         originalUser.reload();
-        expect(originalUser.userId).toBeNull();
+        expect(originalUser.userId).toBeNil();
       }
     });
   });
