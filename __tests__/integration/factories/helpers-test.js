@@ -1,14 +1,23 @@
-import { module, test } from 'qunit';
-import { Model, Server, Factory, belongsTo, hasMany, trait, association } from '@miragejs/server';
+import {
+  Model,
+  Server,
+  Factory,
+  belongsTo,
+  hasMany,
+  trait,
+  association
+} from "../../../lib/index";
 
-module('Integration | Server | Factories | helpers', function(hooks) {
-  hooks.afterEach(function() {
-    this.server.shutdown();
+describe("Integration | Server | Factories | helpers", () => {
+  let server;
+
+  afterEach(() => {
+    server.shutdown();
   });
 
-  test('it creates associations with "association" helper in a dasherized factory', function(assert) {
-    this.server = new Server({
-      environment: 'test',
+  test('it creates associations with "association" helper in a dasherized factory', () => {
+    server = new Server({
+      environment: "test",
       models: {
         author: Model.extend({
           blogPosts: hasMany()
@@ -19,54 +28,54 @@ module('Integration | Server | Factories | helpers', function(hooks) {
       },
       factories: {
         author: Factory.extend({
-          name: 'Sam'
+          name: "Sam"
         }),
         blogPost: Factory.extend({
-          title: 'Lorem ipsum',
+          title: "Lorem ipsum",
 
           author: association()
         })
       }
     });
 
-    let blogPost = this.server.create('blog-post');
+    let blogPost = server.create("blog-post");
 
-    assert.ok(blogPost.author);
+    expect(blogPost.author).toBeTruthy();
 
-    let { db } = this.server;
+    let { db } = server;
 
-    assert.equal(db.authors.length, 1);
-    assert.deepEqual(db.authors[0], {
-      id: '1',
-      name: 'Sam',
-      blogPostIds: ['1']
+    expect(db.authors).toHaveLength(1);
+    expect(db.authors[0]).toEqual({
+      id: "1",
+      name: "Sam",
+      blogPostIds: ["1"]
     });
   });
 
-  test('it creates associations with "association" helper combininig with traits', function(assert) {
-    this.server = new Server({
-      environment: 'test',
+  test('it creates associations with "association" helper combininig with traits', () => {
+    server = new Server({
+      environment: "test",
       models: {
         author: Model.extend({
           posts: hasMany()
         }),
         category: Model.extend({
-          posts: hasMany('post', { inverse: 'kind' })
+          posts: hasMany("post", { inverse: "kind" })
         }),
         post: Model.extend({
           author: belongsTo(),
-          kind: belongsTo('category')
+          kind: belongsTo("category")
         })
       },
       factories: {
         author: Factory.extend({
-          name: 'Sam'
+          name: "Sam"
         }),
         category: Factory.extend({
-          name: 'awesome software'
+          name: "awesome software"
         }),
         post: Factory.extend({
-          title: 'Lorem ipsum',
+          title: "Lorem ipsum",
 
           author: association(),
 
@@ -77,43 +86,43 @@ module('Integration | Server | Factories | helpers', function(hooks) {
       }
     });
 
-    let post = this.server.create('post', 'withCategory');
+    let post = server.create("post", "withCategory");
 
-    assert.ok(post.kind);
-    assert.ok(post.author);
+    expect(post.kind).toBeTruthy();
+    expect(post.author).toBeTruthy();
 
-    let { db } = this.server;
+    let { db } = server;
 
-    assert.equal(db.posts.length, 1);
-    assert.deepEqual(db.posts[0], {
-      id: '1',
-      title: 'Lorem ipsum',
-      authorId: '1',
-      kindId: '1'
+    expect(db.posts).toHaveLength(1);
+    expect(db.posts[0]).toEqual({
+      id: "1",
+      title: "Lorem ipsum",
+      authorId: "1",
+      kindId: "1"
     });
 
-    assert.equal(db.authors.length, 1);
-    assert.deepEqual(db.authors[0], {
-      id: '1',
-      name: 'Sam',
-      postIds: ['1']
+    expect(db.authors).toHaveLength(1);
+    expect(db.authors[0]).toEqual({
+      id: "1",
+      name: "Sam",
+      postIds: ["1"]
     });
 
-    assert.equal(db.categories.length, 1);
-    assert.deepEqual(db.categories[0], {
-      id: '1',
-      name: 'awesome software',
-      postIds: ['1']
+    expect(db.categories).toHaveLength(1);
+    expect(db.categories[0]).toEqual({
+      id: "1",
+      name: "awesome software",
+      postIds: ["1"]
     });
   });
 
-  test('it throws if using the association helper on a self-referential belongsTo relationship', function(assert) {
-    this.server = new Server({
-      environment: 'test',
+  test("it throws if using the association helper on a self-referential belongsTo relationship", () => {
+    server = new Server({
+      environment: "test",
       models: {
         page: Model.extend({
-          parentPage: belongsTo('page', { inverse: 'childPages' }),
-          childPages: hasMany('page', { inverse: 'parentPage' })
+          parentPage: belongsTo("page", { inverse: "childPages" }),
+          childPages: hasMany("page", { inverse: "parentPage" })
         })
       },
       factories: {
@@ -123,8 +132,8 @@ module('Integration | Server | Factories | helpers', function(hooks) {
       }
     });
 
-    assert.throws(() => {
-      this.server.create('page');
-    }, /You're using the association\(\) helper on your page factory for parentPage, which is a belongsTo self-referential relationship. You can't do this as it will lead to infinite recursion. You can move the helper inside of a trait and use it selectively./);
+    expect(() => {
+      server.create("page");
+    }).toThrow();
   });
 });
