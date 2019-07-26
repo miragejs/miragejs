@@ -1,21 +1,22 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | One-Way Reflexive | delete", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   states.forEach(state => {
     test(`deleting children updates the parent's foreign key for a ${state}`, () => {
-      let [tag, tags] = this.helper[state]();
+      let [tag, tags] = helper[state]();
 
       if (tags && tags.length) {
         tags.forEach(t => t.destroy());
         tag.reload();
       }
 
-      expect(tag.tags.length).toEqual(0);
-      expect(tag.tagIds.length).toEqual(0);
+      expect(tag.tags).toHaveLength(0);
+      expect(tag.tagIds).toHaveLength(0);
     });
   });
 });

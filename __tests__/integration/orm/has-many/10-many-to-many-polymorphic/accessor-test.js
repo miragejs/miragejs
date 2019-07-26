@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | Many-to-many Polymorphic | accessor", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,10 +11,10 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | accessor", (
   */
   states.forEach(state => {
     test(`the references of a ${state} are correct`, () => {
-      let [user, posts] = this.helper[state]();
+      let [user, posts] = helper[state]();
 
-      expect(user.commentables.models.length).toEqual(posts.length);
-      expect(user.commentableIds.length).toEqual(posts.length);
+      expect(user.commentables.models).toHaveLength(posts.length);
+      expect(user.commentableIds).toHaveLength(posts.length);
 
       posts.forEach((post, i) => {
         expect(user.commentables.includes(post)).toBeTruthy();

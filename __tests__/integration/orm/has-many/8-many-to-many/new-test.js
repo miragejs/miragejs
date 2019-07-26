@@ -1,13 +1,14 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Has Many | Many to Many | new", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
-    this.schema = this.helper.schema;
+    helper = new Helper();
+    this.schema = helper.schema;
   });
 
   test("the parent accepts a saved child id", () => {
-    let product = this.helper.savedChild();
+    let product = helper.savedChild();
     let order = this.schema.orders.new({
       productIds: [product.id]
     });
@@ -25,13 +26,13 @@ describe("Integration | ORM | Has Many | Many to Many | new", () => {
   test("the parent accepts null children foreign key", () => {
     let order = this.schema.orders.new({ productIds: null });
 
-    expect(order.products.models.length).toEqual(0);
+    expect(order.products.models).toHaveLength(0);
     expect(order.productIds).toBeEmpty();
     expect(order.attrs).toEqual({ productIds: null });
   });
 
   test("the parent accepts saved children", () => {
-    let product = this.helper.savedChild();
+    let product = helper.savedChild();
     let order = this.schema.orders.new({ products: [product] });
 
     expect(order.productIds).toEqual([product.id]);
@@ -49,13 +50,13 @@ describe("Integration | ORM | Has Many | Many to Many | new", () => {
   test("the parent accepts null children", () => {
     let order = this.schema.orders.new({ products: null });
 
-    expect(order.products.models.length).toEqual(0);
+    expect(order.products.models).toHaveLength(0);
     expect(order.productIds).toBeEmpty();
     expect(order.attrs).toEqual({ productIds: null });
   });
 
   test("the parent accepts children and child ids", () => {
-    let product = this.helper.savedChild();
+    let product = helper.savedChild();
     let order = this.schema.orders.new({
       products: [product],
       productIds: [product.id]

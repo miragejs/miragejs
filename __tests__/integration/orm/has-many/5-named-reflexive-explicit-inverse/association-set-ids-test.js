@@ -1,14 +1,15 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | association #setIds", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   states.forEach(state => {
     test(`a ${state} can update its association to include a saved child via childIds`, () => {
-      let [tag, originalTags] = this.helper[state]();
-      let savedTag = this.helper.savedChild();
+      let [tag, originalTags] = helper[state]();
+      let savedTag = helper.savedChild();
 
       tag.labelIds = [savedTag.id];
 
@@ -28,7 +29,7 @@ describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | asso
     });
 
     test(`a ${state} can clear its association via a null childIds`, () => {
-      let [tag, originalTags] = this.helper[state]();
+      let [tag, originalTags] = helper[state]();
 
       tag.labelIds = null;
 

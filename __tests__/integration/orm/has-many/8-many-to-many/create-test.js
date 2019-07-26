@@ -2,13 +2,14 @@ import Helper from "./_helper";
 import { Model } from "@miragejs/server";
 
 describe("Integration | ORM | Has Many | Many to Many | create", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
-    this.helper.schema.registerModel("foo", Model);
+    helper = new Helper();
+    helper.schema.registerModel("foo", Model);
   });
 
   test("it sets up associations correctly when passing in the foreign key", () => {
-    let { schema } = this.helper;
+    let { schema } = helper;
     let product = schema.products.create();
     let order = schema.orders.create({
       productIds: [product.id]
@@ -22,14 +23,14 @@ describe("Integration | ORM | Has Many | Many to Many | create", () => {
     expect(product.attrs.orderIds).toEqual([order.id]);
     expect(order.products.models[0].attrs).toEqual(product.attrs);
     expect(product.orders.models[0].attrs).toEqual(order.attrs);
-    expect(this.helper.db.orders.length).toEqual(1);
-    expect(this.helper.db.products.length).toEqual(1);
-    expect(this.helper.db.orders[0]).toEqual({ id: "1", productIds: ["1"] });
-    expect(this.helper.db.products[0]).toEqual({ id: "1", orderIds: ["1"] });
+    expect(helper.db.orders).toHaveLength(1);
+    expect(helper.db.products).toHaveLength(1);
+    expect(helper.db.orders[0]).toEqual({ id: "1", productIds: ["1"] });
+    expect(helper.db.products[0]).toEqual({ id: "1", orderIds: ["1"] });
   });
 
   test("it sets up associations correctly when passing in an array of models", () => {
-    let { schema } = this.helper;
+    let { schema } = helper;
     let product = schema.products.create();
     let order = schema.orders.create({
       products: [product]
@@ -41,12 +42,12 @@ describe("Integration | ORM | Has Many | Many to Many | create", () => {
     expect(product.orderIds).toEqual([order.id]);
     expect(order.attrs.productIds).toEqual([product.id]);
     expect(product.attrs.orderIds).toEqual([order.id]);
-    expect(this.helper.db.orders.length).toEqual(1);
-    expect(this.helper.db.products.length).toEqual(1);
+    expect(helper.db.orders).toHaveLength(1);
+    expect(helper.db.products).toHaveLength(1);
   });
 
   test("it sets up associations correctly when passing in a collection", () => {
-    let { schema } = this.helper;
+    let { schema } = helper;
     let product = schema.products.create();
     let order = schema.orders.create({
       products: schema.products.all()
@@ -58,12 +59,12 @@ describe("Integration | ORM | Has Many | Many to Many | create", () => {
     expect(product.orderIds).toEqual([order.id]);
     expect(order.attrs.productIds).toEqual([product.id]);
     expect(product.attrs.orderIds).toEqual([order.id]);
-    expect(this.helper.db.orders.length).toEqual(1);
-    expect(this.helper.db.products.length).toEqual(1);
+    expect(helper.db.orders).toHaveLength(1);
+    expect(helper.db.products).toHaveLength(1);
   });
 
   test("it throws an error if a model is passed in without a defined relationship", () => {
-    let { schema } = this.helper;
+    let { schema } = helper;
 
     expect(function() {
       schema.orders.create({
@@ -73,7 +74,7 @@ describe("Integration | ORM | Has Many | Many to Many | create", () => {
   });
 
   test("it throws an error if an array of models is passed in without a defined relationship", () => {
-    let { schema } = this.helper;
+    let { schema } = helper;
 
     expect(function() {
       schema.orders.create({
@@ -83,7 +84,7 @@ describe("Integration | ORM | Has Many | Many to Many | create", () => {
   });
 
   test("it throws an error if a collection is passed in without a defined relationship", () => {
-    let { schema } = this.helper;
+    let { schema } = helper;
     schema.foos.create();
     schema.foos.create();
 

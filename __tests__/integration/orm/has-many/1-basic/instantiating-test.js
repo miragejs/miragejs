@@ -1,13 +1,14 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Has Many | Basic | instantiating", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
-    this.schema = this.helper.schema;
+    helper = new Helper();
+    this.schema = helper.schema;
   });
 
   test("the parent accepts a saved child id", () => {
-    let post = this.helper.savedChild();
+    let post = helper.savedChild();
     let user = this.schema.users.new({
       postIds: [post.id]
     });
@@ -25,13 +26,13 @@ describe("Integration | ORM | Has Many | Basic | instantiating", () => {
   test("the parent accepts null children foreign key", () => {
     let user = this.schema.users.new({ postIds: null });
 
-    expect(user.posts.models.length).toEqual(0);
+    expect(user.posts.models).toHaveLength(0);
     expect(user.postIds).toBeEmpty();
     expect(user.attrs).toEqual({ postIds: null });
   });
 
   test("the parent accepts saved children", () => {
-    let post = this.helper.savedChild();
+    let post = helper.savedChild();
     let user = this.schema.users.new({ posts: [post] });
 
     expect(user.postIds).toEqual([post.id]);
@@ -49,13 +50,13 @@ describe("Integration | ORM | Has Many | Basic | instantiating", () => {
   test("the parent accepts null children", () => {
     let user = this.schema.users.new({ posts: null });
 
-    expect(user.posts.models.length).toEqual(0);
+    expect(user.posts.models).toHaveLength(0);
     expect(user.postIds).toBeEmpty();
     expect(user.attrs).toEqual({ postIds: null });
   });
 
   test("the parent accepts children and child ids", () => {
-    let post = this.helper.savedChild();
+    let post = helper.savedChild();
     let user = this.schema.users.new({ posts: [post], postIds: [post.id] });
 
     expect(user.postIds).toEqual([post.id]);

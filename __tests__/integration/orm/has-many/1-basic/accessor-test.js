@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | Basic | accessor", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,10 +11,10 @@ describe("Integration | ORM | Has Many | Basic | accessor", () => {
   */
   states.forEach(state => {
     test(`the references of a ${state} are correct`, () => {
-      let [user, posts] = this.helper[state]();
+      let [user, posts] = helper[state]();
 
-      expect(user.posts.models.length).toEqual(posts.length);
-      expect(user.postIds.length).toEqual(posts.length);
+      expect(user.posts.models).toHaveLength(posts.length);
+      expect(user.postIds).toHaveLength(posts.length);
 
       posts.forEach((post, i) => {
         expect(user.posts.models[i]).toEqual(posts[i]);

@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | One-way Polymorphic | association #set", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +11,8 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | association #set"
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a list of saved children`, () => {
-      let [user] = this.helper[state]();
-      let savedPost = this.helper.savedChild();
+      let [user] = helper[state]();
+      let savedPost = helper.savedChild();
 
       user.things = [savedPost];
 
@@ -24,8 +25,8 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | association #set"
     });
 
     test(`a ${state} can update its association to a new parent`, () => {
-      let [user] = this.helper[state]();
-      let newPost = this.helper.newChild();
+      let [user] = helper[state]();
+      let newPost = helper.newChild();
 
       user.things = [newPost];
 
@@ -34,21 +35,21 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | association #set"
     });
 
     test(`a ${state} can clear its association via an empty list`, () => {
-      let [user] = this.helper[state]();
+      let [user] = helper[state]();
 
       user.things = [];
 
       expect(user.thingIds).toBeEmpty();
-      expect(user.things.models.length).toEqual(0);
+      expect(user.things.models).toHaveLength(0);
     });
 
     test(`a ${state} can clear its association via null`, () => {
-      let [user] = this.helper[state]();
+      let [user] = helper[state]();
 
       user.things = null;
 
       expect(user.thingIds).toBeEmpty();
-      expect(user.things.models.length).toEqual(0);
+      expect(user.things.models).toHaveLength(0);
     });
   });
 });

@@ -1,13 +1,14 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Has Many | One-way Polymorphic | instantiating", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
-    this.schema = this.helper.schema;
+    helper = new Helper();
+    this.schema = helper.schema;
   });
 
   test("the parent accepts a saved child id", () => {
-    let post = this.helper.savedChild();
+    let post = helper.savedChild();
     let user = this.schema.users.new({
       thingIds: [{ type: "post", id: post.id }]
     });
@@ -25,13 +26,13 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | instantiating", (
   test("the parent accepts null children foreign key", () => {
     let user = this.schema.users.new({ thingIds: null });
 
-    expect(user.things.models.length).toEqual(0);
+    expect(user.things.models).toHaveLength(0);
     expect(user.thingIds).toBeEmpty();
     expect(user.attrs).toEqual({ thingIds: null });
   });
 
   test("the parent accepts saved children", () => {
-    let post = this.helper.savedChild();
+    let post = helper.savedChild();
     let user = this.schema.users.new({ things: [post] });
 
     expect(user.thingIds).toEqual([{ type: "post", id: post.id }]);
@@ -49,13 +50,13 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | instantiating", (
   test("the parent accepts null children", () => {
     let user = this.schema.users.new({ things: null });
 
-    expect(user.things.models.length).toEqual(0);
+    expect(user.things.models).toHaveLength(0);
     expect(user.thingIds).toBeEmpty();
     expect(user.attrs).toEqual({ thingIds: null });
   });
 
   test("the parent accepts children and child ids", () => {
-    let post = this.helper.savedChild();
+    let post = helper.savedChild();
     let user = this.schema.users.new({
       things: [post],
       thingIds: [{ type: "post", id: post.id }]

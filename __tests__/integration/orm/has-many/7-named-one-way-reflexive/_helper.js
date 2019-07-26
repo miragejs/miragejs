@@ -1,9 +1,7 @@
-import {
-  Model,
-  hasMany,
-  _Db as Db,
-  _ormSchema as Schema
-} from "@miragejs/server";
+import "@lib/container";
+import Db from "@lib/db";
+import Schema from "@lib/orm/schema";
+import { Model, hasMany } from "@miragejs/server";
 
 /*
   A model with a hasMany association can be in eight states

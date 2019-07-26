@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | Reflexive | association #set", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +11,8 @@ describe("Integration | ORM | Has Many | Reflexive | association #set", () => {
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a list of saved children`, () => {
-      let [tag, originalTags] = this.helper[state]();
-      let savedTag = this.helper.savedChild();
+      let [tag, originalTags] = helper[state]();
+      let savedTag = helper.savedChild();
 
       tag.tags = [savedTag];
 
@@ -28,13 +29,13 @@ describe("Integration | ORM | Has Many | Reflexive | association #set", () => {
     });
 
     test(`a ${state} can update its association to a new parent`, () => {
-      let [tag, originalTags] = this.helper[state]();
-      let newTag = this.helper.newChild();
+      let [tag, originalTags] = helper[state]();
+      let newTag = helper.newChild();
 
       tag.tags = [newTag];
 
       expect(tag.tags.includes(newTag)).toBeTruthy();
-      expect(tag.tagIds[0]).toEqual(undefined);
+      expect(tag.tagIds[0]).toBeUndefined();
       expect(newTag.tags.includes(tag)).toBeTruthy();
 
       tag.save();
@@ -46,12 +47,12 @@ describe("Integration | ORM | Has Many | Reflexive | association #set", () => {
     });
 
     test(`a ${state} can clear its association via an empty list`, () => {
-      let [tag, originalTags] = this.helper[state]();
+      let [tag, originalTags] = helper[state]();
 
       tag.tags = [];
 
       expect(tag.tagIds).toBeEmpty();
-      expect(tag.tags.models.length).toEqual(0);
+      expect(tag.tags.models).toHaveLength(0);
 
       tag.save();
       originalTags.forEach(originalTag => {
@@ -61,12 +62,12 @@ describe("Integration | ORM | Has Many | Reflexive | association #set", () => {
     });
 
     test(`a ${state} can clear its association via an empty list`, () => {
-      let [tag, originalTags] = this.helper[state]();
+      let [tag, originalTags] = helper[state]();
 
       tag.tags = null;
 
       expect(tag.tagIds).toBeEmpty();
-      expect(tag.tags.models.length).toEqual(0);
+      expect(tag.tags.models).toHaveLength(0);
 
       tag.save();
       originalTags.forEach(originalTag => {

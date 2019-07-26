@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association #setIds", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +11,8 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association 
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a saved parent via parentId`, () => {
-      let [user, originalPosts] = this.helper[state]();
-      let savedPost = this.helper.savedChild();
+      let [user, originalPosts] = helper[state]();
+      let savedPost = helper.savedChild();
 
       user.commentableIds = [{ type: "post", id: savedPost.id }];
 
@@ -35,7 +36,7 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association 
     });
 
     test(`a ${state} can clear its association via a null ids`, () => {
-      let [user, originalPosts] = this.helper[state]();
+      let [user, originalPosts] = helper[state]();
 
       user.commentableIds = null;
 

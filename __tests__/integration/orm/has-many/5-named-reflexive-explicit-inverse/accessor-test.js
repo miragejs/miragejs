@@ -1,16 +1,17 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | accessor", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   states.forEach(state => {
     test(`the references of a ${state} are correct`, () => {
-      let [tag, tags] = this.helper[state]();
+      let [tag, tags] = helper[state]();
 
-      expect(tag.labels.models.length).toEqual(tags.length);
-      expect(tag.labelIds.length).toEqual(tags.length);
+      expect(tag.labels.models).toHaveLength(tags.length);
+      expect(tag.labelIds).toHaveLength(tags.length);
 
       tags.forEach(t => {
         expect(tag.labels.includes(t)).toBeTruthy();

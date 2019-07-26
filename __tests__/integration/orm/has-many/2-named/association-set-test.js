@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | Named | association #set", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +11,8 @@ describe("Integration | ORM | Has Many | Named | association #set", () => {
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a list of saved children`, () => {
-      let [user] = this.helper[state]();
-      let savedPost = this.helper.savedChild();
+      let [user] = helper[state]();
+      let savedPost = helper.savedChild();
 
       user.blogPosts = [savedPost];
 
@@ -20,8 +21,8 @@ describe("Integration | ORM | Has Many | Named | association #set", () => {
     });
 
     test(`a ${state} can update its association to a new parent`, () => {
-      let [user] = this.helper[state]();
-      let newPost = this.helper.newChild();
+      let [user] = helper[state]();
+      let newPost = helper.newChild();
 
       user.blogPosts = [newPost];
 
@@ -30,21 +31,21 @@ describe("Integration | ORM | Has Many | Named | association #set", () => {
     });
 
     test(`a ${state} can clear its association via an empty list`, () => {
-      let [user] = this.helper[state]();
+      let [user] = helper[state]();
 
       user.blogPosts = [];
 
       expect(user.blogPostIds).toBeEmpty();
-      expect(user.blogPosts.models.length).toEqual(0);
+      expect(user.blogPosts.models).toHaveLength(0);
     });
 
     test(`a ${state} can clear its association via an empty list`, () => {
-      let [user] = this.helper[state]();
+      let [user] = helper[state]();
 
       user.blogPosts = null;
 
       expect(user.blogPostIds).toBeEmpty();
-      expect(user.blogPosts.models.length).toEqual(0);
+      expect(user.blogPosts.models).toHaveLength(0);
     });
   });
 });

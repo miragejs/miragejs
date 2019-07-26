@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | Named One-Way Reflexive | association #set", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +11,8 @@ describe("Integration | ORM | Has Many | Named One-Way Reflexive | association #
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a list of saved children`, () => {
-      let [tag] = this.helper[state]();
-      let savedTag = this.helper.savedChild();
+      let [tag] = helper[state]();
+      let savedTag = helper.savedChild();
 
       tag.labels = [savedTag];
 
@@ -23,36 +24,36 @@ describe("Integration | ORM | Has Many | Named One-Way Reflexive | association #
     });
 
     test(`a ${state} can update its association to a new parent`, () => {
-      let [tag] = this.helper[state]();
-      let newTag = this.helper.newChild();
+      let [tag] = helper[state]();
+      let newTag = helper.newChild();
 
       tag.labels = [newTag];
 
       expect(tag.labels.includes(newTag)).toBeTruthy();
-      expect(tag.labelIds[0]).toEqual(undefined);
+      expect(tag.labelIds[0]).toBeUndefined();
       expect(newTag.labels.includes(tag)).toBeFalsy();
 
       tag.save();
     });
 
     test(`a ${state} can clear its association via an empty list`, () => {
-      let [tag] = this.helper[state]();
+      let [tag] = helper[state]();
 
       tag.labels = [];
 
       expect(tag.labelIds).toBeEmpty();
-      expect(tag.labels.models.length).toEqual(0);
+      expect(tag.labels.models).toHaveLength(0);
 
       tag.save();
     });
 
     test(`a ${state} can clear its association via an empty list`, () => {
-      let [tag] = this.helper[state]();
+      let [tag] = helper[state]();
 
       tag.labels = null;
 
       expect(tag.labelIds).toBeEmpty();
-      expect(tag.labels.models.length).toEqual(0);
+      expect(tag.labels.models).toHaveLength(0);
 
       tag.save();
     });

@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | One-way Polymorphic | association #new", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -11,18 +12,18 @@ describe("Integration | ORM | Has Many | One-way Polymorphic | association #new"
 
   states.forEach(state => {
     test(`a ${state} can build a new associated parent`, () => {
-      let [user] = this.helper[state]();
+      let [user] = helper[state]();
       let initialCount = user.things.models.length;
 
       let post = user.newThing("post", { title: "Lorem ipsum" });
 
       expect(!post.id).toBeTruthy();
-      expect(user.things.models.length).toEqual(initialCount + 1);
+      expect(user.things.models).toHaveLength(initialCount + 1);
 
       post.save();
 
       expect(post.attrs).toEqual({ id: post.id, title: "Lorem ipsum" });
-      expect(user.things.models.length).toEqual(initialCount + 1);
+      expect(user.things.models).toHaveLength(initialCount + 1);
       expect(user.things.includes(post)).toBeTruthy();
       expect(
         user.thingIds.find(obj => {

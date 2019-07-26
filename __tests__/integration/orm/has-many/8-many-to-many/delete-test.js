@@ -1,21 +1,22 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | Many to Many | delete", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   states.forEach(state => {
     test(`deleting children updates the parent's foreign key for a ${state}`, () => {
-      let [order, products] = this.helper[state]();
+      let [order, products] = helper[state]();
 
       if (products && products.length) {
         products.forEach(t => t.destroy());
         order.reload();
       }
 
-      expect(order.products.length).toEqual(0);
-      expect(order.productIds.length).toEqual(0);
+      expect(order.products).toHaveLength(0);
+      expect(order.productIds).toHaveLength(0);
     });
   });
 });

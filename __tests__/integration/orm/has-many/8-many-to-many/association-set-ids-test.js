@@ -1,14 +1,15 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | Many to Many | association #setIds", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   states.forEach(state => {
     test(`a ${state} can update its association to include a saved child via childIds`, () => {
-      let [order, originalProducts] = this.helper[state]();
-      let savedProduct = this.helper.savedChild();
+      let [order, originalProducts] = helper[state]();
+      let savedProduct = helper.savedChild();
 
       order.productIds = [savedProduct.id];
 
@@ -28,7 +29,7 @@ describe("Integration | ORM | Has Many | Many to Many | association #setIds", ()
     });
 
     test(`a ${state} can clear its association via a null childIds`, () => {
-      let [order, originalProducts] = this.helper[state]();
+      let [order, originalProducts] = helper[state]();
 
       order.productIds = null;
 

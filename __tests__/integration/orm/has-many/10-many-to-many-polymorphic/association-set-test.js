@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association #set", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +11,8 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association 
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a list of saved children`, () => {
-      let [user, originalPosts] = this.helper[state]();
-      let savedPost = this.helper.savedChild();
+      let [user, originalPosts] = helper[state]();
+      let savedPost = helper.savedChild();
 
       user.commentables = [savedPost];
 
@@ -32,8 +33,8 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association 
     });
 
     test(`a ${state} can update its association to a new parent`, () => {
-      let [user, originalPosts] = this.helper[state]();
-      let newPost = this.helper.newChild();
+      let [user, originalPosts] = helper[state]();
+      let newPost = helper.newChild();
 
       user.commentables = [newPost];
 
@@ -50,12 +51,12 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association 
     });
 
     test(`a ${state} can clear its association via an empty list`, () => {
-      let [user, originalPosts] = this.helper[state]();
+      let [user, originalPosts] = helper[state]();
 
       user.commentables = [];
 
       expect(user.commentableIds).toBeEmpty();
-      expect(user.commentables.models.length).toEqual(0);
+      expect(user.commentables.models).toHaveLength(0);
 
       user.save();
 
@@ -66,12 +67,12 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association 
     });
 
     test(`a ${state} can clear its association via null`, () => {
-      let [user, originalPosts] = this.helper[state]();
+      let [user, originalPosts] = helper[state]();
 
       user.commentables = null;
 
       expect(user.commentableIds).toBeEmpty();
-      expect(user.commentables.models.length).toEqual(0);
+      expect(user.commentables.models).toHaveLength(0);
 
       user.save();
 

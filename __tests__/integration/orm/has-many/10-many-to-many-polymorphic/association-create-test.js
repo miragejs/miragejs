@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association #create", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,13 +11,13 @@ describe("Integration | ORM | Has Many | Many-to-many Polymorphic | association 
   */
   states.forEach(state => {
     test(`a ${state} can create an associated parent`, () => {
-      let [user] = this.helper[state]();
+      let [user] = helper[state]();
       let initialCount = user.commentables.models.length;
 
       let post = user.createCommentable("post", { title: "Lorem ipsum" });
 
       expect(post.id).toBeTruthy();
-      expect(user.commentables.models.length).toEqual(initialCount + 1);
+      expect(user.commentables.models).toHaveLength(initialCount + 1);
       expect(user.commentables.includes(post)).toBeTruthy();
       expect(
         user.commentableIds.find(obj => {

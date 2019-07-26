@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | One-Way Reflexive | association #new", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -11,14 +12,14 @@ describe("Integration | ORM | Has Many | One-Way Reflexive | association #new", 
 
   states.forEach(state => {
     test(`a ${state} can build a new associated child`, () => {
-      let [tag] = this.helper[state]();
+      let [tag] = helper[state]();
       let initialCount = tag.tags.models.length;
 
       let blueTag = tag.newTag({ name: "Blue" });
 
       expect(!blueTag.id).toBeTruthy();
-      expect(tag.tags.models.length).toEqual(initialCount + 1);
-      expect(blueTag.tags.models.length).toEqual(0);
+      expect(tag.tags.models).toHaveLength(initialCount + 1);
+      expect(blueTag.tags.models).toHaveLength(0);
 
       blueTag.save();
 
@@ -27,7 +28,7 @@ describe("Integration | ORM | Has Many | One-Way Reflexive | association #new", 
         name: "Blue",
         tagIds: []
       });
-      expect(tag.tags.models.length).toEqual(initialCount + 1);
+      expect(tag.tags.models).toHaveLength(initialCount + 1);
       expect(tag.tags.includes(blueTag)).toBeTruthy();
       expect(tag.tagIds.indexOf(blueTag.id) > -1).toBeTruthy();
       expect(blueTag.tags.includes(tag)).toBeFalsy();

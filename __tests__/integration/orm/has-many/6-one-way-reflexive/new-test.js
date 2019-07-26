@@ -1,13 +1,14 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Has Many | One-Way Reflexive | new", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
-    this.schema = this.helper.schema;
+    helper = new Helper();
+    this.schema = helper.schema;
   });
 
   test("the parent accepts a saved child id", () => {
-    let tagA = this.helper.savedChild();
+    let tagA = helper.savedChild();
     let tagB = this.schema.tags.new({
       tagIds: [tagA.id]
     });
@@ -25,13 +26,13 @@ describe("Integration | ORM | Has Many | One-Way Reflexive | new", () => {
   test("the parent accepts null children foreign key", () => {
     let tag = this.schema.tags.new({ tagIds: null });
 
-    expect(tag.tags.models.length).toEqual(0);
+    expect(tag.tags.models).toHaveLength(0);
     expect(tag.tagIds).toBeEmpty();
     expect(tag.attrs).toEqual({ tagIds: null });
   });
 
   test("the parent accepts saved children", () => {
-    let tagA = this.helper.savedChild();
+    let tagA = helper.savedChild();
     let tagB = this.schema.tags.new({ tags: [tagA] });
 
     expect(tagB.tagIds).toEqual([tagA.id]);
@@ -49,13 +50,13 @@ describe("Integration | ORM | Has Many | One-Way Reflexive | new", () => {
   test("the parent accepts null children", () => {
     let tag = this.schema.tags.new({ tags: null });
 
-    expect(tag.tags.models.length).toEqual(0);
+    expect(tag.tags.models).toHaveLength(0);
     expect(tag.tagIds).toBeEmpty();
     expect(tag.attrs).toEqual({ tagIds: null });
   });
 
   test("the parent accepts children and child ids", () => {
-    let tagA = this.helper.savedChild();
+    let tagA = helper.savedChild();
     let tagB = this.schema.tags.new({ tags: [tagA], tagIds: [tagA.id] });
 
     expect(tagB.tagIds).toEqual([tagA.id]);

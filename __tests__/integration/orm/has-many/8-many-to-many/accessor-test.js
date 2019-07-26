@@ -1,16 +1,17 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | Many to Many | accessor", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   states.forEach(state => {
     test(`the references of a ${state} are correct`, () => {
-      let [order, products] = this.helper[state]();
+      let [order, products] = helper[state]();
 
-      expect(order.products.models.length).toEqual(products.length);
-      expect(order.productIds.length).toEqual(products.length);
+      expect(order.products.models).toHaveLength(products.length);
+      expect(order.productIds).toHaveLength(products.length);
 
       products.forEach(p => {
         expect(order.products.includes(p)).toBeTruthy();

@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | Many to Many | association #set", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +11,8 @@ describe("Integration | ORM | Has Many | Many to Many | association #set", () =>
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a list of saved children`, () => {
-      let [order, originalProducts] = this.helper[state]();
-      let savedProduct = this.helper.savedChild();
+      let [order, originalProducts] = helper[state]();
+      let savedProduct = helper.savedChild();
 
       order.products = [savedProduct];
 
@@ -28,13 +29,13 @@ describe("Integration | ORM | Has Many | Many to Many | association #set", () =>
     });
 
     test(`a ${state} can update its association to a new parent`, () => {
-      let [order, originalProducts] = this.helper[state]();
-      let newProduct = this.helper.newChild();
+      let [order, originalProducts] = helper[state]();
+      let newProduct = helper.newChild();
 
       order.products = [newProduct];
 
       expect(order.products.includes(newProduct)).toBeTruthy();
-      expect(order.productIds[0]).toEqual(undefined);
+      expect(order.productIds[0]).toBeUndefined();
       expect(newProduct.orders.includes(order)).toBeTruthy();
 
       order.save();
@@ -46,12 +47,12 @@ describe("Integration | ORM | Has Many | Many to Many | association #set", () =>
     });
 
     test(`a ${state} can clear its association via an empty list`, () => {
-      let [order, originalProducts] = this.helper[state]();
+      let [order, originalProducts] = helper[state]();
 
       order.products = [];
 
       expect(order.productIds).toBeEmpty();
-      expect(order.products.models.length).toEqual(0);
+      expect(order.products.models).toHaveLength(0);
 
       order.save();
       originalProducts.forEach(p => {
@@ -61,12 +62,12 @@ describe("Integration | ORM | Has Many | Many to Many | association #set", () =>
     });
 
     test(`a ${state} can clear its association via an empty list`, () => {
-      let [order, originalProducts] = this.helper[state]();
+      let [order, originalProducts] = helper[state]();
 
       order.products = null;
 
       expect(order.productIds).toBeEmpty();
-      expect(order.products.models.length).toEqual(0);
+      expect(order.products.models).toHaveLength(0);
 
       order.save();
 

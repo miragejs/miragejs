@@ -1,8 +1,9 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Has Many | Named | association #setIds", () => {
+  let helper;
   beforeEach(() => {
-    this.helper = new Helper();
+    helper = new Helper();
   });
 
   /*
@@ -10,8 +11,8 @@ describe("Integration | ORM | Has Many | Named | association #setIds", () => {
   */
   states.forEach(state => {
     test(`a ${state} can update its association to a saved parent via parentId`, () => {
-      let [user] = this.helper[state]();
-      let savedPost = this.helper.savedChild();
+      let [user] = helper[state]();
+      let savedPost = helper.savedChild();
 
       user.blogPostIds = [savedPost.id];
 
@@ -20,7 +21,7 @@ describe("Integration | ORM | Has Many | Named | association #setIds", () => {
     });
 
     test(`a ${state} can clear its association via a null parentId`, () => {
-      let [user] = this.helper[state]();
+      let [user] = helper[state]();
 
       user.blogPostIds = null;
 
