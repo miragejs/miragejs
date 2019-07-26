@@ -1,7 +1,7 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | One To One | association #setId", () => {
-  beforeEach(() =>  {
+  beforeEach(() => {
     this.helper = new Helper();
   });
 
@@ -25,5 +25,4 @@ describe("Integration | ORM | Belongs To | One To One | association #setId", () 
       expect(profile.user.attrs).toEqual(user.attrs);
     });
   });
-
 });

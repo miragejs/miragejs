@@ -2,7 +2,7 @@ import Helper from "./_helper";
 import { Model } from "@miragejs/server";
 
 describe("Integration | ORM | Mixed | Many To One | create", () => {
-  beforeEach(() =>  {
+  beforeEach(() => {
     this.helper = new Helper();
     this.helper.schema.registerModel("foo", Model);
   });

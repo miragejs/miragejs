@@ -1,7 +1,7 @@
 import Helper, { states } from "./_helper";
 
 describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | accessor", () => {
-  beforeEach(() =>  {
+  beforeEach(() => {
     this.helper = new Helper();
   });
 

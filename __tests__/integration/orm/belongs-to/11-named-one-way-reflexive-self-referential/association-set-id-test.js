@@ -1,7 +1,7 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Belongs To | Named one-way reflexive self referential | association #setId", () => {
-  beforeEach(() =>  {
+  beforeEach(() => {
     this.helper = new Helper();
   });
 

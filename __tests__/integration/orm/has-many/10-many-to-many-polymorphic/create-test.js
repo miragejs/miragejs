@@ -1,7 +1,7 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Has Many | Many-to-many Polymorphic | create", () => {
-  beforeEach(() =>  {
+  beforeEach(() => {
     this.helper = new Helper();
   });
 

@@ -6,7 +6,7 @@ import {
 } from "@miragejs/server";
 
 describe("Integration | ORM | Has Many | Regressions | Many to many inverse set bug", () => {
-  beforeEach(() =>  {
+  beforeEach(() => {
     this.db = new Db();
 
     this.schema = new Schema(this.db, {

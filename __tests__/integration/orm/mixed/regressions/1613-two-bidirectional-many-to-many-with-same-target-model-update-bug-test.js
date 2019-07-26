@@ -7,7 +7,7 @@ import {
 } from "@miragejs/server";
 
 describe("Integration | ORM | Mixed | Regressions | 1613 Two bidirectional one-to-many relationships with same target model update ids bug", () => {
-  beforeEach(() =>  {
+  beforeEach(() => {
     this.db = new Db();
 
     this.schema = new Schema(this.db, {

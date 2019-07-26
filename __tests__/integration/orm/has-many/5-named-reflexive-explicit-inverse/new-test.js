@@ -1,7 +1,7 @@
 import Helper from "./_helper";
 
 describe("Integration | ORM | Has Many | Named Reflexive Explicit Inverse | new", () => {
-  beforeEach(() =>  {
+  beforeEach(() => {
     this.helper = new Helper();
     this.schema = this.helper.schema;
   });
