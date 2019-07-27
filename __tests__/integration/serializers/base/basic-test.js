@@ -1,46 +1,46 @@
-import SerializerRegistry from "ember-cli-mirage/serializer-registry";
+import SerializerRegistry from "@lib/serializer-registry";
 import schemaHelper from "../schema-helper";
-import { module, test } from "qunit";
-
 import { uniqBy } from "lodash-es";
 
-module("Integration | Serializers | Base | Basic", function(hooks) {
-  hooks.beforeEach(function() {
-    this.schema = schemaHelper.setup();
-    this.registry = new SerializerRegistry(this.schema);
+describe("Integration | Serializers | Base | Basic", function() {
+  let schema, registry;
+
+  beforeEach(function() {
+    schema = schemaHelper.setup();
+    registry = new SerializerRegistry(schema);
   });
 
-  hooks.afterEach(function() {
-    this.schema.db.emptyData();
+  afterEach(function() {
+    schema.db.emptyData();
   });
 
-  test("it returns objects unaffected", function(assert) {
-    let result = this.registry.serialize({ oh: "hai" });
+  test("it returns objects unaffected", () => {
+    let result = registry.serialize({ oh: "hai" });
 
-    assert.deepEqual(result, { oh: "hai" });
+    expect(result).toEqual({ oh: "hai" });
   });
 
-  test("it returns arrays unaffected", function(assert) {
+  test("it returns arrays unaffected", () => {
     let data = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
-    let result = this.registry.serialize(data);
+    let result = registry.serialize(data);
 
-    assert.deepEqual(result, data);
+    expect(result).toEqual(data);
   });
 
-  test("it returns empty arrays unaffected", function(assert) {
-    let result = this.registry.serialize([]);
+  test("it returns empty arrays unaffected", () => {
+    let result = registry.serialize([]);
 
-    assert.deepEqual(result, []);
+    expect(result).toEqual([]);
   });
 
-  test(`it serializes a model by returning its attrs under a root`, function(assert) {
-    let wordSmith = this.schema.wordSmiths.create({
+  test(`it serializes a model by returning its attrs under a root`, () => {
+    let wordSmith = schema.wordSmiths.create({
       id: 1,
       name: "Link"
     });
-    let result = this.registry.serialize(wordSmith);
+    let result = registry.serialize(wordSmith);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       wordSmith: {
         id: "1",
         name: "Link"
@@ -48,37 +48,37 @@ module("Integration | Serializers | Base | Basic", function(hooks) {
     });
   });
 
-  test(`it serializes a collection of models by returning an array of their attrs under a pluralized root`, function(assert) {
-    this.schema.wordSmiths.create({ id: 1, name: "Link" });
-    this.schema.wordSmiths.create({ id: 2, name: "Zelda" });
+  test(`it serializes a collection of models by returning an array of their attrs under a pluralized root`, () => {
+    schema.wordSmiths.create({ id: 1, name: "Link" });
+    schema.wordSmiths.create({ id: 2, name: "Zelda" });
 
-    let wordSmiths = this.schema.wordSmiths.all();
+    let wordSmiths = schema.wordSmiths.all();
 
-    let result = this.registry.serialize(wordSmiths);
+    let result = registry.serialize(wordSmiths);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       wordSmiths: [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }]
     });
   });
 
-  test(`it can serialize an empty collection`, function(assert) {
-    let wordSmiths = this.schema.wordSmiths.all();
-    let result = this.registry.serialize(wordSmiths);
+  test(`it can serialize an empty collection`, () => {
+    let wordSmiths = schema.wordSmiths.all();
+    let result = registry.serialize(wordSmiths);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       wordSmiths: []
     });
   });
 
-  test("it returns POJAs of models unaffected", function(assert) {
-    this.schema.wordSmiths.create({ name: "Sam" });
-    this.schema.wordSmiths.create({ name: "Sam" });
-    this.schema.wordSmiths.create({ name: "Ganondorf" });
+  test("it returns POJAs of models unaffected", () => {
+    schema.wordSmiths.create({ name: "Sam" });
+    schema.wordSmiths.create({ name: "Sam" });
+    schema.wordSmiths.create({ name: "Ganondorf" });
 
-    let wordSmiths = this.schema.wordSmiths.all().models;
+    let wordSmiths = schema.wordSmiths.all().models;
     let uniqueNames = uniqBy(wordSmiths, "name");
-    let result = this.registry.serialize(uniqueNames);
+    let result = registry.serialize(uniqueNames);
 
-    assert.deepEqual(result, uniqueNames);
+    expect(result).toEqual(uniqueNames);
   });
 });

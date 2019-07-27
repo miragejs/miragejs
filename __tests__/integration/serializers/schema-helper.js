@@ -1,37 +1,36 @@
-import Mirage from "@miragejs/server";
-import Schema from "@miragejs/server/orm/schema";
-import Model from "@miragejs/server/orm/model";
-import Db from "@miragejs/server/db";
+import Schema from "@lib/orm/schema";
+import Db from "@lib/db";
+import { Model, hasMany, belongsTo } from "@miragejs/server/orm/model";
 
 export default {
   setup() {
     return new Schema(new Db(), {
       wordSmith: Model.extend({
-        blogPosts: Mirage.hasMany()
+        blogPosts: hasMany()
       }),
       blogPost: Model.extend({
-        wordSmith: Mirage.belongsTo(),
-        fineComments: Mirage.hasMany()
+        wordSmith: belongsTo(),
+        fineComments: hasMany()
       }),
       fineComment: Model.extend({
-        blogPost: Mirage.belongsTo()
+        blogPost: belongsTo()
       }),
       greatPhoto: Model,
 
       foo: Model.extend({
-        bar: Mirage.belongsTo()
+        bar: belongsTo()
       }),
       bar: Model.extend({
-        baz: Mirage.belongsTo()
+        baz: belongsTo()
       }),
       baz: Model.extend({
-        quuxes: Mirage.hasMany()
+        quuxes: hasMany()
       }),
       quux: Model.extend({
-        zomgs: Mirage.hasMany()
+        zomgs: hasMany()
       }),
       zomg: Model.extend({
-        lol: Mirage.belongsTo()
+        lol: belongsTo()
       }),
       lol: Model
     });

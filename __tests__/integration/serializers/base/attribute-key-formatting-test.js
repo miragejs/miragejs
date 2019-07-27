@@ -1,15 +1,14 @@
-import SerializerRegistry from "ember-cli-mirage/serializer-registry";
-import Serializer from "ember-cli-mirage/serializer";
+import SerializerRegistry from "@lib/serializer-registry";
+import Serializer from "@lib/serializer";
 import schemaHelper from "../schema-helper";
-import { camelize } from "ember-cli-mirage/utils/inflector";
-import { module, test } from "qunit";
+import { camelize } from "@lib/utils/inflector";
 
-module("Integration | Serializers | Base | Attribute Key Formatting", function(
-  hooks
-) {
-  hooks.beforeEach(function() {
-    this.schema = schemaHelper.setup();
-    this.registry = new SerializerRegistry(this.schema, {
+describe("Integration | Serializers | Base | Attribute Key Formatting", function() {
+  let schema, registry;
+
+  beforeEach(function() {
+    schema = schemaHelper.setup();
+    registry = new SerializerRegistry(schema, {
       wordSmith: Serializer.extend({
         keyForAttribute(key) {
           return camelize(key);
@@ -18,21 +17,21 @@ module("Integration | Serializers | Base | Attribute Key Formatting", function(
     });
   });
 
-  hooks.afterEach(function() {
-    this.schema.db.emptyData();
+  afterEach(function() {
+    schema.db.emptyData();
   });
 
-  test(`keyForAttribute formats the attributes of a model`, function(assert) {
-    let wordSmith = this.schema.wordSmiths.create({
+  test(`keyForAttribute formats the attributes of a model`, () => {
+    let wordSmith = schema.wordSmiths.create({
       id: 1,
       "first-name": "Link",
       "last-name": "Jackson",
       age: 323
     });
 
-    let result = this.registry.serialize(wordSmith);
+    let result = registry.serialize(wordSmith);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       wordSmith: {
         id: "1",
         firstName: "Link",
@@ -42,22 +41,22 @@ module("Integration | Serializers | Base | Attribute Key Formatting", function(
     });
   });
 
-  test(`keyForAttribute also formats the models in a collections`, function(assert) {
-    this.schema.wordSmiths.create({
+  test(`keyForAttribute also formats the models in a collections`, () => {
+    schema.wordSmiths.create({
       id: 1,
       "first-name": "Link",
       "last-name": "Jackson"
     });
-    this.schema.wordSmiths.create({
+    schema.wordSmiths.create({
       id: 2,
       "first-name": "Zelda",
       "last-name": "Brown"
     });
-    let wordSmiths = this.schema.wordSmiths.all();
+    let wordSmiths = schema.wordSmiths.all();
 
-    let result = this.registry.serialize(wordSmiths);
+    let result = registry.serialize(wordSmiths);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       wordSmiths: [
         { id: "1", firstName: "Link", lastName: "Jackson" },
         { id: "2", firstName: "Zelda", lastName: "Brown" }

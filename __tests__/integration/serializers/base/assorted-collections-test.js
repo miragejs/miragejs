@@ -1,46 +1,45 @@
-import SerializerRegistry from "ember-cli-mirage/serializer-registry";
-import Serializer from "ember-cli-mirage/serializer";
+import SerializerRegistry from "@lib/serializer-registry";
+import Serializer from "@lib/serializer";
 import schemaHelper from "../schema-helper";
-import { module, test } from "qunit";
 
-module("Integration | Serializers | Base | Assorted Collections", function(
-  hooks
-) {
-  hooks.beforeEach(function() {
-    this.schema = schemaHelper.setup();
-    this.registry = new SerializerRegistry(this.schema, {
+describe("Integration | Serializers | Base | Assorted Collections", function() {
+  let schema, registry, wordSmiths, greatPhotos;
+
+  beforeEach(function() {
+    schema = schemaHelper.setup();
+    registry = new SerializerRegistry(schema, {
       greatPhoto: Serializer.extend({
         attrs: ["id", "title"]
       })
     });
-    this.wordSmiths = [
+    wordSmiths = [
       { id: "1", name: "Link" },
       { id: "2", name: "Zelda" },
       { id: "3", name: "Epona" }
     ];
-    this.greatPhotos = [
+    greatPhotos = [
       { id: "1", title: "Amazing", location: "Hyrule" },
       { id: "2", title: "greatPhoto", location: "Goron City" }
     ];
-    this.schema.db.loadData({
-      wordSmiths: this.wordSmiths,
-      greatPhotos: this.greatPhotos
+    schema.db.loadData({
+      wordSmiths: wordSmiths,
+      greatPhotos: greatPhotos
     });
   });
 
-  hooks.afterEach(function() {
-    this.schema.db.emptyData();
+  afterEach(function() {
+    schema.db.emptyData();
   });
 
-  test(`an array of assorted collections can be serialized`, function(assert) {
-    let result = this.registry.serialize([
-      this.schema.wordSmiths.all(),
-      this.schema.greatPhotos.all()
+  test(`an array of assorted collections can be serialized`, () => {
+    let result = registry.serialize([
+      schema.wordSmiths.all(),
+      schema.greatPhotos.all()
     ]);
 
-    assert.deepEqual(result, {
-      wordSmiths: this.wordSmiths,
-      greatPhotos: this.greatPhotos.map(attrs => {
+    expect(result).toEqual({
+      wordSmiths: wordSmiths,
+      greatPhotos: greatPhotos.map(attrs => {
         delete attrs.location;
         return attrs;
       })

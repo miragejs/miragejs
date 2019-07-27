@@ -1,13 +1,13 @@
-import Mirage from "ember-cli-mirage";
-import Server from "ember-cli-mirage/server";
-import Model from "ember-cli-mirage/orm/model";
-import Serializer from "ember-cli-mirage/serializer";
-import { module, test } from "qunit";
-import promiseAjax from "../../../helpers/promise-ajax";
+import Mirage from "@miragejs/server";
+import Server from "@lib/server";
+import Model from "@lib/orm/model";
+import Serializer from "@lib/serializer";
 
-module("Integration | Serializers | Base | Full Request", function(hooks) {
-  hooks.beforeEach(function() {
-    this.server = new Server({
+describe("Integration | Serializers | Base | Full Request", function() {
+  let server;
+
+  beforeEach(function() {
+    server = new Server({
       environment: "development",
       models: {
         author: Model.extend({
@@ -40,36 +40,34 @@ module("Integration | Serializers | Base | Full Request", function(hooks) {
         })
       }
     });
-    this.server.timing = 0;
-    this.server.logging = false;
+    server.timing = 0;
+    server.logging = false;
   });
 
-  hooks.afterEach(function() {
-    this.server.shutdown();
+  afterEach(function() {
+    server.shutdown();
   });
 
-  test("the appropriate serializer is used", async function(assert) {
-    assert.expect(1);
+  test("the appropriate serializer is used", async () => {
+    expect.assertions(1);
 
-    let author = this.server.schema.authors.create({
+    let author = server.schema.authors.create({
       first: "Link",
       last: "of Hyrule",
       age: 323
     });
     author.createPost({ title: "Lorem ipsum" });
 
-    this.server.get("/authors/:id", function(schema, request) {
+    server.get("/authors/:id", function(schema, request) {
       let { id } = request.params;
 
       return schema.authors.find(id);
     });
 
-    let { data } = await promiseAjax({
-      method: "GET",
-      url: "/authors/1"
-    });
+    let res = await fetch("/authors/1");
+    let data = await res.json();
 
-    assert.deepEqual(data, {
+    expect(data).toEqual({
       author: {
         id: "1",
         first: "Link",
@@ -78,51 +76,47 @@ module("Integration | Serializers | Base | Full Request", function(hooks) {
     });
   });
 
-  test("components decoded", async function(assert) {
-    assert.expect(1);
+  test("components decoded", async () => {
+    expect.assertions(1);
 
-    this.server.get("/authors/:id", function(schema, request) {
+    server.get("/authors/:id", function(schema, request) {
       let { id } = request.params;
 
       return { data: { id } };
     });
 
-    let { data } = await promiseAjax({
-      method: "GET",
-      url: "/authors/%3A1"
-    });
+    let res = await fetch("/authors/%3A1");
+    let data = await res.json();
 
-    assert.deepEqual(data, { data: { id: ":1" } });
+    expect(data).toEqual({ data: { id: ":1" } });
   });
 
-  test("a response falls back to the application serializer, if it exists", async function(assert) {
-    assert.expect(1);
-    this.server.schema.posts.create({
+  test("a response falls back to the application serializer, if it exists", async () => {
+    expect.assertions(1);
+    server.schema.posts.create({
       title: "Lorem",
       date: "20001010"
     });
 
-    this.server.get("/posts/:id", function(schema, request) {
+    server.get("/posts/:id", function(schema, request) {
       let { id } = request.params;
 
       return schema.posts.find(id);
     });
 
-    let { data } = await promiseAjax({
-      method: "GET",
-      url: "/posts/1"
-    });
+    let res = await fetch("/posts/1");
+    let data = await res.json();
 
-    assert.deepEqual(data, {
+    expect(data).toEqual({
       id: "1",
       title: "Lorem",
       date: "20001010"
     });
   });
 
-  test("serializer.include is invoked when it is a function", async function(assert) {
-    assert.expect(1);
-    let post = this.server.schema.posts.create({
+  test("serializer.include is invoked when it is a function", async () => {
+    expect.assertions(1);
+    let post = server.schema.posts.create({
       title: "Lorem",
       date: "20001010"
     });
@@ -130,17 +124,15 @@ module("Integration | Serializers | Base | Full Request", function(hooks) {
       description: "Lorem is the best"
     });
 
-    this.server.get("/comments/:id", function(schema, request) {
+    server.get("/comments/:id", function(schema, request) {
       let { id } = request.params;
       return schema.comments.find(id);
     });
 
-    let { data } = await promiseAjax({
-      method: "GET",
-      url: "/comments/1?include_post=true"
-    });
+    let res = await fetch("/comments/1?include_post=true");
+    let data = await res.json();
 
-    assert.deepEqual(data, {
+    expect(data).toEqual({
       id: "1",
       description: "Lorem is the best",
       post: {

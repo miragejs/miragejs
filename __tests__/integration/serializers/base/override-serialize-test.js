@@ -1,21 +1,20 @@
-import SerializerRegistry from "ember-cli-mirage/serializer-registry";
-import Serializer from "ember-cli-mirage/serializer";
+import SerializerRegistry from "@lib/serializer-registry";
+import Serializer from "@lib/serializer";
 import schemaHelper from "../schema-helper";
-import { module, test } from "qunit";
 
-module("Integration | Serializers | Base | Overriding Serialize", function(
-  hooks
-) {
-  hooks.beforeEach(function() {
-    this.schema = schemaHelper.setup();
+describe("Integration | Serializers | Base | Overriding Serialize", function() {
+  let schema;
+
+  beforeEach(function() {
+    schema = schemaHelper.setup();
   });
 
-  hooks.afterEach(function() {
-    this.schema.db.emptyData();
+  afterEach(function() {
+    schema.db.emptyData();
   });
 
-  test(`it can use a completely custom serialize function`, function(assert) {
-    this.registry = new SerializerRegistry(this.schema, {
+  test(`it can use a completely custom serialize function`, () => {
+    let registry = new SerializerRegistry(schema, {
       wordSmith: Serializer.extend({
         serialize() {
           return "blah";
@@ -23,18 +22,18 @@ module("Integration | Serializers | Base | Overriding Serialize", function(
       })
     });
 
-    let wordSmith = this.schema.wordSmiths.create({
+    let wordSmith = schema.wordSmiths.create({
       id: 1,
       title: "Link"
     });
 
-    let result = this.registry.serialize(wordSmith);
+    let result = registry.serialize(wordSmith);
 
-    assert.deepEqual(result, "blah");
+    expect(result).toEqual("blah");
   });
 
-  test(`it can access the request in a custom serialize function`, function(assert) {
-    this.registry = new SerializerRegistry(this.schema, {
+  test(`it can access the request in a custom serialize function`, () => {
+    let registry = new SerializerRegistry(schema, {
       wordSmith: Serializer.extend({
         serialize(response, request) {
           return request.queryParams.foo || "blah";
@@ -42,7 +41,7 @@ module("Integration | Serializers | Base | Overriding Serialize", function(
       })
     });
 
-    let wordSmith = this.schema.wordSmiths.create({
+    let wordSmith = schema.wordSmiths.create({
       id: 1,
       title: "Link"
     });
@@ -52,22 +51,22 @@ module("Integration | Serializers | Base | Overriding Serialize", function(
       params: { id: "1" },
       queryParams: { foo: "bar" }
     };
-    let result = this.registry.serialize(wordSmith, request);
+    let result = registry.serialize(wordSmith, request);
 
-    assert.deepEqual(result, "bar");
+    expect(result).toEqual("bar");
   });
 
-  test(`it can access the databse while in a serializer method`, function(assert) {
-    this.registry = new SerializerRegistry(this.schema, {
+  test(`it can access the databse while in a serializer method`, () => {
+    let registry = new SerializerRegistry(schema, {
       wordSmith: Serializer.extend({
         serialize(response, request) {
           let id = request.params.id;
-          return this.schema.db.wordSmiths.find(id).title || "No title";
+          return schema.db.wordSmiths.find(id).title || "No title";
         }
       })
     });
 
-    let wordSmith = this.schema.wordSmiths.create({
+    let wordSmith = schema.wordSmiths.create({
       id: 1,
       title: "Title in database"
     });
@@ -77,8 +76,8 @@ module("Integration | Serializers | Base | Overriding Serialize", function(
       params: { id: "1" },
       queryParams: { foo: "bar" }
     };
-    let result = this.registry.serialize(wordSmith, request);
+    let result = registry.serialize(wordSmith, request);
 
-    assert.deepEqual(result, "Title in database");
+    expect(result).toEqual("Title in database");
   });
 });

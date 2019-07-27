@@ -1,31 +1,32 @@
-import SerializerRegistry from "ember-cli-mirage/serializer-registry";
-import Serializer from "ember-cli-mirage/serializer";
+import SerializerRegistry from "@lib/serializer-registry";
+import Serializer from "@lib/serializer";
 import schemaHelper from "../schema-helper";
-import { module, test } from "qunit";
 
-module("Integration | Serializers | Base | Attrs List", function(hooks) {
-  hooks.beforeEach(function() {
-    this.schema = schemaHelper.setup();
-    this.registry = new SerializerRegistry(this.schema, {
+describe("Integration | Serializers | Base | Attrs List", function() {
+  let schema, registry;
+
+  beforeEach(function() {
+    schema = schemaHelper.setup();
+    registry = new SerializerRegistry(schema, {
       wordSmith: Serializer.extend({
         attrs: ["id", "name"]
       })
     });
   });
 
-  hooks.afterEach(function() {
-    this.schema.db.emptyData();
+  afterEach(function() {
+    schema.db.emptyData();
   });
 
-  test(`it returns only the whitelisted attrs when serializing a model`, function(assert) {
-    let wordSmith = this.schema.wordSmiths.create({
+  test(`it returns only the whitelisted attrs when serializing a model`, () => {
+    let wordSmith = schema.wordSmiths.create({
       id: 1,
       name: "Link",
       age: 123
     });
 
-    let result = this.registry.serialize(wordSmith);
-    assert.deepEqual(result, {
+    let result = registry.serialize(wordSmith);
+    expect(result).toEqual({
       wordSmith: {
         id: "1",
         name: "Link"
@@ -33,15 +34,14 @@ module("Integration | Serializers | Base | Attrs List", function(hooks) {
     });
   });
 
-  test(`it returns only the whitelisted attrs when serializing a collection`, function(assert) {
-    let { schema } = this;
+  test(`it returns only the whitelisted attrs when serializing a collection`, () => {
     schema.wordSmiths.create({ id: 1, name: "Link", age: 123 });
     schema.wordSmiths.create({ id: 2, name: "Zelda", age: 456 });
 
-    let collection = this.schema.wordSmiths.all();
-    let result = this.registry.serialize(collection);
+    let collection = schema.wordSmiths.all();
+    let result = registry.serialize(collection);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       wordSmiths: [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }]
     });
   });
