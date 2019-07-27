@@ -1,7 +1,7 @@
-import "../../../lib/container";
-import { Model, hasMany } from "../../../lib/index";
-import Db from "../../../lib/db";
-import Schema from "../../../lib/orm/schema";
+import "@lib/container";
+import { Model, hasMany } from "@lib/index";
+import Db from "@lib/db";
+import Schema from "@lib/orm/schema";
 
 describe("Integration | ORM | reinitialize associations", () => {
   // Model classes are defined statically, just like in a typical app

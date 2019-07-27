@@ -1,4 +1,4 @@
-import { Server, Model, hasMany, belongsTo } from "../../../lib/index";
+import { Server, Model, hasMany, belongsTo } from "@miragejs/server";
 
 describe("Integration | ORM | assertions", () => {
   let server;

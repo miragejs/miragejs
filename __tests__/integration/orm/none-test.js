@@ -1,8 +1,8 @@
-import "../../../lib/container";
-import Db from "../../../lib/db";
-import Schema from "../../../lib/orm/schema";
-import Model from "../../../lib/orm/model";
-import Collection from "../../../lib/orm/collection";
+import "@lib/container";
+import Db from "@lib/db";
+import Schema from "@lib/orm/schema";
+import Model from "@lib/orm/model";
+import Collection from "@lib/orm/collection";
 
 describe("Integration | ORM | #none", () => {
   let schema;

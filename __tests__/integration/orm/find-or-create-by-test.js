@@ -1,7 +1,7 @@
-import "../../../lib/container";
-import Db from "../../../lib/db";
-import Schema from "../../../lib/orm/schema";
-import Model from "../../../lib/orm/model";
+import "@lib/container";
+import Db from "@lib/db";
+import Schema from "@lib/orm/schema";
+import Model from "@lib/orm/model";
 
 describe("Integration | ORM | #findOrCreateBy", () => {
   let User, schema;
