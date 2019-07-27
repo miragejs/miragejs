@@ -1,14 +1,20 @@
-import { module, test } from "qunit";
-import Server from "ember-cli-mirage/server";
-import { Model, hasMany, belongsTo, RestSerializer } from "ember-cli-mirage";
+import {
+  Server,
+  Model,
+  hasMany,
+  belongsTo,
+  RestSerializer
+} from "@miragejs/server";
 
-module("Integration | Serializer | RestSerializer", function(hooks) {
-  hooks.afterEach(function() {
-    this.server.shutdown();
+describe("Integration | Serializer | RestSerializer", () => {
+  let server;
+
+  afterEach(function() {
+    server.shutdown();
   });
 
-  test("it sideloads associations and camel-cases relationships and attributes correctly for a model", function(assert) {
-    this.server = new Server({
+  test("it sideloads associations and camel-cases relationships and attributes correctly for a model", () => {
+    server = new Server({
       environment: "test",
       models: {
         wordSmith: Model.extend({
@@ -30,15 +36,15 @@ module("Integration | Serializer | RestSerializer", function(hooks) {
       }
     });
 
-    let link = this.server.create("word-smith", { name: "Link", age: 123 });
+    let link = server.create("word-smith", { name: "Link", age: 123 });
     link.createBlogPost({ title: "Lorem" });
     link.createBlogPost({ title: "Ipsum" });
 
-    this.server.create("word-smith", { name: "Zelda", age: 230 });
+    server.create("word-smith", { name: "Zelda", age: 230 });
 
-    let result = this.server.serializerOrRegistry.serialize(link);
+    let result = server.serializerOrRegistry.serialize(link);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       wordSmith: {
         id: "1",
         name: "Link",
@@ -59,8 +65,8 @@ module("Integration | Serializer | RestSerializer", function(hooks) {
     });
   });
 
-  test("it works for has-many polymorphic associations", function(assert) {
-    this.server = new Server({
+  test("it works for has-many polymorphic associations", () => {
+    server = new Server({
       environment: "test",
       models: {
         wordSmith: Model.extend({
@@ -73,16 +79,16 @@ module("Integration | Serializer | RestSerializer", function(hooks) {
       }
     });
 
-    let post = this.server.create("blog-post", { title: "Post 1" });
-    let link = this.server.create("word-smith", {
+    let post = server.create("blog-post", { title: "Post 1" });
+    let link = server.create("word-smith", {
       name: "Link",
       age: 123,
       posts: [post]
     });
 
-    let result = this.server.serializerOrRegistry.serialize(link);
+    let result = server.serializerOrRegistry.serialize(link);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       wordSmith: {
         id: "1",
         name: "Link",

@@ -3,17 +3,18 @@ import {
   Model,
   hasMany,
   belongsTo
-} from "ember-cli-mirage";
-import Schema from "ember-cli-mirage/orm/schema";
-import Db from "ember-cli-mirage/db";
-import SerializerRegistry from "ember-cli-mirage/serializer-registry";
-import { module, test } from "qunit";
+} from "@miragejs/server";
+import Schema from "@lib/orm/schema";
+import Db from "@lib/db";
+import SerializerRegistry from "@lib/serializer-registry";
 
-module("Integration | Serializer | ActiveModelSerializer", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | Serializer | ActiveModelSerializer", () => {
+  let schema, registry;
+
+  beforeEach(function() {
     let db = new Db();
-    this.schema = new Schema(db);
-    this.schema.registerModels({
+    schema = new Schema(db);
+    schema.registerModels({
       wordSmith: Model.extend({
         blogPosts: hasMany()
       }),
@@ -32,20 +33,20 @@ module("Integration | Serializer | ActiveModelSerializer", function(hooks) {
       })
     });
 
-    let link = this.schema.wordSmiths.create({ name: "Link", age: 123 });
+    let link = schema.wordSmiths.create({ name: "Link", age: 123 });
     let post1 = link.createBlogPost({ title: "Lorem" });
     link.createBlogPost({ title: "Ipsum" });
 
-    this.schema.wordSmiths.create({ name: "Zelda", age: 230 });
+    schema.wordSmiths.create({ name: "Zelda", age: 230 });
 
-    let user = this.schema.users.create({ name: "John Peach", age: 123 });
+    let user = schema.users.create({ name: "John Peach", age: 123 });
     user.createContactInfo({ email: "peach@bb.me" });
     user.createContactInfo({ email: "john3000@mail.com" });
 
-    this.schema.users.create({ name: "Pine Apple", age: 230 });
-    this.schema.comments.create({ text: "Hi there", commentable: post1 });
+    schema.users.create({ name: "Pine Apple", age: 230 });
+    schema.comments.create({ text: "Hi there", commentable: post1 });
 
-    this.registry = new SerializerRegistry(this.schema, {
+    registry = new SerializerRegistry(schema, {
       application: ActiveModelSerializer,
       wordSmith: ActiveModelSerializer.extend({
         serializeIds: "included",
@@ -73,15 +74,15 @@ module("Integration | Serializer | ActiveModelSerializer", function(hooks) {
     });
   });
 
-  hooks.afterEach(function() {
-    this.schema.db.emptyData();
+  afterEach(function() {
+    schema.db.emptyData();
   });
 
-  test("it sideloads associations and snake-cases relationships and attributes correctly for a model", function(assert) {
-    let link = this.schema.wordSmiths.find(1);
-    let result = this.registry.serialize(link);
+  test("it sideloads associations and snake-cases relationships and attributes correctly for a model", () => {
+    let link = schema.wordSmiths.find(1);
+    let result = registry.serialize(link);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       word_smith: {
         id: "1",
         name: "Link",
@@ -112,11 +113,11 @@ module("Integration | Serializer | ActiveModelSerializer", function(hooks) {
     });
   });
 
-  test("it sideloads associations and snake-cases relationships and attributes correctly for a collection", function(assert) {
-    let wordSmiths = this.schema.wordSmiths.all();
-    let result = this.registry.serialize(wordSmiths);
+  test("it sideloads associations and snake-cases relationships and attributes correctly for a collection", () => {
+    let wordSmiths = schema.wordSmiths.all();
+    let result = registry.serialize(wordSmiths);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       word_smiths: [
         {
           id: "1",
@@ -154,11 +155,11 @@ module("Integration | Serializer | ActiveModelSerializer", function(hooks) {
     });
   });
 
-  test("it embeds associations and snake-cases relationships and attributes correctly for a collection", function(assert) {
-    let users = this.schema.users.all();
-    let result = this.registry.serialize(users);
+  test("it embeds associations and snake-cases relationships and attributes correctly for a collection", () => {
+    let users = schema.users.all();
+    let result = registry.serialize(users);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       users: [
         {
           id: "1",

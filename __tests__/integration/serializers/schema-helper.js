@@ -1,7 +1,7 @@
-import Mirage from "ember-cli-mirage";
-import Schema from "ember-cli-mirage/orm/schema";
-import Model from "ember-cli-mirage/orm/model";
-import Db from "ember-cli-mirage/db";
+import Mirage from "@miragejs/server";
+import Schema from "@miragejs/server/orm/schema";
+import Model from "@miragejs/server/orm/model";
+import Db from "@miragejs/server/db";
 
 export default {
   setup() {
