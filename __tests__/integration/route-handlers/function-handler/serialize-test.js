@@ -1,14 +1,14 @@
-import { module, test } from "qunit";
-import { Model, Collection, ActiveModelSerializer } from "ember-cli-mirage";
-import Server from "ember-cli-mirage/server";
+
+import { Model, Collection, ActiveModelSerializer } from "@miragejs/server";
+import Server from "@miragejs/server/server";
 import { uniqBy } from "lodash-es";
 import promiseAjax from "../../../helpers/promise-ajax";
 
-module("Integration | Route handlers | Function handler | #serialize", function(
+describe("Integration | Route handlers | Function handler | #serialize", function(
   hooks
 ) {
-  hooks.beforeEach(function() {
-    this.server = new Server({
+  let server; beforeEach(() => {
+    server = new Server({
       environment: "development",
       models: {
         user: Model.extend({})
@@ -20,24 +20,24 @@ module("Integration | Route handlers | Function handler | #serialize", function(
         })
       }
     });
-    this.server.timing = 0;
-    this.server.logging = false;
+    server.timing = 0;
+    server.logging = false;
   });
 
-  hooks.afterEach(function() {
-    this.server.shutdown();
+  afterEach(() => {
+    server.shutdown();
   });
 
-  test("it uses the default serializer on a model", async function(assert) {
+  test("it uses the default serializer on a model", async () => {
     assert.expect(1);
 
-    this.server.create("user", { name: "Sam" });
+    server.create("user", { name: "Sam" });
 
-    this.server.get("/users", function(schema) {
-      let user = this.schema.users.first();
-      let json = this.serialize(user);
+    server.get("/users", function(schema) {
+      let user = schema.users.first();
+      let json = serialize(user);
 
-      assert.deepEqual(json, {
+      expect(json).toEqual({
         user: {
           id: "1",
           name: "Sam"
@@ -50,16 +50,16 @@ module("Integration | Route handlers | Function handler | #serialize", function(
     await promiseAjax({ method: "GET", url: "/users" });
   });
 
-  test("it uses the default serializer on a collection", async function(assert) {
+  test("it uses the default serializer on a collection", async () => {
     assert.expect(1);
 
-    this.server.create("user", { name: "Sam" });
+    server.create("user", { name: "Sam" });
 
-    this.server.get("/users", function(schema) {
-      let users = this.schema.users.all();
-      let json = this.serialize(users);
+    server.get("/users", function(schema) {
+      let users = schema.users.all();
+      let json = serialize(users);
 
-      assert.deepEqual(json, {
+      expect(json).toEqual({
         users: [{ id: "1", name: "Sam" }]
       });
 
@@ -69,17 +69,17 @@ module("Integration | Route handlers | Function handler | #serialize", function(
     await promiseAjax({ method: "GET", url: "/users" });
   });
 
-  test("it takes an optional serializer type", async function(assert) {
+  test("it takes an optional serializer type", async () => {
     assert.expect(1);
 
-    this.server.create("user", { name: "Sam", tall: true, evil: false });
-    this.server.create("user", { name: "Ganondorf", tall: true, evil: true });
+    server.create("user", { name: "Sam", tall: true, evil: false });
+    server.create("user", { name: "Ganondorf", tall: true, evil: true });
 
-    this.server.get("/users", function(schema) {
+    server.get("/users", function(schema) {
       let users = schema.users.all();
-      let json = this.serialize(users, "sparse-user");
+      let json = serialize(users, "sparse-user");
 
-      assert.deepEqual(json, {
+      expect(json).toEqual({
         users: [
           { id: "1", name: "Sam", tall: true },
           { id: "2", name: "Ganondorf", tall: true }
@@ -92,14 +92,14 @@ module("Integration | Route handlers | Function handler | #serialize", function(
     await promiseAjax({ method: "GET", url: "/users" });
   });
 
-  test("it throws an error when trying to specify a serializer that doesnt exist", async function(assert) {
+  test("it throws an error when trying to specify a serializer that doesnt exist", async () => {
     assert.expect(1);
 
-    this.server.create("user", { name: "Sam" });
-    this.server.get("/users", function(schema) {
+    server.create("user", { name: "Sam" });
+    server.get("/users", function(schema) {
       let users = schema.users.all();
 
-      this.serialize(users, "foo-user");
+      serialize(users, "foo-user");
     });
 
     assert.rejects(promiseAjax({ method: "GET", url: "/users" }), function(
@@ -111,36 +111,36 @@ module("Integration | Route handlers | Function handler | #serialize", function(
     });
   });
 
-  test("it noops on plain JS arrays", async function(assert) {
+  test("it noops on plain JS arrays", async () => {
     assert.expect(1);
 
-    this.server.create("user", { name: "Sam" });
-    this.server.create("user", { name: "Ganondorf" });
+    server.create("user", { name: "Sam" });
+    server.create("user", { name: "Ganondorf" });
 
-    this.server.get("/users", function(schema) {
+    server.get("/users", function(schema) {
       let names = schema.users.all().models.map(user => user.name);
-      let json = this.serialize(names);
+      let json = serialize(names);
 
-      assert.deepEqual(json, names);
+      expect(json).toEqual(names);
     });
 
     await promiseAjax({ method: "GET", url: "/users" });
   });
 
-  test("it can take an optional serializer type on a Collection", async function(assert) {
+  test("it can take an optional serializer type on a Collection", async () => {
     assert.expect(1);
 
-    this.server.create("user", { name: "Sam", tall: true, evil: false });
-    this.server.create("user", { name: "Sam", tall: true, evil: false });
-    this.server.create("user", { name: "Ganondorf", tall: true, evil: true });
+    server.create("user", { name: "Sam", tall: true, evil: false });
+    server.create("user", { name: "Sam", tall: true, evil: false });
+    server.create("user", { name: "Ganondorf", tall: true, evil: true });
 
-    this.server.get("/users", function(schema) {
+    server.get("/users", function(schema) {
       let users = schema.users.all().models;
       let uniqueNames = uniqBy(users, "name");
       let collection = new Collection("user", uniqueNames);
-      let json = this.serialize(collection, "sparse-user");
+      let json = serialize(collection, "sparse-user");
 
-      assert.deepEqual(json, {
+      expect(json).toEqual({
         users: [
           { id: "1", name: "Sam", tall: true },
           { id: "3", name: "Ganondorf", tall: true }

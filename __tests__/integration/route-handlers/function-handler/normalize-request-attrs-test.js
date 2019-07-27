@@ -1,13 +1,13 @@
-import { module, test } from "qunit";
-import { Model, ActiveModelSerializer } from "ember-cli-mirage";
-import Server from "ember-cli-mirage/server";
+
+import { Model, ActiveModelSerializer } from "@miragejs/server";
+import Server from "@miragejs/server/server";
 import promiseAjax from "../../../helpers/promise-ajax";
 
-module(
+describe(
   "Integration | Route handlers | Function handler | #normalizedRequestAttrs",
-  function(hooks) {
-    hooks.beforeEach(function() {
-      this.server = new Server({
+  () => {
+    let server; beforeEach(() => {
+      server = new Server({
         environment: "development",
         models: {
           user: Model.extend({}),
@@ -17,21 +17,21 @@ module(
           application: ActiveModelSerializer
         }
       });
-      this.server.timing = 0;
-      this.server.logging = false;
+      server.timing = 0;
+      server.logging = false;
     });
 
-    hooks.afterEach(function() {
-      this.server.shutdown();
+    afterEach(() => {
+      server.shutdown();
     });
 
-    test(`it returns an object with the primary resource's attrs and belongsTo keys camelized`, async function(assert) {
+    test(`it returns an object with the primary resource's attrs and belongsTo keys camelized`, async () => {
       assert.expect(1);
 
-      this.server.post("/users", function() {
-        let attrs = this.normalizedRequestAttrs();
+      server.post("/users", function() {
+        let attrs = normalizedRequestAttrs();
 
-        assert.deepEqual(attrs, {
+        expect(attrs).toEqual({
           firstName: "Sam",
           lastName: "Selikoff",
           teamId: 1
@@ -54,13 +54,13 @@ module(
       });
     });
 
-    test(`it works for compound names`, async function(assert) {
+    test(`it works for compound names`, async () => {
       assert.expect(1);
 
-      this.server.post("/fine-comments", function() {
-        let attrs = this.normalizedRequestAttrs();
+      server.post("/fine-comments", function() {
+        let attrs = normalizedRequestAttrs();
 
-        assert.deepEqual(attrs, {
+        expect(attrs).toEqual({
           shortText: "lorem ipsum"
         });
 
@@ -79,11 +79,11 @@ module(
       });
     });
 
-    test(`it shows a meaningful error message if it cannot infer the modelname from the URL`, async function(assert) {
+    test(`it shows a meaningful error message if it cannot infer the modelname from the URL`, async () => {
       assert.expect(1);
 
-      this.server.post("/users/create", function() {
-        this.normalizedRequestAttrs();
+      server.post("/users/create", function() {
+        normalizedRequestAttrs();
       });
 
       assert.rejects(
@@ -98,13 +98,13 @@ module(
       );
     });
 
-    test(`it accepts an optional modelName if it cannot be inferred from the path `, async function(assert) {
+    test(`it accepts an optional modelName if it cannot be inferred from the path `, async () => {
       assert.expect(1);
 
-      this.server.post("/users/create", function() {
-        let attrs = this.normalizedRequestAttrs("user");
+      server.post("/users/create", function() {
+        let attrs = normalizedRequestAttrs("user");
 
-        assert.deepEqual(attrs, {
+        expect(attrs).toEqual({
           firstName: "Sam",
           lastName: "Selikoff",
           teamId: 1
@@ -127,11 +127,11 @@ module(
       });
     });
 
-    test(`it errors if the optional parameter is camelized for a model with a compount name`, async function(assert) {
+    test(`it errors if the optional parameter is camelized for a model with a compount name`, async () => {
       assert.expect(1);
 
-      this.server.post("/fine-comments/create", function() {
-        this.normalizedRequestAttrs("fineComment");
+      server.post("/fine-comments/create", function() {
+        normalizedRequestAttrs("fineComment");
       });
 
       assert.rejects(
@@ -146,20 +146,20 @@ module(
       );
     });
 
-    test(`it works with a form encoded request that has a lower-case content-type (issue 1398)`, async function(assert) {
+    test(`it works with a form encoded request that has a lower-case content-type (issue 1398)`, async () => {
       assert.expect(1);
 
-      this.server.post("/form-test", function() {
+      server.post("/form-test", function() {
         // Easiest way I could figure out to change the capitalization of the Content-Type header. Tried
         // to do this from the Ajax side but jquery kept capitalizing the header.
-        this.request.requestHeaders[
+        request.requestHeaders[
           "content-type"
-        ] = this.request.requestHeaders["Content-Type"];
-        delete this.request.requestHeaders["Content-Type"];
+        ] = request.requestHeaders["Content-Type"];
+        delete request.requestHeaders["Content-Type"];
 
-        let attrs = this.normalizedRequestAttrs("user");
+        let attrs = normalizedRequestAttrs("user");
 
-        assert.deepEqual(attrs, {
+        expect(attrs).toEqual({
           name: "Sam Selikoff",
           company: "TED",
           email: "sam.selikoff@gmail.com"
