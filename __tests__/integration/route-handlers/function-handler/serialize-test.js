@@ -1,13 +1,15 @@
-
-import { Model, Collection, ActiveModelSerializer } from "@miragejs/server";
-import Server from "@miragejs/server/server";
+import {
+  Server,
+  Model,
+  Collection,
+  ActiveModelSerializer
+} from "@miragejs/server";
 import { uniqBy } from "lodash-es";
-import promiseAjax from "../../../helpers/promise-ajax";
 
-describe("Integration | Route handlers | Function handler | #serialize", function(
-  hooks
-) {
-  let server; beforeEach(() => {
+describe("Integration | Route handlers | Function handler | #serialize", () => {
+  let server;
+
+  beforeEach(() => {
     server = new Server({
       environment: "development",
       models: {
@@ -29,13 +31,13 @@ describe("Integration | Route handlers | Function handler | #serialize", functio
   });
 
   test("it uses the default serializer on a model", async () => {
-    assert.expect(1);
+    expect.assertions(1);
 
     server.create("user", { name: "Sam" });
 
     server.get("/users", function(schema) {
       let user = schema.users.first();
-      let json = serialize(user);
+      let json = this.serialize(user);
 
       expect(json).toEqual({
         user: {
@@ -47,17 +49,17 @@ describe("Integration | Route handlers | Function handler | #serialize", functio
       return true;
     });
 
-    await promiseAjax({ method: "GET", url: "/users" });
+    await fetch("/users");
   });
 
   test("it uses the default serializer on a collection", async () => {
-    assert.expect(1);
+    expect.assertions(1);
 
     server.create("user", { name: "Sam" });
 
     server.get("/users", function(schema) {
       let users = schema.users.all();
-      let json = serialize(users);
+      let json = this.serialize(users);
 
       expect(json).toEqual({
         users: [{ id: "1", name: "Sam" }]
@@ -66,18 +68,18 @@ describe("Integration | Route handlers | Function handler | #serialize", functio
       return true;
     });
 
-    await promiseAjax({ method: "GET", url: "/users" });
+    await fetch("/users");
   });
 
   test("it takes an optional serializer type", async () => {
-    assert.expect(1);
+    expect.assertions(1);
 
     server.create("user", { name: "Sam", tall: true, evil: false });
     server.create("user", { name: "Ganondorf", tall: true, evil: true });
 
     server.get("/users", function(schema) {
       let users = schema.users.all();
-      let json = serialize(users, "sparse-user");
+      let json = this.serialize(users, "sparse-user");
 
       expect(json).toEqual({
         users: [
@@ -89,46 +91,44 @@ describe("Integration | Route handlers | Function handler | #serialize", functio
       return true;
     });
 
-    await promiseAjax({ method: "GET", url: "/users" });
+    await fetch("/users");
   });
 
   test("it throws an error when trying to specify a serializer that doesnt exist", async () => {
-    assert.expect(1);
+    expect.assertions(2);
 
     server.create("user", { name: "Sam" });
     server.get("/users", function(schema) {
       let users = schema.users.all();
 
-      serialize(users, "foo-user");
+      this.serialize(users, "foo-user");
     });
 
-    assert.rejects(promiseAjax({ method: "GET", url: "/users" }), function(
-      ajaxError
-    ) {
-      return (
-        ajaxError.xhr.responseText.indexOf(`that serializer doesn't exist`) > 0
-      );
-    });
+    let res = await fetch("/users");
+    let data = await res.json();
+
+    expect(res.status).toBe(500);
+    expect(data.message).toMatch(`that serializer doesn't exist`);
   });
 
   test("it noops on plain JS arrays", async () => {
-    assert.expect(1);
+    expect.assertions(1);
 
     server.create("user", { name: "Sam" });
     server.create("user", { name: "Ganondorf" });
 
     server.get("/users", function(schema) {
       let names = schema.users.all().models.map(user => user.name);
-      let json = serialize(names);
+      let json = this.serialize(names);
 
       expect(json).toEqual(names);
     });
 
-    await promiseAjax({ method: "GET", url: "/users" });
+    await fetch("/users");
   });
 
   test("it can take an optional serializer type on a Collection", async () => {
-    assert.expect(1);
+    expect.assertions(1);
 
     server.create("user", { name: "Sam", tall: true, evil: false });
     server.create("user", { name: "Sam", tall: true, evil: false });
@@ -138,7 +138,7 @@ describe("Integration | Route handlers | Function handler | #serialize", functio
       let users = schema.users.all().models;
       let uniqueNames = uniqBy(users, "name");
       let collection = new Collection("user", uniqueNames);
-      let json = serialize(collection, "sparse-user");
+      let json = this.serialize(collection, "sparse-user");
 
       expect(json).toEqual({
         users: [
@@ -148,6 +148,6 @@ describe("Integration | Route handlers | Function handler | #serialize", functio
       });
     });
 
-    await promiseAjax({ method: "GET", url: "/users" });
+    await fetch("/users");
   });
 });
