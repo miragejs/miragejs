@@ -1,178 +1,176 @@
-import Schema from "ember-cli-mirage/orm/schema";
-import { Model, hasMany, belongsTo } from "ember-cli-mirage";
-import Db from "ember-cli-mirage/db";
-import Serializer from "ember-cli-mirage/serializer";
-import SerializerRegistry from "ember-cli-mirage/serializer-registry";
-import { module, test } from "qunit";
+import { Model, hasMany, belongsTo } from "@miragejs/server";
+import Schema from "@lib/orm/schema";
+import Db from "@lib/db";
+import Serializer from "@lib/serializer";
+import SerializerRegistry from "@lib/serializer-registry";
 
-module(
-  "Integration | Serializers | Base | Associations | Sideloading Models",
-  function(hooks) {
-    hooks.beforeEach(function() {
-      this.schema = new Schema(new Db(), {
-        wordSmith: Model.extend({
-          posts: hasMany("blog-post")
-        }),
-        blogPost: Model.extend({
-          author: belongsTo("word-smith"),
-          comments: hasMany("fine-comment")
-        }),
-        fineComment: Model.extend({
-          post: belongsTo("blog-post")
-        })
-      });
+describe("Integration | Serializers | Base | Associations | Sideloading Models", function() {
+  let schema, BaseSerializer;
 
-      let wordSmith = this.schema.wordSmiths.create({ name: "Link" });
-      let blogPost = wordSmith.createPost({ title: "Lorem" });
-      blogPost.createComment({ text: "pwned" });
-
-      wordSmith.createPost({ title: "Ipsum" });
-
-      this.schema.wordSmiths.create({ name: "Zelda" });
-
-      this.BaseSerializer = Serializer.extend({
-        embed: false
-      });
+  beforeEach(function() {
+    schema = new Schema(new Db(), {
+      wordSmith: Model.extend({
+        posts: hasMany("blog-post")
+      }),
+      blogPost: Model.extend({
+        author: belongsTo("word-smith"),
+        comments: hasMany("fine-comment")
+      }),
+      fineComment: Model.extend({
+        post: belongsTo("blog-post")
+      })
     });
 
-    hooks.afterEach(function() {
-      this.schema.db.emptyData();
+    let wordSmith = schema.wordSmiths.create({ name: "Link" });
+    let blogPost = wordSmith.createPost({ title: "Lorem" });
+    blogPost.createComment({ text: "pwned" });
+
+    wordSmith.createPost({ title: "Ipsum" });
+
+    schema.wordSmiths.create({ name: "Zelda" });
+
+    BaseSerializer = Serializer.extend({
+      embed: false
+    });
+  });
+
+  afterEach(function() {
+    schema.db.emptyData();
+  });
+
+  test(`it throws an error if embed is false and root is false`, () => {
+    let registry = new SerializerRegistry(schema, {
+      wordSmith: BaseSerializer.extend({
+        root: false,
+        include: ["posts"]
+      })
     });
 
-    test(`it throws an error if embed is false and root is false`, function(assert) {
-      let registry = new SerializerRegistry(this.schema, {
-        wordSmith: this.BaseSerializer.extend({
-          root: false,
-          include: ["posts"]
-        })
-      });
+    let link = schema.wordSmiths.find(1);
+    expect(function() {
+      registry.serialize(link);
+    }).toThrow();
+  });
 
-      let link = this.schema.wordSmiths.find(1);
-      assert.throws(function() {
-        registry.serialize(link);
-      }, /disables the root/);
+  test(`it can sideload a model with a has-many relationship`, () => {
+    let registry = new SerializerRegistry(schema, {
+      application: BaseSerializer,
+      wordSmith: BaseSerializer.extend({
+        include: ["posts"]
+      })
     });
 
-    test(`it can sideload a model with a has-many relationship`, function(assert) {
-      let registry = new SerializerRegistry(this.schema, {
-        application: this.BaseSerializer,
-        wordSmith: this.BaseSerializer.extend({
-          include: ["posts"]
-        })
-      });
+    let link = schema.wordSmiths.find(1);
+    let result = registry.serialize(link);
 
-      let link = this.schema.wordSmiths.find(1);
-      let result = registry.serialize(link);
+    expect(result).toEqual({
+      wordSmith: {
+        id: "1",
+        name: "Link",
+        postIds: ["1", "2"]
+      },
+      blogPosts: [{ id: "1", title: "Lorem" }, { id: "2", title: "Ipsum" }]
+    });
+  });
 
-      assert.deepEqual(result, {
-        wordSmith: {
-          id: "1",
-          name: "Link",
-          postIds: ["1", "2"]
-        },
-        blogPosts: [{ id: "1", title: "Lorem" }, { id: "2", title: "Ipsum" }]
-      });
+  test(`it can sideload a model with a chain of has-many relationships`, () => {
+    let registry = new SerializerRegistry(schema, {
+      application: BaseSerializer,
+      wordSmith: BaseSerializer.extend({
+        include: ["posts"]
+      }),
+      blogPost: BaseSerializer.extend({
+        include: ["comments"]
+      })
     });
 
-    test(`it can sideload a model with a chain of has-many relationships`, function(assert) {
-      let registry = new SerializerRegistry(this.schema, {
-        application: this.BaseSerializer,
-        wordSmith: this.BaseSerializer.extend({
-          include: ["posts"]
-        }),
-        blogPost: this.BaseSerializer.extend({
-          include: ["comments"]
-        })
-      });
+    let link = schema.wordSmiths.find(1);
+    let result = registry.serialize(link);
 
-      let link = this.schema.wordSmiths.find(1);
-      let result = registry.serialize(link);
+    expect(result).toEqual({
+      wordSmith: {
+        id: "1",
+        name: "Link",
+        postIds: ["1", "2"]
+      },
+      blogPosts: [
+        { id: "1", title: "Lorem", commentIds: ["1"] },
+        { id: "2", title: "Ipsum", commentIds: [] }
+      ],
+      fineComments: [{ id: "1", text: "pwned" }]
+    });
+  });
 
-      assert.deepEqual(result, {
-        wordSmith: {
-          id: "1",
-          name: "Link",
-          postIds: ["1", "2"]
-        },
-        blogPosts: [
-          { id: "1", title: "Lorem", commentIds: ["1"] },
-          { id: "2", title: "Ipsum", commentIds: [] }
-        ],
-        fineComments: [{ id: "1", text: "pwned" }]
-      });
+  test(`it avoids circularity when serializing a model`, () => {
+    let registry = new SerializerRegistry(schema, {
+      application: BaseSerializer,
+      wordSmith: BaseSerializer.extend({
+        include: ["posts"]
+      }),
+      blogPost: BaseSerializer.extend({
+        include: ["author"]
+      })
     });
 
-    test(`it avoids circularity when serializing a model`, function(assert) {
-      let registry = new SerializerRegistry(this.schema, {
-        application: this.BaseSerializer,
-        wordSmith: this.BaseSerializer.extend({
-          include: ["posts"]
-        }),
-        blogPost: this.BaseSerializer.extend({
-          include: ["author"]
-        })
-      });
+    let link = schema.wordSmiths.find(1);
+    let result = registry.serialize(link);
 
-      let link = this.schema.wordSmiths.find(1);
-      let result = registry.serialize(link);
+    expect(result).toEqual({
+      wordSmith: {
+        id: "1",
+        name: "Link",
+        postIds: ["1", "2"]
+      },
+      blogPosts: [
+        { id: "1", title: "Lorem", authorId: "1" },
+        { id: "2", title: "Ipsum", authorId: "1" }
+      ]
+    });
+  });
 
-      assert.deepEqual(result, {
-        wordSmith: {
-          id: "1",
-          name: "Link",
-          postIds: ["1", "2"]
-        },
-        blogPosts: [
-          { id: "1", title: "Lorem", authorId: "1" },
-          { id: "2", title: "Ipsum", authorId: "1" }
-        ]
-      });
+  test(`it can sideload a model with a belongs-to relationship`, () => {
+    let registry = new SerializerRegistry(schema, {
+      application: BaseSerializer,
+      blogPost: BaseSerializer.extend({
+        include: ["author"]
+      })
     });
 
-    test(`it can sideload a model with a belongs-to relationship`, function(assert) {
-      let registry = new SerializerRegistry(this.schema, {
-        application: this.BaseSerializer,
-        blogPost: this.BaseSerializer.extend({
-          include: ["author"]
-        })
-      });
+    let blogPost = schema.blogPosts.find(1);
+    let result = registry.serialize(blogPost);
 
-      let blogPost = this.schema.blogPosts.find(1);
-      let result = registry.serialize(blogPost);
+    expect(result).toEqual({
+      blogPost: {
+        id: "1",
+        title: "Lorem",
+        authorId: "1"
+      },
+      wordSmiths: [{ id: "1", name: "Link" }]
+    });
+  });
 
-      assert.deepEqual(result, {
-        blogPost: {
-          id: "1",
-          title: "Lorem",
-          authorId: "1"
-        },
-        wordSmiths: [{ id: "1", name: "Link" }]
-      });
+  test(`it can sideload a model with a chain of belongs-to relationships`, () => {
+    let registry = new SerializerRegistry(schema, {
+      application: BaseSerializer,
+      fineComment: BaseSerializer.extend({
+        include: ["post"]
+      }),
+      blogPost: BaseSerializer.extend({
+        include: ["author"]
+      })
     });
 
-    test(`it can sideload a model with a chain of belongs-to relationships`, function(assert) {
-      let registry = new SerializerRegistry(this.schema, {
-        application: this.BaseSerializer,
-        fineComment: this.BaseSerializer.extend({
-          include: ["post"]
-        }),
-        blogPost: this.BaseSerializer.extend({
-          include: ["author"]
-        })
-      });
+    let fineComment = schema.fineComments.find(1);
+    let result = registry.serialize(fineComment);
 
-      let fineComment = this.schema.fineComments.find(1);
-      let result = registry.serialize(fineComment);
-
-      assert.deepEqual(result, {
-        fineComment: {
-          id: "1",
-          text: "pwned",
-          postId: "1"
-        },
-        blogPosts: [{ id: "1", title: "Lorem", authorId: "1" }],
-        wordSmiths: [{ id: "1", name: "Link" }]
-      });
+    expect(result).toEqual({
+      fineComment: {
+        id: "1",
+        text: "pwned",
+        postId: "1"
+      },
+      blogPosts: [{ id: "1", title: "Lorem", authorId: "1" }],
+      wordSmiths: [{ id: "1", name: "Link" }]
     });
-  }
-);
+  });
+});
