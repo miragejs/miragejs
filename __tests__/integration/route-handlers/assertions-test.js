@@ -1,12 +1,10 @@
-import { module, test } from "qunit";
+import { Server, Model, JSONAPISerializer } from "@miragejs/server";
+import FunctionRouteHandler from "@lib/route-handlers/function";
 
-import { Model, JSONAPISerializer } from "ember-cli-mirage";
-import Server from "ember-cli-mirage/server";
-import FunctionRouteHandler from "ember-cli-mirage/route-handlers/function";
-
-module("Integration | Route handlers | Assertions", function(hooks) {
-  hooks.beforeEach(function() {
-    this.server = new Server({
+describe("Integration | Route handlers | Assertions", () => {
+  let server;
+  beforeEach(() => {
+    server = new Server({
       environment: "development",
       models: {
         user: Model.extend({}),
@@ -16,18 +14,18 @@ module("Integration | Route handlers | Assertions", function(hooks) {
         application: JSONAPISerializer
       }
     });
-    this.server.timing = 0;
-    this.server.logging = false;
+    server.timing = 0;
+    server.logging = false;
 
-    this.server.post("/users");
+    server.post("/users");
   });
 
-  hooks.afterEach(function() {
-    this.server.shutdown();
+  afterEach(() => {
+    server.shutdown();
   });
 
-  test("a helpful assert is thrown if a relationship passed in a request is not a defined association on the posted model", async function(assert) {
-    assert.expect(1);
+  test("a helpful assert is thrown if a relationship passed in a request is not a defined association on the posted model", async () => {
+    expect.assertions(1);
 
     let request = {
       requestHeaders: {},
@@ -51,15 +49,15 @@ module("Integration | Route handlers | Assertions", function(hooks) {
       })
     };
 
-    this.functionHandler = new FunctionRouteHandler(
-      this.server.schema,
-      this.server.serializerOrRegistry
+    let functionHandler = new FunctionRouteHandler(
+      server.schema,
+      server.serializerOrRegistry
     );
-    this.functionHandler.path = "/users";
-    this.functionHandler.request = request;
+    functionHandler.path = "/users";
+    functionHandler.request = request;
 
-    assert.throws(function() {
-      this.functionHandler.normalizedRequestAttrs();
-    }, /You're passing the relationship 'comments' to the 'user' model via a POST to '\/users', but you did not define the 'comments' association on the 'user' model./);
+    expect(function() {
+      functionHandler.normalizedRequestAttrs();
+    }).toThrow();
   });
 });

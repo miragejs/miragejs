@@ -1,119 +1,117 @@
-import { module, test } from "qunit";
-import Server from "ember-cli-mirage/server";
-import Model from "ember-cli-mirage/orm/model";
-import Mirage from "ember-cli-mirage";
-import DeleteShorthandRouteHandler from "ember-cli-mirage/route-handlers/shorthands/delete";
-import JSONAPISerializer from "ember-cli-mirage/serializers/json-api-serializer";
+import { Server, Model, hasMany } from "@miragejs/server";
+import DeleteShorthandRouteHandler from "@lib/route-handlers/shorthands/delete";
+import JSONAPISerializer from "@lib/serializers/json-api-serializer";
 
-module("Integration | Route Handlers | DELETE shorthand", function(hooks) {
-  hooks.beforeEach(function() {
-    this.server = new Server({
+describe("Integration | Route Handlers | DELETE shorthand", () => {
+  let server, schema, serializer;
+
+  beforeEach(() => {
+    server = new Server({
       environment: "development",
       models: {
         wordSmith: Model.extend({
-          blogPosts: Mirage.hasMany()
+          blogPosts: hasMany()
         }),
         blogPost: Model
       }
     });
-    this.server.timing = 0;
-    this.server.logging = false;
+    server.timing = 0;
+    server.logging = false;
 
     let wordSmiths = [{ id: 1, name: "Ganon", blogPostIds: [1] }];
     let blogPosts = [
       { id: 1, title: "Lorem", wordSmithId: "1" },
       { id: 2, title: "Another", wordSmithId: "2" }
     ];
-    this.server.db.loadData({ wordSmiths, blogPosts });
+    server.db.loadData({ wordSmiths, blogPosts });
 
-    this.schema = this.server.schema;
-    this.serializer = new JSONAPISerializer();
+    schema = server.schema;
+    serializer = new JSONAPISerializer();
   });
 
-  hooks.afterEach(function() {
-    this.server.shutdown();
+  afterEach(() => {
+    server.shutdown();
   });
 
-  test("undefined shorthand deletes the record and returns null", function(assert) {
+  test("undefined shorthand deletes the record and returns null", () => {
     let request = { url: "/word-smiths/1", params: { id: "1" } };
     let handler = new DeleteShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       undefined,
       "/word-smiths/:id"
     );
 
     let response = handler.handle(request);
 
-    assert.equal(this.schema.db.wordSmiths.length, 0);
-    assert.equal(response, null);
+    expect(schema.db.wordSmiths).toHaveLength(0);
+    expect(response).toBeNil();
   });
 
-  test("query params are ignored", function(assert) {
+  test("query params are ignored", () => {
     let request = {
       url: "/word-smiths/1?foo=bar",
       params: { id: "1" },
       queryParams: { foo: "bar" }
     };
     let handler = new DeleteShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       undefined,
       "/word-smiths/:id"
     );
 
     let response = handler.handle(request);
 
-    assert.equal(this.schema.db.wordSmiths.length, 0);
-    assert.equal(response, null);
+    expect(schema.db.wordSmiths).toHaveLength(0);
+    expect(response).toBeNil();
   });
 
-  test("string shorthand deletes the record of the specified type", function(assert) {
+  test("string shorthand deletes the record of the specified type", () => {
     let request = {
       url: "/word-smiths/1?foo=bar",
       params: { id: "1" },
       queryParams: { foo: "bar" }
     };
     let handler = new DeleteShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       undefined,
       "/word-smiths/:id"
     );
 
     let response = handler.handle(request);
 
-    assert.equal(this.schema.db.wordSmiths.length, 0);
-    assert.equal(response, null);
+    expect(schema.db.wordSmiths).toHaveLength(0);
+    expect(response).toBeNil();
   });
 
-  test("array shorthand deletes the record and all related records", function(assert) {
+  test("array shorthand deletes the record and all related records", () => {
     let request = { url: "/word-smiths/1", params: { id: "1" } };
-    let handler = new DeleteShorthandRouteHandler(
-      this.schema,
-      this.serializer,
-      ["word-smith", "blog-posts"]
-    );
+    let handler = new DeleteShorthandRouteHandler(schema, serializer, [
+      "word-smith",
+      "blog-posts"
+    ]);
 
     let response = handler.handle(request);
 
-    assert.equal(this.schema.db.wordSmiths.length, 0);
-    assert.equal(this.schema.db.blogPosts.length, 1);
-    assert.equal(response, null);
+    expect(schema.db.wordSmiths).toHaveLength(0);
+    expect(schema.db.blogPosts).toHaveLength(1);
+    expect(response).toBeNil();
   });
 
-  test("if a shorthand tries to access an unknown type it throws an error", function(assert) {
+  test("if a shorthand tries to access an unknown type it throws an error", () => {
     let request = { url: "/foobars/1", params: { id: "1" } };
     let handler = new DeleteShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       undefined,
       "/foobars/:id"
     );
 
-    assert.throws(function() {
+    expect(function() {
       handler.handle(request);
-    }, /model doesn't exist/);
-    assert.ok(true);
+    }).toThrow();
+    expect(true).toBeTruthy();
   });
 });

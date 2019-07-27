@@ -1,24 +1,23 @@
-import { module, test } from "qunit";
-import Server from "ember-cli-mirage/server";
-import Model from "ember-cli-mirage/orm/model";
-import PostShorthandRouteHandler from "ember-cli-mirage/route-handlers/shorthands/post";
-import JSONAPISerializer from "ember-cli-mirage/serializers/json-api-serializer";
+import { Server, Model, JSONAPISerializer } from "@miragejs/server";
+import PostShorthandRouteHandler from "@lib/route-handlers/shorthands/post";
 
-module("Integration | Route Handlers | POST shorthand", function(hooks) {
-  hooks.beforeEach(function() {
-    this.server = new Server({
+describe("Integration | Route Handlers | POST shorthand", () => {
+  let server, schema, serializer, body;
+
+  beforeEach(() => {
+    server = new Server({
       environment: "development",
       models: {
         author: Model.extend({})
       }
     });
-    this.server.timing = 0;
-    this.server.logging = false;
-    this.schema = this.server.schema;
+    server.timing = 0;
+    server.logging = false;
 
-    this.serializer = new JSONAPISerializer();
+    schema = server.schema;
+    serializer = new JSONAPISerializer();
 
-    this.body = {
+    body = {
       data: {
         type: "authors",
         attributes: {
@@ -29,74 +28,62 @@ module("Integration | Route Handlers | POST shorthand", function(hooks) {
     };
   });
 
-  hooks.afterEach(function() {
-    this.server.shutdown();
+  afterEach(() => {
+    server.shutdown();
   });
 
-  test("string shorthand creates a record of the specified type and returns the new model", function(assert) {
-    let request = { requestBody: JSON.stringify(this.body), url: "/people" };
-    let handler = new PostShorthandRouteHandler(
-      this.schema,
-      this.serializer,
-      "author"
-    );
+  test("string shorthand creates a record of the specified type and returns the new model", () => {
+    let request = { requestBody: JSON.stringify(body), url: "/people" };
+    let handler = new PostShorthandRouteHandler(schema, serializer, "author");
 
     let model = handler.handle(request);
 
-    assert.equal(this.schema.db.authors.length, 1);
-    assert.ok(model instanceof Model);
-    assert.equal(model.modelName, "author");
-    assert.equal(model.firstName, "Ganon");
+    expect(schema.db.authors).toHaveLength(1);
+    expect(model instanceof Model).toBeTruthy();
+    expect(model.modelName).toEqual("author");
+    expect(model.firstName).toEqual("Ganon");
   });
 
-  test("query params are ignored", function(assert) {
+  test("query params are ignored", () => {
     let request = {
-      requestBody: JSON.stringify(this.body),
+      requestBody: JSON.stringify(body),
       url: "/authors?foo=bar",
       queryParams: { foo: "bar" }
     };
-    let handler = new PostShorthandRouteHandler(
-      this.schema,
-      this.serializer,
-      "author"
-    );
+    let handler = new PostShorthandRouteHandler(schema, serializer, "author");
 
     let model = handler.handle(request);
 
-    assert.equal(this.schema.db.authors.length, 1);
-    assert.ok(model instanceof Model);
-    assert.equal(model.modelName, "author");
-    assert.equal(model.firstName, "Ganon");
+    expect(schema.db.authors).toHaveLength(1);
+    expect(model instanceof Model).toBeTruthy();
+    expect(model.modelName).toEqual("author");
+    expect(model.firstName).toEqual("Ganon");
   });
 
-  test("undefined shorthand creates a record and returns the new model", function(assert) {
-    let request = { requestBody: JSON.stringify(this.body), url: "/authors" };
+  test("undefined shorthand creates a record and returns the new model", () => {
+    let request = { requestBody: JSON.stringify(body), url: "/authors" };
     let handler = new PostShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       null,
       "/authors"
     );
 
     let model = handler.handle(request);
 
-    assert.equal(this.schema.db.authors.length, 1);
-    assert.ok(model instanceof Model);
-    assert.equal(model.modelName, "author");
-    assert.equal(model.firstName, "Ganon");
+    expect(schema.db.authors).toHaveLength(1);
+    expect(model instanceof Model).toBeTruthy();
+    expect(model.modelName).toEqual("author");
+    expect(model.firstName).toEqual("Ganon");
   });
 
-  test("if a shorthand tries to access an unknown type it throws an error", function(assert) {
-    let request = { requestBody: JSON.stringify(this.body), url: "/foobars" };
-    let handler = new PostShorthandRouteHandler(
-      this.schema,
-      this.serializer,
-      "foobar"
-    );
+  test("if a shorthand tries to access an unknown type it throws an error", () => {
+    let request = { requestBody: JSON.stringify(body), url: "/foobars" };
+    let handler = new PostShorthandRouteHandler(schema, serializer, "foobar");
 
-    assert.throws(function() {
+    expect(function() {
       handler.handle(request);
-    }, /model doesn't exist/);
-    assert.ok(true);
+    }).toThrow();
+    expect(true).toBeTruthy();
   });
 });

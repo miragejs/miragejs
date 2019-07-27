@@ -1,19 +1,20 @@
-import { module, test } from "qunit";
 import {
   Model,
   hasMany,
   belongsTo,
   JSONAPISerializer,
   RestSerializer,
-  Response
-} from "ember-cli-mirage";
-import Collection from "ember-cli-mirage/orm/collection";
-import Server from "ember-cli-mirage/server";
-import GetShorthandRouteHandler from "ember-cli-mirage/route-handlers/shorthands/get";
+  Response,
+  Server
+} from "@miragejs/server";
+import Collection from "@lib/orm/collection";
+import GetShorthandRouteHandler from "@lib/route-handlers/shorthands/get";
 
-module("Integration | Route Handlers | GET shorthand", function(hooks) {
-  hooks.beforeEach(function() {
-    this.server = new Server({
+describe("Integration | Route Handlers | GET shorthand", () => {
+  let server, authors, posts, photos, projectOwners, schema, serializer;
+
+  beforeEach(() => {
+    server = new Server({
       environment: "development",
       models: {
         author: Model.extend({
@@ -30,126 +31,126 @@ module("Integration | Route Handlers | GET shorthand", function(hooks) {
         "project-owner": Model
       }
     });
-    this.server.timing = 0;
-    this.server.logging = false;
+    server.timing = 0;
+    server.logging = false;
 
-    this.authors = [
+    authors = [
       { id: 1, name: "Link" },
       { id: 2, name: "Zelda" },
       { id: 3, name: "Epona" }
     ];
-    this.posts = [
+    posts = [
       { id: 1, title: "Lorem", authorId: 1 },
       { id: 2, title: "Ipsum", authorId: 1 }
     ];
-    this.photos = [
+    photos = [
       { id: 1, title: "Amazing", location: "Hyrule" },
       { id: 2, title: "Photo", location: "Goron City" }
     ];
-    this.projectOwners = [{ id: 1, name: "Nintendo" }];
-    this.server.db.loadData({
-      authors: this.authors,
-      posts: this.posts,
-      photos: this.photos,
-      projectOwners: this.projectOwners
+    projectOwners = [{ id: 1, name: "Nintendo" }];
+    server.db.loadData({
+      authors: authors,
+      posts: posts,
+      photos: photos,
+      projectOwners: projectOwners
     });
 
-    this.schema = this.server.schema;
-    this.serializer = new JSONAPISerializer();
+    schema = server.schema;
+    serializer = new JSONAPISerializer();
   });
 
-  hooks.afterEach(function() {
-    this.server.shutdown();
+  afterEach(() => {
+    server.shutdown();
   });
 
-  test("undefined shorthand returns the collection of models", function(assert) {
+  test("undefined shorthand returns the collection of models", () => {
     let request = { url: "/authors" };
     let handler = new GetShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       undefined,
       "/authors"
     );
 
     let authors = handler.handle(request);
 
-    assert.equal(authors.models.length, 3);
-    assert.ok(authors.models[0] instanceof Model);
-    assert.equal(authors.models[0].modelName, "author");
+    expect(authors.models).toHaveLength(3);
+    expect(authors.models[0] instanceof Model).toBeTruthy();
+    expect(authors.models[0].modelName).toEqual("author");
   });
 
-  test("undefined shorthand ignores query params", function(assert) {
+  test("undefined shorthand ignores query params", () => {
     let request = { url: "/authors?foo=bar" };
     let handler = new GetShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       undefined,
       "/authors"
     );
 
     let authors = handler.handle(request);
 
-    assert.equal(authors.models.length, 3);
-    assert.ok(authors.models[0] instanceof Model);
-    assert.equal(authors.models[0].modelName, "author");
+    expect(authors.models).toHaveLength(3);
+    expect(authors.models[0] instanceof Model).toBeTruthy();
+    expect(authors.models[0].modelName).toEqual("author");
   });
 
-  test("undefined shorthand can return a single model", function(assert) {
+  test("undefined shorthand can return a single model", () => {
     let request = { url: "/authors/2", params: { id: 2 } };
     let handler = new GetShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       undefined,
       "/authors/:id"
     );
 
     let author = handler.handle(request);
 
-    assert.ok(author instanceof Model);
-    assert.equal(author.modelName, "author");
-    assert.equal(author.name, "Zelda");
+    expect(author instanceof Model).toBeTruthy();
+    expect(author.modelName).toEqual("author");
+    expect(author.name).toEqual("Zelda");
   });
 
-  test("undefined shorthand returns a 404 if a singular resource does not exist", function(assert) {
+  test("undefined shorthand returns a 404 if a singular resource does not exist", () => {
     let request = { url: "/authors/99", params: { id: 99 } };
     let handler = new GetShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       undefined,
       "/authors/:id"
     );
 
     let author = handler.handle(request);
 
-    assert.ok(author instanceof Response);
-    assert.equal(author.code, 404);
+    expect(author instanceof Response).toBeTruthy();
+    expect(author.code).toEqual(404);
   });
 
-  test("undefined shorthand ignores query params for a singular resource", function(assert) {
+  test("undefined shorthand ignores query params for a singular resource", () => {
     let request = { url: "/authors/2?foo=bar", params: { id: 2 } };
     let handler = new GetShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       undefined,
       "/authors/:id"
     );
 
     let author = handler.handle(request);
 
-    assert.ok(author instanceof Model);
-    assert.equal(author.modelName, "author");
-    assert.equal(author.name, "Zelda");
+    expect(author instanceof Model).toBeTruthy();
+    expect(author.modelName).toEqual("author");
+    expect(author.name).toEqual("Zelda");
   });
 
-  test("undefined shorthand with coalesce true returns the appropriate models [JSONAPI]", function(assert) {
+  test("undefined shorthand with coalesce true returns the appropriate models [JSONAPI]", () => {
     let request = {
       url: "/authors?filter[id]=1,3",
       queryParams: { "filter[id]": "1,3" }
     };
     let options = { coalesce: true };
     let handler = new GetShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       undefined,
       "/authors",
       options
@@ -157,21 +158,21 @@ module("Integration | Route Handlers | GET shorthand", function(hooks) {
 
     let authors = handler.handle(request);
 
-    assert.equal(authors.models.length, 2);
-    assert.deepEqual(authors.models.map(author => author.name), [
+    expect(authors.models).toHaveLength(2);
+    expect(authors.models.map(author => author.name)).toEqual([
       "Link",
       "Epona"
     ]);
   });
 
-  test("undefined shorthand with coalesce true returns the appropriate models [REST]", function(assert) {
+  test("undefined shorthand with coalesce true returns the appropriate models [REST]", () => {
     let request = {
       url: "/authors?ids[]=1&ids[]=3",
       queryParams: { ids: [1, 3] }
     };
     let options = { coalesce: true };
     let handler = new GetShorthandRouteHandler(
-      this.schema,
+      schema,
       new RestSerializer(),
       undefined,
       "/authors",
@@ -180,66 +181,54 @@ module("Integration | Route Handlers | GET shorthand", function(hooks) {
 
     let authors = handler.handle(request);
 
-    assert.equal(authors.models.length, 2);
-    assert.deepEqual(authors.models.map(author => author.name), [
+    expect(authors.models).toHaveLength(2);
+    expect(authors.models.map(author => author.name)).toEqual([
       "Link",
       "Epona"
     ]);
   });
 
-  test("string shorthand returns the correct collection of models", function(assert) {
+  test("string shorthand returns the correct collection of models", () => {
     let request = { url: "/people" };
-    let handler = new GetShorthandRouteHandler(
-      this.schema,
-      this.serializer,
-      "author"
-    );
+    let handler = new GetShorthandRouteHandler(schema, serializer, "author");
 
     let authors = handler.handle(request);
 
-    assert.equal(authors.models.length, 3);
-    assert.ok(authors.models[0] instanceof Model);
-    assert.equal(authors.models[0].modelName, "author");
+    expect(authors.models).toHaveLength(3);
+    expect(authors.models[0] instanceof Model).toBeTruthy();
+    expect(authors.models[0].modelName).toEqual("author");
   });
 
-  test("string shorthand with an id returns the correct model", function(assert) {
+  test("string shorthand with an id returns the correct model", () => {
     let request = { url: "/people/2", params: { id: 2 } };
-    let handler = new GetShorthandRouteHandler(
-      this.schema,
-      this.serializer,
-      "author"
-    );
+    let handler = new GetShorthandRouteHandler(schema, serializer, "author");
 
     let author = handler.handle(request);
 
-    assert.ok(author instanceof Model);
-    assert.equal(author.modelName, "author");
-    assert.equal(author.name, "Zelda");
+    expect(author instanceof Model).toBeTruthy();
+    expect(author.modelName).toEqual("author");
+    expect(author.name).toEqual("Zelda");
   });
 
-  test("string shorthand with an id 404s if the model is not found", function(assert) {
+  test("string shorthand with an id 404s if the model is not found", () => {
     let request = { url: "/people/99", params: { id: 99 } };
-    let handler = new GetShorthandRouteHandler(
-      this.schema,
-      this.serializer,
-      "author"
-    );
+    let handler = new GetShorthandRouteHandler(schema, serializer, "author");
 
     let author = handler.handle(request);
 
-    assert.ok(author instanceof Response);
-    assert.equal(author.code, 404);
+    expect(author instanceof Response).toBeTruthy();
+    expect(author.code).toEqual(404);
   });
 
-  test("string shorthand with coalesce returns the correct models [JSONAPI]", function(assert) {
+  test("string shorthand with coalesce returns the correct models [JSONAPI]", () => {
     let request = {
       url: "/authors?filter[id]=1,3",
       queryParams: { "filter[id]": "1,3" }
     };
     let options = { coalesce: true };
     let handler = new GetShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       "author",
       "/people",
       options
@@ -247,21 +236,21 @@ module("Integration | Route Handlers | GET shorthand", function(hooks) {
 
     let authors = handler.handle(request);
 
-    assert.equal(authors.models.length, 2);
-    assert.deepEqual(authors.models.map(author => author.name), [
+    expect(authors.models).toHaveLength(2);
+    expect(authors.models.map(author => author.name)).toEqual([
       "Link",
       "Epona"
     ]);
   });
 
-  test("string shorthand with coalesce returns the correct models [REST]", function(assert) {
+  test("string shorthand with coalesce returns the correct models [REST]", () => {
     let request = {
       url: "/people?ids[]=1&ids[]=3",
       queryParams: { ids: [1, 3] }
     };
     let options = { coalesce: true };
     let handler = new GetShorthandRouteHandler(
-      this.schema,
+      schema,
       new RestSerializer(),
       "author",
       "/people",
@@ -270,77 +259,77 @@ module("Integration | Route Handlers | GET shorthand", function(hooks) {
 
     let authors = handler.handle(request);
 
-    assert.equal(authors.models.length, 2);
-    assert.deepEqual(authors.models.map(author => author.name), [
+    expect(authors.models).toHaveLength(2);
+    expect(authors.models.map(author => author.name)).toEqual([
       "Link",
       "Epona"
     ]);
   });
 
-  test("array shorthand returns the correct models", function(assert) {
+  test("array shorthand returns the correct models", () => {
     let url = "/home";
     let request = { url };
     let handler = new GetShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       ["authors", "photos"],
       url
     );
 
     let models = handler.handle(request);
 
-    assert.ok(models[0] instanceof Collection);
-    assert.equal(models[0].modelName, "author");
-    assert.equal(models[0].models.length, this.authors.length);
+    expect(models[0] instanceof Collection).toBeTruthy();
+    expect(models[0].modelName).toEqual("author");
+    expect(models[0].models).toHaveLength(authors.length);
 
-    assert.ok(models[1] instanceof Collection);
-    assert.equal(models[1].modelName, "photo");
-    assert.equal(models[1].models.length, this.photos.length);
+    expect(models[1] instanceof Collection).toBeTruthy();
+    expect(models[1].modelName).toEqual("photo");
+    expect(models[1].models).toHaveLength(photos.length);
   });
 
-  test("array shorthand for a singular resource errors", function(assert) {
+  test("array shorthand for a singular resource errors", () => {
     let url = "/authors/1";
     let request = { url, params: { id: 1 } };
     let handler = new GetShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       ["author", "posts"],
       url
     );
 
-    assert.throws(function() {
+    expect(function() {
       handler.handle(request);
-    }, /create a serializer/);
+    }).toThrow();
   });
 
-  test("shorthand for list of models with a dash in their name", function(assert) {
+  test("shorthand for list of models with a dash in their name", () => {
     let url = "/project-owners";
     let request = { url };
     let handler = new GetShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       undefined,
       url
     );
     let models = handler.handle(request);
 
-    assert.equal(models.models.length, 1);
-    assert.ok(models.models[0] instanceof Model);
-    assert.equal(models.models[0].modelName, "project-owner");
+    expect(models.models).toHaveLength(1);
+    expect(models.models[0] instanceof Model).toBeTruthy();
+    expect(models.models[0].modelName).toEqual("project-owner");
   });
 
-  test("if a shorthand tries to access an unknown type it throws an error", function(assert) {
+  test("if a shorthand tries to access an unknown type it throws an error", () => {
     let url = "/foobars";
     let request = { url };
     let handler = new GetShorthandRouteHandler(
-      this.schema,
-      this.serializer,
+      schema,
+      serializer,
       undefined,
       url
     );
 
-    assert.throws(function() {
+    expect(function() {
       handler.handle(request);
-    }, /model doesn't exist/);
+    }).toThrow();
   });
 });
