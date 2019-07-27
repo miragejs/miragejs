@@ -6,7 +6,7 @@ import {
   hasMany,
   trait,
   association
-} from "../../../lib/index";
+} from "@miragejs/server";
 
 describe("Integration | Server | Factories | helpers", () => {
   let server;
