@@ -1,13 +1,10 @@
-import Schema from "ember-cli-mirage/orm/schema";
-import Db from "ember-cli-mirage/db";
-import SerializerRegistry from "ember-cli-mirage/serializer-registry";
-import { Model, JSONAPISerializer } from "ember-cli-mirage";
-import { module, test } from "qunit";
+import Schema from "@lib/orm/schema";
+import Db from "@lib/db";
+import SerializerRegistry from "@lib/serializer-registry";
+import { Model, JSONAPISerializer } from "@miragejs/server";
 
-module("Integration | Serializers | JSON API Serializer | Base", function(
-  hooks
-) {
-  hooks.beforeEach(function() {
+describe("Integration | Serializers | JSON API Serializer | Base", function() {
+  beforeEach(function() {
     this.schema = new Schema(new Db(), {
       wordSmith: Model
     });
@@ -16,7 +13,7 @@ module("Integration | Serializers | JSON API Serializer | Base", function(
     });
   });
 
-  test(`it includes all attributes for a model`, function(assert) {
+  test(`it includes all attributes for a model`, () => {
     let link = this.schema.wordSmiths.create({ firstName: "Link", age: 123 });
     let result = this.registry.serialize(link);
 
@@ -32,7 +29,7 @@ module("Integration | Serializers | JSON API Serializer | Base", function(
     });
   });
 
-  test(`it includes all attributes for each model in a collection`, function(assert) {
+  test(`it includes all attributes for each model in a collection`, () => {
     this.schema.wordSmiths.create({ firstName: "Link", age: 123 });
     this.schema.wordSmiths.create({ id: 1, firstName: "Link", age: 123 });
     this.schema.wordSmiths.create({ id: 2, firstName: "Zelda", age: 456 });
@@ -62,7 +59,7 @@ module("Integration | Serializers | JSON API Serializer | Base", function(
     });
   });
 
-  test(`it can serialize an empty collection`, function(assert) {
+  test(`it can serialize an empty collection`, () => {
     let wordSmiths = this.schema.wordSmiths.all();
     let result = this.registry.serialize(wordSmiths);
 

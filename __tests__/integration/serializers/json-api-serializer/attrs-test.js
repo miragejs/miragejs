@@ -1,20 +1,17 @@
-import Schema from "ember-cli-mirage/orm/schema";
-import Db from "ember-cli-mirage/db";
-import SerializerRegistry from "ember-cli-mirage/serializer-registry";
-import { Model, JSONAPISerializer } from "ember-cli-mirage";
-import { module, test } from "qunit";
+import Schema from "@lib/orm/schema";
+import Db from "@lib/db";
+import SerializerRegistry from "@lib/serializer-registry";
+import { Model, JSONAPISerializer } from "@miragejs/server";
 
-module("Integration | Serializers | JSON API Serializer | Attrs List", function(
-  hooks
-) {
-  hooks.beforeEach(function() {
+describe("Integration | Serializers | JSON API Serializer | Attrs List", function() {
+  beforeEach(function() {
     this.schema = new Schema(new Db(), {
       wordSmith: Model,
       photograph: Model
     });
   });
 
-  test(`it returns only the whitelisted attrs when serializing a model`, function(assert) {
+  test(`it returns only the whitelisted attrs when serializing a model`, () => {
     let registry = new SerializerRegistry(this.schema, {
       application: JSONAPISerializer,
       wordSmith: JSONAPISerializer.extend({
@@ -40,7 +37,7 @@ module("Integration | Serializers | JSON API Serializer | Attrs List", function(
     });
   });
 
-  test(`it returns only the whitelisted attrs when serializing a collection`, function(assert) {
+  test(`it returns only the whitelisted attrs when serializing a collection`, () => {
     let registry = new SerializerRegistry(this.schema, {
       application: JSONAPISerializer,
       wordSmith: JSONAPISerializer.extend({
@@ -73,7 +70,7 @@ module("Integration | Serializers | JSON API Serializer | Attrs List", function(
     });
   });
 
-  test(`it can use different attr whitelists for different serializers`, function(assert) {
+  test(`it can use different attr whitelists for different serializers`, () => {
     let registry = new SerializerRegistry(this.schema, {
       wordSmith: JSONAPISerializer.extend({
         attrs: ["firstName"]
