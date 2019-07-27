@@ -1,12 +1,13 @@
-import SerializerRegistry from "@lib/serializer-registry";
 import { Model, hasMany, belongsTo, JSONAPISerializer } from "@miragejs/server";
-
+import SerializerRegistry from "@lib/serializer-registry";
 import Db from "@lib/db";
 import Schema from "@lib/orm/schema";
 
-describe("Integration | Serializers | JSON API Serializer | Associations | Links", function() {
-  beforeEach(function() {
-    this.schema = new Schema(new Db(), {
+describe("Integration | Serializers | JSON API Serializer | Associations | Links", () => {
+  let schema;
+
+  beforeEach(() => {
+    schema = new Schema(new Db(), {
       wordSmith: Model.extend({
         blogPosts: hasMany()
       }),
@@ -20,12 +21,12 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Links
     });
   });
 
-  afterEach(function() {
-    this.schema.db.emptyData();
+  afterEach(() => {
+    schema.db.emptyData();
   });
 
   test(`it supports links`, () => {
-    let registry = new SerializerRegistry(this.schema, {
+    let registry = new SerializerRegistry(schema, {
       application: JSONAPISerializer,
       blogPost: JSONAPISerializer.extend({
         links(model) {
@@ -43,12 +44,12 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Links
       })
     });
 
-    let link = this.schema.wordSmiths.create({ id: 3, name: "Link" }); // specify id to really test our links function
+    let link = schema.wordSmiths.create({ id: 3, name: "Link" }); // specify id to really test our links function
     let blogPost = link.createBlogPost({ title: "Lorem ipsum" });
 
     let result = registry.serialize(blogPost);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       data: {
         type: "blog-posts",
         id: blogPost.id,
@@ -77,7 +78,7 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Links
     let ApplicationSerializer = JSONAPISerializer.extend({
       alwaysIncludeLinkageData: true
     });
-    let registry = new SerializerRegistry(this.schema, {
+    let registry = new SerializerRegistry(schema, {
       application: ApplicationSerializer,
       blogPost: ApplicationSerializer.extend({
         links(model) {
@@ -95,12 +96,12 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Links
       })
     });
 
-    let link = this.schema.wordSmiths.create({ id: 3, name: "Link" }); // specify id to really test our links function
+    let link = schema.wordSmiths.create({ id: 3, name: "Link" }); // specify id to really test our links function
     let blogPost = link.createBlogPost({ title: "Lorem ipsum" });
 
     let result = registry.serialize(blogPost);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       data: {
         type: "blog-posts",
         id: blogPost.id,

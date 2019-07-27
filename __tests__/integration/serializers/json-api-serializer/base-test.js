@@ -3,21 +3,23 @@ import Db from "@lib/db";
 import SerializerRegistry from "@lib/serializer-registry";
 import { Model, JSONAPISerializer } from "@miragejs/server";
 
-describe("Integration | Serializers | JSON API Serializer | Base", function() {
-  beforeEach(function() {
-    this.schema = new Schema(new Db(), {
+describe("Integration | Serializers | JSON API Serializer | Base", () => {
+  let schema, registry;
+
+  beforeEach(() => {
+    schema = new Schema(new Db(), {
       wordSmith: Model
     });
-    this.registry = new SerializerRegistry(this.schema, {
+    registry = new SerializerRegistry(schema, {
       application: JSONAPISerializer
     });
   });
 
   test(`it includes all attributes for a model`, () => {
-    let link = this.schema.wordSmiths.create({ firstName: "Link", age: 123 });
-    let result = this.registry.serialize(link);
+    let link = schema.wordSmiths.create({ firstName: "Link", age: 123 });
+    let result = registry.serialize(link);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       data: {
         type: "word-smiths",
         id: "1",
@@ -30,14 +32,14 @@ describe("Integration | Serializers | JSON API Serializer | Base", function() {
   });
 
   test(`it includes all attributes for each model in a collection`, () => {
-    this.schema.wordSmiths.create({ firstName: "Link", age: 123 });
-    this.schema.wordSmiths.create({ id: 1, firstName: "Link", age: 123 });
-    this.schema.wordSmiths.create({ id: 2, firstName: "Zelda", age: 456 });
+    schema.wordSmiths.create({ firstName: "Link", age: 123 });
+    schema.wordSmiths.create({ id: 1, firstName: "Link", age: 123 });
+    schema.wordSmiths.create({ id: 2, firstName: "Zelda", age: 456 });
 
-    let collection = this.schema.wordSmiths.all();
-    let result = this.registry.serialize(collection);
+    let collection = schema.wordSmiths.all();
+    let result = registry.serialize(collection);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       data: [
         {
           type: "word-smiths",
@@ -60,10 +62,10 @@ describe("Integration | Serializers | JSON API Serializer | Base", function() {
   });
 
   test(`it can serialize an empty collection`, () => {
-    let wordSmiths = this.schema.wordSmiths.all();
-    let result = this.registry.serialize(wordSmiths);
+    let wordSmiths = schema.wordSmiths.all();
+    let result = registry.serialize(wordSmiths);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       data: []
     });
   });

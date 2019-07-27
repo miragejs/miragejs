@@ -3,9 +3,11 @@ import Db from "@lib/db";
 import SerializerRegistry from "@lib/serializer-registry";
 import { Model, hasMany, belongsTo, JSONAPISerializer } from "@miragejs/server";
 
-describe("Integration | Serializers | JSON API Serializer | Associations | Collection", function() {
-  beforeEach(function() {
-    this.schema = new Schema(new Db(), {
+describe("Integration | Serializers | JSON API Serializer | Associations | Collection", () => {
+  let schema;
+
+  beforeEach(() => {
+    schema = new Schema(new Db(), {
       wordSmith: Model.extend({
         posts: hasMany("blogPost", { inverse: "author" })
       }),
@@ -20,16 +22,16 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Colle
   });
 
   test(`by default, it doesn't include a collection's relationships if those relationships are not included in the document and no links are defined`, () => {
-    let registry = new SerializerRegistry(this.schema, {
+    let registry = new SerializerRegistry(schema, {
       application: JSONAPISerializer
     });
-    this.schema.wordSmiths.create({ firstName: "Link", age: 123 });
-    this.schema.wordSmiths.create({ firstName: "Zelda", age: 456 });
+    schema.wordSmiths.create({ firstName: "Link", age: 123 });
+    schema.wordSmiths.create({ firstName: "Zelda", age: 456 });
 
-    let collection = this.schema.wordSmiths.all();
+    let collection = schema.wordSmiths.all();
     let result = registry.serialize(collection);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       data: [
         {
           type: "word-smiths",
@@ -52,18 +54,18 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Colle
   });
 
   test(`when alwaysIncludeLinkageData is true, it contains linkage data for all a collection's relationships, regardless of includes`, () => {
-    let registry = new SerializerRegistry(this.schema, {
+    let registry = new SerializerRegistry(schema, {
       application: JSONAPISerializer.extend({
         alwaysIncludeLinkageData: true
       })
     });
-    this.schema.wordSmiths.create({ firstName: "Link", age: 123 });
-    this.schema.wordSmiths.create({ firstName: "Zelda", age: 456 });
+    schema.wordSmiths.create({ firstName: "Link", age: 123 });
+    schema.wordSmiths.create({ firstName: "Zelda", age: 456 });
 
-    let collection = this.schema.wordSmiths.all();
+    let collection = schema.wordSmiths.all();
     let result = registry.serialize(collection);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       data: [
         {
           type: "word-smiths",
@@ -96,7 +98,7 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Colle
   });
 
   test(`when shouldIncludeLinkageData returns true for a relationship, it contains linkage data for that relationship on all of the collection, regardless of includes`, () => {
-    let registry = new SerializerRegistry(this.schema, {
+    let registry = new SerializerRegistry(schema, {
       application: JSONAPISerializer.extend({
         shouldIncludeLinkageData(relationshipKey, model) {
           if (relationshipKey == "posts") {
@@ -105,13 +107,13 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Colle
         }
       })
     });
-    this.schema.wordSmiths.create({ firstName: "Link", age: 123 });
-    this.schema.wordSmiths.create({ firstName: "Zelda", age: 456 });
+    schema.wordSmiths.create({ firstName: "Link", age: 123 });
+    schema.wordSmiths.create({ firstName: "Zelda", age: 456 });
 
-    let collection = this.schema.wordSmiths.all();
+    let collection = schema.wordSmiths.all();
     let result = registry.serialize(collection);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       data: [
         {
           type: "word-smiths",
@@ -144,21 +146,21 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Colle
   });
 
   test(`it includes linkage data for a has-many relationship that's being included`, () => {
-    let registry = new SerializerRegistry(this.schema, {
+    let registry = new SerializerRegistry(schema, {
       application: JSONAPISerializer,
       wordSmith: JSONAPISerializer.extend({
         include: ["posts"]
       })
     });
-    let link = this.schema.wordSmiths.create({ firstName: "Link" });
+    let link = schema.wordSmiths.create({ firstName: "Link" });
     link.createPost({ title: "Lorem" });
     link.createPost({ title: "Ipsum" });
-    this.schema.wordSmiths.create({ firstName: "Zelda" });
+    schema.wordSmiths.create({ firstName: "Zelda" });
 
-    let collection = this.schema.wordSmiths.all();
+    let collection = schema.wordSmiths.all();
     let result = registry.serialize(collection);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       data: [
         {
           type: "word-smiths",
@@ -208,7 +210,7 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Colle
   });
 
   test(`it can serialize a collection with a chain of has-many relationships`, () => {
-    let registry = new SerializerRegistry(this.schema, {
+    let registry = new SerializerRegistry(schema, {
       application: JSONAPISerializer,
       wordSmith: JSONAPISerializer.extend({
         include: ["posts"]
@@ -218,16 +220,16 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Colle
       })
     });
 
-    let link = this.schema.wordSmiths.create({ firstName: "Link" });
+    let link = schema.wordSmiths.create({ firstName: "Link" });
     let lorem = link.createPost({ title: "Lorem" });
     lorem.createComment({ text: "pwned" });
     link.createPost({ title: "Ipsum" });
-    this.schema.wordSmiths.create({ firstName: "Zelda" });
+    schema.wordSmiths.create({ firstName: "Zelda" });
 
-    let collection = this.schema.wordSmiths.all();
+    let collection = schema.wordSmiths.all();
     let result = registry.serialize(collection);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       data: [
         {
           type: "word-smiths",
@@ -294,23 +296,23 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Colle
   });
 
   test(`it can serialize a collection with a belongs-to relationship`, () => {
-    let registry = new SerializerRegistry(this.schema, {
+    let registry = new SerializerRegistry(schema, {
       application: JSONAPISerializer,
       blogPost: JSONAPISerializer.extend({
         include: ["author"]
       })
     });
 
-    let link = this.schema.wordSmiths.create({ firstName: "Link" });
+    let link = schema.wordSmiths.create({ firstName: "Link" });
     let post = link.createPost({ title: "Lorem" });
     post.createComment();
     link.createPost({ title: "Ipsum" });
-    this.schema.wordSmiths.create({ firstName: "Zelda" });
+    schema.wordSmiths.create({ firstName: "Zelda" });
 
-    let blogPosts = this.schema.blogPosts.all();
+    let blogPosts = schema.blogPosts.all();
     let result = registry.serialize(blogPosts);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       data: [
         {
           type: "blog-posts",
@@ -350,7 +352,7 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Colle
   });
 
   test(`it can serialize a collection with a chain of belongs-to relationships`, () => {
-    let registry = new SerializerRegistry(this.schema, {
+    let registry = new SerializerRegistry(schema, {
       application: JSONAPISerializer,
       fineComment: JSONAPISerializer.extend({
         include: ["post"]
@@ -360,16 +362,16 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Colle
       })
     });
 
-    let link = this.schema.wordSmiths.create({ firstName: "Link" });
+    let link = schema.wordSmiths.create({ firstName: "Link" });
     let post = link.createPost({ title: "Lorem" });
     post.createComment({ text: "pwned" });
     link.createPost({ title: "Ipsum" });
-    this.schema.wordSmiths.create({ firstName: "Zelda" });
+    schema.wordSmiths.create({ firstName: "Zelda" });
 
-    let fineComments = this.schema.fineComments.all();
+    let fineComments = schema.fineComments.all();
     let result = registry.serialize(fineComments);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       data: [
         {
           type: "fine-comments",
@@ -409,7 +411,7 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Colle
   });
 
   test(`it propertly serializes complex relationships`, () => {
-    let registry = new SerializerRegistry(this.schema, {
+    let registry = new SerializerRegistry(schema, {
       application: JSONAPISerializer,
       blogPost: JSONAPISerializer.extend({
         include: ["author", "comments"]
@@ -422,16 +424,16 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Colle
       })
     });
 
-    let link = this.schema.wordSmiths.create({ firstName: "Link" });
+    let link = schema.wordSmiths.create({ firstName: "Link" });
     let post = link.createPost({ title: "Lorem" });
     post.createComment({ text: "pwned" });
     link.createPost({ title: "Ipsum" });
-    this.schema.wordSmiths.create({ firstName: "Zelda" });
+    schema.wordSmiths.create({ firstName: "Zelda" });
 
-    let blogPost = this.schema.blogPosts.find(1);
+    let blogPost = schema.blogPosts.find(1);
     let result = registry.serialize(blogPost);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       data: {
         type: "blog-posts",
         id: "1",

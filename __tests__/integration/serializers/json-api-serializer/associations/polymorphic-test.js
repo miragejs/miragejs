@@ -1,7 +1,7 @@
 import Server from "@lib/server";
 import { Model, belongsTo, hasMany, JSONAPISerializer } from "@miragejs/server";
 
-describe("Integration | Serializers | JSON API Serializer | Associations | Polymorphic", function() {
+describe("Integration | Serializers | JSON API Serializer | Associations | Polymorphic", () => {
   test("it works for belongs to polymorphic relationships", () => {
     let server = new Server({
       models: {
@@ -27,7 +27,7 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Polym
     schema.comments.create({ text: "Love the bar!", commentable: video });
 
     let result = server.serializerOrRegistry.serialize(schema.comments.all());
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       data: [
         {
           attributes: {
@@ -102,7 +102,7 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Polym
 
     let json = server.serializerOrRegistry.serialize(user);
 
-    assert.deepEqual(json, {
+    expect(json).toEqual({
       data: {
         attributes: {
           name: "Sam"
@@ -162,7 +162,7 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Polym
       queryParams: { include: "things" }
     });
 
-    assert.deepEqual(json, {
+    expect(json).toEqual({
       data: {
         attributes: {
           name: "Sam"
@@ -223,7 +223,7 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Polym
 
     let json = server.serializerOrRegistry.serialize(user.things);
 
-    assert.deepEqual(json, {
+    expect(json).toEqual({
       data: [
         {
           attributes: {

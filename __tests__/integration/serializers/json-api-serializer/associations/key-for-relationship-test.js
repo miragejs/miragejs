@@ -4,9 +4,11 @@ import SerializerRegistry from "@lib/serializer-registry";
 import { Model, hasMany, JSONAPISerializer } from "@miragejs/server";
 import { underscore } from "@lib/utils/inflector";
 
-describe("Integration | Serializers | JSON API Serializer | Key for relationship", function() {
-  beforeEach(function() {
-    this.schema = new Schema(new Db(), {
+describe("Integration | Serializers | JSON API Serializer | Key for relationship", () => {
+  let schema;
+
+  beforeEach(() => {
+    schema = new Schema(new Db(), {
       wordSmith: Model.extend({
         blogPosts: hasMany()
       }),
@@ -20,13 +22,13 @@ describe("Integration | Serializers | JSON API Serializer | Key for relationship
         return underscore(key);
       }
     });
-    let registry = new SerializerRegistry(this.schema, {
+    let registry = new SerializerRegistry(schema, {
       application: ApplicationSerializer,
       wordSmith: ApplicationSerializer.extend({
         include: ["blogPosts"]
       })
     });
-    let wordSmith = this.schema.wordSmiths.create({
+    let wordSmith = schema.wordSmiths.create({
       id: 1,
       firstName: "Link",
       lastName: "Jackson",
@@ -36,7 +38,7 @@ describe("Integration | Serializers | JSON API Serializer | Key for relationship
 
     let result = registry.serialize(wordSmith);
 
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       data: {
         type: "word-smiths",
         id: "1",
