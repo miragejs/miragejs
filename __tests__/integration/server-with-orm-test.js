@@ -1,5 +1,4 @@
-import { Model, Factory } from "ember-cli-mirage";
-import Server from "ember-cli-mirage/server";
+import { Server, Model, Factory } from "@miragejs/server";
 
 describe("Integration | Server with ORM", () => {
   let server;
