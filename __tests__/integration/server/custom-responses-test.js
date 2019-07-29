@@ -1,66 +1,62 @@
-
-import Server from "@lib/server";
-import promiseAjax from "../../helpers/promise-ajax";
-import { Response } from "@miragejs/server";
+import { Server, Response } from "@miragejs/server";
 
 describe("Integration | Server | Custom responses", function() {
+  let server;
+
   beforeEach(function() {
-    this.server = new Server({
+    server = new Server({
       environment: "test"
     });
-    this.server.timing = 0;
-    this.server.logging = false;
+    server.timing = 0;
+    server.logging = false;
   });
 
   afterEach(function() {
-    this.server.shutdown();
+    server.shutdown();
   });
 
   test("GET to an empty Response defaults to 200 and an empty json object", async () => {
-    this.server.get("/example", function() {
+    server.get("/example", function() {
       return new Response();
     });
 
-    let { data, xhr } = await promiseAjax({
-      method: "GET",
-      url: "/example"
-    });
+    let res = await fetch("/example");
+    let data = await res.json();
 
     expect(data).toEqual({});
-    expect(xhr.responseText).toEqual("{}");
-    expect(xhr.status).toEqual(200);
-    expect(xhr.getAllResponseHeaders().trim()).toEqual("Content-Type: application/json");
+    expect(res.status).toEqual(200);
+    expect([...res.headers.entries()]).toEqual([
+      ["content-type", "application/json"]
+    ]);
   });
 
   test("GET to a 200 Response responds with an empty json object", async () => {
-    this.server.get("/example", function() {
+    server.get("/example", function() {
       return new Response(200);
     });
 
-    let { data, xhr } = await promiseAjax({
-      method: "GET",
-      url: "/example"
-    });
+    let res = await fetch("/example");
+    let data = await res.json();
 
     expect(data).toEqual({});
-    expect(xhr.responseText).toEqual("{}");
-    expect(xhr.status).toEqual(200);
-    expect(xhr.getAllResponseHeaders().trim()).toEqual("Content-Type: application/json");
+    expect(res.status).toEqual(200);
+    expect([...res.headers.entries()]).toEqual([
+      ["content-type", "application/json"]
+    ]);
   });
 
   test("a 204 Response responds with an empty body", async () => {
-    this.server.post("/example", function() {
+    server.post("/example", function() {
       return new Response(204);
     });
 
-    let { data, xhr } = await promiseAjax({
-      method: "POST",
-      url: "/example"
-    });
+    let res = await fetch("/example", { method: "POST" });
+    let text = await res.text();
 
-    expect(data).toEqual(undefined);
-    expect(xhr.responseText).toEqual("");
-    expect(xhr.status).toEqual(204);
-    expect(xhr.getAllResponseHeaders().trim()).toEqual("");
+    expect(text).toEqual("");
+    expect(res.status).toEqual(204);
+    expect([...res.headers.entries()]).toEqual([
+      ["content-type", "text/plain;charset=UTF-8"]
+    ]);
   });
 });
