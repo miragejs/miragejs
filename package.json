@@ -47,9 +47,9 @@
     "rollup-plugin-alias": "^1.5.2",
     "rollup-plugin-async": "^1.2.0",
     "rollup-plugin-babel": "^4.3.3",
-    "rollup-plugin-commonjs": "^9.2.1",
+    "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-multi-entry": "^2.1.0",
-    "rollup-plugin-node-resolve": "^4.0.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
     "rsvp": "^4.8.5"
   },
   "engines": {
