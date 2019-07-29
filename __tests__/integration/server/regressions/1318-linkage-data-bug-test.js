@@ -1,13 +1,16 @@
+import {
+  Server,
+  Model,
+  hasMany,
+  belongsTo,
+  JSONAPISerializer
+} from "@miragejs/server";
 
-import { Model, hasMany, belongsTo, JSONAPISerializer } from "@miragejs/server";
-import Server from "@lib/server";
-import promiseAjax from "dummy/tests/helpers/promise-ajax";
+describe("Integration | Server | Regressions | 1318 Linkage bug test", function() {
+  let server;
 
-describe("Integration | Server | Regressions | 1318 Linkage bug test", function(
-  
-) {
   beforeEach(function() {
-    this.server = new Server({
+    server = new Server({
       environment: "test",
       models: {
         happyUser: Model.extend({
@@ -31,31 +34,30 @@ describe("Integration | Server | Regressions | 1318 Linkage bug test", function(
   });
 
   afterEach(function() {
-    this.server.shutdown();
+    server.shutdown();
   });
 
   test("it works", async () => {
-    let happySubscription = this.server.create("happy-subscription");
+    let happySubscription = server.create("happy-subscription");
 
-    let user1 = this.server.create("happy-user");
-    this.server.create("happy-license", {
+    let user1 = server.create("happy-user");
+    server.create("happy-license", {
       happyUser: user1,
       happySubscription
     });
 
-    let user2 = this.server.create("happy-user");
-    this.server.create("happy-license", {
+    let user2 = server.create("happy-user");
+    server.create("happy-license", {
       happyUser: user2,
       happySubscription
     });
 
     expect.assertions(1);
 
-    let response = await promiseAjax({
-      method: "GET",
-      url: "/happy-users/1?include=happy-licenses.happy-subscription"
-    });
-    let json = response.data;
+    let res = await fetch(
+      "/happy-users/1?include=happy-licenses.happy-subscription"
+    );
+    let json = await res.json();
 
     expect(json.included).toEqual([
       {

@@ -1,13 +1,10 @@
+import { Server, Model, hasMany, JSONAPISerializer } from "@miragejs/server";
 
-import { Model, hasMany, JSONAPISerializer } from "@miragejs/server";
-import Server from "@lib/server";
-import promiseAjax from "dummy/tests/helpers/promise-ajax";
+describe("Integration | Server | Regressions | Many to many bug", function() {
+  let server;
 
-describe("Integration | Server | Regressions | Many to many bug", function(
-  
-) {
   beforeEach(function() {
-    this.server = new Server({
+    server = new Server({
       environment: "test",
       models: {
         post: Model.extend({
@@ -27,27 +24,26 @@ describe("Integration | Server | Regressions | Many to many bug", function(
   });
 
   afterEach(function() {
-    this.server.shutdown();
+    server.shutdown();
   });
 
   test("it works", async () => {
     expect.assertions(6);
 
-    let serverTagA = this.server.create("tag", { name: "A", slug: "a" });
-    let serverTagB = this.server.create("tag", { name: "B", slug: "b" });
-    let serverPost = this.server.create("post", {
+    let serverTagA = server.create("tag", { name: "A", slug: "a" });
+    let serverTagB = server.create("tag", { name: "B", slug: "b" });
+    let serverPost = server.create("post", {
       title: "Post 1",
       tags: [serverTagA, serverTagB]
     });
 
-    expect(serverTagA.postIds.length).toEqual(1);
-    expect(serverTagB.postIds.length).toEqual(1);
+    expect(serverTagA.postIds).toHaveLength(1);
+    expect(serverTagB.postIds).toHaveLength(1);
     expect(serverPost.tagIds).toEqual(["1", "2"]);
 
-    await promiseAjax({
+    await fetch("/posts/1", {
       method: "PATCH",
-      url: "/posts/1",
-      data: JSON.stringify({
+      body: JSON.stringify({
         data: {
           id: "1",
           attributes: {
