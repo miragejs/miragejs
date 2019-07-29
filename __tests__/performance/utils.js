@@ -20,5 +20,5 @@ export function time(fn) {
 }
 
 export function now() {
-  return performance ? performance.now() : Date.now ? Date.now() : +new Date();
+  return Date.now ? Date.now() : +new Date();
 }
