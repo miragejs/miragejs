@@ -1,7 +1,5 @@
 import { Server, Model, Factory, hasMany, belongsTo } from "@miragejs/server";
 import { inflections } from "inflected";
-// import escape from 'escape-string-regexp';
-// import regExpFromString from "../../helpers/reg-exp-from-string";
 
 // eslint-disable-next-line no-console
 let originalWarn = console.warn;
