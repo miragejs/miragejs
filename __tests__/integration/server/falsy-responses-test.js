@@ -1,81 +1,77 @@
-
-import Server from "@lib/server";
-import promiseAjax from "../../helpers/promise-ajax";
+import { Server } from "@miragejs/server";
 
 describe("Integration | Server | Falsy responses", function() {
+  let server;
+
   beforeEach(function() {
-    this.server = new Server({
+    server = new Server({
       environment: "test"
     });
-    this.server.timing = 0;
-    this.server.logging = false;
+    server.timing = 0;
+    server.logging = false;
   });
 
   afterEach(function() {
-    this.server.shutdown();
+    server.shutdown();
   });
 
   test("undefined response returns an empty object", async () => {
-    this.server.get("/example", function() {
+    server.get("/example", function() {
       return undefined;
     });
 
-    let { data, xhr } = await promiseAjax({
-      method: "GET",
-      url: "/example"
-    });
+    let res = await fetch("/example");
+    let data = await res.json();
 
     expect(data).toEqual({});
-    expect(xhr.responseText).toEqual("{}");
-    expect(xhr.status).toEqual(200);
-    expect(xhr.getAllResponseHeaders().trim()).toEqual("Content-Type: application/json");
+    expect(res.status).toEqual(200);
+    expect([...res.headers.entries()]).toEqual([
+      ["content-type", "application/json"]
+    ]);
   });
 
   test("null response returns a JSON null", async () => {
-    this.server.get("/example", function() {
+    server.get("/example", function() {
       return null;
     });
 
-    let { data, xhr } = await promiseAjax({
-      method: "GET",
-      url: "/example"
-    });
+    let res = await fetch("/example");
+    let data = await res.json();
 
-    expect(data).toEqual(null);
-    expect(xhr.responseText).toEqual("null");
-    expect(xhr.status).toEqual(200);
-    expect(xhr.getAllResponseHeaders().trim()).toEqual("Content-Type: application/json");
+    expect(data).toBeNull();
+    expect(res.status).toEqual(200);
+    expect([...res.headers.entries()]).toEqual([
+      ["content-type", "application/json"]
+    ]);
   });
 
   test("empty string response returns an empty object", async () => {
-    this.server.get("/example", function() {
+    server.get("/example", function() {
       return "";
     });
 
-    let { data, xhr } = await promiseAjax({
-      method: "GET",
-      url: "/example"
-    });
+    let res = await fetch("/example");
+    let data = await res.json();
 
     expect(data).toEqual({});
-    expect(xhr.responseText).toEqual("{}");
-    expect(xhr.status).toEqual(200);
-    expect(xhr.getAllResponseHeaders().trim()).toEqual("Content-Type: application/json");
+    expect(res.status).toEqual(200);
+    expect([...res.headers.entries()]).toEqual([
+      ["content-type", "application/json"]
+    ]);
   });
 
   test("empty object PUT response returns an empty object", async () => {
-    this.server.put("/example", function() {
+    server.put("/example", function() {
       return {};
     });
 
-    let { data, xhr } = await promiseAjax({
-      method: "PUT",
-      url: "/example"
-    });
+    let res = await fetch("/example", { method: "PUT" });
+    let data = await res.json();
 
     expect(data).toEqual({});
-    expect(xhr.responseText).toEqual("{}");
-    expect(xhr.status).toEqual(200);
-    expect(xhr.getAllResponseHeaders().trim()).toEqual("Content-Type: application/json");
+    expect(res.status).toEqual(200);
+    expect([...res.headers.entries()]).toEqual([
+      ["content-type", "application/json"]
+    ]);
   });
 });
