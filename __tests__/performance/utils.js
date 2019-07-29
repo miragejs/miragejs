@@ -1,15 +1,13 @@
-import { test } from "qunit";
-
 export function perfTest(count, message, testFn, timeout = 0) {
-  test(`(${count}) ${message}`, function(assert) {
+  test(`(${count}) ${message}`, () => {
     var duration = time(() => {
       testFn(count);
     });
 
     if (timeout) {
-      assert.ok(duration < timeout, `${duration}ms (${timeout}ms timeout)`);
+      expect(duration).toBeLessThan(timeout);
     } else {
-      assert.ok(true, `${duration}ms`);
+      expect(`${duration}ms`).toBeTruthy();
     }
   });
 }
