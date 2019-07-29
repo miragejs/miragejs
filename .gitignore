@@ -5,7 +5,6 @@
 /tmp/
 
 # dependencies
-/bower_components/
 /node_modules/
 
 # misc
@@ -14,18 +13,7 @@
 /coverage/
 /libpeerconnection.log
 /npm-debug.log*
-/testem.log
 /yarn-error.log
-
-# ember-try
-/.node_modules.ember-try/
-/bower.json.ember-try
-/package.json.ember-try
-
-# custom
-.floo
-_site
-jekyll-tmp
 
 # IDE
 /.idea/

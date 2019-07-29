@@ -2,38 +2,20 @@
 /dist/
 /tmp/
 
-# dependencies
-/bower_components/
-
 # misc
-/.bowerrc
-/.editorconfig
-/.ember-cli
 /.eslintignore
 /.eslintrc.js
 /.gitignore
 /.watchmanconfig
 /.travis.yml
-/bower.json
-/config/ember-try.js
 /dist
-/scripts
 /tmp
 **/.gitkeep
-bower.json
-/ember-cli-build.js
-/testem.js
+/__tests__/
 /tests/
 /yarn.lock
 .gitkeep
 
-# ember-try
-/.node_modules.ember-try/
-/bower.json.ember-try
-/package.json.ember-try
-
 /.sass-cache
 /jekyll-tmp
 *.md
-
-/test-projects
