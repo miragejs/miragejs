@@ -1,12 +1,12 @@
-import { module, test } from "qunit";
-import { Model, hasMany, belongsTo, JSONAPISerializer } from "ember-cli-mirage";
-import Server from "ember-cli-mirage/server";
+
+import { Model, hasMany, belongsTo, JSONAPISerializer } from "@miragejs/server";
+import Server from "@lib/server";
 import promiseAjax from "dummy/tests/helpers/promise-ajax";
 
-module("Integration | Server | Regressions | 1318 Linkage bug test", function(
-  hooks
+describe("Integration | Server | Regressions | 1318 Linkage bug test", function(
+  
 ) {
-  hooks.beforeEach(function() {
+  beforeEach(function() {
     this.server = new Server({
       environment: "test",
       models: {
@@ -30,11 +30,11 @@ module("Integration | Server | Regressions | 1318 Linkage bug test", function(
     });
   });
 
-  hooks.afterEach(function() {
+  afterEach(function() {
     this.server.shutdown();
   });
 
-  test("it works", async function(assert) {
+  test("it works", async () => {
     let happySubscription = this.server.create("happy-subscription");
 
     let user1 = this.server.create("happy-user");
@@ -49,7 +49,7 @@ module("Integration | Server | Regressions | 1318 Linkage bug test", function(
       happySubscription
     });
 
-    assert.expect(1);
+    expect.assertions(1);
 
     let response = await promiseAjax({
       method: "GET",
@@ -57,7 +57,7 @@ module("Integration | Server | Regressions | 1318 Linkage bug test", function(
     });
     let json = response.data;
 
-    assert.deepEqual(json.included, [
+    expect(json.included).toEqual([
       {
         id: "1",
         type: "happy-licenses",

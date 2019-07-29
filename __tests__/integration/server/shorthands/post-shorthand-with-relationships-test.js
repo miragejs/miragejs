@@ -1,14 +1,14 @@
-import { module, test } from "qunit";
-import Server from "ember-cli-mirage/server";
-import { Model, belongsTo, hasMany } from "ember-cli-mirage";
-import PostShorthandRouteHandler from "ember-cli-mirage/route-handlers/shorthands/post";
-import JSONAPISerializer from "ember-cli-mirage/serializers/json-api-serializer";
+
+import Server from "@lib/server";
+import { Model, belongsTo, hasMany } from "@miragejs/server";
+import PostShorthandRouteHandler from "@lib/route-handlers/shorthands/post";
+import JSONAPISerializer from "@lib/serializers/json-api-serializer";
 import promiseAjax from "../../../helpers/promise-ajax";
 
-module("Integration | Server | Shorthands | Post with relationships", function(
-  hooks
+describe("Integration | Server | Shorthands | Post with relationships", function(
+  
 ) {
-  hooks.beforeEach(function() {
+  beforeEach(function() {
     this.newServerWithSchema = function(schema) {
       this.server = new Server({
         environment: "development",
@@ -30,11 +30,11 @@ module("Integration | Server | Shorthands | Post with relationships", function(
     };
   });
 
-  hooks.afterEach(function() {
+  afterEach(function() {
     this.server.shutdown();
   });
 
-  test("it works for belongs to", async function(assert) {
+  test("it works for belongs to", async () => {
     let server = this.newServerWithSchema({
       author: Model.extend({
         posts: hasMany()
@@ -47,7 +47,7 @@ module("Integration | Server | Shorthands | Post with relationships", function(
       this.post("/posts");
     });
 
-    assert.equal(server.db.posts.length, 0);
+    expect(server.db.posts.length).toEqual(0);
 
     let author = server.create("author");
 
@@ -74,11 +74,11 @@ module("Integration | Server | Shorthands | Post with relationships", function(
     let postId = response.data.post.id;
     let post = server.schema.posts.find(postId);
 
-    assert.ok(post);
-    assert.equal(post.author.id, author.id);
+    expect(post).toBeTruthy();
+    expect(post.author.id).toEqual(author.id);
   });
 
-  test("it works for belongs to polymorphic", async function(assert) {
+  test("it works for belongs to polymorphic", async () => {
     let server = this.newServerWithSchema({
       video: Model.extend(),
       post: Model.extend(),
@@ -90,7 +90,7 @@ module("Integration | Server | Shorthands | Post with relationships", function(
       this.post("/comments");
     });
 
-    assert.equal(server.db.comments.length, 0);
+    expect(server.db.comments.length).toEqual(0);
 
     let video = server.create("video");
 
@@ -118,11 +118,11 @@ module("Integration | Server | Shorthands | Post with relationships", function(
     let commentId = response.data.comment.id;
     let comment = server.schema.comments.find(commentId);
 
-    assert.ok(comment);
-    assert.ok(comment.commentable.equals(video));
+    expect(comment).toBeTruthy();
+    expect(comment.commentable.equals(video)).toBeTruthy();
   });
 
-  test("it works for has many polymorphic", async function(assert) {
+  test("it works for has many polymorphic", async () => {
     let server = this.newServerWithSchema({
       car: Model.extend(),
       watch: Model.extend(),
@@ -134,7 +134,7 @@ module("Integration | Server | Shorthands | Post with relationships", function(
       this.post("/users");
     });
 
-    assert.equal(server.db.users.length, 0);
+    expect(server.db.users.length).toEqual(0);
 
     let car = server.create("car");
     let watch = server.create("watch");
@@ -169,8 +169,8 @@ module("Integration | Server | Shorthands | Post with relationships", function(
     let userId = response.data.user.id;
     let user = server.schema.users.find(userId);
 
-    assert.ok(user);
-    assert.ok(user.collectibles.includes(car));
-    assert.ok(user.collectibles.includes(watch));
+    expect(user).toBeTruthy();
+    expect(user.collectibles.includes(car)).toBeTruthy();
+    expect(user.collectibles.includes(watch)).toBeTruthy();
   });
 });

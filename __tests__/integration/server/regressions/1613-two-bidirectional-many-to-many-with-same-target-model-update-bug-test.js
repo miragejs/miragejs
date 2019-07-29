@@ -1,12 +1,12 @@
-import { module, test } from "qunit";
-import { Model, hasMany, belongsTo, JSONAPISerializer } from "ember-cli-mirage";
-import Server from "ember-cli-mirage/server";
+
+import { Model, hasMany, belongsTo, JSONAPISerializer } from "@miragejs/server";
+import Server from "@lib/server";
 import promiseAjax from "dummy/tests/helpers/promise-ajax";
 
-module(
+describe(
   "Integration | Server | Regressions | 1613 Two bidirectional many-to-many with same target model update bug",
-  function(hooks) {
-    hooks.beforeEach(function() {
+  function() {
+    beforeEach(function() {
       this.server = new Server({
         environment: "test",
         models: {
@@ -32,15 +32,15 @@ module(
       });
     });
 
-    hooks.afterEach(function() {
+    afterEach(function() {
       this.server.shutdown();
     });
 
-    test("it stores both relationships", async function(assert) {
+    test("it stores both relationships", async () => {
       let post = this.server.create("post");
       let user = this.server.create("user");
 
-      assert.expect(1);
+      expect.assertions(1);
 
       await promiseAjax({
         method: "PATCH",
@@ -76,7 +76,7 @@ module(
 
       let json = response.data;
 
-      assert.deepEqual(json.data, {
+      expect(json.data).toEqual({
         attributes: {},
         id: "1",
         relationships: {

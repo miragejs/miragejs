@@ -1,9 +1,9 @@
-import { module, test } from "qunit";
-import Server from "ember-cli-mirage/server";
+
+import Server from "@lib/server";
 import promiseAjax from "../../helpers/promise-ajax";
 
-module("Integration | Server | Falsy responses", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | Server | Falsy responses", function() {
+  beforeEach(function() {
     this.server = new Server({
       environment: "test"
     });
@@ -11,11 +11,11 @@ module("Integration | Server | Falsy responses", function(hooks) {
     this.server.logging = false;
   });
 
-  hooks.afterEach(function() {
+  afterEach(function() {
     this.server.shutdown();
   });
 
-  test("undefined response returns an empty object", async function(assert) {
+  test("undefined response returns an empty object", async () => {
     this.server.get("/example", function() {
       return undefined;
     });
@@ -25,16 +25,13 @@ module("Integration | Server | Falsy responses", function(hooks) {
       url: "/example"
     });
 
-    assert.deepEqual(data, {});
-    assert.equal(xhr.responseText, "{}");
-    assert.equal(xhr.status, 200);
-    assert.equal(
-      xhr.getAllResponseHeaders().trim(),
-      "Content-Type: application/json"
-    );
+    expect(data).toEqual({});
+    expect(xhr.responseText).toEqual("{}");
+    expect(xhr.status).toEqual(200);
+    expect(xhr.getAllResponseHeaders().trim()).toEqual("Content-Type: application/json");
   });
 
-  test("null response returns a JSON null", async function(assert) {
+  test("null response returns a JSON null", async () => {
     this.server.get("/example", function() {
       return null;
     });
@@ -44,16 +41,13 @@ module("Integration | Server | Falsy responses", function(hooks) {
       url: "/example"
     });
 
-    assert.deepEqual(data, null);
-    assert.equal(xhr.responseText, "null");
-    assert.equal(xhr.status, 200);
-    assert.equal(
-      xhr.getAllResponseHeaders().trim(),
-      "Content-Type: application/json"
-    );
+    expect(data).toEqual(null);
+    expect(xhr.responseText).toEqual("null");
+    expect(xhr.status).toEqual(200);
+    expect(xhr.getAllResponseHeaders().trim()).toEqual("Content-Type: application/json");
   });
 
-  test("empty string response returns an empty object", async function(assert) {
+  test("empty string response returns an empty object", async () => {
     this.server.get("/example", function() {
       return "";
     });
@@ -63,16 +57,13 @@ module("Integration | Server | Falsy responses", function(hooks) {
       url: "/example"
     });
 
-    assert.deepEqual(data, {});
-    assert.equal(xhr.responseText, "{}");
-    assert.equal(xhr.status, 200);
-    assert.equal(
-      xhr.getAllResponseHeaders().trim(),
-      "Content-Type: application/json"
-    );
+    expect(data).toEqual({});
+    expect(xhr.responseText).toEqual("{}");
+    expect(xhr.status).toEqual(200);
+    expect(xhr.getAllResponseHeaders().trim()).toEqual("Content-Type: application/json");
   });
 
-  test("empty object PUT response returns an empty object", async function(assert) {
+  test("empty object PUT response returns an empty object", async () => {
     this.server.put("/example", function() {
       return {};
     });
@@ -82,12 +73,9 @@ module("Integration | Server | Falsy responses", function(hooks) {
       url: "/example"
     });
 
-    assert.deepEqual(data, {});
-    assert.equal(xhr.responseText, "{}");
-    assert.equal(xhr.status, 200);
-    assert.equal(
-      xhr.getAllResponseHeaders().trim(),
-      "Content-Type: application/json"
-    );
+    expect(data).toEqual({});
+    expect(xhr.responseText).toEqual("{}");
+    expect(xhr.status).toEqual(200);
+    expect(xhr.getAllResponseHeaders().trim()).toEqual("Content-Type: application/json");
   });
 });

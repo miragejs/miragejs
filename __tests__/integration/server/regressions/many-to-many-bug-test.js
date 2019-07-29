@@ -1,12 +1,12 @@
-import { module, test } from "qunit";
-import { Model, hasMany, JSONAPISerializer } from "ember-cli-mirage";
-import Server from "ember-cli-mirage/server";
+
+import { Model, hasMany, JSONAPISerializer } from "@miragejs/server";
+import Server from "@lib/server";
 import promiseAjax from "dummy/tests/helpers/promise-ajax";
 
-module("Integration | Server | Regressions | Many to many bug", function(
-  hooks
+describe("Integration | Server | Regressions | Many to many bug", function(
+  
 ) {
-  hooks.beforeEach(function() {
+  beforeEach(function() {
     this.server = new Server({
       environment: "test",
       models: {
@@ -26,12 +26,12 @@ module("Integration | Server | Regressions | Many to many bug", function(
     });
   });
 
-  hooks.afterEach(function() {
+  afterEach(function() {
     this.server.shutdown();
   });
 
-  test("it works", async function(assert) {
-    assert.expect(6);
+  test("it works", async () => {
+    expect.assertions(6);
 
     let serverTagA = this.server.create("tag", { name: "A", slug: "a" });
     let serverTagB = this.server.create("tag", { name: "B", slug: "b" });
@@ -40,9 +40,9 @@ module("Integration | Server | Regressions | Many to many bug", function(
       tags: [serverTagA, serverTagB]
     });
 
-    assert.equal(serverTagA.postIds.length, 1);
-    assert.equal(serverTagB.postIds.length, 1);
-    assert.deepEqual(serverPost.tagIds, ["1", "2"]);
+    expect(serverTagA.postIds.length).toEqual(1);
+    expect(serverTagB.postIds.length).toEqual(1);
+    expect(serverPost.tagIds).toEqual(["1", "2"]);
 
     await promiseAjax({
       method: "PATCH",
@@ -72,8 +72,8 @@ module("Integration | Server | Regressions | Many to many bug", function(
     serverTagB.reload();
     serverPost.reload();
 
-    assert.deepEqual(serverTagA.postIds, []);
-    assert.deepEqual(serverTagB.postIds, ["1"]);
-    assert.deepEqual(serverPost.tagIds, ["2"]);
+    expect(serverTagA.postIds).toEqual([]);
+    expect(serverTagB.postIds).toEqual(["1"]);
+    expect(serverPost.tagIds).toEqual(["2"]);
   });
 });

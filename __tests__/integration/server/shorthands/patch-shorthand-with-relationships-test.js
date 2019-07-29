@@ -1,14 +1,14 @@
-import { module, test } from "qunit";
-import Server from "ember-cli-mirage/server";
-import { Model, belongsTo, hasMany } from "ember-cli-mirage";
-import PostShorthandRouteHandler from "ember-cli-mirage/route-handlers/shorthands/post";
-import JSONAPISerializer from "ember-cli-mirage/serializers/json-api-serializer";
+
+import Server from "@lib/server";
+import { Model, belongsTo, hasMany } from "@miragejs/server";
+import PostShorthandRouteHandler from "@lib/route-handlers/shorthands/post";
+import JSONAPISerializer from "@lib/serializers/json-api-serializer";
 import promiseAjax from "../../../helpers/promise-ajax";
 
-module("Integration | Server | Shorthands | Patch with relationships", function(
-  hooks
+describe("Integration | Server | Shorthands | Patch with relationships", function(
+  
 ) {
-  hooks.beforeEach(function() {
+  beforeEach(function() {
     this.newServerWithSchema = function(schema) {
       this.server = new Server({
         environment: "development",
@@ -30,11 +30,11 @@ module("Integration | Server | Shorthands | Patch with relationships", function(
     };
   });
 
-  hooks.afterEach(function() {
+  afterEach(function() {
     this.server.shutdown();
   });
 
-  test("it can null out belongs to relationships", async function(assert) {
+  test("it can null out belongs to relationships", async () => {
     let server = this.newServerWithSchema({
       author: Model.extend({
         posts: hasMany()
@@ -68,10 +68,10 @@ module("Integration | Server | Shorthands | Patch with relationships", function(
     });
 
     post.reload();
-    assert.equal(post.author, null);
+    expect(post.author).toEqual(null);
   });
 
-  test("it can null out belongs to polymorphic relationships", async function(assert) {
+  test("it can null out belongs to polymorphic relationships", async () => {
     let server = this.newServerWithSchema({
       video: Model.extend(),
       post: Model.extend(),
@@ -106,10 +106,10 @@ module("Integration | Server | Shorthands | Patch with relationships", function(
     });
 
     comment.reload();
-    assert.equal(comment.commentable, null);
+    expect(comment.commentable).toEqual(null);
   });
 
-  test("it can null out has many polymorphic relationships", async function(assert) {
+  test("it can null out has many polymorphic relationships", async () => {
     let server = this.newServerWithSchema({
       car: Model.extend(),
       watch: Model.extend(),
@@ -143,10 +143,10 @@ module("Integration | Server | Shorthands | Patch with relationships", function(
     });
 
     user.reload();
-    assert.equal(user.collectibles.length, 0);
+    expect(user.collectibles.length).toEqual(0);
   });
 
-  test("it camelizes relationship names", async function(assert) {
+  test("it camelizes relationship names", async () => {
     let server = this.newServerWithSchema({
       postAuthor: Model.extend({
         posts: hasMany()
@@ -182,10 +182,6 @@ module("Integration | Server | Shorthands | Patch with relationships", function(
     });
 
     post.reload();
-    assert.equal(
-      post.postAuthorId,
-      postAuthor.id,
-      "relationship gets updated successfully"
-    );
+    expect(post.postAuthorId).toEqual(postAuthor.id);
   });
 });

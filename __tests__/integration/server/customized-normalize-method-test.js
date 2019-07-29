@@ -1,11 +1,11 @@
-import { module, test } from "qunit";
-import { Model, ActiveModelSerializer } from "ember-cli-mirage";
-import { camelize } from "ember-cli-mirage/utils/inflector";
-import Server from "ember-cli-mirage/server";
+
+import { Model, ActiveModelSerializer } from "@miragejs/server";
+import { camelize } from "@lib/utils/inflector";
+import Server from "@lib/server";
 import promiseAjax from "../../helpers/promise-ajax";
 
-module("Integration | Server | Customized normalize method", function(hooks) {
-  hooks.beforeEach(function() {
+describe("Integration | Server | Customized normalize method", function() {
+  beforeEach(function() {
     this.server = new Server({
       environment: "test",
       models: {
@@ -33,13 +33,13 @@ module("Integration | Server | Customized normalize method", function(hooks) {
     this.server.logging = false;
   });
 
-  hooks.afterEach(function() {
+  afterEach(function() {
     this.server.shutdown();
   });
 
-  test("custom model-specific normalize functions are used", async function(assert) {
+  test("custom model-specific normalize functions are used", async () => {
     let { server } = this;
-    assert.expect(3);
+    expect.assertions(3);
 
     server.post("/contacts");
 
@@ -62,18 +62,18 @@ module("Integration | Server | Customized normalize method", function(hooks) {
       })
     });
 
-    assert.equal(xhr.status, 201);
-    assert.equal(server.db.contacts.length, 1);
-    assert.equal(server.db.contacts[0].firstName, "Zelda");
+    expect(xhr.status).toEqual(201);
+    expect(server.db.contacts.length).toEqual(1);
+    expect(server.db.contacts[0].firstName).toEqual("Zelda");
   });
 
-  test("custom model-specific normalize functions are used with custom function handlers", async function(assert) {
+  test("custom model-specific normalize functions are used with custom function handlers", async () => {
     let { server } = this;
 
     server.put("/contacts/:id", function(schema, request) {
       let attrs = this.normalizedRequestAttrs();
 
-      assert.deepEqual(attrs, {
+      expect(attrs).toEqual({
         id: "1",
         firstName: "Zelda"
       });

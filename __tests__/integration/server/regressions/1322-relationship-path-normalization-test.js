@@ -1,13 +1,13 @@
-import { module, test } from "qunit";
-import { Model, hasMany, belongsTo, JSONAPISerializer } from "ember-cli-mirage";
-import Server from "ember-cli-mirage/server";
-import promiseAjax from "dummy/tests/helpers/promise-ajax";
-import { underscore } from "ember-cli-mirage/utils/inflector";
 
-module(
+import { Model, hasMany, belongsTo, JSONAPISerializer } from "@miragejs/server";
+import Server from "@lib/server";
+import promiseAjax from "dummy/tests/helpers/promise-ajax";
+import { underscore } from "@lib/utils/inflector";
+
+describe(
   "Integration | Server | Regressions | 1322 Relationship Path Normalization Test",
-  function(hooks) {
-    hooks.beforeEach(function() {
+  function() {
+    beforeEach(function() {
       this.server = new Server({
         environment: "test",
         models: {
@@ -35,16 +35,16 @@ module(
       });
     });
 
-    hooks.afterEach(function() {
+    afterEach(function() {
       this.server.shutdown();
     });
 
-    test("it works", async function(assert) {
+    test("it works", async () => {
       let avatar1 = this.server.create("happy-avatar");
       let user1 = this.server.create("happy-user", { happyAvatar: avatar1 });
       this.server.create("happy-license", { happyUser: user1 });
 
-      assert.expect(2);
+      expect.assertions(2);
 
       let response = await promiseAjax({
         method: "GET",
@@ -52,7 +52,7 @@ module(
       });
       let json = response.data;
 
-      assert.deepEqual(json.data, {
+      expect(json.data).toEqual({
         attributes: {},
         id: "1",
         relationships: {
@@ -65,7 +65,7 @@ module(
         },
         type: "happy-licenses"
       });
-      assert.deepEqual(json.included, [
+      expect(json.included).toEqual([
         {
           id: user1.id,
           type: "happy-users",

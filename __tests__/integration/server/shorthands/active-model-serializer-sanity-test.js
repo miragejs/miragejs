@@ -1,12 +1,12 @@
-import { module, test } from "qunit";
-import { Model, ActiveModelSerializer } from "ember-cli-mirage";
-import Server from "ember-cli-mirage/server";
+
+import { Model, ActiveModelSerializer } from "@miragejs/server";
+import Server from "@lib/server";
 import promiseAjax from "../../../helpers/promise-ajax";
 
-module(
+describe(
   "Integration | Server | Shorthands | Active Model Serializer Sanity check",
-  function(hooks) {
-    hooks.beforeEach(function() {
+  function() {
+    beforeEach(function() {
       this.server = new Server({
         environment: "test",
         models: {
@@ -20,12 +20,12 @@ module(
       this.server.logging = false;
     });
 
-    hooks.afterEach(function() {
+    afterEach(function() {
       this.server.shutdown();
     });
 
-    test("a get shorthand works", async function(assert) {
-      assert.expect(2);
+    test("a get shorthand works", async () => {
+      expect.assertions(2);
 
       this.server.db.loadData({
         contacts: [{ id: 1, name: "Link" }]
@@ -38,13 +38,13 @@ module(
         url: "/contacts"
       });
 
-      assert.equal(xhr.status, 200);
-      assert.deepEqual(data, { contacts: [{ id: "1", name: "Link" }] });
+      expect(xhr.status).toEqual(200);
+      expect(data).toEqual({ contacts: [{ id: "1", name: "Link" }] });
     });
 
-    test("a post shorthand works", async function(assert) {
+    test("a post shorthand works", async () => {
       let { server } = this;
-      assert.expect(2);
+      expect.assertions(2);
 
       server.post("/contacts");
 
@@ -58,13 +58,13 @@ module(
         })
       });
 
-      assert.equal(xhr.status, 201);
-      assert.equal(server.db.contacts.length, 1);
+      expect(xhr.status).toEqual(201);
+      expect(server.db.contacts.length).toEqual(1);
     });
 
-    test("a put shorthand works", async function(assert) {
+    test("a put shorthand works", async () => {
       let { server } = this;
-      assert.expect(2);
+      expect.assertions(2);
 
       this.server.db.loadData({
         contacts: [{ id: 1, name: "Link" }]
@@ -82,13 +82,13 @@ module(
         })
       });
 
-      assert.equal(xhr.status, 200);
-      assert.equal(server.db.contacts[0].name, "Zelda");
+      expect(xhr.status).toEqual(200);
+      expect(server.db.contacts[0].name).toEqual("Zelda");
     });
 
-    test("a patch shorthand works", async function(assert) {
+    test("a patch shorthand works", async () => {
       let { server } = this;
-      assert.expect(2);
+      expect.assertions(2);
 
       this.server.db.loadData({
         contacts: [{ id: 1, name: "Link" }]
@@ -106,13 +106,13 @@ module(
         })
       });
 
-      assert.equal(xhr.status, 200);
-      assert.equal(server.db.contacts[0].name, "Zelda");
+      expect(xhr.status).toEqual(200);
+      expect(server.db.contacts[0].name).toEqual("Zelda");
     });
 
-    test("a delete shorthand works", async function(assert) {
+    test("a delete shorthand works", async () => {
       let { server } = this;
-      assert.expect(3);
+      expect.assertions(3);
 
       this.server.db.loadData({
         contacts: [{ id: 1, name: "Link" }]
@@ -125,9 +125,9 @@ module(
         url: "/contacts/1"
       });
 
-      assert.equal(xhr.responseText, "");
-      assert.equal(xhr.status, 204);
-      assert.equal(server.db.contacts.length, 0);
+      expect(xhr.responseText).toEqual("");
+      expect(xhr.status).toEqual(204);
+      expect(server.db.contacts.length).toEqual(0);
     });
   }
 );
