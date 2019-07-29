@@ -33,7 +33,7 @@
     "pretender": "3.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
+    "@babel/core": "^7.5.5",
     "@babel/plugin-transform-modules-commonjs": "^7.5.0",
     "@babel/preset-env": "^7.4.5",
     "babel-eslint": "^9.0.0",
