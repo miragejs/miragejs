@@ -37,7 +37,7 @@
     "@babel/plugin-transform-modules-commonjs": "^7.5.0",
     "@babel/preset-env": "^7.4.5",
     "eslint": "^6.1.0",
-    "eslint-plugin-jest": "^22.13.6",
+    "eslint-plugin-jest": "^22.14.0",
     "eslint-plugin-node": "^9.0.1",
     "jest": "^24.8.0",
     "jest-extended": "^0.11.2",
