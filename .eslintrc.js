@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   parserOptions: {
-    ecmaVersion: 2017,
+    ecmaVersion: 2018,
     sourceType: "module"
   },
   plugins: ["jest"],
@@ -11,7 +11,8 @@ module.exports = {
     "plugin:jest/style"
   ],
   env: {
-    "jest/globals": true
+    "jest/globals": true,
+    es6: true
   },
   rules: {
     camelcase: 0,
