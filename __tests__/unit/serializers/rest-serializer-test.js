@@ -3,7 +3,7 @@ import {
   _Db as Db,
   Model,
   RestSerializer
-} from "../../../lib";
+} from "@lib";
 
 describe("Unit | Serializers | RestSerializer", function() {
   let schema = null;

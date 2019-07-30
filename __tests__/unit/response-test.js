@@ -1,4 +1,4 @@
-import { Response } from "../../lib";
+import { Response } from "@lib";
 
 describe("Unit | Response", function() {
   test("it can be instantiated and return a rack response", () => {

@@ -1,4 +1,4 @@
-import { _routeHandlersShorthandsBase as BaseShorthandRouteHandler } from "../../../../lib";
+import { _routeHandlersShorthandsBase as BaseShorthandRouteHandler } from "@lib";
 
 describe("Unit | Route handlers | Shorthands | BaseShorthandRouteHandler", function() {
   let handler = null;

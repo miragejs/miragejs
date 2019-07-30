@@ -1,6 +1,6 @@
-import "../../lib/container";
-import Db from "../../lib/db";
-import DefaultIdentityManager from "../../lib/identity-manager";
+import "@lib/container";
+import Db from "@lib/db";
+import DefaultIdentityManager from "@lib/identity-manager";
 
 let db;
 
