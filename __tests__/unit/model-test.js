@@ -1,4 +1,4 @@
-import { Model } from "../../lib";
+import { Model } from "@lib";
 
 describe("Unit | Model", function() {
   test("it can be instantiated", () => {

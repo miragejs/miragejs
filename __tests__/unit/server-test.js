@@ -7,7 +7,7 @@ import {
   hasMany,
   trait,
   association
-} from "../../lib";
+} from "@lib";
 
 describe("Unit | Server", function() {
   test("it can be instantiated", () => {

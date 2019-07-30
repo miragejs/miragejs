@@ -1,4 +1,4 @@
-import { _utilsReferenceSort as referenceSort } from "../../lib";
+import { _utilsReferenceSort as referenceSort } from "@lib";
 
 describe("mirage:reference-sort", function() {
   test("it sorts property references", () => {

@@ -48,4 +48,10 @@ describe("Integration | Server #loadFixtures", () => {
     expect(server.db.posts).toHaveLength(2);
     expect(server.db.comments).toHaveLength(0);
   });
+
+  test("it throws on a non-existing file name", () => {
+    expect(() =>
+      server.loadFixtures("authors", "zomg", "posts", "lol")
+    ).toThrow("Fixtures not found: zomg, lol");
+  });
 });

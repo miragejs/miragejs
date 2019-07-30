@@ -1,5 +1,5 @@
 import Helper from "./_helper";
-import { Model } from "../../../../../lib/index";
+import { Model } from "@lib/index";
 
 describe("Integration | ORM | Belongs To | Basic | create", () => {
   let helper;

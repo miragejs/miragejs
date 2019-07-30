@@ -5,7 +5,7 @@ import {
   hasMany,
   belongsTo,
   JSONAPISerializer
-} from "../../../../lib";
+} from "@lib";
 
 /*
   This test is heavily coupled to the implementation and can be deleted

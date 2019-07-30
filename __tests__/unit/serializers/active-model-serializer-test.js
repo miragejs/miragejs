@@ -4,7 +4,7 @@ import {
   Model,
   belongsTo,
   ActiveModelSerializer
-} from "../../../lib";
+} from "@lib";
 
 describe("Unit | Serializers | ActiveModelSerializer", function() {
   let serializer = null;

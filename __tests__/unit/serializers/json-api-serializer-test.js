@@ -1,4 +1,4 @@
-import { JSONAPISerializer } from "../../../lib";
+import { JSONAPISerializer } from "@lib";
 
 describe("Unit | Serializers | JSON API Serializer", function() {
   let serializer = null;

@@ -1,4 +1,4 @@
-import { IdentityManager } from "../../../lib";
+import { IdentityManager } from "@lib";
 
 describe("Unit | Db | IdentityManager", function() {
   test("it can be instantiated", () => {

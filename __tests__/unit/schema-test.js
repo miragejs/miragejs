@@ -1,4 +1,4 @@
-import { _ormSchema as Schema, _Db as Db, Model, belongsTo } from "../../lib";
+import { _ormSchema as Schema, _Db as Db, Model, belongsTo } from "@lib";
 
 describe("Unit | Schema", function() {
   test("it can be instantiated", () => {
