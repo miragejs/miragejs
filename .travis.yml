@@ -35,6 +35,7 @@ jobs:
     - stage: npm release
       script: skip
       deploy:
+        skip_cleanup: true
         provider: npm
         email: sam.selikoff@gmail.com
         api_key:
