@@ -20,16 +20,7 @@ export default {
     resolve(),
     babel({
       exclude: "node_modules/**",
-      babelrc: false,
-      comments: false,
-      presets: [
-        [
-          "@babel/preset-env",
-          {
-            modules: false
-          }
-        ]
-      ]
+      sourceMaps: true
     })
   ]
 };
