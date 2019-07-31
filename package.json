@@ -22,7 +22,7 @@
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "yarn run build",
     "test": "jest",
     "test:server": "testem"
   },
