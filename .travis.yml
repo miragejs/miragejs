@@ -33,7 +33,6 @@ jobs:
       script: yarn test
 
     - stage: npm release
-      install: skip
       script: skip
       deploy:
         provider: npm
