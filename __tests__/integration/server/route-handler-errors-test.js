@@ -31,7 +31,7 @@ describe("Integration | Server | Route handler errors", function() {
     ]);
   });
 
-  test("Throwing a `Response` in a route handler results in an Internal Server Error", async () => {
+  test("Throwing a `Response` in a route handler results in the `Response` being returned", async () => {
     server.get("/example", function() {
       throw new Response(401, {}, { message: "Not Authenticated" });
     });
@@ -39,9 +39,9 @@ describe("Integration | Server | Route handler errors", function() {
     let res = await fetch("/example");
     let data = await res.json();
 
-    expect(data.message).toEqual({"code": 401, "data": { message: "Not Authenticated" }, "headers": {"Content-Type": "application/json"}});
-    expect(data.stack).toContain("Mirage: Your GET handler for the url /example threw an error:\n\n[object Object]");
-    expect(res.status).toEqual(500);
+    expect(data.message).toEqual("Not Authenticated");
+    expect(data.stack).toBeFalsy();
+    expect(res.status).toEqual(401);
     expect([...res.headers.entries()]).toEqual([
       ["content-type", "application/json"]
     ]);
