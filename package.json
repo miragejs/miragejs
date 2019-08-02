@@ -28,7 +28,6 @@
     "test:server": "testem"
   },
   "dependencies": {
-    "chalk": "^2.4.2",
     "inflected": "^2.0.4",
     "lodash-es": "^4.17.15",
     "pretender": "3.0.2"
