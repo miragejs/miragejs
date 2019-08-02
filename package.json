@@ -25,11 +25,9 @@
     "build": "rollup -c",
     "prepublishOnly": "yarn run build",
     "test": "jest",
-    "test:all": "run-s lint test"
+    "ci": "run-s lint test"
   },
   "dependencies": {
-    "chalk": "^2.4.2",
-    "global": "^4.4.0",
     "inflected": "^2.0.4",
     "lodash-es": "^4.17.15",
     "pretender": "3.0.2"
