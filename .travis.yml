@@ -25,7 +25,7 @@ jobs:
     - stage: tests
       env: NAME=tests
       install: yarn install
-      script: yarn test:all
+      script: yarn ci
 
     - stage: npm release
       script: skip
