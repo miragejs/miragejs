@@ -20,14 +20,14 @@
     "url": "https://github.com/miragejs/server/issues"
   },
   "scripts": {
+    "lint": "eslint .",
     "dev": "rollup -c -w",
     "build": "rollup -c",
     "prepublishOnly": "yarn run build",
     "test": "jest",
-    "test:server": "testem"
+    "ci": "run-s lint test"
   },
   "dependencies": {
-    "chalk": "^2.4.2",
     "inflected": "^2.0.4",
     "lodash-es": "^4.17.15",
     "pretender": "3.0.2"
@@ -44,6 +44,7 @@
     "jest": "^24.8.0",
     "jest-extended": "^0.11.2",
     "jest-runner-eslint": "^0.7.4",
+    "npm-run-all": "^4.1.5",
     "prettier": "^1.18.2",
     "regenerator-runtime": "^0.13.3",
     "rollup": "^1.17.0",

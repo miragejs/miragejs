@@ -12,11 +12,6 @@ addons:
 cache:
   yarn: true
 
-env:
-  global:
-    # See https://git.io/vdao3 for details.
-    - JOBS=1
-
 install:
   - yarn install --no-lockfile --non-interactive
 
@@ -30,7 +25,7 @@ jobs:
     - stage: tests
       env: NAME=tests
       install: yarn install
-      script: yarn test
+      script: yarn ci
 
     - stage: npm release
       script: skip
