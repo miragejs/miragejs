@@ -10,6 +10,7 @@ module.exports = {
   env: {
     "jest/globals": true,
     es6: true,
+    node: true,
     browser: true
   },
   rules: {
