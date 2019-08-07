@@ -9,37 +9,37 @@ let browser = {
   }
 };
 
-let esmBundle = {
-  displayName: "esm bundle",
-  transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash-es)"],
-  setupFilesAfterEnv: ["jest-extended"],
-  testMatch: ["**/__tests__/integration/**/*-test.[jt]s?(x)"],
-  moduleNameMapper: {
-    "@lib(.*)": "<rootDir>/dist/mirage-ems",
-    "@miragejs/server": "<rootDir>/dist/mirage-ems"
-  }
-};
-
-let umdBundle = {
-  displayName: "umd bundle",
-  setupFilesAfterEnv: ["jest-extended"],
-  testMatch: ["**/__tests__/integration/**/*-test.[jt]s?(x)"],
-  moduleNameMapper: {
-    "@lib(.*)": "<rootDir>/dist/mirage-umd",
-    "@miragejs/server": "<rootDir>/dist/mirage-umd"
-  }
-};
-
-let cjsBundle = {
-  displayName: "cjs bundle",
-  transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash-es)"],
-  setupFilesAfterEnv: ["jest-extended"],
-  testMatch: ["**/__tests__/integration/**/*-test.[jt]s?(x)"],
-  moduleNameMapper: {
-    "@lib(.*)": "<rootDir>/dist/mirage-cjs",
-    "@miragejs/server": "<rootDir>/dist/mirage-cjs"
-  }
-};
+// let esmBundle = {
+//   displayName: "esm bundle",
+//   transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash-es)"],
+//   setupFilesAfterEnv: ["jest-extended"],
+//   testMatch: ["**/__tests__/integration/**/*-test.[jt]s?(x)"],
+//   moduleNameMapper: {
+//     "@lib(.*)": "<rootDir>/dist/mirage-ems",
+//     "@miragejs/server": "<rootDir>/dist/mirage-ems"
+//   }
+// };
+//
+// let umdBundle = {
+//   displayName: "umd bundle",
+//   setupFilesAfterEnv: ["jest-extended"],
+//   testMatch: ["**/__tests__/integration/**/*-test.[jt]s?(x)"],
+//   moduleNameMapper: {
+//     "@lib(.*)": "<rootDir>/dist/mirage-umd",
+//     "@miragejs/server": "<rootDir>/dist/mirage-umd"
+//   }
+// };
+//
+// let cjsBundle = {
+//   displayName: "cjs bundle",
+//   transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash-es)"],
+//   setupFilesAfterEnv: ["jest-extended"],
+//   testMatch: ["**/__tests__/integration/**/*-test.[jt]s?(x)"],
+//   moduleNameMapper: {
+//     "@lib(.*)": "<rootDir>/dist/mirage-cjs",
+//     "@miragejs/server": "<rootDir>/dist/mirage-cjs"
+//   }
+// };
 
 // let eslint = {
 //   displayName: "lint",
@@ -52,5 +52,6 @@ let cjsBundle = {
 // };
 
 module.exports = {
-  projects: [browser, esmBundle, cjsBundle, umdBundle]
+  // Only browser for now, but add back in bundles soon
+  projects: [browser]
 };
