@@ -1,14 +1,9 @@
-# compiled output
-/dist/
-/tmp/
-
 # misc
 /.eslintignore
 /.eslintrc.js
 /.gitignore
 /.watchmanconfig
 /.travis.yml
-/dist
 /tmp
 **/.gitkeep
 /__tests__/
