@@ -4,7 +4,9 @@
   "description": "A client-side server to help you build, test and demo your JavaScript app",
   "main": "index.js",
   "module": "dist/mirage-esm.js",
-  "browser": "dist/mirage-umd.js",
+  "browser": {
+    "./shims/pretender-node.js": "pretender"
+  },
   "keywords": [
     "pretender",
     "prototype",
