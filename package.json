@@ -2,11 +2,8 @@
   "name": "@miragejs/server",
   "version": "0.1.17",
   "description": "A client-side server to help you build, test and demo your JavaScript app",
-  "main": "index.js",
+  "main": "dist/mirage-umd.js",
   "module": "dist/mirage-esm.js",
-  "browser": {
-    "./shims/pretender-node.js": "pretender"
-  },
   "keywords": [
     "pretender",
     "prototype",
