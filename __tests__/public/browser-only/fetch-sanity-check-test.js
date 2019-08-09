@@ -1,19 +1,18 @@
 import { Server, Model } from "@miragejs/server";
 
-describe("Integration | HTTP Verbs", () => {
+describe("Public | Browser only | Fetch sanity check", () => {
   let server;
+
   beforeEach(() => {
     server = new Server({
-      environment: "development",
+      environment: "test",
       models: {
         contact: Model
       }
     });
-    server.timing = 0;
-    server.logging = false;
   });
 
-  afterEach(function() {
+  afterEach(() => {
     server.shutdown();
   });
 
