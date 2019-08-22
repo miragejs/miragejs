@@ -4,7 +4,7 @@ import {
   Collection,
   ActiveModelSerializer
 } from "@miragejs/server";
-import { uniqBy } from "lodash-es";
+import uniqBy from "lodash.uniqby";
 
 describe("Integration | Route handlers | Function handler | #serialize", () => {
   let server;

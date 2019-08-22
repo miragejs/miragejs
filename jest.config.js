@@ -1,6 +1,6 @@
 let browser = {
   displayName: "browser",
-  transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash-es)"],
+  transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash)"],
   setupFilesAfterEnv: ["jest-extended"],
   testMatch: ["**/__tests__/**/*-test.[jt]s?(x)"],
   moduleNameMapper: {
@@ -11,7 +11,7 @@ let browser = {
 
 // let esmBundle = {
 //   displayName: "esm bundle",
-//   transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash-es)"],
+//   transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash)"],
 //   setupFilesAfterEnv: ["jest-extended"],
 //   testMatch: ["**/__tests__/integration/**/*-test.[jt]s?(x)"],
 //   moduleNameMapper: {
@@ -32,7 +32,7 @@ let browser = {
 //
 // let cjsBundle = {
 //   displayName: "cjs bundle",
-//   transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash-es)"],
+//   transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash)"],
 //   setupFilesAfterEnv: ["jest-extended"],
 //   testMatch: ["**/__tests__/integration/**/*-test.[jt]s?(x)"],
 //   moduleNameMapper: {

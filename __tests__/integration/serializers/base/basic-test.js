@@ -1,6 +1,6 @@
 import SerializerRegistry from "@lib/serializer-registry";
 import schemaHelper from "../schema-helper";
-import { uniqBy } from "lodash-es";
+import uniqBy from "lodash.uniqby";
 
 describe("Integration | Serializers | Base | Basic", function() {
   let schema, registry;
