@@ -1,6 +1,6 @@
 export function perfTest(count, message, testFn, timeout = 0) {
   test(`(${count}) ${message}`, () => {
-    var duration = time(() => {
+    let duration = time(() => {
       testFn(count);
     });
 
@@ -13,7 +13,7 @@ export function perfTest(count, message, testFn, timeout = 0) {
 }
 
 export function time(fn) {
-  var start = now();
+  let start = now();
   fn();
 
   return now() - start;

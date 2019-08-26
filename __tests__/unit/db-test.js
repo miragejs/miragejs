@@ -629,7 +629,7 @@ describe("Unit | Db #firstOrCreate", function() {
 });
 
 describe("Unit | Db #registerIdentityManagers and #identityManagerFor", function() {
-  test("identityManagerFor returns ember-cli-mirage default IdentityManager if there aren't any custom ones", () => {
+  test("identityManagerFor returns default IdentityManager if there aren't any custom ones", () => {
     let db = new Db();
     expect(db.identityManagerFor("foo")).toEqual(DefaultIdentityManager);
   });

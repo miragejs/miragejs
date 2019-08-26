@@ -1266,7 +1266,7 @@ describe("Unit | Server #build", function() {
     expect(() => {
       server.build("article", "withCategory");
     }).toThrow(
-      "Mirage: You're using the `association` factory helper on the 'category' attribute of your article factory, but that attribute is not a `belongsTo` association. Read the Factories docs for more information: http://www.ember-cli-mirage.com/docs/v0.3.x/factories/#factories-and-relationships"
+      "Mirage: You're using the `association` factory helper on the 'category' attribute of your article factory, but that attribute is not a `belongsTo` association."
     );
   });
 });
