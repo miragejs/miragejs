@@ -58,7 +58,7 @@ describe("Integration | Passthrough", () => {
     expect(data).toEqual(123);
 
     await expect(fetch("/addresses")).rejects.toThrow(
-      `Mirage: Your Ember app tried to GET '/addresses', but there was no route defined to handle this request`
+      `Mirage: Your app tried to GET '/addresses', but there was no route defined to handle this request`
     );
 
     await expect(fetch("/addresses", { method: "POST" })).rejects.toThrow(

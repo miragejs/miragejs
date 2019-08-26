@@ -246,19 +246,19 @@ describe("Integration | Server | Resource shorthand", function() {
     server.resource("contacts", { only: ["index"] });
 
     await expect(fetch("/contacts/1")).rejects.toThrow(
-      "Mirage: Your Ember app tried to GET '/contacts/1'"
+      "Mirage: Your app tried to GET '/contacts/1'"
     );
     await expect(fetch("/contacts", { method: "POST" })).rejects.toThrow(
-      "Mirage: Your Ember app tried to POST '/contacts'"
+      "Mirage: Your app tried to POST '/contacts'"
     );
     await expect(fetch("/contacts/1", { method: "PUT" })).rejects.toThrow(
-      "Mirage: Your Ember app tried to PUT '/contacts/1'"
+      "Mirage: Your app tried to PUT '/contacts/1'"
     );
     await expect(fetch("/contacts/1", { method: "PATCH" })).rejects.toThrow(
-      "Mirage: Your Ember app tried to PATCH '/contacts/1'"
+      "Mirage: Your app tried to PATCH '/contacts/1'"
     );
     await expect(fetch("/contacts/1", { method: "DELETE" })).rejects.toThrow(
-      "Mirage: Your Ember app tried to DELETE '/contacts/1'"
+      "Mirage: Your app tried to DELETE '/contacts/1'"
     );
   });
 
@@ -288,16 +288,16 @@ describe("Integration | Server | Resource shorthand", function() {
     server.resource("contacts", { except: ["create", "update", "delete"] });
 
     await expect(fetch("/contacts", { method: "POST" })).rejects.toThrow(
-      "Mirage: Your Ember app tried to POST '/contacts'"
+      "Mirage: Your app tried to POST '/contacts'"
     );
     await expect(fetch("/contacts/1", { method: "PUT" })).rejects.toThrow(
-      "Mirage: Your Ember app tried to PUT '/contacts/1'"
+      "Mirage: Your app tried to PUT '/contacts/1'"
     );
     await expect(fetch("/contacts/1", { method: "PATCH" })).rejects.toThrow(
-      "Mirage: Your Ember app tried to PATCH '/contacts/1'"
+      "Mirage: Your app tried to PATCH '/contacts/1'"
     );
     await expect(fetch("/contacts/1", { method: "DELETE" })).rejects.toThrow(
-      "Mirage: Your Ember app tried to DELETE '/contacts/1'"
+      "Mirage: Your app tried to DELETE '/contacts/1'"
     );
   });
 });

@@ -110,7 +110,7 @@ describe("Integration | ORM | update", () => {
   });
 
   test("it can update a hash of attrs immediately", () => {
-    var link = schema.users.find(1);
+    let link = schema.users.find(1);
     link.update({ name: "Evil link", evil: true });
 
     expect(link.attrs).toEqual({
@@ -128,7 +128,7 @@ describe("Integration | ORM | update", () => {
   });
 
   test("it can update a non-existing attribute", () => {
-    var link = schema.users.find(1);
+    let link = schema.users.find(1);
     link.update({
       name: "Evil link",
       evil: true,
@@ -152,7 +152,7 @@ describe("Integration | ORM | update", () => {
   });
 
   test("if users sets incorrectly an attribute without using update, it will still work", () => {
-    var link = schema.users.find(1);
+    let link = schema.users.find(1);
     link.reallyEvil = "absolutely evil";
     link.update({ reallyEvil: "a little flower", evil: true });
     expect(link.attrs).toEqual({
