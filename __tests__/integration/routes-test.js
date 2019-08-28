@@ -1,6 +1,6 @@
 import { Server, Model } from "@miragejs/server";
 
-describe("Integration | Server Config", () => {
+describe("Integration | Routes", () => {
   let server;
 
   afterEach(function() {
@@ -40,6 +40,8 @@ describe("Integration | Server Config", () => {
           this.get("/posts", () => ({ posts: [] }));
         }
       });
-    }).toThrow("You can't pass both options into your server definition");
+    }).toThrow(
+      "The routes option is an alias for the baseConfig option. You can't pass both options into your server definition."
+    );
   });
 });
