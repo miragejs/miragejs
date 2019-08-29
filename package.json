@@ -25,7 +25,8 @@
     "dev": "rollup -c -w",
     "build": "rollup -c",
     "prepublishOnly": "yarn run build",
-    "test": "jest",
+    "test:run": "jest",
+    "test": "run-s build test:run",
     "ci": "run-s lint test"
   },
   "dependencies": {

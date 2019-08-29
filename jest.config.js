@@ -45,7 +45,7 @@ let browser = {
 let browserEnvironmentConsumingCjs = {
   displayName: "browserEnvironmentConsumingCjs",
   testEnvironment: "jsdom",
-  transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash-es)"],
+  transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash)"],
   setupFilesAfterEnv: ["jest-extended"],
   testMatch: ["**/__tests__/public/**/*-test.[jt]s?(x)"],
   moduleNameMapper: {
@@ -57,7 +57,7 @@ let browserEnvironmentConsumingCjs = {
 let nodeEnvironmentConsumingCjs = {
   displayName: "nodeEnvironmentConsumingCjs",
   testEnvironment: "node",
-  transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash-es)"],
+  transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash)"],
   setupFilesAfterEnv: ["jest-extended"],
   testMatch: ["**/__tests__/public/shared/**/*-test.[jt]s?(x)"],
   moduleNameMapper: {
@@ -68,7 +68,7 @@ let nodeEnvironmentConsumingCjs = {
 // From Ryan's PR. Run all tests in Node. (Lots will fail.)
 // let node = {
 //   displayName: "node",
-//   transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash-es)"],
+//   transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash)"],
 //   setupFilesAfterEnv: ["jest-extended"],
 //   testEnvironment: "node",
 //   testMatch: ["**/__tests__/**/*-test.[jt]s?(x)"],

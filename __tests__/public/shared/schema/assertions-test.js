@@ -1,6 +1,6 @@
 import { Server, Model, hasMany, belongsTo } from "@miragejs/server";
 
-describe("Integration | ORM | assertions", () => {
+describe("Public | Shared | Schema | assertions", () => {
   let server;
 
   beforeEach(() => {
