@@ -1,6 +1,6 @@
 import Helper from "./_helper";
 
-describe("Integration | ORM | Belongs To | Named Reflexive Explicit Inverse | instantiating", () => {
+describe("Public | Shared | Schema | Belongs To | Named Reflexive Explicit Inverse | instantiating", () => {
   let helper, schema;
 
   beforeEach(() => {

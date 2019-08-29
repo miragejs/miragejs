@@ -1,7 +1,7 @@
 import Helper from "./_helper";
 import { Model } from "@miragejs/server";
 
-describe("Integration | ORM | Belongs To | Basic | create", () => {
+describe("Public | Shared | Schema | Belongs To | Basic | create", () => {
   let helper;
   beforeEach(() => {
     helper = new Helper();

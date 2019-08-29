@@ -1,6 +1,6 @@
 import Helper from "./_helper";
 
-describe("Integration | ORM | Belongs To | Named Reflexive | instantiating", () => {
+describe("Public | Shared | Schema | Belongs To | Named Reflexive | instantiating", () => {
   let helper, schema;
 
   beforeEach(() => {

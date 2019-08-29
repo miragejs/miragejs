@@ -1,6 +1,6 @@
 import { Server, Model, belongsTo } from "@miragejs/server";
 
-describe("Integration | ORM | Belongs To | Basic | regressions", function() {
+describe("Public | Shared | Schema | Belongs To | Basic | regressions", function() {
   test("belongsTo accessors works when foreign key is present but falsy", () => {
     let server = new Server({
       environment: "test",

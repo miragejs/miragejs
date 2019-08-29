@@ -1,6 +1,6 @@
 import Helper, { states } from "./_helper";
 
-describe("Integration | ORM | Belongs To | Basic | delete", () => {
+describe("Public | Shared | Schema | Belongs To | Basic | delete", () => {
   let helper;
   beforeEach(() => {
     helper = new Helper();
