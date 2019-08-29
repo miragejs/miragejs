@@ -1,6 +1,6 @@
 import { Server, Model, Factory } from "@miragejs/server";
 
-describe("Integration | Database", () => {
+describe("Integration | Db | Fixtures and factories", () => {
   let server;
   beforeEach(() => {
     server = new Server({

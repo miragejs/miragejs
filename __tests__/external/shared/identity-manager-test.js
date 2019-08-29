@@ -27,7 +27,7 @@ const CustomIdentityManager = class {
   }
 };
 
-describe("Integration | Db | Identity manager", function() {
+describe("External | Shared | Identity manager", function() {
   let server;
 
   afterEach(() => {
@@ -63,28 +63,25 @@ describe("Integration | Db | Identity manager", function() {
     expect(comment.id).toEqual("1");
   });
 
-  test("attribute hash is passed to identity managers fetch method", () => {
-    expect.assertions(2);
-
-    let dataForRecord = {
-      foo: "bar"
-    };
+  test("identity managers can use record data in their fetch method", () => {
     let IdentityManagerForTest = class {
       fetch(data) {
-        expect(data).toBeTruthy();
-        expect(data).toEqual(dataForRecord);
+        return `${data.ssn}`;
       }
     };
+
     server = new Server({
       environment: "test",
       identityManagers: {
         application: IdentityManagerForTest
       },
       models: {
-        foo: Model.extend()
+        user: Model.extend()
       }
     });
 
-    server.create("foo", dataForRecord);
+    let ryan = server.create("user", { name: "Ryan", ssn: 123456789 });
+
+    expect(ryan.id).toEqual("123456789");
   });
 });
