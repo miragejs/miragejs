@@ -1,6 +1,6 @@
 import { Server, Model, hasMany } from "@miragejs/server";
 
-describe("Integration | ORM | Has Many | Regressions | Many to many inverse set bug", () => {
+describe("Public | Shared | Schema | Has Many | Regressions | Many to many inverse set bug", () => {
   let server;
 
   beforeEach(() => {
