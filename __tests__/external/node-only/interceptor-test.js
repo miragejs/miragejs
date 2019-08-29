@@ -7,7 +7,7 @@ describe("Public | Node only | Interceptor", () => {
       routes() {
         this.namespace = "api";
 
-        this.get("/users");
+        this.resource("user");
 
         this.passthrough();
       }

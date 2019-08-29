@@ -45,13 +45,13 @@ let cjs = {
           let umdId = id.replace(".es.js", ".js");
 
           return `
-            export default function(...args) {
-              if (typeof window !== 'undefined') {
-                ${fs.readFileSync(umdId, "utf-8")}
+            const MaybePretender = typeof window === 'undefined' ? undefined : function(...args) {
+              ${fs.readFileSync(umdId, "utf-8")}
 
-                return new Pretender(...args);
-              }
+              return new Pretender(...args);
             }
+
+            export default MaybePretender
           `;
         }
       }
