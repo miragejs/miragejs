@@ -41,25 +41,25 @@ let browser = {
 //   }
 // };
 
-// Public API, Create React App-like environment.
+// External API, Create React App-like environment.
 let browserEnvironmentConsumingCjs = {
   displayName: "browserEnvironmentConsumingCjs",
   testEnvironment: "jsdom",
   transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash)"],
   setupFilesAfterEnv: ["jest-extended"],
-  testMatch: ["**/__tests__/public/**/*-test.[jt]s?(x)"],
+  testMatch: ["**/__tests__/external/**/*-test.[jt]s?(x)"],
   moduleNameMapper: {
     "@miragejs/server": "<rootDir>/dist/mirage-cjs"
   }
 };
 
-// Public API, Gatsby-like environment (SSR of client-side code)
+// External API, Gatsby-like environment (SSR of client-side code)
 let nodeEnvironmentConsumingCjs = {
   displayName: "nodeEnvironmentConsumingCjs",
   testEnvironment: "node",
   transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash)"],
   setupFilesAfterEnv: ["jest-extended"],
-  testMatch: ["**/__tests__/public/shared/**/*-test.[jt]s?(x)"],
+  testMatch: ["**/__tests__/external/shared/**/*-test.[jt]s?(x)"],
   moduleNameMapper: {
     "@miragejs/server": "<rootDir>/dist/mirage-cjs"
   }
