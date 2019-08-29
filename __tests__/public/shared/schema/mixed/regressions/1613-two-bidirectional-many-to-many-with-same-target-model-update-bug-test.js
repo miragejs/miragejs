@@ -1,6 +1,6 @@
 import { Server, Model, hasMany, belongsTo } from "@miragejs/server";
 
-describe("Integration | ORM | Mixed | Regressions | 1613 Two bidirectional one-to-many relationships with same target model update ids bug", () => {
+describe("Public | Shared | Schema | Mixed | Regressions | 1613 Two bidirectional one-to-many relationships with same target model update ids bug", () => {
   let server;
 
   beforeEach(() => {

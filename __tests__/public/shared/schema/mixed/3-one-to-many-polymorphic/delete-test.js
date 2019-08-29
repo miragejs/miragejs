@@ -1,6 +1,6 @@
 import Helper, { states } from "./_helper";
 
-describe("Integration | ORM | Mixed | One To Many Polymorphic | delete", () => {
+describe("Public | Shared | Schema | Mixed | One To Many Polymorphic | delete", () => {
   let helper;
   beforeEach(() => {
     helper = new Helper();
