@@ -1,29 +1,33 @@
-import "@lib/container";
-import Db from "@lib/db";
-import Schema from "@lib/orm/schema";
-import Model from "@lib/orm/model";
-import Collection from "@lib/orm/collection";
+import { Server, Model, Collection } from "@miragejs/server";
 
-describe("Integration | ORM | #where", () => {
-  let schema;
-  let User = Model.extend();
+describe("Public | Shared | Schema | #where", () => {
+  let server;
+  let User;
 
   beforeEach(() => {
-    let db = new Db({
+    User = Model.extend();
+    server = new Server({
+      environment: "test",
+      models: {
+        user: User
+      }
+    });
+
+    server.db.loadData({
       users: [
         { id: 1, name: "Link", good: true },
         { id: 2, name: "Zelda", good: true },
         { id: 3, name: "Ganon", good: false }
       ]
     });
+  });
 
-    schema = new Schema(db, {
-      user: User
-    });
+  afterEach(() => {
+    server.shutdown();
   });
 
   test("it returns models that match a query with where", () => {
-    let users = schema.users.where({ good: false });
+    let users = server.schema.users.where({ good: false });
 
     expect(users instanceof Collection).toBeTruthy();
     expect(users.models).toHaveLength(1);
@@ -36,7 +40,7 @@ describe("Integration | ORM | #where", () => {
   });
 
   test("it returns models that match using a query function", () => {
-    let users = schema.users.where(function(rec) {
+    let users = server.schema.users.where(function(rec) {
       return !rec.good;
     });
 
@@ -51,7 +55,7 @@ describe("Integration | ORM | #where", () => {
   });
 
   test("it returns an empty collection if no models match a query", () => {
-    let users = schema.users.where({ name: "Link", good: false });
+    let users = server.schema.users.where({ name: "Link", good: false });
 
     expect(users instanceof Collection).toBeTruthy();
     expect(users.models).toHaveLength(0);
