@@ -1,10 +1,10 @@
 import { Server } from "@miragejs/server";
 
-describe("Integration | Server #loadFixtures", () => {
+describe("External | Shared | Server | loadFixtures", () => {
   let server;
   beforeEach(() => {
     server = new Server({
-      environment: "development",
+      environment: "test",
       scenarios: {
         default() {}
       },

@@ -47,7 +47,10 @@ let browserEnvironmentConsumingCjs = {
   testEnvironment: "jsdom",
   transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash)"],
   setupFilesAfterEnv: ["jest-extended"],
-  testMatch: ["**/__tests__/external/**/*-test.[jt]s?(x)"],
+  testMatch: [
+    "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
+    "**/__tests__/external/browser-only/**/*-test.[jt]s?(x)"
+  ],
   moduleNameMapper: {
     "@miragejs/server": "<rootDir>/dist/mirage-cjs"
   }
@@ -59,7 +62,10 @@ let nodeEnvironmentConsumingCjs = {
   testEnvironment: "node",
   transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash)"],
   setupFilesAfterEnv: ["jest-extended"],
-  testMatch: ["**/__tests__/external/shared/**/*-test.[jt]s?(x)"],
+  testMatch: [
+    "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
+    "**/__tests__/external/node-only/**/*-test.[jt]s?(x)"
+  ],
   moduleNameMapper: {
     "@miragejs/server": "<rootDir>/dist/mirage-cjs"
   }

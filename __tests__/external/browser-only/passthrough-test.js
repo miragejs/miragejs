@@ -1,14 +1,12 @@
 import { Server } from "@miragejs/server";
 
-describe("Integration | Passthrough", () => {
+describe("Public | Browser only | Passthrough", () => {
   let server, originalError;
 
   beforeEach(() => {
     server = new Server({
-      environment: "development"
+      environment: "test"
     });
-    server.timing = 0;
-    server.logging = false;
 
     /*
       Waiting to hear back on this:
@@ -21,7 +19,7 @@ describe("Integration | Passthrough", () => {
     console.error = () => {};
   });
 
-  afterEach(function() {
+  afterEach(() => {
     server.shutdown();
     console.error = originalError;
   });
