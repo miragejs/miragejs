@@ -1,7 +1,4 @@
-import "@lib/container";
-import Db from "@lib/db";
-import Schema from "@lib/orm/schema";
-import { Model, hasMany, belongsTo } from "@miragejs/server";
+import { Server, Model, hasMany, belongsTo } from "@miragejs/server";
 
 /*
   A model with a hasMany association can be in eight states
@@ -16,16 +13,24 @@ import { Model, hasMany, belongsTo } from "@miragejs/server";
 */
 export default class Helper {
   constructor() {
-    this.db = new Db();
-
-    this.schema = new Schema(this.db, {
-      user: Model.extend({
-        posts: hasMany()
-      }),
-      post: Model.extend({
-        user: belongsTo()
-      })
+    this.server = new Server({
+      environment: "test",
+      models: {
+        user: Model.extend({
+          posts: hasMany()
+        }),
+        post: Model.extend({
+          user: belongsTo()
+        })
+      }
     });
+
+    this.db = this.server.db;
+    this.schema = this.server.schema;
+  }
+
+  shutdown() {
+    this.server.shutdown();
   }
 
   savedChildNoParent() {

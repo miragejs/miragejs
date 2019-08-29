@@ -7,6 +7,9 @@ describe("Integration | ORM | Mixed | Many To One | create", () => {
     helper = new Helper();
     helper.schema.registerModel("foo", Model);
   });
+  afterEach(() => {
+    helper.shutdown();
+  });
 
   test("it sets up associations correctly when passing in the foreign key", () => {
     let { schema } = helper;

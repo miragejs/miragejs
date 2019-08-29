@@ -5,6 +5,9 @@ describe("Integration | ORM | Mixed | One To Many Polymorphic | delete", () => {
   beforeEach(() => {
     helper = new Helper();
   });
+  afterEach(() => {
+    helper.shutdown();
+  });
 
   states.forEach(state => {
     test(`deleting children updates the parent's foreign key for a ${state}`, () => {

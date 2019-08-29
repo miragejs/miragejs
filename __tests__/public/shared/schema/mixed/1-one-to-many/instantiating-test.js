@@ -6,6 +6,9 @@ describe("Integration | ORM | Mixed | One To Many | instantiating", () => {
     helper = new Helper();
     schema = helper.schema;
   });
+  afterEach(() => {
+    helper.shutdown();
+  });
 
   test("the parent accepts a saved child id", () => {
     let post = helper.savedChild();

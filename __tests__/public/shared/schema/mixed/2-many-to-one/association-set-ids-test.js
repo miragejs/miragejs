@@ -5,6 +5,9 @@ describe("Integration | ORM | Mixed | Many To One | association #setIds", () => 
   beforeEach(() => {
     helper = new Helper();
   });
+  afterEach(() => {
+    helper.shutdown();
+  });
 
   /*
     The model can update its association via parentId, for all states

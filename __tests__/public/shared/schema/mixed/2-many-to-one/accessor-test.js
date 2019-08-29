@@ -5,6 +5,9 @@ describe("Integration | ORM | Mixed | Many To One | accessor", () => {
   beforeEach(() => {
     helper = new Helper();
   });
+  afterEach(() => {
+    helper.shutdown();
+  });
 
   /*
     The reference to a belongs-to association is correct, for all states

@@ -5,6 +5,9 @@ describe("Integration | ORM | Mixed | One To Many Polymorphic | association #cre
   beforeEach(() => {
     helper = new Helper();
   });
+  afterEach(() => {
+    helper.shutdown();
+  });
 
   /*
     The model can create a has-many association, for all states

@@ -1,9 +1,12 @@
 import Helper, { states } from "./_helper";
 
-describe("Integration | ORM | Mixed | One To Many Polymorphic | accessor", () => {
+describe("Integration | ORM | Mixed | One To Many | accessor", () => {
   let helper;
   beforeEach(() => {
     helper = new Helper();
+  });
+  afterEach(() => {
+    helper.shutdown();
   });
 
   /*
@@ -13,18 +16,14 @@ describe("Integration | ORM | Mixed | One To Many Polymorphic | accessor", () =>
     test(`the references of a ${state} are correct`, () => {
       let [user, posts] = helper[state]();
 
-      expect(user.things.models).toHaveLength(posts.length);
-      expect(user.thingIds).toHaveLength(posts.length);
+      expect(user.posts.models).toHaveLength(posts.length);
+      expect(user.postIds).toHaveLength(posts.length);
 
       posts.forEach(post => {
-        expect(user.things.includes(post)).toBeTruthy();
+        expect(user.posts.includes(post)).toBeTruthy();
 
         if (post.isSaved()) {
-          expect(
-            user.thingIds.find(obj => {
-              return obj.id === post.id && obj.type === "post";
-            })
-          ).toBeTruthy();
+          expect(user.postIds.indexOf(post.id) > -1).toBeTruthy();
         }
 
         // Check the inverse
