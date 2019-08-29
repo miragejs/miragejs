@@ -1,43 +1,47 @@
-import "@lib/container";
-import Db from "@lib/db";
-import Schema from "@lib/orm/schema";
-import Model from "@lib/orm/model";
+import { Server, Model } from "@miragejs/server";
 
-describe("Integration | ORM | #findOrCreateBy", () => {
-  let User, schema;
+describe("Public | Shared | Schema | #findOrCreateBy", () => {
+  let User;
+  let server;
 
   beforeEach(() => {
-    let db = new Db({
+    User = Model;
+    server = new Server({
+      environment: "test",
+      models: {
+        user: User
+      }
+    });
+
+    server.db.loadData({
       users: [
         { id: 1, name: "Link", good: true },
         { id: 2, name: "Zelda", good: true },
         { id: 3, name: "Ganon", good: false }
       ]
     });
+  });
 
-    User = Model.extend();
-
-    schema = new Schema(db, {
-      user: User
-    });
+  afterEach(() => {
+    server.shutdown();
   });
 
   test("it returns the first model that matches the attrs", () => {
-    let user = schema.users.findOrCreateBy({ good: true });
+    let user = server.schema.users.findOrCreateBy({ good: true });
 
     expect(user instanceof User).toBeTruthy();
     expect(user.attrs).toEqual({ id: "1", name: "Link", good: true });
   });
 
   test("it creates a model if no existing model with the attrs is found", () => {
-    expect(schema.db.users).toHaveLength(3);
+    expect(server.schema.db.users).toHaveLength(3);
 
-    let newUser = schema.users.findOrCreateBy({
+    let newUser = server.schema.users.findOrCreateBy({
       name: "Link",
       good: false
     });
 
-    expect(schema.db.users).toHaveLength(4);
+    expect(server.schema.db.users).toHaveLength(4);
     expect(newUser instanceof User).toBeTruthy();
     expect(newUser.attrs).toEqual({ id: "4", name: "Link", good: false });
   });
