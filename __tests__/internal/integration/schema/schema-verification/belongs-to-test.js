@@ -3,7 +3,7 @@ import Db from "@lib/db";
 import Schema from "@lib/orm/schema";
 import { Model, belongsTo } from "@miragejs/server";
 
-describe("Integration | ORM | Schema Verification | Belongs To", function() {
+describe("Internal | Integration | Schema | Schema Verification | Belongs To", function() {
   test("a one-way belongsTo association is correct", () => {
     let schema = new Schema(
       new Db({

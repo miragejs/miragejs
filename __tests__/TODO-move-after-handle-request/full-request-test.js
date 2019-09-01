@@ -1,24 +1,26 @@
-import Mirage from "@miragejs/server";
-import Server from "@lib/server";
-import Model from "@lib/orm/model";
-import Serializer from "@lib/serializer";
+import {
+  Server,
+  Model,
+  hasMany,
+  belongsTo,
+  Serializer
+} from "@miragejs/server";
 
-describe("Integration | Serializers | Base | Full Request", function() {
+describe("External | Shared | Serializers | Base | Full Request", function() {
   let server;
 
   beforeEach(function() {
     server = new Server({
-      environment: "development",
       models: {
         author: Model.extend({
-          posts: Mirage.hasMany()
+          posts: hasMany()
         }),
         post: Model.extend({
-          author: Mirage.belongsTo(),
-          comments: Mirage.hasMany()
+          author: belongsTo(),
+          comments: hasMany()
         }),
         comment: Model.extend({
-          post: Mirage.belongsTo()
+          post: belongsTo()
         })
       },
       serializers: {
@@ -40,8 +42,6 @@ describe("Integration | Serializers | Base | Full Request", function() {
         })
       }
     });
-    server.timing = 0;
-    server.logging = false;
   });
 
   afterEach(function() {

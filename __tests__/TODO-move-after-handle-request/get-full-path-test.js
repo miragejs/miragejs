@@ -7,8 +7,6 @@ describe("Integration | Server | Get full path", function() {
     server = new Server({
       environment: "test"
     });
-    server.timing = 0;
-    server.logging = false;
   });
 
   afterEach(function() {

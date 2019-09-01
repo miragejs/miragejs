@@ -11,7 +11,7 @@ function expectNoWarning() {
   };
 }
 
-describe("Integration | Server | create and createList", function() {
+describe("External | Shared | Factories | create and createList", function() {
   let server, Contact, AmazingContact, Post, Author, Data;
 
   beforeEach(function() {
@@ -41,8 +41,6 @@ describe("Integration | Server | create and createList", function() {
         amazingContact: Factory
       }
     });
-    server.timing = 0;
-    server.logging = false;
   });
 
   afterEach(function() {

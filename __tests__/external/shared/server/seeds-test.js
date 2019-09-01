@@ -1,6 +1,6 @@
 import { Server, Model } from "@miragejs/server";
 
-describe("Integration | Seeds", () => {
+describe("External | Shared | Server | seeds", () => {
   let server;
 
   afterEach(function() {

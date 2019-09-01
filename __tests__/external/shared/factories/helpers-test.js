@@ -8,7 +8,7 @@ import {
   association
 } from "@miragejs/server";
 
-describe("Integration | Server | Factories | helpers", () => {
+describe("Eternal | Shared | Factories | helpers", () => {
   let server;
 
   afterEach(() => {

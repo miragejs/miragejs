@@ -1,7 +1,8 @@
 import { Server, Model, Factory } from "@miragejs/server";
 
-describe("Integration | Db | Fixtures and factories", () => {
+describe("External | Shared | Fixtures and factories", () => {
   let server;
+
   beforeEach(() => {
     server = new Server({
       environment: "development",
@@ -29,7 +30,8 @@ describe("Integration | Db | Fixtures and factories", () => {
 
     server.schema.authors.create({});
 
-    let { authors } = server.db;
+    let authors = server.db.authors;
+
     expect(authors).toHaveLength(2);
     expect(authors.map(a => a.id)).toEqual(["1", "2"]);
   });

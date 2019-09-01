@@ -1,86 +1,83 @@
 import {
+  Server,
   ActiveModelSerializer,
   Model,
   hasMany,
   belongsTo
 } from "@miragejs/server";
-import Schema from "@lib/orm/schema";
-import Db from "@lib/db";
-import SerializerRegistry from "@lib/serializer-registry";
 
-describe("Integration | Serializer | ActiveModelSerializer", () => {
-  let schema, registry;
+describe("External | Shared | Serializers | ActiveModelSerializer", () => {
+  let server;
 
   beforeEach(function() {
-    let db = new Db();
-    schema = new Schema(db);
-    schema.registerModels({
-      wordSmith: Model.extend({
-        blogPosts: hasMany()
-      }),
-      blogPost: Model.extend({
-        wordSmith: belongsTo(),
-        comments: hasMany()
-      }),
-      user: Model.extend({
-        contactInfos: hasMany()
-      }),
-      contactInfo: Model.extend({
-        user: belongsTo()
-      }),
-      comment: Model.extend({
-        commentable: belongsTo({ polymorphic: true })
-      })
+    server = new Server({
+      models: {
+        wordSmith: Model.extend({
+          blogPosts: hasMany()
+        }),
+        blogPost: Model.extend({
+          wordSmith: belongsTo(),
+          comments: hasMany()
+        }),
+        user: Model.extend({
+          contactInfos: hasMany()
+        }),
+        contactInfo: Model.extend({
+          user: belongsTo()
+        }),
+        comment: Model.extend({
+          commentable: belongsTo({ polymorphic: true })
+        })
+      },
+      serializers: {
+        application: ActiveModelSerializer,
+        wordSmith: ActiveModelSerializer.extend({
+          serializeIds: "included",
+          attrs: ["id", "name"],
+          include: ["blogPosts"]
+        }),
+        blogPost: ActiveModelSerializer.extend({
+          serializeIds: "included",
+          include: ["wordSmith", "comments"]
+        }),
+        comment: ActiveModelSerializer.extend({
+          serializeIds: "included",
+          include: ["commentable"]
+        }),
+        contactInfo: ActiveModelSerializer.extend({
+          serializeIds: "included",
+          include: ["user"]
+        }),
+        user: ActiveModelSerializer.extend({
+          serializeIds: "included",
+          attrs: ["id", "name"],
+          include: ["contactInfos"],
+          embed: true
+        })
+      }
     });
 
-    let link = schema.wordSmiths.create({ name: "Link", age: 123 });
+    let link = server.schema.wordSmiths.create({ name: "Link", age: 123 });
     let post1 = link.createBlogPost({ title: "Lorem" });
     link.createBlogPost({ title: "Ipsum" });
 
-    schema.wordSmiths.create({ name: "Zelda", age: 230 });
+    server.schema.wordSmiths.create({ name: "Zelda", age: 230 });
 
-    let user = schema.users.create({ name: "John Peach", age: 123 });
+    let user = server.schema.users.create({ name: "John Peach", age: 123 });
     user.createContactInfo({ email: "peach@bb.me" });
     user.createContactInfo({ email: "john3000@mail.com" });
 
-    schema.users.create({ name: "Pine Apple", age: 230 });
-    schema.comments.create({ text: "Hi there", commentable: post1 });
-
-    registry = new SerializerRegistry(schema, {
-      application: ActiveModelSerializer,
-      wordSmith: ActiveModelSerializer.extend({
-        serializeIds: "included",
-        attrs: ["id", "name"],
-        include: ["blogPosts"]
-      }),
-      blogPost: ActiveModelSerializer.extend({
-        serializeIds: "included",
-        include: ["wordSmith", "comments"]
-      }),
-      comment: ActiveModelSerializer.extend({
-        serializeIds: "included",
-        include: ["commentable"]
-      }),
-      contactInfo: ActiveModelSerializer.extend({
-        serializeIds: "included",
-        include: ["user"]
-      }),
-      user: ActiveModelSerializer.extend({
-        serializeIds: "included",
-        attrs: ["id", "name"],
-        include: ["contactInfos"],
-        embed: true
-      })
-    });
+    server.schema.users.create({ name: "Pine Apple", age: 230 });
+    server.schema.comments.create({ text: "Hi there", commentable: post1 });
   });
 
   afterEach(function() {
-    schema.db.emptyData();
+    server.shutdown();
   });
 
   test("it sideloads associations and snake-cases relationships and attributes correctly for a model", () => {
-    let link = schema.wordSmiths.find(1);
-    let result = registry.serialize(link);
+    let link = server.schema.wordSmiths.find(1);
+    let result = server.serializerOrRegistry.serialize(link);
 
     expect(result).toEqual({
       word_smith: {
@@ -114,8 +111,8 @@ describe("Integration | Serializer | ActiveModelSerializer", () => {
   });
 
   test("it sideloads associations and snake-cases relationships and attributes correctly for a collection", () => {
-    let wordSmiths = schema.wordSmiths.all();
-    let result = registry.serialize(wordSmiths);
+    let wordSmiths = server.schema.wordSmiths.all();
+    let result = server.serializerOrRegistry.serialize(wordSmiths);
 
     expect(result).toEqual({
       word_smiths: [
@@ -156,8 +153,8 @@ describe("Integration | Serializer | ActiveModelSerializer", () => {
   });
 
   test("it embeds associations and snake-cases relationships and attributes correctly for a collection", () => {
-    let users = schema.users.all();
-    let result = registry.serialize(users);
+    let users = server.schema.users.all();
+    let result = server.serializerOrRegistry.serialize(users);
 
     expect(result).toEqual({
       users: [

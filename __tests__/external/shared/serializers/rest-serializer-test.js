@@ -6,7 +6,7 @@ import {
   RestSerializer
 } from "@miragejs/server";
 
-describe("Integration | Serializer | RestSerializer", () => {
+describe("External | Shared | Serializers | RestSerializer", () => {
   let server;
 
   afterEach(function() {

@@ -1,7 +1,7 @@
 import { Server, Model, Factory } from "@miragejs/server";
 import { perfTest } from "./utils";
 
-describe("Performance | Factory | Simple", () => {
+describe("Internal | Integration | Performance | Simple factory test", () => {
   let server;
 
   beforeEach(() => {

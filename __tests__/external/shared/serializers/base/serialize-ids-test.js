@@ -1,44 +1,45 @@
-import Schema from "@lib/orm/schema";
-import Db from "@lib/db";
-import SerializerRegistry from "@lib/serializer-registry";
-import { Serializer, Model, hasMany } from "@miragejs/server";
+import { Server, Serializer, Model, hasMany } from "@miragejs/server";
 
-describe("Integration | Serializers | Base | Serialize ids", function() {
-  let schema;
+describe("External | Shared | Serializers | Base | Serialize ids", function() {
+  let server;
 
   beforeEach(function() {
-    schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-        blogPosts: hasMany(),
-        specialPosts: hasMany("blog-post", { inverse: "specialAuthor" })
-      }),
-      blogPost: Model
+    server = new Server({
+      models: {
+        wordSmith: Model.extend({
+          blogPosts: hasMany(),
+          specialPosts: hasMany("blog-post", { inverse: "specialAuthor" })
+        }),
+        blogPost: Model
+      }
     });
   });
 
   afterEach(function() {
-    schema.db.emptyData();
+    server.shutdown();
   });
 
   test(`if serializeIds is 'include' it serializes ids of hasMany associations that are included`, () => {
     let ApplicationSerializer = Serializer.extend({
       serializeIds: "included"
     });
-    let registry = new SerializerRegistry(schema, {
-      application: ApplicationSerializer,
-      wordSmith: ApplicationSerializer.extend({
-        include: ["blogPosts"]
-      })
+    server.config({
+      serializers: {
+        application: ApplicationSerializer,
+        wordSmith: ApplicationSerializer.extend({
+          include: ["blogPosts"]
+        })
+      }
     });
 
-    let wordSmith = schema.wordSmiths.create({
+    let wordSmith = server.schema.wordSmiths.create({
       id: 1,
       name: "Link"
     });
     wordSmith.createBlogPost();
     wordSmith.createBlogPost();
     wordSmith.createSpecialPost();
-    let result = registry.serialize(wordSmith);
+    let result = server.serializerOrRegistry.serialize(wordSmith);
 
     expect(result).toEqual({
       wordSmith: {
@@ -51,20 +52,22 @@ describe("Integration | Serializers | Base | Serialize ids", function() {
   });
 
   test(`if serializeIds is 'always' it serializes ids of all hasMany associations`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: Serializer.extend({
-        serializeIds: "always"
-      })
+    server.config({
+      serializers: {
+        application: Serializer.extend({
+          serializeIds: "always"
+        })
+      }
     });
 
-    let wordSmith = schema.wordSmiths.create({
+    let wordSmith = server.schema.wordSmiths.create({
       id: 1,
       name: "Link"
     });
     wordSmith.createBlogPost();
     wordSmith.createBlogPost();
     wordSmith.createSpecialPost();
-    let result = registry.serialize(wordSmith);
+    let result = server.serializerOrRegistry.serialize(wordSmith);
 
     expect(result).toEqual({
       wordSmith: {

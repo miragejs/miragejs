@@ -1,6 +1,6 @@
 import { Model, Factory, belongsTo, Server } from "@miragejs/server";
 
-describe("Integration | Server | Factories | afterCreate", () => {
+describe("External | Shared | Factories | afterCreate", () => {
   let server;
 
   beforeEach(() => {
