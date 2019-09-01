@@ -1,6 +1,6 @@
 import { Server, Model, hasMany, Serializer } from "@miragejs/server";
 
-describe("Integration | Serializers | Base | Associations | Polymorphic | Top level", function() {
+describe("External | Shared | Serializers | Base | Associations | Polymorphic | Top level", function() {
   let server, user;
 
   beforeEach(function() {

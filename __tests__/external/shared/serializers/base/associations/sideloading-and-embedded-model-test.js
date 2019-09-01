@@ -1,58 +1,64 @@
-import Schema from "@lib/orm/schema";
-import { Model, hasMany, belongsTo } from "@miragejs/server";
-import Db from "@lib/db";
-import Serializer from "@lib/serializer";
-import SerializerRegistry from "@lib/serializer-registry";
+import {
+  Server,
+  Model,
+  hasMany,
+  belongsTo,
+  Serializer
+} from "@miragejs/server";
 
-describe("Integration | Serializers | Base | Associations | Sideloading and Embedded Models", function() {
-  let schema, BaseSerializer;
+describe("External | Shared | Serializers | Base | Associations | Sideloading and Embedded Models", function() {
+  let server, BaseSerializer;
 
   beforeEach(function() {
-    schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-        posts: hasMany("blog-post")
-      }),
-      blogPost: Model.extend({
-        author: belongsTo("word-smith"),
-        comments: hasMany("fine-comment")
-      }),
-      fineComment: Model.extend({
-        post: belongsTo("blog-post")
-      })
+    BaseSerializer = Serializer.extend({
+      embed: false
     });
 
-    let wordSmith = schema.wordSmiths.create({ name: "Link" });
+    server = new Server({
+      models: {
+        wordSmith: Model.extend({
+          posts: hasMany("blog-post")
+        }),
+        blogPost: Model.extend({
+          author: belongsTo("word-smith"),
+          comments: hasMany("fine-comment")
+        }),
+        fineComment: Model.extend({
+          post: belongsTo("blog-post")
+        })
+      }
+    });
+
+    let wordSmith = server.schema.wordSmiths.create({ name: "Link" });
     let blogPost = wordSmith.createPost({ title: "Lorem" });
     blogPost.createComment({ text: "pwned" });
 
     wordSmith.createPost({ title: "Ipsum" });
 
-    schema.wordSmiths.create({ name: "Zelda" });
-
-    BaseSerializer = Serializer.extend({
-      embed: false
-    });
+    server.schema.wordSmiths.create({ name: "Zelda" });
   });
 
   afterEach(function() {
-    schema.db.emptyData();
+    server.shutdown();
   });
 
   test(`it can sideload a model with a has-many relationship containing embedded models`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      wordSmith: BaseSerializer.extend({
-        embed: false,
-        include: ["posts"]
-      }),
-      blogPost: BaseSerializer.extend({
-        embed: true,
-        include: ["comments"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        wordSmith: BaseSerializer.extend({
+          embed: false,
+          include: ["posts"]
+        }),
+        blogPost: BaseSerializer.extend({
+          embed: true,
+          include: ["comments"]
+        })
+      }
     });
 
-    let link = schema.wordSmiths.find(1);
-    let result = registry.serialize(link);
+    let link = server.schema.wordSmiths.find(1);
+    let result = server.serializerOrRegistry.serialize(link);
 
     expect(result).toEqual({
       wordSmith: {
@@ -68,20 +74,22 @@ describe("Integration | Serializers | Base | Associations | Sideloading and Embe
   });
 
   test(`it can sideload a model with a belongs-to relationship containing embedded models`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      fineComment: BaseSerializer.extend({
-        embed: false,
-        include: ["post"]
-      }),
-      blogPost: BaseSerializer.extend({
-        embed: true,
-        include: ["author"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        fineComment: BaseSerializer.extend({
+          embed: false,
+          include: ["post"]
+        }),
+        blogPost: BaseSerializer.extend({
+          embed: true,
+          include: ["author"]
+        })
+      }
     });
 
-    let fineComment = schema.fineComments.find(1);
-    let result = registry.serialize(fineComment);
+    let fineComment = server.schema.fineComments.find(1);
+    let result = server.serializerOrRegistry.serialize(fineComment);
 
     expect(result).toEqual({
       fineComment: { id: "1", text: "pwned", postId: "1" },

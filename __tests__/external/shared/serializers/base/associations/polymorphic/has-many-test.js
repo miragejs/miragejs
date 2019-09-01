@@ -1,26 +1,24 @@
-import { Model, hasMany } from "@miragejs/server";
-import Schema from "@lib/orm/schema";
-import Db from "@lib/db";
-import Serializer from "@lib/serializer";
-import SerializerRegistry from "@lib/serializer-registry";
+import { Server, Model, hasMany, Serializer } from "@miragejs/server";
 
-describe("Integration | Serializers | Base | Associations | Polymorphic | Has Many", function() {
-  let schema;
+describe("External | Shared | Serializers | Base | Associations | Polymorphic | Has Many", function() {
+  let server;
 
   beforeEach(function() {
-    schema = new Schema(new Db(), {
-      user: Model.extend({
-        things: hasMany({ polymorphic: true })
-      }),
-      picture: Model.extend()
+    server = new Server({
+      models: {
+        user: Model.extend({
+          things: hasMany({ polymorphic: true })
+        }),
+        picture: Model.extend()
+      }
     });
 
-    let post = schema.pictures.create({ title: "Lorem ipsum" });
-    schema.users.create({ things: [post], name: "Ned" });
+    let post = server.schema.pictures.create({ title: "Lorem ipsum" });
+    server.schema.users.create({ things: [post], name: "Ned" });
   });
 
   afterEach(function() {
-    schema.db.emptyData();
+    server.shutdown();
   });
 
   test(`it can serialize a polymorphic has-many relationship when serializeIds is set to included`, () => {
@@ -28,16 +26,18 @@ describe("Integration | Serializers | Base | Associations | Polymorphic | Has Ma
       embed: false,
       serializeIds: "included"
     });
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      user: BaseSerializer.extend({
-        serializeIds: "included",
-        include: ["things"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        user: BaseSerializer.extend({
+          serializeIds: "included",
+          include: ["things"]
+        })
+      }
     });
 
-    let user = schema.users.find(1);
-    let result = registry.serialize(user);
+    let user = server.schema.users.find(1);
+    let result = server.serializerOrRegistry.serialize(user);
 
     expect(result).toEqual({
       user: {
@@ -54,13 +54,15 @@ describe("Integration | Serializers | Base | Associations | Polymorphic | Has Ma
       embed: false,
       serializeIds: "always"
     });
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      user: BaseSerializer
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        user: BaseSerializer
+      }
     });
 
-    let user = schema.users.find(1);
-    let result = registry.serialize(user);
+    let user = server.schema.users.find(1);
+    let result = server.serializerOrRegistry.serialize(user);
 
     expect(result).toEqual({
       user: {
@@ -76,15 +78,17 @@ describe("Integration | Serializers | Base | Associations | Polymorphic | Has Ma
       embed: true,
       serializeIds: "included"
     });
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      user: BaseSerializer.extend({
-        include: ["things"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        user: BaseSerializer.extend({
+          include: ["things"]
+        })
+      }
     });
 
-    let user = schema.users.find(1);
-    let result = registry.serialize(user);
+    let user = server.schema.users.find(1);
+    let result = server.serializerOrRegistry.serialize(user);
 
     expect(result).toEqual({
       user: {

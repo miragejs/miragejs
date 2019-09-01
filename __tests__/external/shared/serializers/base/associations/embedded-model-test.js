@@ -1,33 +1,37 @@
-import { Model, hasMany, belongsTo } from "@miragejs/server";
-import Schema from "@lib/orm/schema";
-import Db from "@lib/db";
-import Serializer from "@lib/serializer";
-import SerializerRegistry from "@lib/serializer-registry";
+import {
+  Server,
+  Model,
+  hasMany,
+  belongsTo,
+  Serializer
+} from "@miragejs/server";
 
-describe("Integration | Serializers | Base | Associations | Embedded Models", function() {
-  let schema, BaseSerializer;
+describe("External | Shared | Serializers | Base | Associations | Embedded Models", function() {
+  let server, BaseSerializer;
 
   beforeEach(function() {
-    schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-        posts: hasMany("blogPost", { inverse: "author" })
-      }),
-      blogPost: Model.extend({
-        author: belongsTo("wordSmith", { inverse: "posts" }),
-        comments: hasMany("fineComment", { inverse: "post" })
-      }),
-      fineComment: Model.extend({
-        post: belongsTo("blogPost")
-      })
+    server = new Server({
+      models: {
+        wordSmith: Model.extend({
+          posts: hasMany("blogPost", { inverse: "author" })
+        }),
+        blogPost: Model.extend({
+          author: belongsTo("wordSmith", { inverse: "posts" }),
+          comments: hasMany("fineComment", { inverse: "post" })
+        }),
+        fineComment: Model.extend({
+          post: belongsTo("blogPost")
+        })
+      }
     });
 
-    let wordSmith = schema.wordSmiths.create({ name: "Link" });
+    let wordSmith = server.schema.wordSmiths.create({ name: "Link" });
     let post = wordSmith.createPost({ title: "Lorem" });
     post.createComment({ text: "pwned" });
 
     wordSmith.createPost({ title: "Ipsum" });
 
-    schema.wordSmiths.create({ name: "Zelda" });
+    server.schema.wordSmiths.create({ name: "Zelda" });
 
     BaseSerializer = Serializer.extend({
       embed: true
@@ -35,19 +39,21 @@ describe("Integration | Serializers | Base | Associations | Embedded Models", fu
   });
 
   afterEach(function() {
-    schema.db.emptyData();
+    server.shutdown();
   });
 
   test(`it can embed has-many relationships`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      wordSmith: BaseSerializer.extend({
-        include: ["posts"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        wordSmith: BaseSerializer.extend({
+          include: ["posts"]
+        })
+      }
     });
 
-    let link = schema.wordSmiths.find(1);
-    let result = registry.serialize(link);
+    let link = server.schema.wordSmiths.find(1);
+    let result = server.serializerOrRegistry.serialize(link);
 
     expect(result).toEqual({
       wordSmith: {
@@ -59,18 +65,20 @@ describe("Integration | Serializers | Base | Associations | Embedded Models", fu
   });
 
   test(`it can embed a chain of has-many relationships`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      wordSmith: BaseSerializer.extend({
-        include: ["posts"]
-      }),
-      blogPost: BaseSerializer.extend({
-        include: ["comments"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        wordSmith: BaseSerializer.extend({
+          include: ["posts"]
+        }),
+        blogPost: BaseSerializer.extend({
+          include: ["comments"]
+        })
+      }
     });
 
-    let wordSmith = schema.wordSmiths.find(1);
-    let result = registry.serialize(wordSmith);
+    let wordSmith = server.schema.wordSmiths.find(1);
+    let result = server.serializerOrRegistry.serialize(wordSmith);
 
     expect(result).toEqual({
       wordSmith: {
@@ -85,16 +93,18 @@ describe("Integration | Serializers | Base | Associations | Embedded Models", fu
   });
 
   test(`it can embed a belongs-to relationship`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      blogPost: BaseSerializer.extend({
-        embed: true,
-        include: ["author"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        blogPost: BaseSerializer.extend({
+          embed: true,
+          include: ["author"]
+        })
+      }
     });
 
-    let blogPost = schema.blogPosts.find(1);
-    let result = registry.serialize(blogPost);
+    let blogPost = server.schema.blogPosts.find(1);
+    let result = server.serializerOrRegistry.serialize(blogPost);
 
     expect(result).toEqual({
       blogPost: {
@@ -106,18 +116,20 @@ describe("Integration | Serializers | Base | Associations | Embedded Models", fu
   });
 
   test(`it can serialize a chain of belongs-to relationships`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      fineComment: BaseSerializer.extend({
-        include: ["post"]
-      }),
-      blogPost: BaseSerializer.extend({
-        include: ["author"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        fineComment: BaseSerializer.extend({
+          include: ["post"]
+        }),
+        blogPost: BaseSerializer.extend({
+          include: ["author"]
+        })
+      }
     });
 
-    let fineComment = schema.fineComments.find(1);
-    let result = registry.serialize(fineComment);
+    let fineComment = server.schema.fineComments.find(1);
+    let result = server.serializerOrRegistry.serialize(fineComment);
 
     expect(result).toEqual({
       fineComment: {
@@ -136,17 +148,19 @@ describe("Integration | Serializers | Base | Associations | Embedded Models", fu
   });
 
   test(`it can have a null value on a belongs-to relationship`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      blogPost: BaseSerializer.extend({
-        embed: true,
-        include: ["author"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        blogPost: BaseSerializer.extend({
+          embed: true,
+          include: ["author"]
+        })
+      }
     });
 
-    let blogPost = schema.blogPosts.find(1);
+    let blogPost = server.schema.blogPosts.find(1);
     blogPost.update("author", null);
-    let result = registry.serialize(blogPost);
+    let result = server.serializerOrRegistry.serialize(blogPost);
 
     expect(result).toEqual({
       blogPost: {
@@ -157,18 +171,20 @@ describe("Integration | Serializers | Base | Associations | Embedded Models", fu
   });
 
   test(`it ignores relationships that refer to serialized ancestor resources`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      wordSmith: BaseSerializer.extend({
-        include: ["posts"]
-      }),
-      blogPost: BaseSerializer.extend({
-        include: ["author"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        wordSmith: BaseSerializer.extend({
+          include: ["posts"]
+        }),
+        blogPost: BaseSerializer.extend({
+          include: ["author"]
+        })
+      }
     });
 
-    let wordSmith = schema.wordSmiths.find(1);
-    let result = registry.serialize(wordSmith);
+    let wordSmith = server.schema.wordSmiths.find(1);
+    let result = server.serializerOrRegistry.serialize(wordSmith);
 
     expect(result).toEqual({
       wordSmith: {
@@ -180,22 +196,24 @@ describe("Integration | Serializers | Base | Associations | Embedded Models", fu
   });
 
   test(`it ignores relationships that refer to serialized ancestor resources, multiple levels down`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      wordSmith: BaseSerializer.extend({
-        embed: true,
-        include: ["posts"]
-      }),
-      blogPost: BaseSerializer.extend({
-        include: ["author", "comments"]
-      }),
-      fineComment: BaseSerializer.extend({
-        include: ["post"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        wordSmith: BaseSerializer.extend({
+          embed: true,
+          include: ["posts"]
+        }),
+        blogPost: BaseSerializer.extend({
+          include: ["author", "comments"]
+        }),
+        fineComment: BaseSerializer.extend({
+          include: ["post"]
+        })
+      }
     });
 
-    let wordSmith = schema.wordSmiths.find(1);
-    let result = registry.serialize(wordSmith);
+    let wordSmith = server.schema.wordSmiths.find(1);
+    let result = server.serializerOrRegistry.serialize(wordSmith);
 
     expect(result).toEqual({
       wordSmith: {

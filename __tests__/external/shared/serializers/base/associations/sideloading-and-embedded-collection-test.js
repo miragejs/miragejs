@@ -1,33 +1,37 @@
-import Schema from "@lib/orm/schema";
-import { Model, hasMany, belongsTo } from "@miragejs/server";
-import Db from "@lib/db";
-import Serializer from "@lib/serializer";
-import SerializerRegistry from "@lib/serializer-registry";
+import {
+  Server,
+  Model,
+  hasMany,
+  belongsTo,
+  Serializer
+} from "@miragejs/server";
 
-describe("Integration | Serializers | Base | Associations | Sideloading and Embedded Collections", function() {
-  let schema, BaseSerializer;
+describe("External | Shared | Serializers | Base | Associations | Sideloading and Embedded Collections", function() {
+  let server, BaseSerializer;
 
   beforeEach(function() {
-    schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-        posts: hasMany("blog-post")
-      }),
-      blogPost: Model.extend({
-        author: belongsTo("word-smith"),
-        comments: hasMany("fine-comment")
-      }),
-      fineComment: Model.extend({
-        post: belongsTo("blog-post")
-      })
+    server = new Server({
+      models: {
+        wordSmith: Model.extend({
+          posts: hasMany("blog-post")
+        }),
+        blogPost: Model.extend({
+          author: belongsTo("word-smith"),
+          comments: hasMany("fine-comment")
+        }),
+        fineComment: Model.extend({
+          post: belongsTo("blog-post")
+        })
+      }
     });
 
-    let link = schema.wordSmiths.create({ name: "Link" });
+    let link = server.schema.wordSmiths.create({ name: "Link" });
     let blogPost = link.createPost({ title: "Lorem" });
     link.createPost({ title: "Ipsum" });
 
     blogPost.createComment({ text: "pwned" });
 
-    let zelda = schema.wordSmiths.create({ name: "Zelda" });
+    let zelda = server.schema.wordSmiths.create({ name: "Zelda" });
     zelda.createPost({ title: `Zeldas blogPost` });
 
     BaseSerializer = Serializer.extend({
@@ -36,24 +40,26 @@ describe("Integration | Serializers | Base | Associations | Sideloading and Embe
   });
 
   afterEach(function() {
-    schema.db.emptyData();
+    server.shutdown();
   });
 
   test(`it can sideload a collection with a has-many relationship containing embedded models`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      wordSmith: BaseSerializer.extend({
-        embed: false,
-        include: ["posts"]
-      }),
-      blogPost: BaseSerializer.extend({
-        embed: true,
-        include: ["comments"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        wordSmith: BaseSerializer.extend({
+          embed: false,
+          include: ["posts"]
+        }),
+        blogPost: BaseSerializer.extend({
+          embed: true,
+          include: ["comments"]
+        })
+      }
     });
 
-    let wordSmiths = schema.wordSmiths.all();
-    let result = registry.serialize(wordSmiths);
+    let wordSmiths = server.schema.wordSmiths.all();
+    let result = server.serializerOrRegistry.serialize(wordSmiths);
 
     expect(result).toEqual({
       wordSmiths: [
@@ -69,20 +75,22 @@ describe("Integration | Serializers | Base | Associations | Sideloading and Embe
   });
 
   test(`it can sideload a collection with a belongs-to relationship containing embedded models`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      fineComment: BaseSerializer.extend({
-        embed: false,
-        include: ["post"]
-      }),
-      blogPost: BaseSerializer.extend({
-        embed: true,
-        include: ["author"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        fineComment: BaseSerializer.extend({
+          embed: false,
+          include: ["post"]
+        }),
+        blogPost: BaseSerializer.extend({
+          embed: true,
+          include: ["author"]
+        })
+      }
     });
 
-    let fineComments = schema.fineComments.all();
-    let result = registry.serialize(fineComments);
+    let fineComments = server.schema.fineComments.all();
+    let result = server.serializerOrRegistry.serialize(fineComments);
 
     expect(result).toEqual({
       fineComments: [{ id: "1", text: "pwned", postId: "1" }],

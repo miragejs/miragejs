@@ -1,33 +1,37 @@
-import { Model, hasMany, belongsTo } from "@miragejs/server";
-import Schema from "@lib/orm/schema";
-import Db from "@lib/db";
-import Serializer from "@lib/serializer";
-import SerializerRegistry from "@lib/serializer-registry";
+import {
+  Server,
+  Model,
+  hasMany,
+  belongsTo,
+  Serializer
+} from "@miragejs/server";
 
-describe("Integration | Serializers | Base | Associations | Sideloading Models", function() {
-  let schema, BaseSerializer;
+describe("External | Shared | Serializers | Base | Associations | Sideloading Models", function() {
+  let server, BaseSerializer;
 
   beforeEach(function() {
-    schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-        posts: hasMany("blog-post")
-      }),
-      blogPost: Model.extend({
-        author: belongsTo("word-smith"),
-        comments: hasMany("fine-comment")
-      }),
-      fineComment: Model.extend({
-        post: belongsTo("blog-post")
-      })
+    server = new Server({
+      models: {
+        wordSmith: Model.extend({
+          posts: hasMany("blog-post")
+        }),
+        blogPost: Model.extend({
+          author: belongsTo("word-smith"),
+          comments: hasMany("fine-comment")
+        }),
+        fineComment: Model.extend({
+          post: belongsTo("blog-post")
+        })
+      }
     });
 
-    let wordSmith = schema.wordSmiths.create({ name: "Link" });
+    let wordSmith = server.schema.wordSmiths.create({ name: "Link" });
     let blogPost = wordSmith.createPost({ title: "Lorem" });
     blogPost.createComment({ text: "pwned" });
 
     wordSmith.createPost({ title: "Ipsum" });
 
-    schema.wordSmiths.create({ name: "Zelda" });
+    server.schema.wordSmiths.create({ name: "Zelda" });
 
     BaseSerializer = Serializer.extend({
       embed: false
@@ -35,33 +39,37 @@ describe("Integration | Serializers | Base | Associations | Sideloading Models",
   });
 
   afterEach(function() {
-    schema.db.emptyData();
+    server.shutdown();
   });
 
   test(`it throws an error if embed is false and root is false`, () => {
-    let registry = new SerializerRegistry(schema, {
-      wordSmith: BaseSerializer.extend({
-        root: false,
-        include: ["posts"]
-      })
+    server.config({
+      serializers: {
+        wordSmith: BaseSerializer.extend({
+          root: false,
+          include: ["posts"]
+        })
+      }
     });
 
-    let link = schema.wordSmiths.find(1);
+    let link = server.schema.wordSmiths.find(1);
     expect(function() {
-      registry.serialize(link);
+      server.serializerOrRegistry.serialize(link);
     }).toThrow();
   });
 
   test(`it can sideload a model with a has-many relationship`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      wordSmith: BaseSerializer.extend({
-        include: ["posts"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        wordSmith: BaseSerializer.extend({
+          include: ["posts"]
+        })
+      }
     });
 
-    let link = schema.wordSmiths.find(1);
-    let result = registry.serialize(link);
+    let link = server.schema.wordSmiths.find(1);
+    let result = server.serializerOrRegistry.serialize(link);
 
     expect(result).toEqual({
       wordSmith: {
@@ -74,18 +82,20 @@ describe("Integration | Serializers | Base | Associations | Sideloading Models",
   });
 
   test(`it can sideload a model with a chain of has-many relationships`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      wordSmith: BaseSerializer.extend({
-        include: ["posts"]
-      }),
-      blogPost: BaseSerializer.extend({
-        include: ["comments"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        wordSmith: BaseSerializer.extend({
+          include: ["posts"]
+        }),
+        blogPost: BaseSerializer.extend({
+          include: ["comments"]
+        })
+      }
     });
 
-    let link = schema.wordSmiths.find(1);
-    let result = registry.serialize(link);
+    let link = server.schema.wordSmiths.find(1);
+    let result = server.serializerOrRegistry.serialize(link);
 
     expect(result).toEqual({
       wordSmith: {
@@ -102,18 +112,20 @@ describe("Integration | Serializers | Base | Associations | Sideloading Models",
   });
 
   test(`it avoids circularity when serializing a model`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      wordSmith: BaseSerializer.extend({
-        include: ["posts"]
-      }),
-      blogPost: BaseSerializer.extend({
-        include: ["author"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        wordSmith: BaseSerializer.extend({
+          include: ["posts"]
+        }),
+        blogPost: BaseSerializer.extend({
+          include: ["author"]
+        })
+      }
     });
 
-    let link = schema.wordSmiths.find(1);
-    let result = registry.serialize(link);
+    let link = server.schema.wordSmiths.find(1);
+    let result = server.serializerOrRegistry.serialize(link);
 
     expect(result).toEqual({
       wordSmith: {
@@ -129,15 +141,17 @@ describe("Integration | Serializers | Base | Associations | Sideloading Models",
   });
 
   test(`it can sideload a model with a belongs-to relationship`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      blogPost: BaseSerializer.extend({
-        include: ["author"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        blogPost: BaseSerializer.extend({
+          include: ["author"]
+        })
+      }
     });
 
-    let blogPost = schema.blogPosts.find(1);
-    let result = registry.serialize(blogPost);
+    let blogPost = server.schema.blogPosts.find(1);
+    let result = server.serializerOrRegistry.serialize(blogPost);
 
     expect(result).toEqual({
       blogPost: {
@@ -150,18 +164,20 @@ describe("Integration | Serializers | Base | Associations | Sideloading Models",
   });
 
   test(`it can sideload a model with a chain of belongs-to relationships`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: BaseSerializer,
-      fineComment: BaseSerializer.extend({
-        include: ["post"]
-      }),
-      blogPost: BaseSerializer.extend({
-        include: ["author"]
-      })
+    server.config({
+      serializers: {
+        application: BaseSerializer,
+        fineComment: BaseSerializer.extend({
+          include: ["post"]
+        }),
+        blogPost: BaseSerializer.extend({
+          include: ["author"]
+        })
+      }
     });
 
-    let fineComment = schema.fineComments.find(1);
-    let result = registry.serialize(fineComment);
+    let fineComment = server.schema.fineComments.find(1);
+    let result = server.serializerOrRegistry.serialize(fineComment);
 
     expect(result).toEqual({
       fineComment: {

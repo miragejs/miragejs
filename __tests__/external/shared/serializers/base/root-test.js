@@ -2,7 +2,7 @@ import SerializerRegistry from "@lib/serializer-registry";
 import Serializer from "@lib/serializer";
 import schemaHelper from "../schema-helper";
 
-describe("Integration | Serializers | Base | Root", function() {
+describe("External | Shared | Serializers | Base | Root", function() {
   let schema, registry;
 
   beforeEach(function() {
