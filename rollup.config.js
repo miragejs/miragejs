@@ -1,3 +1,4 @@
+import fs from "fs";
 import path from "path";
 import babel from "rollup-plugin-babel";
 import resolve from "rollup-plugin-node-resolve";
@@ -36,9 +37,25 @@ let cjs = {
   },
   plugins: [
     alias({
-      "@miragejs/server": path.resolve(process.cwd(), "./"),
-      pretender: path.resolve(process.cwd(), "./shims/pretender-node")
+      "@miragejs/server": path.resolve(process.cwd(), "./")
     }),
+    {
+      load(id) {
+        if (id.indexOf("pretender") > -1) {
+          let umdId = id.replace(".es.js", ".js");
+
+          return `
+            const MaybePretender = typeof window === 'undefined' ? undefined : function(...args) {
+              ${fs.readFileSync(umdId, "utf-8")}
+
+              return new Pretender(...args);
+            }
+
+            export default MaybePretender
+          `;
+        }
+      }
+    },
     babel({
       exclude: "node_modules/**",
       sourceMaps: true,
