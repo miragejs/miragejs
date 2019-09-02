@@ -103,5 +103,4 @@ let umd = {
   ]
 };
 
-// export default [esm, cjs, umd];
-export default [cjs];
+export default [esm, cjs, umd];
