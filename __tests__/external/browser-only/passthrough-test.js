@@ -1,6 +1,6 @@
 import { Server } from "@miragejs/server";
 
-describe("Public | Browser only | Passthrough", () => {
+describe("External |Browser only | Passthrough", () => {
   let server, originalError;
 
   beforeEach(() => {

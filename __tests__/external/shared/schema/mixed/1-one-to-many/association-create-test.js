@@ -1,6 +1,6 @@
 import Helper, { states } from "./_helper";
 
-describe("Public | Shared | Schema | Mixed | One To Many | association #create", () => {
+describe("External |Shared | Schema | Mixed | One To Many | association #create", () => {
   let helper;
   beforeEach(() => {
     helper = new Helper();

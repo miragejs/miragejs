@@ -1,6 +1,6 @@
 import Helper, { states } from "./_helper";
 
-describe("Public | Shared | Schema | Belongs To | Named Reflexive Explicit Inverse | association #set", () => {
+describe("External |Shared | Schema | Belongs To | Named Reflexive Explicit Inverse | association #set", () => {
   let helper;
   beforeEach(() => {
     helper = new Helper();

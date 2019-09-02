@@ -1,6 +1,6 @@
 import { Server, Model, hasMany } from "@miragejs/server";
 
-describe("Public | Shared | Schema | reinitialize associations", () => {
+describe("External |Shared | Schema | reinitialize associations", () => {
   // Model classes are defined statically, just like in a typical app
   let User = Model.extend({
     addresses: hasMany()

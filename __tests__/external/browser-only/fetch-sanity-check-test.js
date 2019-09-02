@@ -1,6 +1,6 @@
 import { Server, Model } from "@miragejs/server";
 
-describe("Public | Browser only | Fetch sanity check", () => {
+describe("External |Browser only | Fetch sanity check", () => {
   let server;
 
   beforeEach(() => {

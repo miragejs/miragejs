@@ -1,6 +1,6 @@
 import { Server, Model, Collection } from "@miragejs/server";
 
-describe("Public | Shared | Schema | #none", () => {
+describe("External |Shared | Schema | #none", () => {
   let server;
 
   beforeEach(() => {

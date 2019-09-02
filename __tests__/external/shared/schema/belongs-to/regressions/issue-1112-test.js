@@ -1,6 +1,6 @@
 import { Server, Model, belongsTo, hasMany } from "@miragejs/server";
 
-describe("Public | Shared | Schema | Belongs To | Regressions | Issue 1112", function() {
+describe("External |Shared | Schema | Belongs To | Regressions | Issue 1112", function() {
   test(`deleting a record with a polymorphic belongsTo doesn't interfere with other dependents`, () => {
     let server = new Server({
       environment: "test",

@@ -1,6 +1,6 @@
 import { Server, Model, belongsTo, hasMany } from "@miragejs/server";
 
-describe("Public | Shared | Schema | Belongs To | Regressions | pr-1312", function() {
+describe("External |Shared | Schema | Belongs To | Regressions | pr-1312", function() {
   test(`creating and using a record with a polymorphic hasMany and explicit inverse does not fail when accessing the association`, () => {
     let server = new Server({
       environment: "test",

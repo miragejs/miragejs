@@ -1,6 +1,6 @@
 import Helper, { states } from "./_helper";
 
-describe("Public | Shared | Schema | Has Many | One-way Polymorphic | association #new", () => {
+describe("External |Shared | Schema | Has Many | One-way Polymorphic | association #new", () => {
   let helper;
   beforeEach(() => {
     helper = new Helper();

@@ -1,6 +1,6 @@
 import Helper from "./_helper";
 
-describe("Public | Shared | Schema | Belongs To | Named One-Way Reflexive | instantiating", () => {
+describe("External |Shared | Schema | Belongs To | Named One-Way Reflexive | instantiating", () => {
   let helper, schema;
 
   beforeEach(() => {

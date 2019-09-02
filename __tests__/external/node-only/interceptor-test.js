@@ -1,6 +1,6 @@
 import { Server } from "@miragejs/server";
 
-describe("Public | Node only | Interceptor", () => {
+describe("External |Node only | Interceptor", () => {
   test("newing a server with various interceptor config works in node", () => {
     let server = new Server({
       environment: "test",
