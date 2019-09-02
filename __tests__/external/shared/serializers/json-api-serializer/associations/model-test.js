@@ -1,37 +1,48 @@
-import Schema from "@lib/orm/schema";
-import Db from "@lib/db";
-import SerializerRegistry from "@lib/serializer-registry";
-import { Model, hasMany, belongsTo, JSONAPISerializer } from "@miragejs/server";
+import {
+  Server,
+  Model,
+  hasMany,
+  belongsTo,
+  JSONAPISerializer
+} from "@miragejs/server";
 
-describe("Integration | Serializers | JSON API Serializer | Associations | Model", () => {
-  let schema;
+describe("External | Shared | Serializers | JSON API Serializer | Associations | Model", () => {
+  let server;
 
   beforeEach(() => {
-    schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-        blogPosts: hasMany()
-      }),
-      blogPost: Model.extend({
-        wordSmith: belongsTo(),
-        fineComments: hasMany()
-      }),
-      fineComment: Model.extend({
-        blogPost: belongsTo()
-      })
+    server = new Server({
+      models: {
+        wordSmith: Model.extend({
+          blogPosts: hasMany()
+        }),
+        blogPost: Model.extend({
+          wordSmith: belongsTo(),
+          fineComments: hasMany()
+        }),
+        fineComment: Model.extend({
+          blogPost: belongsTo()
+        })
+      }
     });
   });
 
+  afterEach(() => {
+    server.shutdown();
+  });
+
   test(`by default, it doesn't include a model's relationships if those relationships are not included in the document and no links are defined`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer
+    server.config({
+      serializers: {
+        application: JSONAPISerializer
+      }
     });
-    let link = schema.wordSmiths.create({
+    let link = server.schema.wordSmiths.create({
       firstName: "Link",
       age: 123
     });
     let post = link.createBlogPost({ title: "Lorem ipsum" });
 
-    let result = registry.serialize(post);
+    let result = server.serializerOrRegistry.serialize(post);
     expect(result).toEqual({
       data: {
         type: "blog-posts",
@@ -44,18 +55,20 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Model
   });
 
   test(`when alwaysIncludeLinkageData is true, it contains linkage data for all a model's relationships, regardless of includes`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer.extend({
-        alwaysIncludeLinkageData: true
-      })
+    server.config({
+      serializers: {
+        application: JSONAPISerializer.extend({
+          alwaysIncludeLinkageData: true
+        })
+      }
     });
-    let link = schema.wordSmiths.create({
+    let link = server.schema.wordSmiths.create({
       firstName: "Link",
       age: 123
     });
     let post = link.createBlogPost({ title: "Lorem ipsum" });
 
-    let result = registry.serialize(post);
+    let result = server.serializerOrRegistry.serialize(post);
     expect(result).toEqual({
       data: {
         type: "blog-posts",
@@ -79,22 +92,24 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Model
   });
 
   test(`when shouldIncludeLinkageData returns true for a certain belongsTo relationship, it contains linkage data for that relationship, regardless of includes`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer.extend({
-        shouldIncludeLinkageData(relationshipKey, model) {
-          if (relationshipKey === "wordSmith") {
-            return true;
+    server.config({
+      serializers: {
+        application: JSONAPISerializer.extend({
+          shouldIncludeLinkageData(relationshipKey, model) {
+            if (relationshipKey === "wordSmith") {
+              return true;
+            }
           }
-        }
-      })
+        })
+      }
     });
-    let link = schema.wordSmiths.create({
+    let link = server.schema.wordSmiths.create({
       firstName: "Link",
       age: 123
     });
     let post = link.createBlogPost({ title: "Lorem ipsum" });
 
-    let result = registry.serialize(post);
+    let result = server.serializerOrRegistry.serialize(post);
     expect(result).toEqual({
       data: {
         type: "blog-posts",
@@ -115,22 +130,24 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Model
   });
 
   test(`when shouldIncludeLinkageData returns true for a certain hasMany relationship, it contains linkage data for that relationship, regardless of includes`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer,
-      wordSmith: JSONAPISerializer.extend({
-        shouldIncludeLinkageData(relationshipKey, model) {
-          if (relationshipKey === "blogPosts") {
-            return true;
+    server.config({
+      serializers: {
+        application: JSONAPISerializer,
+        wordSmith: JSONAPISerializer.extend({
+          shouldIncludeLinkageData(relationshipKey, model) {
+            if (relationshipKey === "blogPosts") {
+              return true;
+            }
           }
-        }
-      })
+        })
+      }
     });
 
-    let link = schema.wordSmiths.create({ firstName: "Link" });
+    let link = server.schema.wordSmiths.create({ firstName: "Link" });
     link.createBlogPost({ title: "Lorem" });
     link.createBlogPost({ title: "Ipsum" });
 
-    let result = registry.serialize(link);
+    let result = server.serializerOrRegistry.serialize(link);
 
     expect(result).toEqual({
       data: {
@@ -152,18 +169,20 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Model
   });
 
   test(`it includes linkage data for a has-many relationship that's being included`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer,
-      wordSmith: JSONAPISerializer.extend({
-        include: ["blogPosts"]
-      })
+    server.config({
+      serializers: {
+        application: JSONAPISerializer,
+        wordSmith: JSONAPISerializer.extend({
+          include: ["blogPosts"]
+        })
+      }
     });
 
-    let link = schema.wordSmiths.create({ firstName: "Link" });
+    let link = server.schema.wordSmiths.create({ firstName: "Link" });
     link.createBlogPost({ title: "Lorem" });
     link.createBlogPost({ title: "Ipsum" });
 
-    let result = registry.serialize(link);
+    let result = server.serializerOrRegistry.serialize(link);
 
     expect(result).toEqual({
       data: {
@@ -201,22 +220,24 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Model
   });
 
   test(`it can include a chain of has-many relationships`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer,
-      wordSmith: JSONAPISerializer.extend({
-        include: ["blogPosts"]
-      }),
-      blogPost: JSONAPISerializer.extend({
-        include: ["fineComments"]
-      })
+    server.config({
+      serializers: {
+        application: JSONAPISerializer,
+        wordSmith: JSONAPISerializer.extend({
+          include: ["blogPosts"]
+        }),
+        blogPost: JSONAPISerializer.extend({
+          include: ["fineComments"]
+        })
+      }
     });
 
-    let link = schema.wordSmiths.create({ firstName: "Link" });
+    let link = server.schema.wordSmiths.create({ firstName: "Link" });
     let post1 = link.createBlogPost({ title: "Lorem" });
     post1.createFineComment({ text: "pwned" });
     link.createBlogPost({ title: "Ipsum" });
 
-    let result = registry.serialize(link);
+    let result = server.serializerOrRegistry.serialize(link);
 
     expect(result).toEqual({
       data: {
@@ -271,18 +292,20 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Model
   });
 
   test(`it can include a belongs-to relationship`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer,
-      blogPost: JSONAPISerializer.extend({
-        include: ["wordSmith"]
-      })
+    server.config({
+      serializers: {
+        application: JSONAPISerializer,
+        blogPost: JSONAPISerializer.extend({
+          include: ["wordSmith"]
+        })
+      }
     });
 
-    let link = schema.wordSmiths.create({ firstName: "Link" });
+    let link = server.schema.wordSmiths.create({ firstName: "Link" });
     let blogPost = link.createBlogPost({ title: "Lorem" });
     blogPost.createFineComment();
 
-    let result = registry.serialize(blogPost);
+    let result = server.serializerOrRegistry.serialize(blogPost);
 
     expect(result).toEqual({
       data: {
@@ -313,15 +336,17 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Model
   });
 
   test(`it gracefully handles null belongs-to relationship`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer,
-      blogPost: JSONAPISerializer.extend({
-        include: ["wordSmith"]
-      })
+    server.config({
+      serializers: {
+        application: JSONAPISerializer,
+        blogPost: JSONAPISerializer.extend({
+          include: ["wordSmith"]
+        })
+      }
     });
 
-    let blogPost = schema.blogPosts.create({ title: "Lorem" });
-    let result = registry.serialize(blogPost);
+    let blogPost = server.schema.blogPosts.create({ title: "Lorem" });
+    let result = server.serializerOrRegistry.serialize(blogPost);
 
     expect(result).toEqual({
       data: {
@@ -340,21 +365,23 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Model
   });
 
   test(`it can include a chain of belongs-to relationships`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer,
-      blogPost: JSONAPISerializer.extend({
-        include: ["wordSmith"]
-      }),
-      fineComment: JSONAPISerializer.extend({
-        include: ["blogPost"]
-      })
+    server.config({
+      serializers: {
+        application: JSONAPISerializer,
+        blogPost: JSONAPISerializer.extend({
+          include: ["wordSmith"]
+        }),
+        fineComment: JSONAPISerializer.extend({
+          include: ["blogPost"]
+        })
+      }
     });
 
-    let wordSmith = schema.wordSmiths.create({ firstName: "Link" });
+    let wordSmith = server.schema.wordSmiths.create({ firstName: "Link" });
     let post = wordSmith.createBlogPost({ title: "Lorem" });
     let comment = post.createFineComment({ text: "pwned" });
 
-    let result = registry.serialize(comment);
+    let result = server.serializerOrRegistry.serialize(comment);
 
     expect(result).toEqual({
       data: {
@@ -400,25 +427,27 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Model
   });
 
   test(`it properly serializes complex relationships`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer,
-      wordSmith: JSONAPISerializer.extend({
-        include: ["blogPosts"]
-      }),
-      blogPost: JSONAPISerializer.extend({
-        include: ["wordSmith", "fineComments"]
-      }),
-      fineComment: JSONAPISerializer.extend({
-        include: ["blogPost"]
-      })
+    server.config({
+      serializers: {
+        application: JSONAPISerializer,
+        wordSmith: JSONAPISerializer.extend({
+          include: ["blogPosts"]
+        }),
+        blogPost: JSONAPISerializer.extend({
+          include: ["wordSmith", "fineComments"]
+        }),
+        fineComment: JSONAPISerializer.extend({
+          include: ["blogPost"]
+        })
+      }
     });
 
-    let wordSmith = schema.wordSmiths.create({ firstName: "Link" });
+    let wordSmith = server.schema.wordSmiths.create({ firstName: "Link" });
     let post = wordSmith.createBlogPost({ title: "Lorem" });
     wordSmith.createBlogPost({ title: "Ipsum" });
     post.createFineComment({ text: "pwned" });
 
-    let result = registry.serialize(wordSmith);
+    let result = server.serializerOrRegistry.serialize(wordSmith);
 
     expect(result).toEqual({
       data: {

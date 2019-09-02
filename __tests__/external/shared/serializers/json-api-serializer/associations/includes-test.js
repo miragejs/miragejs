@@ -1,51 +1,62 @@
-import Schema from "@lib/orm/schema";
-import Db from "@lib/db";
-import SerializerRegistry from "@lib/serializer-registry";
-import { JSONAPISerializer, Model, hasMany, belongsTo } from "@miragejs/server";
+import {
+  Server,
+  JSONAPISerializer,
+  Model,
+  hasMany,
+  belongsTo
+} from "@miragejs/server";
 
-describe("Integration | Serializers | JSON API Serializer | Associations | Includes", () => {
-  let schema;
+describe("External | Shared | Serializers | JSON API Serializer | Associations | Includes", () => {
+  let server;
 
   beforeEach(() => {
-    schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-        blogPosts: hasMany()
-      }),
+    server = new Server({
+      models: {
+        wordSmith: Model.extend({
+          blogPosts: hasMany()
+        }),
 
-      blogPost: Model.extend({
-        wordSmith: belongsTo(),
-        fineComments: hasMany()
-      }),
+        blogPost: Model.extend({
+          wordSmith: belongsTo(),
+          fineComments: hasMany()
+        }),
 
-      fineComment: Model.extend({
-        blogPost: belongsTo(),
-        category: belongsTo()
-      }),
+        fineComment: Model.extend({
+          blogPost: belongsTo(),
+          category: belongsTo()
+        }),
 
-      category: Model.extend({
-        labels: hasMany()
-      }),
+        category: Model.extend({
+          labels: hasMany()
+        }),
 
-      label: Model.extend({})
+        label: Model.extend({})
+      }
     });
   });
 
+  afterEach(() => {
+    server.shutdown();
+  });
+
   test("includes get serialized with correct serializer", () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer,
-      blogPost: JSONAPISerializer.extend({
-        attrs: ["title"],
-        include: ["wordSmith"]
-      }),
-      wordSmith: JSONAPISerializer.extend({
-        attrs: ["firstName"]
-      })
+    server.config({
+      serializers: {
+        application: JSONAPISerializer,
+        blogPost: JSONAPISerializer.extend({
+          attrs: ["title"],
+          include: ["wordSmith"]
+        }),
+        wordSmith: JSONAPISerializer.extend({
+          attrs: ["firstName"]
+        })
+      }
     });
 
-    let post = schema.blogPosts.create({ title: "We love Mirage!" });
+    let post = server.schema.blogPosts.create({ title: "We love Mirage!" });
     post.createWordSmith({ firstName: "Sam" });
 
-    let result = registry.serialize(post);
+    let result = server.serializerOrRegistry.serialize(post);
 
     expect(result).toEqual({
       data: {
@@ -73,23 +84,25 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Inclu
   });
 
   test("includes can be a function", () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer,
-      blogPost: JSONAPISerializer.extend({
-        attrs: ["title"],
-        include() {
-          return ["wordSmith"];
-        }
-      }),
-      wordSmith: JSONAPISerializer.extend({
-        attrs: ["firstName"]
-      })
+    server.config({
+      serializers: {
+        application: JSONAPISerializer,
+        blogPost: JSONAPISerializer.extend({
+          attrs: ["title"],
+          include() {
+            return ["wordSmith"];
+          }
+        }),
+        wordSmith: JSONAPISerializer.extend({
+          attrs: ["firstName"]
+        })
+      }
     });
 
-    let post = schema.blogPosts.create({ title: "We love Mirage!" });
+    let post = server.schema.blogPosts.create({ title: "We love Mirage!" });
     post.createWordSmith({ firstName: "Sam" });
 
-    let result = registry.serialize(post);
+    let result = server.serializerOrRegistry.serialize(post);
 
     expect(result).toEqual({
       data: {
@@ -117,11 +130,13 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Inclu
   });
 
   test("query param includes work when serializing a model", () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer
+    server.config({
+      serializers: {
+        application: JSONAPISerializer
+      }
     });
 
-    let post = schema.blogPosts.create();
+    let post = server.schema.blogPosts.create();
     post.createWordSmith();
     post.createFineComment();
     post.createFineComment();
@@ -132,7 +147,7 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Inclu
       }
     };
 
-    let result = registry.serialize(post, request);
+    let result = server.serializerOrRegistry.serialize(post, request);
 
     expect(result).toEqual({
       data: {
@@ -172,15 +187,17 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Inclu
   });
 
   test("query param includes work when serializing a collection", () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer
+    server.config({
+      serializers: {
+        application: JSONAPISerializer
+      }
     });
 
-    let post1 = schema.blogPosts.create();
+    let post1 = server.schema.blogPosts.create();
     post1.createWordSmith();
     post1.createFineComment();
     post1.createFineComment();
-    schema.blogPosts.create();
+    server.schema.blogPosts.create();
 
     let request = {
       queryParams: {
@@ -188,7 +205,10 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Inclu
       }
     };
 
-    let result = registry.serialize(schema.blogPosts.all(), request);
+    let result = server.serializerOrRegistry.serialize(
+      server.schema.blogPosts.all(),
+      request
+    );
 
     expect(result).toEqual({
       data: [
@@ -243,14 +263,16 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Inclu
   });
 
   test("query param includes take precedence over default server includes", () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer,
-      blogPost: JSONAPISerializer.extend({
-        include: ["wordSmith"]
-      })
+    server.config({
+      serializers: {
+        application: JSONAPISerializer,
+        blogPost: JSONAPISerializer.extend({
+          include: ["wordSmith"]
+        })
+      }
     });
 
-    let post = schema.blogPosts.create();
+    let post = server.schema.blogPosts.create();
     post.createWordSmith();
     post.createFineComment();
     post.createFineComment();
@@ -261,7 +283,7 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Inclu
       }
     };
 
-    let result = registry.serialize(post, request);
+    let result = server.serializerOrRegistry.serialize(post, request);
 
     expect(result).toEqual({
       data: {
@@ -293,11 +315,13 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Inclu
   });
 
   test("query param includes support dot-paths when serializing a model", () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer
+    server.config({
+      serializers: {
+        application: JSONAPISerializer
+      }
     });
 
-    schema.db.loadData({
+    server.schema.db.loadData({
       wordSmiths: [{ id: 1, name: "Sam", blogPostIds: [2] }],
       blogPosts: [
         { id: 2, wordSmithId: 1, fineCommentIds: [3], title: "Lorem Ipsum" }
@@ -311,7 +335,10 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Inclu
         include: "word-smith,fine-comments.category.labels"
       }
     };
-    let result = registry.serialize(schema.blogPosts.first(), request);
+    let result = server.serializerOrRegistry.serialize(
+      server.schema.blogPosts.first(),
+      request
+    );
 
     expect(result).toEqual({
       data: {
@@ -373,11 +400,13 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Inclu
   });
 
   test("query param includes support dot-paths when serializing a collection", () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer
+    server.config({
+      serializers: {
+        application: JSONAPISerializer
+      }
     });
 
-    schema.db.loadData({
+    server.schema.db.loadData({
       wordSmiths: [{ id: 1, name: "Sam", blogPostIds: [2, 5] }],
       blogPosts: [
         { id: 2, wordSmithId: 1, fineCommentIds: [3], title: "Lorem Ipsum" },
@@ -392,7 +421,10 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Inclu
         include: "word-smith,fine-comments.category.labels"
       }
     };
-    let result = registry.serialize(schema.blogPosts.all(), request);
+    let result = server.serializerOrRegistry.serialize(
+      server.schema.blogPosts.all(),
+      request
+    );
 
     expect(result).toEqual({
       data: [
@@ -471,11 +503,13 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Inclu
   });
 
   test("queryParamIncludes throws if including something that is not an association", () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer
+    server.config({
+      serializers: {
+        application: JSONAPISerializer
+      }
     });
 
-    schema.db.loadData({
+    server.schema.db.loadData({
       blogPosts: [{ id: 2, title: "Lorem Ipsum" }]
     });
     let request = {
@@ -485,7 +519,10 @@ describe("Integration | Serializers | JSON API Serializer | Associations | Inclu
     };
 
     expect(() => {
-      registry.serialize(schema.blogPosts.first(), request);
+      server.serializerOrRegistry.serialize(
+        server.schema.blogPosts.first(),
+        request
+      );
     }).toThrow();
   });
 });

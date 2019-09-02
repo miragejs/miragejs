@@ -1,8 +1,8 @@
-let browser = {
-  displayName: "browser",
+let internal = {
+  displayName: "internal",
   transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash)"],
   setupFilesAfterEnv: ["jest-extended"],
-  testMatch: ["**/__tests__/**/*-test.[jt]s?(x)"],
+  testMatch: ["**/__tests__/internal/**/*-test.[jt]s?(x)"],
   moduleNameMapper: {
     "@lib(.*)": "<rootDir>/lib$1",
     "@miragejs/server": "<rootDir>/lib/index"
@@ -102,5 +102,9 @@ let nodeEnvironmentConsumingCjs = {
 module.exports = {
   // Only browser for now, but add back in bundles soon
   // projects: [browser]
-  projects: [browserEnvironmentConsumingCjs, nodeEnvironmentConsumingCjs]
+  projects: [
+    internal,
+    browserEnvironmentConsumingCjs,
+    nodeEnvironmentConsumingCjs
+  ]
 };

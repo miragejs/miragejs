@@ -1,7 +1,12 @@
-import Server from "@lib/server";
-import { Model, belongsTo, hasMany, JSONAPISerializer } from "@miragejs/server";
+import {
+  Server,
+  Model,
+  belongsTo,
+  hasMany,
+  JSONAPISerializer
+} from "@miragejs/server";
 
-describe("Integration | Serializers | JSON API Serializer | Associations | Polymorphic", () => {
+describe("External | Shared | Serializers | JSON API Serializer | Associations | Polymorphic", () => {
   test("it works for belongs to polymorphic relationships", () => {
     let server = new Server({
       models: {

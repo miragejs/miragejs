@@ -1,35 +1,40 @@
-import Schema from "@lib/orm/schema";
-import Db from "@lib/db";
-import SerializerRegistry from "@lib/serializer-registry";
-import { Model, JSONAPISerializer } from "@miragejs/server";
-import { underscore } from "@lib/utils/inflector";
+import { Server, Model, JSONAPISerializer } from "@miragejs/server";
+import snakeCase from "lodash.snakecase";
 
-describe("Integration | Serializers | JSON API Serializer | Key Formatting", () => {
-  let schema;
+describe("External | Shared | Serializers | JSON API Serializer | Key Formatting", () => {
+  let server;
 
   beforeEach(() => {
-    schema = new Schema(new Db(), {
-      wordSmith: Model,
-      photograph: Model
+    server = new Server({
+      models: {
+        wordSmith: Model,
+        photograph: Model
+      }
     });
   });
 
+  afterEach(() => {
+    server.shutdown();
+  });
+
   test(`keyForAttribute formats the attributes of a model`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer.extend({
-        keyForAttribute(key) {
-          return underscore(key);
-        }
-      })
+    server.config({
+      serializers: {
+        application: JSONAPISerializer.extend({
+          keyForAttribute(key) {
+            return snakeCase(key);
+          }
+        })
+      }
     });
-    let wordSmith = schema.wordSmiths.create({
+    let wordSmith = server.schema.wordSmiths.create({
       id: 1,
       firstName: "Link",
       lastName: "Jackson",
       age: 323
     });
 
-    let result = registry.serialize(wordSmith);
+    let result = server.serializerOrRegistry.serialize(wordSmith);
 
     expect(result).toEqual({
       data: {
@@ -45,27 +50,29 @@ describe("Integration | Serializers | JSON API Serializer | Key Formatting", () 
   });
 
   test(`keyForAttribute also formats the models in a collections`, () => {
-    let registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer.extend({
-        keyForAttribute(key) {
-          return underscore(key);
-        }
-      })
+    server.config({
+      serializers: {
+        application: JSONAPISerializer.extend({
+          keyForAttribute(key) {
+            return snakeCase(key);
+          }
+        })
+      }
     });
 
-    schema.wordSmiths.create({
+    server.schema.wordSmiths.create({
       id: 1,
       firstName: "Link",
       lastName: "Jackson"
     });
-    schema.wordSmiths.create({
+    server.schema.wordSmiths.create({
       id: 2,
       firstName: "Zelda",
       lastName: "Brown"
     });
-    let wordSmiths = schema.wordSmiths.all();
+    let wordSmiths = server.schema.wordSmiths.all();
 
-    let result = registry.serialize(wordSmiths);
+    let result = server.serializerOrRegistry.serialize(wordSmiths);
 
     expect(result).toEqual({
       data: [

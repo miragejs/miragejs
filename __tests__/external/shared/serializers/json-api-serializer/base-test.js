@@ -1,23 +1,26 @@
-import Schema from "@lib/orm/schema";
-import Db from "@lib/db";
-import SerializerRegistry from "@lib/serializer-registry";
-import { Model, JSONAPISerializer } from "@miragejs/server";
+import { Server, Model, JSONAPISerializer } from "@miragejs/server";
 
-describe("Integration | Serializers | JSON API Serializer | Base", () => {
-  let schema, registry;
+describe("External | Shared | Serializers | JSON API Serializer | Base", () => {
+  let server;
 
   beforeEach(() => {
-    schema = new Schema(new Db(), {
-      wordSmith: Model
-    });
-    registry = new SerializerRegistry(schema, {
-      application: JSONAPISerializer
+    server = new Server({
+      models: {
+        wordSmith: Model
+      },
+      serializers: {
+        application: JSONAPISerializer
+      }
     });
   });
 
+  afterEach(() => {
+    server.shutdown();
+  });
+
   test(`it includes all attributes for a model`, () => {
-    let link = schema.wordSmiths.create({ firstName: "Link", age: 123 });
-    let result = registry.serialize(link);
+    let link = server.schema.wordSmiths.create({ firstName: "Link", age: 123 });
+    let result = server.serializerOrRegistry.serialize(link);
 
     expect(result).toEqual({
       data: {
@@ -32,12 +35,12 @@ describe("Integration | Serializers | JSON API Serializer | Base", () => {
   });
 
   test(`it includes all attributes for each model in a collection`, () => {
-    schema.wordSmiths.create({ firstName: "Link", age: 123 });
-    schema.wordSmiths.create({ id: 1, firstName: "Link", age: 123 });
-    schema.wordSmiths.create({ id: 2, firstName: "Zelda", age: 456 });
+    server.schema.wordSmiths.create({ firstName: "Link", age: 123 });
+    server.schema.wordSmiths.create({ id: 1, firstName: "Link", age: 123 });
+    server.schema.wordSmiths.create({ id: 2, firstName: "Zelda", age: 456 });
 
-    let collection = schema.wordSmiths.all();
-    let result = registry.serialize(collection);
+    let collection = server.schema.wordSmiths.all();
+    let result = server.serializerOrRegistry.serialize(collection);
 
     expect(result).toEqual({
       data: [
@@ -62,8 +65,8 @@ describe("Integration | Serializers | JSON API Serializer | Base", () => {
   });
 
   test(`it can serialize an empty collection`, () => {
-    let wordSmiths = schema.wordSmiths.all();
-    let result = registry.serialize(wordSmiths);
+    let wordSmiths = server.schema.wordSmiths.all();
+    let result = server.serializerOrRegistry.serialize(wordSmiths);
 
     expect(result).toEqual({
       data: []

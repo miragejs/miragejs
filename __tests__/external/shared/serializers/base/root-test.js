@@ -1,31 +1,33 @@
-import SerializerRegistry from "@lib/serializer-registry";
-import Serializer from "@lib/serializer";
-import schemaHelper from "../schema-helper";
+import { Server, Model, Serializer } from "@miragejs/server";
 
 describe("External | Shared | Serializers | Base | Root", function() {
-  let schema, registry;
+  let server;
 
   beforeEach(function() {
-    schema = schemaHelper.setup();
-    registry = new SerializerRegistry(schema, {
-      wordSmith: Serializer.extend({
-        embed: true,
-        root: false
-      })
+    server = new Server({
+      models: {
+        wordSmith: Model
+      },
+      serializers: {
+        wordSmith: Serializer.extend({
+          embed: true,
+          root: false
+        })
+      }
     });
   });
 
   afterEach(function() {
-    schema.db.emptyData();
+    server.shutdown();
   });
 
   test(`if root is false, it serializes a model by returning its attrs`, () => {
-    let wordSmith = schema.wordSmiths.create({
+    let wordSmith = server.schema.wordSmiths.create({
       id: "1",
       name: "Link"
     });
 
-    let result = registry.serialize(wordSmith);
+    let result = server.serializerOrRegistry.serialize(wordSmith);
     expect(result).toEqual({
       id: "1",
       name: "Link"
@@ -33,11 +35,11 @@ describe("External | Shared | Serializers | Base | Root", function() {
   });
 
   test(`if root is false, it serializes a collection of models by returning an array of their attrs`, () => {
-    schema.wordSmiths.create({ id: 1, name: "Link" });
-    schema.wordSmiths.create({ id: 2, name: "Zelda" });
-    let wordSmiths = schema.wordSmiths.all();
+    server.schema.wordSmiths.create({ id: 1, name: "Link" });
+    server.schema.wordSmiths.create({ id: 2, name: "Zelda" });
+    let wordSmiths = server.schema.wordSmiths.all();
 
-    let result = registry.serialize(wordSmiths);
+    let result = server.serializerOrRegistry.serialize(wordSmiths);
 
     expect(result).toEqual([
       { id: "1", name: "Link" },
@@ -46,8 +48,10 @@ describe("External | Shared | Serializers | Base | Root", function() {
   });
 
   test(`if root is false, it serializes an empty collection by returning an empty array`, () => {
-    let emptywordSmithCollection = schema.wordSmiths.all();
-    let result = registry.serialize(emptywordSmithCollection);
+    let emptywordSmithCollection = server.schema.wordSmiths.all();
+    let result = server.serializerOrRegistry.serialize(
+      emptywordSmithCollection
+    );
 
     expect(result).toEqual([]);
   });
