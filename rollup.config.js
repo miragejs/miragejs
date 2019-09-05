@@ -9,11 +9,36 @@ function isBareModuleId(id) {
   return !id.startsWith(".") && !id.includes(path.join(process.cwd(), "lib"));
 }
 
+let maybePretender = {
+  load(id) {
+    console.log(id);
+    if (id.indexOf("pretender") > -1) {
+      let umdId = id.replace(".es.js", ".js");
+
+      return `
+        const MaybePretender = typeof window === 'undefined' ? undefined : function(...args) {
+          ${fs.readFileSync(umdId, "utf-8")}
+
+          return new Pretender(...args);
+        }
+
+        export default MaybePretender
+      `;
+    }
+  }
+};
+
 let esm = {
   input: "lib/index.js",
-  output: { file: `dist/mirage-ems.js`, sourcemap: true, format: "esm" },
-  external: isBareModuleId,
+  output: { file: `dist/mirage-esm.js`, sourcemap: true, format: "esm" },
+  external(id) {
+    return false;
+    // pretender isn't external since we are going to override
+    // it with our own shim.
+    return id !== "pretender" && isBareModuleId(id);
+  },
   plugins: [
+    maybePretender,
     babel({
       exclude: "node_modules/**",
       sourceMaps: true,
@@ -39,23 +64,7 @@ let cjs = {
     alias({
       "@miragejs/server": path.resolve(process.cwd(), "./")
     }),
-    {
-      load(id) {
-        if (id.indexOf("pretender") > -1) {
-          let umdId = id.replace(".es.js", ".js");
-
-          return `
-            const MaybePretender = typeof window === 'undefined' ? undefined : function(...args) {
-              ${fs.readFileSync(umdId, "utf-8")}
-
-              return new Pretender(...args);
-            }
-
-            export default MaybePretender
-          `;
-        }
-      }
-    },
+    maybePretender,
     babel({
       exclude: "node_modules/**",
       sourceMaps: true,
@@ -84,6 +93,7 @@ let umd = {
     alias({
       "@miragejs/server": path.resolve(process.cwd(), "./")
     }),
+    maybePretender,
     resolve(),
     babel({
       exclude: "node_modules/**",
@@ -103,4 +113,5 @@ let umd = {
   ]
 };
 
-export default [esm, cjs, umd];
+// export default [esm, cjs, umd];
+export default [esm];
