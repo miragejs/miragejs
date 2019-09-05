@@ -15,8 +15,8 @@ let internal = {
 //   setupFilesAfterEnv: ["jest-extended"],
 //   testMatch: ["**/__tests__/integration/**/*-test.[jt]s?(x)"],
 //   moduleNameMapper: {
-//     "@lib(.*)": "<rootDir>/dist/mirage-ems",
-//     "@miragejs/server": "<rootDir>/dist/mirage-ems"
+//     "@lib(.*)": "<rootDir>/dist/mirage-esm",
+//     "@miragejs/server": "<rootDir>/dist/mirage-esm"
 //   }
 // };
 //
