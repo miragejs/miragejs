@@ -11,7 +11,7 @@ function isBareModuleId(id) {
 
 let esm = {
   input: "lib/index.js",
-  output: { file: `dist/mirage-ems.js`, sourcemap: true, format: "esm" },
+  output: { file: `dist/mirage-esm.js`, sourcemap: true, format: "esm" },
   external: isBareModuleId,
   plugins: [
     babel({
