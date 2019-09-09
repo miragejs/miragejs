@@ -17,17 +17,7 @@ let esm = {
     babel({
       exclude: "node_modules/**",
       sourceMaps: true,
-      presets: [
-        [
-          "@babel/preset-env",
-          {
-            useBuiltIns: "usage",
-            corejs: 3,
-            modules: false,
-            targets: "ie 11"
-          }
-        ]
-      ]
+      presets: [["@babel/preset-env", {}]]
     })
   ]
 };
