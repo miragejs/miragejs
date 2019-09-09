@@ -1,6 +1,6 @@
 {
   "name": "@miragejs/server",
-  "version": "0.1.24",
+  "version": "0.1.23",
   "description": "A client-side server to help you build, test and demo your JavaScript app",
   "main": "dist/mirage-umd.js",
   "module": "dist/mirage-esm.js",
@@ -30,7 +30,6 @@
     "ci": "run-s lint test"
   },
   "dependencies": {
-    "core-js": "3",
     "inflected": "^2.0.4",
     "lodash.assign": "^4.2.0",
     "lodash.camelcase": "^4.3.0",
@@ -51,9 +50,9 @@
     "lodash.map": "^4.6.0",
     "lodash.mapvalues": "^4.6.0",
     "lodash.pick": "^4.4.0",
-    "lodash.snakecase": "^4.1.1",
     "lodash.uniq": "^4.5.0",
     "lodash.uniqby": "^4.7.0",
+    "lodash.snakecase": "^4.1.1",
     "lodash.values": "^4.3.0",
     "pretender": "3.0.2"
   },
