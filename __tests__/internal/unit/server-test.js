@@ -1,6 +1,5 @@
 import {
   Server,
-  defaultPassthroughs,
   Model,
   Factory,
   belongsTo,
@@ -1453,39 +1452,5 @@ describe("Unit | Server #buildList", function() {
     }).toThrow(
       "Mirage: second argument has to be an integer, you passed: string"
     );
-  });
-});
-
-describe("Unit | Server #defaultPassthroughs", function() {
-  test("server configures default passthroughs when useDefaultPassthroughs is true", () => {
-    let server = new Server({ useDefaultPassthroughs: true });
-
-    expect.assertions(defaultPassthroughs.length);
-    defaultPassthroughs.forEach(passthroughUrl => {
-      let passthroughRequest = { method: "GET", url: passthroughUrl };
-      let isPassedThrough = server.pretender.checkPassthrough(
-        passthroughRequest
-      );
-
-      expect(isPassedThrough).toBeTruthy();
-    });
-
-    server.shutdown();
-  });
-
-  test("server does not configure default passthroughs when useDefaultPassthroughs is false", () => {
-    let server = new Server({ useDefaultPassthroughs: false });
-
-    expect.assertions(defaultPassthroughs.length);
-    defaultPassthroughs.forEach(passthroughUrl => {
-      let passthroughRequest = { method: "GET", url: passthroughUrl };
-      let isPassedThrough = server.pretender.checkPassthrough(
-        passthroughRequest
-      );
-
-      expect(!isPassedThrough).toBeTruthy();
-    });
-
-    server.shutdown();
   });
 });

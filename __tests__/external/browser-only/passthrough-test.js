@@ -1,6 +1,6 @@
 import { Server } from "@miragejs/server";
 
-describe("External |Browser only | Passthrough", () => {
+describe("External | Browser only | Passthrough", () => {
   let server, originalError;
 
   beforeEach(() => {
@@ -152,4 +152,48 @@ describe("External |Browser only | Passthrough", () => {
       "Network request failed"
     );
   });
+
+  test("it can take a function", async () => {
+    server.config({
+      routes() {
+        this.passthrough(request => {
+          return request.url === "/users";
+        });
+      }
+    });
+
+    await expect(fetch("/users")).rejects.toThrow("Network request failed");
+
+    await expect(fetch("/movies")).rejects.toThrow(
+      `Mirage: Your app tried to GET '/movies'`
+    );
+  });
+
+  test("it passes through common build tool-related paths", async () => {
+    await expect(fetch("/abc.hot-update.json")).rejects.toThrow(
+      "Network request failed"
+    );
+    await expect(fetch("/movies")).rejects.toThrow(
+      `Mirage: Your app tried to GET '/movies'`
+    );
+
+    await expect(fetch("/def.hot-update.json")).rejects.toThrow(
+      "Network request failed"
+    );
+    await expect(fetch("/movies")).rejects.toThrow(
+      `Mirage: Your app tried to GET '/movies'`
+    );
+  });
+});
+
+test("a new server created with useDefaultPassthroughs set to false ignores default passthrougsh", async () => {
+  let server = new Server({
+    useDefaultPassthroughs: false
+  });
+
+  await expect(fetch("/abc.hot-update.json")).rejects.toThrow(
+    "Mirage: Your app tried to GET '/abc.hot-update.json'"
+  );
+
+  server.shutdown();
 });
