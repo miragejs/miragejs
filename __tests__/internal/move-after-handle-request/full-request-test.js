@@ -11,6 +11,7 @@ describe("External | Shared | Serializers | Base | Full Request", function() {
 
   beforeEach(function() {
     server = new Server({
+      environment: "test",
       models: {
         author: Model.extend({
           posts: hasMany()
