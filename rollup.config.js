@@ -30,11 +30,6 @@ let cjs = {
     esModule: true
   },
   external: isBareModuleId,
-  // external(id) {
-  //   // in cjs pretender isn't external since we are going to override
-  //   // it with our own shim.
-  //   return id !== "./pretender-polyfill" && isBareModuleId(id);
-  // },
   plugins: [
     alias({
       "@miragejs/server": path.resolve(process.cwd(), "./")
