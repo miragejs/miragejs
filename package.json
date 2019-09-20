@@ -55,7 +55,7 @@
     "lodash.uniqby": "^4.7.0",
     "lodash.values": "^4.3.0",
     "pretender": "3.0.2",
-    "@miragejs/pretender-node-polyfill": "latest"
+    "@miragejs/pretender-node-polyfill": "^0.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

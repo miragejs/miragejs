@@ -841,10 +841,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@miragejs/pretender-node-polyfill@latest":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@miragejs/pretender-node-polyfill/-/pretender-node-polyfill-0.1.0.tgz#aac0e741f8e5406fde9293f90e484e4672e926bf"
-  integrity sha512-R29lwiCrL6V9C2rMIgH6kbm4ixE/1xiiS8tu+K/ME7ToP36tlHzSQJuYkR7l9MrQjwWUzDAeCtwPjoFlOynrbQ==
+"@miragejs/pretender-node-polyfill@^0.1.0":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@miragejs/pretender-node-polyfill/-/pretender-node-polyfill-0.1.1.tgz#6f76b5098d3c2f92c7df50b45324cdc9d20a835e"
+  integrity sha512-Zs9ZrFntI5MVYJ1H2ssTDfwGDK8ezEHouMmPBZ13kJHCOHDQ4UuqJVEiomsCY7nlQlVIPtPDDzGbCq7T4gg5Ew==
 
 "@types/babel__core@^7.1.0":
   version "7.1.2"
