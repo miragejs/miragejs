@@ -103,8 +103,8 @@ module.exports = {
   // Only browser for now, but add back in bundles soon
   // projects: [browser]
   projects: [
-    // internal,
-    // browserEnvironmentConsumingCjs
+    internal,
+    browserEnvironmentConsumingCjs,
     nodeEnvironmentConsumingCjs
   ]
 };

@@ -842,9 +842,9 @@
     "@types/yargs" "^13.0.0"
 
 "@miragejs/pretender-node-polyfill@^0.1.0":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@miragejs/pretender-node-polyfill/-/pretender-node-polyfill-0.1.1.tgz#6f76b5098d3c2f92c7df50b45324cdc9d20a835e"
-  integrity sha512-Zs9ZrFntI5MVYJ1H2ssTDfwGDK8ezEHouMmPBZ13kJHCOHDQ4UuqJVEiomsCY7nlQlVIPtPDDzGbCq7T4gg5Ew==
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@miragejs/pretender-node-polyfill/-/pretender-node-polyfill-0.1.2.tgz#d26b6b7483fb70cd62189d05c95d2f67153e43f2"
+  integrity sha512-M/BexG/p05C5lFfMunxo/QcgIJnMT2vDVCd00wNqK2ImZONIlEETZwWJu1QtLxtmYlSHlCFl3JNzp0tLe7OJ5g==
 
 "@types/babel__core@^7.1.0":
   version "7.1.2"
