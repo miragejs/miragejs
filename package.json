@@ -2,7 +2,7 @@
   "name": "@miragejs/server",
   "version": "0.1.26",
   "description": "A client-side server to help you build, test and demo your JavaScript app",
-  "main": "dist/mirage-umd.js",
+  "main": "dist/mirage-cjs.js",
   "module": "dist/mirage-esm.js",
   "keywords": [
     "pretender",
