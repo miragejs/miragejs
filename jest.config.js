@@ -1,6 +1,5 @@
 let internal = {
   displayName: "internal",
-  transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash)"],
   setupFilesAfterEnv: ["jest-extended"],
   testMatch: ["**/__tests__/internal/**/*-test.[jt]s?(x)"],
   moduleNameMapper: {
@@ -41,7 +40,6 @@ let nodeEnvironmentConsumingEsm = {
 let browserEnvironmentConsumingCjs = {
   displayName: "browserEnvironmentConsumingCjs",
   testEnvironment: "jsdom",
-  transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash)"],
   setupFilesAfterEnv: ["jest-extended"],
   testMatch: [
     "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
@@ -56,10 +54,9 @@ let browserEnvironmentConsumingCjs = {
 let nodeEnvironmentConsumingCjs = {
   displayName: "nodeEnvironmentConsumingCjs",
   testEnvironment: "node",
-  transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash)"],
   setupFilesAfterEnv: ["jest-extended"],
   testMatch: [
-    // "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
+    "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
     "**/__tests__/external/node-only/**/*-test.[jt]s?(x)"
   ],
   moduleNameMapper: {
