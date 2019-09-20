@@ -63,7 +63,7 @@ let nodeEnvironmentConsumingCjs = {
   transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash)"],
   setupFilesAfterEnv: ["jest-extended"],
   testMatch: [
-    "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
+    // "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
     "**/__tests__/external/node-only/**/*-test.[jt]s?(x)"
   ],
   moduleNameMapper: {
@@ -103,8 +103,8 @@ module.exports = {
   // Only browser for now, but add back in bundles soon
   // projects: [browser]
   projects: [
-    internal,
-    browserEnvironmentConsumingCjs,
+    // internal,
+    // browserEnvironmentConsumingCjs
     nodeEnvironmentConsumingCjs
   ]
 };
