@@ -30,6 +30,7 @@
     "ci": "run-s lint test"
   },
   "dependencies": {
+    "@miragejs/pretender-node-polyfill": "^0.1.0",
     "inflected": "^2.0.4",
     "lodash.assign": "^4.2.0",
     "lodash.camelcase": "^4.3.0",
