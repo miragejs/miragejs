@@ -1,6 +1,6 @@
 {
   "name": "@miragejs/server",
-  "version": "0.1.27-beta.1",
+  "version": "0.1.27-beta.2",
   "description": "A client-side server to help you build, test and demo your JavaScript app",
   "main": "dist/mirage-cjs.js",
   "module": "dist/mirage-esm.js",
