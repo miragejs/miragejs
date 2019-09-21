@@ -1,5 +1,5 @@
 import { Server, Model, Factory, hasMany, belongsTo } from "@miragejs/server";
-import { inflections } from "inflected";
+import { inflections, pluralize, singularize } from "inflected";
 
 // eslint-disable-next-line no-console
 let originalWarn = console.warn;
@@ -15,6 +15,10 @@ describe("External | Shared | Factories | create and createList", function() {
   let server, Contact, AmazingContact, Post, Author, Data;
 
   beforeEach(function() {
+    inflections("en", inflect => {
+      inflect.uncountable("data");
+    });
+
     Contact = Model.extend();
     AmazingContact = Model.extend();
     Post = Model.extend({
@@ -27,6 +31,7 @@ describe("External | Shared | Factories | create and createList", function() {
 
     server = new Server({
       environment: "test",
+      inflector: { pluralize, singularize },
       models: {
         contact: Contact,
         amazingContact: AmazingContact,
@@ -83,9 +88,6 @@ describe("External | Shared | Factories | create and createList", function() {
   test("create returns a Model instance if the Model name is uncountable", () => {
     expectNoWarning();
 
-    inflections("en", inflect => {
-      inflect.uncountable("data");
-    });
     let data = server.create("data");
 
     expect(data instanceof Data).toBeTruthy();
@@ -124,9 +126,6 @@ describe("External | Shared | Factories | create and createList", function() {
   test("createList returns Models if the model name is uncountable", () => {
     expectNoWarning();
 
-    inflections("en", inflect => {
-      inflect.uncountable("data");
-    });
     let data = server.createList("data", 1);
 
     expect(data[0] instanceof Data).toBeTruthy();

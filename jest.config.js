@@ -65,18 +65,18 @@ let nodeEnvironmentConsumingCjs = {
 };
 
 // External API, script tag or Code Sandbox
-// let browserEnvironmentConsumingUmd = {
-//   displayName: "browserEnvironmentConsumingUmd",
-//   testEnvironment: "jsdom",
-//   setupFilesAfterEnv: ["jest-extended"],
-//   testMatch: [
-//     "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
-//     "**/__tests__/external/browser-only/**/*-test.[jt]s?(x)"
-//   ],
-//   moduleNameMapper: {
-//     "@miragejs/server": "<rootDir>/dist/mirage-umd.js"
-//   }
-// };
+let browserEnvironmentConsumingUmd = {
+  displayName: "browserEnvironmentConsumingUmd",
+  testEnvironment: "jsdom",
+  setupFilesAfterEnv: ["jest-extended"],
+  testMatch: [
+    "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
+    "**/__tests__/external/browser-only/**/*-test.[jt]s?(x)"
+  ],
+  moduleNameMapper: {
+    "@miragejs/server": "<rootDir>/dist/mirage-umd.js"
+  }
+};
 
 module.exports = {
   projects: [
@@ -84,7 +84,7 @@ module.exports = {
     browserEnvironmentConsumingEsm,
     nodeEnvironmentConsumingEsm,
     browserEnvironmentConsumingCjs,
-    nodeEnvironmentConsumingCjs
-    // browserEnvironmentConsumingUmd
+    nodeEnvironmentConsumingCjs,
+    browserEnvironmentConsumingUmd
   ]
 };
