@@ -10,7 +10,7 @@ describe("Unit | Schema", function() {
   test("it cannot be instantiated without a db", () => {
     expect(function() {
       new Schema();
-    }).toThrow('A schema requires a db');
+    }).toThrow("A schema requires a db");
   });
 
   test("modelFor returns model for given type if registered", () => {

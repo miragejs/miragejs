@@ -1,9 +1,4 @@
-import {
-  _ormSchema as Schema,
-  _Db as Db,
-  Model,
-  RestSerializer
-} from "@lib";
+import { _ormSchema as Schema, _Db as Db, Model, RestSerializer } from "@lib";
 
 describe("Unit | Serializers | RestSerializer", function() {
   let schema = null;
