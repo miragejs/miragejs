@@ -23,11 +23,19 @@ module.exports = {
     "object-shorthand": 0,
     "arrow-parens": 0,
     "no-unused-vars": ["error", { args: "none" }],
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["__tests__", "*.config.js"]}]
+    "import/no-extraneous-dependencies": [
+      "error",
+      { devDependencies: ["__tests__", "*.config.js"] }
+    ]
   },
   overrides: [
     {
-      files: ["jest.config.js", "babel.config.js", "rollup.config.js", "rollup.test.config.js"],
+      files: [
+        "jest.config.js",
+        "babel.config.js",
+        "rollup.config.js",
+        "rollup.test.config.js"
+      ],
       env: {
         browser: false,
         node: true
@@ -42,10 +50,7 @@ module.exports = {
   ],
   settings: {
     "import/resolver": {
-      alias: [
-        ["@lib", "./lib"],
-        ["@miragejs/server", "./index"]
-      ],
+      alias: [["@lib", "./lib"], ["@miragejs/server", "./index"]],
       node: {
         extensions: ["js"]
       }

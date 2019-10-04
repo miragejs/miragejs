@@ -4,15 +4,49 @@ import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 import alias from "rollup-plugin-alias";
 
-function isBareModuleId(id) {
-  return !id.startsWith(".") && !id.includes(path.join(process.cwd(), "lib"));
+let aliases = {
+  "@lib": path.resolve(process.cwd(), "./lib/")
+};
+
+function isExternal(id) {
+  /*
+    Here, `id` is "./db", as in
+
+      import db from './db'
+  */
+  let isRelativeInternalModulePath = id.startsWith(".");
+
+  /*
+    Here, `id` is something like
+
+      "/Users/samselikoff/Projects/oss/miragejs/server/lib/identity-manager.js"
+
+    I'm not sure how this happens, but it's referencing an internal module, so
+    it shouldn't be treated as external.
+  */
+  let isAbsoluteInternalModulePath = id.includes(
+    path.join(process.cwd(), "lib")
+  );
+
+  /*
+    Here, `id` is something like '@lib', which is not a path but does reference
+    an internal module. So it shouldn't be treated as external.
+  */
+  let isAlias = Boolean(
+    Object.keys(aliases).find(alias => id.startsWith(alias))
+  );
+
+  return (
+    !isRelativeInternalModulePath && !isAbsoluteInternalModulePath && !isAlias
+  );
 }
 
 let esm = {
   input: "lib/index.js",
   output: { file: `dist/mirage-esm.js`, sourcemap: true, format: "esm" },
-  external: isBareModuleId,
+  external: isExternal,
   plugins: [
+    alias(aliases),
     babel({
       exclude: "node_modules/**",
       sourceMaps: true,
@@ -29,11 +63,9 @@ let cjs = {
     format: "cjs",
     esModule: true
   },
-  external: isBareModuleId,
+  external: isExternal,
   plugins: [
-    alias({
-      "@miragejs/server": path.resolve(process.cwd(), "./")
-    }),
+    alias(aliases),
     babel({
       exclude: "node_modules/**",
       sourceMaps: true,
@@ -59,9 +91,7 @@ let umd = {
   },
   plugins: [
     commonjs(),
-    alias({
-      "@miragejs/server": path.resolve(process.cwd(), "./")
-    }),
+    alias(aliases),
     resolve(),
     babel({
       exclude: "node_modules/**",
