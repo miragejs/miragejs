@@ -5,7 +5,12 @@ import commonjs from "rollup-plugin-commonjs";
 import alias from "rollup-plugin-alias";
 
 let aliases = {
-  "@lib": path.resolve(process.cwd(), "./lib/")
+  entries: [
+    {
+      find: /@lib(.*)/,
+      replacement: path.resolve(process.cwd(), "./lib$1.js")
+    }
+  ]
 };
 
 function isExternal(id) {
@@ -29,11 +34,17 @@ function isExternal(id) {
   );
 
   /*
-    Here, `id` is something like '@lib', which is not a path but does reference
-    an internal module. So it shouldn't be treated as external.
+    Here, `id` is something like '@lib/assert', which is not a path but does
+    reference an internal module. So it shouldn't be treated as external.
   */
   let isAlias = Boolean(
-    Object.keys(aliases).find(alias => id.startsWith(alias))
+    aliases.entries.find(entry => {
+      if (entry.find instanceof RegExp) {
+        return entry.find.test(id);
+      } else if (typeof entry.find === "string") {
+        return id.startsWith(entry.find);
+      }
+    })
   );
 
   return (
