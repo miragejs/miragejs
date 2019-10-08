@@ -80,11 +80,11 @@ let browserEnvironmentConsumingUmd = {
 
 module.exports = {
   projects: [
-    internal,
-    browserEnvironmentConsumingEsm,
-    nodeEnvironmentConsumingEsm,
-    browserEnvironmentConsumingCjs,
-    nodeEnvironmentConsumingCjs,
-    browserEnvironmentConsumingUmd
+    // internal,
+    browserEnvironmentConsumingEsm
+    // nodeEnvironmentConsumingEsm,
+    // browserEnvironmentConsumingCjs,
+    // nodeEnvironmentConsumingCjs,
+    // browserEnvironmentConsumingUmd
   ]
 };
