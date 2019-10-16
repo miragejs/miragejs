@@ -1,5 +1,5 @@
 {
-  "name": "@miragejs/server",
+  "name": "miragejs",
   "version": "0.1.29",
   "description": "A client-side server to help you build, test and demo your JavaScript app",
   "main": "dist/mirage-cjs.js",
