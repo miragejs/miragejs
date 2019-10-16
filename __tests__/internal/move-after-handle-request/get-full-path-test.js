@@ -1,4 +1,4 @@
-import { Server } from "@miragejs/server";
+import { Server } from "miragejs";
 
 describe("Integration | Server | Get full path", function() {
   let server;

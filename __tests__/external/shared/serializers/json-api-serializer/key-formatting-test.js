@@ -1,4 +1,4 @@
-import { Server, Model, JSONAPISerializer } from "@miragejs/server";
+import { Server, Model, JSONAPISerializer } from "miragejs";
 import snakeCase from "lodash.snakecase";
 
 describe("External | Shared | Serializers | JSON API Serializer | Key Formatting", () => {

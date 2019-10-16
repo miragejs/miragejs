@@ -1,4 +1,4 @@
-import { Server } from "@miragejs/server";
+import { Server } from "miragejs";
 
 describe("External | Shared | Server | loadFixtures", () => {
   let server;

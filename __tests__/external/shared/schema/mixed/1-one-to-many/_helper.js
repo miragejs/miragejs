@@ -1,4 +1,4 @@
-import { Server, Model, hasMany, belongsTo } from "@miragejs/server";
+import { Server, Model, hasMany, belongsTo } from "miragejs";
 
 /*
   A model with a hasMany association can be in eight states

@@ -1,4 +1,4 @@
-import { Server, Model, ActiveModelSerializer } from "@miragejs/server";
+import { Server, Model, ActiveModelSerializer } from "miragejs";
 
 describe("Integration | Server | Shorthands | Active Model Serializer Sanity check", function() {
   let server;

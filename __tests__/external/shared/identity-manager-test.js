@@ -4,7 +4,7 @@ import {
   belongsTo,
   Server,
   IdentityManager as DefaultIdentityManager
-} from "@miragejs/server";
+} from "miragejs";
 
 const CustomIdentityManager = class {
   constructor() {

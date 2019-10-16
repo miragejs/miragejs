@@ -1,4 +1,4 @@
-import { Server, Model, JSONAPISerializer } from "@miragejs/server";
+import { Server, Model, JSONAPISerializer } from "miragejs";
 import PostShorthandRouteHandler from "@lib/route-handlers/shorthands/post";
 
 describe("Integration | Route Handlers | POST shorthand", () => {

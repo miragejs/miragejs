@@ -1,4 +1,4 @@
-import { Server } from "@miragejs/server";
+import { Server } from "miragejs";
 
 describe("Integration | Server | Falsy responses", function() {
   let server;

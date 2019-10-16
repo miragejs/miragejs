@@ -1,10 +1,4 @@
-import {
-  Server,
-  Model,
-  hasMany,
-  belongsTo,
-  RestSerializer
-} from "@miragejs/server";
+import { Server, Model, hasMany, belongsTo, RestSerializer } from "miragejs";
 
 describe("Integration | Server | Shorthands | REST Serializer Sanity check", function() {
   let server;

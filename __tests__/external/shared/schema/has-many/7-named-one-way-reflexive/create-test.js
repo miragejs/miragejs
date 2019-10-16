@@ -1,5 +1,5 @@
 import Helper from "./_helper";
-import { Model } from "@miragejs/server";
+import { Model } from "miragejs";
 
 describe("External |Shared | Schema | Has Many | Named One-Way Reflexive | create", () => {
   let helper;

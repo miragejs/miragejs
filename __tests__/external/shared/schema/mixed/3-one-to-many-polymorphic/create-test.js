@@ -1,5 +1,5 @@
 import Helper from "./_helper";
-import { Model } from "@miragejs/server";
+import { Model } from "miragejs";
 
 describe("External |Shared | Schema | Mixed | One To Many Polymorphic | create", () => {
   let helper;

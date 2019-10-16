@@ -1,4 +1,4 @@
-import { Server, Model, hasMany } from "@miragejs/server";
+import { Server, Model, hasMany } from "miragejs";
 
 describe("External |Shared | Schema | reinitialize associations", () => {
   // Model classes are defined statically, just like in a typical app

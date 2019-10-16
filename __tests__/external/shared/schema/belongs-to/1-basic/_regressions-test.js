@@ -1,4 +1,4 @@
-import { Server, Model, belongsTo } from "@miragejs/server";
+import { Server, Model, belongsTo } from "miragejs";
 
 describe("External |Shared | Schema | Belongs To | Basic | regressions", function() {
   test("belongsTo accessors works when foreign key is present but falsy", () => {

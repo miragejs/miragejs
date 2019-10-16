@@ -1,7 +1,7 @@
 import "@lib/container";
 import Db from "@lib/db";
 import Schema from "@lib/orm/schema";
-import { Model, hasMany, belongsTo } from "@miragejs/server";
+import { Model, hasMany, belongsTo } from "miragejs";
 
 describe("Integration | ORM | Schema Verification | Mixed", function() {
   test("unnamed one-to-many associations are correct", () => {

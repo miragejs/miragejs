@@ -1,9 +1,4 @@
-import {
-  Server,
-  Model,
-  ActiveModelSerializer,
-  Response
-} from "@miragejs/server";
+import { Server, Model, ActiveModelSerializer, Response } from "miragejs";
 
 describe("Integration | Route handlers | Function handler", () => {
   let server;

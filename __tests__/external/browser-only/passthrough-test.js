@@ -1,4 +1,4 @@
-import { Server } from "@miragejs/server";
+import { Server } from "miragejs";
 
 describe("External | Browser only | Passthrough", () => {
   let server, originalError;

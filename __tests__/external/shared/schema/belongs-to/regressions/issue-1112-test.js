@@ -1,4 +1,4 @@
-import { Server, Model, belongsTo, hasMany } from "@miragejs/server";
+import { Server, Model, belongsTo, hasMany } from "miragejs";
 
 describe("External |Shared | Schema | Belongs To | Regressions | Issue 1112", function() {
   test(`deleting a record with a polymorphic belongsTo doesn't interfere with other dependents`, () => {

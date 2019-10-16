@@ -1,4 +1,4 @@
-import { Server, Model, JSONAPISerializer } from "@miragejs/server";
+import { Server, Model, JSONAPISerializer } from "miragejs";
 import PutShorthandRouteHandler from "@lib/route-handlers/shorthands/put";
 
 describe("Integration | Route Handlers | PUT shorthand", () => {

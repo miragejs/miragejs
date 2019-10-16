@@ -1,4 +1,4 @@
-import { Server, Model, Collection } from "@miragejs/server";
+import { Server, Model, Collection } from "miragejs";
 
 describe("External |Shared | Schema | #where", () => {
   let server;

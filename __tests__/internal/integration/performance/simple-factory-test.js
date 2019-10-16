@@ -1,4 +1,4 @@
-import { Server, Model, Factory } from "@miragejs/server";
+import { Server, Model, Factory } from "miragejs";
 import { perfTest } from "./utils";
 
 describe("Internal | Integration | Performance | Simple factory test", () => {

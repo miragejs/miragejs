@@ -1,7 +1,7 @@
 import "@lib/container";
 import Db from "@lib/db";
 import Schema from "@lib/orm/schema";
-import { Model, hasMany } from "@miragejs/server";
+import { Model, hasMany } from "miragejs";
 
 describe("Integration | ORM | Schema Verification | Has Many", function() {
   test("a one-way has many association is correct", () => {

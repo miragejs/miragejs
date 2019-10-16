@@ -1,10 +1,4 @@
-import {
-  Server,
-  Model,
-  hasMany,
-  belongsTo,
-  JSONAPISerializer
-} from "@miragejs/server";
+import { Server, Model, hasMany, belongsTo, JSONAPISerializer } from "miragejs";
 
 describe("Integration | Server | Regressions | 1318 Linkage bug test", function() {
   let server;

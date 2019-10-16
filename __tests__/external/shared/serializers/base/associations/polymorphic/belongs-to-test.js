@@ -1,4 +1,4 @@
-import { Server, Model, belongsTo, Serializer } from "@miragejs/server";
+import { Server, Model, belongsTo, Serializer } from "miragejs";
 
 describe("External | Shared | Serializers | Base | Associations | Polymorphic | Belongs To", function() {
   let server, BaseSerializer;

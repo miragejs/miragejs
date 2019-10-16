@@ -1,7 +1,7 @@
 import "@lib/container";
 import Db from "@lib/db";
 import Schema from "@lib/orm/schema";
-import { Model, belongsTo } from "@miragejs/server";
+import { Model, belongsTo } from "miragejs";
 
 describe("Internal | Integration | Schema | Schema Verification | Belongs To", function() {
   test("a one-way belongsTo association is correct", () => {

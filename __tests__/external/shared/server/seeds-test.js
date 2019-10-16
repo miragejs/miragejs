@@ -1,4 +1,4 @@
-import { Server, Model } from "@miragejs/server";
+import { Server, Model } from "miragejs";
 
 describe("External | Shared | Server | seeds", () => {
   let server;

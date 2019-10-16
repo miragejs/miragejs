@@ -1,4 +1,4 @@
-import { Server, Model } from "@miragejs/server";
+import { Server, Model } from "miragejs";
 import uniqBy from "lodash.uniqby";
 
 describe("External | Shared | Serializers | Base | Basic", function() {

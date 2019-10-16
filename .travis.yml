@@ -17,7 +17,7 @@ install:
 
 notifications:
   email: false
-  
+
 # Identifies `a.b.c-xxx.n` tags as pre-releases, and `a.b.c` as stable releases
 before_deploy: |
   function npm_dist_tag() {
@@ -48,4 +48,4 @@ jobs:
           secure: opUbyx91tWudkYlFmysdGjNLS3hcyUwL9nquwt4Xtel7w1ylenoBeiclwtwfRaVJpOkevFmycdGo7f3XjUwJypAfLx0+qMHc8P99hBn1rHJGNjGm5/oi3zuCwBDGsHALBqzu99l6CKNbMYcGIxrsjshL5EOvMAkLgZjuEJ1+hsyVaasG9qbDNkEz0PfJCPJYpHCAmEnYK6gL4ZZHlvje4CUgg5SjJKKvC7OhW03IyDjvCziHIVDxAB4BBEZmlC3nHSNKhe/LJrB/+HWY/SqVMFm1reF099G3G8zr+wyStVKqW8gO2ZejiDrw73N62iqrPcSkq72Nym1+TSz0yRjaPUu3JuQbzzCnJROrnWuD7ItlxwbPSOWTPMMSxlg/yrU5qVXNjHSTvYSn0VJBz7fy/MxiTSuz5+Ua2xOU7KpEP6RhVo0qHssDKm2wQ6rce4kNKXvKTkJ2dYTIBsojk8tELIupvas4ck8Dpt8yAxy6nJkEU+2skuM0JgqME32J1in2rQ/Ip/aa2RnTYgiiNZtxvqZBoM50sXiHFKZXOQsNL09/OvpYXNIDD10sALXLqfz3hUHqaMNmmEWSM7Xzz6/3duB/BqvGWXdetnf/KhTH+IlQVM5j/JYC/lT3M2aGWIpS0iwfMaSUgzuuNoccmlauaYOXnwNeDT6RTx1oMA0+PW0=
         on:
           tags: true
-          repo: miragejs/server
+          repo: miragejs/miragejs

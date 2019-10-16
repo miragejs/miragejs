@@ -1,9 +1,4 @@
-import {
-  Server,
-  Model,
-  ActiveModelSerializer,
-  RestSerializer
-} from "@miragejs/server";
+import { Server, Model, ActiveModelSerializer, RestSerializer } from "miragejs";
 
 describe("Integration | Server Config", () => {
   let server;
