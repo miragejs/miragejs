@@ -24,7 +24,7 @@ function isExternal(id) {
   /*
     Here, `id` is something like
 
-      "/Users/samselikoff/Projects/oss/miragejs/server/lib/identity-manager.js"
+      "/Users/samselikoff/Projects/oss/miragejs/miragejs/lib/identity-manager.js"
 
     I'm not sure how this happens, but it's referencing an internal module, so
     it shouldn't be treated as external.
