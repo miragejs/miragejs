@@ -1,4 +1,4 @@
-import { Server, Model, Serializer } from "@miragejs/server";
+import { Server, Model, Serializer } from "miragejs";
 
 const dasherize = str =>
   str.replace(

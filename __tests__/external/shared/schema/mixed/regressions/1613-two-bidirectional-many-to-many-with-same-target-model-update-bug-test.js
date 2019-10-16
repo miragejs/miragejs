@@ -1,4 +1,4 @@
-import { Server, Model, hasMany, belongsTo } from "@miragejs/server";
+import { Server, Model, hasMany, belongsTo } from "miragejs";
 
 describe("External |Shared | Schema | Mixed | Regressions | 1613 Two bidirectional one-to-many relationships with same target model update ids bug", () => {
   let server;

@@ -4,7 +4,7 @@ import {
   Model,
   belongsTo,
   hasMany
-} from "@miragejs/server";
+} from "miragejs";
 
 describe("Integration | Server | Shorthands | Patch with relationships", function() {
   let newServerWithSchema, server;

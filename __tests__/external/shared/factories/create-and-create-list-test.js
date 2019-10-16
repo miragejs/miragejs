@@ -1,4 +1,4 @@
-import { Server, Model, Factory, hasMany, belongsTo } from "@miragejs/server";
+import { Server, Model, Factory, hasMany, belongsTo } from "miragejs";
 import { inflections, pluralize, singularize } from "inflected";
 
 // eslint-disable-next-line no-console

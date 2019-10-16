@@ -3,7 +3,7 @@ import {
   Model,
   ActiveModelSerializer,
   Response
-} from "@miragejs/server";
+} from "miragejs";
 
 describe("Integration | Route handlers | Function handler", () => {
   let server;

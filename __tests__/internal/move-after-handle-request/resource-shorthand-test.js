@@ -1,4 +1,4 @@
-import { Server, Model, ActiveModelSerializer } from "@miragejs/server";
+import { Server, Model, ActiveModelSerializer } from "miragejs";
 
 describe("Integration | Server | Resource shorthand", function() {
   let server;

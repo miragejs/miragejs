@@ -1,4 +1,4 @@
-import { Server, Model, ActiveModelSerializer } from "@miragejs/server";
+import { Server, Model, ActiveModelSerializer } from "miragejs";
 import { camelize } from "@lib/utils/inflector";
 
 describe("Integration | Server | Customized normalize method", function() {

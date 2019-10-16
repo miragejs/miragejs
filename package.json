@@ -12,13 +12,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/miragejs/server.git"
+    "url": "https://github.com/miragejs/miragejs.git"
   },
   "license": "MIT",
   "author": "Sam Selikoff",
-  "homepage": "https://github.com/miragejs/server",
+  "homepage": "https://github.com/miragejs/miragejs",
   "bugs": {
-    "url": "https://github.com/miragejs/server/issues"
+    "url": "https://github.com/miragejs/miragejs/issues"
   },
   "scripts": {
     "lint": "eslint .",

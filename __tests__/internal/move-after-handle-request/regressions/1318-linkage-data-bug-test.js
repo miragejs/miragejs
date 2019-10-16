@@ -4,7 +4,7 @@ import {
   hasMany,
   belongsTo,
   JSONAPISerializer
-} from "@miragejs/server";
+} from "miragejs";
 
 describe("Integration | Server | Regressions | 1318 Linkage bug test", function() {
   let server;

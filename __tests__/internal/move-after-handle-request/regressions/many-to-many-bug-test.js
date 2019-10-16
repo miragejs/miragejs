@@ -1,4 +1,4 @@
-import { Server, Model, hasMany, JSONAPISerializer } from "@miragejs/server";
+import { Server, Model, hasMany, JSONAPISerializer } from "miragejs";
 
 describe("Integration | Server | Regressions | Many to many bug", function() {
   let server;

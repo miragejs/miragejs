@@ -1,4 +1,4 @@
-import { Server, Model, JSONAPISerializer } from "@miragejs/server";
+import { Server, Model, JSONAPISerializer } from "miragejs";
 
 describe("External | Shared | Serializers | JSON API Serializer | Base", () => {
   let server;

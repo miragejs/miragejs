@@ -1,4 +1,4 @@
-import { Server, Model, JSONAPISerializer } from "@miragejs/server";
+import { Server, Model, JSONAPISerializer } from "miragejs";
 import FunctionRouteHandler from "@lib/route-handlers/function";
 
 describe("Integration | Route handlers | Assertions", () => {

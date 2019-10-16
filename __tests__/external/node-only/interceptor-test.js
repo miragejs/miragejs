@@ -1,4 +1,4 @@
-import { Server } from "@miragejs/server";
+import { Server } from "miragejs";
 
 describe("External |Node only | Interceptor", () => {
   test("newing a server with various interceptor config works in node", () => {

@@ -4,7 +4,7 @@ import {
   belongsTo,
   hasMany,
   JSONAPISerializer
-} from "@miragejs/server";
+} from "miragejs";
 
 describe("External | Shared | Serializers | JSON API Serializer | Associations | Polymorphic", () => {
   test("it works for belongs to polymorphic relationships", () => {

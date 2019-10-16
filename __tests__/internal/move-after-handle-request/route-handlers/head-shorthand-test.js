@@ -1,4 +1,4 @@
-import { Server, Model, JSONAPISerializer, Response } from "@miragejs/server";
+import { Server, Model, JSONAPISerializer, Response } from "miragejs";
 import HeadShorthandRouteHandler from "@lib/route-handlers/shorthands/head";
 
 describe("Integration | Route Handlers | HEAD shorthand", () => {

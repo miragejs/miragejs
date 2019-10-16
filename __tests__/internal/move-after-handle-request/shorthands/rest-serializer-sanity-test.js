@@ -4,7 +4,7 @@ import {
   hasMany,
   belongsTo,
   RestSerializer
-} from "@miragejs/server";
+} from "miragejs";
 
 describe("Integration | Server | Shorthands | REST Serializer Sanity check", function() {
   let server;

@@ -4,7 +4,7 @@ import {
   hasMany,
   belongsTo,
   Serializer
-} from "@miragejs/server";
+} from "miragejs";
 
 describe("External | Shared | Serializers | Base | Full Request", function() {
   let server;

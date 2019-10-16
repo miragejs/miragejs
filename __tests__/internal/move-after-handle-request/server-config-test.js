@@ -3,7 +3,7 @@ import {
   Model,
   ActiveModelSerializer,
   RestSerializer
-} from "@miragejs/server";
+} from "miragejs";
 
 describe("Integration | Server Config", () => {
   let server;

@@ -1,4 +1,4 @@
-import { Server, Model, hasMany, belongsTo } from "@miragejs/server";
+import { Server, Model, hasMany, belongsTo } from "miragejs";
 
 describe("External |Shared | Schema | assertions", () => {
   let server;

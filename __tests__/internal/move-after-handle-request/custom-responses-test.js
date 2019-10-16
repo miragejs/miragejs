@@ -1,4 +1,4 @@
-import { Server, Response } from "@miragejs/server";
+import { Server, Response } from "miragejs";
 
 describe("Integration | Server | Custom responses", function() {
   let server;

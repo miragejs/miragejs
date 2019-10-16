@@ -1,4 +1,4 @@
-import { Server, Model, belongsTo, hasMany } from "@miragejs/server";
+import { Server, Model, belongsTo, hasMany } from "miragejs";
 
 describe("External |Shared | Schema | Belongs To | Regressions | pr-1312", function() {
   test(`creating and using a record with a polymorphic hasMany and explicit inverse does not fail when accessing the association`, () => {

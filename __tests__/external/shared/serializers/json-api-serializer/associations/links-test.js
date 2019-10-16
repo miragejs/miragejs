@@ -4,7 +4,7 @@ import {
   hasMany,
   belongsTo,
   JSONAPISerializer
-} from "@miragejs/server";
+} from "miragejs";
 
 describe("External | Shared | Serializers | JSON API Serializer | Associations | Links", () => {
   let server;

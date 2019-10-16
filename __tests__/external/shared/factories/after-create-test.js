@@ -1,4 +1,4 @@
-import { Model, Factory, belongsTo, Server } from "@miragejs/server";
+import { Model, Factory, belongsTo, Server } from "miragejs";
 
 describe("External | Shared | Factories | afterCreate", () => {
   let server;

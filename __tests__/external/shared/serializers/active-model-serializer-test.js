@@ -4,7 +4,7 @@ import {
   Model,
   hasMany,
   belongsTo
-} from "@miragejs/server";
+} from "miragejs";
 
 describe("External | Shared | Serializers | ActiveModelSerializer", () => {
   let server;

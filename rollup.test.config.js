@@ -26,7 +26,7 @@ export default {
       }
     }),
     alias({
-      "@miragejs/server": path.resolve(process.cwd(), "./lib/index.js")
+      "miragejs": path.resolve(process.cwd(), "./lib/index.js")
     }),
     resolve(),
     babel({

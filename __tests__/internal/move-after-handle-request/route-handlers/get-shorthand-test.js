@@ -6,7 +6,7 @@ import {
   RestSerializer,
   Response,
   Server
-} from "@miragejs/server";
+} from "miragejs";
 import Collection from "@lib/orm/collection";
 import GetShorthandRouteHandler from "@lib/route-handlers/shorthands/get";
 

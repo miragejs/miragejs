@@ -4,7 +4,7 @@ let internal = {
   testMatch: ["**/__tests__/internal/**/*-test.[jt]s?(x)"],
   moduleNameMapper: {
     "@lib(.*)": "<rootDir>/lib$1",
-    "@miragejs/server": "<rootDir>/lib/index"
+    "miragejs": "<rootDir>/lib/index"
   }
 };
 
@@ -18,7 +18,7 @@ let browserEnvironmentConsumingEsm = {
     "**/__tests__/external/browser-only/**/*-test.[jt]s?(x)"
   ],
   moduleNameMapper: {
-    "@miragejs/server": "<rootDir>/dist/mirage-esm.js"
+    "miragejs": "<rootDir>/dist/mirage-esm.js"
   }
 };
 
@@ -32,7 +32,7 @@ let nodeEnvironmentConsumingEsm = {
     "**/__tests__/external/node-only/**/*-test.[jt]s?(x)"
   ],
   moduleNameMapper: {
-    "@miragejs/server": "<rootDir>/dist/mirage-esm.js"
+    "miragejs": "<rootDir>/dist/mirage-esm.js"
   }
 };
 
@@ -46,7 +46,7 @@ let browserEnvironmentConsumingCjs = {
     "**/__tests__/external/browser-only/**/*-test.[jt]s?(x)"
   ],
   moduleNameMapper: {
-    "@miragejs/server": "<rootDir>/dist/mirage-cjs"
+    "miragejs": "<rootDir>/dist/mirage-cjs"
   }
 };
 
@@ -60,7 +60,7 @@ let nodeEnvironmentConsumingCjs = {
     "**/__tests__/external/node-only/**/*-test.[jt]s?(x)"
   ],
   moduleNameMapper: {
-    "@miragejs/server": "<rootDir>/dist/mirage-cjs"
+    "miragejs": "<rootDir>/dist/mirage-cjs"
   }
 };
 
@@ -74,7 +74,7 @@ let browserEnvironmentConsumingUmd = {
     "**/__tests__/external/browser-only/**/*-test.[jt]s?(x)"
   ],
   moduleNameMapper: {
-    "@miragejs/server": "<rootDir>/dist/mirage-umd.js"
+    "miragejs": "<rootDir>/dist/mirage-umd.js"
   }
 };
 

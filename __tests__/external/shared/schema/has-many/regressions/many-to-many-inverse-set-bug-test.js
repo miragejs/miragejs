@@ -1,4 +1,4 @@
-import { Server, Model, hasMany } from "@miragejs/server";
+import { Server, Model, hasMany } from "miragejs";
 
 describe("External |Shared | Schema | Has Many | Regressions | Many to many inverse set bug", () => {
   let server;

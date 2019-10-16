@@ -1,4 +1,4 @@
-import { Server, Model, hasMany } from "@miragejs/server";
+import { Server, Model, hasMany } from "miragejs";
 import DeleteShorthandRouteHandler from "@lib/route-handlers/shorthands/delete";
 import JSONAPISerializer from "@lib/serializers/json-api-serializer";
 

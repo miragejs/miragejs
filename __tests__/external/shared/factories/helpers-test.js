@@ -6,7 +6,7 @@ import {
   hasMany,
   trait,
   association
-} from "@miragejs/server";
+} from "miragejs";
 
 describe("Eternal | Shared | Factories | helpers", () => {
   let server;
