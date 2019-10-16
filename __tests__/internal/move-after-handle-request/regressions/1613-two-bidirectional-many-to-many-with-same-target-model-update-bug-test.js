@@ -1,10 +1,4 @@
-import {
-  Server,
-  Model,
-  hasMany,
-  belongsTo,
-  JSONAPISerializer
-} from "miragejs";
+import { Server, Model, hasMany, belongsTo, JSONAPISerializer } from "miragejs";
 
 describe("Integration | Server | Regressions | 1613 Two bidirectional many-to-many with same target model update bug", function() {
   let server;

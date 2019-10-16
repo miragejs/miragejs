@@ -1,10 +1,4 @@
-import {
-  Server,
-  JSONAPISerializer,
-  Model,
-  belongsTo,
-  hasMany
-} from "miragejs";
+import { Server, JSONAPISerializer, Model, belongsTo, hasMany } from "miragejs";
 
 describe("Integration | Server | Shorthands | Patch with relationships", function() {
   let newServerWithSchema, server;

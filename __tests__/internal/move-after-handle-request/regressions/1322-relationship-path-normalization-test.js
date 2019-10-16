@@ -1,10 +1,4 @@
-import {
-  Server,
-  Model,
-  hasMany,
-  belongsTo,
-  JSONAPISerializer
-} from "miragejs";
+import { Server, Model, hasMany, belongsTo, JSONAPISerializer } from "miragejs";
 import { underscore } from "@lib/utils/inflector";
 
 describe("Integration | Server | Regressions | 1322 Relationship Path Normalization Test", function() {

@@ -1,10 +1,4 @@
-import {
-  Server,
-  Model,
-  hasMany,
-  belongsTo,
-  Serializer
-} from "miragejs";
+import { Server, Model, hasMany, belongsTo, Serializer } from "miragejs";
 
 describe("External | Shared | Serializers | Base | Associations | Embedded Models", function() {
   let server, BaseSerializer;

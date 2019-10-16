@@ -1,10 +1,4 @@
-import {
-  Server,
-  Model,
-  hasMany,
-  belongsTo,
-  RestSerializer
-} from "miragejs";
+import { Server, Model, hasMany, belongsTo, RestSerializer } from "miragejs";
 
 describe("External | Shared | Serializers | RestSerializer", () => {
   let server;
