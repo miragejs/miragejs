@@ -32,10 +32,8 @@ describe("Unit | Server", function() {
 
     let server = new Server({
       environment: "development",
-      scenarios: {
-        default() {
-          expect(true).toBeTruthy();
-        }
+      seeds() {
+        expect(true).toBeTruthy();
       }
     });
 

@@ -6,9 +6,6 @@ describe("External | Shared | Fixtures and factories", () => {
   beforeEach(() => {
     server = new Server({
       environment: "development",
-      scenarios: {
-        default() {}
-      },
       models: {
         author: Model
       },

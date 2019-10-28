@@ -5,9 +5,6 @@ describe("External | Shared | Server | loadFixtures", () => {
   beforeEach(() => {
     server = new Server({
       environment: "test",
-      scenarios: {
-        default() {}
-      },
       factories: {
         author: {},
         post: {},
