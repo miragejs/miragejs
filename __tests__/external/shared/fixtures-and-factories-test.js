@@ -12,6 +12,7 @@ describe("External | Shared | Fixtures and factories", () => {
       factories: {
         author: Factory
       },
+      seeds() {},
       fixtures: {
         authors: [{ id: 1, name: "Zelda" }]
       }
