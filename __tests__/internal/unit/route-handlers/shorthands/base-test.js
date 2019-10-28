@@ -31,9 +31,13 @@ describe("Unit | Route handlers | Shorthands | BaseShorthandRouteHandler", funct
   test("getModelClassFromPath works with various named route path variable", () => {
     let urlWithSlash = "/api/fancy-users";
     let urlWithIdAndSlash = "/api/fancy-users/:id";
+    let urlWithTrailingSlash = "/api/fancy-users/";
 
     expect(handler.getModelClassFromPath(urlWithSlash)).toEqual("fancy-user");
     expect(handler.getModelClassFromPath(urlWithIdAndSlash, true)).toEqual(
+      "fancy-user"
+    );
+    expect(handler.getModelClassFromPath(urlWithTrailingSlash)).toEqual(
       "fancy-user"
     );
 
