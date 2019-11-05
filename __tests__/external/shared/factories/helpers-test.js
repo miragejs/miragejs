@@ -136,4 +136,25 @@ describe("Eternal | Shared | Factories | helpers", () => {
       server.create("page");
     }).toThrow();
   });
+
+  test("it throws if using the association helper with polymorphic relationship", () => {
+    server = new Server({
+      environment: "test",
+      models: {
+        author: Model.extend({
+          anyPost: belongsTo("base-post", { polymorphic: true })
+        }),
+        basePost: Model.extend({})
+      },
+      factories: {
+        author: Factory.extend({
+          anyPost: association()
+        })
+      }
+    });
+
+    expect(() => {
+      server.create("author");
+    }).toThrow();
+  });
 });
