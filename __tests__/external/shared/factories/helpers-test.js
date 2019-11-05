@@ -137,7 +137,7 @@ describe("Eternal | Shared | Factories | helpers", () => {
     }).toThrow();
   });
 
-  test("it allows to use association helper with polymorphic relationship", () => {
+  test("it throws if using the association helper with polymorphic relationship", () => {
     server = new Server({
       environment: "test",
       models: {
@@ -149,14 +149,12 @@ describe("Eternal | Shared | Factories | helpers", () => {
       factories: {
         author: Factory.extend({
           anyPost: association()
-        }),
-        basePost: Factory.extend({
-          title: "base title"
         })
       }
     });
 
-    let author = server.create("author");
-    expect(author.anyPost.title).toEqual("base title");
+    expect(() => {
+      server.create("author");
+    }).toThrow();
   });
 });
