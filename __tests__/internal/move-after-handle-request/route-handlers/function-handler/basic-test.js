@@ -1,4 +1,11 @@
-import { Server, Model, ActiveModelSerializer, Response } from "miragejs";
+import {
+  Server,
+  Model,
+  ActiveModelSerializer,
+  Response,
+  JSONAPISerializer,
+  belongsTo
+} from "miragejs";
 
 describe("Integration | Route handlers | Function handler", () => {
   let server;
@@ -7,13 +14,19 @@ describe("Integration | Route handlers | Function handler", () => {
     server = new Server({
       environment: "development",
       models: {
-        user: Model.extend({})
+        user: Model.extend({}),
+        post: Model.extend({
+          author: belongsTo()
+        }),
+        author: Model
       },
       serializers: {
         application: ActiveModelSerializer,
         sparseUser: ActiveModelSerializer.extend({
           attrs: ["id", "name", "tall"]
-        })
+        }),
+        post: JSONAPISerializer,
+        author: JSONAPISerializer
       }
     });
     server.timing = 0;
@@ -122,5 +135,25 @@ describe("Integration | Route handlers | Function handler", () => {
     let data = await res.json();
 
     expect(data).toEqual([{ id: "1" }, { id: "2" }, { id: "3" }]);
+  });
+
+  test("it can serialize empty includes", async () => {
+    expect.assertions(1);
+
+    server.create("post", {
+      author: server.create("author", { id: 1, name: "Daniel" }),
+      title: "abcd"
+    });
+    server.create("post", {
+      author: server.create("author", { id: 2, name: "Alexandre" }),
+      title: "abcd"
+    });
+
+    server.get("/posts/:id", (schema, request) => {
+      return schema.posts.find(request.params.id);
+    });
+
+    let res = await fetch("/posts/1?include=");
+    expect(res.status).toBe(200);
   });
 });

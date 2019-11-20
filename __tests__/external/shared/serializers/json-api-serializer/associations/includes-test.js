@@ -565,7 +565,6 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
 
     let result = server.serializerOrRegistry.serialize(post, request);
 
-    console.log(result)
     expect(result).toEqual({
       data: {
         type: "blog-posts",
