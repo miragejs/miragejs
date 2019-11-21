@@ -5,4 +5,6 @@
 
 A client-side server to develop, test and prototype your JavaScript app.
 
-Docs coming soon!
+## Documentation
+
+Visit [miragejs.com](https://miragejs.com) to read the docs.
