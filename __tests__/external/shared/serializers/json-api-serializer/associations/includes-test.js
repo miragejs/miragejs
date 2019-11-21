@@ -542,9 +542,8 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
         type: "blog-posts",
         id: "1",
         attributes: {}
-      },
+      }
     });
-
   });
 
   test("Do not throw when queryParamIncludes has a trailing comma", () => {
@@ -564,7 +563,6 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
     };
 
     let result = server.serializerOrRegistry.serialize(post, request);
-
     expect(result).toEqual({
       data: {
         type: "blog-posts",
@@ -572,9 +570,9 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
         attributes: {},
         relationships: {
           "word-smith": {
-            data: { type: "word-smiths", id: "1" },
+            data: { type: "word-smiths", id: "1" }
           }
-        },
+        }
       },
       included: [
         {
@@ -583,8 +581,8 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
           attributes: {
             name: "Sam"
           }
-        }]
+        }
+      ]
     });
-
   });
 });
