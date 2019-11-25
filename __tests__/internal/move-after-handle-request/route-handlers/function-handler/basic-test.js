@@ -29,7 +29,7 @@ describe("Integration | Route handlers | Function handler", () => {
       throw "I goofed";
     });
 
-    let consoleSpy = jest.spyOn(console, "error").mockImplementation(()=>{});
+    let consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
     let res = await fetch("/users");
     let data = await res.json();
 
