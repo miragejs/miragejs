@@ -26,7 +26,7 @@ describe("Integration | Server | Regressions | 1322 Relationship Path Normalizat
           }
         })
       },
-      baseConfig() {
+      routes() {
         this.resource("happy-licenses");
       }
     });

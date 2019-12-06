@@ -17,7 +17,7 @@ describe("Integration | Server | Regressions | Many to many bug", function() {
       serializers: {
         application: JSONAPISerializer
       },
-      baseConfig() {
+      routes() {
         this.resource("posts");
       }
     });

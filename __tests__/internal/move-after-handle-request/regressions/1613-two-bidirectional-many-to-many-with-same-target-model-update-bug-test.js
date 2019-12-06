@@ -22,7 +22,7 @@ describe("Integration | Server | Regressions | 1613 Two bidirectional many-to-ma
           alwaysIncludeLinkageData: true
         })
       },
-      baseConfig() {
+      routes() {
         this.resource("posts");
         this.resource("users");
       }
