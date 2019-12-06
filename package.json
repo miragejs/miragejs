@@ -22,12 +22,13 @@
   },
   "scripts": {
     "lint": "eslint .",
+    "prettier:check": "prettier --list-different '**/*.js'",
     "dev": "rollup -c -w",
     "build": "rollup -c",
     "prepublishOnly": "yarn run build",
     "test:run": "jest",
     "test": "run-s build test:run",
-    "ci": "run-s lint test"
+    "ci": "run-s lint prettier:check test"
   },
   "dependencies": {
     "@miragejs/pretender-node-polyfill": "^0.1.0",
