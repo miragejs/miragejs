@@ -21,7 +21,7 @@ describe("Integration | Server | Regressions | 1318 Linkage bug test", function(
       serializers: {
         application: JSONAPISerializer
       },
-      baseConfig() {
+      routes() {
         this.resource("happy-users");
       }
     });
