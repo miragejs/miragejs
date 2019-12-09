@@ -156,4 +156,27 @@ describe("Integration | Route handlers | Function handler", () => {
     let res = await fetch("/posts/1?include=");
     expect(res.status).toBe(200);
   });
+
+  test("it can serialize includes with trailing comma", async () => {
+    expect.assertions(2);
+
+    server.create("post", {
+      author: server.create("author", { id: 1, name: "Daniel" }),
+      title: "abcd"
+    });
+    server.create("post", {
+      author: server.create("author", { id: 2, name: "Alexandre" }),
+      title: "abcd"
+    });
+
+    server.get("/posts/:id", (schema, request) => {
+      return schema.posts.find(request.params.id);
+    });
+
+    let res = await fetch("/posts/1?include=author,");
+    expect(res.status).toBe(200);
+    expect(JSON.parse(res._bodyInit).included).toEqual([
+      { type: "authors", id: "1", attributes: { name: "Daniel" } }
+    ]);
+  });
 });
