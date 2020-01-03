@@ -4,6 +4,7 @@
   "description": "A client-side server to help you build, test and demo your JavaScript app",
   "main": "dist/mirage-cjs.js",
   "module": "dist/mirage-esm.js",
+  "types": "types/index.d.ts",
   "keywords": [
     "pretender",
     "prototype",
@@ -22,13 +23,15 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "prettier:check": "prettier --list-different '**/*.js'",
+    "lint:ts": "tslint -c ./types/tslint.json 'types/**/*.ts'",
+    "prettier:check": "prettier --list-different '**/*.{js,ts}'",
     "dev": "rollup -c -w",
     "build": "rollup -c",
     "prepublishOnly": "yarn run build",
     "test:run": "jest",
     "test": "run-s build test:run",
-    "ci": "run-s lint prettier:check test"
+    "test:ts": "tslint --project ./types/tsconfig.json --config ./types/tslint.json && tsc --project types",
+    "ci": "run-s lint prettier:check test test:ts"
   },
   "dependencies": {
     "@miragejs/pretender-node-polyfill": "^0.1.0",
@@ -82,7 +85,10 @@
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-multi-entry": "^2.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0"
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.7.4"
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"
