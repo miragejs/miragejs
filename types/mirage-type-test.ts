@@ -7,8 +7,11 @@ server = new Server({
     this.timing = 400;
     this.urlPrefix = "http://localhost:8080";
   },
+  testConfig() {
+    this.namespace = "/test-api";
+  },
   routes() {
-    this.namespace = "api";
+    this.namespace = "/api";
 
     this.get("/movies", () => {
       return {
@@ -19,33 +22,14 @@ server = new Server({
         ]
       };
     });
-  }
-});
+    this.get("/contacts", "contacts");
+    this.post("/movies", () => 201);
+    this.put("/movies", "movies");
+    this.del("/movies/1");
 
-server = new Server({
-  baseConfig() {
     this.pretender.handledRequest = (verb, path, request) => {
       const { responseText } = request;
       // log request and response data
     };
-  }
-});
-
-server = new Server({
-  baseConfig() {
-    this.namespace = "/api";
-
-    // this route will handle the URL '/api/contacts'
-    this.get("/contacts", "contacts");
-  }
-});
-
-server = new Server({
-  baseConfig() {
-    // normal config, shared across development + testing
-  },
-
-  testConfig() {
-    // test-only config, does not apply to development
   }
 });
