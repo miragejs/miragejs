@@ -33,3 +33,58 @@ server = new Server({
     };
   }
 });
+
+interface IMovie {
+  title: string;
+}
+
+interface IContact {
+  name: string;
+  phone: number;
+}
+
+server.db.loadData<IMovie>({
+  movies: [
+    { title: "Interstellar" },
+    { title: "Inception" },
+    { title: "Dunkirk" }
+  ]
+});
+server.db.loadData<IContact>({
+  contacts: [{ name: "Joe", phone: 1234 }, { name: "Bill", phone: 2345 }]
+});
+server.db.dump();
+server.db.emptyData();
+server.db.createCollection("movies");
+
+const allMovies = server.db.movies;
+const firstMovie = server.db.movies[0];
+
+const allContacts = server.db.contacts;
+
+server.db.movies.insert({ title: "The Lord of the Rings" });
+
+const server2 = new Server({
+  // tslint:disable-next-line:no-shadowed-variable
+  seeds(server) {
+    server.db.loadData({
+      movies: [
+        { title: "Interstellar" },
+        { title: "Inception" },
+        { title: "Dunkirk" }
+      ]
+    });
+  },
+
+  routes() {
+    this.get("/movies", (schema, request) => {
+      return schema.db.movies;
+    });
+
+    this.post("/movies", (schema, request) => {
+      const attrs = JSON.parse(request.requestBody);
+
+      return schema.db.movies.insert(attrs);
+    });
+  }
+});

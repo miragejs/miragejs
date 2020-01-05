@@ -5,6 +5,8 @@
         "tslint-config-prettier"
     ],
     "jsRules": {},
-    "rules": {},
+    "rules": {
+        "max-classes-per-file": false
+    },
     "rulesDirectory": []
 }
