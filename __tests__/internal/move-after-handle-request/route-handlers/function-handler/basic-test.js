@@ -178,27 +178,27 @@ describe("Integration | Route handlers | Function handler", () => {
     expect(res.status).toBe(200);
     expect(data).toEqual({
       data: {
-        type: 'posts',
-        id: '1',
-        attributes: { title: 'abcd' },
-        relationships: { 
-          author: { 
-            data: { 
-              type: 'authors',
-              id: '1' 
-            } 
-          } 
+        type: "posts",
+        id: "1",
+        attributes: { title: "abcd" },
+        relationships: {
+          author: {
+            data: {
+              type: "authors",
+              id: "1"
+            }
+          }
         }
       },
       included: [
-        { 
+        {
           type: "authors",
           id: "1",
           attributes: {
             name: "Daniel"
-          } 
+          }
         }
-    ]
+      ]
     });
   });
 });
