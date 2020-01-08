@@ -174,9 +174,31 @@ describe("Integration | Route handlers | Function handler", () => {
     });
 
     let res = await fetch("/posts/1?include=author,");
+    let data = await res.json();
     expect(res.status).toBe(200);
-    expect(JSON.parse(res._bodyInit).included).toEqual([
-      { type: "authors", id: "1", attributes: { name: "Daniel" } }
-    ]);
+    expect(data).toEqual({
+      data: {
+        type: 'posts',
+        id: '1',
+        attributes: { title: 'abcd' },
+        relationships: { 
+          author: { 
+            data: { 
+              type: 'authors',
+              id: '1' 
+            } 
+          } 
+        }
+      },
+      included: [
+        { 
+          type: "authors",
+          id: "1",
+          attributes: {
+            name: "Daniel"
+          } 
+        }
+    ]
+    });
   });
 });
