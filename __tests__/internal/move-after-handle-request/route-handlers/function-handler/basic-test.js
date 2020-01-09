@@ -33,7 +33,9 @@ describe("Integration | Route handlers | Function handler", () => {
     let res = await fetch("/users");
     let data = await res.json();
 
-    expect(consoleSpy).toHaveBeenCalledWith("I goofed");
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "[ Mirage ] Your GET handler for the url /users threw an error:\n\nI goofed"
+    );
 
     expect(data.message).toBe("Mirage: I goofed");
     expect(data.stack).toMatch(
