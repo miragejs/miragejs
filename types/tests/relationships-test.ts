@@ -5,7 +5,7 @@ import {
   HasMany,
   Model,
   Registry
-} from "ember-cli-mirage";
+} from "miragejs";
 import Schema from "miragejs/orm/schema";
 
 const registryBelongsTo: BelongsTo<PersonRegistry> = belongsTo;
