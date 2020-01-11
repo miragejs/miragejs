@@ -1,0 +1,34 @@
+import { Response, Server } from "miragejs";
+
+export default function config(this: Server): void {
+  this.namespace = "foo";
+  this.timing = 123;
+  this.logging = true;
+
+  this.get("/foo");
+  this.put("/foo");
+  this.post("/foo");
+  this.patch("/foo");
+  this.del("/foo");
+
+  this.passthrough("/_coverage/upload");
+  this.loadFixtures();
+
+  this.get("/test/:segment", (schema, request) => {
+    schema.db; // $ExpectType Db
+
+    request.params; // $ExpectType Record<string, string>
+    request.queryParams; // $ExpectType Record<string, string>
+    request.requestBody; // $ExpectType string | File
+    request.requestHeaders; // $ExpectType Record<string, string>
+    request.url; // $ExpectType string
+
+    if (Math.random()) {
+      return "ok";
+    } else if (Math.random()) {
+      return new Response(200, { "Content-Type": "application/json" }, "{}");
+    } else if (Math.random()) {
+      return Promise.resolve(schema.create("foo"));
+    }
+  });
+}
