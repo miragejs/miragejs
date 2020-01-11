@@ -23,7 +23,7 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "lint:ts": "tslint -c ./types/tslint.json 'types/**/*.ts'",
+    "lint:ts": "dtslint types",
     "prettier:check": "prettier --list-different '**/*.{js,ts}'",
     "dev": "rollup -c -w",
     "build": "rollup -c",
@@ -67,6 +67,7 @@
     "babel-eslint": "^10.0.2",
     "babel-jest": "^24.8.0",
     "core-js": "3",
+    "dtslint": "^2.0.5",
     "eslint": "^6.1.0",
     "eslint-config-prettier": "^6.3.0",
     "eslint-import-resolver-alias": "^1.1.2",
