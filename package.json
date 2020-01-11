@@ -30,8 +30,7 @@
     "prepublishOnly": "yarn run build",
     "test:run": "jest",
     "test": "run-s build test:run",
-    "test:ts": "tslint --project ./types/tsconfig.json --config ./types/tslint.json && tsc --project types",
-    "ci": "run-s lint lint:ts prettier:check test test:ts"
+    "ci": "run-s lint lint:ts prettier:check test"
   },
   "dependencies": {
     "@miragejs/pretender-node-polyfill": "^0.1.0",
