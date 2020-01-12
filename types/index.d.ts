@@ -115,8 +115,6 @@ declare module "miragejs" {
 }
 
 declare module "miragejs/-types" {
-  import { Collection } from "miragejs";
-
   // Captures the result of a `Model.extend()` call
   const ModelData: unique symbol;
   interface ModelDefinition<Data = {}> {
@@ -277,6 +275,9 @@ declare module "miragejs/server" {
 
     /** Load all available fixture data matching the given name(s). */
     loadFixtures(...names: string[]): void;
+
+    /** Shutdown the server and stop intercepting network requests. */
+    shutdown(): void;
   }
 }
 

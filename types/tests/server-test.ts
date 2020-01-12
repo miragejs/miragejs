@@ -14,6 +14,8 @@ export default function config(this: Server): void {
   this.passthrough("/_coverage/upload");
   this.loadFixtures();
 
+  this.shutdown();
+
   this.get("/test/:segment", (schema, request) => {
     schema.db; // $ExpectType Db
 
