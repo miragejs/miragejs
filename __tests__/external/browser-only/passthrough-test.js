@@ -157,12 +157,14 @@ describe("External | Browser only | Passthrough", () => {
     server.config({
       routes() {
         this.passthrough(request => {
-          return request.url === "/users";
+          return request.url.match(/users/);
         });
       }
     });
 
-    await expect(fetch("/users")).rejects.toThrow("Network request failed");
+    await expect(fetch("/users?test=withQueryParams")).rejects.toThrow(
+      "Network request failed"
+    );
 
     await expect(fetch("/movies")).rejects.toThrow(
       `Mirage: Your app tried to GET '/movies'`
