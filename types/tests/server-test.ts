@@ -27,4 +27,6 @@ export default function config(this: Server): void {
 
     return new Response(200, { "Content-Type": "application/json" }, "{}");
   });
+
+  this.get("/test/:segment", schema => Promise.resolve(schema.create("foo")));
 }
