@@ -25,12 +25,6 @@ export default function config(this: Server): void {
     request.requestHeaders; // $ExpectType Record<string, string>
     request.url; // $ExpectType string
 
-    if (Math.random()) {
-      return "ok";
-    } else if (Math.random()) {
-      return new Response(200, { "Content-Type": "application/json" }, "{}");
-    } else if (Math.random()) {
-      return Promise.resolve(schema.create("foo"));
-    }
+    return new Response(200, { "Content-Type": "application/json" }, "{}");
   });
 }
