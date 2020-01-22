@@ -10,6 +10,7 @@ export default function config(this: Server): void {
   this.put("/foo");
   this.post("/foo");
   this.patch("/foo");
+  this.options("/foo");
   this.del("/foo");
 
   this.passthrough("/_coverage/upload");

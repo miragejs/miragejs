@@ -266,6 +266,13 @@ declare module "miragejs/server" {
       options?: HandlerOptions
     ): void;
 
+    /** Handle an OPTIONS request to the given path. */
+    options(
+      path: string,
+      handler?: RouteHandler<Registry>,
+      options?: HandlerOptions
+    ): void;
+
     /** Handle a DELETE request to the given path. */
     del(
       path: string,
