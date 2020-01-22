@@ -13,6 +13,8 @@ export default function config(this: Server): void {
   this.del("/foo");
 
   this.passthrough("/_coverage/upload");
+  this.passthrough(request => request.queryParams.skipMirage);
+
   this.loadFixtures();
 
   this.shutdown();
