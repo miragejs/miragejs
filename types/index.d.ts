@@ -205,7 +205,7 @@ declare module "miragejs/server" {
   ) => MaybePromise<ModelInstance | Response | object>;
 
   export interface HandlerOptions {
-    /** A number of ms to artifically delay responses to this route. */
+    /** A number of ms to artificially delay responses to this route. */
     timing?: number;
   }
 
@@ -227,6 +227,9 @@ declare module "miragejs/server" {
 
     /** A default prefix applied to all subsequent route definitions. */
     namespace: string;
+
+    /** Sets a string to prefix all route handler URLs with. */
+    urlPrefix: string;
 
     /** Creates multiple models of the given type. */
     createList<

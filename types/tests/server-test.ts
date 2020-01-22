@@ -2,6 +2,7 @@ import { Response, Server } from "miragejs";
 
 export default function config(this: Server): void {
   this.namespace = "foo";
+  this.urlPrefix = "/api";
   this.timing = 123;
   this.logging = true;
 
