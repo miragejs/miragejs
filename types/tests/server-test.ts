@@ -16,6 +16,8 @@ export default function config(this: Server): void {
   this.passthrough(request => request.queryParams.skipMirage);
 
   this.loadFixtures();
+  this.seeds(this);
+  this.routes();
 
   this.shutdown();
 

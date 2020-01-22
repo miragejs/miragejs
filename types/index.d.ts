@@ -279,6 +279,10 @@ declare module "miragejs/server" {
     /** Load all available fixture data matching the given name(s). */
     loadFixtures(...names: string[]): void;
 
+    seeds(server: Server): void;
+
+    routes(): void;
+
     /** Shutdown the server and stop intercepting network requests. */
     shutdown(): void;
   }
