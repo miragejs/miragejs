@@ -14,19 +14,13 @@ describe("Integration | Route handlers | Function handler", () => {
     server = new Server({
       environment: "development",
       models: {
-        user: Model.extend({}),
-        post: Model.extend({
-          author: belongsTo()
-        }),
-        author: Model
+        user: Model.extend({})
       },
       serializers: {
         application: ActiveModelSerializer,
         sparseUser: ActiveModelSerializer.extend({
           attrs: ["id", "name", "tall"]
-        }),
-        post: JSONAPISerializer,
-        author: JSONAPISerializer
+        })
       }
     });
     server.timing = 0;
