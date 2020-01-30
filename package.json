@@ -85,6 +85,6 @@
     "rollup-plugin-node-resolve": "^5.2.0"
   },
   "engines": {
-    "node": ">= 10.*"
+    "node": "6.* || 8.* || >= 10.*"
   }
 }

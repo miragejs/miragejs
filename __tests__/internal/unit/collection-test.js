@@ -42,22 +42,4 @@ describe("Unit | Collection", function() {
     collection.models = [{ id: 1 }];
     expect(collection).toHaveLength(1);
   });
-
-  // test('collection.filter returns collection instance', function(assert) {
-  //   let collection = new Collection('plant');
-  //   let filteredCollection = collection.filter(Boolean);
-  //   assert.ok(filteredCollection instanceof Collection);
-  //   assert.equal(filteredCollection.modelName, 'plant');
-  // });
-  //
-  // test('collection.mergeCollection works', function(assert) {
-  //   let collection1 = new Collection('plant', { name: 'chrerry' }, { name: 'uchreaflier' });
-  //   let collection2 = new Collection('plant', { name: 'vlip' });
-  //   assert.equal(collection1.length, 2);
-  //   assert.equal(collection2.length, 1);
-  //   collection2.mergeCollection(collection1);
-  //   assert.equal(collection2.length, 3);
-  //   assert.equal(collection2.modelName, 'plant');
-  // });
-  //
 });
