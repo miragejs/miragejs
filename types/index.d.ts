@@ -298,7 +298,7 @@ declare module "miragejs/server" {
 declare module "miragejs/db" {
   /** The in-memory database containing all currently active data keyed by collection name. */
   export default class Db {
-    [key: string]: unknown;
+    [key: string]: DbCollection;
   }
 }
 
