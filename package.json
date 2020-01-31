@@ -86,7 +86,7 @@
     "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-multi-entry": "^2.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "tslint": "^5.20.1",
+    "tslint": "^6.0.0",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.7.4"
   },
