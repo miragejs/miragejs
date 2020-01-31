@@ -1,5 +1,4 @@
 import { Server, Model, Factory } from "miragejs";
-import { perfTest } from "./utils";
 
 describe("Internal | Integration | Performance | Simple factory test", () => {
   let server;
@@ -34,3 +33,28 @@ describe("Internal | Integration | Performance | Simple factory test", () => {
   perfTest(500, "models", carMaker);
   perfTest(5000, "models", carMaker);
 });
+
+function perfTest(count, message, testFn, timeout = 0) {
+  test(`(${count}) ${message}`, () => {
+    let duration = time(() => {
+      testFn(count);
+    });
+
+    if (timeout) {
+      expect(duration).toBeLessThan(timeout);
+    } else {
+      expect(`${duration}ms`).toBeTruthy();
+    }
+  });
+}
+
+function time(fn) {
+  let start = now();
+  fn();
+
+  return now() - start;
+}
+
+function now() {
+  return Date.now ? Date.now() : +new Date();
+}

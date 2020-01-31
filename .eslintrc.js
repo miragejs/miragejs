@@ -1,12 +1,10 @@
 module.exports = {
   root: true,
   parser: "babel-eslint",
-  plugins: ["import", "jest"],
+  plugins: ["import"],
   extends: [
     "eslint:recommended",
     "plugin:import/errors",
-    "plugin:jest/recommended",
-    "plugin:jest/style",
     "plugin:prettier/recommended"
   ],
   env: {
@@ -43,9 +41,11 @@ module.exports = {
     },
     {
       files: ["__tests__/**"],
+      plugins: ["jest"],
       env: {
         "jest/globals": true
-      }
+      },
+      extends: ["plugin:jest/recommended", "plugin:jest/style"]
     }
   ],
   settings: {
