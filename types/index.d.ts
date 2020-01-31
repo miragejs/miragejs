@@ -47,7 +47,7 @@ declare module "miragejs" {
      */
     constructor(code: number, headers?: Record<string, string>, body?: string | {});
 
-    toRackResponse(): [number, Record<string, string>, string];
+    toRackResponse(): [number, Record<string, string> | undefined, string | {} | undefined];
   }
 
   /**
