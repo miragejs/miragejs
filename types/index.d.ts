@@ -45,7 +45,7 @@ declare module "miragejs" {
      * @param headers Any custom headers to set in this response
      * @param body Data to send in the response body
      */
-    constructor(code: number, headers: Record<string, string>, body: string);
+    constructor(code: number, headers?: Record<string, string>, body?: string | {});
 
     toRackResponse(): [number, Record<string, string>, string];
   }
