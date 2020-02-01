@@ -45,9 +45,17 @@ declare module "miragejs" {
      * @param headers Any custom headers to set in this response
      * @param body Data to send in the response body
      */
-    constructor(code: number, headers?: Record<string, string>, body?: string | {});
+    constructor(
+      code: number,
+      headers?: Record<string, string>,
+      body?: string | {}
+    );
 
-    toRackResponse(): [number, Record<string, string> | undefined, string | {} | undefined];
+    toRackResponse(): [
+      number,
+      Record<string, string> | undefined,
+      string | {} | undefined
+    ];
   }
 
   /**
@@ -194,6 +202,7 @@ declare module "miragejs/server" {
   import { Request, Response } from "miragejs";
   import { ModelInstance } from "miragejs/-types";
   import Db from "miragejs/db";
+  import IdentityManager from "miragejs/identity-manager";
   import Schema from "miragejs/orm/schema";
 
   type MaybePromise<T> = T | PromiseLike<T>;
@@ -321,9 +330,74 @@ declare module "miragejs/server" {
 }
 
 declare module "miragejs/db" {
+  import DbCollection from "miragejs/db-collection";
+  import IdentityManager from "miragejs/identity-manager";
+
   /** The in-memory database containing all currently active data keyed by collection name. */
   export default class Db {
-    [key: string]: DbCollection;
+    [key: string]: DbCollection | any;
+
+    constructor(initialData: [], identityManagers?: IdentityManager[]);
+
+    createCollection(name: string, initialData?: any[]): void;
+    dump(): void;
+    emptyData(): void;
+    loadData(data: any): void;
+  }
+}
+
+declare module "miragejs/db-collection" {
+  import IdentityManager from "miragejs/identity-manager";
+  export default class DbCollection {
+    constructor(
+      name: string,
+      initialData: any[],
+      identityManager?: IdentityManager
+    );
+
+    /** Returns a copy of the data, to prevent inadvertent data manipulation. */
+    all(): any[];
+
+    /** Returns a single record from the `collection` if `ids` is a single id, or an array of records if `ids` is an array of ids. */
+    find(id: number | string | number[] | string[]): any;
+
+    /** Returns the first model from `collection` that matches the key-value pairs in the `query` object. */
+    findBy(query: object): any;
+
+    /** Finds the first record matching the provided _query_ in `collection`, or creates a new record using a merge of the `query` and optional `attributesForCreate`. */
+    firstOrCreate(query: object, attributesForCreate?: object): any;
+
+    /** Inserts `data` into the collection. `data` can be a single object or an array of objects. */
+    insert(data: any): any;
+
+    /** Removes one or more records in *collection*. */
+    remove(target?: object | number | string): void;
+
+    /** Updates one or more records in the collection. */
+    update(target: object | number | string, attrs?: object): any;
+
+    /** Returns an array of models from `collection` that match the key-value pairs in the `query` object. */
+    where(query: object): any;
+  }
+}
+
+declare module "miragejs/identity-manager" {
+  /** An IdentityManager is a class that's responsible for generating unique identifiers. You can define a custom identity manager for your entire application, as well as on a per-model basis. */
+  export default class IdentityManager {
+    constructor();
+
+    get(): number;
+
+    /** Registers `uniqueIdentifier` as used. */
+    set(uniqueIdentifier: string | number): void;
+
+    inc(): number;
+
+    /**  Returns the next unique identifier. */
+    fetch(): string;
+
+    /** Resets the identity manager, marking all unique identifiers as available. */
+    reset(): void;
   }
 }
 
