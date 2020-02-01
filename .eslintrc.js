@@ -50,7 +50,10 @@ module.exports = {
   ],
   settings: {
     "import/resolver": {
-      alias: [["@lib", "./lib"], ["miragejs", "./index"]],
+      alias: [
+        ["@lib", "./lib"],
+        ["miragejs", "./index"]
+      ],
       node: {
         extensions: ["js"]
       }

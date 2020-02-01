@@ -26,8 +26,14 @@ describe("Integration | Server | Resource shorthand", function() {
     expect.assertions(2);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }, { id: 2, name: "Zelda" }],
-      blogPosts: [{ id: 1, title: "Post 1" }, { id: 2, title: "Post 2" }]
+      contacts: [
+        { id: 1, name: "Link" },
+        { id: 2, name: "Zelda" }
+      ],
+      blogPosts: [
+        { id: 1, title: "Post 1" },
+        { id: 2, title: "Post 2" }
+      ]
     });
 
     server.resource("contacts");
@@ -37,7 +43,10 @@ describe("Integration | Server | Resource shorthand", function() {
 
     expect(res.status).toEqual(200);
     expect(data).toEqual({
-      contacts: [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }]
+      contacts: [
+        { id: "1", name: "Link" },
+        { id: "2", name: "Zelda" }
+      ]
     });
   });
 
@@ -45,8 +54,14 @@ describe("Integration | Server | Resource shorthand", function() {
     expect.assertions(2);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }, { id: 2, name: "Zelda" }],
-      blogPosts: [{ id: 1, title: "Post 1" }, { id: 2, title: "Post 2" }]
+      contacts: [
+        { id: 1, name: "Link" },
+        { id: 2, name: "Zelda" }
+      ],
+      blogPosts: [
+        { id: 1, title: "Post 1" },
+        { id: 2, title: "Post 2" }
+      ]
     });
 
     server.resource("contacts");
@@ -143,7 +158,10 @@ describe("Integration | Server | Resource shorthand", function() {
     expect.assertions(6);
 
     server.db.loadData({
-      blogPosts: [{ id: 1, title: "Post 1" }, { id: 2, title: "Post 2" }]
+      blogPosts: [
+        { id: 1, title: "Post 1" },
+        { id: 2, title: "Post 2" }
+      ]
     });
 
     server.resource("blog-posts", { path: "/posts" });
@@ -192,8 +210,14 @@ describe("Integration | Server | Resource shorthand", function() {
     expect.assertions(4);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }, { id: 2, name: "Zelda" }],
-      blogPosts: [{ id: 1, title: "Post 1" }, { id: 2, title: "Post 2" }]
+      contacts: [
+        { id: 1, name: "Link" },
+        { id: 2, name: "Zelda" }
+      ],
+      blogPosts: [
+        { id: 1, title: "Post 1" },
+        { id: 2, title: "Post 2" }
+      ]
     });
 
     server.resource("contact");
@@ -204,7 +228,10 @@ describe("Integration | Server | Resource shorthand", function() {
 
     expect(contactsResponse.status).toEqual(200);
     expect(contactsResponseData).toEqual({
-      contacts: [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }]
+      contacts: [
+        { id: "1", name: "Link" },
+        { id: "2", name: "Zelda" }
+      ]
     });
 
     let postsResponse = await fetch("/posts");
@@ -212,7 +239,10 @@ describe("Integration | Server | Resource shorthand", function() {
 
     expect(postsResponse.status).toEqual(200);
     expect(postsResponseData).toEqual({
-      blog_posts: [{ id: "1", title: "Post 1" }, { id: "2", title: "Post 2" }]
+      blog_posts: [
+        { id: "1", title: "Post 1" },
+        { id: "2", title: "Post 2" }
+      ]
     });
   });
 
@@ -226,7 +256,10 @@ describe("Integration | Server | Resource shorthand", function() {
     expect.assertions(1);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }, { id: 2, name: "Zelda" }]
+      contacts: [
+        { id: 1, name: "Link" },
+        { id: 2, name: "Zelda" }
+      ]
     });
 
     server.resource("contacts", { only: ["index"] });

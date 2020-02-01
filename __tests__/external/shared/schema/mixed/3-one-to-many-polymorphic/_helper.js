@@ -56,7 +56,10 @@ export default class Helper {
         {
           id: "1",
           name: "Link",
-          thingIds: [{ type: "post", id: "1" }, { type: "post", id: "2" }]
+          thingIds: [
+            { type: "post", id: "1" },
+            { type: "post", id: "2" }
+          ]
         }
       ],
       posts: [

@@ -14,7 +14,10 @@ describe("mirage:reference-sort", function() {
 
   test("it throws on circular dependency", () => {
     expect(function() {
-      referenceSort([["propA", "propB"], ["propB", "propA"]]);
+      referenceSort([
+        ["propA", "propB"],
+        ["propB", "propA"]
+      ]);
     }).toThrow('Cyclic dependency in properties ["propB","propA"]');
   });
 

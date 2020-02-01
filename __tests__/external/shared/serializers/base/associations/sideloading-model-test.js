@@ -71,7 +71,10 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading Mo
         name: "Link",
         postIds: ["1", "2"]
       },
-      blogPosts: [{ id: "1", title: "Lorem" }, { id: "2", title: "Ipsum" }]
+      blogPosts: [
+        { id: "1", title: "Lorem" },
+        { id: "2", title: "Ipsum" }
+      ]
     });
   });
 

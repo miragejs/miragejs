@@ -11,8 +11,14 @@ describe("External | Shared | Server | loadFixtures", () => {
         comment: {}
       },
       fixtures: {
-        authors: [{ id: 1, name: "Zelda" }, { id: 2, name: "Link" }],
-        posts: [{ id: 1, title: "Lorem" }, { id: 2, title: "Ipsum" }],
+        authors: [
+          { id: 1, name: "Zelda" },
+          { id: 2, name: "Link" }
+        ],
+        posts: [
+          { id: 1, title: "Lorem" },
+          { id: 2, title: "Ipsum" }
+        ],
         comments: [{ id: 1, title: "Lorem" }]
       }
     });
