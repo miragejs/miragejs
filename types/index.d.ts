@@ -209,7 +209,32 @@ declare module "miragejs/server" {
     timing?: number;
   }
 
-  export class Server<Registry = Record<string, ModelInstance>> {
+  export interface ServerConfig {
+    urlPrefix?: string;
+    namespace?: string;
+    timing?: number;
+    environment?: string;
+    trackRequests?: boolean;
+    useDefaultPassthroughs?: boolean;
+    logging?: boolean;
+
+    seeds?: (server: Server) => void;
+    scenarios?: () => void;
+    routes?: () => void;
+    baseConfig?: () => void;
+
+    inflector?: object;
+    identityManagers?: IdentityManager;
+    models?: any;
+    seralizers?: any;
+    factories?: any;
+    pretender?: any;
+  }
+
+  export class Server<Registry = Record<string, ModelInstance>>
+    implements ServerConfig {
+    constructor(options?: ServerConfig);
+
     /** The underlying in-memory database instance for this server. */
     readonly db: Db;
 
