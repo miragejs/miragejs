@@ -54,7 +54,10 @@ describe("External | Shared | Serializers | Base | Associations | Embedded Colle
         {
           id: "1",
           name: "Link",
-          posts: [{ id: "1", title: "Lorem" }, { id: "2", title: "Ipsum" }]
+          posts: [
+            { id: "1", title: "Lorem" },
+            { id: "2", title: "Ipsum" }
+          ]
         },
         {
           id: "2",

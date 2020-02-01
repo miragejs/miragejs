@@ -14,7 +14,10 @@ describe("External |Shared | Schema | #find", () => {
     });
 
     server.db.loadData({
-      users: [{ id: 1, name: "Link" }, { id: 2, name: "Zelda" }]
+      users: [
+        { id: 1, name: "Link" },
+        { id: 2, name: "Zelda" }
+      ]
     });
   });
 

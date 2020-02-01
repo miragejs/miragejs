@@ -32,7 +32,10 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading As
       { id: "2", name: "Zelda", blogPostIds: [] },
       { id: "3", name: "Epona", blogPostIds: [] }
     ];
-    blogPosts = [{ id: "1", title: "Lorem" }, { id: "2", title: "Ipsum" }];
+    blogPosts = [
+      { id: "1", title: "Lorem" },
+      { id: "2", title: "Ipsum" }
+    ];
     greatPhotos = [
       { id: "1", title: "Amazing", location: "Hyrule" },
       { id: "2", title: "greatPhoto", location: "Goron City" }

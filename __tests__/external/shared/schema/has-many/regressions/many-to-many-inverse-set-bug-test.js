@@ -19,8 +19,14 @@ describe("External |Shared | Schema | Has Many | Regressions | Many to many inve
 
   test(`it works`, () => {
     server.db.loadData({
-      posts: [{ id: "1", tagIds: ["15", "16"] }, { id: "2", tagIds: ["16"] }],
-      tags: [{ id: "15", postIds: ["1"] }, { id: "16", postIds: ["1", "2"] }]
+      posts: [
+        { id: "1", tagIds: ["15", "16"] },
+        { id: "2", tagIds: ["16"] }
+      ],
+      tags: [
+        { id: "15", postIds: ["1"] },
+        { id: "16", postIds: ["1", "2"] }
+      ]
     });
 
     server.schema.posts.find(1).update({ tagIds: ["15"] });

@@ -20,7 +20,10 @@ describe("External |Shared | Schema | #all", function() {
 
   test("it can return all models", () => {
     server.db.loadData({
-      users: [{ id: 1, name: "Link" }, { id: 2, name: "Zelda" }]
+      users: [
+        { id: 1, name: "Link" },
+        { id: 2, name: "Zelda" }
+      ]
     });
 
     let users = server.schema.users.all();

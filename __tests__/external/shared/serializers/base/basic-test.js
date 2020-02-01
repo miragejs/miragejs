@@ -23,7 +23,10 @@ describe("External | Shared | Serializers | Base | Basic", function() {
   });
 
   test("it returns arrays unaffected", () => {
-    let data = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
+    let data = [
+      { id: "1", name: "Link" },
+      { id: "2", name: "Zelda" }
+    ];
     let result = server.serializerOrRegistry.serialize(data);
 
     expect(result).toEqual(data);
@@ -59,7 +62,10 @@ describe("External | Shared | Serializers | Base | Basic", function() {
     let result = server.serializerOrRegistry.serialize(wordSmiths);
 
     expect(result).toEqual({
-      wordSmiths: [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }]
+      wordSmiths: [
+        { id: "1", name: "Link" },
+        { id: "2", name: "Zelda" }
+      ]
     });
   });
 

@@ -25,7 +25,10 @@ describe("Integration | Server Config", () => {
   test("namespace can be configured", async () => {
     expect.assertions(1);
 
-    let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
+    let contacts = [
+      { id: "1", name: "Link" },
+      { id: "2", name: "Zelda" }
+    ];
     server.db.loadData({
       contacts
     });
@@ -40,7 +43,10 @@ describe("Integration | Server Config", () => {
   test("urlPrefix can be configured", async () => {
     expect.assertions(1);
 
-    let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
+    let contacts = [
+      { id: "1", name: "Link" },
+      { id: "2", name: "Zelda" }
+    ];
     server.db.loadData({
       contacts
     });
@@ -56,7 +62,10 @@ describe("Integration | Server Config", () => {
   test("urlPrefix and namespace can be configured simultaneously", async () => {
     expect.assertions(1);
 
-    let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
+    let contacts = [
+      { id: "1", name: "Link" },
+      { id: "2", name: "Zelda" }
+    ];
     server.db.loadData({
       contacts
     });
@@ -73,7 +82,10 @@ describe("Integration | Server Config", () => {
   test("fully qualified domain names can be used in configuration", async () => {
     expect.assertions(1);
 
-    let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
+    let contacts = [
+      { id: "1", name: "Link" },
+      { id: "2", name: "Zelda" }
+    ];
     server.db.loadData({
       contacts
     });
@@ -88,7 +100,10 @@ describe("Integration | Server Config", () => {
   test("urlPrefix/namespace are ignored when fully qualified domain names are used in configuration", async () => {
     expect.assertions(1);
 
-    let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
+    let contacts = [
+      { id: "1", name: "Link" },
+      { id: "2", name: "Zelda" }
+    ];
     server.db.loadData({
       contacts
     });
@@ -104,7 +119,10 @@ describe("Integration | Server Config", () => {
   test("blank urlPrefix and namespace ends up as /", async () => {
     expect.assertions(1);
 
-    let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
+    let contacts = [
+      { id: "1", name: "Link" },
+      { id: "2", name: "Zelda" }
+    ];
     server.db.loadData({
       contacts
     });
@@ -121,7 +139,10 @@ describe("Integration | Server Config", () => {
   test("namespace with no slash gets one", async () => {
     expect.assertions(1);
 
-    let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
+    let contacts = [
+      { id: "1", name: "Link" },
+      { id: "2", name: "Zelda" }
+    ];
     server.db.loadData({
       contacts
     });
@@ -137,7 +158,10 @@ describe("Integration | Server Config", () => {
   test("urlPrefix with no slash gets one", async () => {
     expect.assertions(1);
 
-    let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
+    let contacts = [
+      { id: "1", name: "Link" },
+      { id: "2", name: "Zelda" }
+    ];
     server.db.loadData({
       contacts
     });
@@ -153,7 +177,10 @@ describe("Integration | Server Config", () => {
   test("namespace of / works", async () => {
     expect.assertions(1);
 
-    let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
+    let contacts = [
+      { id: "1", name: "Link" },
+      { id: "2", name: "Zelda" }
+    ];
     server.db.loadData({
       contacts
     });
@@ -169,7 +196,10 @@ describe("Integration | Server Config", () => {
   test("redefining options using the config method works", async () => {
     expect.assertions(5);
 
-    let contacts = [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }];
+    let contacts = [
+      { id: "1", name: "Link" },
+      { id: "2", name: "Zelda" }
+    ];
     server.config({
       namespace: "api",
       urlPrefix: "http://localhost:3000",
