@@ -312,9 +312,9 @@ describe("Unit | Factory", function() {
       PostFactory.extractAfterCreateCallbacks({ traits: ["withComments"] })
     ).toHaveLength(2);
     expect(
-      PostFactory.extractAfterCreateCallbacks({ traits: ["withComments"] }).map(
-        cb => cb()
-      )
+      PostFactory.extractAfterCreateCallbacks({
+        traits: ["withComments"]
+      }).map(cb => cb())
     ).toEqual(["from base", "from withComments"]);
 
     expect(

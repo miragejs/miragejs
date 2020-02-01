@@ -60,7 +60,10 @@ export default class Helper {
         {
           id: "1",
           name: "Link",
-          commentableIds: [{ type: "post", id: "1" }, { type: "post", id: "2" }]
+          commentableIds: [
+            { type: "post", id: "1" },
+            { type: "post", id: "2" }
+          ]
         }
       ]
     });

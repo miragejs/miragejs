@@ -182,7 +182,10 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading Co
         { id: "2", title: "Ipsum", authorId: "1" },
         { id: "3", title: "Zeldas blogPost", authorId: "2" }
       ],
-      wordSmiths: [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }]
+      wordSmiths: [
+        { id: "1", name: "Link" },
+        { id: "2", name: "Zelda" }
+      ]
     });
   });
 

@@ -46,7 +46,10 @@ describe("External | Shared | Serializers | Base | Attrs List", function() {
     let result = server.serializerOrRegistry.serialize(collection);
 
     expect(result).toEqual({
-      wordSmiths: [{ id: "1", name: "Link" }, { id: "2", name: "Zelda" }]
+      wordSmiths: [
+        { id: "1", name: "Link" },
+        { id: "2", name: "Zelda" }
+      ]
     });
   });
 });

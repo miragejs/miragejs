@@ -109,7 +109,10 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
         id: "1",
         relationships: {
           things: {
-            data: [{ id: "1", type: "cars" }, { id: "1", type: "watches" }]
+            data: [
+              { id: "1", type: "cars" },
+              { id: "1", type: "watches" }
+            ]
           }
         },
         type: "users"
@@ -169,7 +172,10 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
         id: "1",
         relationships: {
           things: {
-            data: [{ id: "1", type: "cars" }, { id: "1", type: "watches" }]
+            data: [
+              { id: "1", type: "cars" },
+              { id: "1", type: "watches" }
+            ]
           }
         },
         type: "users"

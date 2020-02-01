@@ -166,7 +166,10 @@ describe("Unit | Db #insert", function() {
     db.contacts.insert({ name: "Link" });
     db.contacts.insert({ name: "Ganon" });
 
-    let records = [{ id: "1", name: "Link" }, { id: "2", name: "Ganon" }];
+    let records = [
+      { id: "1", name: "Link" },
+      { id: "2", name: "Ganon" }
+    ];
 
     expect(db.contacts).toIncludeSameMembers(records);
   });
@@ -196,7 +199,10 @@ describe("Unit | Db #insert", function() {
   });
 
   test("it does not add ids to array data if present", () => {
-    db.contacts.insert([{ id: 2, name: "Link" }, { id: 1, name: "Ganon" }]);
+    db.contacts.insert([
+      { id: 2, name: "Link" },
+      { id: 1, name: "Ganon" }
+    ]);
 
     expect(db.contacts).toHaveLength(2);
     expect(db.contacts).toContainEqual({ id: "2", name: "Link" });
