@@ -204,6 +204,7 @@ declare module "miragejs/server" {
   import Db from "miragejs/db";
   import IdentityManager from "miragejs/identity-manager";
   import Schema from "miragejs/orm/schema";
+  import PretenderServer from "pretender";
 
   type MaybePromise<T> = T | PromiseLike<T>;
 
@@ -228,16 +229,19 @@ declare module "miragejs/server" {
     logging?: boolean;
 
     seeds?: (server: Server) => void;
-    scenarios?: () => void;
-    routes?: () => void;
-    baseConfig?: () => void;
+    scenarios?: (server: Server) => void;
+
+    routes?: (this: Server) => void;
+    baseConfig?: (this: Server) => void;
+    testConfig?: (this: Server) => void;
 
     inflector?: object;
     identityManagers?: IdentityManager;
     models?: any;
     seralizers?: any;
     factories?: any;
-    pretender?: any;
+
+    pretender?: PretenderServer;
   }
 
   export class Server<Registry = Record<string, ModelInstance>>
@@ -264,6 +268,9 @@ declare module "miragejs/server" {
 
     /** Sets a string to prefix all route handler URLs with. */
     urlPrefix: string;
+
+    /** Actual Pretender instance */
+    pretender: PretenderServer;
 
     /** Creates multiple models of the given type. */
     createList<

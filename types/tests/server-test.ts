@@ -36,3 +36,28 @@ export default function config(this: Server): void {
 
   this.get("/test/:segment", schema => Promise.resolve(schema.create("foo")));
 }
+
+const server = new Server({
+  routes() {
+    this.namespace = "api";
+
+    this.get("/todos", () => {
+      return {
+        todos: [{ id: "1", text: "Migrate to TypeScript", isDone: false }]
+      };
+    });
+  },
+
+  baseConfig() {
+    this.pretender.handledRequest = (verb, path, request) => {};
+    this.get("/contacts", () => {
+      return ["Interstellar", "Inception", "Dunkirk"];
+    });
+  },
+
+  testConfig() {
+    this.namespace = "/test-api";
+    this.get("/movies");
+    this.post("/movies");
+  }
+});
