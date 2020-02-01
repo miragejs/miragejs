@@ -238,7 +238,7 @@ declare module "miragejs/server" {
     inflector?: object;
     identityManagers?: IdentityManager;
     models?: any;
-    seralizers?: any;
+    serializers?: any;
     factories?: any;
 
     pretender?: PretenderServer;
