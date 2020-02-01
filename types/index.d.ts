@@ -187,8 +187,9 @@ declare module "miragejs/-types" {
     /** Persists any updates on this model back to the Mirage database. */
     save(): void;
 
-    /** Updates and immediately persists a single attr on this model. */
+    /** Updates and immediately persists a single or multiple attr(s) on this model. */
     update<K extends keyof Data>(key: K, value: Data[K]): void;
+    update(changes: Partial<Data>): void;
 
     /** Removes this model from the Mirage database. */
     destroy(): void;
