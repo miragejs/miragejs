@@ -5,11 +5,12 @@
       "es6",
       "dom"
     ],
-    "module": "commonjs",
+    "module": "ES6",
     "noEmit": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
-    "paths": { "miragejs":  ["."]}
+    "paths": { "miragejs":  ["."]},
+    "moduleResolution": "Node"
   }
 }

@@ -27,7 +27,7 @@ export default function config(this: Server): void {
 
     request.params; // $ExpectType Record<string, string>
     request.queryParams; // $ExpectType Record<string, string>
-    request.requestBody; // $ExpectType string | File
+    request.requestBody; // $ExpectType string
     request.requestHeaders; // $ExpectType Record<string, string>
     request.url; // $ExpectType string
 

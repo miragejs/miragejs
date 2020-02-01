@@ -1,7 +1,7 @@
 // TypeScript Version: 3.5
 
 /*
- * Created by Dan Freeman
+ * Inspired by Dan Freeman
  * https://github.com/dfreeman/
  *
  * Source: https://gist.github.com/dfreeman/33fc80164c0ad91d5e9480a94aa6454c#file-tests-model-ts
@@ -20,7 +20,7 @@ declare module "miragejs" {
    */
   export class Request {
     /** The request body, if defined */
-    readonly requestBody: string | File;
+    readonly requestBody: string;
 
     /** The URL of the request */
     readonly url: string;
@@ -316,6 +316,12 @@ declare module "miragejs/server" {
 
     /** Handle a DELETE request to the given path. */
     del(
+      path: string,
+      handler?: RouteHandler<Registry>,
+      options?: HandlerOptions
+    ): void;
+
+    delete(
       path: string,
       handler?: RouteHandler<Registry>,
       options?: HandlerOptions
