@@ -329,7 +329,7 @@ declare module "miragejs/server" {
     ): void;
 
     /** Pass through one or more URLs to make real requests. */
-    passthrough(urls: ((request: Request) => any) | string | string[]): void;
+    passthrough(urls?: ((request: Request) => any) | string | string[]): void;
 
     /** Load all available fixture data matching the given name(s). */
     loadFixtures(...names: string[]): void;
