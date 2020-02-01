@@ -12,9 +12,10 @@ const PersonFactory = Factory.extend({
   }
 });
 
-declare const schema: Schema<
-  Registry<{ person: typeof PersonModel }, { person: typeof PersonFactory }>
->;
+declare const schema: Schema<Registry<
+  { person: typeof PersonModel },
+  { person: typeof PersonFactory }
+>>;
 
 const people = schema.all("person");
 

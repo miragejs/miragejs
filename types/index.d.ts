@@ -142,7 +142,7 @@ declare module "miragejs/-types" {
 
   // Extract relationship values from a model definiton
   type FlattenRelationships<T> = {
-    [K in keyof T]: T[K] extends (() => infer Value) ? Value : T[K];
+    [K in keyof T]: T[K] extends () => infer Value ? Value : T[K];
   };
 
   // Extract factory method return values from a factory definition
