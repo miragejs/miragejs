@@ -73,7 +73,7 @@ new Server({
     this.namespace = "api";
 
     this.get("/movies", (schema, request) => {
-      return schema.movies.all();
+      return schema.db.movies.all();
     });
 
     this.get("/movies");
@@ -81,12 +81,6 @@ new Server({
     this.post("/movies");
     this.patch("/movies/:id");
     this.del("/movies/:id");
-  },
-
-  seeds(server) {
-    server.create("movie", { name: "Inception", year: 2010 });
-    server.create("movie", { name: "Interstellar", year: 2014 });
-    server.create("movie", { name: "Dunkirk", year: 2017 });
   },
 
   factories: {
@@ -118,7 +112,7 @@ new Server({
   },
   routes() {
     this.get("/movies/:id/cast-members", (schema, request) => {
-      const movie = schema.movies.find(request.params.id);
+      const movie = schema.db.movies.find(request.params.id);
 
       return movie.castMembers;
     });

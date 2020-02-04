@@ -140,7 +140,7 @@ declare module "miragejs/-types" {
   // The type-level equivalent of `Object.assign`
   type Assign<T, U> = U & Omit<T, keyof U>;
 
-  // Extract relationship values from a model definiton
+  // Extract relationship values from a model definition
   type FlattenRelationships<T> = {
     [K in keyof T]: T[K] extends () => infer Value ? Value : T[K];
   };
@@ -150,14 +150,14 @@ declare module "miragejs/-types" {
     [K in keyof T]: T[K] extends (n: number) => infer V ? V : T[K];
   };
 
-  // Extracts model definition info for the given key, if a correesponding model is defined
+  // Extracts model definition info for the given key, if a corresponding model is defined
   type ExtractModelData<Models, K> = K extends keyof Models
     ? Models[K] extends ModelDefinition<infer Data>
       ? FlattenRelationships<Data>
       : {}
     : {};
 
-  // Extracts factory definition info for the given key, if a correesponding factory is defined
+  // Extracts factory definition info for the given key, if a corresponding factory is defined
   type ExtractFactoryData<Factories, K> = K extends keyof Factories
     ? Factories[K] extends FactoryDefinition<infer Data>
       ? FlattenFactoryMethods<Data>
@@ -261,7 +261,7 @@ declare module "miragejs/server" {
     /** Whether or not Mirage should log all requests/response cycles. */
     logging: boolean;
 
-    /** A default number of ms to artifically delay responses for all routes. */
+    /** A default number of ms to artificially delay responses for all routes. */
     timing: number;
 
     /** A default prefix applied to all subsequent route definitions. */
