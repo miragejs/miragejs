@@ -56,7 +56,9 @@
     "lodash.uniq": "^4.5.0",
     "lodash.uniqby": "^4.7.0",
     "lodash.values": "^4.3.0",
-    "pretender": "3.3.1"
+    "pretender": "3.3.1",
+    "route-recognizer": "^0.3.4",
+    "url-parse": "^1.4.7"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
