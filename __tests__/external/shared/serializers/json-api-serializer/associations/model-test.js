@@ -89,8 +89,8 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
     server.config({
       serializers: {
         application: JSONAPISerializer.extend({
-          shouldIncludeLinkageData(relationshipKey, model) {
-            if (relationshipKey === "wordSmith") {
+          shouldIncludeLinkageData(relationshipName, model) {
+            if (relationshipName === "wordSmith") {
               return true;
             }
           }
@@ -128,8 +128,8 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
       serializers: {
         application: JSONAPISerializer,
         wordSmith: JSONAPISerializer.extend({
-          shouldIncludeLinkageData(relationshipKey, model) {
-            if (relationshipKey === "blogPosts") {
+          shouldIncludeLinkageData(relationshipName, model) {
+            if (relationshipName === "blogPosts") {
               return true;
             }
           }

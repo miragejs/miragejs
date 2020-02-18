@@ -21,7 +21,7 @@ describe("Integration | ORM | Schema Verification | Has Many", function() {
     let frodo = schema.users.find(1);
     let association = frodo.associationFor("posts");
 
-    expect(association.key).toEqual("posts");
+    expect(association.name).toEqual("posts");
     expect(association.modelName).toEqual("post");
     expect(association.ownerModelName).toEqual("user");
 
@@ -47,7 +47,7 @@ describe("Integration | ORM | Schema Verification | Has Many", function() {
     let frodo = schema.users.find(1);
     let association = frodo.associationFor("blogPosts");
 
-    expect(association.key).toEqual("blogPosts");
+    expect(association.name).toEqual("blogPosts");
     expect(association.modelName).toEqual("post");
     expect(association.ownerModelName).toEqual("user");
 
@@ -71,7 +71,7 @@ describe("Integration | ORM | Schema Verification | Has Many", function() {
     let tag = schema.tags.find(1);
     let association = tag.associationFor("tags");
 
-    expect(association.key).toEqual("tags");
+    expect(association.name).toEqual("tags");
     expect(association.modelName).toEqual("tag");
     expect(association.ownerModelName).toEqual("tag");
 

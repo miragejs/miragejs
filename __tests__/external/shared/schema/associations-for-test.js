@@ -38,13 +38,14 @@ describe("External | Shared | Schema | associationsFor", function() {
     expect(Object.keys(associations)).toEqual(["fineAuthor", "comments"]);
 
     let fineAuthorAssociation = associations.fineAuthor;
+
     expect(fineAuthorAssociation.constructor.name).toEqual("BelongsTo");
     expect(fineAuthorAssociation.modelName).toEqual("user");
-    expect(fineAuthorAssociation.key).toEqual("fineAuthor");
+    expect(fineAuthorAssociation.name).toEqual("fineAuthor");
 
     let commentsAssociation = associations.comments;
     expect(commentsAssociation.constructor.name).toEqual("HasMany");
     expect(commentsAssociation.modelName).toEqual("comment");
-    expect(commentsAssociation.key).toEqual("comments");
+    expect(commentsAssociation.name).toEqual("comments");
   });
 });
