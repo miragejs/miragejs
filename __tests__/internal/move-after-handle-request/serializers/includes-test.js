@@ -155,4 +155,39 @@ describe("Internal | MoveAfterHandleRequest | Serializers | includes", function(
       ]
     });
   });
+
+  test("serializer.schema is exposed", async () => {
+    server.config({
+      serializers: {
+        blogPost: Serializer.extend({
+          include(request, resource) {
+            return Object.keys(this.schema.associationsFor(resource.modelName));
+          }
+        })
+      }
+    });
+
+    let json = await fetch("/blog-posts/1?include").then(res => res.json());
+
+    expect(json).toEqual({
+      blogPost: {
+        authorId: "1",
+        commentIds: ["1"],
+        id: "1",
+        title: "Lorem"
+      },
+      fineComments: [
+        {
+          id: "1",
+          text: "pwned"
+        }
+      ],
+      wordSmiths: [
+        {
+          id: "1",
+          name: "Link"
+        }
+      ]
+    });
+  });
 });
