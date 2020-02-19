@@ -108,8 +108,8 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
     server.config({
       serializers: {
         application: JSONAPISerializer.extend({
-          shouldIncludeLinkageData(relationshipKey, model) {
-            if (relationshipKey == "posts") {
+          shouldIncludeLinkageData(relationshipName, model) {
+            if (relationshipName == "posts") {
               return true;
             }
           }
