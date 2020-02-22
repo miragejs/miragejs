@@ -494,7 +494,7 @@ declare module "miragejs/orm/schema" {
 declare module "miragejs/test-support/setup-mirage" {
   /** Enables Mirage in the current test scope. */
   export default function setupMirage(hooks: {
-    beforeEach: () => void;
-    afterEach: () => void;
+    beforeEach?: (assert: Assert) => void;
+    afterEach?: (assert: Assert) => void;
   }): void;
 }
