@@ -245,8 +245,12 @@ declare module "miragejs/server" {
     pretender?: PretenderServer;
   }
 
-  export class Server<Registry extends Record<string, ModelInstance> = Record<string, ModelInstance>>
-    implements ServerConfig {
+  export class Server<
+    Registry extends Record<string, ModelInstance> = Record<
+      string,
+      ModelInstance
+    >
+  > implements ServerConfig {
     constructor(options?: ServerConfig);
 
     /** The underlying in-memory database instance for this server. */

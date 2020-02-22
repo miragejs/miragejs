@@ -6,21 +6,21 @@ export default function config(this: Server): void {
   this.timing = 123;
   this.logging = true;
 
-  this.get("/foo");
-  this.put("/foo");
-  this.post("/foo");
-  this.patch("/foo");
-  this.options("/foo");
-  this.del("/foo");
+  this.get("/foo"); // $ExpectType void
+  this.put("/foo"); // $ExpectType void
+  this.post("/foo"); // $ExpectType void
+  this.patch("/foo"); // $ExpectType void
+  this.options("/foo"); // $ExpectType void
+  this.del("/foo"); // $ExpectType void
 
-  this.passthrough("/_coverage/upload");
-  this.passthrough(request => request.queryParams.skipMirage);
+  this.passthrough("/_coverage/upload"); // $ExpectType void
+  this.passthrough(request => request.queryParams.skipMirage); // $ExpectType void
 
-  this.loadFixtures();
-  this.seeds(this);
-  this.routes();
+  this.loadFixtures(); // $ExpectType void
+  this.seeds(this); // $ExpectType void
+  this.routes(); // $ExpectType void
 
-  this.shutdown();
+  this.shutdown(); // $ExpectType void
 
   this.get("/test/:segment", (schema, request) => {
     schema.db; // $ExpectType Db
@@ -34,7 +34,7 @@ export default function config(this: Server): void {
     return new Response(200, { "Content-Type": "application/json" }, "{}");
   });
 
-  this.get("/test/:segment", schema => Promise.resolve(schema.create("foo")));
+  this.get("/test/:segment", schema => Promise.resolve(schema.create("foo"))); // $ExpectType void
 }
 
 const server = new Server({

@@ -18,11 +18,11 @@ people.models.map(model => {
   model.attrs; // $ExpectType Record<string, unknown>
   model.foo; // $ExpectError
 
-  model.save();
-  model.reload();
-  model.destroy();
+  model.save(); // $ExpectType void
+  model.reload(); // $ExpectType void
+  model.destroy(); // $ExpectType void
 
-  model.update("name", "goodbye");
+  model.update("name", "goodbye"); // $ExpectType void
   model.update("name", false); // $ExpectError
   model.update("bad", "ok"); // $ExpectError
 });
