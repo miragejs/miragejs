@@ -117,7 +117,7 @@ declare module "miragejs" {
     key?: string,
     options?: RelationshipOptions
   ): () => Collection<T>;
-  export function hasMany<T = ModelInstance>(
+  export function hasMany<T extends ModelInstance = ModelInstance>(
     options?: RelationshipOptions
   ): () => Collection<T>;
 }
