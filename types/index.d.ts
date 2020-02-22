@@ -113,7 +113,7 @@ declare module "miragejs" {
       & (<K extends keyof Registry>(options: RelationshipOptions & { polymorphic: true }) => () => Collection<Registry[K]>);
 
   /** Declares a one-to-many relationship to another Mirage model type. */
-  export function hasMany<T = ModelInstance>(
+  export function hasMany<T extends ModelInstance = ModelInstance>(
     key?: string,
     options?: RelationshipOptions
   ): () => Collection<T>;
