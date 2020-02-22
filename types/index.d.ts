@@ -125,7 +125,7 @@ declare module "miragejs" {
 declare module "miragejs/-types" {
   // Captures the result of a `Model.extend()` call
   const ModelData: unique symbol;
-  interface ModelDefinition<Data = {}> {
+  interface ModelDefinition<Data extends {} = {}> {
     [ModelData]: Data;
     extend<NewData>(data: NewData): ModelDefinition<Assign<Data, NewData>>;
   }
