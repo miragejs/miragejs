@@ -102,7 +102,7 @@ declare module "miragejs" {
     key?: string,
     options?: RelationshipOptions
   ): () => T | undefined;
-  export function belongsTo<T = ModelInstance>(
+  export function belongsTo<T extends ModelInstance = ModelInstance>(
     options?: RelationshipOptions
   ): () => T | undefined;
 
