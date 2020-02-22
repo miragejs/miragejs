@@ -179,7 +179,7 @@ declare module "miragejs/-types" {
   };
 
   /** Represents the type of an instantiated Mirage model.  */
-  export type ModelInstance<Data = {}> = Data & {
+  export type ModelInstance<Data extends {} = {}> = Data & {
     id?: string;
     attrs: Record<string, unknown>;
     modelName: string;
