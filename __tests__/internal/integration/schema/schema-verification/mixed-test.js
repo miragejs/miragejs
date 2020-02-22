@@ -23,7 +23,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     let frodo = schema.wordSmiths.find(1);
     let association = frodo.associationFor("blogPosts");
 
-    expect(association.key).toEqual("blogPosts");
+    expect(association.name).toEqual("blogPosts");
     expect(association.modelName).toEqual("blog-post");
     expect(association.ownerModelName).toEqual("word-smith");
 
@@ -53,7 +53,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     let frodo = schema.wordSmiths.find(1);
     let association = frodo.associationFor("posts");
 
-    expect(association.key).toEqual("posts");
+    expect(association.name).toEqual("posts");
     expect(association.modelName).toEqual("blog-post");
     expect(association.ownerModelName).toEqual("word-smith");
 
@@ -83,7 +83,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     let frodo = schema.users.find(1);
     let notesAssociation = frodo.associationFor("notes");
 
-    expect(notesAssociation.key).toEqual("notes");
+    expect(notesAssociation.name).toEqual("notes");
     expect(notesAssociation.modelName).toEqual("post");
     expect(notesAssociation.ownerModelName).toEqual("user");
 
@@ -95,7 +95,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
 
     let messagesAssociation = frodo.associationFor("messages");
 
-    expect(messagesAssociation.key).toEqual("messages");
+    expect(messagesAssociation.name).toEqual("messages");
     expect(messagesAssociation.modelName).toEqual("post");
     expect(messagesAssociation.ownerModelName).toEqual("user");
 
@@ -120,7 +120,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     let frodo = schema.users.find(1);
     let parentAssociation = frodo.associationFor("parent");
 
-    expect(parentAssociation.key).toEqual("parent");
+    expect(parentAssociation.name).toEqual("parent");
     expect(parentAssociation.modelName).toEqual("user");
     expect(parentAssociation.ownerModelName).toEqual("user");
 
@@ -242,7 +242,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     let frodo = schema.users.find(1);
     let userPostsAssociation = frodo.associationFor("posts");
 
-    expect(userPostsAssociation.key).toEqual("posts");
+    expect(userPostsAssociation.name).toEqual("posts");
     expect(userPostsAssociation.modelName).toEqual("post");
     expect(userPostsAssociation.ownerModelName).toEqual("user");
 
