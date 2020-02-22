@@ -1,4 +1,4 @@
-// TypeScript Version: 3.5
+// Minimum TypeScript Version: 3.7
 
 /*
  * Inspired by Dan Freeman

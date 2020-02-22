@@ -34,8 +34,8 @@ const people = schema.all("person");
 people.length; // $ExpectType number
 people.modelName; // $ExpectType string
 people.models.map(model => {
-  model.parent!.name; // $ExpectType string
-  model.parent!.parent!.name; // $ExpectType string
+  model.parent?.name; // $ExpectType string | undefined
+  model.parent?.parent?.name; // $ExpectType string | undefined
   model.pets.models[0].name; // $ExpectType string
 
   // Polymorphic relationship
