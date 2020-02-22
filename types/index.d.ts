@@ -472,12 +472,7 @@ declare module "miragejs/orm/schema" {
     /** Locates an existing model of the given type by attribute value(s), if one exists. */
     where<K extends keyof Registry>(
       type: K,
-      attributes: Partial<Registry[K]>
-    ): Collection<Registry[K]>;
-    where<K extends keyof Registry>(
-      type: K,
-      // tslint:disable-next-line:unified-signatures
-      test: (item: Registry[K]) => unknown
+      attributes: Partial<Registry[K]> | ((item: Registry[K]) => unknown)
     ): Collection<Registry[K]>;
 
     /** Returns a collection of all known records of the given type */
