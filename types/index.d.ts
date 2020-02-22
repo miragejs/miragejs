@@ -132,7 +132,7 @@ declare module "miragejs/-types" {
 
   // Captures the result of a `Factory.extend()` call
   const FactoryData: unique symbol;
-  interface FactoryDefinition<Data = {}> {
+  interface FactoryDefinition<Data extends {} = {}> {
     [FactoryData]: Data;
     extend<NewData>(data: NewData): FactoryDefinition<Assign<Data, NewData>>;
   }
