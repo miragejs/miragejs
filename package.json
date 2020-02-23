@@ -63,7 +63,6 @@
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "7.8.4",
-    "@types/qunit": "^2.9.0",
     "babel-eslint": "^10.0.2",
     "babel-jest": "^25.1.0",
     "core-js": "3",

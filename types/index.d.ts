@@ -485,11 +485,3 @@ declare module "miragejs/orm/schema" {
     first<K extends keyof Registry>(type: K): Registry[K] | null;
   }
 }
-
-declare module "miragejs/test-support/setup-mirage" {
-  /** Enables Mirage in the current test scope. */
-  export default function setupMirage(hooks: {
-    beforeEach?: (assert: Assert) => void;
-    afterEach?: (assert: Assert) => void;
-  }): void;
-}
