@@ -29,10 +29,15 @@ describe("Integration | Route handlers | Function handler", () => {
       throw "I goofed";
     });
 
+    let consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
     let res = await fetch("/users");
     let data = await res.json();
 
-    expect(data.message).toBe("I goofed");
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "[ Mirage ] Your GET handler for the url /users threw an error:\n\nI goofed"
+    );
+
+    expect(data.message).toBe("Mirage: I goofed");
     expect(data.stack).toMatch(
       "Mirage: Your GET handler for the url /users threw an error"
     );
