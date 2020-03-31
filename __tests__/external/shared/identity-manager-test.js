@@ -3,7 +3,7 @@ import {
   hasMany,
   belongsTo,
   Server,
-  IdentityManager as DefaultIdentityManager
+  IdentityManager as DefaultIdentityManager,
 } from "miragejs";
 
 const CustomIdentityManager = class {
@@ -27,7 +27,7 @@ const CustomIdentityManager = class {
   }
 };
 
-describe("External | Shared | Identity manager", function() {
+describe("External | Shared | Identity manager", function () {
   let server;
 
   afterEach(() => {
@@ -39,19 +39,19 @@ describe("External | Shared | Identity manager", function() {
       environment: "test",
       identityManagers: {
         post: DefaultIdentityManager,
-        author: CustomIdentityManager
+        author: CustomIdentityManager,
       },
       models: {
         author: Model.extend({
-          posts: hasMany()
+          posts: hasMany(),
         }),
         comment: Model.extend({
-          post: belongsTo()
+          post: belongsTo(),
         }),
         post: Model.extend({
-          author: belongsTo()
-        })
-      }
+          author: belongsTo(),
+        }),
+      },
     });
 
     let author = server.create("author");
@@ -73,11 +73,11 @@ describe("External | Shared | Identity manager", function() {
     server = new Server({
       environment: "test",
       identityManagers: {
-        application: IdentityManagerForTest
+        application: IdentityManagerForTest,
       },
       models: {
-        user: Model.extend()
-      }
+        user: Model.extend(),
+      },
     });
 
     let ryan = server.create("user", { name: "Ryan", ssn: 123456789 });

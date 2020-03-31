@@ -13,7 +13,7 @@ describe("External | Shared | ORM | Has Many | One-way Polymorphic | instantiati
   test("the parent accepts a saved child id", () => {
     let post = helper.savedChild();
     let user = schema.users.new({
-      thingIds: [{ type: "post", id: post.id }]
+      thingIds: [{ type: "post", id: post.id }],
     });
 
     expect(user.thingIds).toEqual([{ type: "post", id: post.id }]);
@@ -21,7 +21,7 @@ describe("External | Shared | ORM | Has Many | One-way Polymorphic | instantiati
   });
 
   test("the parent errors if the children ids don't exist", () => {
-    expect(function() {
+    expect(function () {
       schema.users.new({ thingIds: [{ type: "post", id: 2 }] });
     }).toThrow();
   });
@@ -62,7 +62,7 @@ describe("External | Shared | ORM | Has Many | One-way Polymorphic | instantiati
     let post = helper.savedChild();
     let user = schema.users.new({
       things: [post],
-      thingIds: [{ type: "post", id: post.id }]
+      thingIds: [{ type: "post", id: post.id }],
     });
 
     expect(user.thingIds).toEqual([{ type: "post", id: post.id }]);

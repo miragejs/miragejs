@@ -7,16 +7,16 @@ describe("External | Shared | ORM | #none", () => {
     server = new Server({
       environment: "test",
       models: {
-        user: Model
-      }
+        user: Model,
+      },
     });
 
     server.db.loadData({
       user: [
         { id: 1, name: "Link", good: true },
         { id: 2, name: "Zelda", good: true },
-        { id: 3, name: "Ganon", good: false }
-      ]
+        { id: 3, name: "Ganon", good: false },
+      ],
     });
   });
 

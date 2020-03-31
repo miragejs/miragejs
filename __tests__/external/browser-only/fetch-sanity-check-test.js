@@ -7,8 +7,8 @@ describe("External |Browser only | Fetch sanity check", () => {
     server = new Server({
       environment: "test",
       models: {
-        contact: Model
-      }
+        contact: Model,
+      },
     });
   });
 
@@ -19,7 +19,7 @@ describe("External |Browser only | Fetch sanity check", () => {
   test("mirage responds to get", async () => {
     expect.assertions(1);
 
-    server.get("/contacts", function() {
+    server.get("/contacts", function () {
       return { some: "data" };
     });
 
@@ -32,12 +32,12 @@ describe("External |Browser only | Fetch sanity check", () => {
   test("mirage responds to post", async () => {
     expect.assertions(1);
 
-    server.post("/contacts", function() {
+    server.post("/contacts", function () {
       return { some: "data" };
     });
 
     let res = await fetch("/contacts", {
-      method: "POST"
+      method: "POST",
     });
     let data = await res.json();
 
@@ -47,13 +47,13 @@ describe("External |Browser only | Fetch sanity check", () => {
   test("mirage responds to put", async () => {
     expect.assertions(1);
 
-    server.put("/contacts", function() {
+    server.put("/contacts", function () {
       return { some: "data" };
     });
 
     let res = await fetch("/contacts", {
       method: "PUT",
-      url: "/contacts"
+      url: "/contacts",
     });
     let data = await res.json();
 
@@ -63,13 +63,13 @@ describe("External |Browser only | Fetch sanity check", () => {
   test("mirage responds to delete", async () => {
     expect.assertions(1);
 
-    server.delete("/contacts", function() {
+    server.delete("/contacts", function () {
       return { some: "data" };
     });
 
     let res = await fetch("/contacts", {
       method: "DELETE",
-      url: "/contacts"
+      url: "/contacts",
     });
     let data = await res.json();
 
@@ -79,12 +79,12 @@ describe("External |Browser only | Fetch sanity check", () => {
   test("mirage responds to patch", async () => {
     expect.assertions(1);
 
-    server.patch("/contacts", function() {
+    server.patch("/contacts", function () {
       return { some: "data" };
     });
 
     let res = await fetch("/contacts", {
-      method: "PATCH"
+      method: "PATCH",
     });
     let data = await res.json();
 
@@ -108,7 +108,7 @@ describe("External |Browser only | Fetch sanity check", () => {
     server.get("/contacts", {}, 404);
 
     let res = await fetch("/contacts", {
-      method: "GET"
+      method: "GET",
     });
 
     expect(res.status).toEqual(404);
@@ -117,12 +117,12 @@ describe("External |Browser only | Fetch sanity check", () => {
   test("mirage responds to options", async () => {
     expect.assertions(1);
 
-    server.options("/contacts", function() {
+    server.options("/contacts", function () {
       return { some: "data" };
     });
 
     let res = await fetch("/contacts", {
-      method: "OPTIONS"
+      method: "OPTIONS",
     });
     let data = await res.json();
 

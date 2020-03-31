@@ -4,24 +4,24 @@ import {
   Model,
   hasMany,
   belongsTo,
-  JSONAPISerializer
+  JSONAPISerializer,
 } from "@lib";
 
 /*
   This test is heavily coupled to the implementation and can be deleted
   during a future refactoring.
 */
-describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot mixed", function() {
+describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapshot mixed", function () {
   let serializer = null;
   let registry = null;
   let type = null;
   let request = {};
 
-  beforeEach(function() {
+  beforeEach(function () {
     registry = {
       serializerFor() {
         return serializer;
-      }
+      },
     };
     type = "foo";
     request = {};
@@ -32,15 +32,15 @@ describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapsh
   test("it works on models and collections with dot-path includes", () => {
     let schema = new Schema(new Db(), {
       wordSmith: Model.extend({
-        blogPosts: hasMany()
+        blogPosts: hasMany(),
       }),
       blogPost: Model.extend({
-        happyTag: belongsTo()
+        happyTag: belongsTo(),
       }),
       happyTag: Model.extend({
-        happyColor: belongsTo()
+        happyColor: belongsTo(),
       }),
-      happyColor: Model.extend()
+      happyColor: Model.extend(),
     });
     let wordSmith = schema.wordSmiths.create();
     let blogPost1 = wordSmith.createBlogPost();
@@ -52,7 +52,7 @@ describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapsh
     happyTag2.createHappyColor();
 
     serializer.request = {
-      queryParams: { include: "blog-posts.happy-tag.happy-color" }
+      queryParams: { include: "blog-posts.happy-tag.happy-color" },
     };
 
     serializer._createRequestedIncludesGraph(wordSmith);
@@ -61,40 +61,40 @@ describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapsh
       data: {
         "word-smith:1": {
           relationships: {
-            "blog-posts": ["blog-post:1", "blog-post:2"]
-          }
-        }
+            "blog-posts": ["blog-post:1", "blog-post:2"],
+          },
+        },
       },
       included: {
         "blog-posts": {
           "blog-post:1": {
             relationships: {
-              "happy-tag": "happy-tag:1"
-            }
+              "happy-tag": "happy-tag:1",
+            },
           },
           "blog-post:2": {
             relationships: {
-              "happy-tag": "happy-tag:2"
-            }
-          }
+              "happy-tag": "happy-tag:2",
+            },
+          },
         },
         "happy-tags": {
           "happy-tag:1": {
             relationships: {
-              "happy-color": "happy-color:1"
-            }
+              "happy-color": "happy-color:1",
+            },
           },
           "happy-tag:2": {
             relationships: {
-              "happy-color": "happy-color:2"
-            }
-          }
+              "happy-color": "happy-color:2",
+            },
+          },
         },
         "happy-colors": {
           "happy-color:1": {},
-          "happy-color:2": {}
-        }
-      }
+          "happy-color:2": {},
+        },
+      },
     });
   });
 });

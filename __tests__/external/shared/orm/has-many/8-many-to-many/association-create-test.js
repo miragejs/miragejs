@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | association #creat
   /*
     The model can create a has-many association, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can create an associated child`, () => {
       let [order] = helper[state]();
       let initialCount = order.products.models.length;

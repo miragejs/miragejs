@@ -15,7 +15,7 @@ describe("External | Shared | ORM | Belongs To | Reflexive | create", () => {
     let { schema } = helper;
     let friend = schema.create("user");
     let user = schema.create("user", {
-      userId: friend.id
+      userId: friend.id,
     });
 
     friend.reload();
@@ -31,7 +31,7 @@ describe("External | Shared | ORM | Belongs To | Reflexive | create", () => {
     let { schema } = helper;
     let friend = schema.create("user");
     let user = schema.create("user", {
-      user: friend
+      user: friend,
     });
 
     expect(user.userId).toEqual(friend.id);
@@ -44,9 +44,9 @@ describe("External | Shared | ORM | Belongs To | Reflexive | create", () => {
   test("it throws an error if a model is passed in without a defined relationship", () => {
     let { schema } = helper;
 
-    expect(function() {
+    expect(function () {
       schema.create("user", {
-        foo: schema.create("foo")
+        foo: schema.create("foo"),
       });
     }).toThrow();
   });
@@ -56,9 +56,9 @@ describe("External | Shared | ORM | Belongs To | Reflexive | create", () => {
     schema.create("foo");
     schema.create("foo");
 
-    expect(function() {
+    expect(function () {
       schema.create("user", {
-        foos: schema.foos.all()
+        foos: schema.foos.all(),
       });
     }).toThrow();
   });

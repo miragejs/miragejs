@@ -21,7 +21,7 @@ describe("External | Shared | ORM | Belongs To | Named Reflexive | instantiating
   });
 
   test("the child errors if the parent id doesnt exist", () => {
-    expect(function() {
+    expect(function () {
       schema.users.new({ bestFriendId: 2 });
     }).toThrow();
   });
@@ -64,7 +64,7 @@ describe("External | Shared | ORM | Belongs To | Named Reflexive | instantiating
     let friend = helper.savedParent();
     let user = schema.users.new({
       bestFriend: friend,
-      bestFriendId: friend.id
+      bestFriendId: friend.id,
     });
 
     expect(user.bestFriendId).toEqual("1");

@@ -1,36 +1,36 @@
 import { Server, Model, Serializer } from "miragejs";
 
-describe("External | Shared | Serializers | Base | Root", function() {
+describe("External | Shared | Serializers | Base | Root", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       models: {
-        wordSmith: Model
+        wordSmith: Model,
       },
       serializers: {
         wordSmith: Serializer.extend({
           embed: true,
-          root: false
-        })
-      }
+          root: false,
+        }),
+      },
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
   test(`if root is false, it serializes a model by returning its attrs`, () => {
     let wordSmith = server.schema.wordSmiths.create({
       id: "1",
-      name: "Link"
+      name: "Link",
     });
 
     let result = server.serializerOrRegistry.serialize(wordSmith);
     expect(result).toEqual({
       id: "1",
-      name: "Link"
+      name: "Link",
     });
   });
 
@@ -43,7 +43,7 @@ describe("External | Shared | Serializers | Base | Root", function() {
 
     expect(result).toEqual([
       { id: "1", name: "Link" },
-      { id: "2", name: "Zelda" }
+      { id: "2", name: "Zelda" },
     ]);
   });
 

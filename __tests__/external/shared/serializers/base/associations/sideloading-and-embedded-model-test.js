@@ -1,26 +1,26 @@
 import { Server, Model, hasMany, belongsTo, Serializer } from "miragejs";
 
-describe("External | Shared | Serializers | Base | Associations | Sideloading and Embedded Models", function() {
+describe("External | Shared | Serializers | Base | Associations | Sideloading and Embedded Models", function () {
   let server, BaseSerializer;
 
-  beforeEach(function() {
+  beforeEach(function () {
     BaseSerializer = Serializer.extend({
-      embed: false
+      embed: false,
     });
 
     server = new Server({
       models: {
         wordSmith: Model.extend({
-          posts: hasMany("blog-post")
+          posts: hasMany("blog-post"),
         }),
         blogPost: Model.extend({
           author: belongsTo("word-smith"),
-          comments: hasMany("fine-comment")
+          comments: hasMany("fine-comment"),
         }),
         fineComment: Model.extend({
-          post: belongsTo("blog-post")
-        })
-      }
+          post: belongsTo("blog-post"),
+        }),
+      },
     });
 
     let wordSmith = server.schema.wordSmiths.create({ name: "Link" });
@@ -32,7 +32,7 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading an
     server.schema.wordSmiths.create({ name: "Zelda" });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -42,13 +42,13 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading an
         application: BaseSerializer,
         wordSmith: BaseSerializer.extend({
           embed: false,
-          include: ["posts"]
+          include: ["posts"],
         }),
         blogPost: BaseSerializer.extend({
           embed: true,
-          include: ["comments"]
-        })
-      }
+          include: ["comments"],
+        }),
+      },
     });
 
     let link = server.schema.wordSmiths.find(1);
@@ -58,12 +58,12 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading an
       wordSmith: {
         id: "1",
         name: "Link",
-        postIds: ["1", "2"]
+        postIds: ["1", "2"],
       },
       blogPosts: [
         { id: "1", title: "Lorem", comments: [{ id: "1", text: "pwned" }] },
-        { id: "2", title: "Ipsum", comments: [] }
-      ]
+        { id: "2", title: "Ipsum", comments: [] },
+      ],
     });
   });
 
@@ -73,13 +73,13 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading an
         application: BaseSerializer,
         fineComment: BaseSerializer.extend({
           embed: false,
-          include: ["post"]
+          include: ["post"],
         }),
         blogPost: BaseSerializer.extend({
           embed: true,
-          include: ["author"]
-        })
-      }
+          include: ["author"],
+        }),
+      },
     });
 
     let fineComment = server.schema.fineComments.find(1);
@@ -91,9 +91,9 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading an
         {
           id: "1",
           title: "Lorem",
-          author: { id: "1", name: "Link" }
-        }
-      ]
+          author: { id: "1", name: "Link" },
+        },
+      ],
     });
   });
 });

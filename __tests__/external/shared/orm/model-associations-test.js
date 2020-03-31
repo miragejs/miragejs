@@ -11,10 +11,10 @@ describe("External | Shared | ORM | Model | associations", () => {
         user: Model,
         post: Model.extend({
           user: belongsTo(),
-          comments: hasMany()
+          comments: hasMany(),
         }),
-        comment: Model
-      }
+        comment: Model,
+      },
     });
 
     let peter = server.create("user", { name: "Peter" });
@@ -25,7 +25,7 @@ describe("External | Shared | ORM | Model | associations", () => {
     server.shutdown();
   });
 
-  test("associations returns a hashmap of the model's associations", function() {
+  test("associations returns a hashmap of the model's associations", function () {
     let postAssociations = post.associations;
 
     expect(Object.keys(postAssociations)).toEqual(["user", "comments"]);

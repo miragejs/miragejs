@@ -23,6 +23,7 @@
   "scripts": {
     "lint": "eslint .",
     "prettier:check": "prettier --list-different '**/*.js'",
+    "prettier:update": "prettier --write .",
     "dev": "rollup -c -w",
     "build": "rollup -c",
     "prepublishOnly": "yarn run build",

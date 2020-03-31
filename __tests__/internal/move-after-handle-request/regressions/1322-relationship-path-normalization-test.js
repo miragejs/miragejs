@@ -1,38 +1,38 @@
 import { Server, Model, hasMany, belongsTo, JSONAPISerializer } from "miragejs";
 import { underscore } from "@lib/utils/inflector";
 
-describe("Integration | Server | Regressions | 1322 Relationship Path Normalization Test", function() {
+describe("Integration | Server | Regressions | 1322 Relationship Path Normalization Test", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       environment: "test",
       models: {
         happyUser: Model.extend({
           happyLicenses: hasMany(),
-          happyAvatar: belongsTo()
+          happyAvatar: belongsTo(),
         }),
         happyLicense: Model.extend({
-          happyUser: belongsTo()
+          happyUser: belongsTo(),
         }),
         happyAvatar: Model.extend({
-          happyUser: belongsTo()
-        })
+          happyUser: belongsTo(),
+        }),
       },
       serializers: {
         application: JSONAPISerializer.extend({
           keyForRelationship(relationshipName) {
             return underscore(relationshipName);
-          }
-        })
+          },
+        }),
       },
       routes() {
         this.resource("happy-licenses");
-      }
+      },
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -53,11 +53,11 @@ describe("Integration | Server | Regressions | 1322 Relationship Path Normalizat
         happy_user: {
           data: {
             id: user1.id,
-            type: "happy-users"
-          }
-        }
+            type: "happy-users",
+          },
+        },
       },
-      type: "happy-licenses"
+      type: "happy-licenses",
     });
     expect(json.included).toEqual([
       {
@@ -68,16 +68,16 @@ describe("Integration | Server | Regressions | 1322 Relationship Path Normalizat
           happy_avatar: {
             data: {
               id: avatar1.id,
-              type: "happy-avatars"
-            }
-          }
-        }
+              type: "happy-avatars",
+            },
+          },
+        },
       },
       {
         id: avatar1.id,
         type: "happy-avatars",
-        attributes: {}
-      }
+        attributes: {},
+      },
     ]);
   });
 });

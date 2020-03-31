@@ -17,9 +17,9 @@ export default class Helper {
       environment: "test",
       models: {
         tag: Model.extend({
-          tags: hasMany("tag", { inverse: null })
-        })
-      }
+          tags: hasMany("tag", { inverse: null }),
+        }),
+      },
     });
 
     this.db = this.server.db;
@@ -51,7 +51,7 @@ export default class Helper {
     schema.db.tags.insert([
       { id: "1", name: "Red", tagIds: ["2", "3"] },
       { id: "2", name: "Blue", tagIds: [] },
-      { id: "3", name: "Green", tagIds: [] }
+      { id: "3", name: "Green", tagIds: [] },
     ]);
 
     return [schema.tags.find(1), [schema.tags.find(2), schema.tags.find(3)]];
@@ -60,7 +60,7 @@ export default class Helper {
   savedParentMixedChildren() {
     this.schema.db.tags.insert([
       { id: "1", name: "Red", tagIds: ["2"] },
-      { id: "2", name: "Blue", tagIds: [] }
+      { id: "2", name: "Blue", tagIds: [] },
     ]);
     let tag = this.schema.tags.find(1);
     let blueTag = this.schema.tags.find(2);
@@ -127,5 +127,5 @@ export const states = [
   "newParentNoChildren",
   "newParentNewChildren",
   "newParentSavedChildren",
-  "newParentMixedChildren"
+  "newParentMixedChildren",
 ];

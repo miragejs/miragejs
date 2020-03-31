@@ -9,13 +9,13 @@ describe("External | Shared | ORM | Mixed | Regressions | 1613 Two bidirectional
       models: {
         user: Model.extend({
           authoredPosts: hasMany("post", { inverse: "author" }),
-          editedPosts: hasMany("post", { inverse: "editor" })
+          editedPosts: hasMany("post", { inverse: "editor" }),
         }),
         post: Model.extend({
           author: belongsTo("user", { inverse: "authoredPosts" }),
-          editor: belongsTo("user", { inverse: "editedPosts" })
-        })
-      }
+          editor: belongsTo("user", { inverse: "editedPosts" }),
+        }),
+      },
     });
   });
 
@@ -25,18 +25,18 @@ describe("External | Shared | ORM | Mixed | Regressions | 1613 Two bidirectional
 
     post.update({
       authorId: user.id,
-      editorId: user.id
+      editorId: user.id,
     });
 
     expect(server.db.posts.find(1)).toEqual({
       id: "1",
       authorId: "1",
-      editorId: "1"
+      editorId: "1",
     });
     expect(server.db.users.find(1)).toEqual({
       id: "1",
       authoredPostIds: ["1"],
-      editedPostIds: ["1"]
+      editedPostIds: ["1"],
     });
   });
 });

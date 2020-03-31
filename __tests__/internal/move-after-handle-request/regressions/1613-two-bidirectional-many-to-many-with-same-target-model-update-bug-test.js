@@ -1,35 +1,35 @@
 import { Server, Model, hasMany, belongsTo, JSONAPISerializer } from "miragejs";
 
-describe("Integration | Server | Regressions | 1613 Two bidirectional many-to-many with same target model update bug", function() {
+describe("Integration | Server | Regressions | 1613 Two bidirectional many-to-many with same target model update bug", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       environment: "test",
       models: {
         user: Model.extend({
           authoredPosts: hasMany("post", { inverse: "author" }),
-          editedPosts: hasMany("post", { inverse: "editor" })
+          editedPosts: hasMany("post", { inverse: "editor" }),
         }),
         post: Model.extend({
           author: belongsTo("user", { inverse: "authoredPosts" }),
-          editor: belongsTo("user", { inverse: "editedPosts" })
-        })
+          editor: belongsTo("user", { inverse: "editedPosts" }),
+        }),
       },
       serializers: {
         application: JSONAPISerializer.extend(),
         user: JSONAPISerializer.extend({
-          alwaysIncludeLinkageData: true
-        })
+          alwaysIncludeLinkageData: true,
+        }),
       },
       routes() {
         this.resource("posts");
         this.resource("users");
-      }
+      },
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -42,7 +42,7 @@ describe("Integration | Server | Regressions | 1613 Two bidirectional many-to-ma
     await fetch(`/posts/${post.id}`, {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/vnd.api+json"
+        "Content-Type": "application/vnd.api+json",
       },
       body: JSON.stringify({
         data: {
@@ -52,19 +52,19 @@ describe("Integration | Server | Regressions | 1613 Two bidirectional many-to-ma
             author: {
               data: {
                 type: "users",
-                id: user.id
-              }
+                id: user.id,
+              },
             },
             editor: {
               data: {
                 type: "users",
-                id: user.id
-              }
-            }
+                id: user.id,
+              },
+            },
           },
-          type: "posts"
-        }
-      })
+          type: "posts",
+        },
+      }),
     });
 
     let res = await fetch(`/users/${user.id}`);
@@ -78,20 +78,20 @@ describe("Integration | Server | Regressions | 1613 Two bidirectional many-to-ma
           data: [
             {
               id: "1",
-              type: "posts"
-            }
-          ]
+              type: "posts",
+            },
+          ],
         },
         "edited-posts": {
           data: [
             {
               id: "1",
-              type: "posts"
-            }
-          ]
-        }
+              type: "posts",
+            },
+          ],
+        },
       },
-      type: "users"
+      type: "users",
     });
   });
 });

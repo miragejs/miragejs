@@ -9,29 +9,29 @@ describe("External | Shared | Factories | afterCreate", () => {
       models: {
         author: Model,
         post: Model.extend({
-          author: belongsTo()
+          author: belongsTo(),
         }),
         comment: Model.extend({
-          post: belongsTo()
-        })
+          post: belongsTo(),
+        }),
       },
       factories: {
         author: Factory.extend({
           afterCreate(author, server) {
             author.update({ name: "Sam" });
             server.create("post", { author });
-          }
+          },
         }),
         post: Factory.extend({
           title: "Lorem ipsum",
           afterCreate(post, server) {
             server.create("comment", { post });
-          }
+          },
         }),
         comment: Factory.extend({
-          text: "Yo soy el nino"
-        })
-      }
+          text: "Yo soy el nino",
+        }),
+      },
     });
   });
 
@@ -47,13 +47,13 @@ describe("External | Shared | Factories | afterCreate", () => {
     expect(server.db.posts[0]).toEqual({
       id: "1",
       title: "Lorem ipsum",
-      authorId: "1"
+      authorId: "1",
     });
     expect(server.db.comments).toHaveLength(1);
     expect(server.db.comments[0]).toEqual({
       id: "1",
       text: "Yo soy el nino",
-      postId: "1"
+      postId: "1",
     });
   });
 });

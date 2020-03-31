@@ -18,9 +18,9 @@ export default class BelongsToHelper {
       models: {
         user: Model.extend(),
         post: Model.extend({
-          author: belongsTo("user")
-        })
-      }
+          author: belongsTo("user"),
+        }),
+      },
     });
 
     this.db = this.server.db;
@@ -51,7 +51,7 @@ export default class BelongsToHelper {
     let insertedAuthor = this.db.users.insert({ name: "Bob" });
     let insertedPost = this.db.posts.insert({
       title: "Lorem",
-      authorId: insertedAuthor.id
+      authorId: insertedAuthor.id,
     });
     let post = this.schema.posts.find(insertedPost.id);
     let author = this.schema.users.find(insertedAuthor.id);
@@ -99,5 +99,5 @@ export const states = [
   "savedChildSavedParent",
   "newChildNoParent",
   "newChildNewParent",
-  "newChildSavedParent"
+  "newChildSavedParent",
 ];

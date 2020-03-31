@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Belongs To | One-way Polymorphic | associati
   /*
     The model can update its association via parentId, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can update its association to a saved parent via parentId`, () => {
       let [comment] = helper[state]();
       let savedPost = helper.savedParent();
@@ -24,7 +24,7 @@ describe("External | Shared | ORM | Belongs To | One-way Polymorphic | associati
     });
   });
 
-  ["savedChildSavedParent", "newChildSavedParent"].forEach(state => {
+  ["savedChildSavedParent", "newChildSavedParent"].forEach((state) => {
     test(`a ${state} can clear its association via a null parentId`, () => {
       let [comment] = helper[state]();
 

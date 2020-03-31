@@ -7,12 +7,12 @@ describe("External | Shared | ORM | assertions", () => {
     server = new Server({
       models: {
         user: Model.extend({
-          posts: hasMany()
+          posts: hasMany(),
         }),
         post: Model.extend({
-          author: belongsTo("user")
-        })
-      }
+          author: belongsTo("user"),
+        }),
+      },
     });
   });
 
@@ -24,7 +24,7 @@ describe("External | Shared | ORM | assertions", () => {
     expect(() => {
       server.schema.users.create({
         name: "Sam",
-        posts: [1]
+        posts: [1],
       });
     }).toThrow();
   });
@@ -32,7 +32,7 @@ describe("External | Shared | ORM | assertions", () => {
   test(`it doesn't error when passing in an empty array`, () => {
     server.schema.users.create({
       name: "Sam",
-      posts: []
+      posts: [],
     });
     expect(true).toBeTruthy();
   });
@@ -41,7 +41,7 @@ describe("External | Shared | ORM | assertions", () => {
     expect(() => {
       server.schema.users.create({
         name: "Sam",
-        postIds: "foo"
+        postIds: "foo",
       });
     }).toThrow();
   });
@@ -50,7 +50,7 @@ describe("External | Shared | ORM | assertions", () => {
     expect(() => {
       server.schema.users.create({
         name: "Sam",
-        postIds: [2]
+        postIds: [2],
       });
     }).toThrow();
   });
@@ -59,7 +59,7 @@ describe("External | Shared | ORM | assertions", () => {
     expect(() => {
       server.schema.posts.create({
         title: "Post 1",
-        author: "sam"
+        author: "sam",
       });
     }).toThrow();
   });
@@ -68,7 +68,7 @@ describe("External | Shared | ORM | assertions", () => {
     expect(() => {
       server.schema.posts.create({
         title: "Post 1",
-        authorId: 1
+        authorId: 1,
       });
     }).toThrow();
   });

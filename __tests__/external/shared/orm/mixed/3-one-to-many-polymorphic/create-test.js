@@ -14,7 +14,7 @@ describe("External | Shared | ORM | Mixed | One To Many Polymorphic | create", (
   test("it sets up associations correctly when passing in the foreign key", () => {
     let post = helper.schema.create("post");
     let user = helper.schema.create("user", {
-      thingIds: [{ type: "post", id: post.id }]
+      thingIds: [{ type: "post", id: post.id }],
     });
     post.reload();
 
@@ -29,14 +29,14 @@ describe("External | Shared | ORM | Mixed | One To Many Polymorphic | create", (
     expect(db.users).toHaveLength(1);
     expect(db.users[0]).toEqual({
       id: "1",
-      thingIds: [{ type: "post", id: "1" }]
+      thingIds: [{ type: "post", id: "1" }],
     });
   });
 
   test("it sets up associations correctly when passing in an array of models", () => {
     let post = helper.schema.create("post");
     let user = helper.schema.create("user", {
-      things: [post]
+      things: [post],
     });
 
     expect(user.thingIds).toEqual([{ type: "post", id: post.id }]);
@@ -50,14 +50,14 @@ describe("External | Shared | ORM | Mixed | One To Many Polymorphic | create", (
     expect(db.users).toHaveLength(1);
     expect(db.users[0]).toEqual({
       id: "1",
-      thingIds: [{ type: "post", id: "1" }]
+      thingIds: [{ type: "post", id: "1" }],
     });
   });
 
   test("it sets up associations correctly when passing in a collection", () => {
     let post = helper.schema.create("post");
     let user = helper.schema.create("user", {
-      things: helper.schema.posts.all()
+      things: helper.schema.posts.all(),
     });
     post.reload();
 
@@ -71,7 +71,7 @@ describe("External | Shared | ORM | Mixed | One To Many Polymorphic | create", (
     expect(db.users).toHaveLength(1);
     expect(db.users[0]).toEqual({
       id: "1",
-      thingIds: [{ type: "post", id: "1" }]
+      thingIds: [{ type: "post", id: "1" }],
     });
   });
 });

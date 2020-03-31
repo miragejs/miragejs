@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Belongs To | Named One-Way Reflexive | acces
   /*
     The reference to a belongs-to association is correct, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`the references of a ${state} are correct`, () => {
       let [user, parent] = helper[state]();
 

@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Mixed | Many To One | association #create", 
   /*
     The model can create a has-many association, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can create an associated parent`, () => {
       let [post, originalUser] = helper[state]();
 

@@ -13,7 +13,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | association #new",
     The model can make a new unsaved belongs-to association, for all states
   */
 
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can build a new associated child`, () => {
       let [order] = helper[state]();
       let initialCount = order.products.models.length;
@@ -29,7 +29,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | association #new",
       expect(blueProduct.attrs).toEqual({
         id: blueProduct.id,
         name: "Blue",
-        orderIds: [order.id]
+        orderIds: [order.id],
       });
       expect(order.products.models).toHaveLength(initialCount + 1);
       expect(order.products.includes(blueProduct)).toBeTruthy();

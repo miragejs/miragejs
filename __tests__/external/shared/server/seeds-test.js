@@ -3,22 +3,22 @@ import { Server, Model } from "miragejs";
 describe("External | Shared | Server | seeds", () => {
   let server;
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
   test("seeds config option works", async () => {
     server = new Server({
       models: {
-        user: Model
+        user: Model,
       },
       seeds(server) {
         server.createList("user", 3);
-      }
+      },
     });
 
     expect(server.db.dump()).toEqual({
-      users: [{ id: "1" }, { id: "2" }, { id: "3" }]
+      users: [{ id: "1" }, { id: "2" }, { id: "3" }],
     });
   });
 
@@ -32,8 +32,8 @@ describe("External | Shared | Server | seeds", () => {
         scenarios: {
           default(server) {
             server.create("user");
-          }
-        }
+          },
+        },
       });
     }).toThrow(
       "The seeds option is an alias for the scenarios.default option. You can't pass both options into your server definition."

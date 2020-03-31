@@ -3,18 +3,18 @@ import Db from "@lib/db";
 import Schema from "@lib/orm/schema";
 import { Model, hasMany } from "miragejs";
 
-describe("Integration | ORM | Schema Verification | Has Many", function() {
+describe("Integration | ORM | Schema Verification | Has Many", function () {
   test("a one-way has many association is correct", () => {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],
-        posts: [{ id: 1, title: "Lorem" }]
+        posts: [{ id: 1, title: "Lorem" }],
       }),
       {
         user: Model.extend({
-          posts: hasMany()
+          posts: hasMany(),
         }),
-        post: Model.extend()
+        post: Model.extend(),
       }
     );
 
@@ -34,13 +34,13 @@ describe("Integration | ORM | Schema Verification | Has Many", function() {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],
-        posts: [{ id: 1, title: "Lorem" }]
+        posts: [{ id: 1, title: "Lorem" }],
       }),
       {
         user: Model.extend({
-          blogPosts: hasMany("post")
+          blogPosts: hasMany("post"),
         }),
-        post: Model.extend()
+        post: Model.extend(),
       }
     );
 
@@ -59,12 +59,12 @@ describe("Integration | ORM | Schema Verification | Has Many", function() {
   test("a reflexive hasMany association with an implicit inverse is correct", () => {
     let schema = new Schema(
       new Db({
-        tags: [{ id: 1, name: "economics" }]
+        tags: [{ id: 1, name: "economics" }],
       }),
       {
         tag: Model.extend({
-          tags: hasMany()
-        })
+          tags: hasMany(),
+        }),
       }
     );
 

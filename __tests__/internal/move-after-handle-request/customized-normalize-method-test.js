@@ -1,14 +1,14 @@
 import { Server, Model, ActiveModelSerializer } from "miragejs";
 import { camelize } from "@lib/utils/inflector";
 
-describe("Integration | Server | Customized normalize method", function() {
+describe("Integration | Server | Customized normalize method", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       environment: "test",
       models: {
-        contact: Model
+        contact: Model,
       },
       serializers: {
         application: ActiveModelSerializer,
@@ -20,19 +20,19 @@ describe("Integration | Server | Customized normalize method", function() {
             let jsonApiDoc = {
               data: {
                 type: "contacts",
-                attributes: attrs
-              }
+                attributes: attrs,
+              },
             };
             return jsonApiDoc;
-          }
-        })
-      }
+          },
+        }),
+      },
     });
     server.timing = 0;
     server.logging = false;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -47,16 +47,16 @@ describe("Integration | Server | Customized normalize method", function() {
         some: {
           random: [
             {
-              format: true
+              format: true,
             },
             {
               attrs: {
-                first_name: "Zelda"
-              }
-            }
-          ]
-        }
-      })
+                first_name: "Zelda",
+              },
+            },
+          ],
+        },
+      }),
     });
 
     expect(res.status).toEqual(201);
@@ -65,12 +65,12 @@ describe("Integration | Server | Customized normalize method", function() {
   });
 
   test("custom model-specific normalize functions are used with custom function handlers", async () => {
-    server.put("/contacts/:id", function(schema, request) {
+    server.put("/contacts/:id", function (schema, request) {
       let attrs = this.normalizedRequestAttrs();
 
       expect(attrs).toEqual({
         id: "1",
-        firstName: "Zelda"
+        firstName: "Zelda",
       });
 
       return {};
@@ -79,22 +79,22 @@ describe("Integration | Server | Customized normalize method", function() {
     await fetch("/contacts/1", {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         some: {
           random: [
             {
-              format: true
+              format: true,
             },
             {
               attrs: {
-                first_name: "Zelda"
-              }
-            }
-          ]
-        }
-      })
+                first_name: "Zelda",
+              },
+            },
+          ],
+        },
+      }),
     });
   });
 });

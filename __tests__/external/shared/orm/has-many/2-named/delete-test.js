@@ -9,12 +9,12 @@ describe("External | Shared | ORM | Has Many | Named | delete", () => {
     helper.shutdown();
   });
 
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`deleting children updates the parent's foreign key for a ${state}`, () => {
       let [user, blogPosts] = helper[state]();
 
       if (blogPosts && blogPosts.length) {
-        blogPosts.forEach(p => p.destroy());
+        blogPosts.forEach((p) => p.destroy());
         user.reload();
       }
 

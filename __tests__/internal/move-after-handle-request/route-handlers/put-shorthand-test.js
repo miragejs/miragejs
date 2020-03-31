@@ -8,15 +8,15 @@ describe("Integration | Route Handlers | PUT shorthand", () => {
     server = new Server({
       environment: "development",
       models: {
-        author: Model.extend()
-      }
+        author: Model.extend(),
+      },
     });
     server.timing = 0;
     server.logging = false;
 
     authors = [{ id: 1, firstName: "Ganon" }];
     server.db.loadData({
-      authors: authors
+      authors: authors,
     });
 
     schema = server.schema;
@@ -27,9 +27,9 @@ describe("Integration | Route Handlers | PUT shorthand", () => {
         type: "authors",
         id: "1",
         attributes: {
-          "first-name": "Ganondorf"
-        }
-      }
+          "first-name": "Ganondorf",
+        },
+      },
     };
   });
 
@@ -47,7 +47,7 @@ describe("Integration | Route Handlers | PUT shorthand", () => {
     let request = {
       requestBody: JSON.stringify(body),
       url: "/authors/1",
-      params: { id: "1" }
+      params: { id: "1" },
     };
 
     let model = handler.handle(request);
@@ -64,7 +64,7 @@ describe("Integration | Route Handlers | PUT shorthand", () => {
       requestBody: JSON.stringify(body),
       url: "/authors/1?foo=bar",
       params: { id: "1" },
-      queryParams: { foo: "bar" }
+      queryParams: { foo: "bar" },
     };
 
     let model = handler.handle(request);
@@ -85,7 +85,7 @@ describe("Integration | Route Handlers | PUT shorthand", () => {
     let request = {
       requestBody: JSON.stringify(body),
       url: "/authors/1",
-      params: { id: "1" }
+      params: { id: "1" },
     };
 
     let model = handler.handle(request);
@@ -106,10 +106,10 @@ describe("Integration | Route Handlers | PUT shorthand", () => {
     let request = {
       requestBody: JSON.stringify(body),
       url: "/foobars/1",
-      params: { id: "1" }
+      params: { id: "1" },
     };
 
-    expect(function() {
+    expect(function () {
       handler.handle(request);
     }).toThrow();
     expect(true).toBeTruthy();

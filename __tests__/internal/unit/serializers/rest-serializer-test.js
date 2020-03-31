@@ -1,14 +1,14 @@
 import { _ormSchema as Schema, _Db as Db, Model, RestSerializer } from "@lib";
 
-describe("Unit | Serializers | RestSerializer", function() {
+describe("Unit | Serializers | RestSerializer", function () {
   let schema = null;
   let serializer = null;
-  beforeEach(function() {
+  beforeEach(function () {
     schema = new Schema(new Db(), {
-      person: Model
+      person: Model,
     });
     serializer = new RestSerializer({
-      schema
+      schema,
     });
   });
 
@@ -17,8 +17,8 @@ describe("Unit | Serializers | RestSerializer", function() {
       person: {
         id: 1,
         firstName: "Rick",
-        lastName: "Sanchez"
-      }
+        lastName: "Sanchez",
+      },
     };
     let jsonApiDoc = serializer.normalize(payload);
 
@@ -28,9 +28,9 @@ describe("Unit | Serializers | RestSerializer", function() {
         id: 1,
         attributes: {
           "first-name": "Rick",
-          "last-name": "Sanchez"
-        }
-      }
+          "last-name": "Sanchez",
+        },
+      },
     });
   });
 

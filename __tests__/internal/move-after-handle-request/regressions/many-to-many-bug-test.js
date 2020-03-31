@@ -1,29 +1,29 @@
 import { Server, Model, hasMany, JSONAPISerializer } from "miragejs";
 
-describe("Integration | Server | Regressions | Many to many bug", function() {
+describe("Integration | Server | Regressions | Many to many bug", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       environment: "test",
       models: {
         post: Model.extend({
-          tags: hasMany()
+          tags: hasMany(),
         }),
         tag: Model.extend({
-          posts: hasMany()
-        })
+          posts: hasMany(),
+        }),
       },
       serializers: {
-        application: JSONAPISerializer
+        application: JSONAPISerializer,
       },
       routes() {
         this.resource("posts");
-      }
+      },
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -34,7 +34,7 @@ describe("Integration | Server | Regressions | Many to many bug", function() {
     let serverTagB = server.create("tag", { name: "B", slug: "b" });
     let serverPost = server.create("post", {
       title: "Post 1",
-      tags: [serverTagA, serverTagB]
+      tags: [serverTagA, serverTagB],
     });
 
     expect(serverTagA.postIds).toHaveLength(1);
@@ -47,21 +47,21 @@ describe("Integration | Server | Regressions | Many to many bug", function() {
         data: {
           id: "1",
           attributes: {
-            title: "Post 2"
+            title: "Post 2",
           },
           relationships: {
             tags: {
               data: [
                 {
                   type: "tags",
-                  id: "2"
-                }
-              ]
-            }
+                  id: "2",
+                },
+              ],
+            },
           },
-          type: "posts"
-        }
-      })
+          type: "posts",
+        },
+      }),
     });
 
     serverTagA.reload();

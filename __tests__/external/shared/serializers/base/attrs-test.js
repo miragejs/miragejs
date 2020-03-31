@@ -1,23 +1,23 @@
 import { Server, Model, Serializer } from "miragejs";
 
-describe("External | Shared | Serializers | Base | Attrs List", function() {
+describe("External | Shared | Serializers | Base | Attrs List", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       models: {
-        wordSmith: Model
+        wordSmith: Model,
       },
       serializers: {
         application: Serializer,
         wordSmith: Serializer.extend({
-          attrs: ["id", "name"]
-        })
-      }
+          attrs: ["id", "name"],
+        }),
+      },
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -25,7 +25,7 @@ describe("External | Shared | Serializers | Base | Attrs List", function() {
     let wordSmith = server.schema.wordSmiths.create({
       id: 1,
       name: "Link",
-      age: 123
+      age: 123,
     });
 
     let result = server.serializerOrRegistry.serialize(wordSmith);
@@ -33,8 +33,8 @@ describe("External | Shared | Serializers | Base | Attrs List", function() {
     expect(result).toEqual({
       wordSmith: {
         id: "1",
-        name: "Link"
-      }
+        name: "Link",
+      },
     });
   });
 
@@ -48,8 +48,8 @@ describe("External | Shared | Serializers | Base | Attrs List", function() {
     expect(result).toEqual({
       wordSmiths: [
         { id: "1", name: "Link" },
-        { id: "2", name: "Zelda" }
-      ]
+        { id: "2", name: "Zelda" },
+      ],
     });
   });
 });

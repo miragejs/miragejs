@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Has Many | Many-to-many Polymorphic | associ
   /*
     The model can create a has-many association, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can create an associated parent`, () => {
       let [user] = helper[state]();
       let initialCount = user.commentables.models.length;
@@ -23,12 +23,12 @@ describe("External | Shared | ORM | Has Many | Many-to-many Polymorphic | associ
       expect(user.commentables.models).toHaveLength(initialCount + 1);
       expect(user.commentables.includes(post)).toBeTruthy();
       expect(
-        user.commentableIds.find(obj => {
+        user.commentableIds.find((obj) => {
           return obj.id === post.id && obj.type === "post";
         })
       ).toBeTruthy();
       expect(
-        user.attrs.commentableIds.find(obj => {
+        user.attrs.commentableIds.find((obj) => {
           return obj.id === post.id && obj.type === "post";
         })
       ).toBeTruthy();

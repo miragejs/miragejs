@@ -14,18 +14,18 @@ describe("External | Shared | ORM | Belongs To | One-way Polymorphic | instantia
   test("the child accepts a saved parent id", () => {
     let post = helper.savedParent();
     let comment = schema.comments.new({
-      commentableId: { id: post.id, type: "post" }
+      commentableId: { id: post.id, type: "post" },
     });
 
     expect(comment.commentableId).toEqual({ id: post.id, type: "post" });
     expect(comment.commentable).toEqual(post);
     expect(comment.attrs).toEqual({
-      commentableId: { id: post.id, type: "post" }
+      commentableId: { id: post.id, type: "post" },
     });
   });
 
   test("the child errors if the parent id doesnt exist", () => {
-    expect(function() {
+    expect(function () {
       schema.comments.new({ commentableId: { type: "post", id: 2 } });
     }).toThrow();
   });
@@ -67,13 +67,13 @@ describe("External | Shared | ORM | Belongs To | One-way Polymorphic | instantia
     let post = helper.savedParent();
     let comment = schema.comments.new({
       commentable: post,
-      commentableId: { type: "post", id: post.id }
+      commentableId: { type: "post", id: post.id },
     });
 
     expect(comment.commentableId).toEqual({ type: "post", id: "1" });
     expect(comment.commentable).toEqual(post);
     expect(comment.attrs).toEqual({
-      commentableId: { type: "post", id: post.id }
+      commentableId: { type: "post", id: post.id },
     });
   });
 

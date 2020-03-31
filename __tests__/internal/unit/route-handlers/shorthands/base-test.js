@@ -1,9 +1,9 @@
 import { _routeHandlersShorthandsBase as BaseShorthandRouteHandler } from "@lib";
 
-describe("Unit | Route handlers | Shorthands | BaseShorthandRouteHandler", function() {
+describe("Unit | Route handlers | Shorthands | BaseShorthandRouteHandler", function () {
   let handler = null;
   let request = null;
-  beforeEach(function() {
+  beforeEach(function () {
     handler = new BaseShorthandRouteHandler();
     request = { params: { id: "" } };
   });

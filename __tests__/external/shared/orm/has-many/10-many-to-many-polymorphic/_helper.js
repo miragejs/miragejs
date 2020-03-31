@@ -17,12 +17,12 @@ export default class Helper {
       environment: "test",
       models: {
         post: Model.extend({
-          users: hasMany()
+          users: hasMany(),
         }),
         user: Model.extend({
-          commentables: hasMany({ polymorphic: true })
-        })
-      }
+          commentables: hasMany({ polymorphic: true }),
+        }),
+      },
     });
 
     this.db = this.server.db;
@@ -54,7 +54,7 @@ export default class Helper {
     this.loadData({
       posts: [
         { id: "1", title: "Lorem", userIds: ["1"] },
-        { id: "2", title: "Ipsum", userIds: ["1"] }
+        { id: "2", title: "Ipsum", userIds: ["1"] },
       ],
       users: [
         {
@@ -62,10 +62,10 @@ export default class Helper {
           name: "Link",
           commentableIds: [
             { type: "post", id: "1" },
-            { type: "post", id: "2" }
-          ]
-        }
-      ]
+            { type: "post", id: "2" },
+          ],
+        },
+      ],
     });
 
     let user = this.schema.users.find(1);
@@ -78,7 +78,7 @@ export default class Helper {
   savedParentMixedChildren() {
     this.loadData({
       posts: [{ id: "1", title: "Lorem", userIds: [] }],
-      users: [{ id: "1", name: "Link", commentableIds: [] }]
+      users: [{ id: "1", name: "Link", commentableIds: [] }],
     });
 
     let user = this.schema.users.find(1);
@@ -146,5 +146,5 @@ export const states = [
   "newParentNoChildren",
   "newParentNewChildren",
   "newParentSavedChildren",
-  "newParentMixedChildren"
+  "newParentMixedChildren",
 ];

@@ -8,8 +8,8 @@ describe("External | Shared | Serializers | JSON API Serializer | Key Formatting
     server = new Server({
       models: {
         wordSmith: Model,
-        photograph: Model
-      }
+        photograph: Model,
+      },
     });
   });
 
@@ -23,15 +23,15 @@ describe("External | Shared | Serializers | JSON API Serializer | Key Formatting
         application: JSONAPISerializer.extend({
           keyForAttribute(key) {
             return snakeCase(key);
-          }
-        })
-      }
+          },
+        }),
+      },
     });
     let wordSmith = server.schema.wordSmiths.create({
       id: 1,
       firstName: "Link",
       lastName: "Jackson",
-      age: 323
+      age: 323,
     });
 
     let result = server.serializerOrRegistry.serialize(wordSmith);
@@ -43,9 +43,9 @@ describe("External | Shared | Serializers | JSON API Serializer | Key Formatting
         attributes: {
           age: 323,
           first_name: "Link",
-          last_name: "Jackson"
-        }
-      }
+          last_name: "Jackson",
+        },
+      },
     });
   });
 
@@ -55,20 +55,20 @@ describe("External | Shared | Serializers | JSON API Serializer | Key Formatting
         application: JSONAPISerializer.extend({
           keyForAttribute(key) {
             return snakeCase(key);
-          }
-        })
-      }
+          },
+        }),
+      },
     });
 
     server.schema.wordSmiths.create({
       id: 1,
       firstName: "Link",
-      lastName: "Jackson"
+      lastName: "Jackson",
     });
     server.schema.wordSmiths.create({
       id: 2,
       firstName: "Zelda",
-      lastName: "Brown"
+      lastName: "Brown",
     });
     let wordSmiths = server.schema.wordSmiths.all();
 
@@ -81,18 +81,18 @@ describe("External | Shared | Serializers | JSON API Serializer | Key Formatting
           id: "1",
           attributes: {
             first_name: "Link",
-            last_name: "Jackson"
-          }
+            last_name: "Jackson",
+          },
         },
         {
           type: "word-smiths",
           id: "2",
           attributes: {
             first_name: "Zelda",
-            last_name: "Brown"
-          }
-        }
-      ]
+            last_name: "Brown",
+          },
+        },
+      ],
     });
   });
 });

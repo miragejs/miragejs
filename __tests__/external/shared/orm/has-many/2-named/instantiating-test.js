@@ -13,7 +13,7 @@ describe("External | Shared | ORM | Has Many | Named | instantiating", () => {
   test("the parent accepts a saved child id", () => {
     let post = helper.savedChild();
     let user = schema.users.new({
-      blogPostIds: [post.id]
+      blogPostIds: [post.id],
     });
 
     expect(user.blogPostIds).toEqual([post.id]);
@@ -21,7 +21,7 @@ describe("External | Shared | ORM | Has Many | Named | instantiating", () => {
   });
 
   test("the parent errors if the children ids don't exist", () => {
-    expect(function() {
+    expect(function () {
       schema.users.new({ blogPostIds: [2] });
     }).toThrow();
   });
@@ -62,7 +62,7 @@ describe("External | Shared | ORM | Has Many | Named | instantiating", () => {
     let post = helper.savedChild();
     let user = schema.users.new({
       blogPosts: [post],
-      blogPostIds: [post.id]
+      blogPostIds: [post.id],
     });
 
     expect(user.blogPostIds).toEqual([post.id]);

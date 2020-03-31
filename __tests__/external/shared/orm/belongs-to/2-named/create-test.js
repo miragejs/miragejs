@@ -14,7 +14,7 @@ describe("External | Shared | ORM | Belongs To | Named | create", () => {
   test("it sets up associations correctly when passing in the foreign key", () => {
     let author = helper.schema.create("user");
     let post = helper.schema.create("post", {
-      authorId: author.id
+      authorId: author.id,
     });
 
     expect(post.authorId).toEqual(author.id);
@@ -28,7 +28,7 @@ describe("External | Shared | ORM | Belongs To | Named | create", () => {
   test("it sets up associations correctly when passing in the association itself", () => {
     let author = helper.schema.create("user");
     let post = helper.schema.create("post", {
-      author
+      author,
     });
 
     expect(post.authorId).toEqual(author.id);
@@ -42,9 +42,9 @@ describe("External | Shared | ORM | Belongs To | Named | create", () => {
   test("it throws an error if a model is passed in without a defined relationship", () => {
     let { schema } = helper;
 
-    expect(function() {
+    expect(function () {
       schema.create("post", {
-        foo: schema.create("foo")
+        foo: schema.create("foo"),
       });
     }).toThrow();
   });
@@ -54,9 +54,9 @@ describe("External | Shared | ORM | Belongs To | Named | create", () => {
     schema.create("foo");
     schema.create("foo");
 
-    expect(function() {
+    expect(function () {
       schema.create("post", {
-        foos: schema.foos.all()
+        foos: schema.foos.all(),
       });
     }).toThrow();
   });

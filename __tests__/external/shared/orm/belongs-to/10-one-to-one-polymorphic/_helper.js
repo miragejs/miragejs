@@ -17,12 +17,12 @@ export default class BelongsToHelper {
       environment: "test",
       models: {
         post: Model.extend({
-          comment: belongsTo()
+          comment: belongsTo(),
         }),
         comment: Model.extend({
-          commentable: belongsTo({ polymorphic: true })
-        })
-      }
+          commentable: belongsTo({ polymorphic: true }),
+        }),
+      },
     });
 
     this.db = this.server.db;
@@ -53,8 +53,8 @@ export default class BelongsToHelper {
     this.loadData({
       posts: [{ id: "1", title: "Post 1", commentId: "1" }],
       comments: [
-        { id: "1", text: "Lorem", commentableId: { id: "1", type: "post" } }
-      ]
+        { id: "1", text: "Lorem", commentableId: { id: "1", type: "post" } },
+      ],
     });
 
     let comment = this.schema.comments.find(1);
@@ -103,5 +103,5 @@ export const states = [
   "savedChildSavedParent",
   "newChildNoParent",
   "newChildNewParent",
-  "newChildSavedParent"
+  "newChildSavedParent",
 ];

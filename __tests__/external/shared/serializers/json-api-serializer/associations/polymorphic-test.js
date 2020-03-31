@@ -7,15 +7,15 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
         photo: Model.extend(),
         video: Model.extend(),
         comment: Model.extend({
-          commentable: belongsTo({ polymorphic: true })
-        })
+          commentable: belongsTo({ polymorphic: true }),
+        }),
       },
       serializers: {
         application: JSONAPISerializer,
         comment: JSONAPISerializer.extend({
-          include: ["commentable"]
-        })
-      }
+          include: ["commentable"],
+        }),
+      },
     });
 
     let schema = server.schema;
@@ -30,45 +30,45 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
       data: [
         {
           attributes: {
-            text: "Pretty foo!"
+            text: "Pretty foo!",
           },
           id: "1",
           relationships: {
             commentable: {
-              data: { id: "1", type: "photos" }
-            }
+              data: { id: "1", type: "photos" },
+            },
           },
-          type: "comments"
+          type: "comments",
         },
         {
           attributes: {
-            text: "Love the bar!"
+            text: "Love the bar!",
           },
           id: "2",
           relationships: {
             commentable: {
-              data: { id: "1", type: "videos" }
-            }
+              data: { id: "1", type: "videos" },
+            },
           },
-          type: "comments"
-        }
+          type: "comments",
+        },
       ],
       included: [
         {
           attributes: {
-            title: "Foo"
+            title: "Foo",
           },
           id: "1",
-          type: "photos"
+          type: "photos",
         },
         {
           attributes: {
-            title: "Bar"
+            title: "Bar",
           },
           id: "1",
-          type: "videos"
-        }
-      ]
+          type: "videos",
+        },
+      ],
     });
 
     server.shutdown();
@@ -78,17 +78,17 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
     let server = new Server({
       models: {
         user: Model.extend({
-          things: hasMany({ polymorphic: true })
+          things: hasMany({ polymorphic: true }),
         }),
         car: Model.extend(),
-        watch: Model.extend()
+        watch: Model.extend(),
       },
       serializers: {
         application: JSONAPISerializer,
         user: JSONAPISerializer.extend({
-          include: ["things"]
-        })
-      }
+          include: ["things"],
+        }),
+      },
     });
 
     let schema = server.schema;
@@ -96,7 +96,7 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
     let watch = schema.watches.create({ make: "Citizen" });
     let user = schema.users.create({
       name: "Sam",
-      things: [car, watch]
+      things: [car, watch],
     });
 
     let json = server.serializerOrRegistry.serialize(user);
@@ -104,35 +104,35 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
     expect(json).toEqual({
       data: {
         attributes: {
-          name: "Sam"
+          name: "Sam",
         },
         id: "1",
         relationships: {
           things: {
             data: [
               { id: "1", type: "cars" },
-              { id: "1", type: "watches" }
-            ]
-          }
+              { id: "1", type: "watches" },
+            ],
+          },
         },
-        type: "users"
+        type: "users",
       },
       included: [
         {
           attributes: {
-            make: "Infiniti"
+            make: "Infiniti",
           },
           id: "1",
-          type: "cars"
+          type: "cars",
         },
         {
           attributes: {
-            make: "Citizen"
+            make: "Citizen",
           },
           id: "1",
-          type: "watches"
-        }
-      ]
+          type: "watches",
+        },
+      ],
     });
 
     server.shutdown();
@@ -142,14 +142,14 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
     let server = new Server({
       models: {
         user: Model.extend({
-          things: hasMany({ polymorphic: true })
+          things: hasMany({ polymorphic: true }),
         }),
         car: Model.extend(),
-        watch: Model.extend()
+        watch: Model.extend(),
       },
       serializers: {
-        application: JSONAPISerializer
-      }
+        application: JSONAPISerializer,
+      },
     });
 
     let schema = server.schema;
@@ -157,45 +157,45 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
     let watch = schema.watches.create({ make: "Citizen" });
     let user = schema.users.create({
       name: "Sam",
-      things: [car, watch]
+      things: [car, watch],
     });
 
     let json = server.serializerOrRegistry.serialize(user, {
-      queryParams: { include: "things" }
+      queryParams: { include: "things" },
     });
 
     expect(json).toEqual({
       data: {
         attributes: {
-          name: "Sam"
+          name: "Sam",
         },
         id: "1",
         relationships: {
           things: {
             data: [
               { id: "1", type: "cars" },
-              { id: "1", type: "watches" }
-            ]
-          }
+              { id: "1", type: "watches" },
+            ],
+          },
         },
-        type: "users"
+        type: "users",
       },
       included: [
         {
           attributes: {
-            make: "Infiniti"
+            make: "Infiniti",
           },
           id: "1",
-          type: "cars"
+          type: "cars",
         },
         {
           attributes: {
-            make: "Citizen"
+            make: "Citizen",
           },
           id: "1",
-          type: "watches"
-        }
-      ]
+          type: "watches",
+        },
+      ],
     });
 
     server.shutdown();
@@ -205,17 +205,17 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
     let server = new Server({
       models: {
         user: Model.extend({
-          things: hasMany({ polymorphic: true })
+          things: hasMany({ polymorphic: true }),
         }),
         car: Model.extend(),
-        watch: Model.extend()
+        watch: Model.extend(),
       },
       serializers: {
         application: JSONAPISerializer,
         user: JSONAPISerializer.extend({
-          include: ["things"]
-        })
-      }
+          include: ["things"],
+        }),
+      },
     });
 
     let schema = server.schema;
@@ -223,7 +223,7 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
     let watch = schema.watches.create({ make: "Citizen" });
     let user = schema.users.create({
       name: "Sam",
-      things: [car, watch]
+      things: [car, watch],
     });
 
     let json = server.serializerOrRegistry.serialize(user.things);
@@ -232,19 +232,19 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
       data: [
         {
           attributes: {
-            make: "Infiniti"
+            make: "Infiniti",
           },
           id: "1",
-          type: "cars"
+          type: "cars",
         },
         {
           attributes: {
-            make: "Citizen"
+            make: "Citizen",
           },
           id: "1",
-          type: "watches"
-        }
-      ]
+          type: "watches",
+        },
+      ],
     });
 
     server.shutdown();

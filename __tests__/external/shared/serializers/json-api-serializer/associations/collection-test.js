@@ -7,16 +7,16 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
     server = new Server({
       models: {
         wordSmith: Model.extend({
-          posts: hasMany("blogPost", { inverse: "author" })
+          posts: hasMany("blogPost", { inverse: "author" }),
         }),
         blogPost: Model.extend({
           author: belongsTo("wordSmith", { inverse: "posts" }),
-          comments: hasMany("fineComment", { inverse: "post" })
+          comments: hasMany("fineComment", { inverse: "post" }),
         }),
         fineComment: Model.extend({
-          post: belongsTo("blogPost")
-        })
-      }
+          post: belongsTo("blogPost"),
+        }),
+      },
     });
   });
 
@@ -27,8 +27,8 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
   test(`by default, it doesn't include a collection's relationships if those relationships are not included in the document and no links are defined`, () => {
     server.config({
       serializers: {
-        application: JSONAPISerializer
-      }
+        application: JSONAPISerializer,
+      },
     });
     server.schema.wordSmiths.create({ firstName: "Link", age: 123 });
     server.schema.wordSmiths.create({ firstName: "Zelda", age: 456 });
@@ -43,18 +43,18 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
           id: "1",
           attributes: {
             "first-name": "Link",
-            age: 123
-          }
+            age: 123,
+          },
         },
         {
           type: "word-smiths",
           id: "2",
           attributes: {
             "first-name": "Zelda",
-            age: 456
-          }
-        }
-      ]
+            age: 456,
+          },
+        },
+      ],
     });
   });
 
@@ -62,9 +62,9 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
     server.config({
       serializers: {
         application: JSONAPISerializer.extend({
-          alwaysIncludeLinkageData: true
-        })
-      }
+          alwaysIncludeLinkageData: true,
+        }),
+      },
     });
     server.schema.wordSmiths.create({ firstName: "Link", age: 123 });
     server.schema.wordSmiths.create({ firstName: "Zelda", age: 456 });
@@ -79,28 +79,28 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
           id: "1",
           attributes: {
             "first-name": "Link",
-            age: 123
+            age: 123,
           },
           relationships: {
             posts: {
-              data: []
-            }
-          }
+              data: [],
+            },
+          },
         },
         {
           type: "word-smiths",
           id: "2",
           attributes: {
             "first-name": "Zelda",
-            age: 456
+            age: 456,
           },
           relationships: {
             posts: {
-              data: []
-            }
-          }
-        }
-      ]
+              data: [],
+            },
+          },
+        },
+      ],
     });
   });
 
@@ -112,9 +112,9 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
             if (relationshipName == "posts") {
               return true;
             }
-          }
-        })
-      }
+          },
+        }),
+      },
     });
     server.schema.wordSmiths.create({ firstName: "Link", age: 123 });
     server.schema.wordSmiths.create({ firstName: "Zelda", age: 456 });
@@ -129,28 +129,28 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
           id: "1",
           attributes: {
             "first-name": "Link",
-            age: 123
+            age: 123,
           },
           relationships: {
             posts: {
-              data: []
-            }
-          }
+              data: [],
+            },
+          },
         },
         {
           type: "word-smiths",
           id: "2",
           attributes: {
             "first-name": "Zelda",
-            age: 456
+            age: 456,
           },
           relationships: {
             posts: {
-              data: []
-            }
-          }
-        }
-      ]
+              data: [],
+            },
+          },
+        },
+      ],
     });
   });
 
@@ -159,9 +159,9 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
       serializers: {
         application: JSONAPISerializer,
         wordSmith: JSONAPISerializer.extend({
-          include: ["posts"]
-        })
-      }
+          include: ["posts"],
+        }),
+      },
     });
     let link = server.schema.wordSmiths.create({ firstName: "Link" });
     link.createPost({ title: "Lorem" });
@@ -177,46 +177,46 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
           type: "word-smiths",
           id: "1",
           attributes: {
-            "first-name": "Link"
+            "first-name": "Link",
           },
           relationships: {
             posts: {
               data: [
                 { type: "blog-posts", id: "1" },
-                { type: "blog-posts", id: "2" }
-              ]
-            }
-          }
+                { type: "blog-posts", id: "2" },
+              ],
+            },
+          },
         },
         {
           type: "word-smiths",
           id: "2",
           attributes: {
-            "first-name": "Zelda"
+            "first-name": "Zelda",
           },
           relationships: {
             posts: {
-              data: []
-            }
-          }
-        }
+              data: [],
+            },
+          },
+        },
       ],
       included: [
         {
           type: "blog-posts",
           id: "1",
           attributes: {
-            title: "Lorem"
-          }
+            title: "Lorem",
+          },
         },
         {
           type: "blog-posts",
           id: "2",
           attributes: {
-            title: "Ipsum"
-          }
-        }
-      ]
+            title: "Ipsum",
+          },
+        },
+      ],
     });
   });
 
@@ -225,12 +225,12 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
       serializers: {
         application: JSONAPISerializer,
         wordSmith: JSONAPISerializer.extend({
-          include: ["posts"]
+          include: ["posts"],
         }),
         blogPost: JSONAPISerializer.extend({
-          include: ["comments"]
-        })
-      }
+          include: ["comments"],
+        }),
+      },
     });
 
     let link = server.schema.wordSmiths.create({ firstName: "Link" });
@@ -248,63 +248,63 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
           type: "word-smiths",
           id: "1",
           attributes: {
-            "first-name": "Link"
+            "first-name": "Link",
           },
           relationships: {
             posts: {
               data: [
                 { type: "blog-posts", id: "1" },
-                { type: "blog-posts", id: "2" }
-              ]
-            }
-          }
+                { type: "blog-posts", id: "2" },
+              ],
+            },
+          },
         },
         {
           type: "word-smiths",
           id: "2",
           attributes: {
-            "first-name": "Zelda"
+            "first-name": "Zelda",
           },
           relationships: {
             posts: {
-              data: []
-            }
-          }
-        }
+              data: [],
+            },
+          },
+        },
       ],
       included: [
         {
           type: "blog-posts",
           id: "1",
           attributes: {
-            title: "Lorem"
+            title: "Lorem",
           },
           relationships: {
             comments: {
-              data: [{ type: "fine-comments", id: "1" }]
-            }
-          }
+              data: [{ type: "fine-comments", id: "1" }],
+            },
+          },
         },
         {
           type: "fine-comments",
           id: "1",
           attributes: {
-            text: "pwned"
-          }
+            text: "pwned",
+          },
         },
         {
           type: "blog-posts",
           id: "2",
           attributes: {
-            title: "Ipsum"
+            title: "Ipsum",
           },
           relationships: {
             comments: {
-              data: []
-            }
-          }
-        }
-      ]
+              data: [],
+            },
+          },
+        },
+      ],
     });
   });
 
@@ -313,9 +313,9 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
       serializers: {
         application: JSONAPISerializer,
         blogPost: JSONAPISerializer.extend({
-          include: ["author"]
-        })
-      }
+          include: ["author"],
+        }),
+      },
     });
 
     let link = server.schema.wordSmiths.create({ firstName: "Link" });
@@ -333,36 +333,36 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
           type: "blog-posts",
           id: "1",
           attributes: {
-            title: "Lorem"
+            title: "Lorem",
           },
           relationships: {
             author: {
-              data: { type: "word-smiths", id: "1" }
-            }
-          }
+              data: { type: "word-smiths", id: "1" },
+            },
+          },
         },
         {
           type: "blog-posts",
           id: "2",
           attributes: {
-            title: "Ipsum"
+            title: "Ipsum",
           },
           relationships: {
             author: {
-              data: { type: "word-smiths", id: "1" }
-            }
-          }
-        }
+              data: { type: "word-smiths", id: "1" },
+            },
+          },
+        },
       ],
       included: [
         {
           type: "word-smiths",
           id: "1",
           attributes: {
-            "first-name": "Link"
-          }
-        }
-      ]
+            "first-name": "Link",
+          },
+        },
+      ],
     });
   });
 
@@ -371,12 +371,12 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
       serializers: {
         application: JSONAPISerializer,
         fineComment: JSONAPISerializer.extend({
-          include: ["post"]
+          include: ["post"],
         }),
         blogPost: JSONAPISerializer.extend({
-          include: ["author"]
-        })
-      }
+          include: ["author"],
+        }),
+      },
     });
 
     let link = server.schema.wordSmiths.create({ firstName: "Link" });
@@ -394,36 +394,36 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
           type: "fine-comments",
           id: "1",
           attributes: {
-            text: "pwned"
+            text: "pwned",
           },
           relationships: {
             post: {
-              data: { type: "blog-posts", id: "1" }
-            }
-          }
-        }
+              data: { type: "blog-posts", id: "1" },
+            },
+          },
+        },
       ],
       included: [
         {
           type: "blog-posts",
           id: "1",
           attributes: {
-            title: "Lorem"
+            title: "Lorem",
           },
           relationships: {
             author: {
-              data: { type: "word-smiths", id: "1" }
-            }
-          }
+              data: { type: "word-smiths", id: "1" },
+            },
+          },
         },
         {
           type: "word-smiths",
           id: "1",
           attributes: {
-            "first-name": "Link"
-          }
-        }
-      ]
+            "first-name": "Link",
+          },
+        },
+      ],
     });
   });
 
@@ -432,15 +432,15 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
       serializers: {
         application: JSONAPISerializer,
         blogPost: JSONAPISerializer.extend({
-          include: ["author", "comments"]
+          include: ["author", "comments"],
         }),
         wordSmith: JSONAPISerializer.extend({
-          include: ["posts"]
+          include: ["posts"],
         }),
         fineComment: JSONAPISerializer.extend({
-          include: ["post"]
-        })
-      }
+          include: ["post"],
+        }),
+      },
     });
 
     let link = server.schema.wordSmiths.create({ firstName: "Link" });
@@ -457,70 +457,70 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
         type: "blog-posts",
         id: "1",
         attributes: {
-          title: "Lorem"
+          title: "Lorem",
         },
         relationships: {
           author: {
-            data: { type: "word-smiths", id: "1" }
+            data: { type: "word-smiths", id: "1" },
           },
           comments: {
-            data: [{ type: "fine-comments", id: "1" }]
-          }
-        }
+            data: [{ type: "fine-comments", id: "1" }],
+          },
+        },
       },
       included: [
         {
           type: "word-smiths",
           id: "1",
           attributes: {
-            "first-name": "Link"
+            "first-name": "Link",
           },
           relationships: {
             posts: {
               data: [
                 {
                   id: "1",
-                  type: "blog-posts"
+                  type: "blog-posts",
                 },
                 {
                   id: "2",
-                  type: "blog-posts"
-                }
-              ]
-            }
-          }
+                  type: "blog-posts",
+                },
+              ],
+            },
+          },
         },
         {
           type: "blog-posts",
           id: "2",
           attributes: {
-            title: "Ipsum"
+            title: "Ipsum",
           },
           relationships: {
             author: {
-              data: { type: "word-smiths", id: "1" }
+              data: { type: "word-smiths", id: "1" },
             },
             comments: {
-              data: []
-            }
-          }
+              data: [],
+            },
+          },
         },
         {
           type: "fine-comments",
           id: "1",
           attributes: {
-            text: "pwned"
+            text: "pwned",
           },
           relationships: {
             post: {
               data: {
                 id: "1",
-                type: "blog-posts"
-              }
-            }
-          }
-        }
-      ]
+                type: "blog-posts",
+              },
+            },
+          },
+        },
+      ],
     });
   });
 });

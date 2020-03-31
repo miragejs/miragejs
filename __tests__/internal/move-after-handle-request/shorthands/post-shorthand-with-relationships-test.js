@@ -1,16 +1,16 @@
 import { Server, JSONAPISerializer, Model, belongsTo, hasMany } from "miragejs";
 
-describe("Integration | Server | Shorthands | Post with relationships", function() {
+describe("Integration | Server | Shorthands | Post with relationships", function () {
   let newServerWithSchema, server;
 
-  beforeEach(function() {
-    newServerWithSchema = function(schema) {
+  beforeEach(function () {
+    newServerWithSchema = function (schema) {
       server = new Server({
         environment: "development",
         models: schema,
         serializers: {
-          appliction: JSONAPISerializer
-        }
+          appliction: JSONAPISerializer,
+        },
       });
       server.timing = 0;
       server.logging = false;
@@ -19,18 +19,18 @@ describe("Integration | Server | Shorthands | Post with relationships", function
     };
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
   test("it works for belongs to", async () => {
     let server = newServerWithSchema({
       author: Model.extend({
-        posts: hasMany()
+        posts: hasMany(),
       }),
       post: Model.extend({
-        author: belongsTo()
-      })
+        author: belongsTo(),
+      }),
     });
     server.post("/posts");
 
@@ -43,18 +43,18 @@ describe("Integration | Server | Shorthands | Post with relationships", function
       body: JSON.stringify({
         data: {
           attributes: {
-            title: "Post 1"
+            title: "Post 1",
           },
           relationships: {
             author: {
               data: {
                 type: "authors",
-                id: author.id
-              }
-            }
-          }
-        }
-      })
+                id: author.id,
+              },
+            },
+          },
+        },
+      }),
     });
     let data = await res.json();
 
@@ -70,8 +70,8 @@ describe("Integration | Server | Shorthands | Post with relationships", function
       video: Model.extend(),
       post: Model.extend(),
       comment: Model.extend({
-        commentable: belongsTo({ polymorphic: true })
-      })
+        commentable: belongsTo({ polymorphic: true }),
+      }),
     });
     server.post("/comments");
 
@@ -85,18 +85,18 @@ describe("Integration | Server | Shorthands | Post with relationships", function
         data: {
           type: "comments",
           attributes: {
-            text: "Comment 1"
+            text: "Comment 1",
           },
           relationships: {
             commentable: {
               data: {
                 type: "videos",
-                id: video.id
-              }
-            }
-          }
-        }
-      })
+                id: video.id,
+              },
+            },
+          },
+        },
+      }),
     });
     let data = await res.json();
 
@@ -112,8 +112,8 @@ describe("Integration | Server | Shorthands | Post with relationships", function
       car: Model.extend(),
       watch: Model.extend(),
       user: Model.extend({
-        collectibles: hasMany({ polymorphic: true })
-      })
+        collectibles: hasMany({ polymorphic: true }),
+      }),
     });
 
     server.post("/users");
@@ -129,24 +129,24 @@ describe("Integration | Server | Shorthands | Post with relationships", function
         data: {
           type: "users",
           attributes: {
-            name: "Elon Musk"
+            name: "Elon Musk",
           },
           relationships: {
             collectibles: {
               data: [
                 {
                   type: "cars",
-                  id: car.id
+                  id: car.id,
                 },
                 {
                   type: "watches",
-                  id: watch.id
-                }
-              ]
-            }
-          }
-        }
-      })
+                  id: watch.id,
+                },
+              ],
+            },
+          },
+        },
+      }),
     });
 
     let data = await res.json();

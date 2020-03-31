@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Belongs To | One-to-one Polymorphic | associ
   /*
     The model can create a belongs-to association, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can create an associated parent`, () => {
       let [comment] = helper[state]();
 
@@ -24,7 +24,7 @@ describe("External | Shared | ORM | Belongs To | One-to-one Polymorphic | associ
       expect(comment.commentableId).toEqual({ type: "post", id: post.id });
       expect(helper.schema.comments.find(comment.id).commentableId).toEqual({
         type: "post",
-        id: post.id
+        id: post.id,
       });
     });
   });

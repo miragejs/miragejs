@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Has Many | One-Way Reflexive | association #
   /*
     The model can update its association via parent, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can update its association to a list of saved children`, () => {
       let [tag] = helper[state]();
       let savedTag = helper.savedChild();

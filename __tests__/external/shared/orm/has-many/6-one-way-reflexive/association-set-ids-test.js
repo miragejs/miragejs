@@ -9,7 +9,7 @@ describe("External | Shared | ORM | Has Many | One-Way Reflexive | association #
     helper.shutdown();
   });
 
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can update its association to include a saved child via childIds`, () => {
       let [tag] = helper[state]();
       let savedTag = helper.savedChild();

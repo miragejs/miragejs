@@ -17,12 +17,12 @@ export default class Helper {
       environment: "test",
       models: {
         user: Model.extend({
-          things: hasMany({ polymorphic: true })
+          things: hasMany({ polymorphic: true }),
         }),
         post: Model.extend({
-          user: belongsTo({ inverse: "things" })
-        })
-      }
+          user: belongsTo({ inverse: "things" }),
+        }),
+      },
     });
 
     this.db = this.server.db;
@@ -58,14 +58,14 @@ export default class Helper {
           name: "Link",
           thingIds: [
             { type: "post", id: "1" },
-            { type: "post", id: "2" }
-          ]
-        }
+            { type: "post", id: "2" },
+          ],
+        },
       ],
       posts: [
         { id: "1", title: "Lorem", userId: "1" },
-        { id: "2", title: "Ipsum", userId: "1" }
-      ]
+        { id: "2", title: "Ipsum", userId: "1" },
+      ],
     });
 
     return [schema.users.find(1), [schema.posts.find(1), schema.posts.find(2)]];
@@ -74,7 +74,7 @@ export default class Helper {
   savedParentMixedChildren() {
     this.schema.db.loadData({
       users: [{ id: "1", name: "Link", thingIds: [{ type: "post", id: "1" }] }],
-      posts: [{ id: "1", title: "Lorem", userId: "1" }]
+      posts: [{ id: "1", title: "Lorem", userId: "1" }],
     });
     let user = this.schema.users.find(1);
     let post1 = this.schema.posts.find(1);
@@ -141,5 +141,5 @@ export const states = [
   "newParentNoChildren",
   "newParentNewChildren",
   "newParentSavedChildren",
-  "newParentMixedChildren"
+  "newParentMixedChildren",
 ];

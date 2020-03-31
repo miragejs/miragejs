@@ -1,33 +1,33 @@
 import { Server, Model, hasMany, belongsTo, JSONAPISerializer } from "miragejs";
 
-describe("Integration | Server | Regressions | 1318 Linkage bug test", function() {
+describe("Integration | Server | Regressions | 1318 Linkage bug test", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       environment: "test",
       models: {
         happyUser: Model.extend({
-          happyLicenses: hasMany()
+          happyLicenses: hasMany(),
         }),
         happyLicense: Model.extend({
           happyUser: belongsTo(),
-          happySubscription: belongsTo()
+          happySubscription: belongsTo(),
         }),
         happySubscription: Model.extend({
-          happyLicenses: hasMany()
-        })
+          happyLicenses: hasMany(),
+        }),
       },
       serializers: {
-        application: JSONAPISerializer
+        application: JSONAPISerializer,
       },
       routes() {
         this.resource("happy-users");
-      }
+      },
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -37,13 +37,13 @@ describe("Integration | Server | Regressions | 1318 Linkage bug test", function(
     let user1 = server.create("happy-user");
     server.create("happy-license", {
       happyUser: user1,
-      happySubscription
+      happySubscription,
     });
 
     let user2 = server.create("happy-user");
     server.create("happy-license", {
       happyUser: user2,
-      happySubscription
+      happySubscription,
     });
 
     expect.assertions(1);
@@ -62,16 +62,16 @@ describe("Integration | Server | Regressions | 1318 Linkage bug test", function(
           "happy-subscription": {
             data: {
               type: "happy-subscriptions",
-              id: "1"
-            }
-          }
-        }
+              id: "1",
+            },
+          },
+        },
       },
       {
         id: "1",
         type: "happy-subscriptions",
-        attributes: {}
-      }
+        attributes: {},
+      },
     ]);
   });
 });

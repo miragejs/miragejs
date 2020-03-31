@@ -1,45 +1,45 @@
 import { Server, Model, hasMany, belongsTo, Serializer } from "miragejs";
 
-describe("External | Shared | Serializers | Base | Full Request", function() {
+describe("External | Shared | Serializers | Base | Full Request", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       environment: "test",
       models: {
         author: Model.extend({
-          posts: hasMany()
+          posts: hasMany(),
         }),
         post: Model.extend({
           author: belongsTo(),
-          comments: hasMany()
+          comments: hasMany(),
         }),
         comment: Model.extend({
-          post: belongsTo()
-        })
+          post: belongsTo(),
+        }),
       },
       serializers: {
         application: Serializer.extend({
           embed: true,
-          root: false
+          root: false,
         }),
         author: Serializer.extend({
           embed: true,
           attrs: ["id", "first"],
-          include: ["posts"]
+          include: ["posts"],
         }),
         comment: Serializer.extend({
           embed: true,
           root: false,
           include(request) {
             return request.queryParams.include_post ? ["post"] : [];
-          }
-        })
-      }
+          },
+        }),
+      },
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -49,11 +49,11 @@ describe("External | Shared | Serializers | Base | Full Request", function() {
     let author = server.schema.authors.create({
       first: "Link",
       last: "of Hyrule",
-      age: 323
+      age: 323,
     });
     author.createPost({ title: "Lorem ipsum" });
 
-    server.get("/authors/:id", function(schema, request) {
+    server.get("/authors/:id", function (schema, request) {
       let { id } = request.params;
 
       return schema.authors.find(id);
@@ -66,15 +66,15 @@ describe("External | Shared | Serializers | Base | Full Request", function() {
       author: {
         id: "1",
         first: "Link",
-        posts: [{ id: "1", title: "Lorem ipsum" }]
-      }
+        posts: [{ id: "1", title: "Lorem ipsum" }],
+      },
     });
   });
 
   test("components decoded", async () => {
     expect.assertions(1);
 
-    server.get("/authors/:id", function(schema, request) {
+    server.get("/authors/:id", function (schema, request) {
       let { id } = request.params;
 
       return { data: { id } };
@@ -90,10 +90,10 @@ describe("External | Shared | Serializers | Base | Full Request", function() {
     expect.assertions(1);
     server.schema.posts.create({
       title: "Lorem",
-      date: "20001010"
+      date: "20001010",
     });
 
-    server.get("/posts/:id", function(schema, request) {
+    server.get("/posts/:id", function (schema, request) {
       let { id } = request.params;
 
       return schema.posts.find(id);
@@ -105,7 +105,7 @@ describe("External | Shared | Serializers | Base | Full Request", function() {
     expect(data).toEqual({
       id: "1",
       title: "Lorem",
-      date: "20001010"
+      date: "20001010",
     });
   });
 
@@ -113,13 +113,13 @@ describe("External | Shared | Serializers | Base | Full Request", function() {
     expect.assertions(1);
     let post = server.schema.posts.create({
       title: "Lorem",
-      date: "20001010"
+      date: "20001010",
     });
     post.createComment({
-      description: "Lorem is the best"
+      description: "Lorem is the best",
     });
 
-    server.get("/comments/:id", function(schema, request) {
+    server.get("/comments/:id", function (schema, request) {
       let { id } = request.params;
       return schema.comments.find(id);
     });
@@ -133,8 +133,8 @@ describe("External | Shared | Serializers | Base | Full Request", function() {
       post: {
         id: "1",
         title: "Lorem",
-        date: "20001010"
-      }
+        date: "20001010",
+      },
     });
   });
 });

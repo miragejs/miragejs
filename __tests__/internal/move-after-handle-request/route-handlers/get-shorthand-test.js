@@ -5,7 +5,7 @@ import {
   JSONAPISerializer,
   RestSerializer,
   Response,
-  Server
+  Server,
 } from "miragejs";
 import Collection from "@lib/orm/collection";
 import GetShorthandRouteHandler from "@lib/route-handlers/shorthands/get";
@@ -18,18 +18,18 @@ describe("Integration | Route Handlers | GET shorthand", () => {
       environment: "development",
       models: {
         author: Model.extend({
-          posts: hasMany()
+          posts: hasMany(),
         }),
         post: Model.extend({
           author: belongsTo(),
-          comments: hasMany()
+          comments: hasMany(),
         }),
         comment: Model.extend({
-          post: belongsTo()
+          post: belongsTo(),
         }),
         photo: Model,
-        "project-owner": Model
-      }
+        "project-owner": Model,
+      },
     });
     server.timing = 0;
     server.logging = false;
@@ -37,22 +37,22 @@ describe("Integration | Route Handlers | GET shorthand", () => {
     authors = [
       { id: 1, name: "Link" },
       { id: 2, name: "Zelda" },
-      { id: 3, name: "Epona" }
+      { id: 3, name: "Epona" },
     ];
     posts = [
       { id: 1, title: "Lorem", authorId: 1 },
-      { id: 2, title: "Ipsum", authorId: 1 }
+      { id: 2, title: "Ipsum", authorId: 1 },
     ];
     photos = [
       { id: 1, title: "Amazing", location: "Hyrule" },
-      { id: 2, title: "Photo", location: "Goron City" }
+      { id: 2, title: "Photo", location: "Goron City" },
     ];
     projectOwners = [{ id: 1, name: "Nintendo" }];
     server.db.loadData({
       authors: authors,
       posts: posts,
       photos: photos,
-      projectOwners: projectOwners
+      projectOwners: projectOwners,
     });
 
     schema = server.schema;
@@ -145,7 +145,7 @@ describe("Integration | Route Handlers | GET shorthand", () => {
   test("undefined shorthand with coalesce true returns the appropriate models [JSONAPI]", () => {
     let request = {
       url: "/authors?filter[id]=1,3",
-      queryParams: { "filter[id]": "1,3" }
+      queryParams: { "filter[id]": "1,3" },
     };
     let options = { coalesce: true };
     let handler = new GetShorthandRouteHandler(
@@ -159,16 +159,16 @@ describe("Integration | Route Handlers | GET shorthand", () => {
     let authors = handler.handle(request);
 
     expect(authors.models).toHaveLength(2);
-    expect(authors.models.map(author => author.name)).toEqual([
+    expect(authors.models.map((author) => author.name)).toEqual([
       "Link",
-      "Epona"
+      "Epona",
     ]);
   });
 
   test("undefined shorthand with coalesce true returns the appropriate models [REST]", () => {
     let request = {
       url: "/authors?ids[]=1&ids[]=3",
-      queryParams: { ids: [1, 3] }
+      queryParams: { ids: [1, 3] },
     };
     let options = { coalesce: true };
     let handler = new GetShorthandRouteHandler(
@@ -182,9 +182,9 @@ describe("Integration | Route Handlers | GET shorthand", () => {
     let authors = handler.handle(request);
 
     expect(authors.models).toHaveLength(2);
-    expect(authors.models.map(author => author.name)).toEqual([
+    expect(authors.models.map((author) => author.name)).toEqual([
       "Link",
-      "Epona"
+      "Epona",
     ]);
   });
 
@@ -223,7 +223,7 @@ describe("Integration | Route Handlers | GET shorthand", () => {
   test("string shorthand with coalesce returns the correct models [JSONAPI]", () => {
     let request = {
       url: "/authors?filter[id]=1,3",
-      queryParams: { "filter[id]": "1,3" }
+      queryParams: { "filter[id]": "1,3" },
     };
     let options = { coalesce: true };
     let handler = new GetShorthandRouteHandler(
@@ -237,16 +237,16 @@ describe("Integration | Route Handlers | GET shorthand", () => {
     let authors = handler.handle(request);
 
     expect(authors.models).toHaveLength(2);
-    expect(authors.models.map(author => author.name)).toEqual([
+    expect(authors.models.map((author) => author.name)).toEqual([
       "Link",
-      "Epona"
+      "Epona",
     ]);
   });
 
   test("string shorthand with coalesce returns the correct models [REST]", () => {
     let request = {
       url: "/people?ids[]=1&ids[]=3",
-      queryParams: { ids: [1, 3] }
+      queryParams: { ids: [1, 3] },
     };
     let options = { coalesce: true };
     let handler = new GetShorthandRouteHandler(
@@ -260,9 +260,9 @@ describe("Integration | Route Handlers | GET shorthand", () => {
     let authors = handler.handle(request);
 
     expect(authors.models).toHaveLength(2);
-    expect(authors.models.map(author => author.name)).toEqual([
+    expect(authors.models.map((author) => author.name)).toEqual([
       "Link",
-      "Epona"
+      "Epona",
     ]);
   });
 
@@ -297,7 +297,7 @@ describe("Integration | Route Handlers | GET shorthand", () => {
       url
     );
 
-    expect(function() {
+    expect(function () {
       handler.handle(request);
     }).toThrow();
   });
@@ -328,7 +328,7 @@ describe("Integration | Route Handlers | GET shorthand", () => {
       url
     );
 
-    expect(function() {
+    expect(function () {
       handler.handle(request);
     }).toThrow();
   });

@@ -13,7 +13,7 @@ describe("External | Shared | ORM | Has Many | One-Way Reflexive | association #
     The model can make a new unsaved belongs-to association, for all states
   */
 
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can build a new associated child`, () => {
       let [tag] = helper[state]();
       let initialCount = tag.tags.models.length;
@@ -29,7 +29,7 @@ describe("External | Shared | ORM | Has Many | One-Way Reflexive | association #
       expect(blueTag.attrs).toEqual({
         id: blueTag.id,
         name: "Blue",
-        tagIds: []
+        tagIds: [],
       });
       expect(tag.tags.models).toHaveLength(initialCount + 1);
       expect(tag.tags.includes(blueTag)).toBeTruthy();

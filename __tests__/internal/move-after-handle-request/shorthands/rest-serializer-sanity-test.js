@@ -1,30 +1,30 @@
 import { Server, Model, hasMany, belongsTo, RestSerializer } from "miragejs";
 
-describe("Integration | Server | Shorthands | REST Serializer Sanity check", function() {
+describe("Integration | Server | Shorthands | REST Serializer Sanity check", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       environment: "test",
       models: {
         contact: Model.extend({
-          addresses: hasMany()
+          addresses: hasMany(),
         }),
         address: Model.extend({
-          contact: belongsTo()
-        })
+          contact: belongsTo(),
+        }),
       },
       serializers: {
         application: RestSerializer.extend({
-          normalizeIds: true
-        })
-      }
+          normalizeIds: true,
+        }),
+      },
     });
     server.timing = 0;
     server.logging = false;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -32,7 +32,7 @@ describe("Integration | Server | Shorthands | REST Serializer Sanity check", fun
     expect.assertions(2);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }]
+      contacts: [{ id: 1, name: "Link" }],
     });
 
     server.get("/contacts");
@@ -42,7 +42,7 @@ describe("Integration | Server | Shorthands | REST Serializer Sanity check", fun
 
     expect(res.status).toEqual(200);
     expect(data).toEqual({
-      contacts: [{ id: "1", name: "Link", addresses: [] }]
+      contacts: [{ id: "1", name: "Link", addresses: [] }],
     });
   });
 
@@ -50,7 +50,7 @@ describe("Integration | Server | Shorthands | REST Serializer Sanity check", fun
     expect.assertions(3);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }]
+      contacts: [{ id: 1, name: "Link" }],
     });
 
     server.post("/addresses");
@@ -60,9 +60,9 @@ describe("Integration | Server | Shorthands | REST Serializer Sanity check", fun
       body: JSON.stringify({
         address: {
           street: "5th ave",
-          contact: 1
-        }
-      })
+          contact: 1,
+        },
+      }),
     });
 
     expect(res.status).toEqual(201);
@@ -74,7 +74,7 @@ describe("Integration | Server | Shorthands | REST Serializer Sanity check", fun
     expect.assertions(2);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }]
+      contacts: [{ id: 1, name: "Link" }],
     });
 
     server.put("/contacts/:id");
@@ -83,9 +83,9 @@ describe("Integration | Server | Shorthands | REST Serializer Sanity check", fun
       method: "PUT",
       body: JSON.stringify({
         contact: {
-          name: "Zelda"
-        }
-      })
+          name: "Zelda",
+        },
+      }),
     });
 
     expect(res.status).toEqual(200);
@@ -96,7 +96,7 @@ describe("Integration | Server | Shorthands | REST Serializer Sanity check", fun
     expect.assertions(2);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }]
+      contacts: [{ id: 1, name: "Link" }],
     });
 
     server.patch("/contacts/:id");
@@ -105,9 +105,9 @@ describe("Integration | Server | Shorthands | REST Serializer Sanity check", fun
       method: "PATCH",
       body: JSON.stringify({
         contact: {
-          name: "Zelda"
-        }
-      })
+          name: "Zelda",
+        },
+      }),
     });
 
     expect(res.status).toEqual(200);
@@ -118,13 +118,13 @@ describe("Integration | Server | Shorthands | REST Serializer Sanity check", fun
     expect.assertions(2);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }]
+      contacts: [{ id: 1, name: "Link" }],
     });
 
     server.del("/contacts/:id");
 
     let res = await fetch("/contacts/1", {
-      method: "DELETE"
+      method: "DELETE",
     });
 
     expect(res.status).toEqual(204);

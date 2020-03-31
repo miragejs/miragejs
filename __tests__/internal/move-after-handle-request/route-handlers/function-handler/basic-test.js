@@ -7,14 +7,14 @@ describe("Integration | Route handlers | Function handler", () => {
     server = new Server({
       environment: "development",
       models: {
-        user: Model.extend({})
+        user: Model.extend({}),
       },
       serializers: {
         application: ActiveModelSerializer,
         sparseUser: ActiveModelSerializer.extend({
-          attrs: ["id", "name", "tall"]
-        })
-      }
+          attrs: ["id", "name", "tall"],
+        }),
+      },
     });
     server.timing = 0;
     server.logging = false;
@@ -25,7 +25,7 @@ describe("Integration | Route handlers | Function handler", () => {
   });
 
   test("a meaningful error is thrown if a custom route handler throws an error", async () => {
-    server.get("/users", function() {
+    server.get("/users", function () {
       throw "I goofed";
     });
 
@@ -41,7 +41,7 @@ describe("Integration | Route handlers | Function handler", () => {
   test("mirage response string is not serialized to string", async () => {
     expect.assertions(1);
 
-    server.get("/users", function() {
+    server.get("/users", function () {
       return new Response(
         200,
         { "Content-Type": "text/csv" },
@@ -58,8 +58,8 @@ describe("Integration | Route handlers | Function handler", () => {
   test("it can return a promise with non-serializable content", async () => {
     expect.assertions(1);
 
-    server.get("/users", function() {
-      return new Promise(resolve => {
+    server.get("/users", function () {
+      return new Promise((resolve) => {
         resolve(
           new Response(
             200,
@@ -81,8 +81,8 @@ describe("Integration | Route handlers | Function handler", () => {
 
     let user = server.create("user", { name: "Sam" });
 
-    server.get("/users", function(schema) {
-      return new Promise(resolve => {
+    server.get("/users", function (schema) {
+      return new Promise((resolve) => {
         resolve(schema.users.all());
       });
     });
@@ -96,8 +96,8 @@ describe("Integration | Route handlers | Function handler", () => {
   test("it can return a promise with an empty string", async () => {
     expect.assertions(3);
 
-    server.get("/users", function() {
-      return new Promise(resolve => {
+    server.get("/users", function () {
+      return new Promise((resolve) => {
         resolve(new Response(200, { "Content-Type": "text/csv" }, ""));
       });
     });
@@ -114,7 +114,7 @@ describe("Integration | Route handlers | Function handler", () => {
     expect.assertions(1);
 
     server.createList("user", 3);
-    server.get("/users", schema => {
+    server.get("/users", (schema) => {
       return schema.users.all().models;
     });
 

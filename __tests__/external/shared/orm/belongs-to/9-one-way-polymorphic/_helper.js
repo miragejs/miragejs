@@ -18,9 +18,9 @@ export default class BelongsToHelper {
       models: {
         post: Model.extend(),
         comment: Model.extend({
-          commentable: belongsTo("commentable", { polymorphic: true })
-        })
-      }
+          commentable: belongsTo("commentable", { polymorphic: true }),
+        }),
+      },
     });
 
     this.db = this.server.db;
@@ -40,7 +40,7 @@ export default class BelongsToHelper {
 
   savedChildNewParent() {
     this.loadData({
-      comments: [{ id: "1", text: "Lorem" }]
+      comments: [{ id: "1", text: "Lorem" }],
     });
 
     let comment = this.schema.comments.find(1);
@@ -55,8 +55,8 @@ export default class BelongsToHelper {
     this.loadData({
       posts: [{ id: "1", title: "Lorem ipsum" }],
       comments: [
-        { id: "1", text: "Trolling", commentableId: { id: "1", type: "post" } }
-      ]
+        { id: "1", text: "Trolling", commentableId: { id: "1", type: "post" } },
+      ],
     });
 
     let comment = this.schema.comments.find(1);
@@ -79,7 +79,7 @@ export default class BelongsToHelper {
 
   newChildSavedParent() {
     this.loadData({
-      posts: [{ id: "1", title: "Lorem ipsum" }]
+      posts: [{ id: "1", title: "Lorem ipsum" }],
     });
     let comment = this.schema.comments.new({ text: "Lorem" });
     let savedPost = this.schema.posts.find(1);
@@ -107,5 +107,5 @@ export const states = [
   "savedChildSavedParent",
   "newChildNoParent",
   "newChildNewParent",
-  "newChildSavedParent"
+  "newChildSavedParent",
 ];

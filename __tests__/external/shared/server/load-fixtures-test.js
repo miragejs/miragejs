@@ -8,23 +8,23 @@ describe("External | Shared | Server | loadFixtures", () => {
       factories: {
         author: {},
         post: {},
-        comment: {}
+        comment: {},
       },
       fixtures: {
         authors: [
           { id: 1, name: "Zelda" },
-          { id: 2, name: "Link" }
+          { id: 2, name: "Link" },
         ],
         posts: [
           { id: 1, title: "Lorem" },
-          { id: 2, title: "Ipsum" }
+          { id: 2, title: "Ipsum" },
         ],
-        comments: [{ id: 1, title: "Lorem" }]
-      }
+        comments: [{ id: 1, title: "Lorem" }],
+      },
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 

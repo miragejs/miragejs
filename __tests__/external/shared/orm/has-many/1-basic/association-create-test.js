@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Has Many | Basic | association #create", () 
   /*
     The model can create a has-many association, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can create an associated parent`, () => {
       let [user] = helper[state]();
       let initialCount = user.posts.models.length;

@@ -1,22 +1,22 @@
 import { Server, Response } from "miragejs";
 
-describe("Integration | Server | Custom responses", function() {
+describe("Integration | Server | Custom responses", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
-      environment: "test"
+      environment: "test",
     });
     server.timing = 0;
     server.logging = false;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
   test("GET to an empty Response defaults to 200 and an empty json object", async () => {
-    server.get("/example", function() {
+    server.get("/example", function () {
       return new Response();
     });
 
@@ -26,12 +26,12 @@ describe("Integration | Server | Custom responses", function() {
     expect(data).toEqual({});
     expect(res.status).toEqual(200);
     expect([...res.headers.entries()]).toEqual([
-      ["content-type", "application/json"]
+      ["content-type", "application/json"],
     ]);
   });
 
   test("GET to a 200 Response responds with an empty json object", async () => {
-    server.get("/example", function() {
+    server.get("/example", function () {
       return new Response(200);
     });
 
@@ -41,12 +41,12 @@ describe("Integration | Server | Custom responses", function() {
     expect(data).toEqual({});
     expect(res.status).toEqual(200);
     expect([...res.headers.entries()]).toEqual([
-      ["content-type", "application/json"]
+      ["content-type", "application/json"],
     ]);
   });
 
   test("a 204 Response responds with an empty body", async () => {
-    server.post("/example", function() {
+    server.post("/example", function () {
       return new Response(204);
     });
 
@@ -56,7 +56,7 @@ describe("Integration | Server | Custom responses", function() {
     expect(text).toEqual("");
     expect(res.status).toEqual(204);
     expect([...res.headers.entries()]).toEqual([
-      ["content-type", "text/plain;charset=UTF-8"]
+      ["content-type", "text/plain;charset=UTF-8"],
     ]);
   });
 });

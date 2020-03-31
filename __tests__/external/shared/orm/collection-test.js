@@ -7,16 +7,16 @@ describe("External | Shared | ORM | collection", () => {
     server = new Server({
       environment: "test",
       models: {
-        user: Model
-      }
+        user: Model,
+      },
     });
 
     server.db.loadData({
       users: [
         { id: 1, name: "Link", good: true },
         { id: 2, name: "Zelda", good: true },
-        { id: 3, name: "Ganon", good: false }
-      ]
+        { id: 3, name: "Ganon", good: false },
+      ],
     });
   });
 
@@ -47,7 +47,7 @@ describe("External | Shared | ORM | collection", () => {
     let collection = server.schema.users.all();
     expect(collection.models).toHaveLength(3);
 
-    let newCollection = collection.filter(author => author.good);
+    let newCollection = collection.filter((author) => author.good);
 
     expect(newCollection instanceof Collection).toBeTruthy();
     expect(newCollection.modelName).toEqual("user");
@@ -56,10 +56,10 @@ describe("External | Shared | ORM | collection", () => {
 
   test("a collection can sort its models", () => {
     let collection = server.schema.users.all();
-    expect(collection.models.map(m => m.name)).toEqual([
+    expect(collection.models.map((m) => m.name)).toEqual([
       "Link",
       "Zelda",
-      "Ganon"
+      "Ganon",
     ]);
 
     let newCollection = collection.sort((a, b) => {
@@ -68,31 +68,31 @@ describe("External | Shared | ORM | collection", () => {
 
     expect(newCollection instanceof Collection).toBeTruthy();
     expect(newCollection.modelName).toEqual("user");
-    expect(newCollection.models.map(m => m.name)).toEqual([
+    expect(newCollection.models.map((m) => m.name)).toEqual([
       "Ganon",
       "Link",
-      "Zelda"
+      "Zelda",
     ]);
   });
 
   test("a collection can slice its models", () => {
     let collection = server.schema.users.all();
-    expect(collection.models.map(m => m.name)).toEqual([
+    expect(collection.models.map((m) => m.name)).toEqual([
       "Link",
       "Zelda",
-      "Ganon"
+      "Ganon",
     ]);
 
     let newCollection = collection.slice(-2);
 
     expect(newCollection instanceof Collection).toBeTruthy();
     expect(newCollection.modelName).toEqual("user");
-    expect(newCollection.models.map(m => m.name)).toEqual(["Zelda", "Ganon"]);
+    expect(newCollection.models.map((m) => m.name)).toEqual(["Zelda", "Ganon"]);
   });
 
   test("a collection can merge with another collection", () => {
-    let goodGuys = server.schema.users.where(user => user.good);
-    let badGuys = server.schema.users.where(user => !user.good);
+    let goodGuys = server.schema.users.where((user) => user.good);
+    let badGuys = server.schema.users.where((user) => !user.good);
 
     expect(goodGuys.models).toHaveLength(2);
     expect(badGuys.models).toHaveLength(1);
