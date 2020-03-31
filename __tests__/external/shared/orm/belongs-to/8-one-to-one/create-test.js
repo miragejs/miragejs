@@ -15,7 +15,7 @@ describe("External | Shared | ORM | Belongs To | One To One | create", () => {
     let { schema } = helper;
     let profile = schema.create("profile");
     let user = schema.create("user", {
-      profileId: profile.id
+      profileId: profile.id,
     });
     profile.reload();
 
@@ -32,7 +32,7 @@ describe("External | Shared | ORM | Belongs To | One To One | create", () => {
     let { schema } = helper;
     let profile = schema.create("profile");
     let user = schema.create("user", {
-      profile
+      profile,
     });
 
     expect(user.profileId).toEqual(profile.id);
@@ -47,9 +47,9 @@ describe("External | Shared | ORM | Belongs To | One To One | create", () => {
   test("it throws an error if a model is passed in without a defined relationship", () => {
     let { schema } = helper;
 
-    expect(function() {
+    expect(function () {
       schema.create("user", {
-        foo: schema.create("foo")
+        foo: schema.create("foo"),
       });
     }).toThrow();
   });
@@ -59,9 +59,9 @@ describe("External | Shared | ORM | Belongs To | One To One | create", () => {
     schema.create("foo");
     schema.create("foo");
 
-    expect(function() {
+    expect(function () {
       schema.create("user", {
-        foos: schema.foos.all()
+        foos: schema.foos.all(),
       });
     }).toThrow();
   });

@@ -1,6 +1,6 @@
 import { Response } from "@lib";
 
-describe("Unit | Response", function() {
+describe("Unit | Response", function () {
   test("it can be instantiated and return a rack response", () => {
     let response = new Response(404, {}, {});
 

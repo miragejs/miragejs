@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Mixed | One To Many | association #set", () 
   /*
     The model can update its association via parent, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can update its association to a list of saved children`, () => {
       let [user, originalPosts] = helper[state]();
       let savedPost = helper.savedChild();
@@ -24,7 +24,7 @@ describe("External | Shared | ORM | Mixed | One To Many | association #set", () 
 
       user.save();
 
-      originalPosts.forEach(post => {
+      originalPosts.forEach((post) => {
         if (post.isSaved()) {
           post.reload();
           expect(post.user).toBeNull();
@@ -43,7 +43,7 @@ describe("External | Shared | ORM | Mixed | One To Many | association #set", () 
 
       user.save();
 
-      originalPosts.forEach(post => {
+      originalPosts.forEach((post) => {
         if (post.isSaved()) {
           post.reload();
           expect(post.user).toBeNull();
@@ -61,7 +61,7 @@ describe("External | Shared | ORM | Mixed | One To Many | association #set", () 
 
       user.save();
 
-      originalPosts.forEach(post => {
+      originalPosts.forEach((post) => {
         if (post.isSaved()) {
           post.reload();
           expect(post.user).toBeNull();
@@ -79,7 +79,7 @@ describe("External | Shared | ORM | Mixed | One To Many | association #set", () 
 
       user.save();
 
-      originalPosts.forEach(post => {
+      originalPosts.forEach((post) => {
         if (post.isSaved()) {
           post.reload();
           expect(post.user).toBeNull();

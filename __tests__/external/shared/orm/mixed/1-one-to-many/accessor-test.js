@@ -12,14 +12,14 @@ describe("External | Shared | ORM | Mixed | One To Many | accessor", () => {
   /*
     The reference to a belongs-to association is correct, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`the references of a ${state} are correct`, () => {
       let [user, posts] = helper[state]();
 
       expect(user.posts.models).toHaveLength(posts.length);
       expect(user.postIds).toHaveLength(posts.length);
 
-      posts.forEach(post => {
+      posts.forEach((post) => {
         expect(user.posts.includes(post)).toBeTruthy();
 
         if (post.isSaved()) {

@@ -1,22 +1,22 @@
 import { Server, Model, hasMany, belongsTo, Serializer } from "miragejs";
 
-describe("External | Shared | Serializers | Base | Associations | Embedded Collections", function() {
+describe("External | Shared | Serializers | Base | Associations | Embedded Collections", function () {
   let server, BaseSerializer;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       models: {
         wordSmith: Model.extend({
-          posts: hasMany("blogPost", { inverse: "author" })
+          posts: hasMany("blogPost", { inverse: "author" }),
         }),
         blogPost: Model.extend({
           author: belongsTo("wordSmith", { inverse: "posts" }),
-          comments: hasMany("fineComment", { inverse: "post" })
+          comments: hasMany("fineComment", { inverse: "post" }),
         }),
         fineComment: Model.extend({
-          post: belongsTo("blogPost")
-        })
-      }
+          post: belongsTo("blogPost"),
+        }),
+      },
     });
 
     let wordSmith = server.schema.wordSmiths.create({ name: "Link" });
@@ -28,11 +28,11 @@ describe("External | Shared | Serializers | Base | Associations | Embedded Colle
     server.schema.wordSmiths.create({ name: "Zelda" });
 
     BaseSerializer = Serializer.extend({
-      embed: true
+      embed: true,
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -41,9 +41,9 @@ describe("External | Shared | Serializers | Base | Associations | Embedded Colle
       serializers: {
         application: BaseSerializer,
         wordSmith: BaseSerializer.extend({
-          include: ["posts"]
-        })
-      }
+          include: ["posts"],
+        }),
+      },
     });
 
     let wordSmiths = server.schema.wordSmiths.all();
@@ -56,15 +56,15 @@ describe("External | Shared | Serializers | Base | Associations | Embedded Colle
           name: "Link",
           posts: [
             { id: "1", title: "Lorem" },
-            { id: "2", title: "Ipsum" }
-          ]
+            { id: "2", title: "Ipsum" },
+          ],
         },
         {
           id: "2",
           name: "Zelda",
-          posts: []
-        }
-      ]
+          posts: [],
+        },
+      ],
     });
   });
 
@@ -73,12 +73,12 @@ describe("External | Shared | Serializers | Base | Associations | Embedded Colle
       serializers: {
         application: BaseSerializer,
         wordSmith: BaseSerializer.extend({
-          include: ["posts"]
+          include: ["posts"],
         }),
         blogPost: BaseSerializer.extend({
-          include: ["comments"]
-        })
-      }
+          include: ["comments"],
+        }),
+      },
     });
 
     let wordSmiths = server.schema.wordSmiths.all();
@@ -93,21 +93,21 @@ describe("External | Shared | Serializers | Base | Associations | Embedded Colle
             {
               id: "1",
               title: "Lorem",
-              comments: [{ id: "1", text: "pwned" }]
+              comments: [{ id: "1", text: "pwned" }],
             },
             {
               id: "2",
               title: "Ipsum",
-              comments: []
-            }
-          ]
+              comments: [],
+            },
+          ],
         },
         {
           id: "2",
           name: "Zelda",
-          posts: []
-        }
-      ]
+          posts: [],
+        },
+      ],
     });
   });
 
@@ -116,9 +116,9 @@ describe("External | Shared | Serializers | Base | Associations | Embedded Colle
       serializers: {
         application: BaseSerializer,
         blogPost: BaseSerializer.extend({
-          include: ["author"]
-        })
-      }
+          include: ["author"],
+        }),
+      },
     });
 
     let blogPosts = server.schema.blogPosts.all();
@@ -129,14 +129,14 @@ describe("External | Shared | Serializers | Base | Associations | Embedded Colle
         {
           id: "1",
           title: "Lorem",
-          author: { id: "1", name: "Link" }
+          author: { id: "1", name: "Link" },
         },
         {
           id: "2",
           title: "Ipsum",
-          author: { id: "1", name: "Link" }
-        }
-      ]
+          author: { id: "1", name: "Link" },
+        },
+      ],
     });
   });
 
@@ -145,12 +145,12 @@ describe("External | Shared | Serializers | Base | Associations | Embedded Colle
       serializers: {
         application: BaseSerializer,
         fineComment: BaseSerializer.extend({
-          include: ["post"]
+          include: ["post"],
         }),
         blogPost: BaseSerializer.extend({
-          include: ["author"]
-        })
-      }
+          include: ["author"],
+        }),
+      },
     });
 
     let fineComments = server.schema.fineComments.all();
@@ -164,10 +164,10 @@ describe("External | Shared | Serializers | Base | Associations | Embedded Colle
           post: {
             id: "1",
             title: "Lorem",
-            author: { id: "1", name: "Link" }
-          }
-        }
-      ]
+            author: { id: "1", name: "Link" },
+          },
+        },
+      ],
     });
   });
 });

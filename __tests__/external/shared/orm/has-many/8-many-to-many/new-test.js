@@ -13,7 +13,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | new", () => {
   test("the parent accepts a saved child id", () => {
     let product = helper.savedChild();
     let order = schema.orders.new({
-      productIds: [product.id]
+      productIds: [product.id],
     });
 
     expect(order.productIds).toEqual([product.id]);
@@ -21,7 +21,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | new", () => {
   });
 
   test("the parent errors if the children ids don't exist", () => {
-    expect(function() {
+    expect(function () {
       schema.orders.new({ productIds: [2] });
     }).toThrow();
   });
@@ -62,7 +62,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | new", () => {
     let product = helper.savedChild();
     let order = schema.orders.new({
       products: [product],
-      productIds: [product.id]
+      productIds: [product.id],
     });
 
     expect(order.productIds).toEqual([product.id]);

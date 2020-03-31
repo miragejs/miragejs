@@ -1,23 +1,23 @@
 import { Server, Model, ActiveModelSerializer } from "miragejs";
 
-describe("Integration | Server | Shorthands | Active Model Serializer Sanity check", function() {
+describe("Integration | Server | Shorthands | Active Model Serializer Sanity check", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       environment: "test",
       models: {
-        contact: Model
+        contact: Model,
       },
       serializers: {
-        application: ActiveModelSerializer
-      }
+        application: ActiveModelSerializer,
+      },
     });
     server.timing = 0;
     server.logging = false;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -25,7 +25,7 @@ describe("Integration | Server | Shorthands | Active Model Serializer Sanity che
     expect.assertions(2);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }]
+      contacts: [{ id: 1, name: "Link" }],
     });
 
     server.get("/contacts");
@@ -46,9 +46,9 @@ describe("Integration | Server | Shorthands | Active Model Serializer Sanity che
       method: "POST",
       body: JSON.stringify({
         contact: {
-          name: "Zelda"
-        }
-      })
+          name: "Zelda",
+        },
+      }),
     });
 
     expect(res.status).toEqual(201);
@@ -59,7 +59,7 @@ describe("Integration | Server | Shorthands | Active Model Serializer Sanity che
     expect.assertions(2);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }]
+      contacts: [{ id: 1, name: "Link" }],
     });
 
     server.put("/contacts/:id");
@@ -68,9 +68,9 @@ describe("Integration | Server | Shorthands | Active Model Serializer Sanity che
       method: "PUT",
       body: JSON.stringify({
         contact: {
-          name: "Zelda"
-        }
-      })
+          name: "Zelda",
+        },
+      }),
     });
 
     expect(res.status).toEqual(200);
@@ -81,7 +81,7 @@ describe("Integration | Server | Shorthands | Active Model Serializer Sanity che
     expect.assertions(2);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }]
+      contacts: [{ id: 1, name: "Link" }],
     });
 
     server.patch("/contacts/:id");
@@ -90,9 +90,9 @@ describe("Integration | Server | Shorthands | Active Model Serializer Sanity che
       method: "PATCH",
       body: JSON.stringify({
         contact: {
-          name: "Zelda"
-        }
-      })
+          name: "Zelda",
+        },
+      }),
     });
 
     expect(res.status).toEqual(200);
@@ -103,13 +103,13 @@ describe("Integration | Server | Shorthands | Active Model Serializer Sanity che
     expect.assertions(3);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }]
+      contacts: [{ id: 1, name: "Link" }],
     });
 
     server.del("/contacts/:id");
 
     let res = await fetch("/contacts/1", {
-      method: "DELETE"
+      method: "DELETE",
     });
     let text = await res.text();
 

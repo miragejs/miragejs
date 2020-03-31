@@ -14,7 +14,7 @@ describe("External | Shared | ORM | Has Many | One-way Polymorphic | create", ()
   test("it sets up associations correctly when passing in the foreign key", () => {
     let post = helper.schema.create("post");
     let user = helper.schema.create("user", {
-      thingIds: [{ type: "post", id: post.id }]
+      thingIds: [{ type: "post", id: post.id }],
     });
 
     expect(user.thingIds).toEqual([{ type: "post", id: post.id }]);
@@ -25,14 +25,14 @@ describe("External | Shared | ORM | Has Many | One-way Polymorphic | create", ()
     expect(helper.db.users).toHaveLength(1);
     expect(helper.db.users[0]).toEqual({
       id: "1",
-      thingIds: [{ type: "post", id: "1" }]
+      thingIds: [{ type: "post", id: "1" }],
     });
   });
 
   test("it sets up associations correctly when passing in an array of models", () => {
     let post = helper.schema.create("post");
     let user = helper.schema.create("user", {
-      things: [post]
+      things: [post],
     });
 
     expect(user.thingIds).toEqual([{ type: "post", id: post.id }]);
@@ -43,14 +43,14 @@ describe("External | Shared | ORM | Has Many | One-way Polymorphic | create", ()
     expect(helper.db.users).toHaveLength(1);
     expect(helper.db.users[0]).toEqual({
       id: "1",
-      thingIds: [{ type: "post", id: "1" }]
+      thingIds: [{ type: "post", id: "1" }],
     });
   });
 
   test("it sets up associations correctly when passing in a collection", () => {
     let post = helper.schema.create("post");
     let user = helper.schema.create("user", {
-      things: helper.schema.posts.all()
+      things: helper.schema.posts.all(),
     });
 
     expect(user.thingIds).toEqual([{ type: "post", id: post.id }]);
@@ -61,16 +61,16 @@ describe("External | Shared | ORM | Has Many | One-way Polymorphic | create", ()
     expect(helper.db.users).toHaveLength(1);
     expect(helper.db.users[0]).toEqual({
       id: "1",
-      thingIds: [{ type: "post", id: "1" }]
+      thingIds: [{ type: "post", id: "1" }],
     });
   });
 
   test("it throws an error if a model is passed in without a defined relationship", () => {
     let { schema } = helper;
 
-    expect(function() {
+    expect(function () {
       schema.create("user", {
-        foo: schema.create("foo")
+        foo: schema.create("foo"),
       });
     }).toThrow();
   });
@@ -78,9 +78,9 @@ describe("External | Shared | ORM | Has Many | One-way Polymorphic | create", ()
   test("it throws an error if an array of models is passed in without a defined relationship", () => {
     let { schema } = helper;
 
-    expect(function() {
+    expect(function () {
       schema.create("user", {
-        foos: [schema.create("foo")]
+        foos: [schema.create("foo")],
       });
     }).toThrow();
   });
@@ -90,9 +90,9 @@ describe("External | Shared | ORM | Has Many | One-way Polymorphic | create", ()
     schema.create("foo");
     schema.create("foo");
 
-    expect(function() {
+    expect(function () {
       schema.create("user", {
-        foos: schema.foos.all()
+        foos: schema.foos.all(),
       });
     }).toThrow();
   });

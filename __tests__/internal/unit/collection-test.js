@@ -1,6 +1,6 @@
 import Collection from "@lib/orm/collection";
 
-describe("Unit | Collection", function() {
+describe("Unit | Collection", function () {
   test("it can be instantiated", () => {
     let collection = new Collection("plant");
 

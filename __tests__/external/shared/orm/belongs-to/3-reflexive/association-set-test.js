@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Belongs To | Reflexive | association #set", 
   /*
     The model can update its association via parent, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can update its association to a saved parent`, () => {
       let [user, originalUser] = helper[state]();
       let friend = helper.savedParent();

@@ -1,25 +1,25 @@
 import { Server, Model, Serializer } from "miragejs";
 
-describe("External | Shared | Serializers | Base | Assorted Collections", function() {
+describe("External | Shared | Serializers | Base | Assorted Collections", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       models: {
         wordSmith: Model,
-        greatPhoto: Model
+        greatPhoto: Model,
       },
 
       serializers: {
         application: Serializer,
         greatPhoto: Serializer.extend({
-          attrs: ["id", "title"]
-        })
-      }
+          attrs: ["id", "title"],
+        }),
+      },
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -27,26 +27,26 @@ describe("External | Shared | Serializers | Base | Assorted Collections", functi
     let wordSmiths = [
       { id: "1", name: "Link" },
       { id: "2", name: "Zelda" },
-      { id: "3", name: "Epona" }
+      { id: "3", name: "Epona" },
     ];
     let greatPhotos = [
       { id: "1", title: "Amazing", location: "Hyrule" },
-      { id: "2", title: "greatPhoto", location: "Goron City" }
+      { id: "2", title: "greatPhoto", location: "Goron City" },
     ];
 
     server.db.loadData({ wordSmiths, greatPhotos });
 
     let result = server.serializerOrRegistry.serialize([
       server.schema.wordSmiths.all(),
-      server.schema.greatPhotos.all()
+      server.schema.greatPhotos.all(),
     ]);
 
     expect(result).toEqual({
       wordSmiths: wordSmiths,
-      greatPhotos: greatPhotos.map(attrs => {
+      greatPhotos: greatPhotos.map((attrs) => {
         delete attrs.location;
         return attrs;
-      })
+      }),
     });
   });
 });

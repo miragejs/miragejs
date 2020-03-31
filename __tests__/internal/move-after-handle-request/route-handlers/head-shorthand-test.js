@@ -9,8 +9,8 @@ describe("Integration | Route Handlers | HEAD shorthand", () => {
       environment: "development",
       models: {
         author: Model,
-        photo: Model
-      }
+        photo: Model,
+      },
     });
     server.timing = 0;
     server.logging = false;
@@ -18,15 +18,15 @@ describe("Integration | Route Handlers | HEAD shorthand", () => {
     authors = [
       { id: 1, name: "Link" },
       { id: 2, name: "Zelda" },
-      { id: 3, name: "Epona" }
+      { id: 3, name: "Epona" },
     ];
     photos = [
       { id: 1, title: "Amazing", location: "Hyrule" },
-      { id: 2, title: "Photo", location: "Goron City" }
+      { id: 2, title: "Photo", location: "Goron City" },
     ];
     server.db.loadData({
       authors: authors,
-      photos: photos
+      photos: photos,
     });
 
     schema = server.schema;
@@ -70,7 +70,7 @@ describe("Integration | Route Handlers | HEAD shorthand", () => {
   test("undefined shorthand with coalesce true will return a 204 response if one of the IDs are found", () => {
     let request = {
       url: "/authors?ids[]=1&ids[]=3",
-      queryParams: { ids: [1, 3] }
+      queryParams: { ids: [1, 3] },
     };
     let options = { coalesce: true };
     let handler = new HeadShorthandRouteHandler(
@@ -125,7 +125,7 @@ describe("Integration | Route Handlers | HEAD shorthand", () => {
   test("string shorthand with coalesce true will return a 204 response if one of the IDs are found", () => {
     let request = {
       url: "/authors?ids[]=1&ids[]=3",
-      queryParams: { ids: [1, 3] }
+      queryParams: { ids: [1, 3] },
     };
     let options = { coalesce: true };
     let handler = new HeadShorthandRouteHandler(

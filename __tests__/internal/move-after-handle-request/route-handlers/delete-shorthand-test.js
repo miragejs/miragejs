@@ -10,10 +10,10 @@ describe("Integration | Route Handlers | DELETE shorthand", () => {
       environment: "development",
       models: {
         wordSmith: Model.extend({
-          blogPosts: hasMany()
+          blogPosts: hasMany(),
         }),
-        blogPost: Model
-      }
+        blogPost: Model,
+      },
     });
     server.timing = 0;
     server.logging = false;
@@ -21,7 +21,7 @@ describe("Integration | Route Handlers | DELETE shorthand", () => {
     let wordSmiths = [{ id: 1, name: "Ganon", blogPostIds: [1] }];
     let blogPosts = [
       { id: 1, title: "Lorem", wordSmithId: "1" },
-      { id: 2, title: "Another", wordSmithId: "2" }
+      { id: 2, title: "Another", wordSmithId: "2" },
     ];
     server.db.loadData({ wordSmiths, blogPosts });
 
@@ -52,7 +52,7 @@ describe("Integration | Route Handlers | DELETE shorthand", () => {
     let request = {
       url: "/word-smiths/1?foo=bar",
       params: { id: "1" },
-      queryParams: { foo: "bar" }
+      queryParams: { foo: "bar" },
     };
     let handler = new DeleteShorthandRouteHandler(
       schema,
@@ -71,7 +71,7 @@ describe("Integration | Route Handlers | DELETE shorthand", () => {
     let request = {
       url: "/word-smiths/1?foo=bar",
       params: { id: "1" },
-      queryParams: { foo: "bar" }
+      queryParams: { foo: "bar" },
     };
     let handler = new DeleteShorthandRouteHandler(
       schema,
@@ -90,7 +90,7 @@ describe("Integration | Route Handlers | DELETE shorthand", () => {
     let request = { url: "/word-smiths/1", params: { id: "1" } };
     let handler = new DeleteShorthandRouteHandler(schema, serializer, [
       "word-smith",
-      "blog-posts"
+      "blog-posts",
     ]);
 
     let response = handler.handle(request);
@@ -109,7 +109,7 @@ describe("Integration | Route Handlers | DELETE shorthand", () => {
       "/foobars/:id"
     );
 
-    expect(function() {
+    expect(function () {
       handler.handle(request);
     }).toThrow();
     expect(true).toBeTruthy();

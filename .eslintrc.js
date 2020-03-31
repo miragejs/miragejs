@@ -5,12 +5,12 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:import/errors",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
   ],
   env: {
     es6: true,
     node: true,
-    browser: true
+    browser: true,
   },
   rules: {
     camelcase: 0,
@@ -23,8 +23,8 @@ module.exports = {
     "no-unused-vars": ["error", { args: "none" }],
     "import/no-extraneous-dependencies": [
       "error",
-      { devDependencies: ["__tests__", "*.config.js"] }
-    ]
+      { devDependencies: ["__tests__", "*.config.js"] },
+    ],
   },
   overrides: [
     {
@@ -32,31 +32,31 @@ module.exports = {
         "jest.config.js",
         "babel.config.js",
         "rollup.config.js",
-        "rollup.test.config.js"
+        "rollup.test.config.js",
       ],
       env: {
         browser: false,
-        node: true
-      }
+        node: true,
+      },
     },
     {
       files: ["__tests__/**"],
       plugins: ["jest"],
       env: {
-        "jest/globals": true
+        "jest/globals": true,
       },
-      extends: ["plugin:jest/recommended", "plugin:jest/style"]
-    }
+      extends: ["plugin:jest/recommended", "plugin:jest/style"],
+    },
   ],
   settings: {
     "import/resolver": {
       alias: [
         ["@lib", "./lib"],
-        ["miragejs", "./index"]
+        ["miragejs", "./index"],
       ],
       node: {
-        extensions: ["js"]
-      }
-    }
-  }
+        extensions: ["js"],
+      },
+    },
+  },
 };

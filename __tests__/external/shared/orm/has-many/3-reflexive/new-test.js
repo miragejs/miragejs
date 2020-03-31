@@ -13,7 +13,7 @@ describe("External | Shared | ORM | Has Many | Reflexive | new", () => {
   test("the parent accepts a saved child id", () => {
     let tagA = helper.savedChild();
     let tagB = schema.tags.new({
-      tagIds: [tagA.id]
+      tagIds: [tagA.id],
     });
 
     expect(tagB.tagIds).toEqual([tagA.id]);
@@ -21,7 +21,7 @@ describe("External | Shared | ORM | Has Many | Reflexive | new", () => {
   });
 
   test("the parent errors if the children ids don't exist", () => {
-    expect(function() {
+    expect(function () {
       schema.tags.new({ tagIds: [2] });
     }).toThrow();
   });

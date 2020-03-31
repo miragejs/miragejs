@@ -14,7 +14,7 @@ describe("External | Shared | ORM | Belongs To | One-way Polymorphic | create", 
   test("it sets up associations correctly when passing in the foreign key", () => {
     let post = helper.schema.create("post");
     let comment = helper.schema.create("comment", {
-      commentableId: { id: post.id, type: "post" }
+      commentableId: { id: post.id, type: "post" },
     });
 
     expect(comment.commentableId).toEqual({ id: post.id, type: "post" });
@@ -24,14 +24,14 @@ describe("External | Shared | ORM | Belongs To | One-way Polymorphic | create", 
     expect(helper.schema.db.comments).toHaveLength(1);
     expect(helper.schema.db.comments[0]).toEqual({
       id: "1",
-      commentableId: { id: "1", type: "post" }
+      commentableId: { id: "1", type: "post" },
     });
   });
 
   test("it sets up associations correctly when passing in the association itself", () => {
     let post = helper.schema.create("post");
     let comment = helper.schema.create("comment", {
-      commentable: post
+      commentable: post,
     });
 
     expect(comment.commentableId).toEqual({ id: post.id, type: "post" });
@@ -41,7 +41,7 @@ describe("External | Shared | ORM | Belongs To | One-way Polymorphic | create", 
     expect(helper.schema.db.comments).toHaveLength(1);
     expect(helper.schema.db.comments[0]).toEqual({
       id: "1",
-      commentableId: { id: "1", type: "post" }
+      commentableId: { id: "1", type: "post" },
     });
   });
 });

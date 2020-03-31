@@ -21,7 +21,7 @@ describe("External | Shared | ORM | Belongs To | One-Way Reflexive | instantiati
   });
 
   test("the child errors if the parent id doesnt exist", () => {
-    expect(function() {
+    expect(function () {
       schema.users.new({ userId: 2 });
     }).toThrow();
   });

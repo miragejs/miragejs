@@ -8,14 +8,14 @@ describe("Integration | Route handlers | Function handler | #serialize", () => {
     server = new Server({
       environment: "development",
       models: {
-        user: Model.extend({})
+        user: Model.extend({}),
       },
       serializers: {
         application: ActiveModelSerializer,
         sparseUser: ActiveModelSerializer.extend({
-          attrs: ["id", "name", "tall"]
-        })
-      }
+          attrs: ["id", "name", "tall"],
+        }),
+      },
     });
     server.timing = 0;
     server.logging = false;
@@ -30,15 +30,15 @@ describe("Integration | Route handlers | Function handler | #serialize", () => {
 
     server.create("user", { name: "Sam" });
 
-    server.get("/users", function(schema) {
+    server.get("/users", function (schema) {
       let user = schema.users.first();
       let json = this.serialize(user);
 
       expect(json).toEqual({
         user: {
           id: "1",
-          name: "Sam"
-        }
+          name: "Sam",
+        },
       });
 
       return true;
@@ -52,12 +52,12 @@ describe("Integration | Route handlers | Function handler | #serialize", () => {
 
     server.create("user", { name: "Sam" });
 
-    server.get("/users", function(schema) {
+    server.get("/users", function (schema) {
       let users = schema.users.all();
       let json = this.serialize(users);
 
       expect(json).toEqual({
-        users: [{ id: "1", name: "Sam" }]
+        users: [{ id: "1", name: "Sam" }],
       });
 
       return true;
@@ -72,15 +72,15 @@ describe("Integration | Route handlers | Function handler | #serialize", () => {
     server.create("user", { name: "Sam", tall: true, evil: false });
     server.create("user", { name: "Ganondorf", tall: true, evil: true });
 
-    server.get("/users", function(schema) {
+    server.get("/users", function (schema) {
       let users = schema.users.all();
       let json = this.serialize(users, "sparse-user");
 
       expect(json).toEqual({
         users: [
           { id: "1", name: "Sam", tall: true },
-          { id: "2", name: "Ganondorf", tall: true }
-        ]
+          { id: "2", name: "Ganondorf", tall: true },
+        ],
       });
 
       return true;
@@ -93,7 +93,7 @@ describe("Integration | Route handlers | Function handler | #serialize", () => {
     expect.assertions(2);
 
     server.create("user", { name: "Sam" });
-    server.get("/users", function(schema) {
+    server.get("/users", function (schema) {
       let users = schema.users.all();
 
       this.serialize(users, "foo-user");
@@ -112,8 +112,8 @@ describe("Integration | Route handlers | Function handler | #serialize", () => {
     server.create("user", { name: "Sam" });
     server.create("user", { name: "Ganondorf" });
 
-    server.get("/users", function(schema) {
-      let names = schema.users.all().models.map(user => user.name);
+    server.get("/users", function (schema) {
+      let names = schema.users.all().models.map((user) => user.name);
       let json = this.serialize(names);
 
       expect(json).toEqual(names);
@@ -129,7 +129,7 @@ describe("Integration | Route handlers | Function handler | #serialize", () => {
     server.create("user", { name: "Sam", tall: true, evil: false });
     server.create("user", { name: "Ganondorf", tall: true, evil: true });
 
-    server.get("/users", function(schema) {
+    server.get("/users", function (schema) {
       let users = schema.users.all().models;
       let uniqueNames = uniqBy(users, "name");
       let collection = new Collection("user", uniqueNames);
@@ -138,8 +138,8 @@ describe("Integration | Route handlers | Function handler | #serialize", () => {
       expect(json).toEqual({
         users: [
           { id: "1", name: "Sam", tall: true },
-          { id: "3", name: "Ganondorf", tall: true }
-        ]
+          { id: "3", name: "Ganondorf", tall: true },
+        ],
       });
     });
 

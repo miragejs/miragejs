@@ -9,15 +9,15 @@ describe("External | Shared | ORM | #find", () => {
     server = new Server({
       environment: "test",
       models: {
-        user: User
-      }
+        user: User,
+      },
     });
 
     server.db.loadData({
       users: [
         { id: 1, name: "Link" },
-        { id: 2, name: "Zelda" }
-      ]
+        { id: 2, name: "Zelda" },
+      ],
     });
   });
 
@@ -48,7 +48,7 @@ describe("External | Shared | ORM | #find", () => {
   });
 
   test("it errors if incorrect number of models are found for an array of ids", () => {
-    expect(function() {
+    expect(function () {
       server.schema.users.find([1, 6]);
     }).toThrow();
   });

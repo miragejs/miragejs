@@ -1,26 +1,26 @@
 import { Server, Model, hasMany, belongsTo, Serializer } from "miragejs";
 
-describe("Internal | MoveAfterHandleRequest | Serializers | includes", function() {
+describe("Internal | MoveAfterHandleRequest | Serializers | includes", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       environment: "test",
       models: {
         wordSmith: Model.extend({
-          posts: hasMany("blog-post")
+          posts: hasMany("blog-post"),
         }),
         blogPost: Model.extend({
           author: belongsTo("word-smith"),
-          comments: hasMany("fine-comment")
+          comments: hasMany("fine-comment"),
         }),
         fineComment: Model.extend({
-          post: belongsTo("blog-post")
-        })
+          post: belongsTo("blog-post"),
+        }),
       },
       routes() {
         this.resource("blog-posts");
-      }
+      },
     });
 
     let wordSmith = server.schema.wordSmiths.create({ name: "Link" });
@@ -28,7 +28,7 @@ describe("Internal | MoveAfterHandleRequest | Serializers | includes", function(
     blogPost.createComment({ text: "pwned" });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -36,32 +36,32 @@ describe("Internal | MoveAfterHandleRequest | Serializers | includes", function(
     server.config({
       serializers: {
         blogPost: Serializer.extend({
-          include: ["author", "comments"]
-        })
-      }
+          include: ["author", "comments"],
+        }),
+      },
     });
 
-    let json = await fetch("/blog-posts/1").then(res => res.json());
+    let json = await fetch("/blog-posts/1").then((res) => res.json());
 
     expect(json).toEqual({
       blogPost: {
         authorId: "1",
         commentIds: ["1"],
         id: "1",
-        title: "Lorem"
+        title: "Lorem",
       },
       fineComments: [
         {
           id: "1",
-          text: "pwned"
-        }
+          text: "pwned",
+        },
       ],
       wordSmiths: [
         {
           id: "1",
-          name: "Link"
-        }
-      ]
+          name: "Link",
+        },
+      ],
     });
   });
 
@@ -71,25 +71,25 @@ describe("Internal | MoveAfterHandleRequest | Serializers | includes", function(
         blogPost: Serializer.extend({
           include() {
             return ["comments"];
-          }
-        })
-      }
+          },
+        }),
+      },
     });
 
-    let json = await fetch("/blog-posts/1").then(res => res.json());
+    let json = await fetch("/blog-posts/1").then((res) => res.json());
 
     expect(json).toEqual({
       blogPost: {
         commentIds: ["1"],
         id: "1",
-        title: "Lorem"
+        title: "Lorem",
       },
       fineComments: [
         {
           id: "1",
-          text: "pwned"
-        }
-      ]
+          text: "pwned",
+        },
+      ],
     });
   });
 
@@ -99,25 +99,25 @@ describe("Internal | MoveAfterHandleRequest | Serializers | includes", function(
         blogPost: Serializer.extend({
           include(request) {
             return request.queryParams.include ? ["comments"] : [];
-          }
-        })
-      }
+          },
+        }),
+      },
     });
 
-    let json = await fetch("/blog-posts/1?include").then(res => res.json());
+    let json = await fetch("/blog-posts/1?include").then((res) => res.json());
 
     expect(json).toEqual({
       blogPost: {
         commentIds: ["1"],
         id: "1",
-        title: "Lorem"
+        title: "Lorem",
       },
       fineComments: [
         {
           id: "1",
-          text: "pwned"
-        }
-      ]
+          text: "pwned",
+        },
+      ],
     });
   });
 
@@ -127,32 +127,32 @@ describe("Internal | MoveAfterHandleRequest | Serializers | includes", function(
         blogPost: Serializer.extend({
           include(request, model) {
             return Object.keys(model.associations);
-          }
-        })
-      }
+          },
+        }),
+      },
     });
 
-    let json = await fetch("/blog-posts/1?include").then(res => res.json());
+    let json = await fetch("/blog-posts/1?include").then((res) => res.json());
 
     expect(json).toEqual({
       blogPost: {
         authorId: "1",
         commentIds: ["1"],
         id: "1",
-        title: "Lorem"
+        title: "Lorem",
       },
       fineComments: [
         {
           id: "1",
-          text: "pwned"
-        }
+          text: "pwned",
+        },
       ],
       wordSmiths: [
         {
           id: "1",
-          name: "Link"
-        }
-      ]
+          name: "Link",
+        },
+      ],
     });
   });
 
@@ -162,32 +162,32 @@ describe("Internal | MoveAfterHandleRequest | Serializers | includes", function(
         blogPost: Serializer.extend({
           include(request, resource) {
             return Object.keys(this.schema.associationsFor(resource.modelName));
-          }
-        })
-      }
+          },
+        }),
+      },
     });
 
-    let json = await fetch("/blog-posts/1?include").then(res => res.json());
+    let json = await fetch("/blog-posts/1?include").then((res) => res.json());
 
     expect(json).toEqual({
       blogPost: {
         authorId: "1",
         commentIds: ["1"],
         id: "1",
-        title: "Lorem"
+        title: "Lorem",
       },
       fineComments: [
         {
           id: "1",
-          text: "pwned"
-        }
+          text: "pwned",
+        },
       ],
       wordSmiths: [
         {
           id: "1",
-          name: "Link"
-        }
-      ]
+          name: "Link",
+        },
+      ],
     });
   });
 });

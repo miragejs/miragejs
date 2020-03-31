@@ -10,7 +10,7 @@ describe("External |Node only | Interceptor", () => {
         this.resource("user");
 
         this.passthrough();
-      }
+      },
     });
 
     server.timing = 1000;

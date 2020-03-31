@@ -1,54 +1,54 @@
 import { Server, Model, hasMany, Serializer } from "miragejs";
 
-describe("External | Shared | Serializers | Base | Associations | Sideloading Assorted Collections", function() {
+describe("External | Shared | Serializers | Base | Associations | Sideloading Assorted Collections", function () {
   let server, wordSmiths, blogPosts, greatPhotos;
 
-  beforeEach(function() {
+  beforeEach(function () {
     let BaseSerializer = Serializer.extend({
-      embed: false
+      embed: false,
     });
 
     server = new Server({
       models: {
         wordSmith: Model.extend({
-          blogPosts: hasMany()
+          blogPosts: hasMany(),
         }),
         blogPost: Model,
-        greatPhoto: Model
+        greatPhoto: Model,
       },
       serializers: {
         application: BaseSerializer,
         wordSmith: BaseSerializer.extend({
-          include: ["blogPosts"]
+          include: ["blogPosts"],
         }),
         greatPhoto: BaseSerializer.extend({
-          attrs: ["id", "title"]
-        })
-      }
+          attrs: ["id", "title"],
+        }),
+      },
     });
 
     wordSmiths = [
       { id: "1", name: "Link", blogPostIds: ["1", "2"] },
       { id: "2", name: "Zelda", blogPostIds: [] },
-      { id: "3", name: "Epona", blogPostIds: [] }
+      { id: "3", name: "Epona", blogPostIds: [] },
     ];
     blogPosts = [
       { id: "1", title: "Lorem" },
-      { id: "2", title: "Ipsum" }
+      { id: "2", title: "Ipsum" },
     ];
     greatPhotos = [
       { id: "1", title: "Amazing", location: "Hyrule" },
-      { id: "2", title: "greatPhoto", location: "Goron City" }
+      { id: "2", title: "greatPhoto", location: "Goron City" },
     ];
 
     server.db.loadData({
       wordSmiths: wordSmiths,
       blogPosts: blogPosts,
-      greatPhotos: greatPhotos
+      greatPhotos: greatPhotos,
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -58,16 +58,16 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading As
   test(`it can sideload an array of assorted collections that have relationships`, () => {
     let result = server.serializerOrRegistry.serialize([
       server.schema.wordSmiths.all(),
-      server.schema.greatPhotos.all()
+      server.schema.greatPhotos.all(),
     ]);
 
     expect(result).toEqual({
       wordSmiths: wordSmiths,
       blogPosts: blogPosts,
-      greatPhotos: greatPhotos.map(attrs => {
+      greatPhotos: greatPhotos.map((attrs) => {
         delete attrs.location;
         return attrs;
-      })
+      }),
     });
   });
 });

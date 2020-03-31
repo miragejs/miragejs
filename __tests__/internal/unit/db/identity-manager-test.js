@@ -1,6 +1,6 @@
 import { IdentityManager } from "@lib";
 
-describe("Unit | Db | IdentityManager", function() {
+describe("Unit | Db | IdentityManager", function () {
   test("it can be instantiated", () => {
     let manager = new IdentityManager();
     expect(manager).toBeTruthy();
@@ -27,7 +27,7 @@ describe("Unit | Db | IdentityManager", function() {
     let manager = new IdentityManager();
     manager.set("abc");
 
-    expect(function() {
+    expect(function () {
       manager.set("abc");
     }).toThrow("Attempting to use the ID abc, but it's already been used");
   });

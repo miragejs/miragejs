@@ -1,27 +1,27 @@
 import { Server, Model, belongsTo, Serializer } from "miragejs";
 
-describe("External | Shared | Serializers | Base | Associations | Polymorphic | Belongs To", function() {
+describe("External | Shared | Serializers | Base | Associations | Polymorphic | Belongs To", function () {
   let server, BaseSerializer;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       models: {
         post: Model.extend(),
         comment: Model.extend({
-          commentable: belongsTo({ polymorphic: true })
-        })
-      }
+          commentable: belongsTo({ polymorphic: true }),
+        }),
+      },
     });
 
     let post = server.schema.posts.create({ title: "Lorem ipsum" });
     server.schema.comments.create({ commentable: post, text: "Foo" });
 
     BaseSerializer = Serializer.extend({
-      embed: false
+      embed: false,
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -30,9 +30,9 @@ describe("External | Shared | Serializers | Base | Associations | Polymorphic | 
       serializers: {
         application: BaseSerializer,
         comment: BaseSerializer.extend({
-          include: ["commentable"]
-        })
-      }
+          include: ["commentable"],
+        }),
+      },
     });
 
     let comment = server.schema.comments.find(1);
@@ -43,9 +43,9 @@ describe("External | Shared | Serializers | Base | Associations | Polymorphic | 
         id: "1",
         text: "Foo",
         commentableType: "post",
-        commentableId: "1"
+        commentableId: "1",
       },
-      posts: [{ id: "1", title: "Lorem ipsum" }]
+      posts: [{ id: "1", title: "Lorem ipsum" }],
     });
   });
 });

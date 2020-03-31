@@ -8,17 +8,17 @@ describe("Integration | Server Config", () => {
       environment: "development",
       models: {
         contact: Model,
-        post: Model
+        post: Model,
       },
       serializers: {
-        contact: ActiveModelSerializer
-      }
+        contact: ActiveModelSerializer,
+      },
     });
     server.timing = 0;
     server.logging = false;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -27,10 +27,10 @@ describe("Integration | Server Config", () => {
 
     let contacts = [
       { id: "1", name: "Link" },
-      { id: "2", name: "Zelda" }
+      { id: "2", name: "Zelda" },
     ];
     server.db.loadData({
-      contacts
+      contacts,
     });
     server.namespace = "api";
     server.get("/contacts");
@@ -45,10 +45,10 @@ describe("Integration | Server Config", () => {
 
     let contacts = [
       { id: "1", name: "Link" },
-      { id: "2", name: "Zelda" }
+      { id: "2", name: "Zelda" },
     ];
     server.db.loadData({
-      contacts
+      contacts,
     });
     server.urlPrefix = "http://localhost:3000";
     server.get("/contacts");
@@ -64,10 +64,10 @@ describe("Integration | Server Config", () => {
 
     let contacts = [
       { id: "1", name: "Link" },
-      { id: "2", name: "Zelda" }
+      { id: "2", name: "Zelda" },
     ];
     server.db.loadData({
-      contacts
+      contacts,
     });
     server.urlPrefix = "http://localhost:3000";
     server.namespace = "api";
@@ -84,10 +84,10 @@ describe("Integration | Server Config", () => {
 
     let contacts = [
       { id: "1", name: "Link" },
-      { id: "2", name: "Zelda" }
+      { id: "2", name: "Zelda" },
     ];
     server.db.loadData({
-      contacts
+      contacts,
     });
     server.get("http://example.org/api/contacts");
 
@@ -102,10 +102,10 @@ describe("Integration | Server Config", () => {
 
     let contacts = [
       { id: "1", name: "Link" },
-      { id: "2", name: "Zelda" }
+      { id: "2", name: "Zelda" },
     ];
     server.db.loadData({
-      contacts
+      contacts,
     });
     server.urlPrefix = "https://example.net";
     server.get("http://example.org/api/contacts");
@@ -121,10 +121,10 @@ describe("Integration | Server Config", () => {
 
     let contacts = [
       { id: "1", name: "Link" },
-      { id: "2", name: "Zelda" }
+      { id: "2", name: "Zelda" },
     ];
     server.db.loadData({
-      contacts
+      contacts,
     });
     server.namespace = "";
     server.urlPrefix = "";
@@ -141,10 +141,10 @@ describe("Integration | Server Config", () => {
 
     let contacts = [
       { id: "1", name: "Link" },
-      { id: "2", name: "Zelda" }
+      { id: "2", name: "Zelda" },
     ];
     server.db.loadData({
-      contacts
+      contacts,
     });
     server.namespace = "api";
     server.get("contacts");
@@ -160,10 +160,10 @@ describe("Integration | Server Config", () => {
 
     let contacts = [
       { id: "1", name: "Link" },
-      { id: "2", name: "Zelda" }
+      { id: "2", name: "Zelda" },
     ];
     server.db.loadData({
-      contacts
+      contacts,
     });
     server.urlPrefix = "pre";
     server.get("contacts");
@@ -179,10 +179,10 @@ describe("Integration | Server Config", () => {
 
     let contacts = [
       { id: "1", name: "Link" },
-      { id: "2", name: "Zelda" }
+      { id: "2", name: "Zelda" },
     ];
     server.db.loadData({
-      contacts
+      contacts,
     });
     server.namespace = "/";
     server.get("contacts");
@@ -198,18 +198,18 @@ describe("Integration | Server Config", () => {
 
     let contacts = [
       { id: "1", name: "Link" },
-      { id: "2", name: "Zelda" }
+      { id: "2", name: "Zelda" },
     ];
     server.config({
       namespace: "api",
       urlPrefix: "http://localhost:3000",
       timing: 1000,
       serializers: {
-        post: RestSerializer
-      }
+        post: RestSerializer,
+      },
     });
     server.db.loadData({
-      contacts
+      contacts,
     });
     server.get("contacts");
 
@@ -229,7 +229,7 @@ describe("Integration | Server Config", () => {
   test("changing the environment of the server throws an error", () => {
     expect(() => {
       server.config({
-        environment: "test"
+        environment: "test",
       });
     }).toThrow();
   });
@@ -237,7 +237,7 @@ describe("Integration | Server Config", () => {
   test("changing the trackRequests configuration of the server throws an error", () => {
     expect(() => {
       server.config({
-        trackRequests: true
+        trackRequests: true,
       });
     }).toThrow();
   });

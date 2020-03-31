@@ -13,7 +13,7 @@ describe("External | Shared | ORM | Mixed | One To Many Polymorphic | associatio
     The model can make a new unsaved belongs-to association, for all states
   */
 
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can build a new associated parent`, () => {
       let [user] = helper[state]();
       let initialCount = user.things.models.length;
@@ -28,12 +28,12 @@ describe("External | Shared | ORM | Mixed | One To Many Polymorphic | associatio
       expect(post.attrs).toEqual({
         id: post.id,
         title: "Lorem ipsum",
-        userId: user.id
+        userId: user.id,
       });
       expect(user.things.models).toHaveLength(initialCount + 1);
       expect(user.things.includes(post)).toBeTruthy();
       expect(
-        user.thingIds.find(obj => {
+        user.thingIds.find((obj) => {
           return obj.id === post.id && obj.type === "post";
         })
       ).toBeTruthy();

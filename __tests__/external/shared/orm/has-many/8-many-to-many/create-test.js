@@ -15,7 +15,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | create", () => {
     let { schema } = helper;
     let product = schema.products.create();
     let order = schema.orders.create({
-      productIds: [product.id]
+      productIds: [product.id],
     });
 
     product.reload();
@@ -36,7 +36,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | create", () => {
     let { schema } = helper;
     let product = schema.products.create();
     let order = schema.orders.create({
-      products: [product]
+      products: [product],
     });
 
     product.reload();
@@ -53,7 +53,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | create", () => {
     let { schema } = helper;
     let product = schema.products.create();
     let order = schema.orders.create({
-      products: schema.products.all()
+      products: schema.products.all(),
     });
 
     product.reload();
@@ -69,9 +69,9 @@ describe("External | Shared | ORM | Has Many | Many to Many | create", () => {
   test("it throws an error if a model is passed in without a defined relationship", () => {
     let { schema } = helper;
 
-    expect(function() {
+    expect(function () {
       schema.orders.create({
-        foo: schema.create("foo")
+        foo: schema.create("foo"),
       });
     }).toThrow();
   });
@@ -79,9 +79,9 @@ describe("External | Shared | ORM | Has Many | Many to Many | create", () => {
   test("it throws an error if an array of models is passed in without a defined relationship", () => {
     let { schema } = helper;
 
-    expect(function() {
+    expect(function () {
       schema.orders.create({
-        foos: [schema.create("foo")]
+        foos: [schema.create("foo")],
       });
     }).toThrow();
   });
@@ -91,9 +91,9 @@ describe("External | Shared | ORM | Has Many | Many to Many | create", () => {
     schema.foos.create();
     schema.foos.create();
 
-    expect(function() {
+    expect(function () {
       schema.orders.create({
-        foos: schema.foos.all()
+        foos: schema.foos.all(),
       });
     }).toThrow();
   });

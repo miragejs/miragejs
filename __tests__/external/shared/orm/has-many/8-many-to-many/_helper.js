@@ -18,12 +18,12 @@ export default class Helper {
       environment: "test",
       models: {
         order: Model.extend({
-          products: hasMany()
+          products: hasMany(),
         }),
         product: Model.extend({
-          orders: hasMany()
-        })
-      }
+          orders: hasMany(),
+        }),
+      },
     });
 
     this.db = this.server.db;
@@ -55,19 +55,19 @@ export default class Helper {
     schema.db.orders.insert([{ id: "1", name: "Red", productIds: ["2", "3"] }]);
     schema.db.products.insert([
       { id: "2", name: "Blue", orderIds: ["1"] },
-      { id: "3", name: "Green", orderIds: ["1"] }
+      { id: "3", name: "Green", orderIds: ["1"] },
     ]);
 
     return [
       schema.orders.find(1),
-      [schema.products.find(2), schema.products.find(3)]
+      [schema.products.find(2), schema.products.find(3)],
     ];
   }
 
   savedParentMixedChildren() {
     this.schema.db.orders.insert([{ id: "1", name: "Red", productIds: ["2"] }]);
     this.schema.db.products.insert([
-      { id: "2", name: "Blue", orderIds: ["1"] }
+      { id: "2", name: "Blue", orderIds: ["1"] },
     ]);
     let order = this.schema.orders.find(1);
     let product1 = this.schema.products.find(2);
@@ -134,5 +134,5 @@ export const states = [
   "newParentNoChildren",
   "newParentNewChildren",
   "newParentSavedChildren",
-  "newParentMixedChildren"
+  "newParentMixedChildren",
 ];

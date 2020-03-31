@@ -17,9 +17,9 @@ export default class BelongsToHelper {
       environment: "test",
       models: {
         user: Model.extend({
-          user: belongsTo() // implicit inverse
-        })
-      }
+          user: belongsTo(), // implicit inverse
+        }),
+      },
     });
 
     this.db = this.server.db;
@@ -49,7 +49,7 @@ export default class BelongsToHelper {
     let insertedFriend = this.db.users.insert({ name: "Bob" });
     let insertedUser = this.db.users.insert({
       name: "Link",
-      userId: insertedFriend.id
+      userId: insertedFriend.id,
     });
     this.db.users.update(insertedFriend.id, { userId: insertedUser.id });
     let user = this.schema.users.find(insertedUser.id);
@@ -98,5 +98,5 @@ export const states = [
   "savedChildSavedParent",
   "newChildNoParent",
   "newChildNewParent",
-  "newChildSavedParent"
+  "newChildSavedParent",
 ];

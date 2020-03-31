@@ -3,63 +3,63 @@ import {
   ActiveModelSerializer,
   Model,
   hasMany,
-  belongsTo
+  belongsTo,
 } from "miragejs";
 
 describe("External | Shared | Serializers | ActiveModelSerializer", () => {
   let server;
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
   describe("with serializeIds as included", () => {
-    beforeEach(function() {
+    beforeEach(function () {
       server = new Server({
         models: {
           wordSmith: Model.extend({
-            blogPosts: hasMany()
+            blogPosts: hasMany(),
           }),
           blogPost: Model.extend({
             wordSmith: belongsTo(),
-            comments: hasMany()
+            comments: hasMany(),
           }),
           user: Model.extend({
-            contactInfos: hasMany()
+            contactInfos: hasMany(),
           }),
           contactInfo: Model.extend({
-            user: belongsTo()
+            user: belongsTo(),
           }),
           comment: Model.extend({
-            commentable: belongsTo({ polymorphic: true })
-          })
+            commentable: belongsTo({ polymorphic: true }),
+          }),
         },
         serializers: {
           application: ActiveModelSerializer,
           wordSmith: ActiveModelSerializer.extend({
             serializeIds: "included",
             attrs: ["id", "name"],
-            include: ["blogPosts"]
+            include: ["blogPosts"],
           }),
           blogPost: ActiveModelSerializer.extend({
             serializeIds: "included",
-            include: ["wordSmith", "comments"]
+            include: ["wordSmith", "comments"],
           }),
           comment: ActiveModelSerializer.extend({
             serializeIds: "included",
-            include: ["commentable"]
+            include: ["commentable"],
           }),
           contactInfo: ActiveModelSerializer.extend({
             serializeIds: "included",
-            include: ["user"]
+            include: ["user"],
           }),
           user: ActiveModelSerializer.extend({
             serializeIds: "included",
             attrs: ["id", "name"],
             include: ["contactInfos"],
-            embed: true
-          })
-        }
+            embed: true,
+          }),
+        },
       });
 
       let link = server.schema.wordSmiths.create({ name: "Link", age: 123 });
@@ -84,30 +84,30 @@ describe("External | Shared | Serializers | ActiveModelSerializer", () => {
         word_smith: {
           id: "1",
           name: "Link",
-          blog_post_ids: ["1", "2"]
+          blog_post_ids: ["1", "2"],
         },
         blog_posts: [
           {
             id: "1",
             title: "Lorem",
             word_smith_id: "1",
-            comment_ids: ["1"]
+            comment_ids: ["1"],
           },
           {
             id: "2",
             title: "Ipsum",
             word_smith_id: "1",
-            comment_ids: []
-          }
+            comment_ids: [],
+          },
         ],
         comments: [
           {
             id: "1",
             text: "Hi there",
             commentable_id: "1",
-            commentable_type: "blog-post"
-          }
-        ]
+            commentable_type: "blog-post",
+          },
+        ],
       });
     });
 
@@ -120,36 +120,36 @@ describe("External | Shared | Serializers | ActiveModelSerializer", () => {
           {
             id: "1",
             name: "Link",
-            blog_post_ids: ["1", "2"]
+            blog_post_ids: ["1", "2"],
           },
           {
             id: "2",
             name: "Zelda",
-            blog_post_ids: []
-          }
+            blog_post_ids: [],
+          },
         ],
         blog_posts: [
           {
             id: "1",
             title: "Lorem",
             word_smith_id: "1",
-            comment_ids: ["1"]
+            comment_ids: ["1"],
           },
           {
             id: "2",
             title: "Ipsum",
             word_smith_id: "1",
-            comment_ids: []
-          }
+            comment_ids: [],
+          },
         ],
         comments: [
           {
             id: "1",
             text: "Hi there",
             commentable_id: "1",
-            commentable_type: "blog-post"
-          }
-        ]
+            commentable_type: "blog-post",
+          },
+        ],
       });
     });
 
@@ -166,21 +166,21 @@ describe("External | Shared | Serializers | ActiveModelSerializer", () => {
               {
                 id: "1",
                 email: "peach@bb.me",
-                user_id: "1"
+                user_id: "1",
               },
               {
                 id: "2",
                 email: "john3000@mail.com",
-                user_id: "1"
-              }
-            ]
+                user_id: "1",
+              },
+            ],
           },
           {
             id: "2",
             name: "Pine Apple",
-            contact_infos: []
-          }
-        ]
+            contact_infos: [],
+          },
+        ],
       });
     });
   });
@@ -191,19 +191,19 @@ describe("External | Shared | Serializers | ActiveModelSerializer", () => {
         models: {
           post: Model,
           comment: Model.extend({
-            commentable: belongsTo({ polymorphic: true })
-          })
+            commentable: belongsTo({ polymorphic: true }),
+          }),
         },
 
         serializers: {
           application: ActiveModelSerializer.extend({
-            serializeIds: "always"
-          })
-        }
+            serializeIds: "always",
+          }),
+        },
       });
 
       server.schema.comments.create({
-        commentable: server.schema.posts.create()
+        commentable: server.schema.posts.create(),
       });
 
       let serializedComments = server.serializerOrRegistry.serialize(
@@ -215,9 +215,9 @@ describe("External | Shared | Serializers | ActiveModelSerializer", () => {
           {
             id: "1",
             commentable_id: "1",
-            commentable_type: "post"
-          }
-        ]
+            commentable_type: "post",
+          },
+        ],
       });
     });
   });

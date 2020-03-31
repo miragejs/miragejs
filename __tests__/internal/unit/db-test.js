@@ -4,7 +4,7 @@ import DefaultIdentityManager from "@lib/identity-manager";
 
 let db;
 
-describe("Unit | Db", function() {
+describe("Unit | Db", function () {
   test("it can be instantiated", () => {
     db = new Db();
     expect(Db).toBeTruthy();
@@ -15,8 +15,8 @@ describe("Unit | Db", function() {
       users: [{ id: 1, name: "Link" }],
       addresses: [
         { id: 1, name: "123 Hyrule Way" },
-        { id: 2, name: "Lorem ipsum" }
-      ]
+        { id: 2, name: "Lorem ipsum" },
+      ],
     });
 
     expect(db.users).toHaveLength(1);
@@ -28,8 +28,8 @@ describe("Unit | Db", function() {
       users: [{ id: 1, name: "Link" }],
       addresses: [
         { id: 1, name: "123 Hyrule Way" },
-        { id: 2, name: "Lorem ipsum" }
-      ]
+        { id: 2, name: "Lorem ipsum" },
+      ],
     });
 
     db.emptyData();
@@ -39,12 +39,12 @@ describe("Unit | Db", function() {
   });
 });
 
-describe("Unit | Db #createCollection", function() {
-  beforeEach(function() {
+describe("Unit | Db #createCollection", function () {
+  beforeEach(function () {
     db = new Db();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     db.emptyData();
   });
 
@@ -62,19 +62,19 @@ describe("Unit | Db #createCollection", function() {
   });
 });
 
-describe("Unit | Db #loadData", function() {
-  beforeEach(function() {
+describe("Unit | Db #loadData", function () {
+  beforeEach(function () {
     db = new Db();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     db.emptyData();
   });
 
   test("it can load an object of data", () => {
     let data = {
       contacts: [{ id: "1", name: "Link" }],
-      addresses: [{ id: "1", name: "123 Hyrule Way" }]
+      addresses: [{ id: "1", name: "123 Hyrule Way" }],
     };
     db.loadData(data);
 
@@ -84,7 +84,7 @@ describe("Unit | Db #loadData", function() {
 
   test("it clones all data so nothing is passed by reference", () => {
     let data = {
-      contacts: [{ id: "1", someArray: ["foo", "bar"] }]
+      contacts: [{ id: "1", someArray: ["foo", "bar"] }],
     };
     db.loadData(data);
 
@@ -96,19 +96,19 @@ describe("Unit | Db #loadData", function() {
   });
 });
 
-describe("Unit | Db #all", function() {
+describe("Unit | Db #all", function () {
   let data;
 
-  beforeEach(function() {
+  beforeEach(function () {
     data = {
       contacts: [{ id: "1", name: "Link" }],
-      addresses: [{ id: "1", name: "123 Hyrule Way" }]
+      addresses: [{ id: "1", name: "123 Hyrule Way" }],
     };
 
     db = new Db(data);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     db.emptyData();
   });
 
@@ -127,13 +127,13 @@ describe("Unit | Db #all", function() {
   });
 });
 
-describe("Unit | Db #insert", function() {
-  beforeEach(function() {
+describe("Unit | Db #insert", function () {
+  beforeEach(function () {
     db = new Db();
     db.createCollection("contacts");
   });
 
-  afterEach(function() {
+  afterEach(function () {
     db.emptyData();
   });
 
@@ -141,7 +141,7 @@ describe("Unit | Db #insert", function() {
     let link = db.contacts.insert({ name: "Link" });
     let expectedRecord = {
       id: "1",
-      name: "Link"
+      name: "Link",
     };
 
     expect(db.contacts).toIncludeSameMembers([expectedRecord]);
@@ -152,7 +152,7 @@ describe("Unit | Db #insert", function() {
     let link = db.contacts.insert({ name: "Link" });
     let expectedRecord = {
       id: "1",
-      name: "Link"
+      name: "Link",
     };
 
     expect(link).toEqual(expectedRecord);
@@ -168,7 +168,7 @@ describe("Unit | Db #insert", function() {
 
     let records = [
       { id: "1", name: "Link" },
-      { id: "2", name: "Ganon" }
+      { id: "2", name: "Ganon" },
     ];
 
     expect(db.contacts).toIncludeSameMembers(records);
@@ -190,18 +190,18 @@ describe("Unit | Db #insert", function() {
     expect(db.contacts).toIncludeSameMembers([
       { id: "1", name: "Link" },
       { id: "2", name: "Zelda" },
-      { id: "3", name: "Ganon" }
+      { id: "3", name: "Ganon" },
     ]);
     expect(contacts).toIncludeSameMembers([
       { id: "2", name: "Zelda" },
-      { id: "3", name: "Ganon" }
+      { id: "3", name: "Ganon" },
     ]);
   });
 
   test("it does not add ids to array data if present", () => {
     db.contacts.insert([
       { id: 2, name: "Link" },
-      { id: 1, name: "Ganon" }
+      { id: 1, name: "Ganon" },
     ]);
 
     expect(db.contacts).toHaveLength(2);
@@ -231,13 +231,13 @@ describe("Unit | Db #insert", function() {
 
     db.contacts.insert({ id: 1, name: "Duncan McCleod" });
 
-    expect(function() {
+    expect(function () {
       db.contacts.insert({ id: 1, name: "Duncan McCleod" });
     }).toThrow();
 
     db.contacts.insert({ id: "atp", name: "Adenosine Triphosphate" });
 
-    expect(function() {
+    expect(function () {
       db.contacts.insert({ id: "atp", name: "Adenosine Triphosphate" });
     }).toThrow();
   });
@@ -250,8 +250,8 @@ describe("Unit | Db #insert", function() {
   });
 });
 
-describe("Unit | Db #findBy", function() {
-  beforeEach(function() {
+describe("Unit | Db #findBy", function () {
+  beforeEach(function () {
     db = new Db();
     db.createCollection("contacts");
     db.contacts.insert([
@@ -259,11 +259,11 @@ describe("Unit | Db #findBy", function() {
       { name: "Link" },
       { name: "Epona", race: "Horse" },
       { name: "Epona", race: "Centaur" },
-      { id: "abc", name: "Ganon" }
+      { id: "abc", name: "Ganon" },
     ]);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     db.emptyData();
   });
 
@@ -300,18 +300,18 @@ describe("Unit | Db #findBy", function() {
   });
 });
 
-describe("Unit | Db #find", function() {
-  beforeEach(function() {
+describe("Unit | Db #find", function () {
+  beforeEach(function () {
     db = new Db();
     db.createCollection("contacts");
     db.contacts.insert([
       { name: "Zelda" },
       { name: "Link" },
-      { id: "abc", name: "Ganon" }
+      { id: "abc", name: "Ganon" },
     ]);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     db.emptyData();
   });
 
@@ -342,14 +342,14 @@ describe("Unit | Db #find", function() {
 
     expect(contacts).toEqual([
       { id: "1", name: "Zelda" },
-      { id: "2", name: "Link" }
+      { id: "2", name: "Link" },
     ]);
   });
 
   test("returns a record whose id is a string that start with numbers", () => {
     db.contacts.insert({
       id: "123-456",
-      name: "Epona"
+      name: "Epona",
     });
 
     let contact = db.contacts.find("123-456");
@@ -361,7 +361,7 @@ describe("Unit | Db #find", function() {
 
     expect(contacts).toEqual([
       { id: "1", name: "Zelda" },
-      { id: "2", name: "Link" }
+      { id: "2", name: "Link" },
     ]);
   });
 
@@ -372,18 +372,18 @@ describe("Unit | Db #find", function() {
   });
 });
 
-describe("Unit | Db #where", function() {
-  beforeEach(function() {
+describe("Unit | Db #where", function () {
+  beforeEach(function () {
     db = new Db();
     db.createCollection("contacts");
     db.contacts.insert([
       { name: "Link", evil: false, age: 17 },
       { name: "Zelda", evil: false, age: 17 },
-      { name: "Ganon", evil: true, age: 45 }
+      { name: "Ganon", evil: true, age: 45 },
     ]);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     db.emptyData();
   });
 
@@ -407,7 +407,7 @@ describe("Unit | Db #where", function() {
     result[0].evil = false;
 
     expect(db.contacts.where({ evil: true })).toEqual([
-      { id: "3", name: "Ganon", evil: true, age: 45 }
+      { id: "3", name: "Ganon", evil: true, age: 45 },
     ]);
   });
 
@@ -418,7 +418,7 @@ describe("Unit | Db #where", function() {
   });
 
   test("accepts a filter function", () => {
-    let result = db.contacts.where(function(record) {
+    let result = db.contacts.where(function (record) {
       return record.age === 45;
     });
 
@@ -426,19 +426,19 @@ describe("Unit | Db #where", function() {
   });
 });
 
-describe("Unit | Db #update", function() {
-  beforeEach(function() {
+describe("Unit | Db #update", function () {
+  beforeEach(function () {
     db = new Db();
     db.createCollection("contacts");
     db.contacts.insert([
       { name: "Link", evil: false },
       { name: "Zelda", evil: false },
       { name: "Ganon", evil: true },
-      { id: "123-abc", name: "Epona", evil: false }
+      { id: "123-abc", name: "Epona", evil: false },
     ]);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     db.emptyData();
   });
 
@@ -451,8 +451,8 @@ describe("Unit | Db #update", function() {
       { id: "1", name: "Sam", evil: false },
       { id: "2", name: "Sam", evil: false },
       { id: "3", name: "Sam", evil: false },
-      { id: "123-abc", name: "Sam", evil: false }
-    ].forEach(contact => {
+      { id: "123-abc", name: "Sam", evil: false },
+    ].forEach((contact) => {
       expect(db.contacts).toContainEqual(contact);
     });
   });
@@ -488,8 +488,8 @@ describe("Unit | Db #update", function() {
       { id: "1", name: "Sam", evil: false },
       { id: "2", name: "Sam", evil: false },
       { id: "3", name: "Ganon", evil: true },
-      { id: "123-abc", name: "Sam", evil: false }
-    ].forEach(contact => {
+      { id: "123-abc", name: "Sam", evil: false },
+    ].forEach((contact) => {
       expect(db.contacts).toContainEqual(contact);
     });
   });
@@ -504,7 +504,7 @@ describe("Unit | Db #update", function() {
     expect(characters).toEqual([
       { id: "1", name: "Link", evil: true },
       { id: "2", name: "Zelda", evil: true },
-      { id: "123-abc", name: "Epona", evil: true }
+      { id: "123-abc", name: "Epona", evil: true },
     ]);
   });
 
@@ -513,32 +513,32 @@ describe("Unit | Db #update", function() {
     expect(characters).toEqual([
       { id: "1", name: "Link", evil: true },
       { id: "2", name: "Zelda", evil: true },
-      { id: "123-abc", name: "Epona", evil: true }
+      { id: "123-abc", name: "Epona", evil: true },
     ]);
   });
 
   test("throws when updating an ID is attempted", () => {
     expect.assertions(1);
 
-    expect(function() {
+    expect(function () {
       db.contacts.update(1, { id: 3 });
     }).toThrow();
   });
 });
 
-describe("Unit | Db #remove", function() {
-  beforeEach(function() {
+describe("Unit | Db #remove", function () {
+  beforeEach(function () {
     db = new Db();
     db.createCollection("contacts");
     db.contacts.insert([
       { name: "Link", evil: false },
       { name: "Zelda", evil: false },
       { name: "Ganon", evil: true },
-      { id: "123-abc", name: "Epona", evil: false }
+      { id: "123-abc", name: "Epona", evil: false },
     ]);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     db.emptyData();
   });
 
@@ -556,7 +556,7 @@ describe("Unit | Db #remove", function() {
     expect(db.contacts).toContainEqual({
       id: "123-abc",
       name: "Epona",
-      evil: false
+      evil: false,
     });
   });
 
@@ -577,7 +577,7 @@ describe("Unit | Db #remove", function() {
     expect(db.contacts).toContainEqual({
       id: "123-abc",
       name: "Epona",
-      evil: false
+      evil: false,
     });
   });
 
@@ -597,18 +597,18 @@ describe("Unit | Db #remove", function() {
   });
 });
 
-describe("Unit | Db #firstOrCreate", function() {
-  beforeEach(function() {
+describe("Unit | Db #firstOrCreate", function () {
+  beforeEach(function () {
     db = new Db();
     db.createCollection("contacts");
     db.contacts.insert([
       { id: 1, name: "Link", evil: false },
       { id: 2, name: "Zelda", evil: false },
-      { id: 3, name: "Ganon", evil: true }
+      { id: 3, name: "Ganon", evil: true },
     ]);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     db.emptyData();
   });
 
@@ -634,7 +634,7 @@ describe("Unit | Db #firstOrCreate", function() {
   });
 });
 
-describe("Unit | Db #registerIdentityManagers and #identityManagerFor", function() {
+describe("Unit | Db #registerIdentityManagers and #identityManagerFor", function () {
   test("identityManagerFor returns default IdentityManager if there aren't any custom ones", () => {
     let db = new Db();
     expect(db.identityManagerFor("foo")).toEqual(DefaultIdentityManager);
@@ -647,7 +647,7 @@ describe("Unit | Db #registerIdentityManagers and #identityManagerFor", function
     let db = new Db();
     db.registerIdentityManagers({
       foo: FooIdentityManager,
-      application: ApplicationIdentityManager
+      application: ApplicationIdentityManager,
     });
 
     expect(db.identityManagerFor("foo")).toEqual(FooIdentityManager);
@@ -657,7 +657,7 @@ describe("Unit | Db #registerIdentityManagers and #identityManagerFor", function
   test("it can register idenitity managers on instantiation", () => {
     let CustomIdentityManager = class {};
     let db = new Db(undefined, {
-      foo: CustomIdentityManager
+      foo: CustomIdentityManager,
     });
     expect(db.identityManagerFor("foo")).toEqual(CustomIdentityManager);
     expect(db.identityManagerFor("bar")).toEqual(DefaultIdentityManager);

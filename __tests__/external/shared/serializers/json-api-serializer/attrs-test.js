@@ -7,8 +7,8 @@ describe("External | Shared | Serializers | JSON API Serializer | Attrs List", (
     server = new Server({
       models: {
         wordSmith: Model,
-        photograph: Model
-      }
+        photograph: Model,
+      },
     });
   });
 
@@ -21,14 +21,14 @@ describe("External | Shared | Serializers | JSON API Serializer | Attrs List", (
       serializers: {
         application: JSONAPISerializer,
         wordSmith: JSONAPISerializer.extend({
-          attrs: ["firstName"]
-        })
-      }
+          attrs: ["firstName"],
+        }),
+      },
     });
     let user = server.schema.wordSmiths.create({
       id: 1,
       firstName: "Link",
-      age: 123
+      age: 123,
     });
 
     let result = server.serializerOrRegistry.serialize(user);
@@ -38,9 +38,9 @@ describe("External | Shared | Serializers | JSON API Serializer | Attrs List", (
         type: "word-smiths",
         id: "1",
         attributes: {
-          "first-name": "Link"
-        }
-      }
+          "first-name": "Link",
+        },
+      },
     });
   });
 
@@ -49,9 +49,9 @@ describe("External | Shared | Serializers | JSON API Serializer | Attrs List", (
       serializers: {
         application: JSONAPISerializer,
         wordSmith: JSONAPISerializer.extend({
-          attrs: ["firstName"]
-        })
-      }
+          attrs: ["firstName"],
+        }),
+      },
     });
     server.schema.wordSmiths.create({ id: 1, firstName: "Link", age: 123 });
     server.schema.wordSmiths.create({ id: 2, firstName: "Zelda", age: 456 });
@@ -65,17 +65,17 @@ describe("External | Shared | Serializers | JSON API Serializer | Attrs List", (
           type: "word-smiths",
           id: "1",
           attributes: {
-            "first-name": "Link"
-          }
+            "first-name": "Link",
+          },
         },
         {
           type: "word-smiths",
           id: "2",
           attributes: {
-            "first-name": "Zelda"
-          }
-        }
-      ]
+            "first-name": "Zelda",
+          },
+        },
+      ],
     });
   });
 
@@ -83,42 +83,42 @@ describe("External | Shared | Serializers | JSON API Serializer | Attrs List", (
     server.config({
       serializers: {
         wordSmith: JSONAPISerializer.extend({
-          attrs: ["firstName"]
+          attrs: ["firstName"],
         }),
         photograph: JSONAPISerializer.extend({
-          attrs: ["title"]
-        })
-      }
+          attrs: ["title"],
+        }),
+      },
     });
 
     let link = server.schema.wordSmiths.create({
       id: 1,
       firstName: "Link",
-      age: 123
+      age: 123,
     });
     expect(server.serializerOrRegistry.serialize(link)).toEqual({
       data: {
         type: "word-smiths",
         id: "1",
         attributes: {
-          "first-name": "Link"
-        }
-      }
+          "first-name": "Link",
+        },
+      },
     });
 
     let photo = server.schema.photographs.create({
       id: 1,
       title: "Lorem ipsum",
-      createdAt: "2010-01-01"
+      createdAt: "2010-01-01",
     });
     expect(server.serializerOrRegistry.serialize(photo)).toEqual({
       data: {
         type: "photographs",
         id: "1",
         attributes: {
-          title: "Lorem ipsum"
-        }
-      }
+          title: "Lorem ipsum",
+        },
+      },
     });
   });
 });

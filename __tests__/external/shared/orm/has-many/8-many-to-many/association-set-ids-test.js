@@ -9,7 +9,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | association #setId
     helper.shutdown();
   });
 
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can update its association to include a saved child via childIds`, () => {
       let [order, originalProducts] = helper[state]();
       let savedProduct = helper.savedChild();
@@ -23,7 +23,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | association #setId
       savedProduct.reload();
 
       expect(savedProduct.orders.models[0].attrs).toEqual(order.attrs);
-      originalProducts.forEach(p => {
+      originalProducts.forEach((p) => {
         if (p.isSaved()) {
           p.reload();
           expect(p.orders.includes(order)).toBeFalsy();
@@ -41,7 +41,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | association #setId
 
       order.save();
 
-      originalProducts.forEach(p => {
+      originalProducts.forEach((p) => {
         p.reload();
         expect(p.orders.includes(order)).toBeFalsy();
       });

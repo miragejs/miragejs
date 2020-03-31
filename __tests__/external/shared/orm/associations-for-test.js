@@ -1,6 +1,6 @@
 import { Server, Model, hasMany, belongsTo } from "miragejs";
 
-describe("External | Shared | ORM | associationsFor", function() {
+describe("External | Shared | ORM | associationsFor", function () {
   let server;
 
   beforeEach(() => {
@@ -14,8 +14,8 @@ describe("External | Shared | ORM | associationsFor", function() {
   test("it returns an empty object for a model with no relationships", () => {
     server.config({
       models: {
-        user: Model
-      }
+        user: Model,
+      },
     });
 
     expect(server.schema.associationsFor("user")).toEqual({});
@@ -27,10 +27,10 @@ describe("External | Shared | ORM | associationsFor", function() {
         user: Model,
         article: Model.extend({
           fineAuthor: belongsTo("user"),
-          comments: hasMany()
+          comments: hasMany(),
         }),
-        comment: Model
-      }
+        comment: Model,
+      },
     });
 
     let associations = server.schema.associationsFor("article");

@@ -3,7 +3,7 @@ import { Server, Model, hasMany, belongsTo, RestSerializer } from "miragejs";
 describe("External | Shared | Serializers | RestSerializer", () => {
   let server;
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -12,22 +12,22 @@ describe("External | Shared | Serializers | RestSerializer", () => {
       environment: "test",
       models: {
         wordSmith: Model.extend({
-          blogPosts: hasMany()
+          blogPosts: hasMany(),
         }),
         blogPost: Model.extend({
-          wordSmith: belongsTo()
-        })
+          wordSmith: belongsTo(),
+        }),
       },
       serializers: {
         application: RestSerializer,
         wordSmith: RestSerializer.extend({
           attrs: ["id", "name"],
-          include: ["blogPosts"]
+          include: ["blogPosts"],
         }),
         blogPost: RestSerializer.extend({
-          include: ["wordSmith"]
-        })
-      }
+          include: ["wordSmith"],
+        }),
+      },
     });
 
     let link = server.create("word-smith", { name: "Link", age: 123 });
@@ -42,20 +42,20 @@ describe("External | Shared | Serializers | RestSerializer", () => {
       wordSmith: {
         id: "1",
         name: "Link",
-        blogPosts: ["1", "2"]
+        blogPosts: ["1", "2"],
       },
       blogPosts: [
         {
           id: "1",
           title: "Lorem",
-          wordSmith: "1"
+          wordSmith: "1",
         },
         {
           id: "2",
           title: "Ipsum",
-          wordSmith: "1"
-        }
-      ]
+          wordSmith: "1",
+        },
+      ],
     });
   });
 
@@ -64,20 +64,20 @@ describe("External | Shared | Serializers | RestSerializer", () => {
       environment: "test",
       models: {
         wordSmith: Model.extend({
-          posts: hasMany({ polymorphic: true })
+          posts: hasMany({ polymorphic: true }),
         }),
-        blogPost: Model.extend()
+        blogPost: Model.extend(),
       },
       serializers: {
-        application: RestSerializer
-      }
+        application: RestSerializer,
+      },
     });
 
     let post = server.create("blog-post", { title: "Post 1" });
     let link = server.create("word-smith", {
       name: "Link",
       age: 123,
-      posts: [post]
+      posts: [post],
     });
 
     let result = server.serializerOrRegistry.serialize(link);
@@ -87,8 +87,8 @@ describe("External | Shared | Serializers | RestSerializer", () => {
         id: "1",
         name: "Link",
         age: 123,
-        posts: [{ id: "1", type: "blog-post" }]
-      }
+        posts: [{ id: "1", type: "blog-post" }],
+      },
     });
   });
 });

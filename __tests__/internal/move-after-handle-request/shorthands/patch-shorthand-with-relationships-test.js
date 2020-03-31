@@ -1,16 +1,16 @@
 import { Server, JSONAPISerializer, Model, belongsTo, hasMany } from "miragejs";
 
-describe("Integration | Server | Shorthands | Patch with relationships", function() {
+describe("Integration | Server | Shorthands | Patch with relationships", function () {
   let newServerWithSchema, server;
 
-  beforeEach(function() {
-    newServerWithSchema = function(schema) {
+  beforeEach(function () {
+    newServerWithSchema = function (schema) {
       server = new Server({
         environment: "development",
         models: schema,
         serializers: {
-          application: JSONAPISerializer
-        }
+          application: JSONAPISerializer,
+        },
       });
       server.timing = 0;
       server.logging = false;
@@ -19,18 +19,18 @@ describe("Integration | Server | Shorthands | Patch with relationships", functio
     };
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
   test("it can null out belongs to relationships", async () => {
     let server = newServerWithSchema({
       author: Model.extend({
-        posts: hasMany()
+        posts: hasMany(),
       }),
       post: Model.extend({
-        author: belongsTo()
-      })
+        author: belongsTo(),
+      }),
     });
 
     server.patch("/posts/:id");
@@ -43,15 +43,15 @@ describe("Integration | Server | Shorthands | Patch with relationships", functio
       body: JSON.stringify({
         data: {
           attributes: {
-            title: "Post 1"
+            title: "Post 1",
           },
           relationships: {
             author: {
-              data: null
-            }
-          }
-        }
-      })
+              data: null,
+            },
+          },
+        },
+      }),
     });
 
     post.reload();
@@ -63,14 +63,14 @@ describe("Integration | Server | Shorthands | Patch with relationships", functio
       video: Model.extend(),
       post: Model.extend(),
       comment: Model.extend({
-        commentable: belongsTo({ polymorphic: true })
-      })
+        commentable: belongsTo({ polymorphic: true }),
+      }),
     });
     server.patch("/comments/:id");
 
     let video = server.create("video");
     let comment = server.create("comment", {
-      commentable: video
+      commentable: video,
     });
 
     await fetch(`/comments/${comment.id}`, {
@@ -78,15 +78,15 @@ describe("Integration | Server | Shorthands | Patch with relationships", functio
       body: JSON.stringify({
         data: {
           attributes: {
-            title: "Post 1"
+            title: "Post 1",
           },
           relationships: {
             commentable: {
-              data: null
-            }
-          }
-        }
-      })
+              data: null,
+            },
+          },
+        },
+      }),
     });
 
     comment.reload();
@@ -98,15 +98,15 @@ describe("Integration | Server | Shorthands | Patch with relationships", functio
       car: Model.extend(),
       watch: Model.extend(),
       user: Model.extend({
-        collectibles: hasMany({ polymorphic: true })
-      })
+        collectibles: hasMany({ polymorphic: true }),
+      }),
     });
     server.patch("/users/:id");
 
     let car = server.create("car");
     let watch = server.create("watch");
     let user = server.create("user", {
-      collectibles: [car, watch]
+      collectibles: [car, watch],
     });
 
     await fetch(`/users/${user.id}`, {
@@ -116,11 +116,11 @@ describe("Integration | Server | Shorthands | Patch with relationships", functio
           attributes: {},
           relationships: {
             collectibles: {
-              data: null
-            }
-          }
-        }
-      })
+              data: null,
+            },
+          },
+        },
+      }),
     });
 
     user.reload();
@@ -130,11 +130,11 @@ describe("Integration | Server | Shorthands | Patch with relationships", functio
   test("it camelizes relationship names", async () => {
     let server = newServerWithSchema({
       postAuthor: Model.extend({
-        posts: hasMany()
+        posts: hasMany(),
       }),
       post: Model.extend({
-        postAuthor: belongsTo()
-      })
+        postAuthor: belongsTo(),
+      }),
     });
 
     server.patch("/posts/:id");
@@ -151,12 +151,12 @@ describe("Integration | Server | Shorthands | Patch with relationships", functio
             "post-author": {
               data: {
                 id: postAuthor.id,
-                type: "post-authors"
-              }
-            }
-          }
-        }
-      })
+                type: "post-authors",
+              },
+            },
+          },
+        },
+      }),
     });
 
     post.reload();

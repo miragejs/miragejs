@@ -1,27 +1,27 @@
 import { Server, Model, hasMany, Serializer } from "miragejs";
 
-describe("External | Shared | Serializers | Base | Associations | Polymorphic | Top level", function() {
+describe("External | Shared | Serializers | Base | Associations | Polymorphic | Top level", function () {
   let server, user;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       models: {
         user: Model.extend({
-          things: hasMany({ polymorphic: true })
+          things: hasMany({ polymorphic: true }),
         }),
         picture: Model.extend(),
-        car: Model.extend()
-      }
+        car: Model.extend(),
+      },
     });
     user = server.create("user", {
       things: [
         server.create("picture", { title: "Picture 1" }),
-        server.create("car", { name: "Car 1" })
-      ]
+        server.create("car", { name: "Car 1" }),
+      ],
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -30,21 +30,21 @@ describe("External | Shared | Serializers | Base | Associations | Polymorphic | 
       serializers: {
         application: Serializer.extend({
           root: false,
-          embed: true
-        })
-      }
+          embed: true,
+        }),
+      },
     });
     let json = server.serializerOrRegistry.serialize(user.things);
 
     expect(json).toEqual([
       {
         id: "1",
-        title: "Picture 1"
+        title: "Picture 1",
       },
       {
         id: "1",
-        name: "Car 1"
-      }
+        name: "Car 1",
+      },
     ]);
   });
 
@@ -52,9 +52,9 @@ describe("External | Shared | Serializers | Base | Associations | Polymorphic | 
     server.config({
       serializers: {
         application: Serializer.extend({
-          root: true
-        })
-      }
+          root: true,
+        }),
+      },
     });
 
     expect(() => {

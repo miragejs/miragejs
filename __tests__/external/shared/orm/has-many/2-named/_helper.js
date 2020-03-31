@@ -17,10 +17,10 @@ export default class Helper {
       environment: "test",
       models: {
         user: Model.extend({
-          blogPosts: hasMany("post")
+          blogPosts: hasMany("post"),
         }),
-        post: Model
-      }
+        post: Model,
+      },
     });
 
     this.db = this.server.db;
@@ -123,5 +123,5 @@ export const states = [
   "newParentNoChildren",
   "newParentNewChildren",
   "newParentSavedChildren",
-  "newParentMixedChildren"
+  "newParentMixedChildren",
 ];

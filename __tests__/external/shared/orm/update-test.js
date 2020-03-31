@@ -7,15 +7,15 @@ describe("External | Shared | ORM | #update", () => {
     server = new Server({
       environment: "test",
       models: {
-        user: Model
-      }
+        user: Model,
+      },
     });
 
     server.db.loadData({
       users: [
         { id: 1, name: "Link", location: "Hyrule", evil: false },
-        { id: 2, name: "Zelda", location: "Hyrule", evil: false }
-      ]
+        { id: 2, name: "Zelda", location: "Hyrule", evil: false },
+      ],
     });
   });
 
@@ -29,13 +29,13 @@ describe("External | Shared | ORM | #update", () => {
 
     expect(server.db.users).toIncludeSameMembers([
       { id: "1", name: "Link", location: "Hyrule", evil: true },
-      { id: "2", name: "Zelda", location: "Hyrule", evil: true }
+      { id: "2", name: "Zelda", location: "Hyrule", evil: true },
     ]);
     expect(collection.models[0].attrs).toEqual({
       id: "1",
       name: "Link",
       location: "Hyrule",
-      evil: true
+      evil: true,
     });
   });
 
@@ -45,19 +45,19 @@ describe("External | Shared | ORM | #update", () => {
 
     expect(server.db.users).toIncludeSameMembers([
       { id: "1", name: "Link", location: "The water temple", evil: true },
-      { id: "2", name: "Zelda", location: "The water temple", evil: true }
+      { id: "2", name: "Zelda", location: "The water temple", evil: true },
     ]);
     expect(collection.models[0].attrs).toEqual({
       id: "1",
       name: "Link",
       location: "The water temple",
-      evil: true
+      evil: true,
     });
     expect(collection.models[1].attrs).toEqual({
       id: "2",
       name: "Zelda",
       location: "The water temple",
-      evil: true
+      evil: true,
     });
   });
 
@@ -70,13 +70,13 @@ describe("External | Shared | ORM | #update", () => {
       id: "1",
       name: "Young link",
       location: "Hyrule",
-      evil: false
+      evil: false,
     });
     expect(server.db.users.find(1)).toEqual({
       id: "1",
       name: "Link",
       location: "Hyrule",
-      evil: false
+      evil: false,
     });
 
     user.save();
@@ -85,13 +85,13 @@ describe("External | Shared | ORM | #update", () => {
       id: "1",
       name: "Young link",
       location: "Hyrule",
-      evil: false
+      evil: false,
     });
     expect(server.db.users.find(1)).toEqual({
       id: "1",
       name: "Young link",
       location: "Hyrule",
-      evil: false
+      evil: false,
     });
   });
 
@@ -103,13 +103,13 @@ describe("External | Shared | ORM | #update", () => {
       id: "1",
       name: "Link",
       location: "Hyrule",
-      evil: true
+      evil: true,
     });
     expect(server.db.users.find(1)).toEqual({
       id: "1",
       name: "Link",
       location: "Hyrule",
-      evil: true
+      evil: true,
     });
   });
 
@@ -121,13 +121,13 @@ describe("External | Shared | ORM | #update", () => {
       id: "1",
       name: "Evil link",
       location: "Hyrule",
-      evil: true
+      evil: true,
     });
     expect(server.db.users.find(1)).toEqual({
       id: "1",
       name: "Evil link",
       location: "Hyrule",
-      evil: true
+      evil: true,
     });
   });
 
@@ -136,7 +136,7 @@ describe("External | Shared | ORM | #update", () => {
     link.update({
       name: "Evil link",
       evil: true,
-      reallyEvil: "absolutely evil"
+      reallyEvil: "absolutely evil",
     });
 
     expect(link.attrs).toEqual({
@@ -144,14 +144,14 @@ describe("External | Shared | ORM | #update", () => {
       name: "Evil link",
       location: "Hyrule",
       evil: true,
-      reallyEvil: "absolutely evil"
+      reallyEvil: "absolutely evil",
     });
     expect(server.db.users.find(1)).toEqual({
       id: "1",
       name: "Evil link",
       location: "Hyrule",
       evil: true,
-      reallyEvil: "absolutely evil"
+      reallyEvil: "absolutely evil",
     });
   });
 
@@ -164,14 +164,14 @@ describe("External | Shared | ORM | #update", () => {
       reallyEvil: "a little flower",
       evil: true,
       location: "Hyrule",
-      name: "Link"
+      name: "Link",
     });
     expect(server.db.users.find(1)).toEqual({
       id: "1",
       reallyEvil: "a little flower",
       evil: true,
       location: "Hyrule",
-      name: "Link"
+      name: "Link",
     });
   });
 });

@@ -1,22 +1,22 @@
 import { Server } from "miragejs";
 
-describe("Integration | Server | Falsy responses", function() {
+describe("Integration | Server | Falsy responses", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
-      environment: "test"
+      environment: "test",
     });
     server.timing = 0;
     server.logging = false;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
   test("undefined response returns an empty object", async () => {
-    server.get("/example", function() {
+    server.get("/example", function () {
       return undefined;
     });
 
@@ -26,12 +26,12 @@ describe("Integration | Server | Falsy responses", function() {
     expect(data).toEqual({});
     expect(res.status).toEqual(200);
     expect([...res.headers.entries()]).toEqual([
-      ["content-type", "application/json"]
+      ["content-type", "application/json"],
     ]);
   });
 
   test("null response returns a JSON null", async () => {
-    server.get("/example", function() {
+    server.get("/example", function () {
       return null;
     });
 
@@ -41,12 +41,12 @@ describe("Integration | Server | Falsy responses", function() {
     expect(data).toBeNull();
     expect(res.status).toEqual(200);
     expect([...res.headers.entries()]).toEqual([
-      ["content-type", "application/json"]
+      ["content-type", "application/json"],
     ]);
   });
 
   test("empty string response returns an empty object", async () => {
-    server.get("/example", function() {
+    server.get("/example", function () {
       return "";
     });
 
@@ -56,12 +56,12 @@ describe("Integration | Server | Falsy responses", function() {
     expect(data).toEqual({});
     expect(res.status).toEqual(200);
     expect([...res.headers.entries()]).toEqual([
-      ["content-type", "application/json"]
+      ["content-type", "application/json"],
     ]);
   });
 
   test("empty object PUT response returns an empty object", async () => {
-    server.put("/example", function() {
+    server.put("/example", function () {
       return {};
     });
 
@@ -71,7 +71,7 @@ describe("Integration | Server | Falsy responses", function() {
     expect(data).toEqual({});
     expect(res.status).toEqual(200);
     expect([...res.headers.entries()]).toEqual([
-      ["content-type", "application/json"]
+      ["content-type", "application/json"],
     ]);
   });
 });

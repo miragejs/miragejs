@@ -1,22 +1,22 @@
 import { Server, Model, hasMany, belongsTo, Serializer } from "miragejs";
 
-describe("External | Shared | Serializers | Base | Associations | Sideloading Models", function() {
+describe("External | Shared | Serializers | Base | Associations | Sideloading Models", function () {
   let server, BaseSerializer;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       models: {
         wordSmith: Model.extend({
-          posts: hasMany("blog-post")
+          posts: hasMany("blog-post"),
         }),
         blogPost: Model.extend({
           author: belongsTo("word-smith"),
-          comments: hasMany("fine-comment")
+          comments: hasMany("fine-comment"),
         }),
         fineComment: Model.extend({
-          post: belongsTo("blog-post")
-        })
-      }
+          post: belongsTo("blog-post"),
+        }),
+      },
     });
 
     let wordSmith = server.schema.wordSmiths.create({ name: "Link" });
@@ -28,11 +28,11 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading Mo
     server.schema.wordSmiths.create({ name: "Zelda" });
 
     BaseSerializer = Serializer.extend({
-      embed: false
+      embed: false,
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -41,13 +41,13 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading Mo
       serializers: {
         wordSmith: BaseSerializer.extend({
           root: false,
-          include: ["posts"]
-        })
-      }
+          include: ["posts"],
+        }),
+      },
     });
 
     let link = server.schema.wordSmiths.find(1);
-    expect(function() {
+    expect(function () {
       server.serializerOrRegistry.serialize(link);
     }).toThrow();
   });
@@ -57,9 +57,9 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading Mo
       serializers: {
         application: BaseSerializer,
         wordSmith: BaseSerializer.extend({
-          include: ["posts"]
-        })
-      }
+          include: ["posts"],
+        }),
+      },
     });
 
     let link = server.schema.wordSmiths.find(1);
@@ -69,12 +69,12 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading Mo
       wordSmith: {
         id: "1",
         name: "Link",
-        postIds: ["1", "2"]
+        postIds: ["1", "2"],
       },
       blogPosts: [
         { id: "1", title: "Lorem" },
-        { id: "2", title: "Ipsum" }
-      ]
+        { id: "2", title: "Ipsum" },
+      ],
     });
   });
 
@@ -83,12 +83,12 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading Mo
       serializers: {
         application: BaseSerializer,
         wordSmith: BaseSerializer.extend({
-          include: ["posts"]
+          include: ["posts"],
         }),
         blogPost: BaseSerializer.extend({
-          include: ["comments"]
-        })
-      }
+          include: ["comments"],
+        }),
+      },
     });
 
     let link = server.schema.wordSmiths.find(1);
@@ -98,13 +98,13 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading Mo
       wordSmith: {
         id: "1",
         name: "Link",
-        postIds: ["1", "2"]
+        postIds: ["1", "2"],
       },
       blogPosts: [
         { id: "1", title: "Lorem", commentIds: ["1"] },
-        { id: "2", title: "Ipsum", commentIds: [] }
+        { id: "2", title: "Ipsum", commentIds: [] },
       ],
-      fineComments: [{ id: "1", text: "pwned" }]
+      fineComments: [{ id: "1", text: "pwned" }],
     });
   });
 
@@ -113,12 +113,12 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading Mo
       serializers: {
         application: BaseSerializer,
         wordSmith: BaseSerializer.extend({
-          include: ["posts"]
+          include: ["posts"],
         }),
         blogPost: BaseSerializer.extend({
-          include: ["author"]
-        })
-      }
+          include: ["author"],
+        }),
+      },
     });
 
     let link = server.schema.wordSmiths.find(1);
@@ -128,12 +128,12 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading Mo
       wordSmith: {
         id: "1",
         name: "Link",
-        postIds: ["1", "2"]
+        postIds: ["1", "2"],
       },
       blogPosts: [
         { id: "1", title: "Lorem", authorId: "1" },
-        { id: "2", title: "Ipsum", authorId: "1" }
-      ]
+        { id: "2", title: "Ipsum", authorId: "1" },
+      ],
     });
   });
 
@@ -142,9 +142,9 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading Mo
       serializers: {
         application: BaseSerializer,
         blogPost: BaseSerializer.extend({
-          include: ["author"]
-        })
-      }
+          include: ["author"],
+        }),
+      },
     });
 
     let blogPost = server.schema.blogPosts.find(1);
@@ -154,9 +154,9 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading Mo
       blogPost: {
         id: "1",
         title: "Lorem",
-        authorId: "1"
+        authorId: "1",
       },
-      wordSmiths: [{ id: "1", name: "Link" }]
+      wordSmiths: [{ id: "1", name: "Link" }],
     });
   });
 
@@ -165,12 +165,12 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading Mo
       serializers: {
         application: BaseSerializer,
         fineComment: BaseSerializer.extend({
-          include: ["post"]
+          include: ["post"],
         }),
         blogPost: BaseSerializer.extend({
-          include: ["author"]
-        })
-      }
+          include: ["author"],
+        }),
+      },
     });
 
     let fineComment = server.schema.fineComments.find(1);
@@ -180,10 +180,10 @@ describe("External | Shared | Serializers | Base | Associations | Sideloading Mo
       fineComment: {
         id: "1",
         text: "pwned",
-        postId: "1"
+        postId: "1",
       },
       blogPosts: [{ id: "1", title: "Lorem", authorId: "1" }],
-      wordSmiths: [{ id: "1", name: "Link" }]
+      wordSmiths: [{ id: "1", name: "Link" }],
     });
   });
 });

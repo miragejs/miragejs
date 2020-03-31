@@ -22,7 +22,7 @@ describe("External | Shared | ORM | Belongs To | Basic | instantiating", () => {
   });
 
   test("the child errors if the parent id doesnt exist", () => {
-    expect(function() {
+    expect(function () {
       schema.posts.new({ authorId: 2 });
     }).toThrow();
   });

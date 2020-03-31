@@ -7,19 +7,19 @@ describe("External | Shared | Fixtures and factories", () => {
     server = new Server({
       environment: "development",
       models: {
-        author: Model
+        author: Model,
       },
       factories: {
-        author: Factory
+        author: Factory,
       },
       seeds() {},
       fixtures: {
-        authors: [{ id: 1, name: "Zelda" }]
-      }
+        authors: [{ id: 1, name: "Zelda" }],
+      },
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -31,6 +31,6 @@ describe("External | Shared | Fixtures and factories", () => {
     let authors = server.db.authors;
 
     expect(authors).toHaveLength(2);
-    expect(authors.map(a => a.id)).toEqual(["1", "2"]);
+    expect(authors.map((a) => a.id)).toEqual(["1", "2"]);
   });
 });

@@ -3,7 +3,7 @@ import { Server, Model, hasMany } from "miragejs";
 describe("External | Shared | ORM | reinitialize associations", () => {
   // Model classes are defined statically, just like in a typical app
   let User = Model.extend({
-    addresses: hasMany()
+    addresses: hasMany(),
   });
   let Address = Model.extend();
 
@@ -12,8 +12,8 @@ describe("External | Shared | ORM | reinitialize associations", () => {
       environment: "test",
       models: {
         address: Address,
-        user: User
-      }
+        user: User,
+      },
     };
 
     let server1 = new Server(config);

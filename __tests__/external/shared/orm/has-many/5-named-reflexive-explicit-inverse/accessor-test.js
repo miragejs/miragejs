@@ -9,14 +9,14 @@ describe("External | Shared | ORM | Has Many | Named Reflexive Explicit Inverse 
     helper.shutdown();
   });
 
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`the references of a ${state} are correct`, () => {
       let [tag, tags] = helper[state]();
 
       expect(tag.labels.models).toHaveLength(tags.length);
       expect(tag.labelIds).toHaveLength(tags.length);
 
-      tags.forEach(t => {
+      tags.forEach((t) => {
         expect(tag.labels.includes(t)).toBeTruthy();
 
         if (t.isSaved()) {

@@ -1,31 +1,31 @@
 import { Server, Model, Serializer } from "miragejs";
 
-const dasherize = str =>
+const dasherize = (str) =>
   str.replace(
     /[A-Z]/g,
     (char, index) => (index !== 0 ? "-" : "") + char.toLowerCase()
   );
 
-describe("External | Shared | Serializers | Base | Attribute Key Formatting", function() {
+describe("External | Shared | Serializers | Base | Attribute Key Formatting", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       models: {
-        wordSmith: Model
+        wordSmith: Model,
       },
 
       serializers: {
         wordSmith: Serializer.extend({
           keyForAttribute(key) {
             return dasherize(key);
-          }
-        })
-      }
+          },
+        }),
+      },
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -34,7 +34,7 @@ describe("External | Shared | Serializers | Base | Attribute Key Formatting", fu
       id: 1,
       firstName: "Link",
       lastName: "Jackson",
-      age: 323
+      age: 323,
     });
 
     let result = server.serializerOrRegistry.serialize(wordSmith);
@@ -44,8 +44,8 @@ describe("External | Shared | Serializers | Base | Attribute Key Formatting", fu
         id: "1",
         "first-name": "Link",
         "last-name": "Jackson",
-        age: 323
-      }
+        age: 323,
+      },
     });
   });
 
@@ -53,12 +53,12 @@ describe("External | Shared | Serializers | Base | Attribute Key Formatting", fu
     server.schema.wordSmiths.create({
       id: 1,
       firstName: "Link",
-      lastName: "Jackson"
+      lastName: "Jackson",
     });
     server.schema.wordSmiths.create({
       id: 2,
       firstName: "Zelda",
-      lastName: "Brown"
+      lastName: "Brown",
     });
     let wordSmiths = server.schema.wordSmiths.all();
 
@@ -67,8 +67,8 @@ describe("External | Shared | Serializers | Base | Attribute Key Formatting", fu
     expect(result).toEqual({
       wordSmiths: [
         { id: "1", "first-name": "Link", "last-name": "Jackson" },
-        { id: "2", "first-name": "Zelda", "last-name": "Brown" }
-      ]
+        { id: "2", "first-name": "Zelda", "last-name": "Brown" },
+      ],
     });
   });
 });

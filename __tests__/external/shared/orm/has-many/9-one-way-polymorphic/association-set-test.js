@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Has Many | One-way Polymorphic | association
   /*
     The model can update its association via parent, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can update its association to a list of saved children`, () => {
       let [user] = helper[state]();
       let savedPost = helper.savedChild();

@@ -15,7 +15,7 @@ describe("External | Shared | ORM | Mixed | Many To One | create", () => {
     let { schema } = helper;
     let user = schema.create("user");
     let post = schema.create("post", {
-      userId: user.id
+      userId: user.id,
     });
     user.reload();
 
@@ -35,7 +35,7 @@ describe("External | Shared | ORM | Mixed | Many To One | create", () => {
     let { schema } = helper;
     let user = schema.create("user");
     let post = schema.create("post", {
-      user
+      user,
     });
 
     expect(post.user.attrs).toEqual(user.attrs);
@@ -53,9 +53,9 @@ describe("External | Shared | ORM | Mixed | Many To One | create", () => {
   test("it throws an error if a model is passed in without a defined relationship", () => {
     let { schema } = helper;
 
-    expect(function() {
+    expect(function () {
       schema.create("post", {
-        foo: schema.create("foo")
+        foo: schema.create("foo"),
       });
     }).toThrow();
   });
@@ -65,9 +65,9 @@ describe("External | Shared | ORM | Mixed | Many To One | create", () => {
     schema.create("foo");
     schema.create("foo");
 
-    expect(function() {
+    expect(function () {
       schema.create("post", {
-        foos: schema.foos.all()
+        foos: schema.foos.all(),
       });
     }).toThrow();
   });
