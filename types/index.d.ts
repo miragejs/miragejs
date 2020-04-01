@@ -10,7 +10,7 @@ declare module "miragejs" {
   import {
     FactoryDefinition,
     ModelDefinition,
-    ModelInstance
+    ModelInstance,
   } from "miragejs/-types";
   export { Server } from "miragejs/server";
   export { Registry, ModelInstance } from "miragejs/-types";
@@ -200,7 +200,7 @@ declare module "miragejs/-types" {
 }
 
 declare module "miragejs/server" {
-  import { Request, Response } from "miragejs";
+  import { Registry, Request, Response } from "miragejs";
   import { ModelInstance } from "miragejs/-types";
   import Db from "miragejs/db";
   import IdentityManager from "miragejs/identity-manager";
@@ -210,8 +210,8 @@ declare module "miragejs/server" {
   type MaybePromise<T> = T | PromiseLike<T>;
 
   /** A callback that will be invoked when a given Mirage route is hit. */
-  export type RouteHandler<Registry> = (
-    schema: Schema<Registry>,
+  export type RouteHandler<T extends Registry<any, any>> = (
+    schema: Schema<T>,
     request: Request
   ) => MaybePromise<ModelInstance | Response | object>;
 
@@ -438,7 +438,12 @@ declare module "miragejs/orm/schema" {
   /**
    * An interface to the Mirage ORM that allows for querying and creating records.
    */
-  export default class Schema<Registry extends Record<string, ModelInstance> = Record<string, ModelInstance>> {
+  export default class Schema<
+    Registry extends Record<string, ModelInstance> = Record<
+      string,
+      ModelInstance
+    >
+  > {
     /** Mirage's in-memory database */
     readonly db: Db;
 
