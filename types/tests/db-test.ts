@@ -7,8 +7,8 @@ server.db.loadData({
   movies: [
     { title: "Interstellar" },
     { title: "Inception" },
-    { title: "Dunkirk" }
-  ]
+    { title: "Dunkirk" },
+  ],
 });
 
 const myDb = server.db; // $ExpectType Db

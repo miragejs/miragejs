@@ -14,7 +14,7 @@ export default function config(this: Server): void {
   this.del("/foo"); // $ExpectType void
 
   this.passthrough("/_coverage/upload"); // $ExpectType void
-  this.passthrough(request => request.queryParams.skipMirage); // $ExpectType void
+  this.passthrough((request) => request.queryParams.skipMirage); // $ExpectType void
 
   this.loadFixtures(); // $ExpectType void
   this.seeds(this); // $ExpectType void
@@ -34,7 +34,7 @@ export default function config(this: Server): void {
     return new Response(200, { "Content-Type": "application/json" }, "{}");
   });
 
-  this.get("/test/:segment", schema => Promise.resolve(schema.create("foo"))); // $ExpectType void
+  this.get("/test/:segment", (schema) => Promise.resolve(schema.create("foo"))); // $ExpectType void
 }
 
 const server = new Server({
@@ -43,7 +43,7 @@ const server = new Server({
 
     this.get("/todos", () => {
       return {
-        todos: [{ id: "1", text: "Migrate to TypeScript", isDone: false }]
+        todos: [{ id: "1", text: "Migrate to TypeScript", isDone: false }],
       };
     });
   },
@@ -59,5 +59,5 @@ const server = new Server({
     this.namespace = "/test-api";
     this.get("/movies");
     this.post("/movies");
-  }
+  },
 });

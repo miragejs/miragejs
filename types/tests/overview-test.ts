@@ -23,8 +23,8 @@ new Server({
           movies: [
             { id: 1, name: "Inception", year: 2010 },
             { id: 2, name: "Interstellar", year: 2014 },
-            { id: 3, name: "Dunkirk", year: 2017 }
-          ]
+            { id: 3, name: "Dunkirk", year: 2017 },
+          ],
         };
       },
       { timing: 4000 }
@@ -37,12 +37,12 @@ new Server({
 
       return new Response(500, headers, data);
     });
-  }
+  },
 });
 
 new Server({
   models: {
-    movie: Model
+    movie: Model,
   },
 
   routes() {
@@ -53,20 +53,20 @@ new Server({
         movies: [
           { id: 1, name: "Inception", year: 2010 },
           { id: 2, name: "Interstellar", year: 2014 },
-          { id: 3, name: "Dunkirk", year: 2017 }
-        ]
+          { id: 3, name: "Dunkirk", year: 2017 },
+        ],
       };
     });
   },
 
   seeds(server) {
     server.createList("movie", 10);
-  }
+  },
 });
 
 new Server({
   models: {
-    movie: Model
+    movie: Model,
   },
 
   routes() {
@@ -96,19 +96,19 @@ new Server({
         return Math.floor(Math.random() * (max - min + 1)) + min;
       },
 
-      rating: "PG-13"
-    })
-  }
+      rating: "PG-13",
+    }),
+  },
 });
 
 new Server({
   models: {
     movie: Model.extend({
-      castMembers: hasMany()
+      castMembers: hasMany(),
     }),
     castMember: Model.extend({
-      movie: belongsTo()
-    })
+      movie: belongsTo(),
+    }),
   },
   routes() {
     this.get("/movies/:id/cast-members", (schema, request) => {
@@ -116,5 +116,5 @@ new Server({
 
       return movie.castMembers;
     });
-  }
+  },
 });
