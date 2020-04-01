@@ -31,9 +31,9 @@ myDb.users.where({ name: "Link" }); // $ExpectType any
 myDb.users.insert({}); // $ExpectType any
 myDb.users.insert([]); // $ExpectType any
 myDb.users.firstOrCreate({ name: "Link" }); // $ExpectType any
-myDb.users.remove(); // $ExpectType any
-myDb.users.remove(1); // $ExpectType any
-myDb.users.remove({ name: "Zelda" }); // $ExpectType any
+myDb.users.remove(); // $ExpectType void
+myDb.users.remove(1); // $ExpectType void
+myDb.users.remove({ name: "Zelda" }); // $ExpectType void
 myDb.users.update({ name: "Ganon" }); // $ExpectType any
 myDb.users.update(1, { name: "Young Link" }); // $ExpectType any
 myDb.users.update({ name: "Link" }, { name: "Epona" }); // $ExpectType any
