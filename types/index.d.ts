@@ -432,7 +432,7 @@ declare module "miragejs/orm/schema" {
   /**
    * An interface to the Mirage ORM that allows for querying and creating records.
    */
-  export default class Schema<Registry = Record<string, ModelInstance>> {
+  export default class Schema<Registry extends Record<string, ModelInstance> = Record<string, ModelInstance>> {
     /** Mirage's in-memory database */
     readonly db: Db;
 
