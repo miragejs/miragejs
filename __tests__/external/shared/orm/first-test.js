@@ -9,15 +9,15 @@ describe("External | Shared | ORM | #first", () => {
     server = new Server({
       environment: "test",
       models: {
-        user: User
-      }
+        user: User,
+      },
     });
 
     server.db.loadData({
       users: [
         { id: 1, name: "Link" },
-        { id: 2, name: "Zelda" }
-      ]
+        { id: 2, name: "Zelda" },
+      ],
     });
   });
 

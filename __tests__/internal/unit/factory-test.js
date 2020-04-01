@@ -1,7 +1,7 @@
 import Factory from "@lib/factory";
 import trait from "@lib/trait";
 
-describe("Unit | Factory", function() {
+describe("Unit | Factory", function () {
   test("it exists", () => {
     expect(Factory).toBeTruthy();
   });
@@ -25,7 +25,7 @@ describe("Unit | Factory", function() {
     let AFactory = Factory.extend({
       name: "Sam",
       age: 28,
-      alive: true
+      alive: true,
     });
 
     let f = new AFactory();
@@ -36,13 +36,13 @@ describe("Unit | Factory", function() {
 
   test("it supports inheritance", () => {
     let PersonFactory = Factory.extend({
-      species: "human"
+      species: "human",
     });
     let ManFactory = PersonFactory.extend({
-      gender: "male"
+      gender: "male",
     });
     let SamFactory = ManFactory.extend({
-      name: "Sam"
+      name: "Sam",
     });
 
     let p = new PersonFactory();
@@ -54,7 +54,7 @@ describe("Unit | Factory", function() {
     expect(s.build()).toEqual({
       species: "human",
       gender: "male",
-      name: "Sam"
+      name: "Sam",
     });
   });
 
@@ -62,7 +62,7 @@ describe("Unit | Factory", function() {
     let PostFactory = Factory.extend({
       likes(i) {
         return 5 * i;
-      }
+      },
     });
 
     let p = new PostFactory();
@@ -78,7 +78,7 @@ describe("Unit | Factory", function() {
       foo: 5,
       bar(i) {
         return this.foo * i;
-      }
+      },
     });
 
     let b = new BazFactory();
@@ -96,7 +96,7 @@ describe("Unit | Factory", function() {
       },
       bar() {
         return this.foo * 2;
-      }
+      },
     });
 
     let b = new BazFactory();
@@ -114,7 +114,7 @@ describe("Unit | Factory", function() {
       },
       bar() {
         return this.name.substr(1);
-      }
+      },
     });
 
     let b = new BazFactory();
@@ -133,7 +133,7 @@ describe("Unit | Factory", function() {
 
       foo(i) {
         return this.baz * i;
-      }
+      },
     });
 
     let b = new BazFactory();
@@ -152,7 +152,7 @@ describe("Unit | Factory", function() {
 
       bar: 6,
 
-      baz: 10
+      baz: 10,
     });
 
     let BarFactory = Factory.extend({
@@ -162,7 +162,7 @@ describe("Unit | Factory", function() {
         return this.bar + this.baz;
       },
 
-      baz: 10
+      baz: 10,
     });
 
     let BazFactory = Factory.extend({
@@ -172,7 +172,7 @@ describe("Unit | Factory", function() {
 
       foo() {
         return this.bar + this.baz;
-      }
+      },
     });
 
     let Foo = new FooFactory();
@@ -207,7 +207,7 @@ describe("Unit | Factory", function() {
       },
       f: 1,
       g: 2,
-      h: 3
+      h: 3,
     });
 
     let b = new AbcFactory();
@@ -226,11 +226,11 @@ describe("Unit | Factory", function() {
 
       foo() {
         return this.bar;
-      }
+      },
     });
 
     let b = new BazFactory();
-    expect(function() {
+    expect(function () {
       b.build(1);
     }).toThrow();
   });
@@ -240,7 +240,7 @@ describe("Unit | Factory", function() {
     let PostFactory = Factory.extend({
       afterCreate() {
         skipped = false;
-      }
+      },
     });
 
     let factory = new PostFactory();
@@ -255,28 +255,28 @@ describe("Unit | Factory", function() {
       published: trait({
         afterCreate() {
           return "from published";
-        }
+        },
       }),
 
       withComments: trait({
         afterCreate() {
           return "from withComments";
-        }
+        },
       }),
 
       otherTrait: trait({}),
 
       afterCreate() {
         return "from base";
-      }
+      },
     });
 
     let callbacks = PostFactory.extractAfterCreateCallbacks();
     expect(callbacks).toHaveLength(3);
-    expect(callbacks.map(cb => cb())).toEqual([
+    expect(callbacks.map((cb) => cb())).toEqual([
       "from base",
       "from published",
-      "from withComments"
+      "from withComments",
     ]);
   });
 
@@ -285,27 +285,27 @@ describe("Unit | Factory", function() {
       published: trait({
         afterCreate() {
           return "from published";
-        }
+        },
       }),
 
       withComments: trait({
         afterCreate() {
           return "from withComments";
-        }
+        },
       }),
 
       otherTrait: trait({}),
 
       afterCreate() {
         return "from base";
-      }
+      },
     });
 
     expect(
       PostFactory.extractAfterCreateCallbacks({ traits: [] })
     ).toHaveLength(1);
     expect(
-      PostFactory.extractAfterCreateCallbacks({ traits: [] }).map(cb => cb())
+      PostFactory.extractAfterCreateCallbacks({ traits: [] }).map((cb) => cb())
     ).toEqual(["from base"]);
 
     expect(
@@ -313,30 +313,30 @@ describe("Unit | Factory", function() {
     ).toHaveLength(2);
     expect(
       PostFactory.extractAfterCreateCallbacks({
-        traits: ["withComments"]
-      }).map(cb => cb())
+        traits: ["withComments"],
+      }).map((cb) => cb())
     ).toEqual(["from base", "from withComments"]);
 
     expect(
       PostFactory.extractAfterCreateCallbacks({
-        traits: ["withComments", "published"]
+        traits: ["withComments", "published"],
       })
     ).toHaveLength(3);
     expect(
       PostFactory.extractAfterCreateCallbacks({
-        traits: ["withComments", "published"]
-      }).map(cb => cb())
+        traits: ["withComments", "published"],
+      }).map((cb) => cb())
     ).toEqual(["from base", "from withComments", "from published"]);
 
     expect(
       PostFactory.extractAfterCreateCallbacks({
-        traits: ["withComments", "otherTrait"]
+        traits: ["withComments", "otherTrait"],
       })
     ).toHaveLength(2);
     expect(
       PostFactory.extractAfterCreateCallbacks({
-        traits: ["withComments", "otherTrait"]
-      }).map(cb => cb())
+        traits: ["withComments", "otherTrait"],
+      }).map((cb) => cb())
     ).toEqual(["from base", "from withComments"]);
   });
 
@@ -345,12 +345,12 @@ describe("Unit | Factory", function() {
       title: "Lorem ipsum",
 
       published: trait({
-        isPublished: true
+        isPublished: true,
       }),
 
       someNestedObject: {
-        value: "nested"
-      }
+        value: "nested",
+      },
     });
 
     expect(!PostFactory.isTrait("title")).toBeTruthy();

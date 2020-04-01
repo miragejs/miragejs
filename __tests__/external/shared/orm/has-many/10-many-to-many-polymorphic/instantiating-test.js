@@ -13,7 +13,7 @@ describe("External | Shared | ORM | Has Many | Many-to-many Polymorphic | instan
   test("the parent accepts a saved child id", () => {
     let post = helper.savedChild();
     let user = schema.users.new({
-      commentableIds: [{ type: "post", id: post.id }]
+      commentableIds: [{ type: "post", id: post.id }],
     });
 
     expect(user.commentableIds).toEqual([{ type: "post", id: post.id }]);
@@ -21,7 +21,7 @@ describe("External | Shared | ORM | Has Many | Many-to-many Polymorphic | instan
   });
 
   test("the parent errors if the children ids don't exist", () => {
-    expect(function() {
+    expect(function () {
       schema.users.new({ commentableIds: [{ type: "post", id: 2 }] });
     }).toThrow();
   });
@@ -62,7 +62,7 @@ describe("External | Shared | ORM | Has Many | Many-to-many Polymorphic | instan
     let post = helper.savedChild();
     let user = schema.users.new({
       commentables: [post],
-      commentableIds: [{ type: "post", id: post.id }]
+      commentableIds: [{ type: "post", id: post.id }],
     });
 
     expect(user.commentableIds).toEqual([{ type: "post", id: post.id }]);

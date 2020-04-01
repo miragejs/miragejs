@@ -13,7 +13,7 @@ describe("External | Shared | ORM | Has Many | Named Reflexive Explicit Inverse 
   test("the parent accepts a saved child id", () => {
     let tagA = helper.savedChild();
     let tagB = schema.tags.new({
-      labelIds: [tagA.id]
+      labelIds: [tagA.id],
     });
 
     expect(tagB.labelIds).toEqual([tagA.id]);
@@ -21,7 +21,7 @@ describe("External | Shared | ORM | Has Many | Named Reflexive Explicit Inverse 
   });
 
   test("the parent errors if the children ids don't exist", () => {
-    expect(function() {
+    expect(function () {
       schema.tags.new({ labelIds: [2] });
     }).toThrow();
   });

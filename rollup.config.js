@@ -8,9 +8,9 @@ let aliases = {
   entries: [
     {
       find: /@lib(.*)/,
-      replacement: path.resolve(process.cwd(), "./lib$1.js")
-    }
-  ]
+      replacement: path.resolve(process.cwd(), "./lib$1.js"),
+    },
+  ],
 };
 
 function isExternal(id) {
@@ -38,7 +38,7 @@ function isExternal(id) {
     reference an internal module. So it shouldn't be treated as external.
   */
   let isAlias = Boolean(
-    aliases.entries.find(entry => {
+    aliases.entries.find((entry) => {
       if (entry.find instanceof RegExp) {
         return entry.find.test(id);
       } else if (typeof entry.find === "string") {
@@ -61,9 +61,9 @@ let esm = {
     babel({
       exclude: "node_modules/**",
       sourceMaps: true,
-      presets: [["@babel/preset-env", {}]]
-    })
-  ]
+      presets: [["@babel/preset-env", {}]],
+    }),
+  ],
 };
 
 let cjs = {
@@ -72,7 +72,7 @@ let cjs = {
     file: `dist/mirage-cjs.js`,
     sourcemap: true,
     format: "cjs",
-    esModule: true
+    esModule: true,
   },
   external: isExternal,
   plugins: [
@@ -84,13 +84,13 @@ let cjs = {
         [
           "@babel/preset-env",
           {
-            targets: { node: "current" }
-          }
-        ]
-      ]
+            targets: { node: "current" },
+          },
+        ],
+      ],
     }),
-    resolve()
-  ]
+    resolve(),
+  ],
 };
 
 let umd = {
@@ -98,7 +98,7 @@ let umd = {
   output: {
     file: "dist/mirage-umd.js",
     format: "umd",
-    name: "MirageJS.Server"
+    name: "MirageJS.Server",
   },
   plugins: [
     commonjs(),
@@ -114,12 +114,12 @@ let umd = {
             useBuiltIns: "usage",
             corejs: 3,
             modules: false,
-            targets: "ie 11"
-          }
-        ]
-      ]
-    })
-  ]
+            targets: "ie 11",
+          },
+        ],
+      ],
+    }),
+  ],
 };
 
 export default [esm, cjs, umd];

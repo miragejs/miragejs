@@ -9,14 +9,14 @@ describe("External | Shared | ORM | Has Many | Reflexive | accessor", () => {
     helper.shutdown();
   });
 
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`the references of a ${state} are correct`, () => {
       let [tag, tags] = helper[state]();
 
       expect(tag.tags.models).toHaveLength(tags.length);
       expect(tag.tagIds).toHaveLength(tags.length);
 
-      tags.forEach(t => {
+      tags.forEach((t) => {
         expect(tag.tags.includes(t)).toBeTruthy();
 
         if (t.isSaved()) {

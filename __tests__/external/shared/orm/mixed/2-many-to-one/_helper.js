@@ -17,12 +17,12 @@ export default class Helper {
       environment: "test",
       models: {
         user: Model.extend({
-          posts: hasMany()
+          posts: hasMany(),
         }),
         post: Model.extend({
-          user: belongsTo()
-        })
-      }
+          user: belongsTo(),
+        }),
+      },
     });
 
     this.db = this.server.db;
@@ -52,7 +52,7 @@ export default class Helper {
     let { schema } = this;
     schema.db.loadData({
       posts: [{ id: "1", title: "Lorem", userId: "1" }],
-      users: [{ id: "1", name: "Link", postIds: ["1"] }]
+      users: [{ id: "1", name: "Link", postIds: ["1"] }],
     });
 
     return [schema.posts.find(1), schema.users.find(1)];
@@ -100,5 +100,5 @@ export const states = [
   "savedChildSavedParent",
   "newChildNoParent",
   "newChildNewParent",
-  "newChildSavedParent"
+  "newChildSavedParent",
 ];

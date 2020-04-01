@@ -1,15 +1,15 @@
 import { Server } from "miragejs";
 
-describe("Integration | Server | Get full path", function() {
+describe("Integration | Server | Get full path", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
-      environment: "test"
+      environment: "test",
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 

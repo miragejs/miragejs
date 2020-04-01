@@ -3,24 +3,24 @@ import {
   _Db as Db,
   Model,
   belongsTo,
-  ActiveModelSerializer
+  ActiveModelSerializer,
 } from "@lib";
 
-describe("Unit | Serializers | ActiveModelSerializer", function() {
+describe("Unit | Serializers | ActiveModelSerializer", function () {
   let serializer = null;
   let schema = null;
 
-  beforeEach(function() {
+  beforeEach(function () {
     schema = new Schema(new Db(), {
       contact: Model.extend({
-        address: belongsTo()
+        address: belongsTo(),
       }),
       address: Model.extend({
-        contact: belongsTo()
-      })
+        contact: belongsTo(),
+      }),
     });
     serializer = new ActiveModelSerializer({
-      schema
+      schema,
     });
   });
 
@@ -28,8 +28,8 @@ describe("Unit | Serializers | ActiveModelSerializer", function() {
     let payload = {
       contact: {
         id: 1,
-        name: "Link"
-      }
+        name: "Link",
+      },
     };
     let jsonApiDoc = serializer.normalize(payload);
 
@@ -38,9 +38,9 @@ describe("Unit | Serializers | ActiveModelSerializer", function() {
         type: "contacts",
         id: 1,
         attributes: {
-          name: "Link"
-        }
-      }
+          name: "Link",
+        },
+      },
     });
   });
 
@@ -48,8 +48,8 @@ describe("Unit | Serializers | ActiveModelSerializer", function() {
     let payload = {
       contact: {
         id: 1,
-        first_name: "Link"
-      }
+        first_name: "Link",
+      },
     };
     let jsonApiDoc = serializer.normalize(payload);
 
@@ -58,9 +58,9 @@ describe("Unit | Serializers | ActiveModelSerializer", function() {
         type: "contacts",
         id: 1,
         attributes: {
-          "first-name": "Link"
-        }
-      }
+          "first-name": "Link",
+        },
+      },
     });
   });
 
@@ -68,8 +68,8 @@ describe("Unit | Serializers | ActiveModelSerializer", function() {
     let payload = {
       contact: {
         first_name: "Link",
-        last_name: "zor"
-      }
+        last_name: "zor",
+      },
     };
     let jsonApiDoc = serializer.normalize(payload);
 
@@ -78,9 +78,9 @@ describe("Unit | Serializers | ActiveModelSerializer", function() {
         type: "contacts",
         attributes: {
           "first-name": "Link",
-          "last-name": "zor"
-        }
-      }
+          "last-name": "zor",
+        },
+      },
     });
   });
 
@@ -106,8 +106,8 @@ describe("Unit | Serializers | ActiveModelSerializer", function() {
       contact: {
         id: 1,
         name: "Link",
-        address: 1
-      }
+        address: 1,
+      },
     };
     let jsonApiDoc = serializer.normalize(payload);
 
@@ -116,17 +116,17 @@ describe("Unit | Serializers | ActiveModelSerializer", function() {
         type: "contacts",
         id: 1,
         attributes: {
-          name: "Link"
+          name: "Link",
         },
         relationships: {
           address: {
             data: {
               type: "address",
-              id: 1
-            }
-          }
-        }
-      }
+              id: 1,
+            },
+          },
+        },
+      },
     });
   });
 

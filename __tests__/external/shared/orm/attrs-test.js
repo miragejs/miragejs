@@ -7,12 +7,12 @@ describe("External | Shared | ORM | attrs", () => {
     server = new Server({
       environment: "test",
       models: {
-        user: Model
-      }
+        user: Model,
+      },
     });
 
     server.db.loadData({
-      users: [{ id: 1, name: "Link", evil: false }]
+      users: [{ id: 1, name: "Link", evil: false }],
     });
   });
 

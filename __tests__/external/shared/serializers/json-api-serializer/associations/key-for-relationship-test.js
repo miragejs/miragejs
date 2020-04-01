@@ -8,10 +8,10 @@ describe("External | Shared | Serializers | JSON API Serializer | Key for relati
     server = new Server({
       models: {
         wordSmith: Model.extend({
-          blogPosts: hasMany()
+          blogPosts: hasMany(),
         }),
-        blogPost: Model
-      }
+        blogPost: Model,
+      },
     });
   });
 
@@ -23,21 +23,21 @@ describe("External | Shared | Serializers | JSON API Serializer | Key for relati
     let ApplicationSerializer = JSONAPISerializer.extend({
       keyForRelationship(key) {
         return snakeCase(key);
-      }
+      },
     });
     server.config({
       serializers: {
         application: ApplicationSerializer,
         wordSmith: ApplicationSerializer.extend({
-          include: ["blogPosts"]
-        })
-      }
+          include: ["blogPosts"],
+        }),
+      },
     });
     let wordSmith = server.schema.wordSmiths.create({
       id: 1,
       firstName: "Link",
       lastName: "Jackson",
-      age: 323
+      age: 323,
     });
     wordSmith.createBlogPost({ title: "Lorem ipsum" });
 
@@ -50,23 +50,23 @@ describe("External | Shared | Serializers | JSON API Serializer | Key for relati
         attributes: {
           age: 323,
           "first-name": "Link",
-          "last-name": "Jackson"
+          "last-name": "Jackson",
         },
         relationships: {
           blog_posts: {
-            data: [{ id: "1", type: "blog-posts" }]
-          }
-        }
+            data: [{ id: "1", type: "blog-posts" }],
+          },
+        },
       },
       included: [
         {
           attributes: {
-            title: "Lorem ipsum"
+            title: "Lorem ipsum",
           },
           id: "1",
-          type: "blog-posts"
-        }
-      ]
+          type: "blog-posts",
+        },
+      ],
     });
   });
 });

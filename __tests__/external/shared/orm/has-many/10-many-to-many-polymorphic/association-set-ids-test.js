@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Has Many | Many-to-many Polymorphic | associ
   /*
     The model can update its association via parentId, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can update its association to a saved parent via parentId`, () => {
       let [user, originalPosts] = helper[state]();
       let savedPost = helper.savedChild();
@@ -30,7 +30,7 @@ describe("External | Shared | ORM | Has Many | Many-to-many Polymorphic | associ
       savedPost.reload();
 
       expect(savedPost.users.includes(user)).toBeTruthy();
-      originalPosts.forEach(post => {
+      originalPosts.forEach((post) => {
         if (post.isSaved()) {
           post.reload();
           expect(post.users.includes(user)).toBeFalsy();
@@ -48,7 +48,7 @@ describe("External | Shared | ORM | Has Many | Many-to-many Polymorphic | associ
 
       user.save();
 
-      originalPosts.forEach(post => {
+      originalPosts.forEach((post) => {
         post.reload();
         expect(post.users.includes(user)).toBeFalsy();
       });

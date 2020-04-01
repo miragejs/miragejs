@@ -11,21 +11,21 @@ function expectNoWarning() {
   };
 }
 
-describe("External | Shared | Factories | create and createList", function() {
+describe("External | Shared | Factories | create and createList", function () {
   let server, Contact, AmazingContact, Post, Author, Data;
 
-  beforeEach(function() {
-    inflections("en", inflect => {
+  beforeEach(function () {
+    inflections("en", (inflect) => {
       inflect.uncountable("data");
     });
 
     Contact = Model.extend();
     AmazingContact = Model.extend();
     Post = Model.extend({
-      author: belongsTo()
+      author: belongsTo(),
     });
     Author = Model.extend({
-      posts: hasMany()
+      posts: hasMany(),
     });
     Data = Model.extend();
 
@@ -37,18 +37,18 @@ describe("External | Shared | Factories | create and createList", function() {
         amazingContact: AmazingContact,
         post: Post,
         author: Author,
-        data: Data
+        data: Data,
       },
       factories: {
         contact: Factory.extend({
-          name: "Yehuda"
+          name: "Yehuda",
         }),
-        amazingContact: Factory
-      }
+        amazingContact: Factory,
+      },
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
 
     // eslint-disable-next-line no-console
@@ -171,7 +171,7 @@ describe("External | Shared | Factories | create and createList", function() {
 
     let author = server.create("author");
     let post = server.create("post", {
-      authorId: author.id
+      authorId: author.id,
     });
     author.reload();
 
@@ -185,7 +185,7 @@ describe("External | Shared | Factories | create and createList", function() {
 
     let author = server.create("author");
     let post = server.create("post", {
-      author
+      author,
     });
 
     expect(author.posts.models).toHaveLength(1);

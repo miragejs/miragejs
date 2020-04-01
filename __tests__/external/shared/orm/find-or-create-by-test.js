@@ -9,16 +9,16 @@ describe("External | Shared | ORM | #findOrCreateBy", () => {
     server = new Server({
       environment: "test",
       models: {
-        user: User
-      }
+        user: User,
+      },
     });
 
     server.db.loadData({
       users: [
         { id: 1, name: "Link", good: true },
         { id: 2, name: "Zelda", good: true },
-        { id: 3, name: "Ganon", good: false }
-      ]
+        { id: 3, name: "Ganon", good: false },
+      ],
     });
   });
 
@@ -38,7 +38,7 @@ describe("External | Shared | ORM | #findOrCreateBy", () => {
 
     let newUser = server.schema.users.findOrCreateBy({
       name: "Link",
-      good: false
+      good: false,
     });
 
     expect(server.schema.db.users).toHaveLength(4);

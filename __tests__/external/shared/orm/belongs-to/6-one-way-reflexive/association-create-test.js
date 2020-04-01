@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Belongs To | One-Way Reflexive | association
   /*
     The model can create a belongs-to association, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can create an associated parent`, () => {
       let [child] = helper[state]();
 

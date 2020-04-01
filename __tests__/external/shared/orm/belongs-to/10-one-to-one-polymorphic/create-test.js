@@ -15,7 +15,7 @@ describe("External | Shared | ORM | Belongs To | One-to-one Polymorphic | create
     let { schema } = helper;
     let post = schema.create("post");
     let comment = schema.create("comment", {
-      commentableId: { type: "post", id: post.id }
+      commentableId: { type: "post", id: post.id },
     });
     post.reload();
 
@@ -26,7 +26,7 @@ describe("External | Shared | ORM | Belongs To | One-to-one Polymorphic | create
     expect(schema.db.posts).toHaveLength(1);
     expect(schema.db.comments[0]).toEqual({
       id: "1",
-      commentableId: { type: "post", id: "1" }
+      commentableId: { type: "post", id: "1" },
     });
     expect(schema.db.posts[0]).toEqual({ id: "1", commentId: "1" });
   });
@@ -35,7 +35,7 @@ describe("External | Shared | ORM | Belongs To | One-to-one Polymorphic | create
     let { schema } = helper;
     let post = schema.create("post");
     let comment = schema.create("comment", {
-      commentable: post
+      commentable: post,
     });
 
     expect(comment.commentableId).toEqual({ type: "post", id: post.id });
@@ -45,7 +45,7 @@ describe("External | Shared | ORM | Belongs To | One-to-one Polymorphic | create
     expect(schema.db.posts).toHaveLength(1);
     expect(schema.db.comments[0]).toEqual({
       id: "1",
-      commentableId: { type: "post", id: "1" }
+      commentableId: { type: "post", id: "1" },
     });
     expect(schema.db.posts[0]).toEqual({ id: "1", commentId: "1" });
   });
@@ -53,9 +53,9 @@ describe("External | Shared | ORM | Belongs To | One-to-one Polymorphic | create
   test("it throws an error if a model is passed in without a defined relationship", () => {
     let { schema } = helper;
 
-    expect(function() {
+    expect(function () {
       schema.create("comment", {
-        foo: schema.create("foo")
+        foo: schema.create("foo"),
       });
     }).toThrow();
   });
@@ -65,9 +65,9 @@ describe("External | Shared | ORM | Belongs To | One-to-one Polymorphic | create
     schema.create("foo");
     schema.create("foo");
 
-    expect(function() {
+    expect(function () {
       schema.create("comment", {
-        foos: schema.foos.all()
+        foos: schema.foos.all(),
       });
     }).toThrow();
   });

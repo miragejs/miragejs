@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Has Many | Reflexive | association #set", ()
   /*
     The model can update its association via parent, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can update its association to a list of saved children`, () => {
       let [tag, originalTags] = helper[state]();
       let savedTag = helper.savedChild();
@@ -25,7 +25,7 @@ describe("External | Shared | ORM | Has Many | Reflexive | association #set", ()
 
       tag.save();
 
-      originalTags.forEach(originalTag => {
+      originalTags.forEach((originalTag) => {
         originalTag.reload();
         expect(originalTag.tags.includes(tag)).toBeFalsy();
       });
@@ -43,7 +43,7 @@ describe("External | Shared | ORM | Has Many | Reflexive | association #set", ()
 
       tag.save();
 
-      originalTags.forEach(originalTag => {
+      originalTags.forEach((originalTag) => {
         originalTag.reload();
         expect(originalTag.tags.includes(tag)).toBeFalsy();
       });
@@ -58,7 +58,7 @@ describe("External | Shared | ORM | Has Many | Reflexive | association #set", ()
       expect(tag.tags.models).toHaveLength(0);
 
       tag.save();
-      originalTags.forEach(originalTag => {
+      originalTags.forEach((originalTag) => {
         originalTag.reload();
         expect(originalTag.tags.includes(tag)).toBeFalsy();
       });
@@ -73,7 +73,7 @@ describe("External | Shared | ORM | Has Many | Reflexive | association #set", ()
       expect(tag.tags.models).toHaveLength(0);
 
       tag.save();
-      originalTags.forEach(originalTag => {
+      originalTags.forEach((originalTag) => {
         originalTag.reload();
         expect(originalTag.tags.includes(tag)).toBeFalsy();
       });

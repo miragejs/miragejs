@@ -13,7 +13,7 @@ describe("External | Shared | ORM | Belongs To | Named one-way reflexive self re
     The model can update its association via parentId, for all states
   */
 
-  ["savedChildNoParent", "savedChildSavedParent"].forEach(state => {
+  ["savedChildNoParent", "savedChildSavedParent"].forEach((state) => {
     test(`a ${state} can update its association to itself via parentId`, () => {
       let [user] = helper[state]();
 
@@ -29,7 +29,7 @@ describe("External | Shared | ORM | Belongs To | Named one-way reflexive self re
     });
   });
 
-  ["savedChildSavedParent", "newChildNewParent"].forEach(state => {
+  ["savedChildSavedParent", "newChildNewParent"].forEach((state) => {
     test(`a ${state} can clear its association via a null parentId`, () => {
       let [user] = helper[state]();
 

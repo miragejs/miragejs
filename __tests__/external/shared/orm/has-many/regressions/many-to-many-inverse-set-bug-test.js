@@ -8,12 +8,12 @@ describe("External | Shared | ORM | Has Many | Regressions | Many to many invers
       environment: "test",
       models: {
         post: Model.extend({
-          tags: hasMany()
+          tags: hasMany(),
         }),
         tag: Model.extend({
-          posts: hasMany()
-        })
-      }
+          posts: hasMany(),
+        }),
+      },
     });
   });
 
@@ -21,12 +21,12 @@ describe("External | Shared | ORM | Has Many | Regressions | Many to many invers
     server.db.loadData({
       posts: [
         { id: "1", tagIds: ["15", "16"] },
-        { id: "2", tagIds: ["16"] }
+        { id: "2", tagIds: ["16"] },
       ],
       tags: [
         { id: "15", postIds: ["1"] },
-        { id: "16", postIds: ["1", "2"] }
-      ]
+        { id: "16", postIds: ["1", "2"] },
+      ],
     });
 
     server.schema.posts.find(1).update({ tagIds: ["15"] });

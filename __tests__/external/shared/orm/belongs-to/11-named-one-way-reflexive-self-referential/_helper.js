@@ -17,9 +17,9 @@ export default class BelongsToHelper {
       environment: "test",
       models: {
         user: Model.extend({
-          representative: belongsTo("user", { inverse: null })
-        })
-      }
+          representative: belongsTo("user", { inverse: null }),
+        }),
+      },
     });
 
     this.db = this.server.db;
@@ -39,7 +39,7 @@ export default class BelongsToHelper {
   savedChildSavedParent() {
     let linkDbRecord = this.db.users.insert({ name: "Link" });
     this.db.users.update(linkDbRecord.id, {
-      representativeId: linkDbRecord.id
+      representativeId: linkDbRecord.id,
     });
 
     let link = this.schema.users.find(linkDbRecord.id);
@@ -74,5 +74,5 @@ export const states = [
   "savedChildNoParent",
   "savedChildSavedParent",
   "newChildNoParent",
-  "newChildNewParent"
+  "newChildNewParent",
 ];

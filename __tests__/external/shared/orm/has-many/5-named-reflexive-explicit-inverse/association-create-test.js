@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Has Many | Named Reflexive Explicit Inverse 
   /*
     The model can create a has-many association, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can create an associated child`, () => {
       let [tag] = helper[state]();
       let initialCount = tag.labels.models.length;

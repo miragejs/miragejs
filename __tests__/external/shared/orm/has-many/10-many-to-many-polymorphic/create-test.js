@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Has Many | Many-to-many Polymorphic | create
   test("it sets up associations correctly when passing in the foreign key", () => {
     let post = helper.schema.create("post");
     let user = helper.schema.create("user", {
-      commentableIds: [{ type: "post", id: post.id }]
+      commentableIds: [{ type: "post", id: post.id }],
     });
 
     post.reload();
@@ -25,14 +25,14 @@ describe("External | Shared | ORM | Has Many | Many-to-many Polymorphic | create
     expect(helper.db.posts[0]).toEqual({ id: "1", userIds: ["1"] });
     expect(helper.db.users[0]).toEqual({
       id: "1",
-      commentableIds: [{ type: "post", id: "1" }]
+      commentableIds: [{ type: "post", id: "1" }],
     });
   });
 
   test("it sets up associations correctly when passing in an array of models", () => {
     let post = helper.schema.create("post");
     let user = helper.schema.create("user", {
-      commentables: [post]
+      commentables: [post],
     });
 
     post.reload();
@@ -48,7 +48,7 @@ describe("External | Shared | ORM | Has Many | Many-to-many Polymorphic | create
   test("it sets up associations correctly when passing in a collection", () => {
     let post = helper.schema.create("post");
     let user = helper.schema.create("user", {
-      commentables: helper.schema.posts.all()
+      commentables: helper.schema.posts.all(),
     });
 
     post.reload();

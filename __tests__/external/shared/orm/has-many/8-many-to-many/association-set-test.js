@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | association #set",
   /*
     The model can update its association via parent, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can update its association to a list of saved children`, () => {
       let [order, originalProducts] = helper[state]();
       let savedProduct = helper.savedChild();
@@ -25,7 +25,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | association #set",
 
       order.save();
 
-      originalProducts.forEach(p => {
+      originalProducts.forEach((p) => {
         p.reload();
         expect(p.orders.includes(order)).toBeFalsy();
       });
@@ -43,7 +43,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | association #set",
 
       order.save();
 
-      originalProducts.forEach(p => {
+      originalProducts.forEach((p) => {
         p.reload();
         expect(p.orders.includes(order)).toBeFalsy();
       });
@@ -58,7 +58,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | association #set",
       expect(order.products.models).toHaveLength(0);
 
       order.save();
-      originalProducts.forEach(p => {
+      originalProducts.forEach((p) => {
         p.reload();
         expect(p.orders.includes(order)).toBeFalsy();
       });
@@ -74,7 +74,7 @@ describe("External | Shared | ORM | Has Many | Many to Many | association #set",
 
       order.save();
 
-      originalProducts.forEach(p => {
+      originalProducts.forEach((p) => {
         p.reload();
         expect(p.orders.includes(order)).toBeFalsy();
       });

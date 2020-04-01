@@ -12,7 +12,7 @@ describe("External | Shared | ORM | Has Many | Basic | association #setIds", () 
   /*
     The model can update its association via parentId, for all states
   */
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can update its association to a saved parent via parentId`, () => {
       let [user] = helper[state]();
       let savedPost = helper.savedChild();

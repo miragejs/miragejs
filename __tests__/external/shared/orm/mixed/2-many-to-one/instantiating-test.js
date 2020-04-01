@@ -25,7 +25,7 @@ describe("External | Shared | ORM | Mixed | One To Many | instantiating", () => 
   });
 
   test("the child errors if the parent id doesnt exist", () => {
-    expect(function() {
+    expect(function () {
       schema.posts.new({ userId: 2 });
     }).toThrow();
   });

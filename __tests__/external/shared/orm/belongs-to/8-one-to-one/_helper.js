@@ -17,12 +17,12 @@ export default class BelongsToHelper {
       environment: "test",
       models: {
         user: Model.extend({
-          profile: belongsTo()
+          profile: belongsTo(),
         }),
         profile: Model.extend({
-          user: belongsTo()
-        })
-      }
+          user: belongsTo(),
+        }),
+      },
     });
 
     this.db = this.server.db;
@@ -52,7 +52,7 @@ export default class BelongsToHelper {
     let insertedProfile = this.db.profiles.insert({ age: 300 });
     let insertedUser = this.db.users.insert({
       name: "Link",
-      profileId: insertedProfile.id
+      profileId: insertedProfile.id,
     });
     this.db.profiles.update(insertedProfile.id, { userId: insertedUser.id });
     let user = this.schema.users.find(insertedUser.id);
@@ -101,5 +101,5 @@ export const states = [
   "savedChildSavedParent",
   "newChildNoParent",
   "newChildNewParent",
-  "newChildSavedParent"
+  "newChildSavedParent",
 ];

@@ -3,7 +3,7 @@ import { Server, Model } from "miragejs";
 describe("Integration | Routes", () => {
   let server;
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -11,21 +11,21 @@ describe("Integration | Routes", () => {
     server = new Server({
       environment: "test",
       models: {
-        user: Model
+        user: Model,
       },
       routes() {
         this.namespace = "api";
 
         this.get("/users");
-      }
+      },
     });
 
     server.createList("user", 3);
 
-    let data = await fetch("/api/users").then(res => res.json());
+    let data = await fetch("/api/users").then((res) => res.json());
 
     expect(data).toEqual({
-      users: [{ id: "1" }, { id: "2" }, { id: "3" }]
+      users: [{ id: "1" }, { id: "2" }, { id: "3" }],
     });
   });
 
@@ -38,7 +38,7 @@ describe("Integration | Routes", () => {
         },
         baseConfig() {
           this.get("/posts", () => ({ posts: [] }));
-        }
+        },
       });
     }).toThrow(
       "The routes option is an alias for the baseConfig option. You can't pass both options into your server definition."

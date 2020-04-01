@@ -3,20 +3,20 @@ import Db from "@lib/db";
 import Schema from "@lib/orm/schema";
 import { Model, hasMany, belongsTo } from "miragejs";
 
-describe("Integration | ORM | Schema Verification | Mixed", function() {
+describe("Integration | ORM | Schema Verification | Mixed", function () {
   test("unnamed one-to-many associations are correct", () => {
     let schema = new Schema(
       new Db({
         wordSmiths: [{ id: 1, name: "Frodo" }],
-        blogPosts: [{ id: 1, title: "Lorem" }]
+        blogPosts: [{ id: 1, title: "Lorem" }],
       }),
       {
         wordSmith: Model.extend({
-          blogPosts: hasMany()
+          blogPosts: hasMany(),
         }),
         blogPost: Model.extend({
-          wordSmith: belongsTo()
-        })
+          wordSmith: belongsTo(),
+        }),
       }
     );
 
@@ -38,15 +38,15 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     let schema = new Schema(
       new Db({
         wordSmiths: [{ id: 1, name: "Frodo" }],
-        blogPosts: [{ id: 1, title: "Lorem" }]
+        blogPosts: [{ id: 1, title: "Lorem" }],
       }),
       {
         wordSmith: Model.extend({
-          posts: hasMany("blog-post")
+          posts: hasMany("blog-post"),
         }),
         blogPost: Model.extend({
-          author: belongsTo("word-smith")
-        })
+          author: belongsTo("word-smith"),
+        }),
       }
     );
 
@@ -66,17 +66,17 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],
-        posts: [{ id: 1, title: "Lorem" }]
+        posts: [{ id: 1, title: "Lorem" }],
       }),
       {
         user: Model.extend({
           notes: hasMany("post", { inverse: "author" }),
-          messages: hasMany("post", { inverse: "messenger" })
+          messages: hasMany("post", { inverse: "messenger" }),
         }),
         post: Model.extend({
           author: belongsTo("user", { inverse: "notes" }),
-          messenger: belongsTo("user", { inverse: "messages" })
-        })
+          messenger: belongsTo("user", { inverse: "messages" }),
+        }),
       }
     );
 
@@ -107,13 +107,13 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
   test("one-to-many reflexive association is correct", () => {
     let schema = new Schema(
       new Db({
-        users: [{ id: 1, name: "Frodo" }]
+        users: [{ id: 1, name: "Frodo" }],
       }),
       {
         user: Model.extend({
           parent: belongsTo("user", { inverse: "children" }),
-          children: hasMany("user", { inverse: "parent" })
-        })
+          children: hasMany("user", { inverse: "parent" }),
+        }),
       }
     );
 
@@ -134,18 +134,18 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
       new Db({
         authors: [{ id: 1, name: "Peter" }],
         posts: [{ id: 1, title: "Lorem" }],
-        articles: [{ id: 1, title: "Ipsum" }]
+        articles: [{ id: 1, title: "Ipsum" }],
       }),
       {
         author: Model.extend({
-          writings: hasMany({ polymorphic: true })
+          writings: hasMany({ polymorphic: true }),
         }),
         post: Model.extend({
-          author: belongsTo("author", { inverse: "writings" })
+          author: belongsTo("author", { inverse: "writings" }),
         }),
         article: Model.extend({
-          author: belongsTo("author", { inverse: "writings" })
-        })
+          author: belongsTo("author", { inverse: "writings" }),
+        }),
       }
     );
 
@@ -174,16 +174,16 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],
-        posts: [{ id: 1, title: "Lorem" }]
+        posts: [{ id: 1, title: "Lorem" }],
       }),
       {
         user: Model.extend({
-          posts: hasMany("post")
+          posts: hasMany("post"),
         }),
         post: Model.extend({
           editor: belongsTo("user"),
-          authors: hasMany("user")
-        })
+          authors: hasMany("user"),
+        }),
       }
     );
 
@@ -191,7 +191,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     let userPostsAssociation = frodo.associationFor("posts");
     let post = schema.posts.find(1);
 
-    expect(function() {
+    expect(function () {
       post.inverseFor(userPostsAssociation);
     }).toThrow();
   });
@@ -200,16 +200,16 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],
-        posts: [{ id: 1, title: "Lorem" }]
+        posts: [{ id: 1, title: "Lorem" }],
       }),
       {
         user: Model.extend({
-          posts: hasMany("post", { inverse: "authors" })
+          posts: hasMany("post", { inverse: "authors" }),
         }),
         post: Model.extend({
           editor: belongsTo("user", { inverse: "posts" }),
-          authors: hasMany("user", { inverse: "posts" })
-        })
+          authors: hasMany("user", { inverse: "posts" }),
+        }),
       }
     );
 
@@ -217,7 +217,7 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     let userPostsAssociation = frodo.associationFor("posts");
     let post = schema.posts.find(1);
 
-    expect(function() {
+    expect(function () {
       post.inverseFor(userPostsAssociation);
     }).toThrow();
   });
@@ -226,16 +226,16 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],
-        posts: [{ id: 1, title: "Lorem" }]
+        posts: [{ id: 1, title: "Lorem" }],
       }),
       {
         user: Model.extend({
-          posts: hasMany("post", { inverse: "authors" })
+          posts: hasMany("post", { inverse: "authors" }),
         }),
         post: Model.extend({
           editor: belongsTo("user"),
-          authors: hasMany("user", { inverse: "posts" })
-        })
+          authors: hasMany("user", { inverse: "posts" }),
+        }),
       }
     );
 
@@ -258,19 +258,19 @@ describe("Integration | ORM | Schema Verification | Mixed", function() {
       new Db({
         users: [{ id: 1, name: "Frodo" }],
         posts: [{ id: 1, title: "Lorem" }],
-        books: [{ id: 1, title: "Ipsum" }]
+        books: [{ id: 1, title: "Ipsum" }],
       }),
       {
         user: Model.extend({
           authoredPosts: hasMany("post", { inverse: "authors" }),
-          authoredBooks: hasMany("book", { inverse: "authors" })
+          authoredBooks: hasMany("book", { inverse: "authors" }),
         }),
         post: Model.extend({
-          authors: hasMany("user", { inverse: "authoredPosts" })
+          authors: hasMany("user", { inverse: "authoredPosts" }),
         }),
         book: Model.extend({
-          authors: hasMany("user", { inverse: "authoredBooks" })
-        })
+          authors: hasMany("user", { inverse: "authoredBooks" }),
+        }),
       }
     );
 

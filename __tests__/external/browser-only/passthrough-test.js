@@ -5,7 +5,7 @@ describe("External | Browser only | Passthrough", () => {
 
   beforeEach(() => {
     server = new Server({
-      environment: "test"
+      environment: "test",
     });
 
     /*
@@ -27,8 +27,8 @@ describe("External | Browser only | Passthrough", () => {
   test("it can passthrough individual paths", async () => {
     expect.assertions(2);
 
-    server.loadConfig(function() {
-      this.get("/contacts", function() {
+    server.loadConfig(function () {
+      this.get("/contacts", function () {
         return 123;
       });
       this.passthrough("/addresses");
@@ -44,8 +44,8 @@ describe("External | Browser only | Passthrough", () => {
   test("it can passthrough certain verbs for individual paths", async () => {
     expect.assertions(3);
 
-    server.loadConfig(function() {
-      this.get("/contacts", function() {
+    server.loadConfig(function () {
+      this.get("/contacts", function () {
         return 123;
       });
       this.passthrough("/addresses", ["post"]);
@@ -68,7 +68,7 @@ describe("External | Browser only | Passthrough", () => {
     let verbs = ["GET", "HEAD", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"];
     expect.assertions(7);
 
-    server.loadConfig(function() {
+    server.loadConfig(function () {
       this.passthrough("/addresses");
     });
 
@@ -82,8 +82,8 @@ describe("External | Browser only | Passthrough", () => {
   test("it can passthrough multiple paths in a single call", async () => {
     expect.assertions(2);
 
-    server.loadConfig(function() {
-      this.get("/contacts", function() {
+    server.loadConfig(function () {
+      this.get("/contacts", function () {
         return 123;
       });
       this.passthrough("/contacts", "/addresses");
@@ -96,7 +96,7 @@ describe("External | Browser only | Passthrough", () => {
   test("user can call passthrough multiple times", async () => {
     expect.assertions(2);
 
-    server.loadConfig(function() {
+    server.loadConfig(function () {
       this.passthrough("/contacts");
       this.passthrough("/addresses", ["post"]);
     });
@@ -110,8 +110,8 @@ describe("External | Browser only | Passthrough", () => {
   test("passthrough without args allows all paths on the current domain to passthrough", async () => {
     expect.assertions(2);
 
-    server.loadConfig(function() {
-      this.get("/contacts", function() {
+    server.loadConfig(function () {
+      this.get("/contacts", function () {
         return 123;
       });
       this.passthrough();
@@ -127,8 +127,8 @@ describe("External | Browser only | Passthrough", () => {
   test("passthrough without args allows index route on current domain to passthrough", async () => {
     expect.assertions(2);
 
-    server.loadConfig(function() {
-      this.get("/contacts", function() {
+    server.loadConfig(function () {
+      this.get("/contacts", function () {
         return 123;
       });
       this.passthrough();
@@ -144,7 +144,7 @@ describe("External | Browser only | Passthrough", () => {
   test("it can passthrough other-origin hosts", async () => {
     expect.assertions(1);
 
-    server.loadConfig(function() {
+    server.loadConfig(function () {
       this.passthrough("http://api.foo.bar/**");
     });
 
@@ -156,10 +156,10 @@ describe("External | Browser only | Passthrough", () => {
   test("it can take a function", async () => {
     server.config({
       routes() {
-        this.passthrough(request => {
+        this.passthrough((request) => {
           return request.url.match(/users/);
         });
-      }
+      },
     });
 
     await expect(fetch("/users?test=withQueryParams")).rejects.toThrow(
@@ -190,7 +190,7 @@ describe("External | Browser only | Passthrough", () => {
 
 test("a new server created with useDefaultPassthroughs set to false ignores default passthrougsh", async () => {
   let server = new Server({
-    useDefaultPassthroughs: false
+    useDefaultPassthroughs: false,
   });
 
   await expect(fetch("/abc.hot-update.json")).rejects.toThrow(

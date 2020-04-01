@@ -1,17 +1,17 @@
 import { Server, Model, Serializer } from "miragejs";
 
-describe("External | Shared | Serializers | Base | Overriding Serialize", function() {
+describe("External | Shared | Serializers | Base | Overriding Serialize", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       models: {
-        wordSmith: Model
-      }
+        wordSmith: Model,
+      },
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -21,13 +21,13 @@ describe("External | Shared | Serializers | Base | Overriding Serialize", functi
         wordSmith: Serializer.extend({
           serialize() {
             return "blah";
-          }
-        })
-      }
+          },
+        }),
+      },
     });
     let wordSmith = server.schema.wordSmiths.create({
       id: 1,
-      title: "Link"
+      title: "Link",
     });
 
     let result = server.serializerOrRegistry.serialize(wordSmith);
@@ -41,20 +41,20 @@ describe("External | Shared | Serializers | Base | Overriding Serialize", functi
         wordSmith: Serializer.extend({
           serialize(response, request) {
             return request.queryParams.foo || "blah";
-          }
-        })
-      }
+          },
+        }),
+      },
     });
 
     let wordSmith = server.schema.wordSmiths.create({
       id: 1,
-      title: "Link"
+      title: "Link",
     });
 
     let request = {
       url: "/word-smiths/1?foo=bar",
       params: { id: "1" },
-      queryParams: { foo: "bar" }
+      queryParams: { foo: "bar" },
     };
     let result = server.serializerOrRegistry.serialize(wordSmith, request);
 
@@ -68,20 +68,20 @@ describe("External | Shared | Serializers | Base | Overriding Serialize", functi
           serialize(response, request) {
             let id = request.params.id;
             return server.schema.db.wordSmiths.find(id).title || "No title";
-          }
-        })
-      }
+          },
+        }),
+      },
     });
 
     let wordSmith = server.schema.wordSmiths.create({
       id: 1,
-      title: "Title in database"
+      title: "Title in database",
     });
 
     let request = {
       url: "/word-smiths/1?foo=bar",
       params: { id: "1" },
-      queryParams: { foo: "bar" }
+      queryParams: { foo: "bar" },
     };
     let result = server.serializerOrRegistry.serialize(wordSmith, request);
 

@@ -1,6 +1,6 @@
 import { Server, Model, Collection } from "miragejs";
 
-describe("External | Shared | ORM | #all", function() {
+describe("External | Shared | ORM | #all", function () {
   let User;
   let server;
 
@@ -9,8 +9,8 @@ describe("External | Shared | ORM | #all", function() {
     server = new Server({
       environment: "test",
       models: {
-        user: User
-      }
+        user: User,
+      },
     });
   });
 
@@ -22,8 +22,8 @@ describe("External | Shared | ORM | #all", function() {
     server.db.loadData({
       users: [
         { id: 1, name: "Link" },
-        { id: 2, name: "Zelda" }
-      ]
+        { id: 2, name: "Zelda" },
+      ],
     });
 
     let users = server.schema.users.all();

@@ -1,8 +1,8 @@
 import { JSONAPISerializer } from "@lib";
 
-describe("Unit | Serializers | JSON API Serializer", function() {
+describe("Unit | Serializers | JSON API Serializer", function () {
   let serializer = null;
-  beforeEach(function() {
+  beforeEach(function () {
     serializer = new JSONAPISerializer();
   });
 

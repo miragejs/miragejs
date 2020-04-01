@@ -1,6 +1,6 @@
 import { _ormSchema as Schema, _Db as Db, Model, belongsTo } from "@lib";
 
-describe("Unit | Schema", function() {
+describe("Unit | Schema", function () {
   test("it can be instantiated", () => {
     let dbMock = {};
     let schema = new Schema(dbMock);
@@ -8,7 +8,7 @@ describe("Unit | Schema", function() {
   });
 
   test("it cannot be instantiated without a db", () => {
-    expect(function() {
+    expect(function () {
       new Schema();
     }).toThrow("A schema requires a db");
   });
@@ -21,7 +21,7 @@ describe("Unit | Schema", function() {
 
     let authorModel = Model.extend({});
     let articleModel = Model.extend({
-      author: belongsTo()
+      author: belongsTo(),
     });
     schema.registerModel("article", articleModel);
     schema.registerModel("author", authorModel);

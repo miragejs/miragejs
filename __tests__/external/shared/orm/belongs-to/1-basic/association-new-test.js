@@ -13,7 +13,7 @@ describe("External | Shared | ORM | Belongs To | Basic | association #new", () =
     The model can make a new unsaved belongs-to association, for all states
   */
 
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`a ${state} can build a new associated parent`, () => {
       let [post] = helper[state]();
 

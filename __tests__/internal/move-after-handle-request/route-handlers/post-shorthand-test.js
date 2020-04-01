@@ -8,8 +8,8 @@ describe("Integration | Route Handlers | POST shorthand", () => {
     server = new Server({
       environment: "development",
       models: {
-        author: Model.extend({})
-      }
+        author: Model.extend({}),
+      },
     });
     server.timing = 0;
     server.logging = false;
@@ -22,9 +22,9 @@ describe("Integration | Route Handlers | POST shorthand", () => {
         type: "authors",
         attributes: {
           "first-name": "Ganon",
-          "last-name": "Dorf"
-        }
-      }
+          "last-name": "Dorf",
+        },
+      },
     };
   });
 
@@ -48,7 +48,7 @@ describe("Integration | Route Handlers | POST shorthand", () => {
     let request = {
       requestBody: JSON.stringify(body),
       url: "/authors?foo=bar",
-      queryParams: { foo: "bar" }
+      queryParams: { foo: "bar" },
     };
     let handler = new PostShorthandRouteHandler(schema, serializer, "author");
 
@@ -81,7 +81,7 @@ describe("Integration | Route Handlers | POST shorthand", () => {
     let request = { requestBody: JSON.stringify(body), url: "/foobars" };
     let handler = new PostShorthandRouteHandler(schema, serializer, "foobar");
 
-    expect(function() {
+    expect(function () {
       handler.handle(request);
     }).toThrow();
     expect(true).toBeTruthy();

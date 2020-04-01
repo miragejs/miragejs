@@ -9,7 +9,7 @@ describe("External | Shared | ORM | Belongs To | Named Reflexive Explicit Invers
     helper.shutdown();
   });
 
-  states.forEach(state => {
+  states.forEach((state) => {
     test(`deleting the parent updates the child's foreign key for a ${state}`, () => {
       let [user, bestFriend] = helper[state]();
 

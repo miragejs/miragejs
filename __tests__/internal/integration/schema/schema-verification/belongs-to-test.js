@@ -3,18 +3,18 @@ import Db from "@lib/db";
 import Schema from "@lib/orm/schema";
 import { Model, belongsTo } from "miragejs";
 
-describe("Internal | Integration | Schema | Schema Verification | Belongs To", function() {
+describe("Internal | Integration | Schema | Schema Verification | Belongs To", function () {
   test("a one-way belongsTo association is correct", () => {
     let schema = new Schema(
       new Db({
         authors: [{ id: 1, name: "Frodo" }],
-        posts: [{ id: 1, title: "Lorem ipsum" }]
+        posts: [{ id: 1, title: "Lorem ipsum" }],
       }),
       {
         author: Model.extend(),
         post: Model.extend({
-          author: belongsTo()
-        })
+          author: belongsTo(),
+        }),
       }
     );
 
@@ -32,13 +32,13 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],
-        posts: [{ id: 1, title: "Lorem ipsum" }]
+        posts: [{ id: 1, title: "Lorem ipsum" }],
       }),
       {
         user: Model.extend(),
         post: Model.extend({
-          author: belongsTo("user")
-        })
+          author: belongsTo("user"),
+        }),
       }
     );
 
@@ -55,12 +55,12 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
   test("a reflexive belongsTo association is correct and has an implicit inverse", () => {
     let schema = new Schema(
       new Db({
-        users: [{ id: 1, name: "Frodo" }]
+        users: [{ id: 1, name: "Frodo" }],
       }),
       {
         user: Model.extend({
-          user: belongsTo()
-        })
+          user: belongsTo(),
+        }),
       }
     );
 
@@ -76,12 +76,12 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
   test("a named reflexive belongsTo association with an implicit inverse is correct", () => {
     let schema = new Schema(
       new Db({
-        users: [{ id: 1, name: "Frodo" }]
+        users: [{ id: 1, name: "Frodo" }],
       }),
       {
         user: Model.extend({
-          bestFriend: belongsTo("user")
-        })
+          bestFriend: belongsTo("user"),
+        }),
       }
     );
 
@@ -97,12 +97,12 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
   test("a named reflexive belongsTo association with an explicit inverse is correct", () => {
     let schema = new Schema(
       new Db({
-        users: [{ id: 1, name: "Frodo" }]
+        users: [{ id: 1, name: "Frodo" }],
       }),
       {
         user: Model.extend({
-          bestFriend: belongsTo("user", { inverse: "bestFriend" })
-        })
+          bestFriend: belongsTo("user", { inverse: "bestFriend" }),
+        }),
       }
     );
 
@@ -118,12 +118,12 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
   test("a one-way reflexive belongsTo association with a null inverse is correct", () => {
     let schema = new Schema(
       new Db({
-        users: [{ id: 1, name: "Frodo" }]
+        users: [{ id: 1, name: "Frodo" }],
       }),
       {
         user: Model.extend({
-          user: belongsTo("user", { inverse: null })
-        })
+          user: belongsTo("user", { inverse: null }),
+        }),
       }
     );
 
@@ -139,12 +139,12 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
   test("a named one-way way reflexive belongsTo association with a null inverse is correct", () => {
     let schema = new Schema(
       new Db({
-        users: [{ id: 1, name: "Frodo" }]
+        users: [{ id: 1, name: "Frodo" }],
       }),
       {
         user: Model.extend({
-          parent: belongsTo("user", { inverse: null })
-        })
+          parent: belongsTo("user", { inverse: null }),
+        }),
       }
     );
 
@@ -161,15 +161,15 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
     let schema = new Schema(
       new Db({
         users: [{ id: 1, name: "Frodo" }],
-        profiles: [{ id: 1, type: "Admin" }]
+        profiles: [{ id: 1, type: "Admin" }],
       }),
       {
         user: Model.extend({
-          profile: belongsTo()
+          profile: belongsTo(),
         }),
         profile: Model.extend({
-          user: belongsTo()
-        })
+          user: belongsTo(),
+        }),
       }
     );
 

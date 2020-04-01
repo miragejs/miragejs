@@ -1,18 +1,18 @@
 import { Server, Model } from "miragejs";
 import uniqBy from "lodash.uniqby";
 
-describe("External | Shared | Serializers | Base | Basic", function() {
+describe("External | Shared | Serializers | Base | Basic", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       models: {
-        wordSmith: Model
-      }
+        wordSmith: Model,
+      },
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -25,7 +25,7 @@ describe("External | Shared | Serializers | Base | Basic", function() {
   test("it returns arrays unaffected", () => {
     let data = [
       { id: "1", name: "Link" },
-      { id: "2", name: "Zelda" }
+      { id: "2", name: "Zelda" },
     ];
     let result = server.serializerOrRegistry.serialize(data);
 
@@ -41,15 +41,15 @@ describe("External | Shared | Serializers | Base | Basic", function() {
   test(`it serializes a model by returning its attrs under a root`, () => {
     let wordSmith = server.schema.wordSmiths.create({
       id: 1,
-      name: "Link"
+      name: "Link",
     });
     let result = server.serializerOrRegistry.serialize(wordSmith);
 
     expect(result).toEqual({
       wordSmith: {
         id: "1",
-        name: "Link"
-      }
+        name: "Link",
+      },
     });
   });
 
@@ -64,8 +64,8 @@ describe("External | Shared | Serializers | Base | Basic", function() {
     expect(result).toEqual({
       wordSmiths: [
         { id: "1", name: "Link" },
-        { id: "2", name: "Zelda" }
-      ]
+        { id: "2", name: "Zelda" },
+      ],
     });
   });
 
@@ -74,7 +74,7 @@ describe("External | Shared | Serializers | Base | Basic", function() {
     let result = server.serializerOrRegistry.serialize(wordSmiths);
 
     expect(result).toEqual({
-      wordSmiths: []
+      wordSmiths: [],
     });
   });
 

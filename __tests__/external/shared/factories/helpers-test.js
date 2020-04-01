@@ -5,7 +5,7 @@ import {
   belongsTo,
   hasMany,
   trait,
-  association
+  association,
 } from "miragejs";
 
 describe("Eternal | Shared | Factories | helpers", () => {
@@ -20,22 +20,22 @@ describe("Eternal | Shared | Factories | helpers", () => {
       environment: "test",
       models: {
         author: Model.extend({
-          blogPosts: hasMany()
+          blogPosts: hasMany(),
         }),
         blogPost: Model.extend({
-          author: belongsTo()
-        })
+          author: belongsTo(),
+        }),
       },
       factories: {
         author: Factory.extend({
-          name: "Sam"
+          name: "Sam",
         }),
         blogPost: Factory.extend({
           title: "Lorem ipsum",
 
-          author: association()
-        })
-      }
+          author: association(),
+        }),
+      },
     });
 
     let blogPost = server.create("blog-post");
@@ -48,7 +48,7 @@ describe("Eternal | Shared | Factories | helpers", () => {
     expect(db.authors[0]).toEqual({
       id: "1",
       name: "Sam",
-      blogPostIds: ["1"]
+      blogPostIds: ["1"],
     });
   });
 
@@ -57,22 +57,22 @@ describe("Eternal | Shared | Factories | helpers", () => {
       environment: "test",
       models: {
         author: Model.extend({
-          posts: hasMany()
+          posts: hasMany(),
         }),
         category: Model.extend({
-          posts: hasMany("post", { inverse: "kind" })
+          posts: hasMany("post", { inverse: "kind" }),
         }),
         post: Model.extend({
           author: belongsTo(),
-          kind: belongsTo("category")
-        })
+          kind: belongsTo("category"),
+        }),
       },
       factories: {
         author: Factory.extend({
-          name: "Sam"
+          name: "Sam",
         }),
         category: Factory.extend({
-          name: "awesome software"
+          name: "awesome software",
         }),
         post: Factory.extend({
           title: "Lorem ipsum",
@@ -80,10 +80,10 @@ describe("Eternal | Shared | Factories | helpers", () => {
           author: association(),
 
           withCategory: trait({
-            kind: association()
-          })
-        })
-      }
+            kind: association(),
+          }),
+        }),
+      },
     });
 
     let post = server.create("post", "withCategory");
@@ -98,21 +98,21 @@ describe("Eternal | Shared | Factories | helpers", () => {
       id: "1",
       title: "Lorem ipsum",
       authorId: "1",
-      kindId: "1"
+      kindId: "1",
     });
 
     expect(db.authors).toHaveLength(1);
     expect(db.authors[0]).toEqual({
       id: "1",
       name: "Sam",
-      postIds: ["1"]
+      postIds: ["1"],
     });
 
     expect(db.categories).toHaveLength(1);
     expect(db.categories[0]).toEqual({
       id: "1",
       name: "awesome software",
-      postIds: ["1"]
+      postIds: ["1"],
     });
   });
 
@@ -122,14 +122,14 @@ describe("Eternal | Shared | Factories | helpers", () => {
       models: {
         page: Model.extend({
           parentPage: belongsTo("page", { inverse: "childPages" }),
-          childPages: hasMany("page", { inverse: "parentPage" })
-        })
+          childPages: hasMany("page", { inverse: "parentPage" }),
+        }),
       },
       factories: {
         page: Factory.extend({
-          parentPage: association()
-        })
-      }
+          parentPage: association(),
+        }),
+      },
     });
 
     expect(() => {
@@ -142,15 +142,15 @@ describe("Eternal | Shared | Factories | helpers", () => {
       environment: "test",
       models: {
         author: Model.extend({
-          anyPost: belongsTo("base-post", { polymorphic: true })
+          anyPost: belongsTo("base-post", { polymorphic: true }),
         }),
-        basePost: Model.extend({})
+        basePost: Model.extend({}),
       },
       factories: {
         author: Factory.extend({
-          anyPost: association()
-        })
-      }
+          anyPost: association(),
+        }),
+      },
     });
 
     expect(() => {

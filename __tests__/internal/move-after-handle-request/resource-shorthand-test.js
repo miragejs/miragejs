@@ -1,24 +1,24 @@
 import { Server, Model, ActiveModelSerializer } from "miragejs";
 
-describe("Integration | Server | Resource shorthand", function() {
+describe("Integration | Server | Resource shorthand", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       environment: "test",
       models: {
         contact: Model,
-        blogPost: Model
+        blogPost: Model,
       },
       serializers: {
-        application: ActiveModelSerializer
-      }
+        application: ActiveModelSerializer,
+      },
     });
     server.timing = 0;
     server.logging = false;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
@@ -28,12 +28,12 @@ describe("Integration | Server | Resource shorthand", function() {
     server.db.loadData({
       contacts: [
         { id: 1, name: "Link" },
-        { id: 2, name: "Zelda" }
+        { id: 2, name: "Zelda" },
       ],
       blogPosts: [
         { id: 1, title: "Post 1" },
-        { id: 2, title: "Post 2" }
-      ]
+        { id: 2, title: "Post 2" },
+      ],
     });
 
     server.resource("contacts");
@@ -45,8 +45,8 @@ describe("Integration | Server | Resource shorthand", function() {
     expect(data).toEqual({
       contacts: [
         { id: "1", name: "Link" },
-        { id: "2", name: "Zelda" }
-      ]
+        { id: "2", name: "Zelda" },
+      ],
     });
   });
 
@@ -56,12 +56,12 @@ describe("Integration | Server | Resource shorthand", function() {
     server.db.loadData({
       contacts: [
         { id: 1, name: "Link" },
-        { id: 2, name: "Zelda" }
+        { id: 2, name: "Zelda" },
       ],
       blogPosts: [
         { id: 1, title: "Post 1" },
-        { id: 2, title: "Post 2" }
-      ]
+        { id: 2, title: "Post 2" },
+      ],
     });
 
     server.resource("contacts");
@@ -83,9 +83,9 @@ describe("Integration | Server | Resource shorthand", function() {
       method: "POST",
       body: JSON.stringify({
         contact: {
-          name: "Zelda"
-        }
-      })
+          name: "Zelda",
+        },
+      }),
     });
 
     expect(res.status).toEqual(201);
@@ -97,7 +97,7 @@ describe("Integration | Server | Resource shorthand", function() {
 
     server.db.loadData({
       contacts: [{ id: 1, name: "Link" }],
-      blogPosts: [{ id: 1, title: "Post 1" }]
+      blogPosts: [{ id: 1, title: "Post 1" }],
     });
 
     server.resource("contacts");
@@ -106,9 +106,9 @@ describe("Integration | Server | Resource shorthand", function() {
       method: "PUT",
       body: JSON.stringify({
         contact: {
-          name: "Zelda"
-        }
-      })
+          name: "Zelda",
+        },
+      }),
     });
 
     expect(res.status).toEqual(200);
@@ -120,7 +120,7 @@ describe("Integration | Server | Resource shorthand", function() {
 
     server.db.loadData({
       contacts: [{ id: 1, name: "Link" }],
-      blogPosts: [{ id: 1, title: "Post 1" }]
+      blogPosts: [{ id: 1, title: "Post 1" }],
     });
 
     server.resource("contacts");
@@ -129,9 +129,9 @@ describe("Integration | Server | Resource shorthand", function() {
       method: "PATCH",
       body: JSON.stringify({
         contact: {
-          name: "Zelda"
-        }
-      })
+          name: "Zelda",
+        },
+      }),
     });
 
     expect(res.status).toEqual(200);
@@ -143,7 +143,7 @@ describe("Integration | Server | Resource shorthand", function() {
 
     server.db.loadData({
       contacts: [{ id: 1, name: "Link" }],
-      blogPosts: [{ id: 1, title: "Post 1" }]
+      blogPosts: [{ id: 1, title: "Post 1" }],
     });
 
     server.resource("contacts");
@@ -160,8 +160,8 @@ describe("Integration | Server | Resource shorthand", function() {
     server.db.loadData({
       blogPosts: [
         { id: 1, title: "Post 1" },
-        { id: 2, title: "Post 2" }
-      ]
+        { id: 2, title: "Post 2" },
+      ],
     });
 
     server.resource("blog-posts", { path: "/posts" });
@@ -176,9 +176,9 @@ describe("Integration | Server | Resource shorthand", function() {
       method: "POST",
       body: JSON.stringify({
         blog_post: {
-          name: "Post 1"
-        }
-      })
+          name: "Post 1",
+        },
+      }),
     });
     expect(createResponse.status).toEqual(201);
 
@@ -186,9 +186,9 @@ describe("Integration | Server | Resource shorthand", function() {
       method: "PUT",
       body: JSON.stringify({
         blog_post: {
-          name: "Post 2"
-        }
-      })
+          name: "Post 2",
+        },
+      }),
     });
     expect(updatePutResponse.status).toEqual(200);
 
@@ -196,9 +196,9 @@ describe("Integration | Server | Resource shorthand", function() {
       method: "PATCH",
       body: JSON.stringify({
         blog_post: {
-          name: "Post 2"
-        }
-      })
+          name: "Post 2",
+        },
+      }),
     });
     expect(updatePatchResponse.status).toEqual(200);
 
@@ -212,12 +212,12 @@ describe("Integration | Server | Resource shorthand", function() {
     server.db.loadData({
       contacts: [
         { id: 1, name: "Link" },
-        { id: 2, name: "Zelda" }
+        { id: 2, name: "Zelda" },
       ],
       blogPosts: [
         { id: 1, title: "Post 1" },
-        { id: 2, title: "Post 2" }
-      ]
+        { id: 2, title: "Post 2" },
+      ],
     });
 
     server.resource("contact");
@@ -230,8 +230,8 @@ describe("Integration | Server | Resource shorthand", function() {
     expect(contactsResponseData).toEqual({
       contacts: [
         { id: "1", name: "Link" },
-        { id: "2", name: "Zelda" }
-      ]
+        { id: "2", name: "Zelda" },
+      ],
     });
 
     let postsResponse = await fetch("/posts");
@@ -241,8 +241,8 @@ describe("Integration | Server | Resource shorthand", function() {
     expect(postsResponseData).toEqual({
       blog_posts: [
         { id: "1", title: "Post 1" },
-        { id: "2", title: "Post 2" }
-      ]
+        { id: "2", title: "Post 2" },
+      ],
     });
   });
 
@@ -258,8 +258,8 @@ describe("Integration | Server | Resource shorthand", function() {
     server.db.loadData({
       contacts: [
         { id: 1, name: "Link" },
-        { id: 2, name: "Zelda" }
-      ]
+        { id: 2, name: "Zelda" },
+      ],
     });
 
     server.resource("contacts", { only: ["index"] });
@@ -273,7 +273,7 @@ describe("Integration | Server | Resource shorthand", function() {
     expect.assertions(5);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }]
+      contacts: [{ id: 1, name: "Link" }],
     });
 
     server.resource("contacts", { only: ["index"] });
@@ -299,7 +299,7 @@ describe("Integration | Server | Resource shorthand", function() {
     expect.assertions(2);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }]
+      contacts: [{ id: 1, name: "Link" }],
     });
 
     server.resource("contacts", { except: ["create", "update", "delete"] });
@@ -315,7 +315,7 @@ describe("Integration | Server | Resource shorthand", function() {
     expect.assertions(4);
 
     server.db.loadData({
-      contacts: [{ id: 1, name: "Link" }]
+      contacts: [{ id: 1, name: "Link" }],
     });
 
     server.resource("contacts", { except: ["create", "update", "delete"] });

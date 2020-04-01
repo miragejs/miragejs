@@ -7,11 +7,11 @@ describe("Integration | Route handlers | Function handler | #normalizedRequestAt
       environment: "development",
       models: {
         user: Model.extend({}),
-        fineComment: Model.extend({})
+        fineComment: Model.extend({}),
       },
       serializers: {
-        application: ActiveModelSerializer
-      }
+        application: ActiveModelSerializer,
+      },
     });
     server.timing = 0;
     server.logging = false;
@@ -24,13 +24,13 @@ describe("Integration | Route handlers | Function handler | #normalizedRequestAt
   test(`it returns an object with the primary resource's attrs and belongsTo keys camelized`, async () => {
     expect.assertions(1);
 
-    server.post("/users", function() {
+    server.post("/users", function () {
       let attrs = this.normalizedRequestAttrs();
 
       expect(attrs).toEqual({
         firstName: "Sam",
         lastName: "Selikoff",
-        teamId: 1
+        teamId: 1,
       });
 
       return {};
@@ -39,26 +39,26 @@ describe("Integration | Route handlers | Function handler | #normalizedRequestAt
     await fetch("/users", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         user: {
           first_name: "Sam",
           last_name: "Selikoff",
-          team_id: 1
-        }
-      })
+          team_id: 1,
+        },
+      }),
     });
   });
 
   test(`it works for compound names`, async () => {
     expect.assertions(1);
 
-    server.post("/fine-comments", function() {
+    server.post("/fine-comments", function () {
       let attrs = this.normalizedRequestAttrs();
 
       expect(attrs).toEqual({
-        shortText: "lorem ipsum"
+        shortText: "lorem ipsum",
       });
 
       return {};
@@ -67,20 +67,20 @@ describe("Integration | Route handlers | Function handler | #normalizedRequestAt
     await fetch("/fine-comments", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         fine_comment: {
-          short_text: "lorem ipsum"
-        }
-      })
+          short_text: "lorem ipsum",
+        },
+      }),
     });
   });
 
   test(`it shows a meaningful error message if it cannot infer the modelname from the URL`, async () => {
     expect.assertions(2);
 
-    server.post("/users/create", function() {
+    server.post("/users/create", function () {
       this.normalizedRequestAttrs();
     });
 
@@ -96,13 +96,13 @@ describe("Integration | Route handlers | Function handler | #normalizedRequestAt
   test(`it accepts an optional modelName if it cannot be inferred from the path `, async () => {
     expect.assertions(1);
 
-    server.post("/users/create", function() {
+    server.post("/users/create", function () {
       let attrs = this.normalizedRequestAttrs("user");
 
       expect(attrs).toEqual({
         firstName: "Sam",
         lastName: "Selikoff",
-        teamId: 1
+        teamId: 1,
       });
 
       return {};
@@ -111,22 +111,22 @@ describe("Integration | Route handlers | Function handler | #normalizedRequestAt
     await fetch("/users/create", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         user: {
           first_name: "Sam",
           last_name: "Selikoff",
-          team_id: 1
-        }
-      })
+          team_id: 1,
+        },
+      }),
     });
   });
 
   test(`it errors if the optional parameter is camelized for a model with a compount name`, async () => {
     expect.assertions(2);
 
-    server.post("/fine-comments/create", function() {
+    server.post("/fine-comments/create", function () {
       this.normalizedRequestAttrs("fineComment");
     });
 
@@ -142,13 +142,13 @@ describe("Integration | Route handlers | Function handler | #normalizedRequestAt
   test(`it works with a form encoded request that has a lower-case content-type (issue 1398)`, async () => {
     expect.assertions(1);
 
-    server.post("/form-test", function() {
+    server.post("/form-test", function () {
       let attrs = this.normalizedRequestAttrs("user");
 
       expect(attrs).toEqual({
         name: "Sam Selikoff",
         company: "TED",
-        email: "sam.selikoff@gmail.com"
+        email: "sam.selikoff@gmail.com",
       });
 
       return {};
@@ -157,9 +157,9 @@ describe("Integration | Route handlers | Function handler | #normalizedRequestAt
     await fetch("/form-test", {
       method: "POST",
       headers: {
-        "content-type": "x-www-form-urlencoded"
+        "content-type": "x-www-form-urlencoded",
       },
-      body: "name=Sam+Selikoff&company=TED&email=sam.selikoff@gmail.com"
+      body: "name=Sam+Selikoff&company=TED&email=sam.selikoff@gmail.com",
     });
   });
 });

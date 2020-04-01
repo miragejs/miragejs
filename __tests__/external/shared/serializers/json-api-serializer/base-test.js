@@ -6,11 +6,11 @@ describe("External | Shared | Serializers | JSON API Serializer | Base", () => {
   beforeEach(() => {
     server = new Server({
       models: {
-        wordSmith: Model
+        wordSmith: Model,
       },
       serializers: {
-        application: JSONAPISerializer
-      }
+        application: JSONAPISerializer,
+      },
     });
   });
 
@@ -28,9 +28,9 @@ describe("External | Shared | Serializers | JSON API Serializer | Base", () => {
         id: "1",
         attributes: {
           "first-name": "Link",
-          age: 123
-        }
-      }
+          age: 123,
+        },
+      },
     });
   });
 
@@ -49,18 +49,18 @@ describe("External | Shared | Serializers | JSON API Serializer | Base", () => {
           id: "1",
           attributes: {
             "first-name": "Link",
-            age: 123
-          }
+            age: 123,
+          },
         },
         {
           type: "word-smiths",
           id: "2",
           attributes: {
             "first-name": "Zelda",
-            age: 456
-          }
-        }
-      ]
+            age: 456,
+          },
+        },
+      ],
     });
   });
 
@@ -69,7 +69,7 @@ describe("External | Shared | Serializers | JSON API Serializer | Base", () => {
     let result = server.serializerOrRegistry.serialize(wordSmiths);
 
     expect(result).toEqual({
-      data: []
+      data: [],
     });
   });
 });

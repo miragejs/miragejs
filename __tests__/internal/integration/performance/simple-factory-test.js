@@ -7,15 +7,15 @@ describe("Internal | Integration | Performance | Simple factory test", () => {
     server = new Server({
       environment: "test",
       models: {
-        car: Model
+        car: Model,
       },
       factories: {
         car: Factory.extend({
           make: "Fjord",
           model: "Wagon",
-          year: "1886"
-        })
-      }
+          year: "1886",
+        }),
+      },
     });
     server.timing = 0;
     server.logging = false;
@@ -25,7 +25,7 @@ describe("Internal | Integration | Performance | Simple factory test", () => {
     server.shutdown();
   });
 
-  const carMaker = count => {
+  const carMaker = (count) => {
     server.createList("car", count);
   };
 

@@ -8,11 +8,11 @@ describe("Integration | Route handlers | Assertions", () => {
       environment: "development",
       models: {
         user: Model.extend({}),
-        comment: Model.extend({})
+        comment: Model.extend({}),
       },
       serializers: {
-        application: JSONAPISerializer
-      }
+        application: JSONAPISerializer,
+      },
     });
     server.timing = 0;
     server.logging = false;
@@ -35,18 +35,18 @@ describe("Integration | Route handlers | Assertions", () => {
         data: {
           type: "user",
           attributes: {
-            name: "Jacob Dylan"
+            name: "Jacob Dylan",
           },
           relationships: {
             comments: {
               data: {
                 type: "comment",
-                name: "Bob Dylan"
-              }
-            }
-          }
-        }
-      })
+                name: "Bob Dylan",
+              },
+            },
+          },
+        },
+      }),
     };
 
     let functionHandler = new FunctionRouteHandler(
@@ -56,7 +56,7 @@ describe("Integration | Route handlers | Assertions", () => {
     functionHandler.path = "/users";
     functionHandler.request = request;
 
-    expect(function() {
+    expect(function () {
       functionHandler.normalizedRequestAttrs();
     }).toThrow();
   });

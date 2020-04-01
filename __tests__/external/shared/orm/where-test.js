@@ -9,16 +9,16 @@ describe("External | Shared | ORM | #where", () => {
     server = new Server({
       environment: "test",
       models: {
-        user: User
-      }
+        user: User,
+      },
     });
 
     server.db.loadData({
       users: [
         { id: 1, name: "Link", good: true },
         { id: 2, name: "Zelda", good: true },
-        { id: 3, name: "Ganon", good: false }
-      ]
+        { id: 3, name: "Ganon", good: false },
+      ],
     });
   });
 
@@ -35,12 +35,12 @@ describe("External | Shared | ORM | #where", () => {
     expect(users.models[0].attrs).toEqual({
       id: "3",
       name: "Ganon",
-      good: false
+      good: false,
     });
   });
 
   test("it returns models that match using a query function", () => {
-    let users = server.schema.users.where(function(rec) {
+    let users = server.schema.users.where(function (rec) {
       return !rec.good;
     });
 
@@ -50,7 +50,7 @@ describe("External | Shared | ORM | #where", () => {
     expect(users.models[0].attrs).toEqual({
       id: "3",
       name: "Ganon",
-      good: false
+      good: false,
     });
   });
 

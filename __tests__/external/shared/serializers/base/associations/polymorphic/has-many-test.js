@@ -1,39 +1,39 @@
 import { Server, Model, hasMany, Serializer } from "miragejs";
 
-describe("External | Shared | Serializers | Base | Associations | Polymorphic | Has Many", function() {
+describe("External | Shared | Serializers | Base | Associations | Polymorphic | Has Many", function () {
   let server;
 
-  beforeEach(function() {
+  beforeEach(function () {
     server = new Server({
       models: {
         user: Model.extend({
-          things: hasMany({ polymorphic: true })
+          things: hasMany({ polymorphic: true }),
         }),
-        picture: Model.extend()
-      }
+        picture: Model.extend(),
+      },
     });
 
     let post = server.schema.pictures.create({ title: "Lorem ipsum" });
     server.schema.users.create({ things: [post], name: "Ned" });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     server.shutdown();
   });
 
   test(`it can serialize a polymorphic has-many relationship when serializeIds is set to included`, () => {
     let BaseSerializer = Serializer.extend({
       embed: false,
-      serializeIds: "included"
+      serializeIds: "included",
     });
     server.config({
       serializers: {
         application: BaseSerializer,
         user: BaseSerializer.extend({
           serializeIds: "included",
-          include: ["things"]
-        })
-      }
+          include: ["things"],
+        }),
+      },
     });
 
     let user = server.schema.users.find(1);
@@ -43,22 +43,22 @@ describe("External | Shared | Serializers | Base | Associations | Polymorphic | 
       user: {
         id: "1",
         name: "Ned",
-        thingIds: [{ id: "1", type: "picture" }]
+        thingIds: [{ id: "1", type: "picture" }],
       },
-      pictures: [{ id: "1", title: "Lorem ipsum" }]
+      pictures: [{ id: "1", title: "Lorem ipsum" }],
     });
   });
 
   test(`it can serialize a polymorphic has-many relationship when serializeIds is set to always`, () => {
     let BaseSerializer = Serializer.extend({
       embed: false,
-      serializeIds: "always"
+      serializeIds: "always",
     });
     server.config({
       serializers: {
         application: BaseSerializer,
-        user: BaseSerializer
-      }
+        user: BaseSerializer,
+      },
     });
 
     let user = server.schema.users.find(1);
@@ -68,23 +68,23 @@ describe("External | Shared | Serializers | Base | Associations | Polymorphic | 
       user: {
         id: "1",
         name: "Ned",
-        thingIds: [{ id: "1", type: "picture" }]
-      }
+        thingIds: [{ id: "1", type: "picture" }],
+      },
     });
   });
 
   test(`it can serialize an embedded polymorphic has-many relationship`, () => {
     let BaseSerializer = Serializer.extend({
       embed: true,
-      serializeIds: "included"
+      serializeIds: "included",
     });
     server.config({
       serializers: {
         application: BaseSerializer,
         user: BaseSerializer.extend({
-          include: ["things"]
-        })
-      }
+          include: ["things"],
+        }),
+      },
     });
 
     let user = server.schema.users.find(1);
@@ -97,10 +97,10 @@ describe("External | Shared | Serializers | Base | Associations | Polymorphic | 
         things: [
           {
             id: "1",
-            title: "Lorem ipsum"
-          }
-        ]
-      }
+            title: "Lorem ipsum",
+          },
+        ],
+      },
     });
   });
 });

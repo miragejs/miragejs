@@ -9,8 +9,8 @@ describe("External | Shared | ORM | create", () => {
     server = new Server({
       environment: "test",
       models: {
-        user: User
-      }
+        user: User,
+      },
     });
   });
 
@@ -19,13 +19,13 @@ describe("External | Shared | ORM | create", () => {
   });
 
   test("it cannot make new models that havent been registered", () => {
-    expect(function() {
+    expect(function () {
       server.schema.authors.new({ name: "Link" });
     }).toThrow();
   });
 
   test("it cannot create models that havent been registered", () => {
-    expect(function() {
+    expect(function () {
       server.schema.authors.create({ name: "Link" });
     }).toThrow();
   });

@@ -15,7 +15,7 @@ describe("External | Shared | ORM | Has Many | One-Way Reflexive | create", () =
     let { schema } = helper;
     let tagA = schema.tags.create();
     let tagB = schema.tags.create({
-      tagIds: [tagA.id]
+      tagIds: [tagA.id],
     });
 
     tagA.reload();
@@ -33,7 +33,7 @@ describe("External | Shared | ORM | Has Many | One-Way Reflexive | create", () =
     let { schema } = helper;
     let tagA = schema.tags.create();
     let tagB = schema.tags.create({
-      tags: [tagA]
+      tags: [tagA],
     });
 
     tagA.reload();
@@ -49,7 +49,7 @@ describe("External | Shared | ORM | Has Many | One-Way Reflexive | create", () =
     let { schema } = helper;
     let tagA = schema.tags.create();
     let tagB = schema.tags.create({
-      tags: schema.tags.all()
+      tags: schema.tags.all(),
     });
 
     tagA.reload();
@@ -64,9 +64,9 @@ describe("External | Shared | ORM | Has Many | One-Way Reflexive | create", () =
   test("it throws an error if a model is passed in without a defined relationship", () => {
     let { schema } = helper;
 
-    expect(function() {
+    expect(function () {
       schema.tags.create({
-        foo: schema.create("foo")
+        foo: schema.create("foo"),
       });
     }).toThrow();
   });
@@ -74,9 +74,9 @@ describe("External | Shared | ORM | Has Many | One-Way Reflexive | create", () =
   test("it throws an error if an array of models is passed in without a defined relationship", () => {
     let { schema } = helper;
 
-    expect(function() {
+    expect(function () {
       schema.tags.create({
-        foos: [schema.create("foo")]
+        foos: [schema.create("foo")],
       });
     }).toThrow();
   });
@@ -86,9 +86,9 @@ describe("External | Shared | ORM | Has Many | One-Way Reflexive | create", () =
     schema.foos.create();
     schema.foos.create();
 
-    expect(function() {
+    expect(function () {
       schema.tags.create({
-        foos: schema.foos.all()
+        foos: schema.foos.all(),
       });
     }).toThrow();
   });
