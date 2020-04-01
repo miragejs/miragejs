@@ -351,10 +351,11 @@ declare module "miragejs/db" {
   import DbCollection from "miragejs/db-collection";
   import IdentityManager from "miragejs/identity-manager";
 
-  /** The in-memory database containing all currently active data keyed by collection name. */
-  export default class Db {
-    [key: string]: DbCollection | any;
+  type DbLookup = {
+    [key: string]: DbCollection;
+  };
 
+  class DbClass {
     constructor(initialData: [], identityManagers?: IdentityManager[]);
 
     createCollection(name: string, initialData?: any[]): void;
@@ -362,6 +363,11 @@ declare module "miragejs/db" {
     emptyData(): void;
     loadData(data: any): void;
   }
+
+  /** The in-memory database containing all currently active data keyed by collection name. */
+  export type Db = DbClass & DbLookup;
+  export const Db: Db;
+  export default Db;
 }
 
 declare module "miragejs/db-collection" {
