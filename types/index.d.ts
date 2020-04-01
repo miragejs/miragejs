@@ -170,8 +170,14 @@ declare module "miragejs/-types" {
    * a `Server` and its corresponding `Schema` instance.
    */
   export type Registry<
-    Models extends Record<string, ModelDefinition>,
-    Factories extends Record<string, FactoryDefinition>
+    Models extends Record<string, ModelDefinition> = Record<
+      string,
+      ModelDefinition
+    >,
+    Factories extends Record<string, FactoryDefinition> = Record<
+      string,
+      FactoryDefinition
+    >
   > = {
     [K in keyof Models | keyof Factories]: ModelInstance<
       ExtractModelData<Models, K> & ExtractFactoryData<Factories, K>
@@ -210,7 +216,7 @@ declare module "miragejs/server" {
   type MaybePromise<T> = T | PromiseLike<T>;
 
   /** A callback that will be invoked when a given Mirage route is hit. */
-  export type RouteHandler<T extends Registry<any, any>> = (
+  export type RouteHandler<T extends Registry> = (
     schema: Schema<T>,
     request: Request
   ) => MaybePromise<ModelInstance | Response | object>;
@@ -426,7 +432,7 @@ declare module "miragejs/identity-manager" {
 }
 
 declare module "miragejs/orm/schema" {
-  import { Collection, ModelInstance } from "miragejs";
+  import { Collection, ModelInstance, Registry } from "miragejs";
   import Db from "miragejs/db";
 
   type ModelInitializer<Data> = {
@@ -438,12 +444,7 @@ declare module "miragejs/orm/schema" {
   /**
    * An interface to the Mirage ORM that allows for querying and creating records.
    */
-  export default class Schema<
-    Registry extends Record<string, ModelInstance> = Record<
-      string,
-      ModelInstance
-    >
-  > {
+  export default class Schema<R extends Registry> {
     /** Mirage's in-memory database */
     readonly db: Db;
 
@@ -453,8 +454,8 @@ declare module "miragejs/orm/schema" {
      * @param data Optional initial values for model attributes/relationships
      */
     create<
-      K extends keyof Registry,
-      Init extends Registry[K],
+      K extends keyof R,
+      Init extends R[K],
       Data extends Partial<ModelInitializer<Init>>
     >(
       modelName: K,
@@ -462,37 +463,28 @@ declare module "miragejs/orm/schema" {
     ): Init & { [K in keyof Init & keyof Data]: Exclude<Init[K], undefined> };
 
     /** Locates one or more existing models of the given type by ID(s). */
-    find<K extends keyof Registry>(type: K, id: string): Registry[K] | null;
-    find<K extends keyof Registry>(
-      type: K,
-      ids: string[]
-    ): Collection<Registry[K]>;
+    find<K extends keyof R>(type: K, id: string): R[K] | null;
+    find<K extends keyof R>(type: K, ids: string[]): Collection<[K]>;
 
     /** Locates an existing model of the given type by attribute value(s), if one exists. */
-    findBy<K extends keyof Registry>(
-      type: K,
-      attributes: Partial<Registry[K]>
-    ): Registry[K] | null;
+    findBy<K extends keyof R>(type: K, attributes: Partial<R[K]>): R[K] | null;
 
     /** Locates an existing model of the given type by attribute value(s), creating one if it doesn't exist. */
-    findOrCreateBy<K extends keyof Registry>(
-      type: K,
-      attributes: Partial<Registry[K]>
-    ): Registry[K];
+    findOrCreateBy<K extends keyof R>(type: K, attributes: Partial<R[K]>): R[K];
 
     /** Locates an existing model of the given type by attribute value(s), if one exists. */
-    where<K extends keyof Registry>(
+    where<K extends keyof R>(
       type: K,
-      attributes: Partial<Registry[K]> | ((item: Registry[K]) => unknown)
-    ): Collection<Registry[K]>;
+      attributes: Partial<R[K]> | ((item: R[K]) => unknown)
+    ): Collection<R[K]>;
 
     /** Returns a collection of all known records of the given type */
-    all<K extends keyof Registry>(type: K): Collection<Registry[K]>;
+    all<K extends keyof R>(type: K): Collection<R[K]>;
 
     /** Returns an empty collection of the given type */
-    none<K extends keyof Registry>(type: K): Collection<Registry[K]>;
+    none<K extends keyof R>(type: K): Collection<R[K]>;
 
     /** Returns the first model instance found of the given type */
-    first<K extends keyof Registry>(type: K): Registry[K] | null;
+    first<K extends keyof R>(type: K): R[K] | null;
   }
 }
