@@ -464,7 +464,7 @@ declare module "miragejs/orm/schema" {
 
     /** Locates one or more existing models of the given type by ID(s). */
     find<K extends keyof R>(type: K, id: string): R[K] | null;
-    find<K extends keyof R>(type: K, ids: string[]): Collection<[K]>;
+    find<K extends keyof R>(type: K, ids: string[]): Collection<R[K]>;
 
     /** Locates an existing model of the given type by attribute value(s), if one exists. */
     findBy<K extends keyof R>(type: K, attributes: Partial<R[K]>): R[K] | null;

@@ -21,7 +21,7 @@ schema.create("foo", { x: true }); // $ExpectError
 schema.create("cow"); // $ExpectError
 
 schema.find("foo", "123"); // $ExpectType ModelInstance<FlattenRelationships<Assign<{}, { attr: string; }>> & FlattenFactoryMethods<Assign<{}, { attr: string; }>>> | null
-schema.find("foo", ["123"]).models[0]; // $ExpectType ["foo"]
+schema.find("foo", ["123"]).models[0]; // $ExpectType ModelInstance<FlattenRelationships<Assign<{}, { attr: string; }>> & FlattenFactoryMethods<Assign<{}, { attr: string; }>>>
 schema.find("cow", "123"); // $ExpectError
 
 schema.findOrCreateBy("foo", { attr: "hi" }); // $ExpectType ModelInstance<FlattenRelationships<Assign<{}, { attr: string; }>> & FlattenFactoryMethods<Assign<{}, { attr: string; }>>>
