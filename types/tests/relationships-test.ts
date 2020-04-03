@@ -4,7 +4,7 @@ import {
   hasMany,
   HasMany,
   Model,
-  Registry
+  Registry,
 } from "miragejs";
 import Schema from "miragejs/orm/schema";
 
@@ -15,12 +15,12 @@ const PersonModel = Model.extend({
   name: "hello",
   parent: registryBelongsTo("person"),
   pets: registryHasMany("pet"),
-  friends: registryHasMany<"pet" | "person">({ polymorphic: true })
+  friends: registryHasMany<"pet" | "person">({ polymorphic: true }),
 });
 
 const PetModel = Model.extend({
   name: "fido",
-  owner: registryBelongsTo("person")
+  owner: registryBelongsTo("person"),
 });
 
 type PersonRegistry = Registry<
@@ -33,7 +33,7 @@ const people = schema.all("person");
 
 people.length; // $ExpectType number
 people.modelName; // $ExpectType string
-people.models.map(model => {
+people.models.map((model) => {
   model.parent?.name; // $ExpectType string | undefined
   model.parent?.parent?.name; // $ExpectType string | undefined
   model.pets.models[0].name; // $ExpectType string
@@ -58,7 +58,7 @@ people.models.map(model => {
 });
 
 const child = schema.create("person", {
-  parent: schema.create("person")
+  parent: schema.create("person"),
 });
 
 // Here we know `parent` is defined because it was just passed in
@@ -73,13 +73,13 @@ const pet2 = schema.create("pet");
 // Either way, the instance should have a collection.
 
 const personWithPetsArray = schema.create("person", {
-  pets: [pet1, pet2]
+  pets: [pet1, pet2],
 });
 
 personWithPetsArray.pets.modelName; // $ExpectType string
 
 const personWithPetsCollection = schema.create("person", {
-  pets: schema.all("pet")
+  pets: schema.all("pet"),
 });
 
 personWithPetsCollection.pets.modelName; // $ExpectType string

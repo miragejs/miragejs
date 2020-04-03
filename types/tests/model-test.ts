@@ -2,7 +2,7 @@ import { Model, Registry } from "miragejs";
 import Schema from "miragejs/orm/schema";
 
 const PersonModel = Model.extend({
-  name: "hello"
+  name: "hello",
 });
 
 declare const schema: Schema<Registry<{ person: typeof PersonModel }, {}>>;
@@ -11,7 +11,7 @@ const people = schema.all("person");
 
 people.length; // $ExpectType number
 people.modelName; // $ExpectType string
-people.models.map(model => {
+people.models.map((model) => {
   model.id; // $ExpectType string | undefined
   model.name; // $ExpectType string
   model.modelName; // $ExpectType string
