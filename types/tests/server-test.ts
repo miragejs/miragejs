@@ -38,6 +38,13 @@ export default function config(this: Server): void {
 }
 
 const server = new Server({
+  fixtures: {
+    countries: [
+      { id: 1, name: "China" },
+      { id: 2, name: "India" },
+      { id: 3, name: "United States" },
+    ],
+  },
   routes() {
     this.namespace = "api";
 
