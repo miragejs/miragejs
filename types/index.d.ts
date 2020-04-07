@@ -14,6 +14,12 @@ declare module "miragejs" {
   } from "miragejs/-types";
   export { Server } from "miragejs/server";
   export { Registry, ModelInstance } from "miragejs/-types";
+  export {
+    Serializer,
+    ActiveModelSerializer,
+    JSONAPISerializer,
+    RestSerializer,
+  } from "miragejs/serializer";
 
   /**
    * A fake HTTP request
@@ -433,7 +439,7 @@ declare module "miragejs/identity-manager" {
 }
 
 declare module "miragejs/orm/schema" {
-  import { Collection, ModelInstance, Registry } from "miragejs";
+  import { Collection, Registry } from "miragejs";
   import Db from "miragejs/db";
 
   type ModelInitializer<Data> = {
@@ -488,4 +494,51 @@ declare module "miragejs/orm/schema" {
     /** Returns the first model instance found of the given type */
     first<K extends keyof R>(type: K): R[K] | null;
   }
+}
+
+declare module "miragejs/serializer" {
+  import Schema from "miragejs/orm/schema";
+
+  interface SerializerInterface {
+    schema?: Schema<any>;
+    attrs?: any;
+    embed?: any;
+    root?: any;
+    serializeIds?: any;
+    include?: any;
+    keyForAttribute?(attr: any): any;
+    keyForCollection?(modelName: any): any;
+    keyForEmbeddedRelationship?(attributeName: any): any;
+    keyForForeignKey?(relationshipName: any): any;
+    keyForModel?(modelName: any): any;
+    keyForPolymorphicForeignKeyId?(relationshipName: string): string;
+    keyForPolymorphicForeignKeyType?(relationshipName: string): string;
+    keyForRelationship?(modelName: any): any;
+    keyForRelationshipIds?(modelName: any): any;
+    normalize?(json: any): any;
+    serialize?(primaryResource: any, request: any): any;
+    extend?(param?: SerializerInterface): SerializerInterface;
+  }
+
+  class Serializer implements SerializerInterface {
+    static extend(param?: SerializerInterface | {}): SerializerInterface | {};
+  }
+
+  interface JSONAPISerializerInterface extends SerializerInterface {
+    alwaysIncludeLinkageData?: boolean;
+
+    links?(model: any): any;
+    shouldIncludeLinkageData?(relationshipKey: string, model: any): boolean;
+    typeKeyForModel?(model: any): string;
+  }
+
+  class JSONAPISerializer extends Serializer
+    implements JSONAPISerializerInterface {
+    static extend(
+      param?: JSONAPISerializerInterface | {}
+    ): JSONAPISerializerInterface;
+  }
+
+  class ActiveModelSerializer extends Serializer {}
+  class RestSerializer extends Serializer {}
 }

@@ -1,4 +1,4 @@
-import { Response, Server } from "miragejs";
+import { Response, Server, JSONAPISerializer } from "miragejs";
 
 export default function config(this: Server): void {
   this.namespace = "foo";
@@ -38,6 +38,9 @@ export default function config(this: Server): void {
 }
 
 const server = new Server({
+  serializers: {
+    application: JSONAPISerializer,
+  },
   fixtures: {
     countries: [
       { id: 1, name: "China" },
