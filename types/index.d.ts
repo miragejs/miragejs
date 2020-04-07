@@ -228,6 +228,7 @@ declare module "miragejs/server" {
 
   export interface ServerConfig {
     urlPrefix?: string;
+    fixtures?: any;
     namespace?: string;
     timing?: number;
     environment?: string;
