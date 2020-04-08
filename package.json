@@ -59,14 +59,14 @@
     "lodash.uniq": "^4.5.0",
     "lodash.uniqby": "^4.7.0",
     "lodash.values": "^4.3.0",
-    "pretender": "3.4.0"
+    "pretender": "^3.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
-    "@babel/preset-env": "7.9.0",
+    "@babel/preset-env": "^7.9.0",
     "babel-eslint": "^10.0.2",
     "babel-jest": "^25.1.0",
-    "core-js": "3",
+    "core-js": "^3",
     "dtslint": "^3.4.1",
     "eslint": "^6.1.0",
     "eslint-config-prettier": "^6.3.0",
