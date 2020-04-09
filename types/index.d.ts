@@ -124,16 +124,12 @@ declare module "miragejs" {
 
 declare module "miragejs/-types" {
   // Captures the result of a `Model.extend()` call
-  const ModelData: unique symbol;
   interface ModelDefinition<Data extends {} = {}> {
-    [ModelData]: Data;
     extend<NewData>(data: NewData): ModelDefinition<Assign<Data, NewData>>;
   }
 
   // Captures the result of a `Factory.extend()` call
-  const FactoryData: unique symbol;
   interface FactoryDefinition<Data extends {} = {}> {
-    [FactoryData]: Data;
     extend<NewData>(data: NewData): FactoryDefinition<Assign<Data, NewData>>;
   }
 
@@ -170,19 +166,19 @@ declare module "miragejs/-types" {
    * a `Server` and its corresponding `Schema` instance.
    */
   export type Registry<
-    Models extends Record<string, ModelDefinition> = Record<
-      string,
-      ModelDefinition
-    >,
-    Factories extends Record<string, FactoryDefinition> = Record<
-      string,
-      FactoryDefinition
-    >
+    Models extends AnyModels,
+    Factories extends AnyFactories
   > = {
     [K in keyof Models | keyof Factories]: ModelInstance<
       ExtractModelData<Models, K> & ExtractFactoryData<Factories, K>
     >;
   };
+
+  export type AnyModels = Record<string, ModelDefinition>;
+  export type AnyFactories = Record<string, FactoryDefinition>;
+
+  /** A marker type for easily constraining type parameters that must be shaped like a Registry */
+  export type AnyRegistry = Registry<AnyModels, AnyFactories>;
 
   /** Represents the type of an instantiated Mirage model.  */
   export type ModelInstance<Data extends {} = {}> = Data & {
@@ -206,7 +202,8 @@ declare module "miragejs/-types" {
 }
 
 declare module "miragejs/server" {
-  import { Registry, Request, Response } from "miragejs";
+  import { Request, Response, Registry as MirageRegistry } from "miragejs";
+  import { AnyRegistry, AnyModels, AnyFactories } from "miragejs/-types";
   import { ModelInstance } from "miragejs/-types";
   import Db from "miragejs/db";
   import IdentityManager from "miragejs/identity-manager";
@@ -216,8 +213,8 @@ declare module "miragejs/server" {
   type MaybePromise<T> = T | PromiseLike<T>;
 
   /** A callback that will be invoked when a given Mirage route is hit. */
-  export type RouteHandler<T extends Registry> = (
-    schema: Schema<T>,
+  export type RouteHandler<Registry extends AnyRegistry> = (
+    schema: Schema<Registry>,
     request: Request
   ) => MaybePromise<ModelInstance | Response | object>;
 
@@ -252,12 +249,7 @@ declare module "miragejs/server" {
     pretender?: PretenderServer;
   }
 
-  export class Server<
-    Registry extends Record<string, ModelInstance> = Record<
-      string,
-      ModelInstance
-    >
-  > implements ServerConfig {
+  export class Server<Registry extends AnyRegistry = AnyRegistry> {
     constructor(options?: ServerConfig);
 
     /** The underlying in-memory database instance for this server. */
@@ -433,7 +425,8 @@ declare module "miragejs/identity-manager" {
 }
 
 declare module "miragejs/orm/schema" {
-  import { Collection, ModelInstance, Registry } from "miragejs";
+  import { Collection } from "miragejs";
+  import { AnyRegistry } from "miragejs/-types";
   import Db from "miragejs/db";
 
   type ModelInitializer<Data> = {
@@ -445,7 +438,7 @@ declare module "miragejs/orm/schema" {
   /**
    * An interface to the Mirage ORM that allows for querying and creating records.
    */
-  export default class Schema<R extends Registry> {
+  export default class Schema<Registry extends AnyRegistry> {
     /** Mirage's in-memory database */
     readonly db: Db;
 
@@ -455,8 +448,8 @@ declare module "miragejs/orm/schema" {
      * @param data Optional initial values for model attributes/relationships
      */
     create<
-      K extends keyof R,
-      Init extends R[K],
+      K extends keyof Registry,
+      Init extends Registry[K],
       Data extends Partial<ModelInitializer<Init>>
     >(
       modelName: K,
@@ -464,28 +457,37 @@ declare module "miragejs/orm/schema" {
     ): Init & { [K in keyof Init & keyof Data]: Exclude<Init[K], undefined> };
 
     /** Locates one or more existing models of the given type by ID(s). */
-    find<K extends keyof R>(type: K, id: string): R[K] | null;
-    find<K extends keyof R>(type: K, ids: string[]): Collection<R[K]>;
+    find<K extends keyof Registry>(type: K, id: string): Registry[K] | null;
+    find<K extends keyof Registry>(
+      type: K,
+      ids: string[]
+    ): Collection<Registry[K]>;
 
     /** Locates an existing model of the given type by attribute value(s), if one exists. */
-    findBy<K extends keyof R>(type: K, attributes: Partial<R[K]>): R[K] | null;
+    findBy<K extends keyof Registry>(
+      type: K,
+      attributes: Partial<Registry[K]>
+    ): Registry[K] | null;
 
     /** Locates an existing model of the given type by attribute value(s), creating one if it doesn't exist. */
-    findOrCreateBy<K extends keyof R>(type: K, attributes: Partial<R[K]>): R[K];
+    findOrCreateBy<K extends keyof Registry>(
+      type: K,
+      attributes: Partial<Registry[K]>
+    ): Registry[K];
 
     /** Locates an existing model of the given type by attribute value(s), if one exists. */
-    where<K extends keyof R>(
+    where<K extends keyof Registry>(
       type: K,
-      attributes: Partial<R[K]> | ((item: R[K]) => unknown)
-    ): Collection<R[K]>;
+      attributes: Partial<Registry[K]> | ((item: Registry[K]) => unknown)
+    ): Collection<Registry[K]>;
 
     /** Returns a collection of all known records of the given type */
-    all<K extends keyof R>(type: K): Collection<R[K]>;
+    all<K extends keyof Registry>(type: K): Collection<Registry[K]>;
 
     /** Returns an empty collection of the given type */
-    none<K extends keyof R>(type: K): Collection<R[K]>;
+    none<K extends keyof Registry>(type: K): Collection<Registry[K]>;
 
     /** Returns the first model instance found of the given type */
-    first<K extends keyof R>(type: K): R[K] | null;
+    first<K extends keyof Registry>(type: K): Registry[K] | null;
   }
 }
