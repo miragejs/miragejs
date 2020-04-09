@@ -1,26 +1,19 @@
-import {
-  belongsTo,
-  BelongsTo,
-  hasMany,
-  HasMany,
-  Model,
-  Registry,
-} from "miragejs";
+import { belongsTo, hasMany, Model, Registry } from "miragejs";
 import Schema from "miragejs/orm/schema";
-
-const registryBelongsTo: BelongsTo<PersonRegistry> = belongsTo;
-const registryHasMany: HasMany<PersonRegistry> = hasMany;
 
 const PersonModel = Model.extend({
   name: "hello",
-  parent: registryBelongsTo("person"),
-  pets: registryHasMany("pet"),
-  friends: registryHasMany<"pet" | "person">({ polymorphic: true }),
+  parent: belongsTo("person"),
+  pets: hasMany("pet"),
+  friends: hasMany<"pet" | "person">({ polymorphic: true }),
+
+  nothing: belongsTo("nonexistent"),
+  muchAdoAboutNothing: hasMany("nonexistent"),
 });
 
 const PetModel = Model.extend({
   name: "fido",
-  owner: registryBelongsTo("person"),
+  owner: belongsTo("person"),
 });
 
 type PersonRegistry = Registry<
@@ -34,6 +27,9 @@ const people = schema.all("person");
 people.length; // $ExpectType number
 people.modelName; // $ExpectType string
 people.models.map((model) => {
+  model.nothing; // $ExpectType unknown
+  model.muchAdoAboutNothing; // $ExpectType Collection<unknown>
+
   model.parent?.name; // $ExpectType string | undefined
   model.parent?.parent?.name; // $ExpectType string | undefined
   model.pets.models[0].name; // $ExpectType string
