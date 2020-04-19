@@ -44,6 +44,29 @@ describe("Unit | Serializers | ActiveModelSerializer", function () {
     });
   });
 
+  test("normalize primaryKey Works", () => {
+    let payload = {
+      contact: {
+        contactId: 1,
+        name: "Link",
+      },
+    };
+
+    serializer.primaryKey = "contactId";
+
+    let jsonApiDoc = serializer.normalize(payload);
+
+    expect(jsonApiDoc).toEqual({
+      data: {
+        type: "contacts",
+        id: 1,
+        attributes: {
+          name: "Link",
+        },
+      },
+    });
+  });
+
   test("it hyphenates snake_cased words", () => {
     let payload = {
       contact: {
