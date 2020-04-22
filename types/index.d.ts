@@ -389,6 +389,9 @@ declare module "miragejs/server" {
 
     /** Shutdown the server and stop intercepting network requests. */
     shutdown(): void;
+
+    /** Handled Requests, according to configured Pretender instance */
+    handledRequests(): Request[];
   }
 }
 

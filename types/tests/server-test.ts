@@ -35,6 +35,8 @@ export default function config(this: Server): void {
   });
 
   this.get("/test/:segment", (schema) => Promise.resolve(schema.create("foo"))); // $ExpectType void
+
+  this.handledRequests() // $ExpectType Request[]
 }
 
 const server = new Server({

@@ -6,6 +6,7 @@ describe("Integration | Server Config", () => {
   beforeEach(() => {
     server = new Server({
       environment: "development",
+      trackRequests: true,
       models: {
         contact: Model,
         post: Model,
@@ -20,6 +21,51 @@ describe("Integration | Server Config", () => {
 
   afterEach(function () {
     server.shutdown();
+  });
+
+  test("handled requests are tracked if trackRequests is true", async () => {
+    expect.assertions(3);
+
+    let contacts = [
+      { id: "1", name: "Link" },
+      { id: "2", name: "Zelda" },
+    ];
+    server.db.loadData({
+      contacts,
+    });
+    server.namespace = "api";
+    server.get("/contacts");
+
+    await fetch("/api/contacts?name=link");
+    const handledRequests = server.handledRequests();
+
+    expect(handledRequests).toHaveLength(1);
+    expect(handledRequests[0].queryParams).toMatchObject({ name: "link" });
+    expect(handledRequests[0].url).toBe("/api/contacts?name=link");
+  });
+
+  test("handled requests are not tracked if trackRequests is false", async () => {
+    expect.assertions(1);
+
+    const serverWithoutTrackedRequests = new Server({
+      environment: "development",
+      trackRequests: false,
+      models: {
+        contact: Model,
+        post: Model,
+      },
+    });
+
+    serverWithoutTrackedRequests.timing = 0;
+    serverWithoutTrackedRequests.logging = false;
+    serverWithoutTrackedRequests.namespace = "api";
+    serverWithoutTrackedRequests.get("/contacts");
+
+    await fetch("/api/contacts?name=link");
+    const handledRequests = serverWithoutTrackedRequests.handledRequests();
+
+    expect(handledRequests).toHaveLength(0);
+    serverWithoutTrackedRequests.shutdown();
   });
 
   test("namespace can be configured", async () => {
