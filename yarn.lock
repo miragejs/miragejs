@@ -1126,7 +1126,7 @@
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.0.tgz#e486d0d97396d79beedd0a6e33f4534ff6b4973e"
   integrity sha512-f5j5b/Gf71L+dbqxIpQ4Z2WlmI/mPJ0fOkGGmFgtb6sAu97EPczzbS3/tJKxmcYDj55OX6ssqwDAWOHIYDRDGA==
 
-"@types/parsimmon@^1.10.1", "@types/parsimmon@^1.3.0":
+"@types/parsimmon@^1.10.1":
   version "1.10.1"
   resolved "https://registry.yarnpkg.com/@types/parsimmon/-/parsimmon-1.10.1.tgz#d46015ad91128fce06a1a688ab39a2516507f740"
   integrity sha512-MoF2IC9oGSgArJwlxdst4XsvWuoYfNUWtBw0kpnCi6K05kV+Ecl7siEeJ40tgCbI9uqEMGQL/NlPMRv6KVkY5Q==
@@ -2010,14 +2010,6 @@ define-property@^2.0.2:
     is-descriptor "^1.0.2"
     isobject "^3.0.1"
 
-definitelytyped-header-parser@^3.8.2:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/definitelytyped-header-parser/-/definitelytyped-header-parser-3.9.0.tgz#f992abb8e62f697ca25e1adbfd5f69ef11621644"
-  integrity sha512-slbwZ5h5lasB12t+9EAGYr060aCMqEXp6cwD7CoTriK40HNDYU56/XQ6S4sbjBK8ReGRMnB/uDx0elKkb4kuQA==
-  dependencies:
-    "@types/parsimmon" "^1.3.0"
-    parsimmon "^1.2.0"
-
 delayed-stream@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
@@ -2075,27 +2067,27 @@ domexception@^1.0.1:
   dependencies:
     webidl-conversions "^4.0.2"
 
-dts-critic@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/dts-critic/-/dts-critic-3.0.2.tgz#a3e85b8be85fa983aed1b52ee84caa4a1d11977e"
-  integrity sha512-wkRb9FOBXNwpB14nxHbevbyGm42KhA2YGtYsIrfDMvVWDaRMQVYodYtUbuNAH7WUPFMd0ywaqnmzGJl+E6yjsg==
+dts-critic@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/dts-critic/-/dts-critic-3.1.0.tgz#bbbe707f1fb6efa08e85aeaf1ee9dd7a184dca98"
+  integrity sha512-cNn4SsrlnGqnqxXE0GdPORurDrr+Y8k6yy5eBpjM6lu0C80QgabU8ypq+uAQ+JYeJ/ykQVUNo9zdLQfZHvnSVQ==
   dependencies:
+    "@definitelytyped/header-parser" "0.0.29"
     command-exists "^1.2.8"
-    definitelytyped-header-parser "^3.8.2"
     rimraf "^3.0.2"
     semver "^6.2.0"
     typescript "^3.7.5"
     yargs "^12.0.5"
 
 dtslint@^3.4.1:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/dtslint/-/dtslint-3.5.0.tgz#c8dc2d9d309228f5654ff57d0cbf7874cc721bf4"
-  integrity sha512-ajY1/5ZCl7xd03TTSe2qdLCj/+lia2ZSk9r8bxNrQhZDx11fQH/YTCV2Elb5tmFCONBrqMmkYzuuraVc9RODew==
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/dtslint/-/dtslint-3.5.1.tgz#886c1672f4654f04eee9fe359681965f39eca80c"
+  integrity sha512-BVR+7h/tgCKlaWjYPG8xt3iuPPOUTYCg1TBp7UK23XlS6HSeRQVHPpJRTXLmPGXBoE9zKbKesQVLtnNB5bRTCA==
   dependencies:
     "@definitelytyped/header-parser" "0.0.29"
     "@definitelytyped/typescript-versions" "0.0.29"
     "@definitelytyped/utils" "0.0.29"
-    dts-critic "^3.0.2"
+    dts-critic "^3.1.0"
     fs-extra "^6.0.1"
     json-stable-stringify "^1.0.1"
     strip-json-comments "^2.0.1"
@@ -4663,7 +4655,7 @@ parse5@5.1.0:
   resolved "https://registry.yarnpkg.com/parse5/-/parse5-5.1.0.tgz#c59341c9723f414c452975564c7c00a68d58acd2"
   integrity sha512-fxNG2sQjHvlVAYmzBZS9YlDp6PTSSDwa98vkD4QgVDDCAo84z5X1t5XyJQ62ImdLXx5NdIIfihey6xpum9/gRQ==
 
-parsimmon@^1.13.0, parsimmon@^1.2.0:
+parsimmon@^1.13.0:
   version "1.13.0"
   resolved "https://registry.yarnpkg.com/parsimmon/-/parsimmon-1.13.0.tgz#6e4ef3dbd45ed6ea6808be600ac4b9c8a44228cf"
   integrity sha512-5UIrOCW+gjbILkjKPgTgmq8LKf8TT3Iy7kN2VD7OtQ81facKn8B4gG1X94jWqXYZsxG2KbJhrv/Yq/5H6BQn7A==
