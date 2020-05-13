@@ -1,4 +1,13 @@
-import { Response, Server, JSONAPISerializer } from "miragejs";
+import {
+  Response,
+  Server,
+  JSONAPISerializer,
+  createServer,
+  Model,
+  belongsTo,
+  hasMany,
+  Factory,
+} from "miragejs";
 
 export default function config(this: Server): void {
   this.namespace = "foo";
@@ -37,7 +46,11 @@ export default function config(this: Server): void {
   this.get("/test/:segment", (schema) => Promise.resolve(schema.create("foo"))); // $ExpectType void
 }
 
-const server = new Server({
+// In `new Server`, models and factories are untyped, and you can
+// therefore use any model names you want when interacting with the
+// schema; the return values just won't necessarily have a lot of
+// type information.
+new Server({
   serializers: {
     application: JSONAPISerializer,
   },
@@ -50,6 +63,8 @@ const server = new Server({
   },
   routes() {
     this.namespace = "api";
+
+    this.schema.all("asfd"); // $ExpectType Collection<ModelInstance<{}>>
 
     this.get("/todos", () => {
       return {
@@ -69,5 +84,51 @@ const server = new Server({
     this.namespace = "/test-api";
     this.get("/movies");
     this.post("/movies");
+  },
+});
+
+// In contrast to `new Server`, `createServer` is able to infer
+// type info from the models and factories you pass it
+createServer({
+  models: {
+    pet: Model.extend({
+      owner: belongsTo("person"),
+    }),
+    person: Model.extend({
+      children: hasMany("person"),
+      friends: hasMany<"person" | "pet">({ polymorphic: true }),
+    }),
+  },
+
+  factories: {
+    pet: Factory.extend({
+      name: (n: number) => `Pet ${n}`,
+    }),
+    person: Factory.extend({
+      name: (n: number) => `Pet ${n}`,
+    }),
+  },
+
+  routes() {
+    this.get("people/:id", (schema, request) => {
+      let person = this.schema.find("person", request.params.id);
+
+      person?.name; // $ExpectType string | undefined
+
+      let friend = person?.friends.models[0];
+
+      friend?.name; // $ExpectType string | undefined
+      friend?.children; // $ExpectError
+
+      if (friend && "friends" in friend) {
+        friend.children.modelName; // $ExpectType string
+      }
+
+      return person ?? new Response(404);
+    });
+
+    this.get("bad", () => {
+      return this.schema.all("typo"); // $ExpectError
+    });
   },
 });

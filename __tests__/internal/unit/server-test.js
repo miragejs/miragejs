@@ -1,4 +1,5 @@
 import {
+  createServer,
   Server,
   Model,
   Factory,
@@ -31,6 +32,39 @@ describe("Unit | Server", function () {
     expect.assertions(1);
 
     let server = new Server({
+      environment: "development",
+      seeds() {
+        expect(true).toBeTruthy();
+      },
+    });
+
+    server.shutdown();
+  });
+});
+
+describe("Unit | createServer", function () {
+  test("it returns a server instance", () => {
+    let server = createServer();
+
+    expect(server).toBeTruthy();
+
+    server.shutdown();
+  });
+
+  test("routes return pretender handler", () => {
+    let server = createServer({ environment: "test" });
+
+    let handler = server.post("foo");
+
+    expect(handler.numberOfCalls).toBe(0);
+
+    server.shutdown();
+  });
+
+  test("it runs the default scenario in non-test environments", () => {
+    expect.assertions(1);
+
+    let server = createServer({
       environment: "development",
       seeds() {
         expect(true).toBeTruthy();

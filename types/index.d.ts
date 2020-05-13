@@ -13,7 +13,7 @@ declare module "miragejs" {
     BelongsTo,
     HasMany,
   } from "miragejs/-types";
-  export { Server } from "miragejs/server";
+  export { Server, createServer } from "miragejs/server";
   export { Registry, Instantiate, ModelInstance } from "miragejs/-types";
   export {
     Serializer,
@@ -269,7 +269,10 @@ declare module "miragejs/server" {
     timing?: number;
   }
 
-  export interface ServerConfig {
+  export interface ServerConfig<
+    Models extends AnyModels,
+    Factories extends AnyFactories
+  > {
     urlPrefix?: string;
     fixtures?: any;
     namespace?: string;
@@ -279,24 +282,34 @@ declare module "miragejs/server" {
     useDefaultPassthroughs?: boolean;
     logging?: boolean;
 
-    seeds?: (server: Server) => void;
-    scenarios?: (server: Server) => void;
+    seeds?: (server: Server<MirageRegistry<Models, Factories>>) => void;
+    scenarios?: (server: Server<MirageRegistry<Models, Factories>>) => void;
 
-    routes?: (this: Server) => void;
-    baseConfig?: (this: Server) => void;
-    testConfig?: (this: Server) => void;
+    routes?: (this: Server<MirageRegistry<Models, Factories>>) => void;
+    baseConfig?: (this: Server<MirageRegistry<Models, Factories>>) => void;
+    testConfig?: (this: Server<MirageRegistry<Models, Factories>>) => void;
 
     inflector?: object;
     identityManagers?: IdentityManager;
-    models?: any;
+    models?: Models;
     serializers?: any;
-    factories?: any;
+    factories?: Factories;
 
     pretender?: PretenderServer;
   }
 
+  /**
+   * Starts up a Mirage server with the given configuration.
+   */
+  export function createServer<
+    Models extends AnyModels,
+    Factories extends AnyFactories
+  >(
+    config: ServerConfig<Models, Factories>
+  ): Server<MirageRegistry<Models, Factories>>;
+
   export class Server<Registry extends AnyRegistry = AnyRegistry> {
-    constructor(options?: ServerConfig);
+    constructor(options?: ServerConfig<AnyModels, AnyFactories>);
 
     /** The underlying in-memory database instance for this server. */
     readonly db: Db;
