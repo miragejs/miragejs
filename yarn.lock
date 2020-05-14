@@ -777,26 +777,26 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@definitelytyped/header-parser@0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@definitelytyped/header-parser/-/header-parser-0.0.29.tgz#81e72279f16ffb7d2c5b2ae7a19982b40544b52d"
-  integrity sha512-d6FgX8LhSY75fa6cpjsTkLsbFuRKxT4k9EV2oc38wznndlkaWLjP9FW1GT24AMg5hkRuA9AJUbKRO1QhSqvSpA==
+"@definitelytyped/header-parser@0.0.30":
+  version "0.0.30"
+  resolved "https://registry.yarnpkg.com/@definitelytyped/header-parser/-/header-parser-0.0.30.tgz#fb600afd236051501e2f7a9f2e24140a2eaca64e"
+  integrity sha512-oa9EUZ2dT1t4drHE2lOZdSprvXy0BPyoJHyflY0E9qdYxZHaV9y9dkIC8We9B7bx+qCeSSSRrZjChwRmjfCfiA==
   dependencies:
-    "@definitelytyped/typescript-versions" "^0.0.29"
+    "@definitelytyped/typescript-versions" "^0.0.30"
     "@types/parsimmon" "^1.10.1"
     parsimmon "^1.13.0"
 
-"@definitelytyped/typescript-versions@0.0.29", "@definitelytyped/typescript-versions@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@definitelytyped/typescript-versions/-/typescript-versions-0.0.29.tgz#1f1a3bb35e2a8d31ce83763481f6e5530f0f92a0"
-  integrity sha512-jMWqu0U5MiEVuTBtAbLwxKoF1ZWzbrcFrmX6nuzPzwxNHzUJlACq9RnIH93//bU7JOxkW6UrZy/8V8W5jxmiFA==
+"@definitelytyped/typescript-versions@0.0.30", "@definitelytyped/typescript-versions@^0.0.30":
+  version "0.0.30"
+  resolved "https://registry.yarnpkg.com/@definitelytyped/typescript-versions/-/typescript-versions-0.0.30.tgz#4e1b6c7919f36c9061d6cb6df769067d35d754c3"
+  integrity sha512-XrQ8I/uPr+OSR4GP3fJU9v+u+Zflai8ujeTcB7lNfVHmnzgOeD5s1h/+uvUvvKsb8/uz7CbEbII3tcq/11Fsyw==
 
-"@definitelytyped/utils@0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@definitelytyped/utils/-/utils-0.0.29.tgz#dfa642cbec49e6f44789083ff24c182e0da0fb0b"
-  integrity sha512-cqUjvXijj9PgEbVH+DwS5kLHjB700CmeQhFjfRlxn9CeRzSUoa5D0uOdz9b5Hl4XKDQfo1A1lY04nc6z486Nqw==
+"@definitelytyped/utils@0.0.30":
+  version "0.0.30"
+  resolved "https://registry.yarnpkg.com/@definitelytyped/utils/-/utils-0.0.30.tgz#15341410ce17373859d58c8ef0e43f3b20b5ecb4"
+  integrity sha512-wnOPtMfAB1m3rnUXGblzi2Qk+KU67Tfxh4Tbj2RCxFCyKYVf063DQ+6wU8fb1FdEFvtZ2hIpOs5KewBJkoyZOA==
   dependencies:
-    "@definitelytyped/typescript-versions" "^0.0.29"
+    "@definitelytyped/typescript-versions" "^0.0.30"
     "@types/node" "^12.12.29"
     charm "^1.0.2"
     fs-extra "^8.1.0"
@@ -2067,12 +2067,12 @@ domexception@^1.0.1:
   dependencies:
     webidl-conversions "^4.0.2"
 
-dts-critic@^3.0.2:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/dts-critic/-/dts-critic-3.1.0.tgz#bbbe707f1fb6efa08e85aeaf1ee9dd7a184dca98"
-  integrity sha512-cNn4SsrlnGqnqxXE0GdPORurDrr+Y8k6yy5eBpjM6lu0C80QgabU8ypq+uAQ+JYeJ/ykQVUNo9zdLQfZHvnSVQ==
+dts-critic@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/dts-critic/-/dts-critic-3.2.0.tgz#715e5cad7d5b224fc85304feea1c6c13c4dfdf28"
+  integrity sha512-qJ7vXQXwp/U/v/sGGbmPl1tAbRNcgmBRHkw8HyC9oA1aVPUDGQbI4MqMmIYAUVUUXlrIkrXiZy3QpXz5DzqkqQ==
   dependencies:
-    "@definitelytyped/header-parser" "0.0.29"
+    "@definitelytyped/header-parser" "0.0.30"
     command-exists "^1.2.8"
     rimraf "^3.0.2"
     semver "^6.2.0"
@@ -2080,14 +2080,14 @@ dts-critic@^3.0.2:
     yargs "^12.0.5"
 
 dtslint@^3.4.1:
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/dtslint/-/dtslint-3.5.2.tgz#56d70b47415e70a3b689c242d19e20d15be7c7e7"
-  integrity sha512-i76Ai9Oo8uD8IQhGcb8X0AHNs/fo7RUnVSOk+a/OYkO9WXkM7l8oHGnZGZSMu2TbSRE1JQD/hWK56R94e+uXrQ==
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/dtslint/-/dtslint-3.6.0.tgz#0102125e279812b9bce7c5fb93682651ba590596"
+  integrity sha512-6l2WetYCIPekiKrhnXeu6Tx+Nkf5s5mTm8C35obu3kmSfGMA8I0Qu+NncKxJqyFs4nQp44qnitX3A/KKJd+LGg==
   dependencies:
-    "@definitelytyped/header-parser" "0.0.29"
-    "@definitelytyped/typescript-versions" "0.0.29"
-    "@definitelytyped/utils" "0.0.29"
-    dts-critic "^3.0.2"
+    "@definitelytyped/header-parser" "0.0.30"
+    "@definitelytyped/typescript-versions" "0.0.30"
+    "@definitelytyped/utils" "0.0.30"
+    dts-critic "^3.2.0"
     fs-extra "^6.0.1"
     json-stable-stringify "^1.0.1"
     strip-json-comments "^2.0.1"
