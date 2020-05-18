@@ -777,15 +777,6 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@definitelytyped/header-parser@0.0.30":
-  version "0.0.30"
-  resolved "https://registry.yarnpkg.com/@definitelytyped/header-parser/-/header-parser-0.0.30.tgz#fb600afd236051501e2f7a9f2e24140a2eaca64e"
-  integrity sha512-oa9EUZ2dT1t4drHE2lOZdSprvXy0BPyoJHyflY0E9qdYxZHaV9y9dkIC8We9B7bx+qCeSSSRrZjChwRmjfCfiA==
-  dependencies:
-    "@definitelytyped/typescript-versions" "^0.0.30"
-    "@types/parsimmon" "^1.10.1"
-    parsimmon "^1.13.0"
-
 "@definitelytyped/header-parser@0.0.34":
   version "0.0.34"
   resolved "https://registry.yarnpkg.com/@definitelytyped/header-parser/-/header-parser-0.0.34.tgz#892c83ae0cdbc52ee439dfc3ac34244903b8a5ee"
@@ -799,11 +790,6 @@
   version "0.0.34"
   resolved "https://registry.yarnpkg.com/@definitelytyped/typescript-versions/-/typescript-versions-0.0.34.tgz#6167363d378670ad7ef9485b7cff7d198106dcdf"
   integrity sha512-7IqWcbHKYbfY8Lt7AigXDa29cbz3gynzBHMjwMUCeLnex8D682M6OW8uBLouvVHCr+YENL58tQB3dn0Zos8mFQ==
-
-"@definitelytyped/typescript-versions@^0.0.30":
-  version "0.0.30"
-  resolved "https://registry.yarnpkg.com/@definitelytyped/typescript-versions/-/typescript-versions-0.0.30.tgz#4e1b6c7919f36c9061d6cb6df769067d35d754c3"
-  integrity sha512-XrQ8I/uPr+OSR4GP3fJU9v+u+Zflai8ujeTcB7lNfVHmnzgOeD5s1h/+uvUvvKsb8/uz7CbEbII3tcq/11Fsyw==
 
 "@definitelytyped/utils@0.0.34":
   version "0.0.34"
@@ -2081,12 +2067,12 @@ domexception@^1.0.1:
   dependencies:
     webidl-conversions "^4.0.2"
 
-dts-critic@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/dts-critic/-/dts-critic-3.2.0.tgz#715e5cad7d5b224fc85304feea1c6c13c4dfdf28"
-  integrity sha512-qJ7vXQXwp/U/v/sGGbmPl1tAbRNcgmBRHkw8HyC9oA1aVPUDGQbI4MqMmIYAUVUUXlrIkrXiZy3QpXz5DzqkqQ==
+dts-critic@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/dts-critic/-/dts-critic-3.2.1.tgz#611f5f724772661b86d2951ca58380baddae79b0"
+  integrity sha512-jNCWcrOduMsEUDXTZd+qWN7Nig52OgPVPL2IRJ7QQTx0MdYASEwqkoBdPrcEY/ClkKZ+rSjZi/xjBiNmRObuRg==
   dependencies:
-    "@definitelytyped/header-parser" "0.0.30"
+    "@definitelytyped/header-parser" "0.0.34"
     command-exists "^1.2.8"
     rimraf "^3.0.2"
     semver "^6.2.0"
@@ -2094,14 +2080,14 @@ dts-critic@^3.2.0:
     yargs "^12.0.5"
 
 dtslint@^3.4.1:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/dtslint/-/dtslint-3.6.1.tgz#63a269dff7d57c433ae3952ff9f859cda1bfa47a"
-  integrity sha512-wtkvf2DgZC7nJAzgX4+WUh59O+BE86UEs0CpEs1atrk2Hy6Y8/CK9Vlmu4SLVAEmKnIk+kaNwTZq0AFRX6Ra+g==
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/dtslint/-/dtslint-3.6.2.tgz#c131de5f87f8edc2ef3eeb86820f4f3d2c1bb567"
+  integrity sha512-U+1EcZpnzBsPqIqTVNEk12/K5oHnbUppvws4rLYoy9rmUjSkDVJqaMqEWJXTXPuqWy1Rp/Ky2rI53XRcMFJaeQ==
   dependencies:
     "@definitelytyped/header-parser" "0.0.34"
     "@definitelytyped/typescript-versions" "0.0.34"
     "@definitelytyped/utils" "0.0.34"
-    dts-critic "^3.2.0"
+    dts-critic "^3.2.1"
     fs-extra "^6.0.1"
     json-stable-stringify "^1.0.1"
     strip-json-comments "^2.0.1"
