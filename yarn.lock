@@ -4784,10 +4784,10 @@ prelude-ls@~1.1.2:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
   integrity sha1-IZMqVJ9eUv/ZqCf1cOBL5iqX2lQ=
 
-pretender@^3.4.0:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/pretender/-/pretender-3.4.1.tgz#04345d99f0da8266f545ff377d4a9f23db9b99dd"
-  integrity sha512-qIQk0vKo739Dbx940Qq2hMZjIXHxWj9bDRQCfWSgoMWDfZTgn0bJ3lD0aJa37F5/MRzG5AtbYXf5JHzoXMsW/Q==
+pretender@^3.4.3:
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/pretender/-/pretender-3.4.3.tgz#a3b4160516007075d29127262f3a0063d19896e9"
+  integrity sha512-AlbkBly9R8KR+R0sTCJ/ToOeEoUMtt52QVCetui5zoSmeLOU3S8oobFsyPLm1O2txR6t58qDNysqPnA1vVi8Hg==
   dependencies:
     fake-xml-http-request "^2.1.1"
     route-recognizer "^0.3.3"
