@@ -4,6 +4,7 @@
   "description": "A client-side server to help you build, test and demo your JavaScript app",
   "main": "dist/mirage-cjs.js",
   "module": "dist/mirage-esm.js",
+  "sideEffects": false,
   "types": "types/index.d.ts",
   "keywords": [
     "pretender",
