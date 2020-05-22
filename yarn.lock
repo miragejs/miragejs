@@ -2137,27 +2137,28 @@ domexception@^1.0.1:
   dependencies:
     webidl-conversions "^4.0.2"
 
-dts-critic@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/dts-critic/-/dts-critic-3.2.2.tgz#2a730a87ef83c80d64764ef836271a1ebe197d77"
-  integrity sha512-eSnRQumKgQjaQThLKyyI2P3f98OZHEUbFjcraVfEJHrV+JpO8f2IrStzxLhVLAGa42moB0pRoznVQATdDabIoQ==
+dts-critic@^3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/dts-critic/-/dts-critic-3.2.3.tgz#892c9a02fd620a1d30449b26b314cd4820d9ba9c"
+  integrity sha512-CErYGgQiloLH0PZ/vrLH5+WgpPbHiOj77qFF+6pGuGtlQzb43oFUSS9Qetr4y9fAg2ZOG9ZvGp7h+jhh0kkbAg==
   dependencies:
     "@definitelytyped/header-parser" "0.0.34"
     command-exists "^1.2.8"
+    rimraf "^3.0.2"
     semver "^6.2.0"
     tmp "^0.2.1"
     typescript "^3.9.2"
     yargs "^12.0.5"
 
 dtslint@^3.4.1:
-  version "3.6.3"
-  resolved "https://registry.yarnpkg.com/dtslint/-/dtslint-3.6.3.tgz#be93c74fe00f99be6a89bab3b943d733c8c27893"
-  integrity sha512-7zm45PbN6TQ6N/5gFPKveHt6zybgO+Xq50cviemLLyfbAhkh7I5ZZAE5adn5WjryjN36amkL0vtf1r0+7gWE2w==
+  version "3.6.4"
+  resolved "https://registry.yarnpkg.com/dtslint/-/dtslint-3.6.4.tgz#f7439e0306c6c1b58e04d68fb6679d2f9549721f"
+  integrity sha512-D9qwC0N945ge+CENZ1Dtm6I72fc8dAgQpyAde1XoiChR+mk8dC9uzToJNORe7SI0P3dSSULofwjsg7rzQ/iplw==
   dependencies:
     "@definitelytyped/header-parser" "0.0.34"
     "@definitelytyped/typescript-versions" "0.0.34"
     "@definitelytyped/utils" "0.0.34"
-    dts-critic "^3.2.2"
+    dts-critic "^3.2.3"
     fs-extra "^6.0.1"
     json-stable-stringify "^1.0.1"
     strip-json-comments "^2.0.1"
@@ -5280,7 +5281,7 @@ rimraf@2.6.3:
   dependencies:
     glob "^7.1.3"
 
-rimraf@^3.0.0:
+rimraf@^3.0.0, rimraf@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-3.0.2.tgz#f1a5402ba6220ad52cc1282bac1ae3aa49fd061a"
   integrity sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==
