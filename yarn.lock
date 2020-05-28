@@ -849,17 +849,31 @@
     "@types/parsimmon" "^1.10.1"
     parsimmon "^1.13.0"
 
-"@definitelytyped/typescript-versions@0.0.34", "@definitelytyped/typescript-versions@^0.0.34":
+"@definitelytyped/header-parser@latest":
+  version "0.0.35"
+  resolved "https://registry.yarnpkg.com/@definitelytyped/header-parser/-/header-parser-0.0.35.tgz#3184ec205c4f5254c33cc34ca720dc9dbdc0176d"
+  integrity sha512-tlfQzjptRPS7ukWzOyUB/srJ3HuQf6OIkK4OOu5kVX6pS+oQRKqCBDS7afwKsGOCP198jT6gwDuuGJeojmFCBg==
+  dependencies:
+    "@definitelytyped/typescript-versions" "^0.0.35"
+    "@types/parsimmon" "^1.10.1"
+    parsimmon "^1.13.0"
+
+"@definitelytyped/typescript-versions@^0.0.34":
   version "0.0.34"
   resolved "https://registry.yarnpkg.com/@definitelytyped/typescript-versions/-/typescript-versions-0.0.34.tgz#6167363d378670ad7ef9485b7cff7d198106dcdf"
   integrity sha512-7IqWcbHKYbfY8Lt7AigXDa29cbz3gynzBHMjwMUCeLnex8D682M6OW8uBLouvVHCr+YENL58tQB3dn0Zos8mFQ==
 
-"@definitelytyped/utils@0.0.34":
-  version "0.0.34"
-  resolved "https://registry.yarnpkg.com/@definitelytyped/utils/-/utils-0.0.34.tgz#7d34d4b411b68c95c1b3460071cee3efa4fc5b8b"
-  integrity sha512-C1mlA9ixRfv7PPmO99hJZ8Ii2roKY+7GoIwBPh5uYSF6WfABoVlzyWX3LsF6fy1MwpZbempC+r81iDm2QeYTsw==
+"@definitelytyped/typescript-versions@^0.0.35", "@definitelytyped/typescript-versions@latest":
+  version "0.0.35"
+  resolved "https://registry.yarnpkg.com/@definitelytyped/typescript-versions/-/typescript-versions-0.0.35.tgz#f58d22d3f1141f5832e17f5b033ec80559eb8e51"
+  integrity sha512-avSJ8C5KPAYjAF2BkJbrIP3WaTKWM10LT+PepKFr0WXAjObUp8Ds7k8yweEpsRdUTjcL1YIzsusk9NOvAIVY2w==
+
+"@definitelytyped/utils@latest":
+  version "0.0.35"
+  resolved "https://registry.yarnpkg.com/@definitelytyped/utils/-/utils-0.0.35.tgz#edd672d463cbfb6351d06f2e02e27be1fd8e549b"
+  integrity sha512-dw5sLbmyiPG0vFmrSe7cNpPWd1XgKWVT4FzRvZuf7L3heAzx+tshGs8vU5t8tAuQNFCvbtvacXRhN0OywqogTg==
   dependencies:
-    "@definitelytyped/typescript-versions" "^0.0.34"
+    "@definitelytyped/typescript-versions" "^0.0.35"
     "@types/node" "^12.12.29"
     charm "^1.0.2"
     fs-extra "^8.1.0"
@@ -2155,13 +2169,13 @@ dts-critic@^3.2.3:
     yargs "^12.0.5"
 
 dtslint@^3.4.1:
-  version "3.6.4"
-  resolved "https://registry.yarnpkg.com/dtslint/-/dtslint-3.6.4.tgz#f7439e0306c6c1b58e04d68fb6679d2f9549721f"
-  integrity sha512-D9qwC0N945ge+CENZ1Dtm6I72fc8dAgQpyAde1XoiChR+mk8dC9uzToJNORe7SI0P3dSSULofwjsg7rzQ/iplw==
+  version "3.6.7"
+  resolved "https://registry.yarnpkg.com/dtslint/-/dtslint-3.6.7.tgz#122701a32193913d7715a1b20b65f8dabcdd1040"
+  integrity sha512-0Ap/EjQ8s17SzsjL9mf07pYuGO5yL1wWPKr5TbrRdguNHdbDxd8gVyuF3L3lVanXIg6bwEXmU+umUjSY7nFx4w==
   dependencies:
-    "@definitelytyped/header-parser" "0.0.34"
-    "@definitelytyped/typescript-versions" "0.0.34"
-    "@definitelytyped/utils" "0.0.34"
+    "@definitelytyped/header-parser" latest
+    "@definitelytyped/typescript-versions" latest
+    "@definitelytyped/utils" latest
     dts-critic "^3.2.3"
     fs-extra "^6.0.1"
     json-stable-stringify "^1.0.1"
