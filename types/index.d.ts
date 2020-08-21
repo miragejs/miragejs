@@ -290,7 +290,9 @@ declare module "miragejs/server" {
     testConfig?: (this: Server<MirageRegistry<Models, Factories>>) => void;
 
     inflector?: object;
-    identityManagers?: IdentityManager;
+    identityManagers?: Partial<
+      Record<keyof Models | "application", typeof IdentityManager>
+    >;
     models?: Models;
     serializers?: any;
     factories?: Factories;
@@ -414,7 +416,10 @@ declare module "miragejs/db" {
   };
 
   class DbClass {
-    constructor(initialData: [], identityManagers?: IdentityManager[]);
+    constructor(
+      initialData: [],
+      identityManagers?: Record<string, IdentityManager>,
+    );
 
     createCollection(name: string, initialData?: any[]): void;
     dump(): void;

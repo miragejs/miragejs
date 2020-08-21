@@ -8,6 +8,7 @@ import {
   hasMany,
   Factory,
 } from "miragejs";
+import IdentityManager from 'miragejs/identity-manager';
 
 export default function config(this: Server): void {
   this.namespace = "foo";
@@ -85,11 +86,19 @@ new Server({
     this.get("/movies");
     this.post("/movies");
   },
+
+  identityManagers: {
+    application: IdentityManager,
+  },
 });
 
 // In contrast to `new Server`, `createServer` is able to infer
 // type info from the models and factories you pass it
 createServer({
+  identityManagers: {
+    pet: IdentityManager,
+  },
+
   models: {
     pet: Model.extend({
       owner: belongsTo("person"),
