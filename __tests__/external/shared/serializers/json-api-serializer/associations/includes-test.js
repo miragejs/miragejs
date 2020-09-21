@@ -520,7 +520,7 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
     }).toThrow();
   });
 
-  test(" Do not return includes when queryParamIncludes is empty ", () => {
+  test("Do not return includes when queryParamIncludes is empty", () => {
     server.config({
       serializers: {
         application: JSONAPISerializer,

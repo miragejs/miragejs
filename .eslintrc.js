@@ -46,6 +46,9 @@ module.exports = {
         "jest/globals": true,
       },
       extends: ["plugin:jest/recommended", "plugin:jest/style"],
+      rules: {
+        "jest/no-conditional-expect": "off",
+      },
     },
   ],
   settings: {
