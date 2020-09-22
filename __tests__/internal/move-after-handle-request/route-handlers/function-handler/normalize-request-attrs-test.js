@@ -93,7 +93,7 @@ describe("Integration | Route handlers | Function handler | #normalizedRequestAt
     );
   });
 
-  test(`it accepts an optional modelName if it cannot be inferred from the path `, async () => {
+  test(`it accepts an optional modelName if it cannot be inferred from the path`, async () => {
     expect.assertions(1);
 
     server.post("/users/create", function () {
