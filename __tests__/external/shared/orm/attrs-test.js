@@ -31,4 +31,14 @@ describe("External | Shared | ORM | attrs", () => {
 
     expect(user.name).toEqual("Link");
   });
+
+  test("toJSON should return a copy of attrs so they cannot be mutated", () => {
+    let user = server.schema.users.find(1);
+
+    let json = user.toJSON();
+    expect(json).toEqual({ id: "1", name: "Link", evil: false });
+
+    json.name = "Young Link";
+    expect(user.name).toEqual("Link");
+  });
 });
