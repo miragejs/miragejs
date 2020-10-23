@@ -72,10 +72,6 @@ new Server({
   routes() {
     this.namespace = "api";
 
-    this.get("/movies", (schema, request) => {
-      return schema.db.movies.all();
-    });
-
     this.get("/movies");
     this.get("/movies/:id");
     this.post("/movies");
