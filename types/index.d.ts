@@ -137,8 +137,14 @@ declare module "miragejs/-types" {
 
   // Captures the result of a `Factory.extend()` call
   interface FactoryDefinition<Data extends {} = {}> {
-    extend<NewData>(data: NewData): FactoryDefinition<Assign<Data, NewData>>;
+    extend<NewData>(
+      data: WithFactoryMethods<NewData>
+    ): FactoryDefinition<Assign<Data, FlattenFactoryMethods<NewData>>>;
   }
+
+  type WithFactoryMethods<T> = {
+    [K in keyof T]: T[K] | ((n: number) => T[K]);
+  };
 
   // Extract factory method return values from a factory definition
   type FlattenFactoryMethods<T> = {
