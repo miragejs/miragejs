@@ -410,7 +410,7 @@ declare module "miragejs/db" {
   import IdentityManager from "miragejs/identity-manager";
 
   type DbLookup = {
-    [key: string]: DbCollection;
+    [key: string]: ReturnType<DbCollection["all"]> & Omit<DbCollection, "all">;
   };
 
   class DbClass {
@@ -597,7 +597,8 @@ declare module "miragejs/serializer" {
     typeKeyForModel?(model: any): string;
   }
 
-  class JSONAPISerializer extends Serializer
+  class JSONAPISerializer
+    extends Serializer
     implements JSONAPISerializerInterface {
     static extend(
       param?: JSONAPISerializerInterface | {}
