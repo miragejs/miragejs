@@ -17,7 +17,7 @@ interface Movie {
   title: string;
 }
 
-myDb.createCollection("movies", [{ title: "Interstellar" }]); // $ExpectType void
+myDb.createCollection("movies", [{ title: "Interstellar" }]); // $ExpectType Db
 myDb.dump(); // $ExpectType void
 myDb.emptyData(); // $ExpectType void
 myDb.loadData({}); // $ExpectType void
