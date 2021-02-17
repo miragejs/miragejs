@@ -422,7 +422,7 @@ declare module "miragejs/db" {
   class DbClass {
     constructor(initialData: [], identityManagers?: IdentityManager[]);
 
-    createCollection(name: string, initialData?: any[]): void;
+    createCollection(name: string, initialData?: any[]): Db;
     dump(): void;
     emptyData(): void;
     loadData(data: any): void;
