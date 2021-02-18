@@ -1,5 +1,8 @@
 import DbCollection from "miragejs/db-collection";
 import { Server } from "miragejs/server";
+import { Registry } from 'miragejs';
+import { ModelDefinition } from "miragejs/-types";
+import Schema from "miragejs/orm/schema";
 
 const server: Server = new Server();
 
@@ -37,3 +40,14 @@ myDb.users.remove({ name: "Zelda" }); // $ExpectType void
 myDb.users.update({ name: "Ganon" }); // $ExpectType any
 myDb.users.update(1, { name: "Young Link" }); // $ExpectType any
 myDb.users.update({ name: "Link" }, { name: "Epona" }); // $ExpectType any
+
+type TestModels = {
+  movie: ModelDefinition<Movie>,
+}
+
+type TestRegistry = Registry<TestModels, {}>;
+
+const testServer = new Server<TestRegistry>();
+
+// $ExpectType ModelInstance<{ title: string; }> | null
+testServer.schema.findBy('movie', (instance) => instance.title.length > 0);
