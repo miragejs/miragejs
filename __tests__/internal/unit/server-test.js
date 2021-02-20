@@ -531,6 +531,34 @@ describe("Unit | Server #create", function () {
     server.shutdown();
   });
 
+  test("create allows to apply attr overrides containing afterCreate", () => {
+    let CommentFactory = Factory.extend({
+      content: "content",
+    });
+    let ArticleFactory = Factory.extend({
+      title: "Lorem ipsum",
+    });
+
+    let server = new Server({
+      environment: "test",
+      factories: {
+        article: ArticleFactory,
+        comment: CommentFactory,
+      },
+    });
+
+    let articleWithComments = server.create("article", {
+      afterCreate(article, server) {
+        server.createList("comment", 3, { article });
+      },
+    });
+
+    expect(articleWithComments).toEqual({ id: "1", title: "Lorem ipsum" });
+    expect(server.db.comments).toHaveLength(3);
+
+    server.shutdown();
+  });
+
   test("create throws errors when using trait that is not defined and distinquishes between traits and non-traits", () => {
     let ArticleFactory = Factory.extend({
       title: "Lorem ipsum",
