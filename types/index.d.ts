@@ -88,9 +88,21 @@ declare module "miragejs" {
    * A collection of zero or more Mirage model instances.
    */
   export class Collection<T> {
+    add(model: T): Collection<T>;
+    destroy(): Collection<T>;
+    filter(
+      predicate: (model: T, index: number, collection: Collection<T>) => any,
+      thisArg?: any
+    ): Collection<T>;
+    includes(model: T): boolean;
     length: number;
+    mergeCollection(collection: Collection<T>): Collection<T>;
     modelName: string;
     models: T[];
+    reload(): Collection<T>;
+    remove(model: T): Collection<T>;
+    slice(start?: number, end?: number): Collection<T>;
+    sort(compareFn?: (a: T, b: T) => number): Collection<T>;
   }
 
   export interface RelationshipOptions {
