@@ -33,6 +33,10 @@ describe("External | Shared | Serializers | ActiveModelSerializer", () => {
           comment: Model.extend({
             commentable: belongsTo({ polymorphic: true }),
           }),
+          team: Model.extend({
+            users: hasMany(),
+            comments: hasMany(),
+          }),
         },
         serializers: {
           application: ActiveModelSerializer,
@@ -59,6 +63,12 @@ describe("External | Shared | Serializers | ActiveModelSerializer", () => {
             include: ["contactInfos"],
             embed: true,
           }),
+          team: ActiveModelSerializer.extend({
+            serializeIds: "included",
+            attrs: ["id", "name"],
+            include: ["users", "comments"],
+            embed: (key) => key === "comments",
+          }),
         },
       });
 
@@ -74,6 +84,15 @@ describe("External | Shared | Serializers | ActiveModelSerializer", () => {
 
       server.schema.users.create({ name: "Pine Apple", age: 230 });
       server.schema.comments.create({ text: "Hi there", commentable: post1 });
+
+      let team = server.schema.teams.create({
+        name: "Blue Team",
+        users: [user],
+      });
+      server.schema.comments.create({
+        text: "Blue team, go!",
+        commentable: team,
+      });
     });
 
     test("it sideloads associations and snake-cases relationships and attributes correctly for a model", () => {
@@ -153,7 +172,7 @@ describe("External | Shared | Serializers | ActiveModelSerializer", () => {
       });
     });
 
-    test("it embeds associations and snake-cases relationships and attributes correctly for a collection", () => {
+    test("it embeds all associations and snake-cases relationships and attributes correctly for a collection", () => {
       let users = server.schema.users.all();
       let result = server.serializerOrRegistry.serialize(users);
 
@@ -179,6 +198,39 @@ describe("External | Shared | Serializers | ActiveModelSerializer", () => {
             id: "2",
             name: "Pine Apple",
             contact_infos: [],
+          },
+        ],
+      });
+    });
+
+    test("it embeds some associations and snake-cases relationships and attributes correctly for a collection", () => {
+      let teams = server.schema.teams.all();
+      let result = server.serializerOrRegistry.serialize(teams);
+
+      expect(result).toEqual({
+        teams: [
+          {
+            id: "1",
+            name: "Blue Team",
+            comments: [
+              {
+                text: "Blue team, go!",
+                id: "2",
+                commentable_type: "team",
+                commentable_id: "1",
+              },
+            ],
+            user_ids: ["1"],
+          },
+        ],
+        users: [
+          {
+            id: "1",
+            name: "John Peach",
+            contact_infos: [
+              { email: "peach@bb.me", id: "1", user_id: "1" },
+              { email: "john3000@mail.com", id: "2", user_id: "1" },
+            ],
           },
         ],
       });
