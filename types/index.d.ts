@@ -91,6 +91,17 @@ declare module "miragejs" {
     length: number;
     modelName: string;
     models: T[];
+    sort: (sortFunc: (a: T, b: T) => number) => Collection<T>;
+    add: (instance: T) => any;
+    destroy: () => any;
+    filter: (callbackFunc: (item: T) => boolean) => Collection<T>;
+    includes: (item: T) => boolean;
+    mergeCollection: (collection: Collection<T>) => Collection<T>;
+    reload: () => any;
+    remove: (instance: T) => any;
+    save: () => any;
+    slice: (start: number, end: number) => Collection<T>;
+    update: <K extends keyof T>(key: K, value: T[K]) => any;
   }
 
   export interface RelationshipOptions {
