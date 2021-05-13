@@ -348,6 +348,14 @@ declare module "miragejs/server" {
       Data extends Partial<Init>
     >(modelName: K, count: number, data?: Data): Array<Init & Data>;
 
+    createList<
+      K extends keyof Registry, 
+      Init extends Instantiate<Registry, K>,
+      Data extends Partial<Init>
+    >(
+      modelName: K, count: number, ...traitsAndOverrides: (Data | string)[]
+    ): Array<Init & Data>;
+                                                           
     /** Handle a GET request to the given path. */
     get(
       path: string,
@@ -521,7 +529,16 @@ declare module "miragejs/orm/schema" {
       data?: Data
     ): Init &
       { [K in keyof Init & keyof Data]: Exclude<Init[K], undefined | null> };
-
+    
+   create<
+      K extends keyof Registry, 
+      Init extends Instantiate<Registry, K>,
+      Data extends Partial<ModelInitializer<Init>>
+    >(
+      modelName: K, ...traitsAndOverrides: (Data | string)[]
+    ): Init &
+    { [K in keyof Init & keyof Data]: Exclude<Init[K], undefined | null> };
+                                                           
     /** Locates one or more existing models of the given type by ID(s). */
     find<K extends keyof Registry>(
       type: K,
