@@ -4,10 +4,10 @@ type ModelType = { name: string };
 
 const collection = new Collection<ModelType>();
 
-collection.add({ name: 'Bob' }) // $ExpectType ModelType
+collection.add({ name: 'Bob' }) // $ExpectType Collection<ModelType>
 collection.add({ err: 'err' }) // $ExpectError
 
-collection.destroy() // $ExpectType any
+collection.destroy() // $ExpectType Collection<ModelType>
 
 collection.filter((item) => item.name === 'Bob') // $ExpectType Collection<ModelType>
 collection.filter((item) => item.err === 'Err') // $ExpectError
