@@ -128,7 +128,7 @@ declare module "miragejs" {
     sort(f: (a: T, b: T) => number): Collection<T>;
 
     /** Updates each model in the collection, and immediately persists all changes to the db. */
-    update: <K extends keyof T>(key: K, val: T[K]) => Collection<T>;
+    update<K extends keyof T>(key: K, val: T[K]): Collection<T>;
   }
 
   export interface RelationshipOptions {
