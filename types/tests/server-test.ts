@@ -64,7 +64,7 @@ new Server({
   routes() {
     this.namespace = "api";
 
-    this.schema.all("asfd"); // $ExpectType Collection<ModelInstance<{}>>
+    this.schema.all("asfd");
 
     this.get("/todos", () => {
       return {
