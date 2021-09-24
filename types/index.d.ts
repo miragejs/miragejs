@@ -115,6 +115,9 @@ declare module "miragejs" {
   export function hasMany<K extends string>(
     options?: RelationshipOptions
   ): HasMany<K>;
+
+  /** Declares traits for Factory */
+  export function trait<Data>(data: Data): Data;
 }
 
 declare module "miragejs/-types" {
@@ -346,7 +349,11 @@ declare module "miragejs/server" {
       K extends keyof Registry,
       Init extends Instantiate<Registry, K>,
       Data extends Partial<Init>
-    >(modelName: K, count: number, data?: Data): Array<Init & Data>;
+    >(
+      modelName: K,
+      count: number,
+      ...data: (Data | keyof Data)[]
+    ): Array<Init & Data>;
 
     /** Handle a GET request to the given path. */
     get(
@@ -525,7 +532,7 @@ declare module "miragejs/orm/schema" {
       Data extends Partial<ModelInitializer<Init>>
     >(
       modelName: K,
-      data?: Data
+      ...data: (Data | keyof Data)[]
     ): Init &
       { [K in keyof Init & keyof Data]: Exclude<Init[K], undefined | null> };
 
