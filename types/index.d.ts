@@ -184,12 +184,10 @@ declare module "miragejs/-types" {
 
   // Returns the instantiated type of the given model if it exists in the
   // given registry, or `unknown` otherwise.
-  type InstantiateIfDefined<
-    Registry,
-    ModelName
-  > = ModelName extends keyof Registry
-    ? Instantiate<Registry, ModelName>
-    : unknown;
+  type InstantiateIfDefined<Registry, ModelName> =
+    ModelName extends keyof Registry
+      ? Instantiate<Registry, ModelName>
+      : unknown;
 
   // The type-level equivalent of `Object.assign`
   type Assign<T, U> = U & Omit<T, keyof U>;
@@ -526,8 +524,9 @@ declare module "miragejs/orm/schema" {
     >(
       modelName: K,
       data?: Data
-    ): Init &
-      { [K in keyof Init & keyof Data]: Exclude<Init[K], undefined | null> };
+    ): Init & {
+      [K in keyof Init & keyof Data]: Exclude<Init[K], undefined | null>;
+    };
 
     /** Locates one or more existing models of the given type by ID(s). */
     find<K extends keyof Registry>(
@@ -612,7 +611,8 @@ declare module "miragejs/serializer" {
 
   class JSONAPISerializer
     extends Serializer
-    implements JSONAPISerializerInterface {
+    implements JSONAPISerializerInterface
+  {
     static extend(
       param?: JSONAPISerializerInterface | {}
     ): JSONAPISerializerInterface;

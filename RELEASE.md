@@ -26,24 +26,24 @@ For more significant changes, add some extra notes so folks see some docs in the
 
 Here's an example of each. Note release descriptions are in markdown, so you can copy these examples for the headings + formatting.
 
-```md
+````md
 🚀 **Enhancements**
 
 - #481 Mark Mirage as tree-shakable via sideEffects key.
 
-    Prior to this change, Webpack (in common tools like Create React App + Vue CLI) would not tree-shake Mirage from production builds, since Mirage does indeed have side effects. However, these side effects are only relevant during development, and should not prevent Mirage from being tree-shaken from production builds.
+  Prior to this change, Webpack (in common tools like Create React App + Vue CLI) would not tree-shake Mirage from production builds, since Mirage does indeed have side effects. However, these side effects are only relevant during development, and should not prevent Mirage from being tree-shaken from production builds.
 
-    The `sideEffects` key is an escape hatch and can be used to tell Webpack exactly this. With this change, apps with modern build setups that use Mirage like this
+  The `sideEffects` key is an escape hatch and can be used to tell Webpack exactly this. With this change, apps with modern build setups that use Mirage like this
 
-    ```js
-    import { Server } from 'miragejs'
+  ```js
+  import { Server } from "miragejs";
 
-    if (process.env.NODE_ENV !== 'production') {
-      new Server()
-    }
-    ```
+  if (process.env.NODE_ENV !== "production") {
+    new Server();
+  }
+  ```
 
-    should get all of `miragejs` automatically tree-shaken from their production builds!
+  should get all of `miragejs` automatically tree-shaken from their production builds!
 
 🐛 **Bugfixes**
 
@@ -51,24 +51,24 @@ Here's an example of each. Note release descriptions are in markdown, so you can
 
 📝 **Docs**
 
-* Update serializer docs
+- Update serializer docs
 
 🏠 **Internal**
 
 - Dependency updates
-```
+````
 
-You can group all Dependabot updates into a single  "- Dependency updates" line item under Internal.
+You can group all Dependabot updates into a single "- Dependency updates" line item under Internal.
 
 ## 4. Determine the new release number
 
 If there's a breaking change, increment the middle number of the previous release:
 
-	v0.1.41 -> v0.2.0
+    v0.1.41 -> v0.2.0
 
 If not, increment the last number:
 
-	v0.1.41 -> v0.1.42
+    v0.1.41 -> v0.1.42
 
 Take note of the new version number.
 

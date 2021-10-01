@@ -9,10 +9,9 @@ const FooFactory = Factory.extend({
   attr: "text",
 });
 
-declare const schema: Schema<Registry<
-  { foo: typeof FooModel },
-  { foo: typeof FooFactory }
->>;
+declare const schema: Schema<
+  Registry<{ foo: typeof FooModel }, { foo: typeof FooFactory }>
+>;
 
 schema.create("foo").attr; // $ExpectType string
 schema.create("foo", { attr: "ok" }).attr; // $ExpectType string

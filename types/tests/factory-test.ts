@@ -33,13 +33,15 @@ const PersonFactoryExplicit = Factory.extend<Partial<Person>>({
   },
 });
 
-declare const schema: Schema<Registry<
-  { personExplicit: typeof PersonModel; personInferred: typeof PersonModel },
-  {
-    personExplicit: typeof PersonFactoryExplicit;
-    personInferred: typeof PersonFactoryInferred;
-  }
->>;
+declare const schema: Schema<
+  Registry<
+    { personExplicit: typeof PersonModel; personInferred: typeof PersonModel },
+    {
+      personExplicit: typeof PersonFactoryExplicit;
+      personInferred: typeof PersonFactoryInferred;
+    }
+  >
+>;
 
 {
   const people = schema.all("personExplicit");
