@@ -1,7 +1,8 @@
 # Mirage JS
 
 [![npm version](https://badge.fury.io/js/miragejs.svg)](https://badge.fury.io/js/miragejs)
-[![Build Status](https://travis-ci.com/miragejs/miragejs.svg?branch=master)](https://travis-ci.com/github/miragejs/miragejs)
+![example workflow](https://github.com/miragejs/miragejs/actions/workflows/.github/workflows/ci.yml/badge.svg)
+
 
 A client-side server to develop, test and prototype your JavaScript app.
 
