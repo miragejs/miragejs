@@ -88,9 +88,47 @@ declare module "miragejs" {
    * A collection of zero or more Mirage model instances.
    */
   export class Collection<T> {
+    /** The number of models in the collection. */
     length: number;
+
+    /** The dasherized model name this Collection represents. */
     modelName: string;
+
+    /** The underlying plain JavaScript array of Models in this Collection. */
     models: T[];
+
+    /** Adds a model to this collection. */
+    add(model: T): Collection<T>;
+
+    /** Destroys the db record for all models in the collection. */
+    destroy(): Collection<T>;
+
+    /** Returns a new Collection with its models filtered according to the provided callback function. */
+    filter(f: (value: T, index: number, models: T[]) => unknown): Collection<T>;
+
+    /** Checks if the Collection includes the given model. */
+    includes(model: T): boolean;
+
+    /** Modifies the Collection by merging the models from another collection. */
+    mergeCollection(collection: Collection<T>): Collection<T>;
+
+    /** Reloads each model in the collection. */
+    reload(): Collection<T>;
+
+    /** Removes a model from this collection. */
+    remove(model: T): Collection<T>;
+
+    /** Saves all models in the collection. */
+    save(): Collection<T>;
+
+    /** Returns a new Collection with a subset of its models selected from begin to end. */
+    slice(begin: number, end: number): Collection<T>;
+
+    /** Returns a new Collection with its models sorted according to the provided compare function. */
+    sort(f: (a: T, b: T) => number): Collection<T>;
+
+    /** Updates each model in the collection, and immediately persists all changes to the db. */
+    update<K extends keyof T>(key: K, val: T[K]): Collection<T>;
   }
 
   export interface RelationshipOptions {
