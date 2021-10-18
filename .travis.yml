@@ -1,7 +1,7 @@
 ---
 language: node_js
 node_js:
-  - "12"
+  - "14"
 
 sudo: false
 dist: trusty
@@ -29,14 +29,7 @@ before_deploy: |
   }
 
 jobs:
-  fail_fast: true
-
   include:
-    - stage: tests
-      env: NAME=tests
-      install: yarn install
-      script: yarn ci
-
     - stage: npm release
       script: skip
       deploy:

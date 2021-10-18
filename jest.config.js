@@ -1,6 +1,7 @@
 let internal = {
   displayName: "internal",
   setupFilesAfterEnv: ["jest-extended"],
+  testEnvironment: "jsdom",
   testMatch: ["**/__tests__/internal/**/*-test.[jt]s?(x)"],
   moduleNameMapper: {
     "@lib(.*)": "<rootDir>/lib$1",
