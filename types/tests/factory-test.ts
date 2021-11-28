@@ -51,7 +51,7 @@ declare const schema: Schema<
   people.models.map((model) => {
     model.id; // $ExpectType string | undefined
     model.name; // $ExpectType string
-    model.attrs; // $ExpectType Record<string, unknown>
+    model.attrs; // $ExpectType { name: string; age?: number | undefined; height?: string | undefined; }
     model.age; // $ExpectType number | undefined
     model.height; // $ExpectType string | undefined
     model.foo; // $ExpectError
@@ -73,7 +73,7 @@ declare const schema: Schema<
   people.models.map((model) => {
     model.id; // $ExpectType string | undefined
     model.name; // $ExpectType string
-    model.attrs; // $ExpectType Record<string, unknown>
+    model.attrs; // $ExpectType { name: string; age: number; height: string; }
     model.age; // $ExpectType number
     model.height; // $ExpectType string
     model.foo; // $ExpectError

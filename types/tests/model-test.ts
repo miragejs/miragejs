@@ -15,7 +15,7 @@ people.models.map((model) => {
   model.id; // $ExpectType string | undefined
   model.name; // $ExpectType string
   model.modelName; // $ExpectType string
-  model.attrs; // $ExpectType Record<string, unknown>
+  model.attrs; // $ExpectType { name: string; }
   model.foo; // $ExpectError
 
   model.save(); // $ExpectType void
