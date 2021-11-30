@@ -22,6 +22,19 @@ export default function config(this: Server): void {
   this.options("/foo"); // $ExpectType void
   this.del("/foo"); // $ExpectType void
 
+  this.get('/foo', () => ({}))
+  this.get('/foo', () => 0)
+  this.get('/foo', () => 'foo')
+  this.get('/foo', () => true)
+  this.get('/foo', () => null)
+  this.get('/foo', () => ['foo'])
+  this.get('/foo', () => ['foo', 0])
+  this.get<number>('/foo', () => 0)
+  this.get<[number, string]>('/foo', () => [0, 'foo'])
+  
+  this.get<number>('/foo', () => false) // $ExpectError
+  this.get<[number, string]>('/foo', () => ['foo', 0]) // $ExpectError
+
   this.passthrough("/_coverage/upload"); // $ExpectType void
   this.passthrough((request) => request.queryParams.skipMirage); // $ExpectType void
 
