@@ -264,7 +264,8 @@ declare module "miragejs/-types" {
   export type AnyRegistry = Registry<AnyModels, AnyFactories>;
 
   type MaybePromise<T> = T | PromiseLike<T>;
-  export type AnyResponse = MaybePromise<ModelInstance | Response | object | number | string | boolean | null>
+  type ValidResponse = object | number | string | boolean | null
+  export type AnyResponse = MaybePromise<ModelInstance | Response | ValidResponse | ValidResponse[]>
 
   /** Represents the type of an instantiated Mirage model.  */
   export type ModelInstance<Data extends {} = {}> = Data & {
