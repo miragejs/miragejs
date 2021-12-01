@@ -181,7 +181,7 @@ declare module "miragejs/-types" {
   }
 
   type WithFactoryMethods<T> = {
-    [K in keyof T]: T[K] | ((n: number) => T[K]);
+    [K in keyof T]: T[K] | ((this: FlattenFactoryMethods<T>, n: number) => T[K]);
   };
 
   // Extract factory method return values from a factory definition
