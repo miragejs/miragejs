@@ -156,7 +156,7 @@ declare module "miragejs" {
 }
 
 declare module "miragejs/-types" {
-  import { Collection } from "miragejs";
+  import { Collection, Response } from "miragejs";
 
   /* A 1:1 relationship between models */
   export class BelongsTo<Name extends string> {
@@ -263,6 +263,17 @@ declare module "miragejs/-types" {
   /** A marker type for easily constraining type parameters that must be shaped like a Registry */
   export type AnyRegistry = Registry<AnyModels, AnyFactories>;
 
+  type MaybePromise<T> = T | PromiseLike<T>;
+  type ValidResponse =
+    | Record<PropertyKey, any>
+    | number
+    | string
+    | boolean
+    | null;
+  export type AnyResponse = MaybePromise<
+    ModelInstance | Response | ValidResponse | ValidResponse[]
+  >;
+
   /** Represents the type of an instantiated Mirage model.  */
   export type ModelInstance<Data extends {} = {}> = Data & {
     id?: string;
@@ -290,6 +301,7 @@ declare module "miragejs/server" {
     AnyRegistry,
     AnyModels,
     AnyFactories,
+    AnyResponse,
     Instantiate,
   } from "miragejs/-types";
   import { ModelInstance } from "miragejs/-types";
@@ -298,13 +310,11 @@ declare module "miragejs/server" {
   import Schema from "miragejs/orm/schema";
   import PretenderServer from "pretender";
 
-  type MaybePromise<T> = T | PromiseLike<T>;
-
   /** A callback that will be invoked when a given Mirage route is hit. */
-  export type RouteHandler<Registry extends AnyRegistry> = (
-    schema: Schema<Registry>,
-    request: Request
-  ) => MaybePromise<ModelInstance | Response | object>;
+  export type RouteHandler<
+    Registry extends AnyRegistry,
+    Response extends AnyResponse = AnyResponse
+  > = (schema: Schema<Registry>, request: Request) => Response;
 
   export interface HandlerOptions {
     /** A number of ms to artificially delay responses to this route. */
@@ -385,57 +395,57 @@ declare module "miragejs/server" {
     >(modelName: K, count: number, data?: Data): Array<Init & Data>;
 
     /** Handle a GET request to the given path. */
-    get(
+    get<Response extends AnyResponse>(
       path: string,
-      handler?: RouteHandler<Registry>,
+      handler?: RouteHandler<Registry, Response>,
       options?: HandlerOptions
     ): void;
 
     /** Handle a POST request to the given path. */
-    post(
+    post<Response extends AnyResponse>(
       path: string,
-      handler?: RouteHandler<Registry>,
+      handler?: RouteHandler<Registry, Response>,
       options?: HandlerOptions
     ): void;
 
     /** Handle a PUT request to the given path. */
-    put(
+    put<Response extends AnyResponse>(
       path: string,
-      handler?: RouteHandler<Registry>,
+      handler?: RouteHandler<Registry, Response>,
       options?: HandlerOptions
     ): void;
 
     /** Handle a PATCH request to the given path. */
-    patch(
+    patch<Response extends AnyResponse>(
       path: string,
-      handler?: RouteHandler<Registry>,
+      handler?: RouteHandler<Registry, Response>,
       options?: HandlerOptions
     ): void;
 
     /** Handle an OPTIONS request to the given path. */
-    options(
+    options<Response extends AnyResponse>(
       path: string,
-      handler?: RouteHandler<Registry>,
+      handler?: RouteHandler<Registry, Response>,
       options?: HandlerOptions
     ): void;
 
     /** Handle a DELETE request to the given path. */
-    del(
+    del<Response extends AnyResponse>(
       path: string,
-      handler?: RouteHandler<Registry>,
+      handler?: RouteHandler<Registry, Response>,
       options?: HandlerOptions
     ): void;
 
-    delete(
+    delete<Response extends AnyResponse>(
       path: string,
-      handler?: RouteHandler<Registry>,
+      handler?: RouteHandler<Registry, Response>,
       options?: HandlerOptions
     ): void;
 
     /** Handle a HEAD request to the given path. */
-    head(
+    head<Response extends AnyResponse>(
       path: string,
-      handler?: RouteHandler<Registry>,
+      handler?: RouteHandler<Registry, Response>,
       options?: HandlerOptions
     ): void;
 
