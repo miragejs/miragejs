@@ -264,8 +264,15 @@ declare module "miragejs/-types" {
   export type AnyRegistry = Registry<AnyModels, AnyFactories>;
 
   type MaybePromise<T> = T | PromiseLike<T>;
-  type ValidResponse = Record<PropertyKey, any> | number | string | boolean | null
-  export type AnyResponse = MaybePromise<ModelInstance | Response | ValidResponse | ValidResponse[]>
+  type ValidResponse =
+    | Record<PropertyKey, any>
+    | number
+    | string
+    | boolean
+    | null;
+  export type AnyResponse = MaybePromise<
+    ModelInstance | Response | ValidResponse | ValidResponse[]
+  >;
 
   /** Represents the type of an instantiated Mirage model.  */
   export type ModelInstance<Data extends {} = {}> = Data & {
@@ -304,10 +311,10 @@ declare module "miragejs/server" {
   import PretenderServer from "pretender";
 
   /** A callback that will be invoked when a given Mirage route is hit. */
-  export type RouteHandler<Registry extends AnyRegistry, Response extends AnyResponse = AnyResponse> = (
-    schema: Schema<Registry>,
-    request: Request
-  ) => Response;
+  export type RouteHandler<
+    Registry extends AnyRegistry,
+    Response extends AnyResponse = AnyResponse
+  > = (schema: Schema<Registry>, request: Request) => Response;
 
   export interface HandlerOptions {
     /** A number of ms to artificially delay responses to this route. */
