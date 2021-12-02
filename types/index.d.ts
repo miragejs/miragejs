@@ -592,6 +592,11 @@ declare module "miragejs/orm/schema" {
       attributes: Partial<Instantiate<Registry, K>>
     ): Instantiate<Registry, K> | null;
 
+    findBy<K extends keyof Registry>(
+      type: K,
+      predicate: (instance: Instantiate<Registry, K>) => boolean
+    ): Instantiate<Registry, K> | null;
+
     /** Locates an existing model of the given type by attribute value(s), creating one if it doesn't exist. */
     findOrCreateBy<K extends keyof Registry>(
       type: K,

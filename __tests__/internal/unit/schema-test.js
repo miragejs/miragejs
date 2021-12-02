@@ -62,4 +62,20 @@ describe("Unit | Schema", function () {
     expect(schema.findBy("author", { name: "Mary Roach" })).toEqual(record);
     expect(schema.findBy("author", { name: "Charles Dickens" })).toBeNull();
   });
+
+  test("`findBy()` accepts a predicate function to find the desired instance", () => {
+    const db = new Db();
+    const schema = new Schema(db);
+
+    const movieModel = Model.extend({});
+    schema.registerModel("movie", movieModel);
+
+    schema.create("movie", { id: 1, title: "Up" });
+    const movie = schema.create("movie", { id: 2, title: "Some title" });
+    schema.create("movie", { id: 3, title: "Some other title" });
+    const found = schema.findBy("movie", (movie) => movie.title.length > 4);
+
+    // Finds the first match
+    expect(found).toEqual(movie);
+  });
 });
