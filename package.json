@@ -25,7 +25,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:ts": "dtslint types --expectOnly",
-    "prettier:check": "prettier --list-different '**/*.js'",
+    "prettier:check": "prettier --list-different '**/*{.js,.ts}'",
     "prettier:update": "prettier --write .",
     "dev": "rollup -c -w",
     "build": "rollup -c",
