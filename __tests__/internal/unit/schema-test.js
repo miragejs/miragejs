@@ -70,9 +70,12 @@ describe("Unit | Schema", function () {
     const movieModel = Model.extend({});
     schema.registerModel("movie", movieModel);
 
-    const movie = schema.create("movie", { id: 1, title: "Some title" });
+    schema.create("movie", { id: 1, title: "Up" });
+    const movie = schema.create("movie", { id: 2, title: "Some title" });
+    schema.create("movie", { id: 3, title: "Some other title" });
     const found = schema.findBy("movie", (movie) => movie.title.length > 4);
 
+    // Finds the first match
     expect(found).toEqual(movie);
   });
 });
