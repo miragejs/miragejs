@@ -1,6 +1,6 @@
 import path from "path";
 import babel from "rollup-plugin-babel";
-import resolve from "rollup-plugin-node-resolve";
+import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 import alias from "rollup-plugin-alias";
 
@@ -89,7 +89,7 @@ let cjs = {
         ],
       ],
     }),
-    resolve(),
+    nodeResolve(),
   ],
 };
 
@@ -103,7 +103,7 @@ let umd = {
   plugins: [
     commonjs(),
     alias(aliases),
-    resolve(),
+    nodeResolve(),
     babel({
       exclude: "node_modules/**",
       sourceMaps: true,
