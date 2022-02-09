@@ -156,7 +156,7 @@ declare module "miragejs" {
 }
 
 declare module "miragejs/-types" {
-  import { Collection, Response } from "miragejs";
+  import { Collection, Response, Server } from "miragejs";
 
   /* A 1:1 relationship between models */
   export class BelongsTo<Name extends string> {
@@ -180,13 +180,15 @@ declare module "miragejs/-types" {
     ): FactoryDefinition<Assign<Data, FlattenFactoryMethods<NewData>>>;
   }
 
-  type WithFactoryMethods<T> = {
-    [K in keyof T]: T[K] | ((n: number) => T[K]);
-  };
+  type WithFactoryMethods<T> =
+    | { afterCreate?: (model: ModelInstance<any>, server: Server) => void }
+    | { [K in keyof Omit<T, "afterCreate">]: T[K] | ((n: number) => T[K]) };
 
   // Extract factory method return values from a factory definition
   type FlattenFactoryMethods<T> = {
-    [K in keyof T]: T[K] extends (n: number) => infer V ? V : T[K];
+    [K in keyof Omit<T, "afterCreate">]: T[K] extends (n: number) => infer V
+      ? V
+      : T[K];
   };
 
   /**
