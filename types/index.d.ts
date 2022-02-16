@@ -13,6 +13,8 @@ declare module "miragejs" {
     BelongsTo,
     HasMany,
   } from "miragejs/-types";
+  import IdentityManager from "miragejs/identity-manager";
+  export { IdentityManager };
   export { Server, createServer } from "miragejs/server";
   export { Registry, Instantiate, ModelInstance } from "miragejs/-types";
   export {
@@ -342,7 +344,9 @@ declare module "miragejs/server" {
     testConfig?: (this: Server<MirageRegistry<Models, Factories>>) => void;
 
     inflector?: object;
-    identityManagers?: IdentityManager;
+    identityManagers?: {
+      [modelName in keyof Models]?: typeof IdentityManager;
+    } & { application?: typeof IdentityManager };
     models?: Models;
     serializers?: any;
     factories?: Factories;
@@ -527,12 +531,12 @@ declare module "miragejs/identity-manager" {
   export default class IdentityManager {
     constructor();
 
-    get(): number;
+    get?(): number;
 
     /** Registers `uniqueIdentifier` as used. */
     set(uniqueIdentifier: string | number): void;
 
-    inc(): number;
+    inc?(): number;
 
     /**  Returns the next unique identifier. */
     fetch(): string;
