@@ -186,6 +186,12 @@ describe("External | Browser only | Passthrough", () => {
       `Mirage: Your app tried to GET '/movies'`
     );
   });
+
+  test("it passes through data urls", async () => {
+    const response = await fetch("data:,Passthrough!");
+    const data = await response.text();
+    expect(data).toEqual("Passthrough!");
+  });
 });
 
 test("a new server created with useDefaultPassthroughs set to false ignores default passthrougsh", async () => {
