@@ -48,7 +48,7 @@ export default function config(this: Server): void {
     schema.db; // $ExpectType Db
 
     request.params; // $ExpectType Record<string, string>
-    request.queryParams; // $ExpectType Record<string, string>
+    request.queryParams; // $ExpectType Record<string, string | string[] | null | undefined>
     request.requestBody; // $ExpectType string
     request.requestHeaders; // $ExpectType Record<string, string>
     request.url; // $ExpectType string
@@ -141,6 +141,7 @@ createServer({
     });
 
     this.get("bad", () => {
+      this.schema.all("typo");
       return this.schema.all("typo"); // $ExpectError
     });
   },
