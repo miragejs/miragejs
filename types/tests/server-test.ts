@@ -141,7 +141,6 @@ createServer({
     });
 
     this.get("bad", () => {
-      this.schema.all("typo");
       return this.schema.all("typo"); // $ExpectError
     });
   },
