@@ -41,7 +41,7 @@ declare module "miragejs" {
     readonly params: Record<string, string>;
 
     /** Any query parameters associated with the request */
-    readonly queryParams: Record<string, string>;
+    readonly queryParams: Record<string, string[] | string | null | undefined>;
   }
 
   /**
