@@ -17,21 +17,27 @@ describe("Integration | Server | Get full path", function () {
     expect.assertions(1);
     server.namespace = "/api";
 
-    expect(server.interceptor._getFullPath("/contacts")).toEqual("/api/contacts");
+    expect(server.interceptor._getFullPath("/contacts")).toEqual(
+      "/api/contacts"
+    );
   });
 
   test("it works with a configured namespace with a trailing slash", () => {
     expect.assertions(1);
     server.namespace = "api/";
 
-    expect(server.interceptor._getFullPath("/contacts")).toEqual("/api/contacts");
+    expect(server.interceptor._getFullPath("/contacts")).toEqual(
+      "/api/contacts"
+    );
   });
 
   test("it works with a configured namespace without a leading slash", () => {
     expect.assertions(1);
     server.namespace = "api";
 
-    expect(server.interceptor._getFullPath("/contacts")).toEqual("/api/contacts");
+    expect(server.interceptor._getFullPath("/contacts")).toEqual(
+      "/api/contacts"
+    );
   });
 
   test("it works with a configured namespace is an empty string", () => {
