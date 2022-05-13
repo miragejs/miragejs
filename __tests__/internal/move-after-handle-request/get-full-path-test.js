@@ -17,35 +17,41 @@ describe("Integration | Server | Get full path", function () {
     expect.assertions(1);
     server.namespace = "/api";
 
-    expect(server._getFullPath("/contacts")).toEqual("/api/contacts");
+    expect(server.interceptor._getFullPath("/contacts")).toEqual(
+      "/api/contacts"
+    );
   });
 
   test("it works with a configured namespace with a trailing slash", () => {
     expect.assertions(1);
     server.namespace = "api/";
 
-    expect(server._getFullPath("/contacts")).toEqual("/api/contacts");
+    expect(server.interceptor._getFullPath("/contacts")).toEqual(
+      "/api/contacts"
+    );
   });
 
   test("it works with a configured namespace without a leading slash", () => {
     expect.assertions(1);
     server.namespace = "api";
 
-    expect(server._getFullPath("/contacts")).toEqual("/api/contacts");
+    expect(server.interceptor._getFullPath("/contacts")).toEqual(
+      "/api/contacts"
+    );
   });
 
   test("it works with a configured namespace is an empty string", () => {
     expect.assertions(1);
     server.namespace = "";
 
-    expect(server._getFullPath("/contacts")).toEqual("/contacts");
+    expect(server.interceptor._getFullPath("/contacts")).toEqual("/contacts");
   });
 
   test("it works with a configured urlPrefix with a trailing slash", () => {
     expect.assertions(1);
     server.urlPrefix = "http://localhost:3000/";
 
-    expect(server._getFullPath("/contacts")).toEqual(
+    expect(server.interceptor._getFullPath("/contacts")).toEqual(
       "http://localhost:3000/contacts"
     );
   });
@@ -54,7 +60,7 @@ describe("Integration | Server | Get full path", function () {
     expect.assertions(1);
     server.urlPrefix = "http://localhost:3000";
 
-    expect(server._getFullPath("/contacts")).toEqual(
+    expect(server.interceptor._getFullPath("/contacts")).toEqual(
       "http://localhost:3000/contacts"
     );
   });
@@ -63,7 +69,7 @@ describe("Integration | Server | Get full path", function () {
     expect.assertions(1);
     server.urlPrefix = "";
 
-    expect(server._getFullPath("/contacts")).toEqual("/contacts");
+    expect(server.interceptor._getFullPath("/contacts")).toEqual("/contacts");
   });
 
   test("it works with a configured namespace and a urlPrefix", () => {
@@ -71,7 +77,7 @@ describe("Integration | Server | Get full path", function () {
     server.namespace = "api";
     server.urlPrefix = "http://localhost:3000";
 
-    expect(server._getFullPath("/contacts")).toEqual(
+    expect(server.interceptor._getFullPath("/contacts")).toEqual(
       "http://localhost:3000/api/contacts"
     );
   });
@@ -81,7 +87,7 @@ describe("Integration | Server | Get full path", function () {
     server.namespace = "/api";
     server.urlPrefix = "http://localhost:3000";
 
-    expect(server._getFullPath("/contacts")).toEqual(
+    expect(server.interceptor._getFullPath("/contacts")).toEqual(
       "http://localhost:3000/api/contacts"
     );
   });
@@ -91,6 +97,6 @@ describe("Integration | Server | Get full path", function () {
     server.namespace = "";
     server.urlPrefix = "";
 
-    expect(server._getFullPath("/contacts")).toEqual("/contacts");
+    expect(server.interceptor._getFullPath("/contacts")).toEqual("/contacts");
   });
 });
