@@ -175,16 +175,18 @@ declare module "miragejs/-types" {
     extend<NewData>(data: NewData): ModelDefinition<Assign<Data, NewData>>;
   }
   
-  type AfterCreateFunction<Data, NewData> = (modelOrRecord: ModelInstance<Assign<Data, FlattenFactoryMethods<NewData>>>
+  type ExtendedModel<Data, NewData> = Assign<Data, FlattenFactoryMethods<NewData>>;
+  
+  type AfterCreateFunction<Data, NewData> = (modelOrRecord: ModelInstance<ExtendedModel<Data, NewData>>
     , server: Server) => void;
 
-  // Captures the result of a `Factory.extend()` call
+// Captures the result of a `Factory.extend()` call
   interface FactoryDefinition<Data extends {} = {}> {
     extend<NewData>(
       data: WithFactoryMethods<NewData> & {
         afterCreate?: AfterCreateFunction<Data, NewData>;
       }
-    ): FactoryDefinition<Assign<Data, FlattenFactoryMethods<NewData>>>;
+    ): FactoryDefinition<ExtendedModel<Data, NewData>>;
   }
 
   type WithFactoryMethods<T> = {
