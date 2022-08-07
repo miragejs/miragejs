@@ -158,7 +158,7 @@ declare module "miragejs" {
 }
 
 declare module "miragejs/-types" {
-  import { Collection, Response } from "miragejs";
+  import { Collection, Response, Server } from "miragejs";
 
   /* A 1:1 relationship between models */
   export class BelongsTo<Name extends string> {
@@ -174,11 +174,16 @@ declare module "miragejs/-types" {
   interface ModelDefinition<Data extends {} = {}> {
     extend<NewData>(data: NewData): ModelDefinition<Assign<Data, NewData>>;
   }
+  
+  type AfterCreateFunction<Data, NewData> = (modelOrRecord: ModelInstance<Assign<Data, FlattenFactoryMethods<NewData>>>
+    , server: Server) => void;
 
   // Captures the result of a `Factory.extend()` call
   interface FactoryDefinition<Data extends {} = {}> {
     extend<NewData>(
-      data: WithFactoryMethods<NewData>
+      data: WithFactoryMethods<NewData> & {
+        afterCreate?: AfterCreateFunction<Data, NewData>;
+      }
     ): FactoryDefinition<Assign<Data, FlattenFactoryMethods<NewData>>>;
   }
 
