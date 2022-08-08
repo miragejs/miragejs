@@ -96,6 +96,6 @@ declare const schema: Schema<
       person.foo; // $ExpectError
       person.age = "42"; // $ExpectError
       person.height = 42; // $ExpectError
-    }
+    },
   });
 }
