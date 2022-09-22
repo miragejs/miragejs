@@ -322,6 +322,15 @@ declare module "miragejs/server" {
     /** A number of ms to artificially delay responses to this route. */
     timing?: number;
   }
+  
+  export interface ResourceOptions {
+    /** Whitelist of shorthand options */
+    only?: string[];
+    /** Exclude list of shorthand options */
+    except?: string[];
+    /** Shorthand route path */
+    path?: string;
+  }
 
   export interface ServerConfig<
     Models extends AnyModels,
@@ -452,6 +461,9 @@ declare module "miragejs/server" {
       handler?: RouteHandler<Registry, Response>,
       options?: HandlerOptions
     ): void;
+    
+    /** Define multiple shorthands for a given resource */
+    resource(model: string, options?: ResourceOptions): void;
 
     /** Pass through one or more URLs to make real requests. */
     passthrough(urls?: ((request: Request) => any) | string | string[]): void;
