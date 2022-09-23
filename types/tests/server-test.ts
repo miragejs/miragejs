@@ -35,6 +35,8 @@ export default function config(this: Server): void {
   this.get<number>("/foo", () => false); // $ExpectError
   this.get<[number, string]>("/foo", () => ["foo", 0]); // $ExpectError
 
+  this.resource("foo"); // $ExpectType void
+
   this.passthrough("/_coverage/upload"); // $ExpectType void
   this.passthrough((request) => request.queryParams.skipMirage); // $ExpectType void
 
