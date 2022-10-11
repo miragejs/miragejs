@@ -1,4 +1,4 @@
-// Minimum TypeScript Version: 3.7
+// Minimum TypeScript Version: 4.2
 
 /*
  * Inspired by Dan Freeman
@@ -298,7 +298,7 @@ declare module "miragejs/-types" {
 }
 
 declare module "miragejs/server" {
-  import { Request, Response, Registry as MirageRegistry } from "miragejs";
+  import { Request, Registry as MirageRegistry } from "miragejs";
   import {
     AnyRegistry,
     AnyModels,
@@ -306,11 +306,26 @@ declare module "miragejs/server" {
     AnyResponse,
     Instantiate,
   } from "miragejs/-types";
-  import { ModelInstance } from "miragejs/-types";
+
   import Db from "miragejs/db";
   import IdentityManager from "miragejs/identity-manager";
   import Schema from "miragejs/orm/schema";
   import PretenderServer from "pretender";
+
+  /**
+   * Possible HTTP verbs
+   * @see https://github.com/pretenderjs/pretender/blob/master/index.d.ts#L13
+   **/
+  type HTTPVerb =
+    | "get"
+    | "put"
+    | "post"
+    | "patch"
+    | "delete"
+    | "options"
+    | "head";
+  type PassthroughUrl = ((request: Request) => any) | string;
+  type PassthroughVerbs = HTTPVerb[];
 
   /** A callback that will be invoked when a given Mirage route is hit. */
   export type RouteHandler<
@@ -454,7 +469,10 @@ declare module "miragejs/server" {
     ): void;
 
     /** Pass through one or more URLs to make real requests. */
-    passthrough(...urls: Array<((request: Request) => any) | string>): void;
+    passthrough(...urls: PassthroughUrl[]): void;
+    passthrough(
+      ...args: [PassthroughUrl, ...PassthroughUrl[], PassthroughVerbs]
+    ): void;
 
     /** Load all available fixture data matching the given name(s). */
     loadFixtures(...names: string[]): void;
