@@ -324,7 +324,7 @@ declare module "miragejs/server" {
     | "delete"
     | "options"
     | "head";
-  type PassthroughUrl = ((request: Request) => any) | string;
+  type PassthroughArg = ((request: Request) => any) | string;
   type PassthroughVerbs = HTTPVerb[];
 
   /** A callback that will be invoked when a given Mirage route is hit. */
@@ -469,9 +469,9 @@ declare module "miragejs/server" {
     ): void;
 
     /** Pass through one or more URLs to make real requests. */
-    passthrough(...urls: PassthroughUrl[]): void;
+    passthrough(...urls: PassthroughArg[]): void;
     passthrough(
-      ...args: [PassthroughUrl, ...PassthroughUrl[], PassthroughVerbs]
+      ...args: [PassthroughArg, ...PassthroughArg[], PassthroughVerbs]
     ): void;
 
     /** Load all available fixture data matching the given name(s). */
