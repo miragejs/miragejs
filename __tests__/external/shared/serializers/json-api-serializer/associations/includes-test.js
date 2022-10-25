@@ -180,6 +180,63 @@ describe("External | Shared | Serializers | JSON API Serializer | Associations |
     });
   });
 
+  test("query param array includes work when serializing a model", () => {
+    server.config({
+      serializers: {
+        application: JSONAPISerializer,
+      },
+    });
+
+    let post = server.schema.blogPosts.create();
+    post.createWordSmith();
+    post.createFineComment();
+    post.createFineComment();
+
+    let request = {
+      queryParams: {
+        include: ["word-smith", "fine-comments"],
+      },
+    };
+
+    let result = server.serializerOrRegistry.serialize(post, request);
+
+    expect(result).toEqual({
+      data: {
+        type: "blog-posts",
+        id: "1",
+        attributes: {},
+        relationships: {
+          "word-smith": {
+            data: { type: "word-smiths", id: "1" },
+          },
+          "fine-comments": {
+            data: [
+              { type: "fine-comments", id: "1" },
+              { type: "fine-comments", id: "2" },
+            ],
+          },
+        },
+      },
+      included: [
+        {
+          type: "word-smiths",
+          id: "1",
+          attributes: {},
+        },
+        {
+          type: "fine-comments",
+          id: "1",
+          attributes: {},
+        },
+        {
+          type: "fine-comments",
+          id: "2",
+          attributes: {},
+        },
+      ],
+    });
+  });
+
   test("query param includes work when serializing a collection", () => {
     server.config({
       serializers: {
