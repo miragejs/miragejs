@@ -654,7 +654,7 @@ declare module "miragejs/serializer" {
   interface SerializerInterface {
     schema?: Schema<any>;
     attrs?: any;
-    embed?: any;
+    embed?: boolean | ((key: string) => boolean);
     root?: any;
     serializeIds?: any;
     include?: any;
