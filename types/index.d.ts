@@ -338,6 +338,17 @@ declare module "miragejs/server" {
     timing?: number;
   }
 
+  type ShorthandOptions = "index" | "show" | "create" | "update" | "delete";
+
+  export interface ResourceOptions {
+    /** Whitelist of shorthand options */
+    only?: ShorthandOptions[];
+    /** Exclude list of shorthand options */
+    except?: ShorthandOptions[];
+    /** Shorthand route path */
+    path?: string;
+  }
+
   export interface ServerConfig<
     Models extends AnyModels,
     Factories extends AnyFactories
@@ -466,6 +477,12 @@ declare module "miragejs/server" {
       path: string,
       handler?: RouteHandler<Registry, Response>,
       options?: HandlerOptions
+    ): void;
+
+    /** Define multiple shorthands for a given resource */
+    resource<K extends keyof Registry>(
+      modelName: K,
+      options?: ResourceOptions
     ): void;
 
     /** Pass through one or more URLs to make real requests. */
