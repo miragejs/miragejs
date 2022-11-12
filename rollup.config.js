@@ -4,11 +4,16 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 import alias from "rollup-plugin-alias";
 
+const extensions = [
+  '.js', '.jsx', '.ts', '.tsx',
+];
+
 let aliases = {
+  resolve: ['.ts', '.js'],
   entries: [
     {
       find: /@lib(.*)/,
-      replacement: path.resolve(process.cwd(), "./lib$1.js"),
+      replacement: path.resolve(process.cwd(), "./dist$1.js"),
     },
   ],
 };
@@ -30,7 +35,7 @@ function isExternal(id) {
     it shouldn't be treated as external.
   */
   let isAbsoluteInternalModulePath = id.includes(
-    path.join(process.cwd(), "lib")
+    path.join(process.cwd(), "dist")
   );
 
   /*
@@ -53,7 +58,7 @@ function isExternal(id) {
 }
 
 let esm = {
-  input: "lib/index.js",
+  input: "dist/index.js",
   output: { file: `dist/mirage-esm.js`, sourcemap: true, format: "esm" },
   external: isExternal,
   plugins: [
@@ -61,13 +66,13 @@ let esm = {
     babel({
       exclude: "node_modules/**",
       sourceMaps: true,
-      presets: [["@babel/preset-env", {}]],
+      presets: [["@babel/typescript", {}]],
     }),
   ],
 };
 
 let cjs = {
-  input: "lib/index.js",
+  input: "dist/index.js",
   output: {
     file: `dist/mirage-cjs.js`,
     sourcemap: true,
@@ -82,7 +87,7 @@ let cjs = {
       sourceMaps: true,
       presets: [
         [
-          "@babel/preset-env",
+          "@babel/typescript",
           {
             targets: { node: "current" },
           },
@@ -94,7 +99,7 @@ let cjs = {
 };
 
 let umd = {
-  input: "lib/index.js",
+  input: "dist/index.js",
   output: {
     file: "dist/mirage-umd.js",
     format: "umd",
@@ -109,7 +114,7 @@ let umd = {
       sourceMaps: true,
       presets: [
         [
-          "@babel/preset-env",
+          "@babel/typescript",
           {
             useBuiltIns: "usage",
             corejs: 3,
