@@ -16,7 +16,7 @@ declare module "miragejs" {
   import IdentityManager from "miragejs/identity-manager";
   export { IdentityManager };
   export { Server, createServer } from "miragejs/server";
-  export { Registry, Instantiate, ModelInstance } from "miragejs/-types";
+  export { Registry, Instantiate } from "miragejs/-types";
   export {
     Serializer,
     ActiveModelSerializer,
@@ -159,6 +159,7 @@ declare module "miragejs" {
 
 declare module "miragejs/-types" {
   import { Collection, Response } from "miragejs";
+  import { ModelInstance } from "orm/collection";
 
   /* A 1:1 relationship between models */
   export class BelongsTo<Name extends string> {
@@ -276,25 +277,6 @@ declare module "miragejs/-types" {
     ModelInstance | Response | ValidResponse | ValidResponse[]
   >;
 
-  /** Represents the type of an instantiated Mirage model.  */
-  export type ModelInstance<Data extends {} = {}> = Data & {
-    id?: string;
-    attrs: Data;
-    modelName: string;
-
-    /** Persists any updates on this model back to the Mirage database. */
-    save(): void;
-
-    /** Updates and immediately persists a single or multiple attr(s) on this model. */
-    update<K extends keyof Data>(key: K, value: Data[K]): void;
-    update(changes: Partial<Data>): void;
-
-    /** Removes this model from the Mirage database. */
-    destroy(): void;
-
-    /** Reloads this model's data from the Mirage database. */
-    reload(): void;
-  };
 }
 
 declare module "miragejs/server" {

@@ -28,7 +28,7 @@
     "prettier:check": "prettier --list-different '**/*{.js,.ts}'",
     "prettier:update": "prettier --write .",
     "dev": "tsc && tsc-alias && rollup -c -w",
-    "build": "tsc && tsc-alias && rollup -c",
+    "build": "tsc && tsc-alias && tsc -p tsconfig-emit.json && rollup -c",
     "prepublishOnly": "yarn run build",
     "test:run": "jest",
     "test": "run-s build test:run",

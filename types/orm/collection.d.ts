@@ -1,28 +1,19 @@
-import invokeMap from "lodash.invokemap";
-import assert from "../assert";
-
 /** Represents the type of an instantiated Mirage model.  */
-export type ModelInstance<Data extends {} = {}> = Data & {
+export declare type ModelInstance<Data extends {} = {}> = Data & {
     id?: string;
     attrs: Data;
     modelName: string;
-
     /** Persists any updates on this model back to the Mirage database. */
     save(): void;
-
     /** Updates and immediately persists a single or multiple attr(s) on this model. */
     update<K extends keyof Data>(key: K, value: Data[K]): void;
     update(changes: Partial<Data>): void;
-
     /** Removes this model from the Mirage database. */
     destroy(): void;
-
     /** Reloads this model's data from the Mirage database. */
     reload(): void;
-
     toString(): string;
 };
-
 /**
   Collections represent arrays of models. They are returned by a hasMany association, or by one of the ModelClass query methods:
 
@@ -41,31 +32,9 @@ export type ModelInstance<Data extends {} = {}> = Data & {
 */
 export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
     modelName: string;
-
-    public constructor(modelName: string | number, items: ModelInstance<T>[] | undefined) {
-        assert(
-            modelName !== undefined,
-            "You must pass a `modelName` into a Collection"
-        );
-        if (typeof modelName === 'string') {
-            super(...(items ?? []));
-            this.modelName = modelName;
-        } else {
-            assert(true);
-            super(modelName);
-            this.modelName = '';
-        }
-    }
-
-    public get models(): ModelInstance<T>[] {
-        return this.map(item => item);
-    }
-
-    public set models(models: ModelInstance<T>[]) {
-        this.length = 0;
-        models.forEach((item) => this.push(item));
-    }
-
+    constructor(modelName: string | number, items: ModelInstance<T>[] | undefined);
+    get models(): ModelInstance<T>[];
+    set models(models: ModelInstance<T>[]);
     /**
         Adds a model to this collection.
 
@@ -82,11 +51,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return this
         @public
     */
-    public add(model: ModelInstance<T>): Collection<T> {
-        this.push(model);
-        return this;
-    }
-
+    add(model: ModelInstance<T>): Collection<T>;
     /**
         Destroys the db record for all models in the collection.
 
@@ -100,11 +65,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return this
         @public
     */
-    public destroy(): Collection<T> {
-        this.forEach((item) => item.destroy());
-        return this;
-    }
-
+    destroy(): Collection<T>;
     /**
         Returns a new Collection with its models filtered according to the provided [callback function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter).
 
@@ -116,30 +77,8 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return {Collection}
         @public
     */
-    public filter(f: (value: ModelInstance<T>, index: number, models: ModelInstance<T>[]) => unknown): Collection<T> {
-        const filteredModels: ModelInstance<T>[] = [];
-        this.forEach((item, index, array) => {
-            if (f(item, index, array)) {
-                filteredModels.push(item);
-            }
-        });
-
-        return new Collection(this.modelName, filteredModels);
-    }
-
-    public concat(...items: ConcatArray<ModelInstance<T>>[]): Collection<T> {
-        const concatenated: ModelInstance<T>[] = [];
-        this.forEach((item) => {
-            concatenated.push(item);
-        });
-        items.forEach(array => {
-            for (let i = 0; i < array.length; i++) {
-                concatenated.push(array[i]);
-            }
-        })
-        return new Collection(this.modelName, concatenated);
-    }
-
+    filter(f: (value: ModelInstance<T>, index: number, models: ModelInstance<T>[]) => unknown): Collection<T>;
+    concat(...items: ConcatArray<ModelInstance<T>>[]): Collection<T>;
     /**
         Checks if the Collection includes the given model.
 
@@ -166,10 +105,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return {Boolean}
         @public
     */
-    public includes(model: ModelInstance<T>): boolean {
-        return this.some((m) => m.toString() === model.toString());
-    }
-
+    includes(model: ModelInstance<T>): boolean;
     /**
         Modifies the Collection by merging the models from another collection.
 
@@ -183,11 +119,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return this
         @public
     */
-    public mergeCollection(collection: Collection<T>): Collection<T> {
-        collection.forEach((item) => this.push(item));
-        return this;
-    }
-
+    mergeCollection(collection: Collection<T>): Collection<T>;
     /**
         Reloads each model in the collection.
 
@@ -203,11 +135,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return this
         @public
     */
-    public reload(): Collection<T> {
-        this.forEach((item) => item.reload());
-        return this;
-    }
-
+    reload(): Collection<T>;
     /**
         Removes a model from this collection.
 
@@ -226,16 +154,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return this
         @public
     */
-    public remove(model: ModelInstance<T>): Collection<T> {
-        let match = this.find((m) => m.toString() === model.toString());
-        if (match) {
-            let i = this.indexOf(match);
-            this.splice(i, 1);
-        }
-
-        return this;
-    }
-
+    remove(model: ModelInstance<T>): Collection<T>;
     /**
         Returns a new Collection with a subset of its models selected from `begin` to `end`.
 
@@ -249,10 +168,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return {Collection}
         @public
     */
-    public slice(begin: number, end: number): Collection<T> {
-        return new Collection(this.modelName, super.slice(begin, end));
-    }
-
+    slice(begin: number, end: number): Collection<T>;
     /**
          Updates each model in the collection, and immediately persists all changes to the db.
 
@@ -267,24 +183,9 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @param val
         @return this
     */
-    public update<K extends keyof T>(key: K & string, val: T[K]): Collection<T> {
-        this.forEach(item => item.update(key, val));
-        return this;
-    }
-
-    public save(): Collection<T> {
-        this.forEach((item) => item.save());
-        return this;
-    }
-
-    public map<U>(callbackfn: (value: ModelInstance<T>, index: number, array: ModelInstance<T>[]) => U, thisArg?: any): U[] {
-        const result: U[] = [];
-        this.forEach((item, index, array) => {
-            result.push(callbackfn(item, index, array));
-        });
-        return result;
-    }
-
+    update<K extends keyof T>(key: K & string, val: T[K]): Collection<T>;
+    save(): Collection<T>;
+    map<U>(callbackfn: (value: ModelInstance<T>, index: number, array: ModelInstance<T>[]) => U, thisArg?: any): U[];
     /**
          Simple string representation of the collection and id.
 
@@ -296,9 +197,6 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return {String}
         @public
     */
-    toString() {
-        return `collection:${this.modelName}(${this
-        .map((m) => m.id)
-        .join(",")})`;
-    }
+    toString(): string;
 }
+//# sourceMappingURL=collection.d.ts.map
