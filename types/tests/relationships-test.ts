@@ -72,6 +72,11 @@ const personWithPetsArray = schema.create("person", {
   pets: [pet1, pet2],
 });
 
+personWithPetsArray.update('pets', [pet1]);
+personWithPetsArray.update({
+  pets: [pet1, pet2]
+});
+
 personWithPetsArray.pets.modelName; // $ExpectType string
 
 const personWithPetsCollection = schema.create("person", {
