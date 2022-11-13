@@ -1,27 +1,30 @@
-import invokeMap from "lodash.invokemap";
 import assert from "../assert";
 
 /** Represents the type of an instantiated Mirage model.  */
 export type ModelInstance<Data extends {} = {}> = Data & {
-    id?: string;
-    attrs: Data;
-    modelName: string;
+  id?: string;
+  attrs: Data;
+  modelName: string;
 
-    /** Persists any updates on this model back to the Mirage database. */
-    save(): void;
+  /** Persists any updates on this model back to the Mirage database. */
+  save(): void;
 
-    /** Updates and immediately persists a single or multiple attr(s) on this model. */
-    update<K extends keyof Data>(key: K, value: Data[K]): void;
-    update(changes: Partial<Data>): void;
+  /** Updates and immediately persists a single or multiple attr(s) on this model. */
+  update<K extends keyof Data>(key: K, value: Data[K]): void;
+  update(changes: Partial<Data>): void;
 
-    /** Removes this model from the Mirage database. */
-    destroy(): void;
+  /** Removes this model from the Mirage database. */
+  destroy(): void;
 
-    /** Reloads this model's data from the Mirage database. */
-    reload(): void;
+  /** Reloads this model's data from the Mirage database. */
+  reload(): void;
 
-    toString(): string;
+  toString(): string;
 };
+
+type Element<T> = T extends ModelInstance<infer ElementType>
+  ? ElementType
+  : never;
 
 /**
   Collections represent arrays of models. They are returned by a hasMany association, or by one of the ModelClass query methods:
@@ -39,36 +42,36 @@ export type ModelInstance<Data extends {} = {}> = Data & {
   @constructor
   @public
 */
+export default class Collection<
+  T extends ModelInstance<ElementType>,
+  ElementType extends {} = Element<T>
+> extends Array<T> {
+  modelName: string;
 
-type Element<T> = T extends ModelInstance<infer ElementType> ? ElementType : never;
-
-export default class Collection<T extends ModelInstance<ElementType>, ElementType extends {} = Element<T>> extends Array<T> {
-    modelName: string;
-
-    public constructor(modelName?: string | number, items?: T[]) {
-        assert(
-            modelName !== undefined,
-            "You must pass a `modelName` into a Collection"
-        );
-        if (typeof modelName === 'string') {
-            super(...(items ?? []));
-            this.modelName = modelName;
-        } else {
-            super(modelName!);
-            this.modelName = '';
-        }
+  public constructor(modelName?: string | number, items?: T[]) {
+    assert(
+      modelName !== undefined,
+      "You must pass a `modelName` into a Collection"
+    );
+    if (typeof modelName === "string") {
+      super(...(items ?? []));
+      this.modelName = modelName;
+    } else {
+      super(modelName!);
+      this.modelName = "";
     }
+  }
 
-    public get models(): T[] {
-        return this.map(item => item);
-    }
+  public get models(): T[] {
+    return this.map((item) => item);
+  }
 
-    public set models(models: T[]) {
-        this.length = 0;
-        models.forEach((item) => this.push(item));
-    }
+  public set models(models: T[]) {
+    this.length = 0;
+    models.forEach((item) => this.push(item));
+  }
 
-    /**
+  /**
         Adds a model to this collection.
 
         ```js
@@ -84,12 +87,12 @@ export default class Collection<T extends ModelInstance<ElementType>, ElementTyp
         @return this
         @public
     */
-    public add(model: T): Collection<T, ElementType> {
-        this.push(model);
-        return this;
-    }
+  public add(model: T): Collection<T, ElementType> {
+    this.push(model);
+    return this;
+  }
 
-    /**
+  /**
         Destroys the db record for all models in the collection.
 
         ```js
@@ -102,12 +105,12 @@ export default class Collection<T extends ModelInstance<ElementType>, ElementTyp
         @return this
         @public
     */
-    public destroy(): Collection<T, ElementType> {
-        this.forEach((item) => item.destroy());
-        return this;
-    }
+  public destroy(): Collection<T, ElementType> {
+    this.forEach((item) => item.destroy());
+    return this;
+  }
 
-    /**
+  /**
         Returns a new Collection with its models filtered according to the provided [callback function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter).
 
         ```js
@@ -118,31 +121,33 @@ export default class Collection<T extends ModelInstance<ElementType>, ElementTyp
         @return {Collection}
         @public
     */
-    public filter(f: (value: T, index: number, models: T[]) => unknown): Collection<T, ElementType> {
-        const filteredModels: T[] = [];
-        this.forEach((item, index, array) => {
-            if (f(item, index, array)) {
-                filteredModels.push(item);
-            }
-        });
+  public filter(
+    f: (value: T, index: number, models: T[]) => unknown
+  ): Collection<T, ElementType> {
+    const filteredModels: T[] = [];
+    this.forEach((item, index, array) => {
+      if (f(item, index, array)) {
+        filteredModels.push(item);
+      }
+    });
 
-        return new Collection(this.modelName, filteredModels);
-    }
+    return new Collection(this.modelName, filteredModels);
+  }
 
-    public concat(...items: ConcatArray<T>[]): Collection<T, ElementType> {
-        const concatenated: T[] = [];
-        this.forEach((item) => {
-            concatenated.push(item);
-        });
-        items.forEach(array => {
-            for (let i = 0; i < array.length; i++) {
-                concatenated.push(array[i]);
-            }
-        })
-        return new Collection(this.modelName, concatenated);
-    }
+  public concat(...items: ConcatArray<T>[]): Collection<T, ElementType> {
+    const concatenated: T[] = [];
+    this.forEach((item) => {
+      concatenated.push(item);
+    });
+    items.forEach((array) => {
+      for (let i = 0; i < array.length; i++) {
+        concatenated.push(array[i]);
+      }
+    });
+    return new Collection(this.modelName, concatenated);
+  }
 
-    /**
+  /**
         Checks if the Collection includes the given model.
 
         ```js
@@ -168,11 +173,11 @@ export default class Collection<T extends ModelInstance<ElementType>, ElementTyp
         @return {Boolean}
         @public
     */
-    public includes(model: ElementType): boolean {
-        return this.some((m) => m.toString() === model.toString());
-    }
+  public includes(model: ElementType): boolean {
+    return this.some((m) => m.toString() === model.toString());
+  }
 
-    /**
+  /**
         Modifies the Collection by merging the models from another collection.
 
         ```js
@@ -185,12 +190,14 @@ export default class Collection<T extends ModelInstance<ElementType>, ElementTyp
         @return this
         @public
     */
-    public mergeCollection(collection: Collection<T, ElementType>): Collection<T, ElementType> {
-        collection.forEach((item) => this.push(item));
-        return this;
-    }
+  public mergeCollection(
+    collection: Collection<T, ElementType>
+  ): Collection<T, ElementType> {
+    collection.forEach((item) => this.push(item));
+    return this;
+  }
 
-    /**
+  /**
         Reloads each model in the collection.
 
         ```js
@@ -205,12 +212,12 @@ export default class Collection<T extends ModelInstance<ElementType>, ElementTyp
         @return this
         @public
     */
-    public reload(): Collection<T, ElementType> {
-        this.forEach((item) => item.reload());
-        return this;
-    }
+  public reload(): Collection<T, ElementType> {
+    this.forEach((item) => item.reload());
+    return this;
+  }
 
-    /**
+  /**
         Removes a model from this collection.
 
         ```js
@@ -228,17 +235,17 @@ export default class Collection<T extends ModelInstance<ElementType>, ElementTyp
         @return this
         @public
     */
-    public remove(model: ElementType): Collection<T, ElementType> {
-        let match = this.find((m) => m.toString() === model.toString());
-        if (match) {
-            let i = this.indexOf(match);
-            this.splice(i, 1);
-        }
-
-        return this;
+  public remove(model: ElementType): Collection<T, ElementType> {
+    let match = this.find((m) => m.toString() === model.toString());
+    if (match) {
+      let i = this.indexOf(match);
+      this.splice(i, 1);
     }
 
-    /**
+    return this;
+  }
+
+  /**
         Returns a new Collection with a subset of its models selected from `begin` to `end`.
 
         ```js
@@ -251,11 +258,11 @@ export default class Collection<T extends ModelInstance<ElementType>, ElementTyp
         @return {Collection}
         @public
     */
-    public slice(begin: number, end: number): Collection<T, ElementType> {
-        return new Collection(this.modelName, super.slice(begin, end));
-    }
+  public slice(begin: number, end: number): Collection<T, ElementType> {
+    return new Collection(this.modelName, super.slice(begin, end));
+  }
 
-    /**
+  /**
          Updates each model in the collection, and immediately persists all changes to the db.
 
         ```js
@@ -269,25 +276,58 @@ export default class Collection<T extends ModelInstance<ElementType>, ElementTyp
         @param val
         @return this
     */
-    public update<K extends keyof ElementType>(key: K & string, val: T[K]): Collection<T, ElementType> {
-        this.forEach(item => item.update(key, val));
-        return this;
-    }
+  public update<K extends keyof ElementType>(
+    key: K & string,
+    val: T[K]
+  ): Collection<T, ElementType> {
+    this.forEach((item) => item.update(key, val));
+    return this;
+  }
 
-    public save(): Collection<T, ElementType> {
-        this.forEach((item) => item.save());
-        return this;
-    }
+  /**
+     Saves all models in the collection.
 
-    public map<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[] {
-        const result: U[] = [];
-        this.forEach((item, index, array) => {
-            result.push(callbackfn(item, index, array));
-        });
-        return result;
-    }
+     ```js
+     let posts = user.blogPosts;
 
-    /**
+     posts.models[0].published = true;
+
+     posts.save(); // all posts saved to db
+     ```
+
+     @method save
+     @return this
+     @public
+   */
+  public save(): Collection<T, ElementType> {
+    this.forEach((item) => item.save());
+    return this;
+  }
+
+  /**
+     Apply callbackFn to each item of the list, and return the mapped list
+
+     ```ts
+     let posts = user.blogPosts;
+     let postIds: []string = posts.map((post) => post.id);
+     ```
+
+     @method save
+     @return this
+     @public
+   */
+  public map<U>(
+    callbackfn: (value: T, index: number, array: T[]) => U,
+    thisArg?: any
+  ): U[] {
+    const result: U[] = [];
+    this.forEach((item, index, array) => {
+      result.push(callbackfn(item, index, array));
+    });
+    return result;
+  }
+
+  /**
          Simple string representation of the collection and id.
 
         ```js
@@ -298,9 +338,7 @@ export default class Collection<T extends ModelInstance<ElementType>, ElementTyp
         @return {String}
         @public
     */
-    toString() {
-        return `collection:${this.modelName}(${this
-        .map((m) => m.id)
-        .join(",")})`;
-    }
+  toString() {
+    return `collection:${this.modelName}(${this.map((m) => m.id).join(",")})`;
+  }
 }

@@ -88,7 +88,6 @@ declare module "miragejs" {
 
   export type Collection<T> = import("orm/collection").default<T>;
 
-
   export interface RelationshipOptions {
     inverse?: string | null;
     polymorphic?: boolean;
@@ -179,9 +178,10 @@ declare module "miragejs/-types" {
     ? CollectionIfDefined<Registry, ModelName>
     : T;
 
-  type CollectionIfDefined<Registry, ModelName> = ModelName extends keyof Registry
-  ? Collection<Instantiate<Registry, ModelName>> 
-  : unknown
+  type CollectionIfDefined<Registry, ModelName> =
+    ModelName extends keyof Registry
+      ? Collection<Instantiate<Registry, ModelName>>
+      : unknown;
 
   // Returns the instantiated type of the given model if it exists in the
   // given registry, or `unknown` otherwise.
@@ -236,7 +236,6 @@ declare module "miragejs/-types" {
   export type AnyResponse = MaybePromise<
     ModelInstance | Response | ValidResponse | ValidResponse[]
   >;
-
 }
 
 declare module "miragejs/server" {

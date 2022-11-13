@@ -4,12 +4,10 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
 import alias from "rollup-plugin-alias";
 
-const extensions = [
-  '.js', '.jsx', '.ts', '.tsx',
-];
+const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
 let aliases = {
-  resolve: ['.ts', '.js'],
+  resolve: [".ts", ".js"],
   entries: [
     {
       find: /@lib(.*)/,

@@ -6,12 +6,12 @@ module.exports = {
         targets: {
           node: "current",
         },
-      }
+      },
     ],
-    ["@babel/typescript"]
+    ["@babel/typescript"],
   ],
   plugins: [
     "@babel/plugin-proposal-class-properties",
-    "@babel/proposal-object-rest-spread"
-  ]
+    "@babel/proposal-object-rest-spread",
+  ],
 };
