@@ -19,3 +19,4 @@
 # IDE
 /.idea/
 /*.iml
+types/assert*

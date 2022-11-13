@@ -4,8 +4,8 @@ let internal = {
   testEnvironment: "jsdom",
   testMatch: ["**/__tests__/internal/**/*-test.[jt]s?(x)"],
   moduleNameMapper: {
-    "@lib(.*)": "<rootDir>/lib$1",
-    "^miragejs$": "<rootDir>/lib/index",
+    "@lib(.*)": "<rootDir>/dist$1",
+    "^miragejs$": "<rootDir>/dist/index",
   },
 };
 

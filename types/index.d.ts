@@ -16,7 +16,7 @@ declare module "miragejs" {
   import IdentityManager from "miragejs/identity-manager";
   export { IdentityManager };
   export { Server, createServer } from "miragejs/server";
-  export { Registry, Instantiate, ModelInstance } from "miragejs/-types";
+  export { Registry, Instantiate } from "miragejs/-types";
   export {
     Serializer,
     ActiveModelSerializer,
@@ -86,52 +86,7 @@ declare module "miragejs" {
    */
   export const Factory: FactoryDefinition;
 
-  /**
-   * A collection of zero or more Mirage model instances.
-   */
-  export class Collection<T> {
-    /** The number of models in the collection. */
-    length: number;
-
-    /** The dasherized model name this Collection represents. */
-    modelName: string;
-
-    /** The underlying plain JavaScript array of Models in this Collection. */
-    models: T[];
-
-    /** Adds a model to this collection. */
-    add(model: T): Collection<T>;
-
-    /** Destroys the db record for all models in the collection. */
-    destroy(): Collection<T>;
-
-    /** Returns a new Collection with its models filtered according to the provided callback function. */
-    filter(f: (value: T, index: number, models: T[]) => unknown): Collection<T>;
-
-    /** Checks if the Collection includes the given model. */
-    includes(model: T): boolean;
-
-    /** Modifies the Collection by merging the models from another collection. */
-    mergeCollection(collection: Collection<T>): Collection<T>;
-
-    /** Reloads each model in the collection. */
-    reload(): Collection<T>;
-
-    /** Removes a model from this collection. */
-    remove(model: T): Collection<T>;
-
-    /** Saves all models in the collection. */
-    save(): Collection<T>;
-
-    /** Returns a new Collection with a subset of its models selected from begin to end. */
-    slice(begin: number, end: number): Collection<T>;
-
-    /** Returns a new Collection with its models sorted according to the provided compare function. */
-    sort(f: (a: T, b: T) => number): Collection<T>;
-
-    /** Updates each model in the collection, and immediately persists all changes to the db. */
-    update<K extends keyof T>(key: K, val: T[K]): Collection<T>;
-  }
+  export type Collection<T> = import("orm/collection").default<T>;
 
   export interface RelationshipOptions {
     inverse?: string | null;
@@ -159,6 +114,7 @@ declare module "miragejs" {
 
 declare module "miragejs/-types" {
   import { Collection, Response } from "miragejs";
+  import { ModelInstance } from "orm/collection";
 
   /* A 1:1 relationship between models */
   export class BelongsTo<Name extends string> {
@@ -219,8 +175,13 @@ declare module "miragejs/-types" {
   type InstantiateValue<Registry, T> = T extends BelongsTo<infer ModelName>
     ? InstantiateIfDefined<Registry, ModelName> | null
     : T extends HasMany<infer ModelName>
-    ? Collection<InstantiateIfDefined<Registry, ModelName>>
+    ? CollectionIfDefined<Registry, ModelName>
     : T;
+
+  type CollectionIfDefined<Registry, ModelName> =
+    ModelName extends keyof Registry
+      ? Collection<Instantiate<Registry, ModelName>>
+      : unknown;
 
   // Returns the instantiated type of the given model if it exists in the
   // given registry, or `unknown` otherwise.
@@ -275,26 +236,6 @@ declare module "miragejs/-types" {
   export type AnyResponse = MaybePromise<
     ModelInstance | Response | ValidResponse | ValidResponse[]
   >;
-
-  /** Represents the type of an instantiated Mirage model.  */
-  export type ModelInstance<Data extends {} = {}> = Data & {
-    id?: string;
-    attrs: Data;
-    modelName: string;
-
-    /** Persists any updates on this model back to the Mirage database. */
-    save(): void;
-
-    /** Updates and immediately persists a single or multiple attr(s) on this model. */
-    update<K extends keyof Data>(key: K, value: Data[K]): void;
-    update(changes: Partial<Data>): void;
-
-    /** Removes this model from the Mirage database. */
-    destroy(): void;
-
-    /** Reloads this model's data from the Mirage database. */
-    reload(): void;
-  };
 }
 
 declare module "miragejs/server" {
