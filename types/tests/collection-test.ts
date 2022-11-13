@@ -56,3 +56,8 @@ collection.sort((a, b) => {
 collection.update("name", "John"); // $ExpectType Collection<ModelType>
 collection.update("name", new Date()); // $ExpectError
 collection.update("err", "err"); // $ExpectError
+
+collection[0].reload();
+collection.forEach((item) => {
+  item.reload();
+});
