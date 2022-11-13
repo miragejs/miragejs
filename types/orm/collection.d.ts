@@ -30,11 +30,12 @@ export declare type ModelInstance<Data extends {} = {}> = Data & {
   @constructor
   @public
 */
-export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
+declare type Element<T> = T extends ModelInstance<infer ElementType> ? ElementType : never;
+export default class Collection<T extends ModelInstance<ElementType>, ElementType extends {} = Element<T>> extends Array<T> {
     modelName: string;
-    constructor(modelName: string | number, items: ModelInstance<T>[] | undefined);
-    get models(): ModelInstance<T>[];
-    set models(models: ModelInstance<T>[]);
+    constructor(modelName?: string | number, items?: T[]);
+    get models(): T[];
+    set models(models: T[]);
     /**
         Adds a model to this collection.
 
@@ -51,7 +52,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return this
         @public
     */
-    add(model: ModelInstance<T>): Collection<T>;
+    add(model: T): Collection<T, ElementType>;
     /**
         Destroys the db record for all models in the collection.
 
@@ -65,7 +66,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return this
         @public
     */
-    destroy(): Collection<T>;
+    destroy(): Collection<T, ElementType>;
     /**
         Returns a new Collection with its models filtered according to the provided [callback function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter).
 
@@ -77,8 +78,8 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return {Collection}
         @public
     */
-    filter(f: (value: ModelInstance<T>, index: number, models: ModelInstance<T>[]) => unknown): Collection<T>;
-    concat(...items: ConcatArray<ModelInstance<T>>[]): Collection<T>;
+    filter(f: (value: T, index: number, models: T[]) => unknown): Collection<T, ElementType>;
+    concat(...items: ConcatArray<T>[]): Collection<T, ElementType>;
     /**
         Checks if the Collection includes the given model.
 
@@ -105,7 +106,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return {Boolean}
         @public
     */
-    includes(model: ModelInstance<T>): boolean;
+    includes(model: ElementType): boolean;
     /**
         Modifies the Collection by merging the models from another collection.
 
@@ -119,7 +120,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return this
         @public
     */
-    mergeCollection(collection: Collection<T>): Collection<T>;
+    mergeCollection(collection: Collection<T, ElementType>): Collection<T, ElementType>;
     /**
         Reloads each model in the collection.
 
@@ -135,7 +136,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return this
         @public
     */
-    reload(): Collection<T>;
+    reload(): Collection<T, ElementType>;
     /**
         Removes a model from this collection.
 
@@ -154,7 +155,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return this
         @public
     */
-    remove(model: ModelInstance<T>): Collection<T>;
+    remove(model: ElementType): Collection<T, ElementType>;
     /**
         Returns a new Collection with a subset of its models selected from `begin` to `end`.
 
@@ -168,7 +169,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return {Collection}
         @public
     */
-    slice(begin: number, end: number): Collection<T>;
+    slice(begin: number, end: number): Collection<T, ElementType>;
     /**
          Updates each model in the collection, and immediately persists all changes to the db.
 
@@ -183,9 +184,9 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @param val
         @return this
     */
-    update<K extends keyof T>(key: K & string, val: T[K]): Collection<T>;
-    save(): Collection<T>;
-    map<U>(callbackfn: (value: ModelInstance<T>, index: number, array: ModelInstance<T>[]) => U, thisArg?: any): U[];
+    update<K extends keyof ElementType>(key: K & string, val: T[K]): Collection<T, ElementType>;
+    save(): Collection<T, ElementType>;
+    map<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[];
     /**
          Simple string representation of the collection and id.
 
@@ -199,4 +200,5 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
     */
     toString(): string;
 }
+export {};
 //# sourceMappingURL=collection.d.ts.map

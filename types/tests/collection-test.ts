@@ -1,10 +1,28 @@
-import { Collection } from "miragejs";
+import Collection, { ModelInstance } from "orm/collection";
 
 type ModelType = { name: string };
 
-const collection = new Collection<ModelType>();
+const collection = new Collection<ModelInstance<ModelType>>();
 
-collection.add({ name: "Bob" }); // $ExpectType Collection<ModelType>
+collection.add({
+  name: "Bob",
+  attrs: {
+    name: ""
+  },
+  modelName: "",
+  save: function (): void {
+    throw new Error("Function not implemented.");
+  },
+  update<K extends "name">(key: K | Partial<ModelType>, value?: ModelType[K]): void {
+    throw new Error("Function not implemented.");
+  },
+  destroy: function (): void {
+    throw new Error("Function not implemented.");
+  },
+  reload: function (): void {
+    throw new Error("Function not implemented.");
+  }
+}); // $ExpectType Collection<ModelType>
 collection.add({ err: "err" }); // $ExpectError
 
 collection.destroy(); // $ExpectType Collection<ModelType>
@@ -15,7 +33,7 @@ collection.filter((item) => item.err === "Err"); // $ExpectError
 collection.includes({ name: "Bob" }); // $ExpectType boolean
 collection.includes({ err: "err" }); // $ExpectError
 
-collection.mergeCollection(new Collection<ModelType>()); // $ExpectType Collection<ModelType>
+collection.mergeCollection(new Collection<ModelInstance<ModelType>>()); // $ExpectType Collection<ModelType>
 collection.mergeCollection(new Collection<{ err: string }>()); // $ExpectError
 
 collection.reload(); // $ExpectType Collection<ModelType>

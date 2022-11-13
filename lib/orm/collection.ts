@@ -39,10 +39,13 @@ export type ModelInstance<Data extends {} = {}> = Data & {
   @constructor
   @public
 */
-export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
+
+type Element<T> = T extends ModelInstance<infer ElementType> ? ElementType : never;
+
+export default class Collection<T extends ModelInstance<ElementType>, ElementType extends {} = Element<T>> extends Array<T> {
     modelName: string;
 
-    public constructor(modelName: string | number, items: ModelInstance<T>[] | undefined) {
+    public constructor(modelName?: string | number, items?: T[]) {
         assert(
             modelName !== undefined,
             "You must pass a `modelName` into a Collection"
@@ -51,17 +54,16 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
             super(...(items ?? []));
             this.modelName = modelName;
         } else {
-            assert(true);
-            super(modelName);
+            super(modelName!);
             this.modelName = '';
         }
     }
 
-    public get models(): ModelInstance<T>[] {
+    public get models(): T[] {
         return this.map(item => item);
     }
 
-    public set models(models: ModelInstance<T>[]) {
+    public set models(models: T[]) {
         this.length = 0;
         models.forEach((item) => this.push(item));
     }
@@ -82,7 +84,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return this
         @public
     */
-    public add(model: ModelInstance<T>): Collection<T> {
+    public add(model: T): Collection<T, ElementType> {
         this.push(model);
         return this;
     }
@@ -100,7 +102,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return this
         @public
     */
-    public destroy(): Collection<T> {
+    public destroy(): Collection<T, ElementType> {
         this.forEach((item) => item.destroy());
         return this;
     }
@@ -116,8 +118,8 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return {Collection}
         @public
     */
-    public filter(f: (value: ModelInstance<T>, index: number, models: ModelInstance<T>[]) => unknown): Collection<T> {
-        const filteredModels: ModelInstance<T>[] = [];
+    public filter(f: (value: T, index: number, models: T[]) => unknown): Collection<T, ElementType> {
+        const filteredModels: T[] = [];
         this.forEach((item, index, array) => {
             if (f(item, index, array)) {
                 filteredModels.push(item);
@@ -127,8 +129,8 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         return new Collection(this.modelName, filteredModels);
     }
 
-    public concat(...items: ConcatArray<ModelInstance<T>>[]): Collection<T> {
-        const concatenated: ModelInstance<T>[] = [];
+    public concat(...items: ConcatArray<T>[]): Collection<T, ElementType> {
+        const concatenated: T[] = [];
         this.forEach((item) => {
             concatenated.push(item);
         });
@@ -166,7 +168,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return {Boolean}
         @public
     */
-    public includes(model: ModelInstance<T>): boolean {
+    public includes(model: ElementType): boolean {
         return this.some((m) => m.toString() === model.toString());
     }
 
@@ -183,7 +185,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return this
         @public
     */
-    public mergeCollection(collection: Collection<T>): Collection<T> {
+    public mergeCollection(collection: Collection<T, ElementType>): Collection<T, ElementType> {
         collection.forEach((item) => this.push(item));
         return this;
     }
@@ -203,7 +205,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return this
         @public
     */
-    public reload(): Collection<T> {
+    public reload(): Collection<T, ElementType> {
         this.forEach((item) => item.reload());
         return this;
     }
@@ -226,7 +228,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return this
         @public
     */
-    public remove(model: ModelInstance<T>): Collection<T> {
+    public remove(model: ElementType): Collection<T, ElementType> {
         let match = this.find((m) => m.toString() === model.toString());
         if (match) {
             let i = this.indexOf(match);
@@ -249,7 +251,7 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @return {Collection}
         @public
     */
-    public slice(begin: number, end: number): Collection<T> {
+    public slice(begin: number, end: number): Collection<T, ElementType> {
         return new Collection(this.modelName, super.slice(begin, end));
     }
 
@@ -267,17 +269,17 @@ export default class Collection<T extends {}> extends Array<ModelInstance<T>> {
         @param val
         @return this
     */
-    public update<K extends keyof T>(key: K & string, val: T[K]): Collection<T> {
+    public update<K extends keyof ElementType>(key: K & string, val: T[K]): Collection<T, ElementType> {
         this.forEach(item => item.update(key, val));
         return this;
     }
 
-    public save(): Collection<T> {
+    public save(): Collection<T, ElementType> {
         this.forEach((item) => item.save());
         return this;
     }
 
-    public map<U>(callbackfn: (value: ModelInstance<T>, index: number, array: ModelInstance<T>[]) => U, thisArg?: any): U[] {
+    public map<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[] {
         const result: U[] = [];
         this.forEach((item, index, array) => {
             result.push(callbackfn(item, index, array));
