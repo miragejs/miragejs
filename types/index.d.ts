@@ -282,7 +282,7 @@ declare module "miragejs/-types" {
     ? ElementType[] | Collection<ElementType>
     : Value;
 
-  /** Convert any Collection<ElementType> to ElementType[] */
+  /** Convert any Collection<ElementType> to ElementType[] | Collection<ElementType> */
   type CollectionOrList<Data extends {} = {}> = {
     [K in keyof Data]: CollectionOrListValue<Data[K]>;
   };
