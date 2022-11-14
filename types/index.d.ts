@@ -276,6 +276,17 @@ declare module "miragejs/-types" {
     ModelInstance | Response | ValidResponse | ValidResponse[]
   >;
 
+  type CollectionOrListValue<Value> = Value extends Collection<
+    infer ElementType
+  >
+    ? ElementType[] | Collection<ElementType>
+    : Value;
+
+  /** Convert any Collection<ElementType> to ElementType[] | Collection<ElementType> */
+  type CollectionOrList<Data extends {} = {}> = {
+    [K in keyof Data]: CollectionOrListValue<Data[K]>;
+  };
+
   /** Represents the type of an instantiated Mirage model.  */
   export type ModelInstance<Data extends {} = {}> = Data & {
     id?: string;
@@ -286,8 +297,11 @@ declare module "miragejs/-types" {
     save(): void;
 
     /** Updates and immediately persists a single or multiple attr(s) on this model. */
-    update<K extends keyof Data>(key: K, value: Data[K]): void;
-    update(changes: Partial<Data>): void;
+    update<K extends keyof Data>(
+      key: K,
+      value: CollectionOrListValue<Data[K]>
+    ): void;
+    update(changes: Partial<CollectionOrList<Data>>): void;
 
     /** Removes this model from the Mirage database. */
     destroy(): void;

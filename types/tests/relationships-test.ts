@@ -1,4 +1,12 @@
-import { belongsTo, hasMany, Model, Registry } from "miragejs";
+import {
+  belongsTo,
+  Collection,
+  hasMany,
+  Instantiate,
+  Model,
+  Registry,
+} from "miragejs";
+import { ModelInstance } from "miragejs/-types";
 import Schema from "miragejs/orm/schema";
 
 const PersonModel = Model.extend({
@@ -71,6 +79,15 @@ const pet2 = schema.create("pet");
 const personWithPetsArray = schema.create("person", {
   pets: [pet1, pet2],
 });
+
+personWithPetsArray.update("pets", [pet1]);
+personWithPetsArray.update({
+  pets: [pet1, pet2],
+});
+personWithPetsArray.update(
+  "pets",
+  new Collection<Instantiate<PersonRegistry, "pet">>()
+);
 
 personWithPetsArray.pets.modelName; // $ExpectType string
 
