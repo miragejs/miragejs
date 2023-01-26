@@ -75,7 +75,15 @@ describe("Unit | createServer", function () {
   });
 
   test("forces timing to be 0 in test environment", () => {
-    let server = new Server({ environment: "test" });
+    let server = createServer({ environment: "test" });
+
+    expect(server.timing).toEqual(0);
+
+    server.shutdown();
+  });
+
+  test("allows setting the timing to 0", () => {
+    let server = createServer({ timing: 0 });
 
     expect(server.timing).toEqual(0);
 
