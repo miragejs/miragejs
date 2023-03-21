@@ -170,4 +170,83 @@ describe("External | Shared | Serializers | Base | Associations | Embedded Colle
       ],
     });
   });
+
+  describe(`'embed' takes precedence over 'serializeIds'`, () => {
+    test(`it entirely overrides serializeIds`, () => {
+      const EmbedSerializer = Serializer.extend({
+        embed: true,
+        serializeIds: "always",
+      });
+
+      server.config({
+        serializers: {
+          application: EmbedSerializer,
+          blogPost: EmbedSerializer.extend({
+            include: ["author", "comments"],
+          }),
+        },
+      });
+
+      const post = server.schema.blogPosts.first();
+      const result = server.serializerOrRegistry.serialize(post);
+
+      expect(result).toEqual({
+        blogPost: {
+          id: "1",
+          title: "Lorem",
+          comments: [
+            {
+              id: "1",
+              text: "pwned",
+            },
+          ],
+          author: {
+            id: "1",
+            name: "Link",
+          },
+        },
+      });
+    });
+
+    test(`it selectively overrides serializeIds`, () => {
+      const SelectiveSerializer = Serializer.extend({
+        embed: (key) => key === "comments",
+        serializeIds: "always",
+      });
+
+      server.config({
+        serializers: {
+          application: SelectiveSerializer,
+          blogPost: SelectiveSerializer.extend({
+            include: ["author", "comments"],
+          }),
+        },
+      });
+
+      const post = server.schema.blogPosts.first();
+      const result = server.serializerOrRegistry.serialize(post);
+
+      expect(result).toEqual({
+        blogPost: {
+          id: "1",
+          title: "Lorem",
+          authorId: "1",
+          comments: [
+            {
+              id: "1",
+              text: "pwned",
+              postId: "1",
+            },
+          ],
+        },
+        wordSmiths: [
+          {
+            id: "1",
+            name: "Link",
+            postIds: ["1", "2"],
+          },
+        ],
+      });
+    });
+  });
 });

@@ -1,4 +1,4 @@
-// Minimum TypeScript Version: 3.7
+// Minimum TypeScript Version: 4.2
 
 /*
  * Inspired by Dan Freeman
@@ -276,6 +276,17 @@ declare module "miragejs/-types" {
     ModelInstance | Response | ValidResponse | ValidResponse[]
   >;
 
+  type CollectionOrListValue<Value> = Value extends Collection<
+    infer ElementType
+  >
+    ? ElementType[] | Collection<ElementType>
+    : Value;
+
+  /** Convert any Collection<ElementType> to ElementType[] | Collection<ElementType> */
+  type CollectionOrList<Data extends {} = {}> = {
+    [K in keyof Data]: CollectionOrListValue<Data[K]>;
+  };
+
   /** Represents the type of an instantiated Mirage model.  */
   export type ModelInstance<Data extends {} = {}> = Data & {
     id?: string;
@@ -286,8 +297,11 @@ declare module "miragejs/-types" {
     save(): void;
 
     /** Updates and immediately persists a single or multiple attr(s) on this model. */
-    update<K extends keyof Data>(key: K, value: Data[K]): void;
-    update(changes: Partial<Data>): void;
+    update<K extends keyof Data>(
+      key: K,
+      value: CollectionOrListValue<Data[K]>
+    ): void;
+    update(changes: Partial<CollectionOrList<Data>>): void;
 
     /** Removes this model from the Mirage database. */
     destroy(): void;
@@ -298,7 +312,7 @@ declare module "miragejs/-types" {
 }
 
 declare module "miragejs/server" {
-  import { Request, Response, Registry as MirageRegistry } from "miragejs";
+  import { Request, Registry as MirageRegistry } from "miragejs";
   import {
     AnyRegistry,
     AnyModels,
@@ -306,11 +320,26 @@ declare module "miragejs/server" {
     AnyResponse,
     Instantiate,
   } from "miragejs/-types";
-  import { ModelInstance } from "miragejs/-types";
+
   import Db from "miragejs/db";
   import IdentityManager from "miragejs/identity-manager";
   import Schema from "miragejs/orm/schema";
   import PretenderServer from "pretender";
+
+  /**
+   * Possible HTTP verbs
+   * @see https://github.com/pretenderjs/pretender/blob/master/index.d.ts#L13
+   **/
+  type HTTPVerb =
+    | "get"
+    | "put"
+    | "post"
+    | "patch"
+    | "delete"
+    | "options"
+    | "head";
+  type PassthroughArg = ((request: Request) => any) | string;
+  type PassthroughVerbs = HTTPVerb[];
 
   /** A callback that will be invoked when a given Mirage route is hit. */
   export type RouteHandler<
@@ -321,6 +350,17 @@ declare module "miragejs/server" {
   export interface HandlerOptions {
     /** A number of ms to artificially delay responses to this route. */
     timing?: number;
+  }
+
+  type ShorthandOptions = "index" | "show" | "create" | "update" | "delete";
+
+  export interface ResourceOptions {
+    /** Whitelist of shorthand options */
+    only?: ShorthandOptions[];
+    /** Exclude list of shorthand options */
+    except?: ShorthandOptions[];
+    /** Shorthand route path */
+    path?: string;
   }
 
   export interface ServerConfig<
@@ -453,8 +493,17 @@ declare module "miragejs/server" {
       options?: HandlerOptions
     ): void;
 
+    /** Define multiple shorthands for a given resource */
+    resource<K extends keyof Registry>(
+      modelName: K,
+      options?: ResourceOptions
+    ): void;
+
     /** Pass through one or more URLs to make real requests. */
-    passthrough(urls?: ((request: Request) => any) | string | string[]): void;
+    passthrough(...urls: PassthroughArg[]): void;
+    passthrough(
+      ...args: [PassthroughArg, ...PassthroughArg[], PassthroughVerbs]
+    ): void;
 
     /** Load all available fixture data matching the given name(s). */
     loadFixtures(...names: string[]): void;
@@ -636,7 +685,7 @@ declare module "miragejs/serializer" {
   interface SerializerInterface {
     schema?: Schema<any>;
     attrs?: any;
-    embed?: any;
+    embed?: boolean | ((key: string) => boolean);
     root?: any;
     serializeIds?: any;
     include?: any;

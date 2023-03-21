@@ -1,3 +1,4 @@
+// Minimum TypeScript Version: 4.2
 import {
   Response,
   Server,
@@ -35,8 +36,17 @@ export default function config(this: Server): void {
   this.get<number>("/foo", () => false); // $ExpectError
   this.get<[number, string]>("/foo", () => ["foo", 0]); // $ExpectError
 
+  this.resource("foo"); // $ExpectType void
+
   this.passthrough("/_coverage/upload"); // $ExpectType void
+  this.passthrough("/_coverage/upload_a", "/_coverage/upload_b"); // $ExpectType void
+  this.passthrough(["/_coverage/upload"]); // $ExpectError
   this.passthrough((request) => request.queryParams.skipMirage); // $ExpectType void
+  this.passthrough("/_coverage/upload", ["get"]); // $ExpectType void
+  // prettier-ignore
+  this.passthrough("/_coverage/upload", (request) => request.queryParams.skipMirage); // $ExpectType void
+  // prettier-ignore
+  this.passthrough("/_coverage/upload", (request) => request.queryParams.skipMirage, ["post"]); // $ExpectType void
 
   this.loadFixtures(); // $ExpectType void
   this.seeds(this); // $ExpectType void
