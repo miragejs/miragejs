@@ -347,6 +347,15 @@ declare module "miragejs/server" {
     Response extends AnyResponse = AnyResponse
   > = (schema: Schema<Registry>, request: Request) => Response;
 
+  export type Middleware<
+    Registry extends AnyRegistry,
+    Response extends AnyResponse = AnyResponse
+  > = (
+    schema: Schema<Registry>,
+    request: Request,
+    next?: Middleware<Registry, Response>
+  ) => Response;
+
   export interface HandlerOptions {
     /** A number of ms to artificially delay responses to this route. */
     timing?: number;
@@ -511,6 +520,41 @@ declare module "miragejs/server" {
     seeds(server: Server): void;
 
     routes(): void;
+
+    /**
+     * Use the provided middleware for the route handlers defined within the
+     * callback.
+     *
+     * ```js
+     *   // Example middleware which randomly returns a
+     *   // 500 response:
+     *   function random500() {
+     *     return (schema, req, next) => {
+     *       return (Math.random() > 0.7)
+     *         ? new Response(500, {}, 'no')
+     *         : next();
+     *     }
+     *   }
+     *
+     *   // Routes which use the middleware defined above:
+     *   routes() {
+     *     this.withMiddleware([
+     *       random500()
+     *     ], () => {
+     *
+     *        // Regular route handlers go here, e.g.
+     *        server.get('/users', (schema, req) => {
+     *          return new Response(204, {}, null);
+     *        });
+     *
+     *     });
+     *   }
+     * ```
+     */
+    withMiddleware<Response extends AnyResponse>(
+      middleware: Middleware<Registry, Response>[],
+      callback: () => void
+    ): void;
 
     /** Shutdown the server and stop intercepting network requests. */
     shutdown(): void;
