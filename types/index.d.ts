@@ -434,6 +434,9 @@ declare module "miragejs/server" {
     /** A default prefix applied to all subsequent route definitions. */
     namespace: string;
 
+    /** A set of middleware applied to all subsequent route definitions. */
+    middleware: Middleware<Registry, Response>[];
+
     /** Sets a string to prefix all route handler URLs with. */
     urlPrefix: string;
 
