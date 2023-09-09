@@ -462,7 +462,6 @@ declare module "miragejs/server" {
      *   }
      * ```
      */
-    /**  */
     middleware: Middleware<Registry, Response>[];
 
     /** Sets a string to prefix all route handler URLs with. */

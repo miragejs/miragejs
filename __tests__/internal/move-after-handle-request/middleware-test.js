@@ -132,8 +132,8 @@ describe("Integration | Middleware", () => {
             return next(requestFromMiddleware2);
           },
           (schema, req, next) => {
-            // This middleware intentionally doesn't pass a Request into `next`
-            // the prior Request object is expected to make it through to the
+            // This middleware intentionally doesn't pass a Request into `next`.
+            // The prior Request object is expected to make it through to the
             // next handler.
             return next();
           },
