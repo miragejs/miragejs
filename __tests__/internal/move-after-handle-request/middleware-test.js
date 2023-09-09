@@ -1,4 +1,4 @@
-import { Response, Server, Model } from "miragejs";
+import { Server, Model } from "miragejs";
 
 describe("Integration | Middleware", () => {
   let server;
@@ -7,168 +7,147 @@ describe("Integration | Middleware", () => {
     server.shutdown();
   });
 
-  describe("#middleware", () => {
-    test("works and only applies to subsequent routes", async () => {
-      function shortCircuitingMiddleware1() {
-        return (schema, request, next) => "from first middleware";
-      }
+  test("short-circuits by returning without calling next()", async () => {
+    function shortCircuitingMiddleware() {
+      return () => "from middleware";
+    }
 
-      function shortCircuitingMiddleware2() {
-        return (schema, request, next) => "from second middleware";
-      }
+    server = new Server({
+      environment: "test",
+      models: {
+        user: Model,
+      },
+      routes() {
+        this.middleware = [shortCircuitingMiddleware()];
+        this.get("/users");
+      },
+    });
 
-      server = new Server({
-        environment: "test",
-        models: {
-          user: Model,
-          frog: Model,
-        },
-        routes() {
-          this.namespace = "api";
+    let data = await fetch("/users").then((res) => res.text());
 
-          this.middleware = [shortCircuitingMiddleware1()];
-          this.get("/users");
+    expect(data).toEqual("from middleware");
+  });
 
-          this.middleware = [shortCircuitingMiddleware2()];
-          this.get("/frogs");
-        },
-      });
+  test("invokes the route handler by calling next()", async () => {
+    function noopMiddleware() {
+      return (schema, req, next) => next();
+    }
 
-      server.createList("user", 3);
+    server = new Server({
+      environment: "test",
+      models: {
+        user: Model,
+      },
+      routes() {
+        this.middleware = [noopMiddleware()];
+        this.get("/users");
+      },
+    });
 
-      let users = await fetch("/api/users").then((res) => res.text());
-      let frogs = await fetch("/api/frogs").then((res) => res.text());
+    server.createList("user", 3);
 
-      expect(users).toEqual("from first middleware");
-      expect(frogs).toEqual("from second middleware");
+    let data = await fetch("/users").then((res) => res.json());
+
+    expect(data).toEqual({
+      users: [{ id: "1" }, { id: "2" }, { id: "3" }],
     });
   });
 
-  describe("#withMiddleware", () => {
-    test("short-circuits by returning without calling next()", async () => {
-      function shortCircuitingMiddleware() {
-        return () => "from middleware";
-      }
+  test("works with multiple middleware", async () => {
+    function noopMiddleware() {
+      return (schema, req, next) => next(req);
+    }
 
-      server = new Server({
-        environment: "test",
-        models: {
-          user: Model,
-        },
-        routes() {
-          this.namespace = "api";
-
-          this.withMiddleware([shortCircuitingMiddleware()], () => {
-            this.get("/users");
-          });
-        },
-      });
-
-      server.createList("user", 3);
-
-      let data = await fetch("/api/users").then((res) => res.text());
-
-      expect(data).toEqual("from middleware");
+    server = new Server({
+      environment: "test",
+      models: {
+        user: Model,
+      },
+      routes() {
+        this.middleware = [noopMiddleware(), noopMiddleware()];
+        this.get("/users");
+      },
     });
 
-    test("calls the route handler by calling next()", async () => {
-      function noopMiddleware() {
-        return (schema, request, next) => next();
-      }
+    server.createList("user", 3);
 
-      server = new Server({
-        environment: "test",
-        models: {
-          user: Model,
-        },
-        routes() {
-          this.namespace = "api";
+    let data = await fetch("/users").then((res) => res.json());
 
-          this.withMiddleware([noopMiddleware()], () => {
-            this.get("/users");
-          });
-        },
-      });
+    expect(data).toEqual({
+      users: [{ id: "1" }, { id: "2" }, { id: "3" }],
+    });
+  });
 
-      server.createList("user", 3);
+  test("only applies to subsequent routes", async () => {
+    function shortCircuitingMiddleware1() {
+      return (schema, req, next) => "from first middleware";
+    }
 
-      let data = await fetch("/api/users").then((res) => res.json());
+    function shortCircuitingMiddleware2() {
+      return (schema, req, next) => "from second middleware";
+    }
 
-      expect(data).toEqual({
-        users: [{ id: "1" }, { id: "2" }, { id: "3" }],
-      });
+    server = new Server({
+      environment: "test",
+      models: {
+        user: Model,
+        frog: Model,
+      },
+      routes() {
+        this.middleware = [shortCircuitingMiddleware1()];
+        this.get("/users");
+
+        this.middleware = [shortCircuitingMiddleware2()];
+        this.get("/frogs");
+      },
     });
 
-    test("works with multiple middleware", async () => {
-      function noopMiddleware() {
-        return (schema, request, next) => next();
-      }
+    server.createList("user", 3);
 
-      server = new Server({
-        environment: "test",
-        models: {
-          user: Model,
-        },
-        routes() {
-          this.namespace = "api";
+    let users = await fetch("/users").then((res) => res.text());
+    let frogs = await fetch("/frogs").then((res) => res.text());
 
-          this.withMiddleware([noopMiddleware(), noopMiddleware()], () => {
-            this.get("/users");
-          });
-        },
-      });
+    expect(users).toEqual("from first middleware");
+    expect(frogs).toEqual("from second middleware");
+  });
 
-      server.createList("user", 3);
+  test("can pass different request objects down the line", async () => {
+    const requestFromMiddleware1 = { fakeRequest: "from middleware1" };
+    const requestFromMiddleware2 = { fakeRequest: "from middleware2" };
+    let requestReceivedByMiddleware2;
+    let requestReceivedByRouteHandler;
 
-      let data = await fetch("/api/users").then((res) => res.json());
-
-      expect(data).toEqual({
-        users: [{ id: "1" }, { id: "2" }, { id: "3" }],
-      });
+    server = new Server({
+      environment: "test",
+      models: {
+        user: Model,
+      },
+      routes() {
+        this.middleware = [
+          (schema, req, next) => {
+            return next(requestFromMiddleware1);
+          },
+          (schema, req, next) => {
+            requestReceivedByMiddleware2 = req;
+            return next(requestFromMiddleware2);
+          },
+          (schema, req, next) => {
+            // This middleware intentionally doesn't pass a Request into `next`
+            // the prior Request object is expected to make it through to the
+            // next handler.
+            return next();
+          },
+        ];
+        this.get("/users", (schema, req) => {
+          requestReceivedByRouteHandler = req;
+          return { done: true };
+        });
+      },
     });
 
-    test("resets the middleware outside the block", async () => {
-      function appendStringMiddleware(str) {
-        return (schema, request, next) => {
-          const response = next();
-          const res =
-            response instanceof Response
-              ? response.toRackResponse()
-              : [200, {}, response];
-          return new Response(res[0], res[1], `${res[2]} ${str}`);
-        };
-      }
+    await fetch("/users").then((res) => res.json());
 
-      server = new Server({
-        environment: "test",
-        models: {
-          level0: Model,
-          level1: Model,
-          level2: Model,
-        },
-        routes() {
-          this.namespace = "api";
-
-          this.withMiddleware([appendStringMiddleware("A")], () => {
-            this.withMiddleware([appendStringMiddleware("B")], () => {
-              this.get("/level2", () => "level2 response");
-            });
-
-            this.get("/level1", () => "level1 response");
-          });
-
-          this.get("/level0", () => "level0 response");
-        },
-      });
-
-      let data2 = await fetch("/api/level2").then((res) => res.text());
-      expect(data2).toEqual("level2 response B A");
-
-      let data1 = await fetch("/api/level1").then((res) => res.text());
-      expect(data1).toEqual("level1 response A");
-
-      let data0 = await fetch("/api/level0").then((res) => res.text());
-      expect(data0).toEqual("level0 response");
-    });
+    expect(requestReceivedByMiddleware2).toEqual(requestFromMiddleware1);
+    expect(requestReceivedByRouteHandler).toEqual(requestFromMiddleware2);
   });
 });

@@ -353,7 +353,7 @@ declare module "miragejs/server" {
   > = (
     schema: Schema<Registry>,
     request: Request,
-    next?: Middleware<Registry, Response>
+    next?: (request?: Request) => Response
   ) => Response;
 
   export interface HandlerOptions {
@@ -434,7 +434,35 @@ declare module "miragejs/server" {
     /** A default prefix applied to all subsequent route definitions. */
     namespace: string;
 
-    /** A set of middleware applied to all subsequent route definitions. */
+    /**
+     * A set of middleware applied to subsequent route definitions.
+     *
+     * Usage:
+     * ```js
+     *   // Example middleware which randomly returns a
+     *   // 500 response:
+     *   function random500() {
+     *     return (schema, req, next) => {
+     *       return (Math.random() > 0.7)
+     *         ? new Response(500, {}, 'no')
+     *         : next();
+     *     }
+     *   }
+     *
+     *   // Routes which use the middleware defined above:
+     *   routes() {
+     *     this.middleware = [
+     *       random500(),
+     *       // ...
+     *     ]
+     *
+     *     server.get('/users', (schema, req) => {
+     *       return new Response(204, {}, null);
+     *     });
+     *   }
+     * ```
+     */
+    /**  */
     middleware: Middleware<Registry, Response>[];
 
     /** Sets a string to prefix all route handler URLs with. */
@@ -523,41 +551,6 @@ declare module "miragejs/server" {
     seeds(server: Server): void;
 
     routes(): void;
-
-    /**
-     * Use the provided middleware for the route handlers defined within the
-     * callback.
-     *
-     * ```js
-     *   // Example middleware which randomly returns a
-     *   // 500 response:
-     *   function random500() {
-     *     return (schema, req, next) => {
-     *       return (Math.random() > 0.7)
-     *         ? new Response(500, {}, 'no')
-     *         : next();
-     *     }
-     *   }
-     *
-     *   // Routes which use the middleware defined above:
-     *   routes() {
-     *     this.withMiddleware([
-     *       random500()
-     *     ], () => {
-     *
-     *        // Regular route handlers go here, e.g.
-     *        server.get('/users', (schema, req) => {
-     *          return new Response(204, {}, null);
-     *        });
-     *
-     *     });
-     *   }
-     * ```
-     */
-    withMiddleware<Response extends AnyResponse>(
-      middleware: Middleware<Registry, Response>[],
-      callback: () => void
-    ): void;
 
     /** Shutdown the server and stop intercepting network requests. */
     shutdown(): void;
