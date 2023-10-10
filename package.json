@@ -38,7 +38,6 @@
     "@miragejs/pretender-node-polyfill": "^0.1.0",
     "inflected": "^2.0.4",
     "lodash": "^4.0.0",
-    "lodash.pick": "^4.4.0",
     "lodash.snakecase": "^4.1.1",
     "lodash.uniq": "^4.5.0",
     "lodash.uniqby": "^4.7.0",
