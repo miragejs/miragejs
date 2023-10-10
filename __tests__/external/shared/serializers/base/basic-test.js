@@ -1,5 +1,5 @@
 import { Server, Model } from "miragejs";
-import uniqBy from "lodash.uniqby";
+import uniqBy from "lodash/uniqBy";
 
 describe("External | Shared | Serializers | Base | Basic", function () {
   let server;
