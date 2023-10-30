@@ -347,6 +347,15 @@ declare module "miragejs/server" {
     Response extends AnyResponse = AnyResponse
   > = (schema: Schema<Registry>, request: Request) => Response;
 
+  export type Middleware<
+    Registry extends AnyRegistry,
+    Response extends AnyResponse = AnyResponse
+  > = (
+    schema: Schema<Registry>,
+    request: Request,
+    next?: (request?: Request) => Response
+  ) => Response;
+
   export interface HandlerOptions {
     /** A number of ms to artificially delay responses to this route. */
     timing?: number;
@@ -424,6 +433,36 @@ declare module "miragejs/server" {
 
     /** A default prefix applied to all subsequent route definitions. */
     namespace: string;
+
+    /**
+     * A set of middleware applied to subsequent route definitions.
+     *
+     * Usage:
+     * ```js
+     *   // Example middleware which randomly returns a
+     *   // 500 response:
+     *   function random500() {
+     *     return (schema, req, next) => {
+     *       return (Math.random() > 0.7)
+     *         ? new Response(500, {}, 'no')
+     *         : next();
+     *     }
+     *   }
+     *
+     *   // Routes which use the middleware defined above:
+     *   routes() {
+     *     this.middleware = [
+     *       random500(),
+     *       // ...
+     *     ]
+     *
+     *     server.get('/users', (schema, req) => {
+     *       return new Response(204, {}, null);
+     *     });
+     *   }
+     * ```
+     */
+    middleware: Middleware<Registry, Response>[];
 
     /** Sets a string to prefix all route handler URLs with. */
     urlPrefix: string;
