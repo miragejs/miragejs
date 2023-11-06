@@ -95,4 +95,49 @@ describe("Integration | Middleware | async", () => {
     let data = await fetch("/path").then((res) => res.text());
     expect(data).toEqual("yay");
   });
+
+  test("mixing async/await and callback-based middleware", async () => {
+    const asyncMiddleware = (number) => {
+      return async (schema, req, next) => {
+        await asynchronousTask(() => {
+          req.queryParams.tasks ||= [];
+          req.queryParams.tasks.push(number);
+        });
+        const res = await next();
+        res.push(number * 10);
+        return res;
+      };
+    };
+
+    const syncMiddleware = (number) => {
+      const promisify = (cb) => (async () => cb())();
+
+      return (schema, req, next) => {
+        req.queryParams.tasks ||= [];
+        req.queryParams.tasks.push(number);
+        return promisify(() => next()).then((res) => {
+          res.push(number * 10);
+          return res;
+        });
+      };
+    };
+
+    server = new Server({
+      environment: "test",
+      routes() {
+        this.middleware = [
+          asyncMiddleware(1),
+          syncMiddleware(2),
+          asyncMiddleware(3),
+          syncMiddleware(4),
+        ];
+        this.get("/path", (schema, req) => {
+          return req.queryParams.tasks;
+        });
+      },
+    });
+
+    let data = await fetch("/path").then((res) => res.json());
+    expect(data).toEqual([1, 2, 3, 4, 40, 30, 20, 10]);
+  });
 });
