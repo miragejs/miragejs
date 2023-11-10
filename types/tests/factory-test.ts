@@ -1,13 +1,24 @@
-import { Factory, Model, Registry } from "miragejs";
+import { Factory, Model, Registry, belongsTo, Server } from "miragejs";
 import Schema from "miragejs/orm/schema";
 
 const PersonModel = Model.extend({
   name: "hello",
+  address: belongsTo(),
+});
+
+const AddressModel = Model.extend({
+  street: "Meat Street",
+  person: belongsTo(),
 });
 
 interface Person {
   age: number;
   height: string;
+  address: Address;
+}
+
+interface Address {
+  street: string;
 }
 
 /**
@@ -25,6 +36,9 @@ const PersonFactoryInferred = Factory.extend({
   height(n: number) {
     return `${n}'`;
   },
+  aftercreate(person, server: Server) {
+    person.update({ address: server.create("address") });
+  },
 });
 
 const PersonFactoryExplicit = Factory.extend<Partial<Person>>({
@@ -33,15 +47,20 @@ const PersonFactoryExplicit = Factory.extend<Partial<Person>>({
   },
 });
 
-declare const schema: Schema<
-  Registry<
-    { personExplicit: typeof PersonModel; personInferred: typeof PersonModel },
-    {
-      personExplicit: typeof PersonFactoryExplicit;
-      personInferred: typeof PersonFactoryInferred;
-    }
-  >
+type RegistryFixture = Registry<
+  {
+    personExplicit: typeof PersonModel;
+    personInferred: typeof PersonModel;
+    address: typeof AddressModel;
+  },
+  {
+    personExplicit: typeof PersonFactoryExplicit;
+    personInferred: typeof PersonFactoryInferred;
+    address: typeof AddressModel;
+  }
 >;
+
+declare const schema: Schema<RegistryFixture>;
 
 {
   const people = schema.all("personExplicit");
