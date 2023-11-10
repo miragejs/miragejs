@@ -86,3 +86,16 @@ declare const schema: Schema<
   schema.create("personInferred", { height: 123 }); // $ExpectError
   schema.create("personInferred", { foo: "bar" }); // $ExpectError
 }
+
+{
+  const PersonFactoryWithAfterCreate = Factory.extend<Partial<Person>>({
+    age: 42,
+    afterCreate(person, server) {
+      person.age; // $ExpectType number | undefined
+      person.height; // $ExpectType string | undefined
+      person.foo; // $ExpectError
+      person.age = "42"; // $ExpectError
+      person.height = 42; // $ExpectError
+    },
+  });
+}
