@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node_version: [16]
+        node_version: [22]
       fail-fast: false
 
     name: "Lint: node-${{ matrix.node_version }}, ${{ matrix.os }}"
@@ -37,7 +37,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node_version: [10, 12, 14, 16]
+        node_version: [18, 20, 22]
         include:
           - os: macos-latest
             node_version: 14
