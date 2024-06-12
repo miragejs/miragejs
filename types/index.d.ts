@@ -411,7 +411,7 @@ declare module "miragejs/server" {
     Factories extends AnyFactories,
   >(
     config: ServerConfig<Models, Factories>
-  ): Server<MirageRegistry<Models, Factories>>;
+  ): Promise<Server<MirageRegistry<Models, Factories>>>;
 
   export class Server<Registry extends AnyRegistry = AnyRegistry> {
     constructor(options?: ServerConfig<AnyModels, AnyFactories>);
