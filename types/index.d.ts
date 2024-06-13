@@ -63,7 +63,7 @@ declare module "miragejs" {
     toRackResponse(): [
       number,
       Record<string, string> | undefined,
-      string | {} | undefined
+      string | {} | undefined,
     ];
   }
 
@@ -197,7 +197,7 @@ declare module "miragejs/-types" {
    */
   export type Instantiate<
     Registry,
-    ModelName extends keyof Registry
+    ModelName extends keyof Registry,
   > = ModelInstance<
     {
       // Splitting and rejoining on `ModelName` ensures that unions distribute
@@ -216,11 +216,12 @@ declare module "miragejs/-types" {
   // Given a registry and value type, checks whether that type represents
   // if Mirage relationship. If so, returns the corresponding model or
   // collection type from the registry; otherwise returns the type unchanged.
-  type InstantiateValue<Registry, T> = T extends BelongsTo<infer ModelName>
-    ? InstantiateIfDefined<Registry, ModelName> | null
-    : T extends HasMany<infer ModelName>
-    ? Collection<InstantiateIfDefined<Registry, ModelName>>
-    : T;
+  type InstantiateValue<Registry, T> =
+    T extends BelongsTo<infer ModelName>
+      ? InstantiateIfDefined<Registry, ModelName> | null
+      : T extends HasMany<infer ModelName>
+        ? Collection<InstantiateIfDefined<Registry, ModelName>>
+        : T;
 
   // Returns the instantiated type of the given model if it exists in the
   // given registry, or `unknown` otherwise.
@@ -253,7 +254,7 @@ declare module "miragejs/-types" {
    */
   export type Registry<
     Models extends AnyModels,
-    Factories extends AnyFactories
+    Factories extends AnyFactories,
   > = {
     [K in keyof Models | keyof Factories]: ExtractModelData<Models, K> &
       ExtractFactoryData<Factories, K>;
@@ -276,11 +277,10 @@ declare module "miragejs/-types" {
     ModelInstance | Response | ValidResponse | ValidResponse[]
   >;
 
-  type CollectionOrListValue<Value> = Value extends Collection<
-    infer ElementType
-  >
-    ? ElementType[] | Collection<ElementType>
-    : Value;
+  type CollectionOrListValue<Value> =
+    Value extends Collection<infer ElementType>
+      ? ElementType[] | Collection<ElementType>
+      : Value;
 
   /** Convert any Collection<ElementType> to ElementType[] | Collection<ElementType> */
   type CollectionOrList<Data extends {} = {}> = {
@@ -344,12 +344,12 @@ declare module "miragejs/server" {
   /** A callback that will be invoked when a given Mirage route is hit. */
   export type RouteHandler<
     Registry extends AnyRegistry,
-    Response extends AnyResponse = AnyResponse
+    Response extends AnyResponse = AnyResponse,
   > = (schema: Schema<Registry>, request: Request) => Response;
 
   export type Middleware<
     Registry extends AnyRegistry,
-    Response extends AnyResponse = AnyResponse
+    Response extends AnyResponse = AnyResponse,
   > = (
     schema: Schema<Registry>,
     request: Request,
@@ -374,7 +374,7 @@ declare module "miragejs/server" {
 
   export interface ServerConfig<
     Models extends AnyModels,
-    Factories extends AnyFactories
+    Factories extends AnyFactories,
   > {
     urlPrefix?: string;
     fixtures?: any;
@@ -408,7 +408,7 @@ declare module "miragejs/server" {
    */
   export function createServer<
     Models extends AnyModels,
-    Factories extends AnyFactories
+    Factories extends AnyFactories,
   >(
     config: ServerConfig<Models, Factories>
   ): Server<MirageRegistry<Models, Factories>>;
@@ -474,7 +474,7 @@ declare module "miragejs/server" {
     createList<
       K extends keyof Registry,
       Init extends Instantiate<Registry, K>,
-      Data extends Partial<Init>
+      Data extends Partial<Init>,
     >(modelName: K, count: number, data?: Data): Array<Init & Data>;
 
     /** Handle a GET request to the given path. */
@@ -660,7 +660,7 @@ declare module "miragejs/orm/schema" {
     create<
       K extends keyof Registry,
       Init extends Instantiate<Registry, K>,
-      Data extends Partial<ModelInitializer<Init>>
+      Data extends Partial<ModelInitializer<Init>>,
     >(
       modelName: K,
       data?: Data
