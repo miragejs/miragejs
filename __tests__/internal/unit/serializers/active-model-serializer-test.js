@@ -120,7 +120,7 @@ describe("Unit | Serializers | ActiveModelSerializer", function () {
   test("normalizeIds defaults to true", () => {
     let serializer = new ActiveModelSerializer();
 
-    expect(serializer.normalizeIds).toEqual(true);
+    expect(serializer.normalizeIds).toBe(true);
   });
 
   test("normalize works with normalizeIds set to true", () => {
@@ -155,6 +155,6 @@ describe("Unit | Serializers | ActiveModelSerializer", function () {
 
   test('serializeIds defaults to "always"', () => {
     let defaultState = new ActiveModelSerializer();
-    expect(defaultState.serializeIds).toEqual("always");
+    expect(defaultState.serializeIds).toBe("always");
   });
 });

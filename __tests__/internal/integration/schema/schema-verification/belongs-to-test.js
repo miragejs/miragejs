@@ -22,9 +22,9 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
     let association = post.associationFor("author");
     let frodo = schema.authors.find(1);
 
-    expect(association.name).toEqual("author");
-    expect(association.modelName).toEqual("author");
-    expect(association.ownerModelName).toEqual("post");
+    expect(association.name).toBe("author");
+    expect(association.modelName).toBe("author");
+    expect(association.ownerModelName).toBe("post");
     expect(frodo.inverseFor(association) === null).toBeTruthy();
   });
 
@@ -46,9 +46,9 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
     let association = post.associationFor("author");
     let frodo = schema.users.find(1);
 
-    expect(association.name).toEqual("author");
-    expect(association.modelName).toEqual("user");
-    expect(association.ownerModelName).toEqual("post");
+    expect(association.name).toBe("author");
+    expect(association.modelName).toBe("user");
+    expect(association.ownerModelName).toBe("post");
     expect(frodo.inverseFor(association) === null).toBeTruthy();
   });
 
@@ -67,9 +67,9 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
     let frodo = schema.users.find(1);
     let association = frodo.associationFor("user");
 
-    expect(association.name).toEqual("user");
-    expect(association.modelName).toEqual("user");
-    expect(association.ownerModelName).toEqual("user");
+    expect(association.name).toBe("user");
+    expect(association.modelName).toBe("user");
+    expect(association.ownerModelName).toBe("user");
     expect(frodo.inverseFor(association) === association).toBeTruthy();
   });
 
@@ -88,9 +88,9 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
     let frodo = schema.users.find(1);
     let association = frodo.associationFor("bestFriend");
 
-    expect(association.name).toEqual("bestFriend");
-    expect(association.modelName).toEqual("user");
-    expect(association.ownerModelName).toEqual("user");
+    expect(association.name).toBe("bestFriend");
+    expect(association.modelName).toBe("user");
+    expect(association.ownerModelName).toBe("user");
     expect(frodo.inverseFor(association) === association).toBeTruthy();
   });
 
@@ -109,9 +109,9 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
     let frodo = schema.users.find(1);
     let association = frodo.associationFor("bestFriend");
 
-    expect(association.name).toEqual("bestFriend");
-    expect(association.modelName).toEqual("user");
-    expect(association.ownerModelName).toEqual("user");
+    expect(association.name).toBe("bestFriend");
+    expect(association.modelName).toBe("user");
+    expect(association.ownerModelName).toBe("user");
     expect(frodo.inverseFor(association) === association).toBeTruthy();
   });
 
@@ -130,9 +130,9 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
     let frodo = schema.users.find(1);
     let association = frodo.associationFor("user");
 
-    expect(association.name).toEqual("user");
-    expect(association.modelName).toEqual("user");
-    expect(association.ownerModelName).toEqual("user");
+    expect(association.name).toBe("user");
+    expect(association.modelName).toBe("user");
+    expect(association.ownerModelName).toBe("user");
     expect(frodo.inverseFor(association) === null).toBeTruthy();
   });
 
@@ -151,9 +151,9 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
     let frodo = schema.users.find(1);
     let association = frodo.associationFor("parent");
 
-    expect(association.name).toEqual("parent");
-    expect(association.modelName).toEqual("user");
-    expect(association.ownerModelName).toEqual("user");
+    expect(association.name).toBe("parent");
+    expect(association.modelName).toBe("user");
+    expect(association.ownerModelName).toBe("user");
     expect(frodo.inverseFor(association) === null).toBeTruthy();
   });
 
@@ -176,15 +176,15 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
     let admin = schema.profiles.find(1);
     let association = admin.associationFor("user");
 
-    expect(association.name).toEqual("user");
-    expect(association.modelName).toEqual("user");
-    expect(association.ownerModelName).toEqual("profile");
+    expect(association.name).toBe("user");
+    expect(association.modelName).toBe("user");
+    expect(association.ownerModelName).toBe("profile");
 
     let frodo = schema.users.find(1);
     let inverse = frodo.inverseFor(association);
 
-    expect(inverse.name).toEqual("profile");
-    expect(inverse.modelName).toEqual("profile");
-    expect(inverse.ownerModelName).toEqual("user");
+    expect(inverse.name).toBe("profile");
+    expect(inverse.modelName).toBe("profile");
+    expect(inverse.ownerModelName).toBe("user");
   });
 });

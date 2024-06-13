@@ -87,7 +87,7 @@ describe("Integration | Route handlers | Function handler | #normalizedRequestAt
     let res = await fetch("/users/create", { method: "POST" });
     let data = await res.json();
 
-    expect(res.status).toEqual(500);
+    expect(res.status).toBe(500);
     expect(data.message).toMatch(
       "the detected model of 'create' does not exist"
     );
@@ -133,7 +133,7 @@ describe("Integration | Route handlers | Function handler | #normalizedRequestAt
     let res = await fetch("/fine-comments/create", { method: "POST" });
     let data = await res.json();
 
-    expect(res.status).toEqual(500);
+    expect(res.status).toBe(500);
     expect(data.message).toMatch(
       "You called normalizedRequestAttrs('fineComment'), but normalizedRequestAttrs was intended to be used with the dasherized version of the model type. Please change this to normalizedRequestAttrs('fine-comment')"
     );

@@ -58,9 +58,9 @@ describe("External | Shared | Identity manager", function () {
     let comment = server.create("comment");
     let post = server.create("post");
 
-    expect(author.id).toEqual("custom-id");
-    expect(post.id).toEqual("1");
-    expect(comment.id).toEqual("1");
+    expect(author.id).toBe("custom-id");
+    expect(post.id).toBe("1");
+    expect(comment.id).toBe("1");
   });
 
   test("identity managers can use record data in their fetch method", () => {
@@ -82,6 +82,6 @@ describe("External | Shared | Identity manager", function () {
 
     let ryan = server.create("user", { name: "Ryan", ssn: 123456789 });
 
-    expect(ryan.id).toEqual("123456789");
+    expect(ryan.id).toBe("123456789");
   });
 });

@@ -42,7 +42,7 @@ describe("External | Shared | ORM | Mixed | One To Many | instantiating", () => 
     let user = helper.savedParent();
     let post = schema.posts.new({ user });
 
-    expect(post.userId).toEqual("1");
+    expect(post.userId).toBe("1");
     expect(post.user.attrs).toEqual(user.attrs);
     expect(post.attrs).toEqual({ userId: null });
 
@@ -74,7 +74,7 @@ describe("External | Shared | ORM | Mixed | One To Many | instantiating", () => 
     let user = helper.savedParent();
     let post = schema.posts.new({ user, userId: user.id });
 
-    expect(post.userId).toEqual("1");
+    expect(post.userId).toBe("1");
     expect(post.user).toEqual(user);
     expect(post.attrs).toEqual({ userId: user.id });
 

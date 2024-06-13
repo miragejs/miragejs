@@ -82,7 +82,7 @@ describe("External | Shared | Factories | create and createList", function () {
     let contact = server.create("contact");
 
     expect(contact instanceof Contact).toBeTruthy();
-    expect(contact.name).toEqual("Yehuda");
+    expect(contact.name).toBe("Yehuda");
   });
 
   test("create returns a Model instance if the Model name is uncountable", () => {
@@ -120,7 +120,7 @@ describe("External | Shared | Factories | create and createList", function () {
     let contacts = server.createList("contact", 1);
 
     expect(contacts[0] instanceof Contact).toBeTruthy();
-    expect(contacts[0].name).toEqual("Yehuda");
+    expect(contacts[0].name).toBe("Yehuda");
   });
 
   test("createList returns Models if the model name is uncountable", () => {
@@ -153,7 +153,7 @@ describe("External | Shared | Factories | create and createList", function () {
     let post = server.create("post");
 
     expect(post instanceof Post).toBeTruthy();
-    expect(post.id).toEqual("1");
+    expect(post.id).toBe("1");
   });
 
   test("createList falls back to a model if no factory is defined", () => {
@@ -163,7 +163,7 @@ describe("External | Shared | Factories | create and createList", function () {
 
     expect(posts[0] instanceof Post).toBeTruthy();
     expect(posts).toHaveLength(2);
-    expect(posts[0].id).toEqual("1");
+    expect(posts[0].id).toBe("1");
   });
 
   test("create sets up the db correctly when passing in fks", () => {

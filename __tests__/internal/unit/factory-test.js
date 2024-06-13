@@ -247,7 +247,7 @@ describe("Unit | Factory", function () {
     let post = factory.build(0);
 
     expect(skipped).toBeTruthy();
-    expect(typeof post.afterCreate).toEqual("undefined");
+    expect(typeof post.afterCreate).toBe("undefined");
   });
 
   test("extractAfterCreateCallbacks returns all afterCreate callbacks from factory with the base one being first", () => {

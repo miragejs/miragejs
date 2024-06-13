@@ -77,7 +77,7 @@ describe("Unit | createServer", function () {
   test("forces timing to be 0 in test environment", () => {
     let server = createServer({ environment: "test" });
 
-    expect(server.timing).toEqual(0);
+    expect(server.timing).toBe(0);
 
     server.shutdown();
   });
@@ -85,7 +85,7 @@ describe("Unit | createServer", function () {
   test("allows setting the timing to 0", () => {
     let server = createServer({ timing: 0 });
 
-    expect(server.timing).toEqual(0);
+    expect(server.timing).toBe(0);
 
     server.shutdown();
   });
@@ -99,7 +99,7 @@ describe("Unit | Server #loadConfig", function () {
       this.timing = 50;
     });
 
-    expect(server.timing).toEqual(0);
+    expect(server.timing).toBe(0);
 
     server.shutdown();
   });
@@ -111,7 +111,7 @@ describe("Unit | Server #loadConfig", function () {
       this.timing = 50;
     });
 
-    expect(server.timing).toEqual(50);
+    expect(server.timing).toBe(50);
 
     server.shutdown();
   });

@@ -223,7 +223,7 @@ describe("Unit | Db #insert", function () {
 
     let record = db.contacts.insert({ name: "Zelda" });
 
-    expect(record.id).toEqual("3");
+    expect(record.id).toBe("3");
   });
 
   test("inserting a record with an already used ID throws an error", () => {
@@ -476,8 +476,8 @@ describe("Unit | Db #update", function () {
     let link = db.contacts.find(1);
     let zelda = db.contacts.find(2);
 
-    expect(link.evil).toEqual(true);
-    expect(zelda.evil).toEqual(true);
+    expect(link.evil).toBe(true);
+    expect(zelda.evil).toBe(true);
   });
 
   test("it can update records by query", () => {
@@ -621,15 +621,15 @@ describe("Unit | Db #firstOrCreate", function () {
   test("it creates a new record from query + attrs if none found", () => {
     let record = db.contacts.firstOrCreate({ name: "Mario" }, { evil: false });
 
-    expect(record.name).toEqual("Mario");
-    expect(record.evil).toEqual(false);
+    expect(record.name).toBe("Mario");
+    expect(record.evil).toBe(false);
     expect(record.id).toBeTruthy();
   });
 
   test("does not require attrs", () => {
     let record = db.contacts.firstOrCreate({ name: "Luigi" });
 
-    expect(record.name).toEqual("Luigi");
+    expect(record.name).toBe("Luigi");
     expect(record.id).toBeTruthy();
   });
 });

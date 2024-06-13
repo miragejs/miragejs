@@ -27,22 +27,22 @@ describe("External | Shared | ORM | associations", function () {
   });
 
   test("name returns the property used to define the association", function () {
-    expect(fineAuthorAssociation.name).toEqual("fineAuthor");
-    expect(commentsAssociation.name).toEqual("comments");
+    expect(fineAuthorAssociation.name).toBe("fineAuthor");
+    expect(commentsAssociation.name).toBe("comments");
   });
 
   test("modelName returns the modelName of the associated model", function () {
-    expect(fineAuthorAssociation.modelName).toEqual("user");
-    expect(commentsAssociation.modelName).toEqual("comment");
+    expect(fineAuthorAssociation.modelName).toBe("user");
+    expect(commentsAssociation.modelName).toBe("comment");
   });
 
   test("type returns the type of association", function () {
-    expect(fineAuthorAssociation.type).toEqual("belongsTo");
-    expect(commentsAssociation.type).toEqual("hasMany");
+    expect(fineAuthorAssociation.type).toBe("belongsTo");
+    expect(commentsAssociation.type).toBe("hasMany");
   });
 
   test("foreignKey returns the name used for the association's foreign key", function () {
-    expect(fineAuthorAssociation.foreignKey).toEqual("fineAuthorId");
-    expect(commentsAssociation.foreignKey).toEqual("commentIds");
+    expect(fineAuthorAssociation.foreignKey).toBe("fineAuthorId");
+    expect(commentsAssociation.foreignKey).toBe("commentIds");
   });
 });

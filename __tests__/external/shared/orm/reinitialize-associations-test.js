@@ -21,7 +21,7 @@ describe("External | Shared | ORM | reinitialize associations", () => {
     server1.schema.addresses.create({ id: 1, country: "Hyrule" });
     server1.schema.users.create({ id: 1, name: "Link", addressIds: [1] });
 
-    expect(server1.schema.users.find(1).addresses.models[0].country).toEqual(
+    expect(server1.schema.users.find(1).addresses.models[0].country).toBe(
       "Hyrule"
     );
 
@@ -32,7 +32,7 @@ describe("External | Shared | ORM | reinitialize associations", () => {
     server2.schema.addresses.create({ id: 1, country: "Hyrule" });
     server2.schema.users.create({ id: 1, name: "Link", addressIds: [1] });
 
-    expect(server2.schema.users.find(1).addresses.models[0].country).toEqual(
+    expect(server2.schema.users.find(1).addresses.models[0].country).toBe(
       "Hyrule"
     );
 

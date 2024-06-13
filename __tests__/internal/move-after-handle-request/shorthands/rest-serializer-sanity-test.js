@@ -40,7 +40,7 @@ describe("Integration | Server | Shorthands | REST Serializer Sanity check", fun
     let res = await fetch("/contacts");
     let data = await res.json();
 
-    expect(res.status).toEqual(200);
+    expect(res.status).toBe(200);
     expect(data).toEqual({
       contacts: [{ id: "1", name: "Link", addresses: [] }],
     });
@@ -65,9 +65,9 @@ describe("Integration | Server | Shorthands | REST Serializer Sanity check", fun
       }),
     });
 
-    expect(res.status).toEqual(201);
+    expect(res.status).toBe(201);
     expect(server.db.addresses).toHaveLength(1);
-    expect(server.db.addresses[0].contactId).toEqual(1);
+    expect(server.db.addresses[0].contactId).toBe(1);
   });
 
   test("a put shorthand works", async () => {
@@ -88,8 +88,8 @@ describe("Integration | Server | Shorthands | REST Serializer Sanity check", fun
       }),
     });
 
-    expect(res.status).toEqual(200);
-    expect(server.db.contacts[0].name).toEqual("Zelda");
+    expect(res.status).toBe(200);
+    expect(server.db.contacts[0].name).toBe("Zelda");
   });
 
   test("a patch shorthand works", async () => {
@@ -110,8 +110,8 @@ describe("Integration | Server | Shorthands | REST Serializer Sanity check", fun
       }),
     });
 
-    expect(res.status).toEqual(200);
-    expect(server.db.contacts[0].name).toEqual("Zelda");
+    expect(res.status).toBe(200);
+    expect(server.db.contacts[0].name).toBe("Zelda");
   });
 
   test("a delete shorthand works", async () => {
@@ -127,7 +127,7 @@ describe("Integration | Server | Shorthands | REST Serializer Sanity check", fun
       method: "DELETE",
     });
 
-    expect(res.status).toEqual(204);
+    expect(res.status).toBe(204);
     expect(server.db.contacts).toHaveLength(0);
   });
 });

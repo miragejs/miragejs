@@ -26,6 +26,6 @@ describe("External | Shared | Serializers | Base | Array of Models", function ()
     let wordSmiths = server.schema.wordSmiths.all().filter(() => true);
     let result = server.serializerOrRegistry.serialize(wordSmiths);
 
-    expect(result).toEqual("serializer ran");
+    expect(result).toBe("serializer ran");
   });
 });

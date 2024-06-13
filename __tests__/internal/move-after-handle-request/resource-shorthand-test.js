@@ -41,7 +41,7 @@ describe("Integration | Server | Resource shorthand", function () {
     let res = await fetch("/contacts");
     let data = await res.json();
 
-    expect(res.status).toEqual(200);
+    expect(res.status).toBe(200);
     expect(data).toEqual({
       contacts: [
         { id: "1", name: "Link" },
@@ -70,7 +70,7 @@ describe("Integration | Server | Resource shorthand", function () {
     let res = await fetch("/contacts/2");
     let data = await res.json();
 
-    expect(res.status).toEqual(200);
+    expect(res.status).toBe(200);
     expect(data).toEqual({ contact: { id: "2", name: "Zelda" } });
   });
 
@@ -88,7 +88,7 @@ describe("Integration | Server | Resource shorthand", function () {
       }),
     });
 
-    expect(res.status).toEqual(201);
+    expect(res.status).toBe(201);
     expect(server.db.contacts).toHaveLength(1);
   });
 
@@ -111,8 +111,8 @@ describe("Integration | Server | Resource shorthand", function () {
       }),
     });
 
-    expect(res.status).toEqual(200);
-    expect(server.db.contacts[0].name).toEqual("Zelda");
+    expect(res.status).toBe(200);
+    expect(server.db.contacts[0].name).toBe("Zelda");
   });
 
   test("resource generates patch shorthand", async () => {
@@ -134,8 +134,8 @@ describe("Integration | Server | Resource shorthand", function () {
       }),
     });
 
-    expect(res.status).toEqual(200);
-    expect(server.db.contacts[0].name).toEqual("Zelda");
+    expect(res.status).toBe(200);
+    expect(server.db.contacts[0].name).toBe("Zelda");
   });
 
   test("resource generates delete shorthand works", async () => {
@@ -150,7 +150,7 @@ describe("Integration | Server | Resource shorthand", function () {
 
     let res = await fetch("/contacts/1", { method: "DELETE" });
 
-    expect(res.status).toEqual(204);
+    expect(res.status).toBe(204);
     expect(server.db.contacts).toHaveLength(0);
   });
 
@@ -167,10 +167,10 @@ describe("Integration | Server | Resource shorthand", function () {
     server.resource("blog-posts", { path: "/posts" });
 
     let indexResponse = await fetch("/posts");
-    expect(indexResponse.status).toEqual(200);
+    expect(indexResponse.status).toBe(200);
 
     let showResponse = await fetch("/posts/2");
-    expect(showResponse.status).toEqual(200);
+    expect(showResponse.status).toBe(200);
 
     let createResponse = await fetch("/posts", {
       method: "POST",
@@ -180,7 +180,7 @@ describe("Integration | Server | Resource shorthand", function () {
         },
       }),
     });
-    expect(createResponse.status).toEqual(201);
+    expect(createResponse.status).toBe(201);
 
     let updatePutResponse = await fetch("/posts/1", {
       method: "PUT",
@@ -190,7 +190,7 @@ describe("Integration | Server | Resource shorthand", function () {
         },
       }),
     });
-    expect(updatePutResponse.status).toEqual(200);
+    expect(updatePutResponse.status).toBe(200);
 
     let updatePatchResponse = await fetch("/posts/1", {
       method: "PATCH",
@@ -200,10 +200,10 @@ describe("Integration | Server | Resource shorthand", function () {
         },
       }),
     });
-    expect(updatePatchResponse.status).toEqual(200);
+    expect(updatePatchResponse.status).toBe(200);
 
     let deleteResponse = await fetch("/posts/1", { method: "DELETE" });
-    expect(deleteResponse.status).toEqual(204);
+    expect(deleteResponse.status).toBe(204);
   });
 
   test("resource accepts singular name", async () => {
@@ -226,7 +226,7 @@ describe("Integration | Server | Resource shorthand", function () {
     let contactsResponse = await fetch("/contacts");
     let contactsResponseData = await contactsResponse.json();
 
-    expect(contactsResponse.status).toEqual(200);
+    expect(contactsResponse.status).toBe(200);
     expect(contactsResponseData).toEqual({
       contacts: [
         { id: "1", name: "Link" },
@@ -237,7 +237,7 @@ describe("Integration | Server | Resource shorthand", function () {
     let postsResponse = await fetch("/posts");
     let postsResponseData = await postsResponse.json();
 
-    expect(postsResponse.status).toEqual(200);
+    expect(postsResponse.status).toBe(200);
     expect(postsResponseData).toEqual({
       blog_posts: [
         { id: "1", title: "Post 1" },
@@ -266,7 +266,7 @@ describe("Integration | Server | Resource shorthand", function () {
 
     let res = await fetch("/contacts");
 
-    expect(res.status).toEqual(200);
+    expect(res.status).toBe(200);
   });
 
   test("resource does not generate shorthands which are not whitelisted with :only option", async () => {
@@ -305,10 +305,10 @@ describe("Integration | Server | Resource shorthand", function () {
     server.resource("contacts", { except: ["create", "update", "delete"] });
 
     let indexResponse = await fetch("/contacts");
-    expect(indexResponse.status).toEqual(200);
+    expect(indexResponse.status).toBe(200);
 
     let showResponse = await fetch("/contacts/1");
-    expect(showResponse.status).toEqual(200);
+    expect(showResponse.status).toBe(200);
   });
 
   test("resource does not generate shorthands which are blacklisted by :except option", async () => {

@@ -29,7 +29,7 @@ describe("External | Shared | ORM | attrs", () => {
   test("attributes can be read via plain property access", () => {
     let user = server.schema.users.find(1);
 
-    expect(user.name).toEqual("Link");
+    expect(user.name).toBe("Link");
   });
 
   test("toJSON should return a copy of attrs so they cannot be mutated", () => {
@@ -39,6 +39,6 @@ describe("External | Shared | ORM | attrs", () => {
     expect(json).toEqual({ id: "1", name: "Link", evil: false });
 
     json.name = "Young Link";
-    expect(user.name).toEqual("Link");
+    expect(user.name).toBe("Link");
   });
 });

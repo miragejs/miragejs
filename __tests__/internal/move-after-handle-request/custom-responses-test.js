@@ -24,7 +24,7 @@ describe("Integration | Server | Custom responses", function () {
     let data = await res.json();
 
     expect(data).toEqual({});
-    expect(res.status).toEqual(200);
+    expect(res.status).toBe(200);
     expect([...res.headers.entries()]).toEqual([
       ["content-type", "application/json"],
     ]);
@@ -39,7 +39,7 @@ describe("Integration | Server | Custom responses", function () {
     let data = await res.json();
 
     expect(data).toEqual({});
-    expect(res.status).toEqual(200);
+    expect(res.status).toBe(200);
     expect([...res.headers.entries()]).toEqual([
       ["content-type", "application/json"],
     ]);
@@ -53,8 +53,8 @@ describe("Integration | Server | Custom responses", function () {
     let res = await fetch("/example", { method: "POST" });
     let text = await res.text();
 
-    expect(text).toEqual("");
-    expect(res.status).toEqual(204);
+    expect(text).toBe("");
+    expect(res.status).toBe(204);
     expect([...res.headers.entries()]).toEqual([
       ["content-type", "text/plain;charset=UTF-8"],
     ]);

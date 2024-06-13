@@ -49,7 +49,7 @@ describe("Integration | Route Handlers | HEAD shorthand", () => {
     let response = handler.handle(request);
 
     expect(response instanceof Response).toBeTruthy();
-    expect(response.code).toEqual(404);
+    expect(response.code).toBe(404);
   });
 
   test("undefined shorthand with an ID that is in the DB will return a 204 Response", () => {
@@ -64,7 +64,7 @@ describe("Integration | Route Handlers | HEAD shorthand", () => {
     let response = handler.handle(request);
 
     expect(response instanceof Response).toBeTruthy();
-    expect(response.code).toEqual(204);
+    expect(response.code).toBe(204);
   });
 
   test("undefined shorthand with coalesce true will return a 204 response if one of the IDs are found", () => {
@@ -84,7 +84,7 @@ describe("Integration | Route Handlers | HEAD shorthand", () => {
     let response = handler.handle(request);
 
     expect(response instanceof Response).toBeTruthy();
-    expect(response.code).toEqual(204);
+    expect(response.code).toBe(204);
   });
 
   test("undefined shorthand string (no id) shorthand returns a 204 (regardless of the length of the collection)", () => {
@@ -99,7 +99,7 @@ describe("Integration | Route Handlers | HEAD shorthand", () => {
     let response = handler.handle(request);
 
     expect(response instanceof Response).toBeTruthy();
-    expect(response.code).toEqual(204);
+    expect(response.code).toBe(204);
   });
 
   test("string shorthand with an ID that is not in the DB will return a 404 Response", () => {
@@ -109,7 +109,7 @@ describe("Integration | Route Handlers | HEAD shorthand", () => {
     let response = handler.handle(request);
 
     expect(response instanceof Response).toBeTruthy();
-    expect(response.code).toEqual(404);
+    expect(response.code).toBe(404);
   });
 
   test("string shorthand with an ID that is in the DB will return a 204 Response", () => {
@@ -119,7 +119,7 @@ describe("Integration | Route Handlers | HEAD shorthand", () => {
     let response = handler.handle(request);
 
     expect(response instanceof Response).toBeTruthy();
-    expect(response.code).toEqual(204);
+    expect(response.code).toBe(204);
   });
 
   test("string shorthand with coalesce true will return a 204 response if one of the IDs are found", () => {
@@ -139,7 +139,7 @@ describe("Integration | Route Handlers | HEAD shorthand", () => {
     let response = handler.handle(request);
 
     expect(response instanceof Response).toBeTruthy();
-    expect(response.code).toEqual(204);
+    expect(response.code).toBe(204);
   });
 
   test("string shorthand string (no id) shorthand returns a 204 (regardless of the length of the collection)", () => {
@@ -149,6 +149,6 @@ describe("Integration | Route Handlers | HEAD shorthand", () => {
     let response = handler.handle(request);
 
     expect(response instanceof Response).toBeTruthy();
-    expect(response.code).toEqual(204);
+    expect(response.code).toBe(204);
   });
 });

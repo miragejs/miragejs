@@ -42,7 +42,7 @@ describe("External | Shared | Factories | afterCreate", () => {
   test("it works for models", () => {
     let author = server.create("author");
 
-    expect(author.name).toEqual("Sam");
+    expect(author.name).toBe("Sam");
     expect(server.db.posts).toHaveLength(1);
     expect(server.db.posts[0]).toEqual({
       id: "1",

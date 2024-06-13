@@ -33,7 +33,7 @@ describe("Integration | Server | Shorthands | Active Model Serializer Sanity che
     let res = await fetch("/contacts");
     let data = await res.json();
 
-    expect(res.status).toEqual(200);
+    expect(res.status).toBe(200);
     expect(data).toEqual({ contacts: [{ id: "1", name: "Link" }] });
   });
 
@@ -51,7 +51,7 @@ describe("Integration | Server | Shorthands | Active Model Serializer Sanity che
       }),
     });
 
-    expect(res.status).toEqual(201);
+    expect(res.status).toBe(201);
     expect(server.db.contacts).toHaveLength(1);
   });
 
@@ -73,8 +73,8 @@ describe("Integration | Server | Shorthands | Active Model Serializer Sanity che
       }),
     });
 
-    expect(res.status).toEqual(200);
-    expect(server.db.contacts[0].name).toEqual("Zelda");
+    expect(res.status).toBe(200);
+    expect(server.db.contacts[0].name).toBe("Zelda");
   });
 
   test("a patch shorthand works", async () => {
@@ -95,8 +95,8 @@ describe("Integration | Server | Shorthands | Active Model Serializer Sanity che
       }),
     });
 
-    expect(res.status).toEqual(200);
-    expect(server.db.contacts[0].name).toEqual("Zelda");
+    expect(res.status).toBe(200);
+    expect(server.db.contacts[0].name).toBe("Zelda");
   });
 
   test("a delete shorthand works", async () => {
@@ -113,8 +113,8 @@ describe("Integration | Server | Shorthands | Active Model Serializer Sanity che
     });
     let text = await res.text();
 
-    expect(text).toEqual("");
-    expect(res.status).toEqual(204);
+    expect(text).toBe("");
+    expect(res.status).toBe(204);
     expect(server.db.contacts).toHaveLength(0);
   });
 });
