@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  parser: "babel-eslint",
+  parser: "@babel/eslint-parser",
   plugins: ["import"],
   extends: [
     "eslint:recommended",
@@ -32,7 +32,7 @@ module.exports = {
         "jest.config.js",
         "babel.config.js",
         "rollup.config.js",
-        "rollup.test.config.js",
+        "rollup.test.config.mjs",
       ],
       env: {
         browser: false,
