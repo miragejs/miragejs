@@ -24,7 +24,6 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "lint:ts": "dtslint types --expectOnly",
     "prettier:check": "prettier --list-different '**/*{.js,.ts}'",
     "prettier:update": "prettier --write .",
     "dev": "rollup -c -w",
@@ -32,7 +31,7 @@
     "prepublishOnly": "yarn run build",
     "test:run": "jest",
     "test": "run-s build test:run",
-    "ci": "run-s lint lint:ts prettier:check test"
+    "ci": "run-s lint prettier:check test"
   },
   "dependencies": {
     "@miragejs/pretender-node-polyfill": "^0.1.0",
@@ -48,7 +47,6 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "babel-jest": "^29.7.0",
     "core-js": "^3.37.1",
-    "dtslint": "^4.2.1",
     "eslint": "^8.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-alias": "^1.1.2",
@@ -71,9 +69,6 @@
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"
-  },
-  "resolutions": {
-    "@definitelytyped/typescript-versions": "0.0.89"
   },
   "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }

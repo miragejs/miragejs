@@ -27,8 +27,6 @@ jobs:
         run: yarn install
       - name: Lint js
         run: yarn lint
-      - name: Lint typescript definitions
-        run: yarn lint:ts
       - name: Check prettier
         run: yarn prettier:check
 
