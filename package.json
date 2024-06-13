@@ -41,10 +41,10 @@
     "pretender": "^3.4.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.9.0",
-    "babel-eslint": "^10.0.2",
-    "babel-jest": "^27.2.4",
+    "@babel/core": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^29.7.0",
     "core-js": "^3",
     "dtslint": "^4.1.6",
     "eslint": "^7.4.0",
