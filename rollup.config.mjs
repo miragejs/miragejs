@@ -54,7 +54,7 @@ function isExternal(id) {
 
 let esm = {
   input: "lib/index.js",
-  output: { file: `dist/mirage-esm.js`, sourcemap: true, format: "esm" },
+  output: { file: `dist/mirage.mjs`, sourcemap: true, format: "esm" },
   external: isExternal,
   plugins: [
     alias(aliases),
@@ -79,7 +79,7 @@ let esm = {
 let cjs = {
   input: "lib/index.js",
   output: {
-    file: `dist/mirage-cjs.js`,
+    file: `dist/mirage.js`,
     sourcemap: true,
     format: "cjs",
     esModule: true,
