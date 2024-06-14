@@ -42,7 +42,7 @@ jobs:
         os: [ubuntu-latest]
         node_version: [18, 20, 22]
         include:
-          - os: macos-latest
+          - os: macos-13
             node_version: 20
       fail-fast: false
 
