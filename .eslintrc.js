@@ -23,7 +23,7 @@ module.exports = {
     "no-unused-vars": ["error", { args: "none" }],
     "import/no-extraneous-dependencies": [
       "error",
-      { devDependencies: ["__tests__", "*.config.js"] },
+      { devDependencies: ["__tests__", "*.config.js", "*.config.mjs"] },
     ],
   },
   overrides: [
