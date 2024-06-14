@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+env:
+  # 7 GiB by default on GitHub, setting to 6 GiB for node
+  # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+  NODE_OPTIONS: --max-old-space-size=6144
+
 jobs:
   lint:
     runs-on: ${{ matrix.os }}
