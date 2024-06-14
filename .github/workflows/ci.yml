@@ -57,5 +57,7 @@ jobs:
           cache: yarn
       - name: Install dependencies
         run: yarn install
+      - name: Build
+        run: yarn build
       - name: Run tests
-        run: yarn test
+        run: yarn test:run --maxWorkers=4
