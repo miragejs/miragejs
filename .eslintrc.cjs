@@ -58,7 +58,7 @@ module.exports = {
         ["miragejs", "./index"],
       ],
       node: {
-        extensions: ["js"],
+        extensions: ["js", "cjs", "mjs"],
       },
     },
   },
