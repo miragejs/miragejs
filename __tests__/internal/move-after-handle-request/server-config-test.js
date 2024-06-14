@@ -213,7 +213,7 @@ describe("Integration | Server Config", () => {
     });
     server.get("contacts");
 
-    expect(server.timing).toEqual(1000);
+    expect(server.timing).toBe(1000);
 
     let res = await fetch("http://localhost:3000/api/contacts");
     let data = await res.json();
@@ -233,13 +233,13 @@ describe("Integration | Server Config", () => {
       timing: 1000,
     });
 
-    expect(server.timing).toEqual(1000);
+    expect(server.timing).toBe(1000);
 
     server.config({
       timing: 500,
     });
 
-    expect(server.timing).toEqual(500);
+    expect(server.timing).toBe(500);
   });
 
   test("changing the environment of the server throws an error", () => {

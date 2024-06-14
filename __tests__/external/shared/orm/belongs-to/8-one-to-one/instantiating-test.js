@@ -38,7 +38,7 @@ describe("External | Shared | ORM | Belongs To | One To One | instantiating", ()
     let profile = helper.savedParent();
     let user = schema.users.new({ profile });
 
-    expect(user.profileId).toEqual("1");
+    expect(user.profileId).toBe("1");
     expect(user.profile.attrs).toEqual(profile.attrs);
     expect(user.attrs).toEqual({ profileId: null }); // this would update when saved
   });
@@ -64,7 +64,7 @@ describe("External | Shared | ORM | Belongs To | One To One | instantiating", ()
     let profile = helper.savedParent();
     let user = schema.users.new({ profile, profileId: profile.id });
 
-    expect(user.profileId).toEqual("1");
+    expect(user.profileId).toBe("1");
     expect(user.profile).toEqual(profile);
     expect(user.attrs).toEqual({ profileId: profile.id });
   });

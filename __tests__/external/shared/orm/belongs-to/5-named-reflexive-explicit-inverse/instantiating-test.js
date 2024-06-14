@@ -38,7 +38,7 @@ describe("External | Shared | ORM | Belongs To | Named Reflexive Explicit Invers
     let friend = helper.savedParent();
     let user = schema.users.new({ bestFriend: friend });
 
-    expect(user.bestFriendId).toEqual("1");
+    expect(user.bestFriendId).toBe("1");
     expect(user.bestFriend.attrs).toEqual(friend.attrs);
     expect(user.attrs).toEqual({ bestFriendId: null }); // this would update when saved
   });
@@ -67,7 +67,7 @@ describe("External | Shared | ORM | Belongs To | Named Reflexive Explicit Invers
       bestFriendId: friend.id,
     });
 
-    expect(user.bestFriendId).toEqual("1");
+    expect(user.bestFriendId).toBe("1");
     expect(user.bestFriend).toEqual(friend);
     expect(user.attrs).toEqual({ bestFriendId: friend.id });
   });

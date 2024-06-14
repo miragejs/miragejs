@@ -24,7 +24,7 @@ describe("Integration | Server | Falsy responses", function () {
     let data = await res.json();
 
     expect(data).toEqual({});
-    expect(res.status).toEqual(200);
+    expect(res.status).toBe(200);
     expect([...res.headers.entries()]).toEqual([
       ["content-type", "application/json"],
     ]);
@@ -39,7 +39,7 @@ describe("Integration | Server | Falsy responses", function () {
     let data = await res.json();
 
     expect(data).toBeNull();
-    expect(res.status).toEqual(200);
+    expect(res.status).toBe(200);
     expect([...res.headers.entries()]).toEqual([
       ["content-type", "application/json"],
     ]);
@@ -54,7 +54,7 @@ describe("Integration | Server | Falsy responses", function () {
     let data = await res.json();
 
     expect(data).toEqual({});
-    expect(res.status).toEqual(200);
+    expect(res.status).toBe(200);
     expect([...res.headers.entries()]).toEqual([
       ["content-type", "application/json"],
     ]);
@@ -69,7 +69,7 @@ describe("Integration | Server | Falsy responses", function () {
     let data = await res.json();
 
     expect(data).toEqual({});
-    expect(res.status).toEqual(200);
+    expect(res.status).toBe(200);
     expect([...res.headers.entries()]).toEqual([
       ["content-type", "application/json"],
     ]);

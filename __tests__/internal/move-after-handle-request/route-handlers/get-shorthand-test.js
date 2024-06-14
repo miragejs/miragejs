@@ -76,7 +76,7 @@ describe("Integration | Route Handlers | GET shorthand", () => {
 
     expect(authors.models).toHaveLength(3);
     expect(authors.models[0] instanceof Model).toBeTruthy();
-    expect(authors.models[0].modelName).toEqual("author");
+    expect(authors.models[0].modelName).toBe("author");
   });
 
   test("undefined shorthand ignores query params", () => {
@@ -92,7 +92,7 @@ describe("Integration | Route Handlers | GET shorthand", () => {
 
     expect(authors.models).toHaveLength(3);
     expect(authors.models[0] instanceof Model).toBeTruthy();
-    expect(authors.models[0].modelName).toEqual("author");
+    expect(authors.models[0].modelName).toBe("author");
   });
 
   test("undefined shorthand can return a single model", () => {
@@ -107,8 +107,8 @@ describe("Integration | Route Handlers | GET shorthand", () => {
     let author = handler.handle(request);
 
     expect(author instanceof Model).toBeTruthy();
-    expect(author.modelName).toEqual("author");
-    expect(author.name).toEqual("Zelda");
+    expect(author.modelName).toBe("author");
+    expect(author.name).toBe("Zelda");
   });
 
   test("undefined shorthand returns a 404 if a singular resource does not exist", () => {
@@ -123,7 +123,7 @@ describe("Integration | Route Handlers | GET shorthand", () => {
     let author = handler.handle(request);
 
     expect(author instanceof Response).toBeTruthy();
-    expect(author.code).toEqual(404);
+    expect(author.code).toBe(404);
   });
 
   test("undefined shorthand ignores query params for a singular resource", () => {
@@ -138,8 +138,8 @@ describe("Integration | Route Handlers | GET shorthand", () => {
     let author = handler.handle(request);
 
     expect(author instanceof Model).toBeTruthy();
-    expect(author.modelName).toEqual("author");
-    expect(author.name).toEqual("Zelda");
+    expect(author.modelName).toBe("author");
+    expect(author.name).toBe("Zelda");
   });
 
   test("undefined shorthand with coalesce true returns the appropriate models [JSONAPI]", () => {
@@ -196,7 +196,7 @@ describe("Integration | Route Handlers | GET shorthand", () => {
 
     expect(authors.models).toHaveLength(3);
     expect(authors.models[0] instanceof Model).toBeTruthy();
-    expect(authors.models[0].modelName).toEqual("author");
+    expect(authors.models[0].modelName).toBe("author");
   });
 
   test("string shorthand with an id returns the correct model", () => {
@@ -206,8 +206,8 @@ describe("Integration | Route Handlers | GET shorthand", () => {
     let author = handler.handle(request);
 
     expect(author instanceof Model).toBeTruthy();
-    expect(author.modelName).toEqual("author");
-    expect(author.name).toEqual("Zelda");
+    expect(author.modelName).toBe("author");
+    expect(author.name).toBe("Zelda");
   });
 
   test("string shorthand with an id 404s if the model is not found", () => {
@@ -217,7 +217,7 @@ describe("Integration | Route Handlers | GET shorthand", () => {
     let author = handler.handle(request);
 
     expect(author instanceof Response).toBeTruthy();
-    expect(author.code).toEqual(404);
+    expect(author.code).toBe(404);
   });
 
   test("string shorthand with coalesce returns the correct models [JSONAPI]", () => {
@@ -279,11 +279,11 @@ describe("Integration | Route Handlers | GET shorthand", () => {
     let models = handler.handle(request);
 
     expect(models[0] instanceof Collection).toBeTruthy();
-    expect(models[0].modelName).toEqual("author");
+    expect(models[0].modelName).toBe("author");
     expect(models[0].models).toHaveLength(authors.length);
 
     expect(models[1] instanceof Collection).toBeTruthy();
-    expect(models[1].modelName).toEqual("photo");
+    expect(models[1].modelName).toBe("photo");
     expect(models[1].models).toHaveLength(photos.length);
   });
 
@@ -315,7 +315,7 @@ describe("Integration | Route Handlers | GET shorthand", () => {
 
     expect(models.models).toHaveLength(1);
     expect(models.models[0] instanceof Model).toBeTruthy();
-    expect(models.models[0].modelName).toEqual("project-owner");
+    expect(models.models[0].modelName).toBe("project-owner");
   });
 
   test("if a shorthand tries to access an unknown type it throws an error", () => {

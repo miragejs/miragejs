@@ -52,7 +52,7 @@ describe("Integration | Route handlers | Function handler", () => {
     let res = await fetch("/users");
     let text = await res.text();
 
-    expect(text).toEqual("firstname,lastname\nbob,dylon");
+    expect(text).toBe("firstname,lastname\nbob,dylon");
   });
 
   test("it can return a promise with non-serializable content", async () => {
@@ -73,7 +73,7 @@ describe("Integration | Route handlers | Function handler", () => {
     let res = await fetch("/users");
     let text = await res.text();
 
-    expect(text).toEqual("firstname,lastname\nbob,dylan");
+    expect(text).toBe("firstname,lastname\nbob,dylan");
   });
 
   test("it can return a promise with serializable content", async () => {
@@ -105,8 +105,8 @@ describe("Integration | Route handlers | Function handler", () => {
     let res = await fetch("/users");
     let text = await res.text();
 
-    expect(text).toEqual("");
-    expect(res.status).toEqual(200);
+    expect(text).toBe("");
+    expect(res.status).toBe(200);
     expect([...res.headers.entries()]).toEqual([["content-type", "text/csv"]]);
   });
 

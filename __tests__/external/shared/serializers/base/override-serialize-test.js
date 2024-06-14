@@ -32,7 +32,7 @@ describe("External | Shared | Serializers | Base | Overriding Serialize", functi
 
     let result = server.serializerOrRegistry.serialize(wordSmith);
 
-    expect(result).toEqual("blah");
+    expect(result).toBe("blah");
   });
 
   test(`it can access the request in a custom serialize function`, () => {
@@ -58,7 +58,7 @@ describe("External | Shared | Serializers | Base | Overriding Serialize", functi
     };
     let result = server.serializerOrRegistry.serialize(wordSmith, request);
 
-    expect(result).toEqual("bar");
+    expect(result).toBe("bar");
   });
 
   test(`it can access the databse while in a serializer method`, () => {
@@ -85,6 +85,6 @@ describe("External | Shared | Serializers | Base | Overriding Serialize", functi
     };
     let result = server.serializerOrRegistry.serialize(wordSmith, request);
 
-    expect(result).toEqual("Title in database");
+    expect(result).toBe("Title in database");
   });
 });

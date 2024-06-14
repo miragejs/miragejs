@@ -18,6 +18,6 @@ describe("External | Shared | ORM | Belongs To | Basic | regressions", function 
     });
 
     let post = server.schema.posts.find(1);
-    expect(post.author.name).toEqual("Foo");
+    expect(post.author.name).toBe("Foo");
   });
 });

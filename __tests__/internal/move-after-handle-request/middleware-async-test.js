@@ -32,7 +32,7 @@ describe("Integration | Middleware | async", () => {
     });
 
     let data = await fetch("/path").then((res) => res.text());
-    expect(data).toEqual("yay");
+    expect(data).toBe("yay");
   });
 
   test("await call AFTER calling next()", async () => {
@@ -52,7 +52,7 @@ describe("Integration | Middleware | async", () => {
     });
 
     let data = await fetch("/path").then((res) => res.text());
-    expect(data).toEqual("yay");
+    expect(data).toBe("yay");
   });
 
   test("asynchronous callback BEFORE calling next()", async () => {
@@ -73,7 +73,7 @@ describe("Integration | Middleware | async", () => {
     });
 
     let data = await fetch("/path").then((res) => res.text());
-    expect(data).toEqual("yay");
+    expect(data).toBe("yay");
   });
 
   test("asynchronous callback AFTER calling next()", async () => {
@@ -93,7 +93,7 @@ describe("Integration | Middleware | async", () => {
     });
 
     let data = await fetch("/path").then((res) => res.text());
-    expect(data).toEqual("yay");
+    expect(data).toBe("yay");
   });
 
   test("mixing async/await and callback-based middleware", async () => {

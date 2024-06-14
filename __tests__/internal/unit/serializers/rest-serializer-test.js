@@ -47,5 +47,5 @@ describe("Unit | Serializers | RestSerializer", function () {
 
 test('serializeIds defaults to "always"', () => {
   let defaultState = new RestSerializer();
-  expect(defaultState.serializeIds).toEqual("always");
+  expect(defaultState.serializeIds).toBe("always");
 });

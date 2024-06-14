@@ -111,7 +111,7 @@ describe("External |Browser only | Fetch sanity check", () => {
       method: "GET",
     });
 
-    expect(res.status).toEqual(404);
+    expect(res.status).toBe(404);
   });
 
   test("mirage responds to options", async () => {

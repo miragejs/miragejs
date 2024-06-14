@@ -25,7 +25,7 @@ describe("Integration | Middleware", () => {
 
     let data = await fetch("/users").then((res) => res.text());
 
-    expect(data).toEqual("from middleware");
+    expect(data).toBe("from middleware");
   });
 
   test("invokes the route handler by calling next()", async () => {
@@ -107,8 +107,8 @@ describe("Integration | Middleware", () => {
     let users = await fetch("/users").then((res) => res.text());
     let frogs = await fetch("/frogs").then((res) => res.text());
 
-    expect(users).toEqual("from first middleware");
-    expect(frogs).toEqual("from second middleware");
+    expect(users).toBe("from first middleware");
+    expect(frogs).toBe("from second middleware");
   });
 
   test("can pass different request objects down the line", async () => {

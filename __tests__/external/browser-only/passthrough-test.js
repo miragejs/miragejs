@@ -36,7 +36,7 @@ describe("External | Browser only | Passthrough", () => {
 
     let res = await fetch("/contacts");
     let data = await res.json();
-    expect(data).toEqual(123);
+    expect(data).toBe(123);
 
     await expect(fetch("/addresses")).rejects.toThrow(`Network request failed`);
   });
@@ -53,7 +53,7 @@ describe("External | Browser only | Passthrough", () => {
 
     let res = await fetch("/contacts");
     let data = await res.json();
-    expect(data).toEqual(123);
+    expect(data).toBe(123);
 
     await expect(fetch("/addresses")).rejects.toThrow(
       `Mirage: Your app tried to GET '/addresses', but there was no route defined to handle this request`
@@ -119,7 +119,7 @@ describe("External | Browser only | Passthrough", () => {
 
     let res = await fetch("/contacts");
     let data = await res.json();
-    expect(data).toEqual(123);
+    expect(data).toBe(123);
 
     await expect(fetch("/addresses")).rejects.toThrow("Network request failed");
   });
@@ -136,7 +136,7 @@ describe("External | Browser only | Passthrough", () => {
 
     let res = await fetch("/contacts");
     let data = await res.json();
-    expect(data).toEqual(123);
+    expect(data).toBe(123);
 
     await expect(fetch("/")).rejects.toThrow("Network request failed");
   });

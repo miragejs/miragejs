@@ -54,8 +54,8 @@ describe("Integration | Route Handlers | PUT shorthand", () => {
 
     expect(schema.db.authors).toHaveLength(1);
     expect(model instanceof Model).toBeTruthy();
-    expect(model.modelName).toEqual("author");
-    expect(model.firstName).toEqual("Ganondorf");
+    expect(model.modelName).toBe("author");
+    expect(model.firstName).toBe("Ganondorf");
   });
 
   test("query params are ignored", () => {
@@ -71,8 +71,8 @@ describe("Integration | Route Handlers | PUT shorthand", () => {
 
     expect(schema.db.authors).toHaveLength(1);
     expect(model instanceof Model).toBeTruthy();
-    expect(model.modelName).toEqual("author");
-    expect(model.firstName).toEqual("Ganondorf");
+    expect(model.modelName).toBe("author");
+    expect(model.firstName).toBe("Ganondorf");
   });
 
   test("string shorthand updates the record of the specified type and returns the model", () => {
@@ -92,8 +92,8 @@ describe("Integration | Route Handlers | PUT shorthand", () => {
 
     expect(schema.db.authors).toHaveLength(1);
     expect(model instanceof Model).toBeTruthy();
-    expect(model.modelName).toEqual("author");
-    expect(model.firstName).toEqual("Ganondorf");
+    expect(model.modelName).toBe("author");
+    expect(model.firstName).toBe("Ganondorf");
   });
 
   test("if a shorthand tries to access an unknown type it throws an error", () => {

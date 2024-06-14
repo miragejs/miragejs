@@ -59,9 +59,9 @@ describe("Integration | Server | Customized normalize method", function () {
       }),
     });
 
-    expect(res.status).toEqual(201);
+    expect(res.status).toBe(201);
     expect(server.db.contacts).toHaveLength(1);
-    expect(server.db.contacts[0].firstName).toEqual("Zelda");
+    expect(server.db.contacts[0].firstName).toBe("Zelda");
   });
 
   test("custom model-specific normalize functions are used with custom function handlers", async () => {

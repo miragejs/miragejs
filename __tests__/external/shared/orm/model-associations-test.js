@@ -29,11 +29,11 @@ describe("External | Shared | ORM | Model | associations", () => {
     let postAssociations = post.associations;
 
     expect(Object.keys(postAssociations)).toEqual(["user", "comments"]);
-    expect(postAssociations.user.name).toEqual("user");
-    expect(postAssociations.user.modelName).toEqual("user");
-    expect(postAssociations.user.type).toEqual("belongsTo");
-    expect(postAssociations.comments.name).toEqual("comments");
-    expect(postAssociations.comments.modelName).toEqual("comment");
-    expect(postAssociations.comments.type).toEqual("hasMany");
+    expect(postAssociations.user.name).toBe("user");
+    expect(postAssociations.user.modelName).toBe("user");
+    expect(postAssociations.user.type).toBe("belongsTo");
+    expect(postAssociations.comments.name).toBe("comments");
+    expect(postAssociations.comments.modelName).toBe("comment");
+    expect(postAssociations.comments.type).toBe("hasMany");
   });
 });

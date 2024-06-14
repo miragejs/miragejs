@@ -38,7 +38,7 @@ describe("External | Shared | ORM | #all", function () {
     let users = server.schema.users.all();
 
     expect(users instanceof Collection).toBeTruthy();
-    expect(users.modelName).toEqual("user");
+    expect(users.modelName).toBe("user");
     expect(users.models).toHaveLength(0);
   });
 });

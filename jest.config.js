@@ -1,6 +1,6 @@
 let internal = {
   displayName: "internal",
-  setupFilesAfterEnv: ["jest-extended"],
+  setupFilesAfterEnv: ["jest-extended/all"],
   testEnvironment: "jsdom",
   testMatch: ["**/__tests__/internal/**/*-test.[jt]s?(x)"],
   moduleNameMapper: {
@@ -13,7 +13,7 @@ let internal = {
 let browserEnvironmentConsumingEsm = {
   displayName: "browserEnvironmentConsumingEsm",
   testEnvironment: "jsdom",
-  setupFilesAfterEnv: ["jest-extended"],
+  setupFilesAfterEnv: ["jest-extended/all"],
   testMatch: [
     "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
     "**/__tests__/external/browser-only/**/*-test.[jt]s?(x)",
@@ -27,7 +27,7 @@ let browserEnvironmentConsumingEsm = {
 let nodeEnvironmentConsumingEsm = {
   displayName: "nodeEnvironmentConsumingEsm",
   testEnvironment: "node",
-  setupFilesAfterEnv: ["jest-extended"],
+  setupFilesAfterEnv: ["jest-extended/all"],
   testMatch: [
     "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
     "**/__tests__/external/node-only/**/*-test.[jt]s?(x)",
@@ -41,7 +41,7 @@ let nodeEnvironmentConsumingEsm = {
 let browserEnvironmentConsumingCjs = {
   displayName: "browserEnvironmentConsumingCjs",
   testEnvironment: "jsdom",
-  setupFilesAfterEnv: ["jest-extended"],
+  setupFilesAfterEnv: ["jest-extended/all"],
   testMatch: [
     "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
     "**/__tests__/external/browser-only/**/*-test.[jt]s?(x)",
@@ -55,7 +55,7 @@ let browserEnvironmentConsumingCjs = {
 let nodeEnvironmentConsumingCjs = {
   displayName: "nodeEnvironmentConsumingCjs",
   testEnvironment: "node",
-  setupFilesAfterEnv: ["jest-extended"],
+  setupFilesAfterEnv: ["jest-extended/all"],
   testMatch: [
     "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
     "**/__tests__/external/node-only/**/*-test.[jt]s?(x)",
@@ -69,7 +69,7 @@ let nodeEnvironmentConsumingCjs = {
 let browserEnvironmentConsumingUmd = {
   displayName: "browserEnvironmentConsumingUmd",
   testEnvironment: "jsdom",
-  setupFilesAfterEnv: ["jest-extended"],
+  setupFilesAfterEnv: ["jest-extended/all"],
   testMatch: [
     "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
     "**/__tests__/external/browser-only/**/*-test.[jt]s?(x)",

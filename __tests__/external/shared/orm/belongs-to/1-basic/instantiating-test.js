@@ -39,7 +39,7 @@ describe("External | Shared | ORM | Belongs To | Basic | instantiating", () => {
     let author = helper.savedParent();
     let post = schema.posts.new({ author });
 
-    expect(post.authorId).toEqual("1");
+    expect(post.authorId).toBe("1");
     expect(post.author).toEqual(author);
   });
 
@@ -64,7 +64,7 @@ describe("External | Shared | ORM | Belongs To | Basic | instantiating", () => {
     let author = helper.savedParent();
     let post = schema.posts.new({ author, authorId: author.id });
 
-    expect(post.authorId).toEqual("1");
+    expect(post.authorId).toBe("1");
     expect(post.author).toEqual(author);
     expect(post.attrs).toEqual({ authorId: author.id });
   });

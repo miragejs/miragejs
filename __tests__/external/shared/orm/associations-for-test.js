@@ -39,13 +39,13 @@ describe("External | Shared | ORM | associationsFor", function () {
 
     let fineAuthorAssociation = associations.fineAuthor;
 
-    expect(fineAuthorAssociation.type).toEqual("belongsTo");
-    expect(fineAuthorAssociation.modelName).toEqual("user");
-    expect(fineAuthorAssociation.name).toEqual("fineAuthor");
+    expect(fineAuthorAssociation.type).toBe("belongsTo");
+    expect(fineAuthorAssociation.modelName).toBe("user");
+    expect(fineAuthorAssociation.name).toBe("fineAuthor");
 
     let commentsAssociation = associations.comments;
-    expect(commentsAssociation.type).toEqual("hasMany");
-    expect(commentsAssociation.modelName).toEqual("comment");
-    expect(commentsAssociation.name).toEqual("comments");
+    expect(commentsAssociation.type).toBe("hasMany");
+    expect(commentsAssociation.modelName).toBe("comment");
+    expect(commentsAssociation.name).toBe("comments");
   });
 });

@@ -19,7 +19,7 @@ describe("Unit | Response", function () {
     let response = new Response(200, {}, {});
 
     expect(response).toBeTruthy();
-    expect(response.headers["Content-Type"]).toEqual("application/json");
+    expect(response.headers["Content-Type"]).toBe("application/json");
   });
 
   test("it does not add Content-Type for a 204 response", () => {

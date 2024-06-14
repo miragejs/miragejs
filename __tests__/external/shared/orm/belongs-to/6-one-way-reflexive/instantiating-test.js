@@ -38,7 +38,7 @@ describe("External | Shared | ORM | Belongs To | One-Way Reflexive | instantiati
     let parent = helper.savedParent();
     let child = schema.users.new({ user: parent });
 
-    expect(child.userId).toEqual("1");
+    expect(child.userId).toBe("1");
     expect(child.user.attrs).toEqual(parent.attrs);
   });
 
@@ -63,7 +63,7 @@ describe("External | Shared | ORM | Belongs To | One-Way Reflexive | instantiati
     let parent = helper.savedParent();
     let child = schema.users.new({ user: parent, userId: parent.id });
 
-    expect(child.userId).toEqual("1");
+    expect(child.userId).toBe("1");
     expect(child.user.attrs).toEqual(parent.attrs);
     expect(child.attrs).toEqual({ userId: parent.id });
   });

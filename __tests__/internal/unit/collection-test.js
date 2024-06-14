@@ -16,7 +16,7 @@ describe("Unit | Collection", function () {
   test("it knows its modelname", () => {
     let collection = new Collection("author");
 
-    expect(collection.modelName).toEqual("author");
+    expect(collection.modelName).toBe("author");
   });
 
   test("it can be instantiated with an array of models", () => {

@@ -34,13 +34,13 @@ describe("External | Shared | ORM | collection", () => {
 
   test("a collection can reload its models", () => {
     let collection = server.schema.users.all();
-    expect(collection.models[0].name).toEqual("Link");
+    expect(collection.models[0].name).toBe("Link");
 
     collection.models[0].name = "Sam";
-    expect(collection.models[0].name).toEqual("Sam");
+    expect(collection.models[0].name).toBe("Sam");
 
     collection.reload();
-    expect(collection.models[0].name).toEqual("Link");
+    expect(collection.models[0].name).toBe("Link");
   });
 
   test("a collection can filter its models", () => {
@@ -50,7 +50,7 @@ describe("External | Shared | ORM | collection", () => {
     let newCollection = collection.filter((author) => author.good);
 
     expect(newCollection instanceof Collection).toBeTruthy();
-    expect(newCollection.modelName).toEqual("user");
+    expect(newCollection.modelName).toBe("user");
     expect(newCollection.models).toHaveLength(2);
   });
 
@@ -67,7 +67,7 @@ describe("External | Shared | ORM | collection", () => {
     });
 
     expect(newCollection instanceof Collection).toBeTruthy();
-    expect(newCollection.modelName).toEqual("user");
+    expect(newCollection.modelName).toBe("user");
     expect(newCollection.models.map((m) => m.name)).toEqual([
       "Ganon",
       "Link",
@@ -86,7 +86,7 @@ describe("External | Shared | ORM | collection", () => {
     let newCollection = collection.slice(-2);
 
     expect(newCollection instanceof Collection).toBeTruthy();
-    expect(newCollection.modelName).toEqual("user");
+    expect(newCollection.modelName).toBe("user");
     expect(newCollection.models.map((m) => m.name)).toEqual(["Zelda", "Ganon"]);
   });
 
