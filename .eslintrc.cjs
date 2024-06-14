@@ -23,17 +23,19 @@ module.exports = {
     "no-unused-vars": ["error", { args: "none" }],
     "import/no-extraneous-dependencies": [
       "error",
-      { devDependencies: ["__tests__", "*.config.js", "*.config.mjs"] },
+      {
+        devDependencies: [
+          "__tests__",
+          "*.config.js",
+          "*.config.mjs",
+          "*.config.cjs",
+        ],
+      },
     ],
   },
   overrides: [
     {
-      files: [
-        "jest.config.js",
-        "babel.config.js",
-        "rollup.config.js",
-        "rollup.test.config.mjs",
-      ],
+      files: ["jest.config.cjs", "babel.config.cjs", "rollup.config.mjs"],
       env: {
         browser: false,
         node: true,
