@@ -59,6 +59,7 @@ let esm = {
   plugins: [
     alias(aliases),
     babel({
+      babelHelpers: "bundled",
       exclude: "node_modules/**",
       sourceMaps: true,
       presets: [
@@ -87,6 +88,7 @@ let cjs = {
   plugins: [
     alias(aliases),
     babel({
+      babelHelpers: "bundled",
       exclude: "node_modules/**",
       sourceMaps: true,
       presets: [
@@ -114,6 +116,7 @@ let umd = {
     alias(aliases),
     nodeResolve(),
     babel({
+      babelHelpers: "bundled",
       exclude: "node_modules/**",
       sourceMaps: true,
       presets: [
