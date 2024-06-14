@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+env:
+  # GitHub has 14 GB for macOS 16 GB for linux, so setting to 12 GB for node
+  # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+  NODE_OPTIONS: --max-old-space-size=12288
+
 jobs:
   lint:
     runs-on: ${{ matrix.os }}
@@ -37,8 +42,8 @@ jobs:
         os: [ubuntu-latest]
         node_version: [18, 20, 22]
         include:
-          - os: macos-latest
-            node_version: 22
+          - os: macos-13
+            node_version: 20
       fail-fast: false
 
     name: "Build&Test: node-${{ matrix.node_version }}, ${{ matrix.os }}"
@@ -52,5 +57,7 @@ jobs:
           cache: yarn
       - name: Install dependencies
         run: yarn install
+      - name: Build
+        run: yarn build
       - name: Run tests
-        run: yarn test
+        run: yarn test:run --maxWorkers=4

@@ -54,13 +54,15 @@ function isExternal(id) {
 
 let esm = {
   input: "lib/index.js",
-  output: { file: `dist/mirage-esm.js`, sourcemap: true, format: "esm" },
+  output: { file: `dist/mirage.mjs`, sourcemap: true, format: "esm" },
   external: isExternal,
   plugins: [
     alias(aliases),
     babel({
+      babelHelpers: "bundled",
       exclude: "node_modules/**",
       sourceMaps: true,
+      configFile: false,
       presets: [
         [
           "@babel/preset-env",
@@ -78,7 +80,7 @@ let esm = {
 let cjs = {
   input: "lib/index.js",
   output: {
-    file: `dist/mirage-cjs.js`,
+    file: `dist/mirage.cjs`,
     sourcemap: true,
     format: "cjs",
     esModule: true,
@@ -87,8 +89,10 @@ let cjs = {
   plugins: [
     alias(aliases),
     babel({
+      babelHelpers: "bundled",
       exclude: "node_modules/**",
       sourceMaps: true,
+      configFile: false,
       presets: [
         [
           "@babel/preset-env",
@@ -105,7 +109,7 @@ let cjs = {
 let umd = {
   input: "lib/index.js",
   output: {
-    file: "dist/mirage-umd.js",
+    file: "dist/mirage-umd.cjs",
     format: "umd",
     name: "MirageJS.Server",
   },
@@ -114,8 +118,10 @@ let umd = {
     alias(aliases),
     nodeResolve(),
     babel({
+      babelHelpers: "bundled",
       exclude: "node_modules/**",
       sourceMaps: true,
+      configFile: false,
       presets: [
         [
           "@babel/preset-env",
