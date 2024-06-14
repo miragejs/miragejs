@@ -2,10 +2,20 @@
   "name": "miragejs",
   "version": "0.1.48",
   "description": "A client-side server to help you build, test and demo your JavaScript app",
-  "main": "dist/mirage.js",
-  "module": "dist/mirage.mjs",
   "sideEffects": false,
-  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./types/index.d.ts",
+        "default": "./dist/mirage.mjs"
+      },
+      "require": {
+        "types": "./types/index.d.ts",
+        "default": "./dist/mirage.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
   "keywords": [
     "pretender",
     "prototype",
