@@ -62,6 +62,7 @@ let esm = {
       babelHelpers: "bundled",
       exclude: "node_modules/**",
       sourceMaps: true,
+      configFile: false,
       presets: [
         [
           "@babel/preset-env",
@@ -79,7 +80,7 @@ let esm = {
 let cjs = {
   input: "lib/index.js",
   output: {
-    file: `dist/mirage.js`,
+    file: `dist/mirage.cjs`,
     sourcemap: true,
     format: "cjs",
     esModule: true,
@@ -91,6 +92,7 @@ let cjs = {
       babelHelpers: "bundled",
       exclude: "node_modules/**",
       sourceMaps: true,
+      configFile: false,
       presets: [
         [
           "@babel/preset-env",
@@ -107,7 +109,7 @@ let cjs = {
 let umd = {
   input: "lib/index.js",
   output: {
-    file: "dist/mirage-umd.js",
+    file: "dist/mirage-umd.cjs",
     format: "umd",
     name: "MirageJS.Server",
   },
@@ -119,6 +121,7 @@ let umd = {
       babelHelpers: "bundled",
       exclude: "node_modules/**",
       sourceMaps: true,
+      configFile: false,
       presets: [
         [
           "@babel/preset-env",

@@ -13,13 +13,14 @@ let internal = {
 let browserEnvironmentConsumingEsm = {
   displayName: "browserEnvironmentConsumingEsm",
   testEnvironment: "jsdom",
+  transform: {},
   setupFilesAfterEnv: ["jest-extended/all"],
   testMatch: [
     "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
     "**/__tests__/external/browser-only/**/*-test.[jt]s?(x)",
   ],
   moduleNameMapper: {
-    "^miragejs$": "<rootDir>/dist/mirage-esm.js",
+    "^miragejs$": "<rootDir>/dist/mirage.mjs",
   },
 };
 
@@ -27,13 +28,14 @@ let browserEnvironmentConsumingEsm = {
 let nodeEnvironmentConsumingEsm = {
   displayName: "nodeEnvironmentConsumingEsm",
   testEnvironment: "node",
+  transform: {},
   setupFilesAfterEnv: ["jest-extended/all"],
   testMatch: [
     "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
     "**/__tests__/external/node-only/**/*-test.[jt]s?(x)",
   ],
   moduleNameMapper: {
-    "^miragejs$": "<rootDir>/dist/mirage-esm.js",
+    "^miragejs$": "<rootDir>/dist/mirage.mjs",
   },
 };
 
@@ -47,7 +49,7 @@ let browserEnvironmentConsumingCjs = {
     "**/__tests__/external/browser-only/**/*-test.[jt]s?(x)",
   ],
   moduleNameMapper: {
-    "^miragejs$": "<rootDir>/dist/mirage-cjs",
+    "^miragejs$": "<rootDir>/dist/mirage.cjs",
   },
 };
 
@@ -61,7 +63,7 @@ let nodeEnvironmentConsumingCjs = {
     "**/__tests__/external/node-only/**/*-test.[jt]s?(x)",
   ],
   moduleNameMapper: {
-    "^miragejs$": "<rootDir>/dist/mirage-cjs",
+    "^miragejs$": "<rootDir>/dist/mirage.cjs",
   },
 };
 
@@ -75,7 +77,7 @@ let browserEnvironmentConsumingUmd = {
     "**/__tests__/external/browser-only/**/*-test.[jt]s?(x)",
   ],
   moduleNameMapper: {
-    "^miragejs$": "<rootDir>/dist/mirage-umd.js",
+    "^miragejs$": "<rootDir>/dist/mirage-umd.cjs",
   },
 };
 
