@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Enable Corepack
+        run: corepack enable
       - name: Set node version to ${{ matrix.node_version }}
         uses: actions/setup-node@v4
         with:
@@ -50,6 +52,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Enable Corepack
+        run: corepack enable
       - name: Set node version to ${{ matrix.node_version }}
         uses: actions/setup-node@v4
         with:
