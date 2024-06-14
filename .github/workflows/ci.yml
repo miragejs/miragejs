@@ -6,9 +6,9 @@ on:
       - main
 
 env:
-  # 7 GiB by default on GitHub, setting to 6 GiB for node
+  # GitHub has 14 GB for macOS 16 GB for linux, so setting to 12 GB for node
   # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
-  NODE_OPTIONS: --max-old-space-size=6144
+  NODE_OPTIONS: --max-old-space-size=12288
 
 jobs:
   lint:
