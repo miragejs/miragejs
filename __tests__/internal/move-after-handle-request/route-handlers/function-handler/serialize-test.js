@@ -1,5 +1,5 @@
 import { Server, Model, Collection, ActiveModelSerializer } from "miragejs";
-import uniqBy from "lodash/uniqBy";
+import uniqBy from "lodash/uniqBy.js";
 
 describe("Integration | Route handlers | Function handler | #serialize", () => {
   let server;

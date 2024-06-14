@@ -1,5 +1,5 @@
 import { Server, Model, hasMany, JSONAPISerializer } from "miragejs";
-import snakeCase from "lodash/snakeCase";
+import snakeCase from "lodash/snakeCase.js";
 
 describe("External | Shared | Serializers | JSON API Serializer | Key for relationship", () => {
   let server;
