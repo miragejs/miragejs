@@ -57,13 +57,13 @@ declare module "miragejs" {
     constructor(
       code: number,
       headers?: Record<string, string>,
-      body?: string | {}
+      body?: string | {} | ReadableStream
     );
 
     toRackResponse(): [
       number,
       Record<string, string> | undefined,
-      string | {} | undefined,
+      string | {} | ReadableStream | undefined,
     ];
   }
 
