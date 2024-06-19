@@ -1,6 +1,6 @@
 {
   "name": "miragejs",
-  "version": "0.2.0-alpha.1",
+  "version": "0.2.0-alpha.2",
   "description": "A client-side server to help you build, test and demo your JavaScript app",
   "sideEffects": false,
   "type": "module",
