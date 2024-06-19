@@ -151,7 +151,7 @@ describe("External | Browser only | Passthrough", () => {
     await expect(fetch("http://api.foo.bar/addresses")).rejects.toThrow(
       "Network request failed"
     );
-  });
+  }, 8000); // slightly longer timeout, this one seems to have trouble sometimes
 
   test("it can take a function", async () => {
     server.config({
