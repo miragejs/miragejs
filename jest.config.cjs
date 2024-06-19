@@ -1,7 +1,7 @@
 let internal = {
   displayName: "internal",
   setupFilesAfterEnv: ["jest-extended/all"],
-  testEnvironment: "jsdom",
+  testEnvironment: "jest-fixed-jsdom",
   testMatch: ["**/__tests__/internal/**/*-test.[jt]s?(x)"],
   moduleNameMapper: {
     "@lib(.*)": "<rootDir>/lib$1",
@@ -12,7 +12,7 @@ let internal = {
 // External API, Create React App-like environment.
 let browserEnvironmentConsumingEsm = {
   displayName: "browserEnvironmentConsumingEsm",
-  testEnvironment: "jsdom",
+  testEnvironment: "jest-fixed-jsdom",
   transform: {},
   setupFilesAfterEnv: ["jest-extended/all"],
   testMatch: [
@@ -42,7 +42,7 @@ let nodeEnvironmentConsumingEsm = {
 // External API, Create React App-like environment.
 let browserEnvironmentConsumingCjs = {
   displayName: "browserEnvironmentConsumingCjs",
-  testEnvironment: "jsdom",
+  testEnvironment: "jest-fixed-jsdom",
   setupFilesAfterEnv: ["jest-extended/all"],
   testMatch: [
     "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
@@ -70,7 +70,7 @@ let nodeEnvironmentConsumingCjs = {
 // External API, script tag or Code Sandbox
 let browserEnvironmentConsumingUmd = {
   displayName: "browserEnvironmentConsumingUmd",
-  testEnvironment: "jsdom",
+  testEnvironment: "jest-fixed-jsdom",
   setupFilesAfterEnv: ["jest-extended/all"],
   testMatch: [
     "**/__tests__/external/shared/**/*-test.[jt]s?(x)",
