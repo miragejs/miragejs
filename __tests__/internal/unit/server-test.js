@@ -44,7 +44,7 @@ describe("Unit | Server", function () {
 
 describe("Unit | createServer", function () {
   test("it returns a server instance", async () => {
-    let server = await createServer();
+    let server = createServer();
 
     expect(server).toBeTruthy();
 
@@ -52,7 +52,7 @@ describe("Unit | createServer", function () {
   });
 
   test("routes return pretender handler", async () => {
-    let server = await createServer({ environment: "test" });
+    let server = createServer({ environment: "test" });
 
     let handler = server.post("foo");
 
@@ -64,7 +64,7 @@ describe("Unit | createServer", function () {
   test("it runs the default scenario in non-test environments", async () => {
     expect.assertions(1);
 
-    let server = await createServer({
+    let server = createServer({
       environment: "development",
       seeds() {
         expect(true).toBeTruthy();
@@ -75,7 +75,7 @@ describe("Unit | createServer", function () {
   });
 
   test("forces timing to be 0 in test environment", async () => {
-    let server = await createServer({ environment: "test" });
+    let server = createServer({ environment: "test" });
 
     expect(server.timing).toBe(0);
 
@@ -83,7 +83,7 @@ describe("Unit | createServer", function () {
   });
 
   test("allows setting the timing to 0", async () => {
-    let server = await createServer({ timing: 0 });
+    let server = createServer({ timing: 0 });
 
     expect(server.timing).toBe(0);
 
