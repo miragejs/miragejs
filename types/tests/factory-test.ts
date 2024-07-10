@@ -8,6 +8,7 @@ const PersonModel = Model.extend({
 interface Person {
   age: number;
   height: string;
+  name: string;
 }
 
 /**
@@ -23,13 +24,16 @@ interface Person {
 const PersonFactoryInferred = Factory.extend({
   age: 42,
   height(n: number) {
-    return `${n}'`;
+    return `${this.age * n}'`;
   },
+  name(n: number): string {
+    return `${this.height} tall person`;
+  }
 });
 
 const PersonFactoryExplicit = Factory.extend<Partial<Person>>({
   height(n: number) {
-    return `${n}'`;
+    return `${(this.age ?? 1) * n}'`;
   },
 });
 
