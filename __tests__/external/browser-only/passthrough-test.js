@@ -157,17 +157,17 @@ describe("External | Browser only | Passthrough", () => {
     server.config({
       routes() {
         this.passthrough((request) => {
-          return request.url.match(/users/);
+          return request.queryParams.skipMirage;
         });
       },
     });
 
-    await expect(fetch("/users?test=withQueryParams")).rejects.toThrow(
+    await expect(fetch("/users?skipMirage=true")).rejects.toThrow(
       "Network request failed"
     );
 
-    await expect(fetch("/movies")).rejects.toThrow(
-      `Mirage: Your app tried to GET '/movies'`
+    await expect(fetch("/users")).rejects.toThrow(
+      `Mirage: Your app tried to GET '/users'`
     );
   });
 
