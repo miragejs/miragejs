@@ -34,6 +34,20 @@ describe("External | Shared | ORM | destroy", () => {
     expect(server.db.users).toHaveLength(2);
   });
 
+  test("destroying a model marks id as unused and allows creating a new model with same id", () => {
+    expect(server.db.users).toHaveLength(3);
+
+    let link = server.schema.users.find(1);
+    link.destroy();
+
+    server.schema.users.create({ id: 1, name: "Ganon", evil: true });
+    const ganon = server.schema.users.find(1);
+
+    expect(ganon).not.toBeNull();
+    expect(ganon?.name).toBe("Ganon");
+    expect(server.db.users).toHaveLength(3);
+  });
+
   test("destroying a collection removes the associated records from the db", () => {
     expect(server.db.users).toHaveLength(3);
 
