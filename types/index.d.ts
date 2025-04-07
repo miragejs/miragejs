@@ -182,8 +182,12 @@ declare module "miragejs/-types" {
     ): FactoryDefinition<Assign<Data, FlattenFactoryMethods<NewData>>>;
   }
 
+  type OrCallableWithIndex<T> = T  | ((n: number) => T);
+
   type WithFactoryMethods<T> = {
-    [K in keyof T]: T[K] | ((n: number) => T[K]);
+    [K in keyof T]: NonNullable<T[K]> extends Record<string, any>
+      ? WithFactoryMethods<T[K]>
+      : OrCallableWithIndex<T[K]>;
   };
 
   // Extract factory method return values from a factory definition

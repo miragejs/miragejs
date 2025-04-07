@@ -10,6 +10,13 @@ interface Person {
   height: string;
 }
 
+interface PersonWithOccupation extends Person {
+  occupation: {
+    jobTitle: string;
+    salary: number;
+  };
+};
+
 /**
  * We show two methods of using the factories here:
  * - For PersonFactoryInferred, we show that we can infer
@@ -33,12 +40,24 @@ const PersonFactoryExplicit = Factory.extend<Partial<Person>>({
   },
 });
 
+const PersonFactoryWithOccupation = Factory.extend<Partial<PersonWithOccupation>>({
+  occupation: {
+    jobTitle: "Engineer",
+    salary: (i: number) => i * 1000,
+  }
+});
+
 declare const schema: Schema<
   Registry<
-    { personExplicit: typeof PersonModel; personInferred: typeof PersonModel },
+    { 
+      personExplicit: typeof PersonModel; 
+      personInferred: typeof PersonModel;
+      PersonWithOccupation: typeof PersonModel;
+    },
     {
       personExplicit: typeof PersonFactoryExplicit;
       personInferred: typeof PersonFactoryInferred;
+      PersonWithOccupation: typeof PersonFactoryWithOccupation;
     }
   >
 >;
@@ -85,4 +104,18 @@ declare const schema: Schema<
 
   schema.create("personInferred", { height: 123 }); // $ExpectError
   schema.create("personInferred", { foo: "bar" }); // $ExpectError
+}
+
+{
+  const people = schema.all("PersonWithOccupation");
+
+  people.models.map((model) => {
+    model.id; // $ExpectType string | undefined
+    model.name; // $ExpectType string
+    model.attrs; // $ExpectType { name: string; age?: number | undefined; height?: string | undefined; occupation?: { jobTitle: string; salary: number; } | undefined; }
+    model.age; // $ExpectType number | undefined
+    model.height; // $ExpectType string | undefined
+    model.occupation?.jobTitle; // $ExpectType string | undefined
+    model.occupation?.salary; // $ExpectType number | undefined
+  })
 }
