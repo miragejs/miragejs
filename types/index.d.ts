@@ -199,18 +199,15 @@ declare module "miragejs/-types" {
     Registry,
     ModelName extends keyof Registry,
   > = ModelInstance<
-    {
-      // Splitting and rejoining on `ModelName` ensures that unions distribute
-      // properly, so that `Instantiate<Reg, 'foo' | 'bar'>` expands out like
-      // `Instantiate<Reg, 'foo'> | Instantiate<Reg, 'bar'>` rather than something
-      // that only has the intersection of `foo` and `bar`'s keys.
-      [Model in ModelName]: {
-        [Key in keyof Registry[Model]]: InstantiateValue<
-          Registry,
-          Registry[Model][Key]
-        >;
-      };
-    }[ModelName]
+    ModelName extends any
+      ? Registry[ModelName] extends infer U 
+        ? {
+          [Key in keyof U]: InstantiateValue<
+            Registry,
+            U[Key]
+          >;
+        } : never
+    : never
   >;
 
   // Given a registry and value type, checks whether that type represents
