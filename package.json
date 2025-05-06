@@ -41,7 +41,8 @@
     "build": "rimraf dist && rollup -c",
     "prepublishOnly": "yarn run build",
     "test:run": "node --experimental-vm-modules $(yarn bin jest)",
-    "test": "run-s build test:run",
+    "test:types": "tsd -f 'tests/*.ts' -t index.d.ts types",
+    "test": "run-s build test:types test:run",
     "ci": "run-s lint prettier:check test"
   },
   "dependencies": {
