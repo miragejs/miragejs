@@ -1,4 +1,5 @@
-// Minimum TypeScript Version: 4.2
+import {expectType, expectError} from 'tsd';
+
 import {
   Response,
   Server,
@@ -9,6 +10,7 @@ import {
   hasMany,
   Factory,
 } from "miragejs";
+import Db from 'miragejs/db';
 
 export default function config(this: Server): void {
   this.namespace = "foo";
@@ -16,12 +18,12 @@ export default function config(this: Server): void {
   this.timing = 123;
   this.logging = true;
 
-  this.get("/foo"); // $ExpectType void
-  this.put("/foo"); // $ExpectType void
-  this.post("/foo"); // $ExpectType void
-  this.patch("/foo"); // $ExpectType void
-  this.options("/foo"); // $ExpectType void
-  this.del("/foo"); // $ExpectType void
+  expectType<void>(this.get("/foo"));
+  expectType<void>(this.put("/foo"));
+  expectType<void>(this.post("/foo"));
+  expectType<void>(this.patch("/foo"));
+  expectType<void>(this.options("/foo"));
+  expectType<void>(this.del("/foo"));
 
   this.get("/foo", () => ({}));
   this.get("/foo", () => 0);
@@ -33,40 +35,40 @@ export default function config(this: Server): void {
   this.get<number>("/foo", () => 0);
   this.get<[number, string]>("/foo", () => [0, "foo"]);
 
-  this.get<number>("/foo", () => false); // $ExpectError
-  this.get<[number, string]>("/foo", () => ["foo", 0]); // $ExpectError
+  expectError(this.get<number>("/foo", () => false));
+  expectError(this.get<[number, string]>("/foo", () => ["foo", 0]));
 
-  this.resource("foo"); // $ExpectType void
+  expectType<void>(this.resource("foo"));
 
-  this.passthrough("/_coverage/upload"); // $ExpectType void
-  this.passthrough("/_coverage/upload_a", "/_coverage/upload_b"); // $ExpectType void
-  this.passthrough(["/_coverage/upload"]); // $ExpectError
-  this.passthrough((request) => request.queryParams.skipMirage); // $ExpectType void
-  this.passthrough("/_coverage/upload", ["get"]); // $ExpectType void
+  expectType<void>(this.passthrough("/_coverage/upload"));
+  expectType<void>(this.passthrough("/_coverage/upload_a", "/_coverage/upload_b"));
+  expectError(this.passthrough(["/_coverage/upload"]));
+  expectType<void>(this.passthrough((request) => request.queryParams.skipMirage));
+  expectType<void>(this.passthrough("/_coverage/upload", ["get"]));
   // prettier-ignore
-  this.passthrough("/_coverage/upload", (request) => request.queryParams.skipMirage); // $ExpectType void
+  expectType<void>(this.passthrough("/_coverage/upload", (request) => request.queryParams.skipMirage));
   // prettier-ignore
-  this.passthrough("/_coverage/upload", (request) => request.queryParams.skipMirage, ["post"]); // $ExpectType void
+  expectType<void>(this.passthrough("/_coverage/upload", (request) => request.queryParams.skipMirage, ["post"]));
 
-  this.loadFixtures(); // $ExpectType void
-  this.seeds(this); // $ExpectType void
-  this.routes(); // $ExpectType void
+  expectType<void>(this.loadFixtures());
+  expectType<void>(this.seeds(this));
+  expectType<void>(this.routes());
 
-  this.shutdown(); // $ExpectType void
+  expectType<void>(this.shutdown());
 
   this.get("/test/:segment", (schema, request) => {
-    schema.db; // $ExpectType Db
+    expectType<Db>(schema.db);
 
-    request.params; // $ExpectType Record<string, string>
-    request.queryParams; // $ExpectType Record<string, string | string[] | null | undefined>
-    request.requestBody; // $ExpectType string
-    request.requestHeaders; // $ExpectType Record<string, string>
-    request.url; // $ExpectType string
+    expectType<Record<string, string>>(request.params);
+    expectType<Record<string, string | string[] | null | undefined>>(request.queryParams);
+    expectType<string>(request.requestBody);
+    expectType<Record<string, string>>(request.requestHeaders);
+    expectType<string>(request.url);
 
     return new Response(200, { "Content-Type": "application/json" }, "{}");
   });
 
-  this.get("/test/:segment", (schema) => Promise.resolve(schema.create("foo"))); // $ExpectType void
+  expectType<void>(this.get("/test/:segment", (schema) => Promise.resolve(schema.create("foo"))));
 }
 
 // In `new Server`, models and factories are untyped, and you can
@@ -136,22 +138,22 @@ createServer({
     this.get("people/:id", (schema, request) => {
       let person = this.schema.find("person", request.params.id);
 
-      person?.name; // $ExpectType string | undefined
+      expectType<string | undefined>(person?.name);
 
       let friend = person?.friends.models[0];
 
-      friend?.name; // $ExpectType string | undefined
-      friend?.children; // $ExpectError
+      expectType<string | undefined>(friend?.name);
+      expectError(friend?.children);
 
       if (friend && "friends" in friend) {
-        friend.children.modelName; // $ExpectType string
+        expectType<string>(friend.children.modelName);
       }
 
       return person ?? new Response(404);
     });
 
-    this.get("bad", () => {
-      return this.schema.all("typo"); // $ExpectError
-    });
+    expectError(this.get("bad", () => {
+      return this.schema.all("typo");
+    }));
   },
 });

@@ -1,40 +1,40 @@
+import {expectType, expectError} from 'tsd';
 import { Collection } from "miragejs";
 
 type ModelType = { name: string };
 
 const collection = new Collection<ModelType>();
 
-collection.add({ name: "Bob" }); // $ExpectType Collection<ModelType>
-collection.add({ err: "err" }); // $ExpectError
+expectType<Collection<ModelType>>(collection.add({ name: "Bob" }));
+expectError(collection.add({ err: "err" }));
 
-collection.destroy(); // $ExpectType Collection<ModelType>
+expectType<Collection<ModelType>>(collection.destroy());
 
-collection.filter((item) => item.name === "Bob"); // $ExpectType Collection<ModelType>
-collection.filter((item) => item.err === "Err"); // $ExpectError
+expectType<Collection<ModelType>>(collection.filter((item) => item.name === "Bob"));
+expectError(collection.filter((item) => item.err === "Err"));
 
-collection.includes({ name: "Bob" }); // $ExpectType boolean
-collection.includes({ err: "err" }); // $ExpectError
+expectType<boolean>(collection.includes({ name: "Bob" }));
+expectError(collection.includes({ err: "err" }));
 
-collection.mergeCollection(new Collection<ModelType>()); // $ExpectType Collection<ModelType>
-collection.mergeCollection(new Collection<{ err: string }>()); // $ExpectError
+expectType<Collection<ModelType>>(collection.mergeCollection(new Collection<ModelType>()));
+expectError(collection.mergeCollection(new Collection<{ err: string }>()));
 
-collection.reload(); // $ExpectType Collection<ModelType>
+expectType<Collection<ModelType>>(collection.reload());
 
-collection.remove({ name: "Bob" }); // $ExpectType Collection<ModelType>
-collection.remove({ err: "Err" }); // $ExpectError
+expectType<Collection<ModelType>>(collection.remove({ name: "Bob" }));
+expectError(collection.remove({ err: "Err" }));
 
-collection.save(); // $ExpectType Collection<ModelType>
+expectType<Collection<ModelType>>(collection.save());
 
-collection.slice(0, 1); // $ExpectType Collection<ModelType>
+expectType<Collection<ModelType>>(collection.slice(0, 1));
 
-// $ExpectType Collection<ModelType>
-collection.sort((a, b) => {
+expectType<Collection<ModelType>>(collection.sort((a, b) => {
   return a.name.localeCompare(b.name);
-});
-collection.sort((a, b) => {
-  return a.err.localeCompare(b.err); // $ExpectError
-});
+}));
+expectError(collection.sort((a, b) => {
+  return a.err.localeCompare(b.err);
+}));
 
-collection.update("name", "John"); // $ExpectType Collection<ModelType>
-collection.update("name", new Date()); // $ExpectError
-collection.update("err", "err"); // $ExpectError
+expectType<Collection<ModelType>>(collection.update("name", "John"));
+expectError(collection.update("name", new Date()));
+expectError(collection.update("err", "err"));
