@@ -1,4 +1,4 @@
-import {expectType, expectError} from 'tsd';
+import { expectType, expectError } from "tsd";
 import { Factory, Model, Registry } from "miragejs";
 import Schema from "miragejs/orm/schema";
 
@@ -52,7 +52,11 @@ declare const schema: Schema<
   people.models.map((model) => {
     expectType<string | undefined>(model.id);
     expectType<string>(model.name);
-    expectType<{ name: string; age?: number | undefined; height?: string | undefined; }>(model.attrs);
+    expectType<{
+      name: string;
+      age?: number | undefined;
+      height?: string | undefined;
+    }>(model.attrs);
     expectType<number | undefined>(model.age);
     expectType<string | undefined>(model.height);
     expectError(model.foo);
@@ -60,7 +64,9 @@ declare const schema: Schema<
 
   expectType<string>(schema.create("personExplicit").height);
   expectType<string | undefined>(schema.create("personExplicit", {}).height);
-  expectType<string>(schema.create("personExplicit", { height: "custom" }).height);
+  expectType<string>(
+    schema.create("personExplicit", { height: "custom" }).height
+  );
 
   expectError(schema.create("personExplicit", { height: 123 }));
   expectError(schema.create("personExplicit", { foo: "bar" }));
@@ -74,7 +80,7 @@ declare const schema: Schema<
   people.models.map((model) => {
     expectType<string | undefined>(model.id);
     expectType<string>(model.name);
-    expectType<{ name: string; age: number; height: string; }>(model.attrs);
+    expectType<{ name: string; age: number; height: string }>(model.attrs);
     expectType<number>(model.age);
     expectType<string>(model.height);
     expectError(model.foo);
@@ -82,7 +88,9 @@ declare const schema: Schema<
 
   expectType<string>(schema.create("personInferred").height);
   expectType<string>(schema.create("personInferred", {}).height);
-  expectType<string>(schema.create("personInferred", { height: "custom" }).height);
+  expectType<string>(
+    schema.create("personInferred", { height: "custom" }).height
+  );
 
   expectError(schema.create("personInferred", { height: 123 }));
   expectError(schema.create("personInferred", { foo: "bar" }));

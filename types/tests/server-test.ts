@@ -1,4 +1,4 @@
-import {expectType, expectError} from 'tsd';
+import { expectType, expectError } from "tsd";
 
 import {
   Response,
@@ -10,7 +10,7 @@ import {
   hasMany,
   Factory,
 } from "miragejs";
-import Db from 'miragejs/db';
+import Db from "miragejs/db";
 
 export default function config(this: Server): void {
   this.namespace = "foo";
@@ -41,9 +41,13 @@ export default function config(this: Server): void {
   expectType<void>(this.resource("foo"));
 
   expectType<void>(this.passthrough("/_coverage/upload"));
-  expectType<void>(this.passthrough("/_coverage/upload_a", "/_coverage/upload_b"));
+  expectType<void>(
+    this.passthrough("/_coverage/upload_a", "/_coverage/upload_b")
+  );
   expectError(this.passthrough(["/_coverage/upload"]));
-  expectType<void>(this.passthrough((request) => request.queryParams.skipMirage));
+  expectType<void>(
+    this.passthrough((request) => request.queryParams.skipMirage)
+  );
   expectType<void>(this.passthrough("/_coverage/upload", ["get"]));
   // prettier-ignore
   expectType<void>(this.passthrough("/_coverage/upload", (request) => request.queryParams.skipMirage));
@@ -60,7 +64,9 @@ export default function config(this: Server): void {
     expectType<Db>(schema.db);
 
     expectType<Record<string, string>>(request.params);
-    expectType<Record<string, string | string[] | null | undefined>>(request.queryParams);
+    expectType<Record<string, string | string[] | null | undefined>>(
+      request.queryParams
+    );
     expectType<string>(request.requestBody);
     expectType<Record<string, string>>(request.requestHeaders);
     expectType<string>(request.url);
@@ -68,7 +74,11 @@ export default function config(this: Server): void {
     return new Response(200, { "Content-Type": "application/json" }, "{}");
   });
 
-  expectType<void>(this.get("/test/:segment", (schema) => Promise.resolve(schema.create("foo"))));
+  expectType<void>(
+    this.get("/test/:segment", (schema) =>
+      Promise.resolve(schema.create("foo"))
+    )
+  );
 }
 
 // In `new Server`, models and factories are untyped, and you can
@@ -152,8 +162,10 @@ createServer({
       return person ?? new Response(404);
     });
 
-    expectError(this.get("bad", () => {
-      return this.schema.all("typo");
-    }));
+    expectError(
+      this.get("bad", () => {
+        return this.schema.all("typo");
+      })
+    );
   },
 });

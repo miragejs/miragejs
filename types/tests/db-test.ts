@@ -1,9 +1,9 @@
-import {expectType, expectError} from 'tsd';
+import { expectType, expectError } from "tsd";
 import DbCollection from "miragejs/db-collection";
 import { Server } from "miragejs/server";
 import { Registry } from "miragejs";
 import { ModelDefinition } from "miragejs/-types";
-import Db from 'miragejs/db';
+import Db from "miragejs/db";
 
 const server: Server = new Server();
 

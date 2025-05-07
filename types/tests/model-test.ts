@@ -1,4 +1,4 @@
-import {expectType, expectError} from 'tsd';
+import { expectType, expectError } from "tsd";
 import { Model, Registry } from "miragejs";
 import Schema from "miragejs/orm/schema";
 
@@ -13,10 +13,10 @@ const people = schema.all("person");
 expectType<number>(people.length);
 expectType<string>(people.modelName);
 people.models.map((model) => {
-  expectType<string|undefined>(model.id);
+  expectType<string | undefined>(model.id);
   expectType<string>(model.name);
   expectType<string>(model.modelName);
-  expectType<{name: string}>(model.attrs);
+  expectType<{ name: string }>(model.attrs);
   expectError(model.foo);
 
   expectType<void>(model.save());

@@ -1,4 +1,4 @@
-import {expectType, expectError} from 'tsd';
+import { expectType, expectError } from "tsd";
 import { Factory, Model, Registry } from "miragejs";
 import Schema from "miragejs/orm/schema";
 
@@ -30,7 +30,9 @@ expectError(schema.findOrCreateBy("cow", { attr: "bar" }));
 
 expectType<string>(schema.where("foo", { attr: "bar" }).models[0].attr);
 expectError(schema.where("foo", { bar: true }));
-expectType<string>(schema.where("foo", (foo) => foo.attr === "ok").models[0].attr);
+expectType<string>(
+  schema.where("foo", (foo) => foo.attr === "ok").models[0].attr
+);
 expectError(schema.where("foo", (foo) => foo.x === "ok"));
 expectError(schema.where("cow", { attr: "bar" }));
 
