@@ -1,3 +1,4 @@
+import { expectType, expectError } from "tsd";
 import { Factory, Model, Registry } from "miragejs";
 import Schema from "miragejs/orm/schema";
 
@@ -13,31 +14,33 @@ declare const schema: Schema<
   Registry<{ foo: typeof FooModel }, { foo: typeof FooFactory }>
 >;
 
-schema.create("foo").attr; // $ExpectType string
-schema.create("foo", { attr: "ok" }).attr; // $ExpectType string
-schema.create("foo", { attr: 123 }); // $ExpectError
-schema.create("foo", { x: true }); // $ExpectError
-schema.create("cow"); // $ExpectError
+expectType<string>(schema.create("foo").attr);
+expectType<string>(schema.create("foo", { attr: "ok" }).attr);
+expectError(schema.create("foo", { attr: 123 }));
+expectError(schema.create("foo", { x: true }));
+expectError(schema.create("cow"));
 
-schema.find("foo", "123")?.attr; // $ExpectType string | undefined
-schema.find("foo", ["123"]).models[0].attr; // $ExpectType string
-schema.find("cow", "123"); // $ExpectError
+expectType<string | undefined>(schema.find("foo", "123")?.attr);
+expectType<string>(schema.find("foo", ["123"]).models[0].attr);
+expectError(schema.find("cow", "123"));
 
-schema.findOrCreateBy("foo", { attr: "hi" }).attr; // $ExpectType string
-schema.findOrCreateBy("foo", { bar: true }); // $ExpectError
-schema.findOrCreateBy("cow", { attr: "bar" }); // $ExpectError
+expectType<string>(schema.findOrCreateBy("foo", { attr: "hi" }).attr);
+expectError(schema.findOrCreateBy("foo", { bar: true }));
+expectError(schema.findOrCreateBy("cow", { attr: "bar" }));
 
-schema.where("foo", { attr: "bar" }).models[0].attr; // $ExpectType string
-schema.where("foo", { bar: true }); // $ExpectError
-schema.where("foo", (foo) => foo.attr === "ok").models[0].attr; // $ExpectType string
-schema.where("foo", (foo) => foo.x === "ok"); // $ExpectError
-schema.where("cow", { attr: "bar" }); // $ExpectError
+expectType<string>(schema.where("foo", { attr: "bar" }).models[0].attr);
+expectError(schema.where("foo", { bar: true }));
+expectType<string>(
+  schema.where("foo", (foo) => foo.attr === "ok").models[0].attr
+);
+expectError(schema.where("foo", (foo) => foo.x === "ok"));
+expectError(schema.where("cow", { attr: "bar" }));
 
-schema.all("foo").models[0].attr; // $ExpectType string
-schema.all("cow"); // $ExpectError
+expectType<string>(schema.all("foo").models[0].attr);
+expectError(schema.all("cow"));
 
-schema.none("foo").models[0].attr; // $ExpectType string
-schema.none("cow"); // $ExpectError
+expectType<string>(schema.none("foo").models[0].attr);
+expectError(schema.none("cow"));
 
-schema.first("foo")?.attr; // $ExpectType string | undefined
-schema.first("cow"); // $ExpectError
+expectType<string | undefined>(schema.first("foo")?.attr);
+expectError(schema.first("cow"));

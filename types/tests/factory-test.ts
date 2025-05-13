@@ -1,3 +1,4 @@
+import { expectType, expectError } from "tsd";
 import { Factory, Model, Registry } from "miragejs";
 import Schema from "miragejs/orm/schema";
 
@@ -46,43 +47,51 @@ declare const schema: Schema<
 {
   const people = schema.all("personExplicit");
 
-  people.length; // $ExpectType number
-  people.modelName; // $ExpectType string
+  expectType<number>(people.length);
+  expectType<string>(people.modelName);
   people.models.map((model) => {
-    model.id; // $ExpectType string | undefined
-    model.name; // $ExpectType string
-    model.attrs; // $ExpectType { name: string; age?: number | undefined; height?: string | undefined; }
-    model.age; // $ExpectType number | undefined
-    model.height; // $ExpectType string | undefined
-    model.foo; // $ExpectError
+    expectType<string | undefined>(model.id);
+    expectType<string>(model.name);
+    expectType<{
+      name: string;
+      age?: number | undefined;
+      height?: string | undefined;
+    }>(model.attrs);
+    expectType<number | undefined>(model.age);
+    expectType<string | undefined>(model.height);
+    expectError(model.foo);
   });
 
-  schema.create("personExplicit").height; // $ExpectType string
-  schema.create("personExplicit", {}).height; // $ExpectType string | undefined
-  schema.create("personExplicit", { height: "custom" }).height; // $ExpectType string
+  expectType<string>(schema.create("personExplicit").height);
+  expectType<string | undefined>(schema.create("personExplicit", {}).height);
+  expectType<string>(
+    schema.create("personExplicit", { height: "custom" }).height
+  );
 
-  schema.create("personExplicit", { height: 123 }); // $ExpectError
-  schema.create("personExplicit", { foo: "bar" }); // $ExpectError
+  expectError(schema.create("personExplicit", { height: 123 }));
+  expectError(schema.create("personExplicit", { foo: "bar" }));
 }
 
 {
   const people = schema.all("personInferred");
 
-  people.length; // $ExpectType number
-  people.modelName; // $ExpectType string
+  expectType<number>(people.length);
+  expectType<string>(people.modelName);
   people.models.map((model) => {
-    model.id; // $ExpectType string | undefined
-    model.name; // $ExpectType string
-    model.attrs; // $ExpectType { name: string; age: number; height: string; }
-    model.age; // $ExpectType number
-    model.height; // $ExpectType string
-    model.foo; // $ExpectError
+    expectType<string | undefined>(model.id);
+    expectType<string>(model.name);
+    expectType<{ name: string; age: number; height: string }>(model.attrs);
+    expectType<number>(model.age);
+    expectType<string>(model.height);
+    expectError(model.foo);
   });
 
-  schema.create("personInferred").height; // $ExpectType string
-  schema.create("personInferred", {}).height; // $ExpectType string
-  schema.create("personInferred", { height: "custom" }).height; // $ExpectType string
+  expectType<string>(schema.create("personInferred").height);
+  expectType<string>(schema.create("personInferred", {}).height);
+  expectType<string>(
+    schema.create("personInferred", { height: "custom" }).height
+  );
 
-  schema.create("personInferred", { height: 123 }); // $ExpectError
-  schema.create("personInferred", { foo: "bar" }); // $ExpectError
+  expectError(schema.create("personInferred", { height: 123 }));
+  expectError(schema.create("personInferred", { foo: "bar" }));
 }

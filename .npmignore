@@ -7,7 +7,7 @@
 /tmp
 **/.gitkeep
 /__tests__/
-/tests/
+/types/tests/
 /yarn.lock
 .gitkeep
 

@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "lib": ["es6", "dom"],
-    "module": "ES6",
-    "types": [],
-    "noEmit": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
-    "paths": { "miragejs": ["."] },
-    "moduleResolution": "Node"
+    "noEmit": true,
+    "target": "es2020",
+    "lib": ["es2020", "dom", "dom.iterable"],
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "noUnusedLocals": false,
+    "moduleResolution": "node",
+    "skipLibCheck": false,
+    "paths": {
+      "miragejs": ["./index.d.ts"]
+    }
   }
 }

@@ -1,3 +1,4 @@
+import { expectType, expectError } from "tsd";
 import {
   belongsTo,
   Collection,
@@ -32,32 +33,32 @@ declare const schema: Schema<PersonRegistry>;
 
 const people = schema.all("person");
 
-people.length; // $ExpectType number
-people.modelName; // $ExpectType string
+expectType<number>(people.length);
+expectType<string>(people.modelName);
 people.models.map((model) => {
-  model.nothing; // $ExpectType unknown
-  model.muchAdoAboutNothing; // $ExpectType Collection<unknown>
+  expectType<unknown>(model.nothing);
+  expectType<Collection<unknown>>(model.muchAdoAboutNothing);
 
-  model.parent?.name; // $ExpectType string | undefined
-  model.parent?.parent?.name; // $ExpectType string | undefined
-  model.pets.models[0].name; // $ExpectType string
+  expectType<string | undefined>(model.parent?.name);
+  expectType<string | undefined>(model.parent?.parent?.name);
+  expectType<string>(model.pets.models[0].name);
 
   // Polymorphic relationship
   const friend = model.friends.models[0];
 
   // Both 'pet' and 'person' models have a name, but no other shared fields
-  friend.name; // $ExpectType string
-  friend.parent; // $ExpectError
-  friend.friends; // $ExpectError
-  friend.owner; // $ExpectError
+  expectType<string>(friend.name);
+  expectError(friend.parent);
+  expectError(friend.friends);
+  expectError(friend.owner);
 
   if ("parent" in friend) {
     // Here we know friend is a person
-    friend.parent!.name; // $ExpectType string
-    friend.friends.length; // $ExpectType number
+    expectType<string>(friend.parent!.name);
+    expectType<number>(friend.friends.length);
   } else {
     // Here we know friend is a pet
-    friend.owner!.name; // $ExpectType string
+    expectType<string>(friend.owner!.name);
   }
 });
 
@@ -66,9 +67,9 @@ const child = schema.create("person", {
 });
 
 // Here we know `parent` is defined because it was just passed in
-child.parent.name; // $ExpectType string
+expectType<string>(child.parent.name);
 
-schema.create("person", { parent: "hi" }); // $ExpectError
+expectError(schema.create("person", { parent: "hi" }));
 
 const pet1 = schema.create("pet");
 const pet2 = schema.create("pet");
@@ -89,13 +90,13 @@ personWithPetsArray.update(
   new Collection<Instantiate<PersonRegistry, "pet">>()
 );
 
-personWithPetsArray.pets.modelName; // $ExpectType string
+expectType<string>(personWithPetsArray.pets.modelName);
 
 const personWithPetsCollection = schema.create("person", {
   pets: schema.all("pet"),
 });
 
-personWithPetsCollection.pets.modelName; // $ExpectType string
+expectType<string>(personWithPetsCollection.pets.modelName);
 
-schema.create("person", { pets: [child] }); // $ExpectError
-schema.create("person", { pets: schema.all("person") }); // $ExpectError
+expectError(schema.create("person", { pets: [child] }));
+expectError(schema.create("person", { pets: schema.all("person") }));

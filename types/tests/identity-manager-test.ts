@@ -1,12 +1,13 @@
+import { expectType, expectError } from "tsd";
 import { createServer, IdentityManager, Model } from "miragejs";
 
 const identityManager = new IdentityManager();
 
-identityManager.get?.(); // $ExpectType number | undefined
-identityManager.set("id"); // $ExpectType void
-identityManager.inc?.(); // $ExpectType number | undefined
-identityManager.fetch(); // $ExpectType string
-identityManager.reset(); // $ExpectType void
+expectType<number | undefined>(identityManager.get?.());
+expectType<void>(identityManager.set("id"));
+expectType<number | undefined>(identityManager.inc?.());
+expectType<string>(identityManager.fetch());
+expectType<void>(identityManager.reset());
 
 createServer({
   identityManagers: {
@@ -14,12 +15,14 @@ createServer({
   },
 });
 
-createServer({
-  models: {
-    pet: Model.extend({}),
-  },
-  identityManagers: {
-    pet: IdentityManager,
-    foo: IdentityManager, // $ExpectError
-  },
-});
+expectError(
+  createServer({
+    models: {
+      pet: Model.extend({}),
+    },
+    identityManagers: {
+      pet: IdentityManager,
+      foo: IdentityManager,
+    },
+  })
+);

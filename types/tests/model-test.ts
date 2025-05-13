@@ -1,3 +1,4 @@
+import { expectType, expectError } from "tsd";
 import { Model, Registry } from "miragejs";
 import Schema from "miragejs/orm/schema";
 
@@ -9,27 +10,27 @@ declare const schema: Schema<Registry<{ person: typeof PersonModel }, {}>>;
 
 const people = schema.all("person");
 
-people.length; // $ExpectType number
-people.modelName; // $ExpectType string
+expectType<number>(people.length);
+expectType<string>(people.modelName);
 people.models.map((model) => {
-  model.id; // $ExpectType string | undefined
-  model.name; // $ExpectType string
-  model.modelName; // $ExpectType string
-  model.attrs; // $ExpectType { name: string; }
-  model.foo; // $ExpectError
+  expectType<string | undefined>(model.id);
+  expectType<string>(model.name);
+  expectType<string>(model.modelName);
+  expectType<{ name: string }>(model.attrs);
+  expectError(model.foo);
 
-  model.save(); // $ExpectType void
-  model.reload(); // $ExpectType void
-  model.destroy(); // $ExpectType void
+  expectType<void>(model.save());
+  expectType<void>(model.reload());
+  expectType<void>(model.destroy());
 
-  model.update("name", "goodbye"); // $ExpectType void
-  model.update("name", false); // $ExpectError
-  model.update("bad", "ok"); // $ExpectError
+  expectType<void>(model.update("name", "goodbye"));
+  expectError(model.update("name", false));
+  expectError(model.update("bad", "ok"));
 });
 
-schema.create("person").name; // $ExpectType string
-schema.create("person", {}).name; // $ExpectType string
-schema.create("person", { name: "custom" }).name; // $ExpectType string
+expectType<string>(schema.create("person").name);
+expectType<string>(schema.create("person", {}).name);
+expectType<string>(schema.create("person", { name: "custom" }).name);
 
-schema.create("person", { name: 123 }); // $ExpectError
-schema.create("person", { foo: "bar" }); // $ExpectError
+expectError(schema.create("person", { name: 123 }));
+expectError(schema.create("person", { foo: "bar" }));
