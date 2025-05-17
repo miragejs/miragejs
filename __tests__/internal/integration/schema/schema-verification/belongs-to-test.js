@@ -1,6 +1,5 @@
 import "@lib/container";
-import Db from "@lib/db";
-import Schema from "@lib/orm/schema";
+import { Db, Schema } from "@lib/orm";
 import { Model, belongsTo } from "miragejs";
 
 describe("Internal | Integration | Schema | Schema Verification | Belongs To", function () {

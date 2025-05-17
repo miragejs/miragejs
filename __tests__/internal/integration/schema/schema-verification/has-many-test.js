@@ -1,6 +1,5 @@
 import "@lib/container";
-import Db from "@lib/db";
-import Schema from "@lib/orm/schema";
+import { Db, Schema } from "@lib/orm";
 import { Model, hasMany } from "miragejs";
 
 describe("Integration | ORM | Schema Verification | Has Many", function () {

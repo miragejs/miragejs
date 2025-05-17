@@ -1,4 +1,4 @@
-import Collection from "@lib/orm/collection";
+import { Collection } from "@lib/orm";
 
 describe("Unit | Collection", function () {
   test("it can be instantiated", () => {

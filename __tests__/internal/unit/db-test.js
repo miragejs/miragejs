@@ -1,6 +1,5 @@
 import "@lib/container";
-import Db from "@lib/db";
-import DefaultIdentityManager from "@lib/identity-manager";
+import { Db, IdentityManager } from "@lib/orm";
 
 let db;
 
@@ -637,7 +636,7 @@ describe("Unit | Db #firstOrCreate", function () {
 describe("Unit | Db #registerIdentityManagers and #identityManagerFor", function () {
   test("identityManagerFor returns default IdentityManager if there aren't any custom ones", () => {
     let db = new Db();
-    expect(db.identityManagerFor("foo")).toEqual(DefaultIdentityManager);
+    expect(db.identityManagerFor("foo")).toEqual(IdentityManager);
   });
 
   test("it can register identity managers per db collection and for application", () => {
@@ -660,6 +659,6 @@ describe("Unit | Db #registerIdentityManagers and #identityManagerFor", function
       foo: CustomIdentityManager,
     });
     expect(db.identityManagerFor("foo")).toEqual(CustomIdentityManager);
-    expect(db.identityManagerFor("bar")).toEqual(DefaultIdentityManager);
+    expect(db.identityManagerFor("bar")).toEqual(IdentityManager);
   });
 });

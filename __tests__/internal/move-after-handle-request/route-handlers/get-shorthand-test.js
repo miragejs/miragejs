@@ -7,7 +7,7 @@ import {
   Response,
   Server,
 } from "miragejs";
-import Collection from "@lib/orm/collection";
+import { Collection } from "@lib/orm";
 import GetShorthandRouteHandler from "@lib/route-handlers/shorthands/get";
 
 describe("Integration | Route Handlers | GET shorthand", () => {
