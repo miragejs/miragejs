@@ -1,11 +1,14 @@
-import { _ormSchema as Schema, _Db as Db, Model, RestSerializer } from "@lib";
+import { Schema, Model, RestSerializer } from "@lib";
 
 describe("Unit | Serializers | RestSerializer", function () {
   let schema = null;
   let serializer = null;
+
   beforeEach(function () {
-    schema = new Schema(new Db(), {
-      person: Model,
+    schema = new Schema({
+      models: {
+        person: Model,
+      },
     });
     serializer = new RestSerializer({
       schema,

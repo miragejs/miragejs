@@ -1,21 +1,20 @@
 import "@lib/container";
-import { Db, Schema } from "@lib/orm";
-import { Model, hasMany } from "miragejs";
+import { Model, Schema, hasMany } from "@lib";
 
 describe("Integration | ORM | Schema Verification | Has Many", function () {
   test("a one-way has many association is correct", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         users: [{ id: 1, name: "Frodo" }],
         posts: [{ id: 1, title: "Lorem" }],
-      }),
-      {
+      },
+      models: {
         user: Model.extend({
           posts: hasMany(),
         }),
         post: Model.extend(),
-      }
-    );
+      },
+    });
 
     let frodo = schema.users.find(1);
     let association = frodo.associationFor("posts");
@@ -30,18 +29,18 @@ describe("Integration | ORM | Schema Verification | Has Many", function () {
   });
 
   test("a named one-way has many association is correct", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         users: [{ id: 1, name: "Frodo" }],
         posts: [{ id: 1, title: "Lorem" }],
-      }),
-      {
+      },
+      models: {
         user: Model.extend({
           blogPosts: hasMany("post"),
         }),
         post: Model.extend(),
-      }
-    );
+      },
+    });
 
     let frodo = schema.users.find(1);
     let association = frodo.associationFor("blogPosts");
@@ -56,16 +55,16 @@ describe("Integration | ORM | Schema Verification | Has Many", function () {
   });
 
   test("a reflexive hasMany association with an implicit inverse is correct", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         tags: [{ id: 1, name: "economics" }],
-      }),
-      {
+      },
+      models: {
         tag: Model.extend({
           tags: hasMany(),
         }),
-      }
-    );
+      },
+    });
 
     let tag = schema.tags.find(1);
     let association = tag.associationFor("tags");

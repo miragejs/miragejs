@@ -1,16 +1,23 @@
 import "@lib/container";
 import { Db, IdentityManager } from "@lib/orm";
 
-let db;
-
 describe("Unit | Db", function () {
-  test("it can be instantiated", () => {
+  let db;
+
+  beforeEach(function () {
     db = new Db();
+  });
+
+  afterEach(function () {
+    db.emptyData();
+  });
+
+  test("it can be instantiated", () => {
     expect(Db).toBeTruthy();
   });
 
   test("it can load data on instantiation", () => {
-    db = new Db({
+    db.loadData({
       users: [{ id: 1, name: "Link" }],
       addresses: [
         { id: 1, name: "123 Hyrule Way" },
@@ -23,7 +30,7 @@ describe("Unit | Db", function () {
   });
 
   test("it can empty its data", () => {
-    db = new Db({
+    db.loadData({
       users: [{ id: 1, name: "Link" }],
       addresses: [
         { id: 1, name: "123 Hyrule Way" },
@@ -39,6 +46,8 @@ describe("Unit | Db", function () {
 });
 
 describe("Unit | Db #createCollection", function () {
+  let db;
+
   beforeEach(function () {
     db = new Db();
   });
@@ -62,6 +71,8 @@ describe("Unit | Db #createCollection", function () {
 });
 
 describe("Unit | Db #loadData", function () {
+  let db;
+
   beforeEach(function () {
     db = new Db();
   });
@@ -97,6 +108,7 @@ describe("Unit | Db #loadData", function () {
 
 describe("Unit | Db #all", function () {
   let data;
+  let db;
 
   beforeEach(function () {
     data = {
@@ -127,6 +139,8 @@ describe("Unit | Db #all", function () {
 });
 
 describe("Unit | Db #insert", function () {
+  let db;
+
   beforeEach(function () {
     db = new Db();
     db.createCollection("contacts");
@@ -250,6 +264,8 @@ describe("Unit | Db #insert", function () {
 });
 
 describe("Unit | Db #findBy", function () {
+  let db;
+
   beforeEach(function () {
     db = new Db();
     db.createCollection("contacts");
@@ -300,6 +316,8 @@ describe("Unit | Db #findBy", function () {
 });
 
 describe("Unit | Db #find", function () {
+  let db;
+
   beforeEach(function () {
     db = new Db();
     db.createCollection("contacts");
@@ -372,6 +390,8 @@ describe("Unit | Db #find", function () {
 });
 
 describe("Unit | Db #where", function () {
+  let db;
+
   beforeEach(function () {
     db = new Db();
     db.createCollection("contacts");
@@ -426,6 +446,8 @@ describe("Unit | Db #where", function () {
 });
 
 describe("Unit | Db #update", function () {
+  let db;
+
   beforeEach(function () {
     db = new Db();
     db.createCollection("contacts");
@@ -526,6 +548,8 @@ describe("Unit | Db #update", function () {
 });
 
 describe("Unit | Db #remove", function () {
+  let db;
+
   beforeEach(function () {
     db = new Db();
     db.createCollection("contacts");
@@ -597,6 +621,8 @@ describe("Unit | Db #remove", function () {
 });
 
 describe("Unit | Db #firstOrCreate", function () {
+  let db;
+
   beforeEach(function () {
     db = new Db();
     db.createCollection("contacts");

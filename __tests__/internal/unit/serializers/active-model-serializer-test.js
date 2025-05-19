@@ -1,23 +1,19 @@
-import {
-  _ormSchema as Schema,
-  _Db as Db,
-  Model,
-  belongsTo,
-  ActiveModelSerializer,
-} from "@lib";
+import { Schema, Model, belongsTo, ActiveModelSerializer } from "@lib";
 
 describe("Unit | Serializers | ActiveModelSerializer", function () {
   let serializer = null;
   let schema = null;
 
   beforeEach(function () {
-    schema = new Schema(new Db(), {
-      contact: Model.extend({
-        address: belongsTo(),
-      }),
-      address: Model.extend({
-        contact: belongsTo(),
-      }),
+    schema = new Schema({
+      models: {
+        contact: Model.extend({
+          address: belongsTo(),
+        }),
+        address: Model.extend({
+          contact: belongsTo(),
+        }),
+      },
     });
     serializer = new ActiveModelSerializer({
       schema,

@@ -1,21 +1,20 @@
 import "@lib/container";
-import { Db, Schema } from "@lib/orm";
-import { Model, belongsTo } from "miragejs";
+import { Model, Schema, belongsTo } from "@lib";
 
 describe("Internal | Integration | Schema | Schema Verification | Belongs To", function () {
   test("a one-way belongsTo association is correct", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         authors: [{ id: 1, name: "Frodo" }],
         posts: [{ id: 1, title: "Lorem ipsum" }],
-      }),
-      {
+      },
+      models: {
         author: Model.extend(),
         post: Model.extend({
           author: belongsTo(),
         }),
-      }
-    );
+      },
+    });
 
     let post = schema.posts.find(1);
     let association = post.associationFor("author");
@@ -28,18 +27,18 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
   });
 
   test("a one-way named belongsTo association is correct", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         users: [{ id: 1, name: "Frodo" }],
         posts: [{ id: 1, title: "Lorem ipsum" }],
-      }),
-      {
+      },
+      models: {
         user: Model.extend(),
         post: Model.extend({
           author: belongsTo("user"),
         }),
-      }
-    );
+      },
+    });
 
     let post = schema.posts.find(1);
     let association = post.associationFor("author");
@@ -52,16 +51,16 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
   });
 
   test("a reflexive belongsTo association is correct and has an implicit inverse", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         users: [{ id: 1, name: "Frodo" }],
-      }),
-      {
+      },
+      models: {
         user: Model.extend({
           user: belongsTo(),
         }),
-      }
-    );
+      },
+    });
 
     let frodo = schema.users.find(1);
     let association = frodo.associationFor("user");
@@ -73,16 +72,16 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
   });
 
   test("a named reflexive belongsTo association with an implicit inverse is correct", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         users: [{ id: 1, name: "Frodo" }],
-      }),
-      {
+      },
+      models: {
         user: Model.extend({
           bestFriend: belongsTo("user"),
         }),
-      }
-    );
+      },
+    });
 
     let frodo = schema.users.find(1);
     let association = frodo.associationFor("bestFriend");
@@ -94,16 +93,16 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
   });
 
   test("a named reflexive belongsTo association with an explicit inverse is correct", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         users: [{ id: 1, name: "Frodo" }],
-      }),
-      {
+      },
+      models: {
         user: Model.extend({
           bestFriend: belongsTo("user", { inverse: "bestFriend" }),
         }),
-      }
-    );
+      },
+    });
 
     let frodo = schema.users.find(1);
     let association = frodo.associationFor("bestFriend");
@@ -115,16 +114,16 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
   });
 
   test("a one-way reflexive belongsTo association with a null inverse is correct", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         users: [{ id: 1, name: "Frodo" }],
-      }),
-      {
+      },
+      models: {
         user: Model.extend({
           user: belongsTo("user", { inverse: null }),
         }),
-      }
-    );
+      },
+    });
 
     let frodo = schema.users.find(1);
     let association = frodo.associationFor("user");
@@ -136,16 +135,16 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
   });
 
   test("a named one-way way reflexive belongsTo association with a null inverse is correct", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         users: [{ id: 1, name: "Frodo" }],
-      }),
-      {
+      },
+      models: {
         user: Model.extend({
           parent: belongsTo("user", { inverse: null }),
         }),
-      }
-    );
+      },
+    });
 
     let frodo = schema.users.find(1);
     let association = frodo.associationFor("parent");
@@ -157,20 +156,20 @@ describe("Internal | Integration | Schema | Schema Verification | Belongs To", f
   });
 
   test("a one-to-one belongsTo association with an implicit inverse is correct", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         users: [{ id: 1, name: "Frodo" }],
         profiles: [{ id: 1, type: "Admin" }],
-      }),
-      {
+      },
+      models: {
         user: Model.extend({
           profile: belongsTo(),
         }),
         profile: Model.extend({
           user: belongsTo(),
         }),
-      }
-    );
+      },
+    });
 
     let admin = schema.profiles.find(1);
     let association = admin.associationFor("user");

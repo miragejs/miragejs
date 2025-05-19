@@ -1,11 +1,4 @@
-import {
-  _ormSchema as Schema,
-  _Db as Db,
-  Model,
-  hasMany,
-  belongsTo,
-  JSONAPISerializer,
-} from "@lib";
+import { Schema, Model, hasMany, belongsTo, JSONAPISerializer } from "@lib";
 
 /*
   This test is heavily coupled to the implementation and can be deleted
@@ -30,8 +23,10 @@ describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapsh
   });
 
   test("it works on models with no includes", () => {
-    let schema = new Schema(new Db(), {
-      wordSmith: Model.extend({}),
+    let schema = new Schema({
+      models: {
+        wordSmith: Model.extend({}),
+      },
     });
     let wordSmith = schema.wordSmiths.create();
 
@@ -45,14 +40,16 @@ describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapsh
   });
 
   test("it doesn't choke on an empty belongsTo relationship", () => {
-    let schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-        blogPost: belongsTo(),
-      }),
-      blogPost: Model.extend({
-        happyCategory: belongsTo(),
-      }),
-      happyCategory: Model.extend(),
+    let schema = new Schema({
+      models: {
+        wordSmith: Model.extend({
+          blogPost: belongsTo(),
+        }),
+        blogPost: Model.extend({
+          happyCategory: belongsTo(),
+        }),
+        happyCategory: Model.extend(),
+      },
     });
     let wordSmith = schema.wordSmiths.create();
     wordSmith.createBlogPost();
@@ -84,15 +81,17 @@ describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapsh
   });
 
   test("it works on models with belongsTo relationships", () => {
-    let schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-        redTag: belongsTo(),
-        bluePost: belongsTo(),
-      }),
-      bluePost: Model.extend({
-        redTag: belongsTo(),
-      }),
-      redTag: Model.extend(),
+    let schema = new Schema({
+      models: {
+        wordSmith: Model.extend({
+          redTag: belongsTo(),
+          bluePost: belongsTo(),
+        }),
+        bluePost: Model.extend({
+          redTag: belongsTo(),
+        }),
+        redTag: Model.extend(),
+      },
     });
     let wordSmith = schema.wordSmiths.create();
     wordSmith.createRedTag();
@@ -125,18 +124,20 @@ describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapsh
   });
 
   test("it works on models with belongsTo relationships and dot-path includes", () => {
-    let schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-        redTag: belongsTo(),
-        bluePost: belongsTo(),
-      }),
-      bluePost: Model.extend({
-        redTag: belongsTo(),
-      }),
-      redTag: Model.extend({
-        someColor: belongsTo(),
-      }),
-      someColor: Model.extend({}),
+    let schema = new Schema({
+      models: {
+        wordSmith: Model.extend({
+          redTag: belongsTo(),
+          bluePost: belongsTo(),
+        }),
+        bluePost: Model.extend({
+          redTag: belongsTo(),
+        }),
+        redTag: Model.extend({
+          someColor: belongsTo(),
+        }),
+        someColor: Model.extend({}),
+      },
     });
     let wordSmith = schema.wordSmiths.create();
     wordSmith.createRedTag();
@@ -184,15 +185,17 @@ describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapsh
   });
 
   test("it works on models with hasMany relationships", () => {
-    let schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-        redTags: hasMany(),
-        bluePosts: hasMany(),
-      }),
-      bluePost: Model.extend({
-        redTags: hasMany(),
-      }),
-      redTag: Model.extend(),
+    let schema = new Schema({
+      models: {
+        wordSmith: Model.extend({
+          redTags: hasMany(),
+          bluePosts: hasMany(),
+        }),
+        bluePost: Model.extend({
+          redTags: hasMany(),
+        }),
+        redTag: Model.extend(),
+      },
     });
     let wordSmith = schema.wordSmiths.create();
     wordSmith.createRedTag();
@@ -227,18 +230,20 @@ describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapsh
   });
 
   test("it works on models with hasMany relationships and dot-path includes", () => {
-    let schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-        redTags: hasMany(),
-        bluePosts: hasMany(),
-      }),
-      bluePost: Model.extend({
-        redTags: hasMany(),
-      }),
-      redTag: Model.extend({
-        someColors: hasMany(),
-      }),
-      someColor: Model.extend(),
+    let schema = new Schema({
+      models: {
+        wordSmith: Model.extend({
+          redTags: hasMany(),
+          bluePosts: hasMany(),
+        }),
+        bluePost: Model.extend({
+          redTags: hasMany(),
+        }),
+        redTag: Model.extend({
+          someColors: hasMany(),
+        }),
+        someColor: Model.extend(),
+      },
     });
     let wordSmith = schema.wordSmiths.create();
     wordSmith.createRedTag();

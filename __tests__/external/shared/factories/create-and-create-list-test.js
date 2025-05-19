@@ -61,7 +61,7 @@ describe("External | Shared | Factories | create and createList", function () {
     expect(() => {
       server.create("foo");
     }).toThrow(
-      `You called server.create('foo') but no model or factory was found.`
+      `Mirage: You called create('foo') but no model or factory was found.`
     );
   });
 
@@ -72,7 +72,7 @@ describe("External | Shared | Factories | create and createList", function () {
     expect(() => {
       server.create("contacts");
     }).toThrow(
-      `You called server.create('contacts') but no model or factory was found. Make sure you're passing in the singularized version of the model or factory name`
+      `Mirage: You called create('contacts') but no model or factory was found. Make sure you're passing in the singularized version of the model or factory name`
     );
   });
 
@@ -99,7 +99,7 @@ describe("External | Shared | Factories | create and createList", function () {
     expect(() => {
       server.createList("foo", 1);
     }).toThrow(
-      `You called server.createList('foo') but no model or factory was found.`
+      `Mirage: You called createList('foo') but no model or factory was found.`
     );
   });
 
@@ -110,7 +110,7 @@ describe("External | Shared | Factories | create and createList", function () {
     expect(() => {
       server.createList("contacts", 1);
     }).toThrow(
-      `You called server.createList('contacts') but no model or factory was found. Make sure you're passing in the singularized version of the model or factory name.`
+      `Mirage: You called createList('contacts') but no model or factory was found. Make sure you're passing in the singularized version of the model or factory name.`
     );
   });
 

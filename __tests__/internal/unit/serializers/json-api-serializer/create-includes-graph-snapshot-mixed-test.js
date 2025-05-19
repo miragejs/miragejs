@@ -1,11 +1,4 @@
-import {
-  _ormSchema as Schema,
-  _Db as Db,
-  Model,
-  hasMany,
-  belongsTo,
-  JSONAPISerializer,
-} from "@lib";
+import { Schema, Model, hasMany, belongsTo, JSONAPISerializer } from "@lib";
 
 /*
   This test is heavily coupled to the implementation and can be deleted
@@ -30,17 +23,19 @@ describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapsh
   });
 
   test("it works on models and collections with dot-path includes", () => {
-    let schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-        blogPosts: hasMany(),
-      }),
-      blogPost: Model.extend({
-        happyTag: belongsTo(),
-      }),
-      happyTag: Model.extend({
-        happyColor: belongsTo(),
-      }),
-      happyColor: Model.extend(),
+    let schema = new Schema({
+      models: {
+        wordSmith: Model.extend({
+          blogPosts: hasMany(),
+        }),
+        blogPost: Model.extend({
+          happyTag: belongsTo(),
+        }),
+        happyTag: Model.extend({
+          happyColor: belongsTo(),
+        }),
+        happyColor: Model.extend(),
+      },
     });
     let wordSmith = schema.wordSmiths.create();
     let blogPost1 = wordSmith.createBlogPost();

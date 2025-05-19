@@ -1,10 +1,4 @@
-import {
-  _ormSchema as Schema,
-  _Db as Db,
-  Model,
-  hasMany,
-  JSONAPISerializer,
-} from "@lib";
+import { Schema, Model, hasMany, JSONAPISerializer } from "@lib";
 
 /*
   This test is heavily coupled to the implementation and can be deleted
@@ -29,8 +23,10 @@ describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapsh
   });
 
   test("it works on collections with no includes", () => {
-    let schema = new Schema(new Db(), {
-      wordSmith: Model.extend({}),
+    let schema = new Schema({
+      models: {
+        wordSmith: Model.extend({}),
+      },
     });
     schema.wordSmiths.create();
     schema.wordSmiths.create();
@@ -46,18 +42,20 @@ describe("Unit | Serializers | JSON API Serializer | #_createIncludesGraphSnapsh
   });
 
   test("it works on collections with hasMany relationships and dot-path includes", () => {
-    let schema = new Schema(new Db(), {
-      wordSmith: Model.extend({
-        redTags: hasMany(),
-        bluePosts: hasMany(),
-      }),
-      bluePost: Model.extend({
-        redTags: hasMany(),
-      }),
-      redTag: Model.extend({
-        someColors: hasMany(),
-      }),
-      someColor: Model.extend(),
+    let schema = new Schema({
+      models: {
+        wordSmith: Model.extend({
+          redTags: hasMany(),
+          bluePosts: hasMany(),
+        }),
+        bluePost: Model.extend({
+          redTags: hasMany(),
+        }),
+        redTag: Model.extend({
+          someColors: hasMany(),
+        }),
+        someColor: Model.extend(),
+      },
     });
     let wordSmith1 = schema.wordSmiths.create();
     wordSmith1.createRedTag();

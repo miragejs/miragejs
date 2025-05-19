@@ -1,23 +1,22 @@
 import "@lib/container";
-import { Db, Schema } from "@lib/orm";
-import { Model, hasMany, belongsTo } from "miragejs";
+import { Model, Schema, hasMany, belongsTo } from "@lib";
 
 describe("Integration | ORM | Schema Verification | Mixed", function () {
   test("unnamed one-to-many associations are correct", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         wordSmiths: [{ id: 1, name: "Frodo" }],
         blogPosts: [{ id: 1, title: "Lorem" }],
-      }),
-      {
+      },
+      models: {
         wordSmith: Model.extend({
           blogPosts: hasMany(),
         }),
         blogPost: Model.extend({
           wordSmith: belongsTo(),
         }),
-      }
-    );
+      },
+    });
 
     let frodo = schema.wordSmiths.find(1);
     let association = frodo.associationFor("blogPosts");
@@ -34,20 +33,20 @@ describe("Integration | ORM | Schema Verification | Mixed", function () {
   });
 
   test("a named one-to-many association is correct", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         wordSmiths: [{ id: 1, name: "Frodo" }],
         blogPosts: [{ id: 1, title: "Lorem" }],
-      }),
-      {
+      },
+      models: {
         wordSmith: Model.extend({
           posts: hasMany("blog-post"),
         }),
         blogPost: Model.extend({
           author: belongsTo("word-smith"),
         }),
-      }
-    );
+      },
+    });
 
     let frodo = schema.wordSmiths.find(1);
     let association = frodo.associationFor("posts");
@@ -62,12 +61,12 @@ describe("Integration | ORM | Schema Verification | Mixed", function () {
   });
 
   test("multiple has-many associations of the same type", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         users: [{ id: 1, name: "Frodo" }],
         posts: [{ id: 1, title: "Lorem" }],
-      }),
-      {
+      },
+      models: {
         user: Model.extend({
           notes: hasMany("post", { inverse: "author" }),
           messages: hasMany("post", { inverse: "messenger" }),
@@ -76,8 +75,8 @@ describe("Integration | ORM | Schema Verification | Mixed", function () {
           author: belongsTo("user", { inverse: "notes" }),
           messenger: belongsTo("user", { inverse: "messages" }),
         }),
-      }
-    );
+      },
+    });
 
     let frodo = schema.users.find(1);
     let notesAssociation = frodo.associationFor("notes");
@@ -104,17 +103,17 @@ describe("Integration | ORM | Schema Verification | Mixed", function () {
   });
 
   test("one-to-many reflexive association is correct", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         users: [{ id: 1, name: "Frodo" }],
-      }),
-      {
+      },
+      models: {
         user: Model.extend({
           parent: belongsTo("user", { inverse: "children" }),
           children: hasMany("user", { inverse: "parent" }),
         }),
-      }
-    );
+      },
+    });
 
     let frodo = schema.users.find(1);
     let parentAssociation = frodo.associationFor("parent");
@@ -129,13 +128,13 @@ describe("Integration | ORM | Schema Verification | Mixed", function () {
   });
 
   test("one-to-many polymorphic association is correct", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         authors: [{ id: 1, name: "Peter" }],
         posts: [{ id: 1, title: "Lorem" }],
         articles: [{ id: 1, title: "Ipsum" }],
-      }),
-      {
+      },
+      models: {
         author: Model.extend({
           writings: hasMany({ polymorphic: true }),
         }),
@@ -145,8 +144,8 @@ describe("Integration | ORM | Schema Verification | Mixed", function () {
         article: Model.extend({
           author: belongsTo("author", { inverse: "writings" }),
         }),
-      }
-    );
+      },
+    });
 
     let author = schema.authors.find(1);
     let writingsAssociation = author.associationFor("writings");
@@ -170,12 +169,12 @@ describe("Integration | ORM | Schema Verification | Mixed", function () {
   });
 
   test("multiple implicit inverse associations with the same key throws an error", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         users: [{ id: 1, name: "Frodo" }],
         posts: [{ id: 1, title: "Lorem" }],
-      }),
-      {
+      },
+      models: {
         user: Model.extend({
           posts: hasMany("post"),
         }),
@@ -183,8 +182,8 @@ describe("Integration | ORM | Schema Verification | Mixed", function () {
           editor: belongsTo("user"),
           authors: hasMany("user"),
         }),
-      }
-    );
+      },
+    });
 
     let frodo = schema.users.find(1);
     let userPostsAssociation = frodo.associationFor("posts");
@@ -196,12 +195,12 @@ describe("Integration | ORM | Schema Verification | Mixed", function () {
   });
 
   test("multiple explicit inverse associations with the same key throws an error", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         users: [{ id: 1, name: "Frodo" }],
         posts: [{ id: 1, title: "Lorem" }],
-      }),
-      {
+      },
+      models: {
         user: Model.extend({
           posts: hasMany("post", { inverse: "authors" }),
         }),
@@ -209,8 +208,8 @@ describe("Integration | ORM | Schema Verification | Mixed", function () {
           editor: belongsTo("user", { inverse: "posts" }),
           authors: hasMany("user", { inverse: "posts" }),
         }),
-      }
-    );
+      },
+    });
 
     let frodo = schema.users.find(1);
     let userPostsAssociation = frodo.associationFor("posts");
@@ -222,12 +221,12 @@ describe("Integration | ORM | Schema Verification | Mixed", function () {
   });
 
   test("explicit inverse is chosen over implicit inverses", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         users: [{ id: 1, name: "Frodo" }],
         posts: [{ id: 1, title: "Lorem" }],
-      }),
-      {
+      },
+      models: {
         user: Model.extend({
           posts: hasMany("post", { inverse: "authors" }),
         }),
@@ -235,8 +234,8 @@ describe("Integration | ORM | Schema Verification | Mixed", function () {
           editor: belongsTo("user"),
           authors: hasMany("user", { inverse: "posts" }),
         }),
-      }
-    );
+      },
+    });
 
     let frodo = schema.users.find(1);
     let userPostsAssociation = frodo.associationFor("posts");
@@ -253,13 +252,13 @@ describe("Integration | ORM | Schema Verification | Mixed", function () {
   });
 
   test("multiple explicit inverse associations with the same key but different models does not throw an error", () => {
-    let schema = new Schema(
-      new Db({
+    let schema = new Schema({
+      initialData: {
         users: [{ id: 1, name: "Frodo" }],
         posts: [{ id: 1, title: "Lorem" }],
         books: [{ id: 1, title: "Ipsum" }],
-      }),
-      {
+      },
+      models: {
         user: Model.extend({
           authoredPosts: hasMany("post", { inverse: "authors" }),
           authoredBooks: hasMany("book", { inverse: "authors" }),
@@ -270,8 +269,8 @@ describe("Integration | ORM | Schema Verification | Mixed", function () {
         book: Model.extend({
           authors: hasMany("user", { inverse: "authoredBooks" }),
         }),
-      }
-    );
+      },
+    });
 
     let frodo = schema.users.find(1);
     let post = schema.posts.find(1);

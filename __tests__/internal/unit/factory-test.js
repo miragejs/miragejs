@@ -1,5 +1,4 @@
-import Factory from "@lib/factory";
-import trait from "@lib/trait";
+import { Factory, trait } from "@lib";
 
 describe("Unit | Factory", function () {
   test("it exists", () => {
