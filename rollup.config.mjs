@@ -47,9 +47,13 @@ function isExternal(id) {
     })
   );
 
-  return (
-    !isRelativeInternalModulePath && !isAbsoluteInternalModulePath && !isAlias
-  );
+  // Don't treat internal modules as external
+  if (isRelativeInternalModulePath || isAbsoluteInternalModulePath || isAlias) {
+    return false;
+  }
+
+  // Only treat node_modules as external
+  return id.includes("node_modules");
 }
 
 let esm = {
@@ -58,6 +62,7 @@ let esm = {
   external: isExternal,
   plugins: [
     alias(aliases),
+    nodeResolve(),
     babel({
       babelHelpers: "bundled",
       exclude: "node_modules/**",
