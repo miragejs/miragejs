@@ -82,4 +82,13 @@ describe("Unit | Db | IdentityManager", function () {
 
     expect(true).toBeTruthy();
   });
+
+  test(`unset removes id from used ids`, () => {
+    let manager = new IdentityManager();
+    manager.set("abc");
+    manager.unset("abc");
+    manager.set("abc");
+
+    expect(true).toBeTruthy();
+  });
 });
