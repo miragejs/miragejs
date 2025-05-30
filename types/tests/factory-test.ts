@@ -11,6 +11,19 @@ interface Person {
   height: string;
 }
 
+interface Doctor extends Person {
+  occupation: 'Doctor';
+  specialty: string;
+}
+
+interface SoftwareEngineer extends Person {
+  occupation: 'SoftwareEngineer';
+  languages: string[]
+}
+
+type Employee = Doctor | SoftwareEngineer;
+
+
 /**
  * We show two methods of using the factories here:
  * - For PersonFactoryInferred, we show that we can infer
@@ -34,12 +47,19 @@ const PersonFactoryExplicit = Factory.extend<Partial<Person>>({
   },
 });
 
+const EmployeeFactory = Factory.extend<Partial<Employee>>({ age: 42 });
+
 declare const schema: Schema<
   Registry<
-    { personExplicit: typeof PersonModel; personInferred: typeof PersonModel },
+    { 
+      personExplicit: typeof PersonModel;
+      personInferred: typeof PersonModel;
+      employee: typeof Model;
+    },
     {
       personExplicit: typeof PersonFactoryExplicit;
       personInferred: typeof PersonFactoryInferred;
+      employee: typeof EmployeeFactory;
     }
   >
 >;
@@ -94,4 +114,19 @@ declare const schema: Schema<
 
   expectError(schema.create("personInferred", { height: 123 }));
   expectError(schema.create("personInferred", { foo: "bar" }));
+}
+
+{
+  schema.create('employee', { foo: 'bar' }); // $ExpectError
+  schema.create('employee', { specialty: 42 }); // $ExpectError
+  schema.create('employee', { specialty: 'doctor' });
+  schema.create('employee', { languages: ['javascript'] });
+  schema.create('employee', { 
+    occupation: 'Doctor',
+    specialty: 'javascript',
+  });
+  schema.create('employee', { 
+    occupation: 'Doctor',
+    languages: ['javascript'], // $ExpectError
+  });
 }
