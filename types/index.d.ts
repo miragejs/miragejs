@@ -325,6 +325,7 @@ declare module "miragejs/server" {
   import IdentityManager from "miragejs/identity-manager";
   import Schema from "miragejs/orm/schema";
   import PretenderServer from "pretender";
+  import MswConfig from "mirage-msw";
 
   /**
    * Possible HTTP verbs
@@ -401,6 +402,7 @@ declare module "miragejs/server" {
     factories?: Factories;
 
     pretender?: PretenderServer;
+    interceptor?: MswConfig;
   }
 
   /**
@@ -471,6 +473,9 @@ declare module "miragejs/server" {
 
     /** Actual Pretender instance */
     pretender: PretenderServer;
+
+    /** MSW Interceptor instance */
+    interceptor: MswConfig;
 
     /** Creates multiple models of the given type. */
     createList<
